@@ -5,6 +5,8 @@
 
 import GLOBAL from './../Constants/global.constants';
 import { GetFireToken } from './../Utils/user.utils';
+import { IsUndefined, CheckInternet } from './../Utils/common.utils';
+import { StoreEvent, SubscribeToEvent, IsEventAvailable } from './stateManager.utils';
 
 const defautlHeaders = {
     'Content-Type': 'application/json;charset=UTF-8',
@@ -18,6 +20,18 @@ const defautlHeaders = {
  * headers(optional)
  */
 export function Get(obj) {
+    if (!CheckInternet()) {
+        if (obj.persist) {
+            const url = createFinalUrl(obj);
+            SubscribeToEvent({ eventName: url, callback: obj.callback, objParams: obj.body, isMemoryStore: true, extraParams: obj.extraParams });
+            if ((!obj.update) && IsEventAvailable({ eventName: url, isMemoryStore: true, objParams: obj.body })) {
+                return;
+            }
+        } else {
+            // OfflineNotification();
+            return {};
+        }
+    }
     if (!(obj && obj.url)) {
         return false;
     }
@@ -33,6 +47,18 @@ export function Get(obj) {
  * headers(optional), body(optional)
  */
 export function Post(obj) {
+    if (!CheckInternet()) {
+        if (obj.persist) {
+            const url = createFinalUrl(obj);
+            SubscribeToEvent({ eventName: url, callback: obj.callback, objParams: obj.body, isMemoryStore: true, extraParams: obj.extraParams });
+            if ((!obj.update) && IsEventAvailable({ eventName: url, isMemoryStore: true, objParams: obj.body })) {
+                return;
+            }
+        } else {
+            // OfflineNotification();
+            return {};
+        }
+    }
     if (!(obj && obj.url)) {
         return false;
     }
@@ -83,7 +109,7 @@ export function Delete(obj) {
  * @param  {function} resolve
  * @param  {function} reject}
  */
-function ApiCall({ url, method, headers, body, resolve = defaultResolve, reject = defaultReject, params }) {
+function ApiCall({ url, method, headers, body, resolve = defaultResolve, reject = defaultReject, params, hideMessage, hideLoader, persist, callback, extraParams }) {
     const postDict = {
         headers, method
     };
@@ -98,10 +124,10 @@ function ApiCall({ url, method, headers, body, resolve = defaultResolve, reject 
         // });
         .then((response) => response.json())
         .then((response) => {
-            return resolve(response);
+            return resolve(response, hideMessage, hideLoader, { url, body, persist, callback, extraParams });
         })
         .catch((error) => {
-            return reject(error);
+            return reject(error, hideMessage, hideLoader, { url, body, persist, callback, extraParams });
         });
 }
 
@@ -120,7 +146,7 @@ function getNecessaryParams(obj) {
     const reject = obj.hasOwnProperty('reject') ? obj.reject : reject;
 
     const responseObj = {
-        url, method, headers, resolve, reject
+        url, method, headers, resolve, reject, hideMessage: obj.hideMessage || false, persist: obj.persist || false, callback: obj.callback, extraParams: obj.extraParams
     };
 
     if (obj.body) {
@@ -162,7 +188,23 @@ function createHeader(obj) {
  * default method to pass through on each success api call
  * @param  {object} response
  */
-function defaultResolve(response) {
+function defaultResolve(response, hideMessage, hideLoader, { persist, url, body, callback, extraParams }) {
+    if (!hideLoader) { // stop loader
+        // @TODO end loader
+    }
+    // if response contains string, show same in message bar
+    if (response && response.response == 'Request not authorized') {
+        // @TODO clear navigation stack and send to login page
+    } else if (!hideMessage && response && typeof response == 'object' && (typeof response.response == 'string' || typeof response.reason == 'string')) {
+        const type = response.success ? 'success' : 'error';
+        // @TODO show message -response.response
+    }
+    if (persist && !CheckInternet()) {
+        StoreEvent({ eventName: url, data: response, objParams: body, isMemoryStore: true });
+        // SubscribeToEvent({ eventName, callback, objParams: body, isMemoryStore: true });
+    } else if (typeof callback == 'function') {
+        callback(response, { eventName: url, extraParams });
+    }
     return response;
 }
 
@@ -170,6 +212,21 @@ function defaultResolve(response) {
  * default method to pass through on each failure api call
  * @param  {object} response
  */
-function defaultReject(response) {
+function defaultReject(response, hideMessage, hideLoader) {
+    if (!hideLoader) { // stop loader
+        // @TODO end loader
+    }
+    let message = null;
+    // if response contains string, show same in message bar
+    if (!hideMessage && response && typeof response == 'object') {
+        if (response.response == 'string') {
+            message = response.message;
+        } else if (response.reason == 'string') {
+            message = response.reason;
+        }
+        if (message) {
+            // @TODO show error message - message
+        }
+    }
     return response;
 }

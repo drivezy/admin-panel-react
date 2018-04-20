@@ -54,7 +54,8 @@ export function isMobile() {
  * @param  {Array} array
  * @param  {string} key (optional)
  */
-Array.prototype.ArrayToObject = function (key) {
+// Array.prototype.ArrayToObject = function (key) {
+export function ArrayToObject(key) {
     const array = this;
     const obj = {};
 
@@ -76,4 +77,18 @@ Array.prototype.ArrayToObject = function (key) {
  */
 export function IsEqualObject(object, otherObject) {
     return _.isEqual(object, otherObject);
+}
+
+/**
+ * Accepts various params as object and prepare url for get call
+ * @param  {string} url
+ * @param  {object} params
+ */
+export function BuildUrlForGetCall(url, params) {
+    let newUrl = url + "?";
+    for (const i in params) {
+        const value = params[i];
+        newUrl += i + "=" + value + "&";
+    };
+    return newUrl.slice(0, -1);
 }

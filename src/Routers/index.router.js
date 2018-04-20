@@ -32,6 +32,8 @@ import Header from './../Scenes/Header/header.scene';
 import { GetMenusEndPoint } from './../Constants/api.constants';
 import { Get } from './../Utils/http.utils';
 
+import 'bootstrap/dist/css/bootstrap.css';
+
 /** Actions */
 // import { GetCities } from './../Actions/city.action';
 // import { CurrentRoute } from './../Actions/router.action';
