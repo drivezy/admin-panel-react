@@ -1,6 +1,7 @@
 /*
 Implements utility functions to be used across project
 */
+import _ from 'lodash';
 
 /**
  * Check for internet connection
@@ -65,4 +66,14 @@ Array.prototype.ArrayToObject = function (key) {
         }
     });
     return obj;
+}
+
+/**
+ * Checks if two given objects are same 
+ * NOTE: Mainly used in persitance for identifying if two params are same
+ * @param  {object} object
+ * @param  {object} otherObject
+ */
+export function IsEqualObject(object, otherObject) {
+    return _.isEqual(object, otherObject);
 }

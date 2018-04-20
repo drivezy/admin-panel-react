@@ -18,6 +18,7 @@ import {
 
 /** Components */
 import HomeScene from './../Scenes/Home-Scene/home.scene';
+import GenericListing from './../Scenes/Generic-Listing/genericListing.scene';
 import SideNav from './../Scenes/Side-Nav/sideNav.scene';
 import Header from './../Scenes/Header/header.scene';
 
@@ -93,7 +94,7 @@ class MainApp extends Component {
         const { match } = this.props; // match.path = '/'
         const menus = this.menus || [];
         const { visible } = this.state;
-        console.log('visiblevisible', visible);
+        // console.log('visiblevisible', match);
         return (
             <div className="app-container">
                 <div className="page-container">
@@ -106,17 +107,8 @@ class MainApp extends Component {
                         <Header />
 
                         <Switch>
-                            {/* <Route path="/contact" exact component={ContactScene} />
-                            <Route path="/login" exact component={LoginScene} />
-                            <Route path="/profile" exact component={ProfileScene} />
-
-                            <Route path="/editProfile" component={EditProfileScene} /> */}
-
-                            <Route path={match.path} component={HomeScene} />
-                            {/* <Route path="/search-in-:type" component={SearchVehicle} /> */}
-                            {/* <PrivateRoute path="/downloads" component={Download} /> */}
-                            {/* <FooterSection />  */}
-                            {/* <FooterBlueBar /> */}
+                            <Route path={`${match.path}list/:listPage`} component={GenericListing} />
+                            <Route exact path='/' component={HomeScene} />
                         </Switch>
                     </div>
                 </div>
@@ -148,6 +140,7 @@ class StartRoute extends Component {
             // <Provider store={store}>
             <Router>
                 <Switch>
+                    {/* <Router path='/list' component={GenericListing} /> */}
                     <Route path="/" component={MainApp} />
                 </Switch>
             </Router>
