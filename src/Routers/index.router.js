@@ -19,6 +19,7 @@ import {
 /** Components */
 import HomeScene from './../Scenes/Home-Scene/home.scene';
 import GenericListing from './../Scenes/Generic-Listing/genericListing.scene';
+import GenericDetail from './../Scenes/Generic-Detail/genericDetail.scene';
 import SideNav from './../Scenes/Side-Nav/sideNav.scene';
 import Header from './../Scenes/Header/header.scene';
 
@@ -109,7 +110,8 @@ class MainApp extends Component {
                         <Header />
 
                         <Switch>
-                            <Route path={`${match.path}list/:listPage`} component={GenericListing} />
+                            <Route path={`${match.path}list/:page`} component={GenericListing} />
+                            <Route path={`${match.path}detail/:page`} component={GenericDetail} />
                             <Route exact path='/' component={HomeScene} />
                         </Switch>
                     </div>

@@ -62,7 +62,7 @@ export default class GenericListing extends Component {
 
         return (
             <div className="generic-listing-container">
-                <h1 className="header">
+                <h1 className="table-column-header">
                     Generic listing
                 </h1>
 
