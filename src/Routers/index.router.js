@@ -13,7 +13,7 @@ import {
 // import { browserHistory } from 'react-router';
 
 /** Router */
-// import BookingRouter from './booking.router';
+
 /** Router ends */
 
 /** Components */
@@ -24,6 +24,9 @@ import SideNav from './../Scenes/Side-Nav/sideNav.scene';
 // import ProfileScene from './../Scenes/Profile-Scene/profile.scene';
 // import EditProfileScene from './../Scenes/Edit-Profile-Scene/editProfile.scene';
 /** Components ends*/
+
+import { GetMenusEndPoint } from './../Constants/api.constants';
+import { Get } from './../Utils/http.utils';
 
 /** Actions */
 // import { GetCities } from './../Actions/city.action';
@@ -48,7 +51,8 @@ class MainApp extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            visible: false
+            visible: false,
+            menuFetched: false
         }
         // props.GetCities();
     }
@@ -64,12 +68,9 @@ class MainApp extends Component {
         // const locationChanged = nextProps.location !== this.props.location;
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         LoadAsync.loadStyleSheetGlobal();
-        // LoadAsync.loadStyleSheet({ src: 'https://fonts.googleapis.com/icon?family=Material+Icons' });
         // GetProperties();
-
-        // setTimeout(() => this.setState({ visible: true }), 3000);
         LoadAsync.loadStyleSheet({
             src: 'https://use.fontawesome.com/releases/v5.0.10/css/all.css',
             attrs: {
@@ -77,18 +78,24 @@ class MainApp extends Component {
                 crossorigin: 'anonymous'
             }
         });
+
+        const result = await Get({ url: GetMenusEndPoint });
+        if (result.success) {
+            this.menus = result.response;
+            this.setState({ menuFetched: true });
+        }
     }
 
     render() {
         const { match } = this.props; // match.path = '/'
-
+        const menus = this.menus || [];
         const { visible } = this.state;
         console.log('visiblevisible', visible);
         return (
             <div className="app-container">
                 <div className="page-container">
                     <div className="side-nav-container">
-                        <SideNav visible={visible} />
+                        <SideNav visible={visible} menus={menus} />
                     </div>
 
                     <div id="main" style={{ width: '100%', height: '100%' }}>

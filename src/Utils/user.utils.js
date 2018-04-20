@@ -3,7 +3,6 @@
  ***********************************/
 
 import { GetItem } from './localStorage.utils';
-import { FIRE_TOKEN } from './../Constants/asyncStorage.constants';
 
 let fireToken = '';
 /**
@@ -14,6 +13,6 @@ export const GetFireToken = async () => {
     if (fireToken) {
         return fireToken;
     }
-    fireToken = GetItem(FIRE_TOKEN);
+    fireToken = GetItem('FIRE_TOKEN');
     return fireToken;
 };
