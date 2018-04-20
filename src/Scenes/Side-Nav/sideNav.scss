@@ -37,11 +37,15 @@
     
 }
 .menu-visible { 
-    animation: visible .1s forwards alternate;
+    .menu-name { 
+        animation: visible .1s forwards alternate;
+    }
 }
 
 .menu-hide { 
-    animation: hide .4s forwards;
+    .menu-name { 
+        animation: hide .4s forwards;
+    }
 }
 
 @keyframes visible {

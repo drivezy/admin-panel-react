@@ -27,6 +27,7 @@ export default class Sidenav extends Component {
 
     componentDidMount() {
         const main = document.getElementById("main");
+
         if (main) {
             main.addEventListener('click', () => {
                 if (this.state.visible) {
@@ -34,6 +35,7 @@ export default class Sidenav extends Component {
                 }
             })
         }
+        this.closeNav();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -86,10 +88,10 @@ export default class Sidenav extends Component {
                     &times;
                 </a>
                 {
-                    menus.map(menu => (
-                        <a href="#">
+                    menus.map((menu, key) => (
+                        <a href="#" key={key}>
                             {/* <div className=""> */}
-                            <div className={`flex vertical-center  ${visible ? 'menu-visible' : 'menu-hide'}`}>
+                            <div  className={`flex vertical-center  ${visible ? 'menu-visible' : 'menu-hide'}`}>
                                 <i className={`menu-icon fas ${menu.icon}`}></i>
                                 <span className="menu-name">
                                     {menu.name}
