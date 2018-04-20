@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './header.css';
 
+import ActiveModule from './../../Components/Active-Module/ActiveModule';
 
 export default class Header extends Component {
     constructor(props) {
@@ -20,6 +21,7 @@ export default class Header extends Component {
 
         return (
             <div className="header">
+                <ActiveModule />
             </div>
         )
     }
