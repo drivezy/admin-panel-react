@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import './ActiveModule.css';
 
+// import stateManager from './../../Utils/stateManager.utils'
+
+
 export default class ActiveModule extends Component {
     constructor(props) {
         super(props);
@@ -65,6 +68,9 @@ export default class ActiveModule extends Component {
     toggleMenus() {
         this.setState({ collapsed: !this.state.collapsed });
     }
+
+    // stateManager.SubscribeToEvent({eventName: 'user', callback: ()=> {}})
+
 
     render() {
         // const { visible } = this.state;

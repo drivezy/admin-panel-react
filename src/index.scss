@@ -1,7 +1,10 @@
-.app-container { 
-    height: 100%;
-}
-.page-container { 
-    display: flex;
-    height: 100vh;
+body {
+    margin: 0px;
+    .app-container {
+        height: 100%;
+    }
+    .page-container {
+        display: flex;
+        height: 100vh;
+    }
 }

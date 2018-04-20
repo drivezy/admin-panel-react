@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import './sideNav.css';
 
+// import stateManager from './../../Utils/stateManager.utils'
+
+
 export default class Sidenav extends Component {
     constructor(props) {
         super(props);
@@ -56,10 +59,16 @@ export default class Sidenav extends Component {
         }
     }
 
+
     toggleNav = (visible = this.state.visible) => {
         // this.state.visible = !visible;
         this.setState({ visible: !visible });
         this.operation(this.state.visible);
+    }
+
+    toggleMenu = (menu) => {
+        console.log(menu);
+        // stateManager.StoreEvent({ eventName: 'user', data: menu })
     }
 
     render() {
@@ -74,7 +83,7 @@ export default class Sidenav extends Component {
                 </a>
                 {
                     menus.map((menu, key) => (
-                        <a href="#" key={key}>
+                        <a key={key} onClick={() => this.toggleMenu(menu)}>
                             {/* <div className=""> */}
                             <div className={`flex vertical-center  ${visible ? 'menu-visible' : 'menu-hide'}`}>
                                 <i className={`menu-icon fas ${menu.image}`}></i>
