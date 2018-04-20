@@ -19,6 +19,9 @@ import {
 /** Components */
 import HomeScene from './../Scenes/Home-Scene/home.scene';
 import SideNav from './../Scenes/Side-Nav/sideNav.scene';
+import Header from './../Scenes/Header/header.scene';
+
+
 // import ContactScene from './../Scenes/Contact-Us-Scene/contact.scene';
 // import LoginScene from './../Scenes/Login-Scene/login.scene';
 // import ProfileScene from './../Scenes/Profile-Scene/profile.scene';
@@ -92,6 +95,9 @@ class MainApp extends Component {
                     </div>
 
                     <div id="main" style={{ width: '100%', height: '100%' }}>
+
+                        <Header />
+
                         <Switch>
                             {/* <Route path="/contact" exact component={ContactScene} />
                             <Route path="/login" exact component={LoginScene} />
