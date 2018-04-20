@@ -1,0 +1,19 @@
+{
+    "extends": "rallycoding",
+    "rules": {
+        "no-undef": "off",
+        "max-len": "off",
+        "eqeqeq": "off",
+        "no-case-declarations": "off",
+        "react/sort-comp": "off",
+        "no-shadow": "off",
+        "arrow-body-style": ["error"],
+        "one-var-declaration-per-line": "off",
+        "no-underscore-dangle": "off",
+        "one-var": "off",
+        "no-prototype-builtins": "off",
+        "no-restricted-syntax": "off",
+        "no-continue": "off",
+        "guard-for-in": "off"
+    }
+}
