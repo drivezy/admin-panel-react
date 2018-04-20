@@ -1,0 +1,7 @@
+build/
+node_modules/
+firebase.json
+src/**/*.css
+src/**/*.css
+firebase-debug.log
+package-lock.json
