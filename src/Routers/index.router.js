@@ -20,6 +20,8 @@ import {
 import HomeScene from './../Scenes/Home-Scene/home.scene';
 import GenericListing from './../Scenes/Generic-Listing/genericListing.scene';
 import SideNav from './../Scenes/Side-Nav/sideNav.scene';
+import Header from './../Scenes/Header/header.scene';
+
 
 // import ContactScene from './../Scenes/Contact-Us-Scene/contact.scene';
 // import LoginScene from './../Scenes/Login-Scene/login.scene';
@@ -101,6 +103,9 @@ class MainApp extends Component {
                     </div>
 
                     <div id="main" style={{ width: '100%', height: '100%' }}>
+
+                        <Header />
+
                         <Switch>
                             <Route path={`${match.path}list/:listPage`} component={GenericListing} />
                             <Route exact path='/' component={HomeScene} />

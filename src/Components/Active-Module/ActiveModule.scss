@@ -1,0 +1,142 @@
+.active-module {
+    position: relative;
+    .search-box {
+        height: 100vh;
+        background: white;
+        position: fixed;
+        width: 250px; // right: 140px;
+        // left: -254px;
+        left: -251px;
+        transition: all 40ms;
+        top: -3px;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid #dedede;
+        z-index: 250;
+        &.expanded {
+            // right: -110px;
+            // left: -4px;
+            left: 50px;
+            box-shadow: 4px 0 13px 0 rgba(74, 74, 74, .3), 30px 0 40px 0 rgba(0, 0, 0, .11);
+        }
+        .search-box-header {
+            background: white;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #e2e5e8;
+            max-height: 48px;
+            min-height: 48px;
+            padding: 10px 2px;
+            .input-box {
+                flex-basis: 95%; // margin: 3px 0px;
+                margin: 14px;
+                input.form-control {
+                    // color: 1.4em;
+                    // font-size: 1.4em;
+                    font-size: 12px;
+                    box-shadow: none;
+                    border: none;
+                }
+            }
+            button.btn {
+                outline: none;
+                padding: 6px 10px;
+                color: #b58d8e; // color: #183247;
+                border: none;
+                border-radius: 50%;
+                box-shadow: none;
+                &:hover {
+                    background-color: #fff8f8; // background-color: #ebedf0;
+                }
+            }
+        }
+        .search-box-body {
+            display: flex;
+            flex-direction: column;
+            padding: 4px;
+            overflow-y: scroll;
+            p.search-hint {
+                color: #af9564;
+                margin: 9px 16px;
+                font-size: 12px;
+            }
+            .menus {
+                box-shadow: 0px 0px 4px 1px #dbdfe3;
+                border-color: #e4e2e2; // max-height: 80vh;
+                // overflow-y: scroll;
+                .panel-heading {
+                    padding: 5px 8px;
+                    font-weight: 500;
+                    color: #904242; // border-bottom: 1px solid #e4e2e2;
+                }
+                .panel-body {
+                    padding: 5px;
+                    .menu-list {
+                        cursor: pointer;
+                        color: #2b3742;
+                        padding: 5px;
+                        -webkit-font-smoothing: antialiased;
+                        font-size: 14px;
+                        &.selected {
+                            color: green;
+                            background: #ececec;
+                            border-radius: 2px;
+                        }
+                        &:hover {
+                            background: #e8e8e8;
+                        }
+                    }
+                }
+            }
+            .empty {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 80px;
+                p.lead {
+                    -webkit-font-smoothing: antialiased;
+                    color: #2c3d4a;
+                    margin-bottom: 0px;
+                    font-size: 13px;
+                }
+            }
+            &.matching-modules {
+                overflow-y: scroll;
+            }
+        }
+    }
+    .search-button {
+        // display: flex;
+        // justify-content: center;
+        // align-items: center;
+        button.btn {
+            outline: none;
+            padding: 6px 10px;
+            color: #183247;
+            border: none;
+            &:hover {
+                background-color: #ebedf0;
+            }
+        }
+        &.collapsed {
+            button.btn {
+                opacity: 0.1;
+            }
+        }
+    }
+}
+
+.landing-wrapper {
+    &.sidebar-open {
+        header {
+            active-module {
+                .search-box {
+                    left: -209px;
+                    &.expanded {
+                        left: 40px;
+                    }
+                }
+            }
+        }
+    }
+}
