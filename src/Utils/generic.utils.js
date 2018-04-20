@@ -48,24 +48,23 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
     const includesList = [];
     const includesArr = includes.split(',');
 
-    // for (const i in includesArr) {
-    for (let k = 0; k < includesArr.length; k++) {
-        const tempIncludes = includesArr[k].split('.');
+    for (const i in includesArr) {
+        const tempIncludes = includesArr[i].split('.');
         let newStarter = starter;
-        for (let j = 0; j < tempIncludes; j++) {
+        for (const j in tempIncludes) {
             newStarter += `.${tempIncludes[j]}`;
             includesList.push(newStarter);
         }
     }
 
     !excludeStarter ? includesList.unshift(starter) : null;
-    for (let k = 0; k < includesList.length; k++) {
-        columns[includesList[k]] = dictionary[(includesList[k])];
+    for (const i in includesList) {
+        columns[includesList[i]] = dictionary[(includesList[i])];
     }
     // columns = dictionary;
     for (const i in columns) {
         // const data = columns[i];
-        for (let j = 0; j < columns[i].length; j++) {
+        for (const j in columns[i]) {
             const element = `${i}.${columns[i][j].column_name}`;
 
             columns[i][j].path = element.replace(/\.?([A-Z]+)/g, (x, y) => {
