@@ -55,8 +55,8 @@ class MainApp extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            visible: false,
-            menuFetched: false
+            sideNavExpanded: false,
+            menuFetched: false,
         }
         // props.GetCities();
     }
@@ -90,29 +90,30 @@ class MainApp extends Component {
         }
     }
 
+    callback = (method) => {
+        // this.setState({sideNavExpanded:method});
+        console.log(method);
+    }
+
     render() {
         const { match } = this.props; // match.path = '/'
         const menus = this.menus || [];
-        const { visible } = this.state;
-        // console.log('visiblevisible', match);
+        const { sideNavExpanded } = this.state;
         return (
             <div className="app-container">
                 <div className="page-container">
                     <div className="side-nav-container">
-                        <SideNav visible={visible} menus={menus} />
+                        <SideNav visible={sideNavExpanded} onCollapse={this.callback} menus={menus} />
                     </div>
-
-                    <div id="main" style={{ width: '100%', height: '100%' }}>
-
+                    <div id="main" style={{ width: '100%', height: '100%' }} className={this.state.sideNavExpanded ? 'sidenav-open' : 'sidenav-closed'}>
                         <Header />
-
                         <Switch>
                             <Route path={`${match.path}list/:listPage`} component={GenericListing} />
                             <Route exact path='/' component={HomeScene} />
+                            {this.state.sideNavExpanded}
                         </Switch>
                     </div>
                 </div>
-
                 {/* <ToastContainer /> */}
             </div>
         )

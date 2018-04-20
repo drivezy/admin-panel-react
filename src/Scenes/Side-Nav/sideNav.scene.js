@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import './sideNav.css';
 
-import {StoreEvent} from './../../Utils/stateManager.utils'
+import { StoreEvent } from './../../Utils/stateManager.utils'
 
 
 export default class Sidenav extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            visible: props.visible || false
+            visible: props.visible || false,
+            onCollapse: props.onCollapse
         }
     }
 
@@ -52,6 +53,7 @@ export default class Sidenav extends Component {
     }
 
     operation(visible) {
+        this.state.onCollapse(visible);
         if (!visible) {
             this.closeNav();
         } else {
@@ -75,7 +77,7 @@ export default class Sidenav extends Component {
         const { visible } = this.state;
         this.operation(visible);
         const { menus } = this.props;
-        console.log(menus);
+
         return (
             <div id="mySidenav" className="sidenav">
                 <a href="javascript:void(0)" className="closebtn" onClick={() => this.toggleNav()}>
