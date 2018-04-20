@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './sideNav.css';
 
-// import stateManager from './../../Utils/stateManager.utils'
+import {StoreEvent} from './../../Utils/stateManager.utils'
 
 
 export default class Sidenav extends Component {
@@ -68,7 +68,7 @@ export default class Sidenav extends Component {
 
     toggleMenu = (menu) => {
         console.log(menu);
-        // stateManager.StoreEvent({ eventName: 'user', data: menu })
+        StoreEvent({ eventName: 'toggledMenu', data: menu })
     }
 
     render() {
