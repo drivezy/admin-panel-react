@@ -1,22 +1,6 @@
 import React, { Component } from 'react';
 import './sideNav.css';
 
-const menus = [{
-    name: 'Home',
-    icon: 'fa-user'
-}, {
-    name: 'Services',
-    icon: 'fa-user'
-}, {
-    name: 'Clients',
-    icon: 'fa-user'
-}, {
-    name: 'Contact',
-    icon: 'fa-user'
-}, {
-    name: 'Logout',
-    icon: 'fa-user'
-}]
 export default class Sidenav extends Component {
     constructor(props) {
         super(props);
@@ -81,18 +65,19 @@ export default class Sidenav extends Component {
     render() {
         const { visible } = this.state;
         this.operation(visible);
-
+        const { menus } = this.props;
+        console.log(menus);
         return (
             <div id="mySidenav" className="sidenav">
                 <a href="javascript:void(0)" className="closebtn" onClick={() => this.toggleNav()}>
-                    &times;
+                    <i className={`fas ${visible ? 'fa-chevron-left' : 'fa-bars'}`}></i>
                 </a>
                 {
                     menus.map((menu, key) => (
                         <a href="#" key={key}>
                             {/* <div className=""> */}
-                            <div  className={`flex vertical-center  ${visible ? 'menu-visible' : 'menu-hide'}`}>
-                                <i className={`menu-icon fas ${menu.icon}`}></i>
+                            <div className={`flex vertical-center  ${visible ? 'menu-visible' : 'menu-hide'}`}>
+                                <i className={`menu-icon fas ${menu.image}`}></i>
                                 <span className="menu-name">
                                     {menu.name}
                                 </span>

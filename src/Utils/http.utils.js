@@ -8,8 +8,7 @@ import { GetFireToken } from './../Utils/user.utils';
 
 const defautlHeaders = {
     'Content-Type': 'application/json;charset=UTF-8',
-    'Source': '568',
-    'App-Type': '567',
+    'App-Type': '313',
 };
 
 /**
@@ -135,7 +134,8 @@ function getNecessaryParams(obj) {
  * @param  {object} obj
  */
 function createFinalUrl(obj) {
-    const url = GLOBAL.BASE_URL + obj.url;
+    // const url = GLOBAL.BASE_URL + obj.url;
+    const url = (obj.urlPrefix || GLOBAL.API_HOST) + obj.url;
     return url;
 }
 
