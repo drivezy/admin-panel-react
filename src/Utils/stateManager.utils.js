@@ -71,7 +71,7 @@ export function TransmitToAllEvent({ eventName, data, isMemoryStore }) {
         eventDetail = Store[eventName]; // array of subscribed event for particular event name
         subscribedEvent = SubscibedEvent[eventName];
     } else {
-        eventsAvailableInStore = GetItem('memoryStore') || {};
+        let eventsAvailableInStore = GetItem('memoryStore') || {};
         eventDetail = eventsAvailableInStore[eventName]; // array of subscribed event for particular event name
         subscribedEvent = SubscribedStoreEvent[eventName];
     }
@@ -114,7 +114,7 @@ export function UnsubscribeEvent({ eventName, callback, isMemoryStore, objParams
 }
 
 function IsAlreadySubscribed({ events, callback, objParams }) {
-    if (!Array.isArray(events)) {
+    if (!(Array.isArray(events) && events.length)) {
         return false;
     }
     for (const i in events) {
@@ -126,24 +126,3 @@ function IsAlreadySubscribed({ events, callback, objParams }) {
     return false;
 }
 
-export function NotifyUser(message, type) {
-    var background = '#d7d7d7'
-    if (type == 'SUCCESS') {
-        background = '#00b894'
-    } else if (type == 'FAILURE') {
-        background = '#eb2f06'
-    }
-
-    let toast = Notify.show(message, {
-        duration: Notify.durations.LONG,
-        position: Notify.positions.BOTTOM,
-        backgroundColor: background,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-    });
-    setTimeout(function () {
-        Notify.hide(toast);
-    }, 3000);
-}
