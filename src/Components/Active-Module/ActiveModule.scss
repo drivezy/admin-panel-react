@@ -6,7 +6,7 @@
         position: fixed;
         width: 250px; // right: 140px;
         // left: -254px;
-        left: -220px;
+        left: -251px;
         transition: all 40ms;
         top: -3px;
         display: flex;
@@ -16,7 +16,7 @@
         &.expanded {
             // right: -110px;
             // left: -4px;
-            left: 181px;
+            left: 50px;
             box-shadow: 4px 0 13px 0 rgba(74, 74, 74, .3), 30px 0 40px 0 rgba(0, 0, 0, .11);
         }
         .search-box-header {
@@ -106,9 +106,9 @@
         }
     }
     .search-button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        // display: flex;
+        // justify-content: center;
+        // align-items: center;
         button.btn {
             outline: none;
             padding: 6px 10px;
