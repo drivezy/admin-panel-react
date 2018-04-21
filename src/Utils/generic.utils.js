@@ -84,3 +84,89 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
     }
     return selectedColumns;
 }
+
+/**
+ * returns final list of selected columns to be shown on each car for each row
+ * Takes columns list being prepared by 'GetColumnsForListing' method, preference list and relationship
+ * @param  {object} columns
+ * @param  {object} selectedColumns
+ * @param  {object} relationship
+ */
+export function CreateFinalColumns(columns, selectedColumns, relationship) {
+    const finalColumnDefinition = [];
+    let splitEnabled = false;
+
+    for (const i in selectedColumns) {
+        const selected = selectedColumns[i];
+        if (typeof (selected) == "object") {
+            const dict = columns[selected.column];
+            if (dict) {
+                finalColumnDefinition[i] = dict;
+                finalColumnDefinition[i].route = selected.route ? selected.route : false;
+                finalColumnDefinition[i].display_name = selected.columnTitle ? selected.columnTitle : finalColumnDefinition[i].display_name;
+                finalColumnDefinition[i].split = splitEnabled;
+                if (selected.filter) {
+                    finalColumnDefinition[i].filter = selected.filter;
+                }
+
+                // const relationIndex                  = dict.parent.split('.');
+                const relationIndex = dict.parent;
+                if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && relationship[relationIndex].hasOwnProperty('related_model')) {
+                    finalColumnDefinition[i].reference_route = relationship[relationIndex].related_model.state_name;
+                }
+            }
+        } else {
+            finalColumnDefinition[i] = {
+                column_name: selected, column_type: null
+            };
+            splitEnabled = !splitEnabled;
+        }
+
+        // if it is a seperator
+        if (selected.column_name == "seperator") {
+            finalColumnDefinition[i] = selected;
+        }
+    }
+
+    return finalColumnDefinition;
+}
+
+/**
+ * Returns meta data about menus to be used to fetch actual listing data
+ * This method is invoked, Once menu detail is fetched 
+ * @param  {object} menuDetail
+ */
+export function ConvertMenuDetailForGenericPage(menuDetail) {
+    if (menuDetail.default_order) {
+        var splits = menuDetail.default_order.split(",");
+    }
+
+    /**
+     * Preparing obj to build template
+     */
+    return {
+        includes: menuDetail.includes,
+        url: menuDetail.base_url,
+        starter: menuDetail.starter,
+        restricted_query: menuDetail.restricted_query,
+        restrictColumnFilter: menuDetail.restricted_column,
+        userMethod: menuDetail.method,
+        formPreferenceName: menuDetail.state_name.toLowerCase(),
+        order: menuDetail.default_order ? splits[0].trim() : "id",
+        sort: menuDetail.default_order ? splits[1].trim() : "desc",
+        menuId: menuDetail.id,
+        model: menuDetail.data_model,
+        preference: menuDetail.preference,
+        listName: menuDetail.state_name.toLowerCase(),
+        nextActions: menuDetail.actions,
+        userFilter: menuDetail.user_filter,
+        pageName: menuDetail.name,
+        image: menuDetail.image,
+        stateName: menuDetail.state_name,
+        module: menuDetail.base_url,
+        // actions: menuDetail.actions,
+        // method: menuDetail.method,
+        // search: menuDetail.search,
+        // scripts: menuDetail.scripts,
+    };
+}
