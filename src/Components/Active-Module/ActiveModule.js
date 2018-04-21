@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
 import './ActiveModule.css';
 
+import { SubscribeToEvent } from './../../Utils/stateManager.utils'
+
+
 export default class ActiveModule extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            collapsed: props.collapsed || true
+            collapsed: props.collapsed || true,
+            menus: []
         }
+
+        this.toggledMenu = this.toggledMenu.bind(this);
     }
 
     componentDidMount() {
@@ -20,6 +26,12 @@ export default class ActiveModule extends Component {
         //     })
         // }
         // this.closeNav();
+
+        SubscribeToEvent({ eventName: 'toggledMenu', callback: this.toggledMenu })
+    }
+
+    toggledMenu = (module) => {
+        this.setState({ menus: module.menus, collapsed: false });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -66,10 +78,16 @@ export default class ActiveModule extends Component {
         this.setState({ collapsed: !this.state.collapsed });
     }
 
+    navigateTo(menu) {
+
+        console.log(menu);
+    }
+
     render() {
         // const { visible } = this.state;
         // this.operation(visible);
         // const { menus } = this.props;
+        // const { menus } = this.state;
 
         return (
             <div className="active-module">
@@ -92,6 +110,12 @@ export default class ActiveModule extends Component {
                                 Menus
                     </div>
                             <div className="panel-body">
+
+                                {this.state.menus.map((menu, key) => (
+                                    <div key={key} className="menu-list" onClick={this.navigateTo(menu)}>
+                                        {menu.name}
+                                    </div>
+                                ))}
                                 {/* <div className="menu-list"
                                 ng-click="activeModule.navigateTo(menu)" ng-repeat="menu in (filteredResults = (activeModule.selectedModule.menus|filter:activeModule.searchText))">
                                 <span className="pull-right" ng-if="activeModule.state.current.name == 'landing.'+menu.state_name">

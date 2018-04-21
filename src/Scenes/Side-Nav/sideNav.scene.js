@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import './sideNav.css';
 
+import { StoreEvent } from './../../Utils/stateManager.utils'
+
+
 export default class Sidenav extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            visible: props.visible || false
+            visible: props.visible || false,
+            onCollapse: props.onCollapse
         }
     }
 
@@ -32,8 +36,8 @@ export default class Sidenav extends Component {
         const sideNav = document.getElementById("mySidenav");
         const main = document.getElementById("main");
         if (sideNav && main) {
-            sideNav.style.width = "250px";
-            main.style.marginLeft = "250px";
+            sideNav.style.width = "180px";
+            main.style.marginLeft = "180px";
             document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
         }
     }
@@ -42,13 +46,14 @@ export default class Sidenav extends Component {
         const sideNav = document.getElementById("mySidenav");
         const main = document.getElementById("main");
         if (sideNav && main) {
-            sideNav.style.width = "50px";
-            main.style.marginLeft = "50px";
+            sideNav.style.width = "40px";
+            main.style.marginLeft = "40px";
             document.body.style.backgroundColor = "white";
         }
     }
 
     operation(visible) {
+        this.state.onCollapse(visible);
         if (!visible) {
             this.closeNav();
         } else {
@@ -56,35 +61,55 @@ export default class Sidenav extends Component {
         }
     }
 
+
     toggleNav = (visible = this.state.visible) => {
         // this.state.visible = !visible;
         this.setState({ visible: !visible });
         this.operation(this.state.visible);
     }
 
+    toggleMenu = (menu) => {
+        StoreEvent({ eventName: 'toggledMenu', data: menu })
+    }
+
     render() {
         const { visible } = this.state;
         this.operation(visible);
         const { menus } = this.props;
-        console.log(menus);
+
         return (
-            <div id="mySidenav" className="sidenav">
-                <a href="javascript:void(0)" className="closebtn" onClick={() => this.toggleNav()}>
-                    <i className={`fas ${visible ? 'fa-chevron-left' : 'fa-bars'}`}></i>
-                </a>
-                {
-                    menus.map((menu, key) => (
-                        <a href="#" key={key}>
-                            {/* <div className=""> */}
-                            <div className={`flex vertical-center  ${visible ? 'menu-visible' : 'menu-hide'}`}>
-                                <i className={`menu-icon fas ${menu.image}`}></i>
-                                <span className="menu-name">
-                                    {menu.name}
-                                </span>
-                            </div>
-                        </a>
-                    ))
-                }
+            <div id="mySidenav" className="sidebar-wrapper">
+                <div className="sidebar-logo">
+                    <div className="logo-image">
+                        {/* <span className="logo-container">
+                            <img src={require('./../../Assets/images/logo-main.png')} />
+                        </span> */}
+                        <span className="toggle-icon" onClick={() => this.toggleNav()}>
+                            <i className={`fas ${visible ? 'fa-chevron-left' : 'fa-chevron-down'}`}></i>
+                        </span>
+
+                    </div>
+                    <div className="sidebar-menus">
+                        <div className="menus">
+                            {
+                                menus.map((menu, key) => (
+                                    <div className="menu-item" key={key} onClick={() => this.toggleMenu(menu)}>
+                                        <div className="menu-label">
+                                            <div className="menu-icon">
+                                                <i className={`menu-icon fas ${menu.image}`}></i>
+
+                                            </div>
+                                            <div className="item-label `${visible ? 'menu-visible' : 'menu-hide'}`">
+                                                {menu.name}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            }
+                        </div>
+
+                    </div>
+                </div>
             </div>
         )
     }
