@@ -32,8 +32,6 @@ import Header from './../Scenes/Header/header.scene';
 import { GetMenusEndPoint } from './../Constants/api.constants';
 import { Get } from './../Utils/http.utils';
 
-import 'bootstrap/dist/css/bootstrap.css';
-
 /** Actions */
 // import { GetCities } from './../Actions/city.action';
 // import { CurrentRoute } from './../Actions/router.action';
@@ -104,10 +102,10 @@ class MainApp extends Component {
         return (
             <div className="app-container">
                 <div className="page-container">
-                    <div className="side-nav-container">
+                    <div className="landing-sidebar">
                         <SideNav visible={sideNavExpanded} onCollapse={this.callback} menus={menus} />
                     </div>
-                    <div id="main" style={{ width: '100%', height: '100%' }} className={this.state.sideNavExpanded ? 'sidenav-open' : 'sidenav-closed'}>
+                    <div className="landing-wrapper {this.state.sideNavExpanded ? 'sidenav-open' : 'sidenav-closed'}" id="main" style={{ width: '100%', height: '100%' }}>
                         <Header />
                         <Switch>
                             <Route path={`${match.path}list/:listPage`} component={GenericListing} />

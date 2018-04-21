@@ -31,7 +31,7 @@ export default class ActiveModule extends Component {
     }
 
     toggledMenu = (module) => {
-        this.setState({ menus: module.menus });
+        this.setState({ menus: module.menus, collapsed: false });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -78,8 +78,8 @@ export default class ActiveModule extends Component {
         this.setState({ collapsed: !this.state.collapsed });
     }
 
-    navigateTo(menu){
-        console.log(menu);
+    navigateTo(menu) {
+        // console.log(menu);
     }
 
     render() {

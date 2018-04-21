@@ -1,16 +1,85 @@
-
-
-.sidenav {
+.sidebar-wrapper {
     height: 100%;
     width: 50px;
     position: fixed;
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #111;
+    background: #303e4c;
+
+    // background-color: #111;
     overflow-x: hidden;
-    transition: 0.1s;
-    padding-top: 60px;
+    transition: 0.1s; // padding-top: 60px;
+    display: flex;
+    flex-direction: column;
+    .sidebar-logo {
+        .logo-image {
+            background: #303e4c;
+            height: 45px;
+            display: flex;
+            overflow: hidden;
+            justify-content: space-between;
+            span.logo-container {
+                padding: 5px 20px;
+                cursor: pointer;
+                transition: all 50ms ease-in-out;
+                img {
+                    width: 100%;
+                }
+            }
+            span.toggle-icon {
+                cursor: pointer;
+                padding: 2px;
+                &:hover {
+                    i.fa {
+                        color: green;
+                    }
+                }
+                i.fas {
+                    font-size: 16px;
+                    padding: 10px;
+                    color: #5c7084;
+                }
+            }
+        }
+        .sidebar-toggle {}
+    }
+    .sidebar-menus {
+        display: flex;
+        flex-direction: column;
+        .menus {
+            background: #35485b;
+            padding: 8px 10px;
+            .menu-item {
+                .menu-label {
+                    display: flex;
+                    // padding: 10px 15px;
+                    padding: 8px 2px;
+                    -webkit-font-smoothing: antialiased;
+                    transition: all 50ms linear;
+                    color: #A4B2B8;
+                    cursor: pointer;
+                    flex-grow: 1;
+                    font-size: 14px;
+                    height: 40px;
+                    padding: 8px 2px;
+                    border-radius: 2px;
+                    .menu-icon {
+                        width: 30px;
+                        display: inline-block;
+                    }
+                    .item-label {
+                        padding-left: 5px;
+                        white-space: nowrap;
+                        line-height: 25px;
+                        opacity: 1;
+                        transition: all 50ms ease-in-out;
+                        display: inline-block;
+                    }
+                }
+            }
+        }
+    }
 }
 
 .sidenav a {
@@ -31,36 +100,54 @@
     color: #f1f1f1;
 }
 
-.menu-name { 
+.menu-name {
     // transform: all .2s;
     // -webkit-animation: mymove .1s infinite; /* Safari 4.0 - 8.0 */
-    
 }
-.menu-visible { 
-    .menu-name { 
+
+.menu-visible {
+    .menu-name {
         animation: visible .1s forwards alternate;
     }
 }
 
-.menu-hide { 
-    .menu-name { 
+.menu-hide {
+    .menu-name {
         animation: hide .4s forwards;
     }
 }
 
 @keyframes visible {
-    0% { opacity: 0;}
-    20% { opacity: 0;}
-    70% { opacity: .5;}
-    100% { opacity: 1;}
+    0% {
+        opacity: 0;
+    }
+    20% {
+        opacity: 0;
+    }
+    70% {
+        opacity: .5;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 @keyframes hide {
-    0% { opacity: 1;}
-    20% { opacity: 1;}
-    50% { opacity: .5;}
-    80% { opacity: 0;}
-    100% { opacity: 0;}
+    0% {
+        opacity: 1;
+    }
+    20% {
+        opacity: 1;
+    }
+    50% {
+        opacity: .5;
+    }
+    80% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+    }
 }
 
 .sidenav .closebtn {
@@ -72,7 +159,5 @@
 }
 
 #main {
-    transition: margin-left .1s;
-    // padding: 16px;
+    transition: margin-left .1s; // padding: 16px;
 }
-
