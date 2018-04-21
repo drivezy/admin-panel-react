@@ -79,7 +79,8 @@ export default class ActiveModule extends Component {
     }
 
     navigateTo(menu) {
-        // console.log(menu);
+
+        console.log(menu);
     }
 
     render() {
