@@ -1,7 +1,24 @@
-.app-container { 
-    height: 100%;
+@font-face{
+    font-family: adminFont;
+    src:url('../src/Assets/fonts/noway-regular-webfont.woff');
 }
-.page-container { 
-    display: flex;
-    height: 100vh;
+
+body {
+    background: whitesmoke;
+    font-family: adminFont;
+    font-size: 13px;
+    overflow-x: hidden;
+}
+
+body {
+    margin: 0px;
+    .app-container {
+        height: 100%;
+        .page-container {
+            display: flex;
+            height: 100vh;
+            .landing-sidebar {}
+            .landing-wrapper {}
+        }
+    }
 }

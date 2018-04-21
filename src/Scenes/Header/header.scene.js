@@ -20,8 +20,11 @@ export default class Header extends Component {
     render() {
 
         return (
-            <div className="header">
-                <ActiveModule />
+            <div className="landing-header">
+                <div className="header-content">
+                    <ActiveModule />
+
+                </div>
             </div>
         )
     }

@@ -33,8 +33,6 @@ import Header from './../Scenes/Header/header.scene';
 import { GetMenusEndPoint } from './../Constants/api.constants';
 import { Get } from './../Utils/http.utils';
 
-import 'bootstrap/dist/css/bootstrap.css';
-
 /** Actions */
 // import { GetCities } from './../Actions/city.action';
 // import { CurrentRoute } from './../Actions/router.action';
@@ -58,8 +56,8 @@ class MainApp extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            visible: false,
-            menuFetched: false
+            sideNavExpanded: false,
+            menuFetched: false,
         }
         // props.GetCities();
     }
@@ -93,30 +91,31 @@ class MainApp extends Component {
         }
     }
 
+    callback = (method) => {
+        // this.setState({sideNavExpanded:method});
+        console.log(method);
+    }
+
     render() {
         const { match } = this.props; // match.path = '/'
         const menus = this.menus || [];
-        const { visible } = this.state;
-        // console.log('visiblevisible', match);
+        const { sideNavExpanded } = this.state;
         return (
             <div className="app-container">
                 <div className="page-container">
-                    <div className="side-nav-container">
-                        <SideNav visible={visible} menus={menus} />
+                    <div className="landing-sidebar">
+                        <SideNav visible={sideNavExpanded} onCollapse={this.callback} menus={menus} />
                     </div>
-
-                    <div id="main" style={{ width: '100%', height: '100%' }}>
-
+                    <div className="landing-wrapper {this.state.sideNavExpanded ? 'sidenav-open' : 'sidenav-closed'}" id="main" style={{ width: '100%', height: '100%' }}>
                         <Header />
-
                         <Switch>
                             <Route path={`${match.path}list/:page`} component={GenericListing} />
                             <Route path={`${match.path}detail/:page`} component={GenericDetail} />
                             <Route exact path='/' component={HomeScene} />
+                            {this.state.sideNavExpanded}
                         </Switch>
                     </div>
                 </div>
-
                 {/* <ToastContainer /> */}
             </div>
         )

@@ -1,4 +1,7 @@
-.header {
-    height: 30px;
-    background: whitesmoke;
+.landing-header {
+    display: flex;
+    background: white;
+    min-height: 45px;
+    height: 45px;
+    border-bottom: 1px solid #d4d4d4;
 }
