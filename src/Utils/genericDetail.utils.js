@@ -129,37 +129,54 @@ export function GetDetailRecord({ configuration: genericDetailObject, callback, 
     // flag to check promise
 
     const url = BuildUrlForGetCall(module, options);
-    Get({ url, callback }).then(function (result) {
-        const data = result.data;
-        if (JSUtil.isUndefinedOrNull(data)) {
-            swl.info("No Data Returned for this menu");
-            return false;
-        }
-        // flag to check promise
-        params.dictionary = result.data.dictionary || params.dictionary;
+    Get({ url, callback: PrepareObjectForDetailPage, extraParams: { callback, params, genericDetailObject } });
+}
 
-        var previousColumns = MenuService.getPreviousColumns(params);
-        // genericDetailObject.preference = HealPreferenceFactory.listing(genericDetailObject.preference, previousColumns);
-        for (var i in data.relationship) {
-            previousColumns = MenuService.getPreviousColumnsForListing(params);
-            if (typeof data.relationship[i] == "object" && data.relationship[i].hasOwnProperty("preferences")) {
-                data.relationship[i].preferences = HealPreferenceFactory.listing(data.relationship[i].preferences, previousColumns);
-            }
-        }
+/**
+ * Invoked when actual data for generic detail is fetched to process further and again callbacks with final data and columns list
+ * @param  {object} result
+ * @param  {object} {extraParams}
+ */
+function PrepareObjectForDetailPage(result, { extraParams }) {
+    const { callback, params, genericDetailObject } = extraParams;
+    const data = result;
+    if (IsUndefinedOrNull(data)) {
+        // swl.info("No Data Returned for this menu");
+        alert("No Data Returned for this menu");
+        return false;
+    }
+    // flag to check promise
+    params.dictionary = data.dictionary || params.dictionary;
 
-        const selectedColumns = genericDetailObject.preference[vm.listPortlet] ? JSON.parse(genericDetailObject.preference[vm.listPortlet]) : null;
+    // var previousColumns = MenuService.getPreviousColumns(params);
+    // genericDetailObject.preference = HealPreferenceFactory.listing(genericDetailObject.preference, previousColumns);
+    // for (var i in data.relationship) {
+    //     previousColumns = MenuService.getPreviousColumnsForListing(params);
+    //     if (typeof data.relationship[i] == "object" && data.relationship[i].hasOwnProperty("preferences")) {
+    //         data.relationship[i].preferences = HealPreferenceFactory.listing(data.relationship[i].preferences, previousColumns);
+    //     }
+    // }
 
-        // vm.tabs = ConfigureDataForTab.getData(data, genericDetailObject);
-        // vm.tabs.parentData = data.response;
-        // vm.tabs.fixedParams = EvalQuery.eval(genericDetailObject.query, data.response);
+    const listPortlet = genericDetailObject.listName + ".detail.list";
+    const selectedColumns = genericDetailObject.preference[listPortlet] ? JSON.parse(genericDetailObject.preference[listPortlet]) : null;
 
-        // vm.portlet = configureDataForPortlet(data);
-        vm.portlet = GetDataForPortlet({ data, genericDetailObject, params, selectedColumns });
-        vm.portlet.listName = vm.listPortlet;
-        vm.tabs.callFunction = {
-            callback: configureDataForDirective
-        };
-    });
+    // tabs = ConfigureDataForTab.getData(data, genericDetailObject);
+    // tabs.parentData = data.response;
+    // tabs.fixedParams = EvalQuery.eval(genericDetailObject.query, data.response);
+
+    // portlet = configureDataForPortlet(data);
+    const portlet = GetDataForPortlet({ data, genericDetailObject, params, selectedColumns });
+    portlet.listName = listPortlet;
+    // tabs.callFunction = {
+    //     callback: configureDataForDirective
+    // };
+
+    if (typeof callback == 'function') {
+        callback({
+            portlet,
+            // tabs
+        });
+    }
 }
 
 /**
@@ -177,7 +194,7 @@ function CreateUrl({ url, urlParameter }) {
     }
     for (var i in params) {
         // url = url.replace(params[i], $stateParams[params[i].split(":")[1]]);
-        url = url.replace(params[i], Object.value(urlParameter)[0]);
+        url = url.replace(params[i], urlParameter.menu_id);
     }
     return url;
 }

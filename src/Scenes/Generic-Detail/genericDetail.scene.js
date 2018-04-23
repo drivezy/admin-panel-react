@@ -36,8 +36,8 @@ export default class GenericDetail extends Component {
     }
 
     getDetailRecord = () => {
-        const { menuDetail, genericData, urlParameter, params } = this.state;
-        // GetDetailRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, urlParameter: params });
+        const { menuDetail, genericData, urlParameter, params, queryString } = this.state;
+        GetDetailRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, urlParameter: queryString });
     }
 
     dataFetched = ({ tabs, portlet }) => {
