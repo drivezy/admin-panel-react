@@ -133,6 +133,92 @@ export function GetDetailRecord({ configuration: genericDetailObject, callback, 
 }
 
 /**
+ * returns segregated data for tabs
+ * by iterateing over all inclusions in data 
+ * and adds extra properties required for rending and actions on individual tab
+ */
+export function CategorizeDataForTabs(data) {
+    const resolve = [];
+    const includes = data.includes.split(",");
+    const tabs = [];
+    const preferences = {};
+
+    for (const i in includes) {
+        const tab = {};
+        const inclusions = includes[i].split(".");
+        const index = data.starter + "." + inclusions[0];
+        const relationship = data.relationship[index];
+
+        tab.name = relationship.alias_name;
+        tab.image = relationship.image;
+        const configure = data.dictionary[index];
+        tab.relationship = relationship;
+
+        tab.index = index;
+        tab.path = relationship.route_name;
+        tab.identifier = inclusions[0];
+        tab.listName = data.starter + "." + inclusions[0] + ".list";
+        tab.formName = data.starter + "." + inclusions[0] + ".form";
+        tab.preference = "";
+        tab.fixedParams = data.fixedParams;
+        tab.callFunction = data.callFunction;
+        tab.scripts = [];
+
+        // check if there are other includes of the same identifier
+        let finalIncludes = includes[i];
+        for (const j in includes) {
+            if (includes[i] != includes[j]) {
+                if (includes[j].split(".")[0] == inclusions[0]) {
+                    finalIncludes += "," + includes[j];
+                    delete includes[j];
+                }
+            }
+        }
+
+        var params = {
+            includes: CreateInclusions(finalIncludes), starter: data.starter, dictionary: {}
+        };
+
+        var dictionary = params.includes.split(",");
+        for (var k in dictionary) {
+            var dicIndex = data.starter + "." + dictionary[k];
+            params.dictionary[dicIndex] = data.dictionary[dicIndex];
+        }
+        params.relationship = data.relationship;
+        tab.columns = GetColumnsForDetail(params);
+
+
+        params.includes = inclusions[0];
+        params.dictionary = {};
+        params.dictionary[index] = configure;
+
+        tab.configure = GetColumnsForDetail(params, 1);
+
+        tab.actions = relationship.actions;
+
+        // var scripts = InjectScriptFactory.returnMatchingScripts({
+        //     preference: index, scripts: self.responseArray.scripts, searchConstraint: "startsWith"
+        // });
+        // Array.prototype.push.apply(tab.scripts, scripts);
+
+        preferences[tab.identifier] = relationship.preferences[tab.listName] ? JSON.parse(relationship.preferences[tab.listName]) : null;
+        tab.formPreferences = relationship.preferences[tab.formName] ? JSON.parse(relationship.preferences[tab.formName]) : null;
+
+        tab.finalColumns = CreateFinalColumns(tab.columns, preferences[tab.identifier], params.relationship);
+
+        const localResolve = {
+            resolve: {
+                modelAliasId: relationship.id
+            }
+        };
+
+        resolve.push(localResolve);
+        tabs.push(tab);
+    }
+    return { tabs, resolve };
+}
+
+/**
  * same as ConfigureDataForTab.getData
  * @param  {Object} {data - actual data object
  * @param  {Object} genericDetailObject} - meta data about menu
@@ -258,3 +344,24 @@ function Initialization(genericDetailObject) {
         includes: genericDetailObject.includes, starter: genericDetailObject.starter
     };
 }
+
+/**
+ * Creates array of inclusion string attached with starter
+ * @param  {} includes
+ */
+function CreateInclusions(includesString) {
+    const arr = [];
+    let starter = "";
+    const includes = includesString.split(",");
+    for (const k in includes) {
+        const inclusions = includes[k].split(".");
+        for (const i in inclusions) {
+            const name = parseInt(i) ? starter + "." + inclusions[i] : inclusions[i];
+            starter = name;
+            if (arr.indexOf(name) == -1) {
+                arr.push(name);
+            }
+        }
+    }
+    return arr.join(",");
+};

@@ -3,6 +3,8 @@ import { GetUrlParams } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
 import { GetDetailRecord } from './../../Utils/genericDetail.utils';
 
+import DetailIncludes from './../../Components/Detail-Includes/detailIncludes.component';
+
 import './genericDetail.css';
 
 
@@ -22,7 +24,6 @@ export default class GenericDetail extends Component {
             portlet: {},
             tabs: {}
         };
-        console.log(this.state);
     }
 
     componentDidMount() {
@@ -34,7 +35,6 @@ export default class GenericDetail extends Component {
         const { menu_id } = queryString;
         const result = await GetMenuDetail(menu_id);
         if (result.success) {
-            console.log(result.response);
             const { response = {} } = result;
             const menuDetail = ConvertMenuDetailForGenericPage(response || {});
             if (typeof response.controller_path == 'string' && response.controller_path.includes('genericListingController.js') != -1) {
@@ -51,20 +51,12 @@ export default class GenericDetail extends Component {
     }
 
     dataFetched = ({ tabs, portlet }) => {
-        console.log('tabs', tabs);
-        console.log('portlet', portlet);
         this.setState({ portlet, tabs });
     }
 
     render() {
-
-        // console.log(portlet);
-        const { portlet = {} } = this.state;
-
+        const { portlet = {}, tabs = {} } = this.state;
         const { finalColumns = [], data = {} } = portlet;
-
-        console.log(finalColumns, data);
-
         return (
             <div className="generic-detail-container">
                 <Card>
@@ -98,6 +90,8 @@ export default class GenericDetail extends Component {
 
                     </CardBody>
                 </Card>
+
+                <DetailIncludes responseArray={tabs} />
             </div>
         )
     }
