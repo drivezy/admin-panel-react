@@ -138,7 +138,7 @@ export function GetDetailRecord({ configuration: genericDetailObject, callback, 
  * and adds extra properties required for rending and actions on individual tab
  */
 export function CategorizeDataForTabs(data) {
-    const resolve = [];
+    // const resolve = [];
     const includes = data.includes.split(",");
     const tabs = [];
     const preferences = {};
@@ -206,16 +206,16 @@ export function CategorizeDataForTabs(data) {
 
         tab.finalColumns = CreateFinalColumns(tab.columns, preferences[tab.identifier], params.relationship);
 
-        const localResolve = {
-            resolve: {
-                modelAliasId: relationship.id
-            }
-        };
+        // const localResolve = {
+        //     resolve: {
+        //         modelAliasId: relationship.id
+        //     }
+        // };
 
-        resolve.push(localResolve);
+        // resolve.push(localResolve);
         tabs.push(tab);
     }
-    return { tabs, resolve };
+    return { tabs };
 }
 
 /**
