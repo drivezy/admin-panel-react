@@ -4,8 +4,8 @@ import { Table } from 'reactstrap';
 
 import './genericListing.css';
 import { GetUrlParams } from './../../Utils/location.utils';
-import { GetMenuDetail } from './../../Utils/generic.utils';
-import { ConvertMenuDetailForGenericListing, GetListingRecord } from './../../Utils/genericListing.utils';
+import { GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
+import { GetListingRecord } from './../../Utils/genericListing.utils';
 
 export default class GenericListing extends Component {
     constructor(props) {
@@ -15,7 +15,6 @@ export default class GenericListing extends Component {
             menuDetail: {},
             genericData: {}
         };
-        console.log(this.state);
     }
 
     componentDidMount() {
@@ -29,7 +28,7 @@ export default class GenericListing extends Component {
         if (result.success) {
             console.log(result.response);
             const { response = {} } = result;
-            const menuDetail = ConvertMenuDetailForGenericListing(response || {});
+            const menuDetail = ConvertMenuDetailForGenericPage(response || {});
             if (typeof response.controller_path == 'string' && response.controller_path.includes('genericListingController.js') != -1) {
                 this.setState({ menuDetail });
                 this.getListingData();
