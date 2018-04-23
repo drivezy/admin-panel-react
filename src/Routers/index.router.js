@@ -93,7 +93,7 @@ class MainApp extends Component {
 
     callback = (method) => {
         // this.setState({sideNavExpanded:method});
-        console.log(method);
+        // console.log(method);
     }
 
     render() {
