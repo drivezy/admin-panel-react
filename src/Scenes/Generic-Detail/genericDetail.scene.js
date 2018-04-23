@@ -3,6 +3,9 @@ import { GetUrlParams } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
 import { GetDetailRecord } from './../../Utils/genericDetail.utils';
 
+import { TabContent, TabPane, Nav, NavItem, NavLink, Table } from 'reactstrap';
+
+
 import './genericDetail.css';
 
 
@@ -22,7 +25,6 @@ export default class GenericDetail extends Component {
             portlet: {},
             tabs: {}
         };
-        console.log(this.state);
     }
 
     componentDidMount() {
@@ -34,7 +36,6 @@ export default class GenericDetail extends Component {
         const { menu_id } = queryString;
         const result = await GetMenuDetail(menu_id);
         if (result.success) {
-            console.log(result.response);
             const { response = {} } = result;
             const menuDetail = ConvertMenuDetailForGenericPage(response || {});
             if (typeof response.controller_path == 'string' && response.controller_path.includes('genericListingController.js') != -1) {
@@ -51,20 +52,28 @@ export default class GenericDetail extends Component {
     }
 
     dataFetched = ({ tabs, portlet }) => {
-        console.log('tabs', tabs);
-        console.log('portlet', portlet);
+        console.log(tabs);
         this.setState({ portlet, tabs });
+    }
+
+    toggle = (tab) => {
+        if (this.state.activeTab !== tab) {
+            this.setState({
+                activeTab: tab
+            });
+        }
     }
 
     render() {
 
         // console.log(portlet);
-        const { portlet = {} } = this.state;
+        const { portlet = {}, tabs = {} } = this.state;
 
+        if (tabs.data) { }
         const { finalColumns = [], data = {} } = portlet;
+        const tabsContent = this.state.tabs;
 
-        console.log(finalColumns, data);
-
+        // console.log(tabsContent);
         return (
             <div className="generic-detail-container">
                 <Card>
@@ -98,6 +107,64 @@ export default class GenericDetail extends Component {
 
                     </CardBody>
                 </Card>
+
+                <div className="tabs-container">
+
+
+
+                    <Nav tabs>
+                        {
+                            tabs.data ?
+                                Object.keys(tabs.data).map((tab, key) => (
+                                    <NavItem key={key} >
+                                        <NavLink
+                                            className={`${this.state.activeTab === tabs.relationship[tab].id ? 'active' : ''}`}
+                                            onClick={() => { this.toggle(tabs.relationship[tab].id); }}>
+                                            {tabs.relationship[tab].display_name}
+                                        </NavLink>
+                                    </NavItem>
+                                ))
+                                : null}
+                    </Nav>
+                    <TabContent activeTab={this.state.activeTab}>
+                        {
+                            tabs.data ?
+                                Object.keys(tabs.data).map((tab, key) => (
+                                    <TabPane key={key} tabId={tabs.relationship[tab].id}>
+
+                                        {/* <Table striped>
+                                            <thead>
+                                                <tr>
+                                                    {
+                                                        finalColumns.map((selectedColumn, key) => (
+                                                            <th key={key}> {selectedColumn.display_name}</th>
+                                                        ))
+                                                    }
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {
+                                                    listing.map((listingRow, rowKey) => (
+                                                        <tr key={rowKey}>
+                                                            {
+                                                                finalColumns.map((selectedColumn, key) => (
+                                                                    <td key={key}>
+                                                                        {eval('listingRow.' + selectedColumn.path)}
+                                                                    </td>
+                                                                ))
+                                                            }
+                                                        </tr>
+                                                    ))
+                                                }
+                                            </tbody>
+                                        </Table> */}
+
+
+                                    </TabPane>
+                                ))
+                                : null}
+                    </TabContent>
+                </div>
             </div>
         )
     }
