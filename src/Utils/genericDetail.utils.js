@@ -133,6 +133,61 @@ export function GetDetailRecord({ configuration: genericDetailObject, callback, 
 }
 
 /**
+ * same as ConfigureDataForTab.getData
+ * @param  {Object} {data - actual data object
+ * @param  {Object} genericDetailObject} - meta data about menu
+ */
+function GetDataForTabs({ data, genericDetailObject }) {
+    if (IsUndefinedOrNull(data)) {
+        alert("No Data Returned for this menu");
+        // swl.info("No Data Returned for this menu");
+        return false;
+    }
+
+    const obj = {};
+    obj.data = {};
+    obj.relationship = {};
+    obj.dictionary = {};
+    obj.includes = {};
+    obj.scripts = [];
+
+    if (!genericDetailObject.includes) {
+        return obj;
+    }
+
+    var includes = genericDetailObject.includes.split(",");
+    var inclusions = [];
+    includes.forEach(item => {
+        const toCheckColumn = item.split(".");
+        const index = genericDetailObject.starter + "." + toCheckColumn[0];
+
+        // const scripts = InjectScriptFactory.returnMatchingScripts({
+        //     preference: index, scripts: genericDetailObject.scripts, searchConstraint: "startsWith"
+        // });
+        // if (scripts.length) {
+        //     Array.prototype.push.apply(obj.scripts, scripts);
+        // }
+
+        if (data.relationship[index] && data.relationship[index].alias_type == 163) {
+            inclusions.push(item);
+            let name = genericDetailObject.starter;
+            for (var i in toCheckColumn) {
+                name += "." + toCheckColumn[i];
+                obj.relationship[name] = data.relationship[name];
+                obj.dictionary[name] = data.dictionary[name];
+            }
+            obj.data[index] = data.response[toCheckColumn[0]];
+        }
+    });
+    obj.includes = inclusions.join(",");
+    obj.starter = genericDetailObject.starter;
+
+    // obj.scripts =
+
+    return obj;
+};
+
+/**
  * Invoked when actual data for generic detail is fetched to process further and again callbacks with final data and columns list
  * @param  {object} result
  * @param  {object} {extraParams}
@@ -160,11 +215,10 @@ function PrepareObjectForDetailPage(result, { extraParams }) {
     const listPortlet = genericDetailObject.listName + ".detail.list";
     const selectedColumns = genericDetailObject.preference[listPortlet] ? JSON.parse(genericDetailObject.preference[listPortlet]) : null;
 
-    // tabs = ConfigureDataForTab.getData(data, genericDetailObject);
+    const tabs = GetDataForTabs({ data, genericDetailObject });
     // tabs.parentData = data.response;
     // tabs.fixedParams = EvalQuery.eval(genericDetailObject.query, data.response);
 
-    // portlet = configureDataForPortlet(data);
     const portlet = GetDataForPortlet({ data, genericDetailObject, params, selectedColumns });
     portlet.listName = listPortlet;
     // tabs.callFunction = {
@@ -174,7 +228,7 @@ function PrepareObjectForDetailPage(result, { extraParams }) {
     if (typeof callback == 'function') {
         callback({
             portlet,
-            // tabs
+            tabs
         });
     }
 }
@@ -194,7 +248,7 @@ function CreateUrl({ url, urlParameter }) {
     }
     for (var i in params) {
         // url = url.replace(params[i], $stateParams[params[i].split(":")[1]]);
-        url = url.replace(params[i], urlParameter.menu_id);
+        url = url.replace(params[i], urlParameter.detailId);
     }
     return url;
 }
