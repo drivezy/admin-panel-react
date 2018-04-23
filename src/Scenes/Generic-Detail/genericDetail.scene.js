@@ -3,6 +3,16 @@ import { GetUrlParams } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
 import { GetDetailRecord } from './../../Utils/genericDetail.utils';
 
+import './genericDetail.css';
+
+
+import {
+    Card, CardImg, CardText, CardBody,
+    CardTitle, CardSubtitle, Button,
+    Container,
+    Row, Col
+} from 'reactstrap';
+
 export default class GenericDetail extends Component {
     constructor(props) {
         super(props);
@@ -46,10 +56,48 @@ export default class GenericDetail extends Component {
     }
 
     render() {
+
+        // console.log(portlet);
+        const { portlet = {} } = this.state;
+
+        const { finalColumns = [], data = {} } = portlet;
+
+        console.log(finalColumns, data);
+
         return (
-            <h1>
-                Generic detail
-            </h1>
+            <div className="generic-detail-container">
+                <Card>
+
+                    {/* <CardImg top width="100%" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=318%C3%97180&w=318&h=180" alt="Card image cap" /> */}
+                    <CardBody>
+                        <CardTitle>
+                            {data.name}
+                        </CardTitle>
+                        <Row>
+                            {finalColumns.map((selectedColumn, key) => (
+                                <Col key={key} xs={selectedColumn.split ? '6' : '12'}>
+                                    {selectedColumn.absPath ?
+
+                                        <Row className="detail-entry" >
+                                            <Col>
+                                                <strong>
+                                                    {selectedColumn.display_name}
+                                                </strong>
+
+                                            </Col>
+                                            <Col>
+                                                {data[selectedColumn.column_name]}
+                                            </Col>
+                                        </Row>
+                                        : null}
+                                </Col>
+                            ))}
+                        </Row>
+
+
+                    </CardBody>
+                </Card>
+            </div>
         )
     }
 }
