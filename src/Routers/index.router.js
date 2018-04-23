@@ -110,7 +110,7 @@ class MainApp extends Component {
                         <Header />
                         <Switch>
                             <Route path={`${match.path}list/:page`} component={GenericListing} />
-                            <Route path={`${match.path}detail/:page`} component={GenericDetail} />
+                            <Route path={`${match.path}detail/:page/:detailId`} component={GenericDetail} />
                             <Route exact path='/' component={HomeScene} />
                             {this.state.sideNavExpanded}
                         </Switch>
