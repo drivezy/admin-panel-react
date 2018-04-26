@@ -1,0 +1,46 @@
+.page-nav {
+    position: relative;
+    margin-top: 5px;
+    right: 21px;
+
+    .btn-group {
+        box-shadow: none;
+        border: none;
+        .btn {
+            padding: 0px;
+            border: none;
+            box-shadow: none;
+            background: transparent;
+        }
+    }
+
+    .user-profile {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 32px;
+        height: 32px;
+        border: 1px solid #3b4c5d;
+        border-radius: 50%;
+        overflow: hidden;
+        &.nil {
+            border: 1px solid #f1f1f1;
+            border-radius: 50%;
+            background: #f9f9f9;
+            color: #848484;
+        }
+        div.profile-image {
+            width: 32px;
+            height: 32px;
+            transition: all 200ms;
+            background-size: cover !important;
+            background-repeat: no-repeat !important;
+            background-clip: padding-box;
+        }
+    }
+
+    .dropdown-menu {
+        left: -108px;
+    }
+    
+}

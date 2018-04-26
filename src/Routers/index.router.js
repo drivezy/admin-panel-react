@@ -17,6 +17,7 @@ import {
 /** Router ends */
 
 /** Components */
+import LoginScene from './../Scenes/Login-Scene/Login.scene';
 import HomeScene from './../Scenes/Home-Scene/home.scene';
 import GenericListing from './../Scenes/Generic-Listing/genericListing.scene';
 import GenericDetail from './../Scenes/Generic-Detail/genericDetail.scene';
@@ -144,6 +145,7 @@ class StartRoute extends Component {
             <Router>
                 <Switch>
                     {/* <Router path='/list' component={GenericListing} /> */}
+                    <Route path="/login" component={LoginScene} />
                     <Route path="/" component={MainApp} />
                 </Switch>
             </Router>
