@@ -91,7 +91,7 @@ export default class GenericListing extends Component {
                                             </td>
                                         ))
                                     }
-                                    <CustomAction actions={genericData.nextActions} listingContent={listingRow} />
+                                    <CustomAction genericData = {genericData} actions={genericData.nextActions} listingRow={listingRow} />
                                 </tr>
                             ))
                         }
