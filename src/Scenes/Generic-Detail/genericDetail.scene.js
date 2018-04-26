@@ -3,6 +3,13 @@ import { GetUrlParams } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
 import { GetDetailRecord } from './../../Utils/genericDetail.utils';
 
+import { createFinalObject } from './../../Utils/table.utils';
+
+import DetailPortlet from './../../Components/Detail-Portlet/DetailPortlet';
+import DetailIncludes from './../../Components/Detail-Includes/DetailIncludes';
+
+import TableSettings from './../../Components/Table-Settings/TableSettings';
+
 import { TabContent, TabPane, Nav, NavItem, NavLink, Table } from 'reactstrap';
 
 
@@ -23,7 +30,8 @@ export default class GenericDetail extends Component {
             ...GetUrlParams(this.props), // params, queryString
             menuDetail: {},
             portlet: {},
-            tabs: {}
+            tabs: {},
+            tabsPreference: {}
         };
     }
 
@@ -52,119 +60,59 @@ export default class GenericDetail extends Component {
     }
 
     dataFetched = ({ tabs, portlet }) => {
-        console.log(tabs);
         this.setState({ portlet, tabs });
     }
 
-    toggle = (tab) => {
-        if (this.state.activeTab !== tab) {
-            this.setState({
-                activeTab: tab
-            });
-        }
+    getColumn = (preference, dictionary) => {
+        // return preference.column
     }
 
     render() {
 
-        // console.log(portlet);
-        const { portlet = {}, tabs = {} } = this.state;
+        const { menuDetail = {}, portlet = {}, tabs = {} } = this.state;
 
-        if (tabs.data) { }
         const { finalColumns = [], data = {} } = portlet;
-        const tabsContent = this.state.tabs;
 
-        // console.log(tabsContent);
+        let selectedColumns = {};
+
+        if (menuDetail.preference) {
+            selectedColumns = JSON.parse(menuDetail.preference['menudef.detail.list'])
+        }
+
         return (
             <div className="generic-detail-container">
-                <Card>
 
-                    {/* <CardImg top width="100%" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=318%C3%97180&w=318&h=180" alt="Card image cap" /> */}
-                    <CardBody>
-                        <CardTitle>
-                            {data.name}
-                        </CardTitle>
-                        <Row>
-                            {finalColumns.map((selectedColumn, key) => (
-                                <Col key={key} xs={selectedColumn.split ? '6' : '12'}>
-                                    {selectedColumn.absPath ?
+                <div className="header">
 
-                                        <Row className="detail-entry" >
-                                            <Col>
-                                                <strong>
-                                                    {selectedColumn.display_name}
-                                                </strong>
+                    <div className="left">
+                    </div>
+                    <div className="right">
 
-                                            </Col>
-                                            <Col>
-                                                {data[selectedColumn.column_name]}
-                                            </Col>
-                                        </Row>
-                                        : null}
-                                </Col>
-                            ))}
-                        </Row>
+                        {portlet.portletColumns ? <TableSettings selectedColumns={selectedColumns} columns={portlet.portletColumns} finalColumns={finalColumns}>
+                        </TableSettings>
+                            : null}
 
+                        {/* <!--configure view columns--> */}
+                        {/* <button settings-modal relationship="genericDetail.portlet.relationship" ng-if="genericDetail.portlet.listName" final-columns="genericDetail.portlet.finalColumns"
+                                list-name="genericDetail.listPortlet" columns="genericDetail.portlet.portletColumns" selected-columns="genericDetail.configuration.selectedColumns"
+                                type="button" class="btn btn-sm btn-info" uib-tooltip="Configure page">
+                            </button> */}
+                        {/* <!--configure view columns ends--> */}
 
-                    </CardBody>
-                </Card>
-
-                <div className="tabs-container">
-
-
-
-                    <Nav tabs>
-                        {
-                            tabs.data ?
-                                Object.keys(tabs.data).map((tab, key) => (
-                                    <NavItem key={key} >
-                                        <NavLink
-                                            className={`${this.state.activeTab === tabs.relationship[tab].id ? 'active' : ''}`}
-                                            onClick={() => { this.toggle(tabs.relationship[tab].id); }}>
-                                            {tabs.relationship[tab].display_name}
-                                        </NavLink>
-                                    </NavItem>
-                                ))
-                                : null}
-                    </Nav>
-                    <TabContent activeTab={this.state.activeTab}>
-                        {
-                            tabs.data ?
-                                Object.keys(tabs.data).map((tab, key) => (
-                                    <TabPane key={key} tabId={tabs.relationship[tab].id}>
-
-                                        {/* <Table striped>
-                                            <thead>
-                                                <tr>
-                                                    {
-                                                        finalColumns.map((selectedColumn, key) => (
-                                                            <th key={key}> {selectedColumn.display_name}</th>
-                                                        ))
-                                                    }
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {
-                                                    listing.map((listingRow, rowKey) => (
-                                                        <tr key={rowKey}>
-                                                            {
-                                                                finalColumns.map((selectedColumn, key) => (
-                                                                    <td key={key}>
-                                                                        {eval('listingRow.' + selectedColumn.path)}
-                                                                    </td>
-                                                                ))
-                                                            }
-                                                        </tr>
-                                                    ))
-                                                }
-                                            </tbody>
-                                        </Table> */}
-
-
-                                    </TabPane>
-                                ))
-                                : null}
-                    </TabContent>
+                    </div>
                 </div>
+
+
+                {
+                    finalColumns.length ?
+                        <DetailPortlet data={data} finalColumns={finalColumns}>
+                        </DetailPortlet> : null}
+
+                {
+                    tabs && tabs.includes ?
+                        <DetailIncludes tabs={tabs} >
+                        </DetailIncludes> : null
+                }
             </div>
         )
     }

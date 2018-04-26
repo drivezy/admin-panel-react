@@ -1,5 +1,14 @@
 .generic-detail-container {
-    margin: 4px;
+    margin: 8px;
+    .header {
+        display: flex;
+        justify-content: space-between;
+        .left {}
+        .right {
+            display: flex;
+            align-items: flex-end;
+        }
+    }
     .detail-entry {
         padding: 4px 0px;
     }
