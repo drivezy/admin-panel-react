@@ -67,6 +67,12 @@ export default class GenericDetail extends Component {
         // return preference.column
     }
 
+    layoutChanges = (changes) => {
+        const { portlet } = this.state;
+        portlet.finalColumns = changes;
+        this.setState({ portlet: portlet });
+    }
+
     render() {
 
         const { menuDetail = {}, portlet = {}, tabs = {} } = this.state;
@@ -88,17 +94,9 @@ export default class GenericDetail extends Component {
                     </div>
                     <div className="right">
 
-                        {portlet.portletColumns ? <TableSettings selectedColumns={selectedColumns} columns={portlet.portletColumns} finalColumns={finalColumns}>
+                        {portlet.portletColumns ? <TableSettings onSubmit={this.layoutChanges} listName={portlet.listName} selectedColumns={selectedColumns} columns={portlet.portletColumns} finalColumns={finalColumns}>
                         </TableSettings>
                             : null}
-
-                        {/* <!--configure view columns--> */}
-                        {/* <button settings-modal relationship="genericDetail.portlet.relationship" ng-if="genericDetail.portlet.listName" final-columns="genericDetail.portlet.finalColumns"
-                                list-name="genericDetail.listPortlet" columns="genericDetail.portlet.portletColumns" selected-columns="genericDetail.configuration.selectedColumns"
-                                type="button" class="btn btn-sm btn-info" uib-tooltip="Configure page">
-                            </button> */}
-                        {/* <!--configure view columns ends--> */}
-
                     </div>
                 </div>
 

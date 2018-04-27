@@ -1,5 +1,6 @@
 
 
+let content = {};
 
 /**
  * Returns the columns for building tabs
@@ -7,12 +8,22 @@
  * @param  {function} callback
  */
 export function changeArrayPosition(array, from, to) {
+    const tempArray = [...array];
     if (to >= 0 && to < array.length) {
-        var temp = array[from];
-        array[from] = array[to];
-        array[to] = temp;
-        return { array: array, index: to };
+        var temp = tempArray[from];
+        tempArray[from] = tempArray[to];
+        tempArray[to] = temp;
+        return { array: tempArray, index: to };
     } else {
-        return { array: array, index: from };
+        return { array: tempArray, index: from };
     }
+}
+
+
+export function Setter(key, value) {
+    content[key] = value;
+}
+
+export function Getter(key) {
+    return content[key];
 }
