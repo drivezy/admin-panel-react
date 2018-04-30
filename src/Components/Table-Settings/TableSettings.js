@@ -82,15 +82,10 @@ export default class DetailPortlet extends Component {
         this.setState({ selectedColumns });
     }
 
-
     applyChanges = async () => {
         const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
         result.success ? this.setState({ modal: !this.state.modal }) : null;
         this.state.onSubmit(this.state.tempSelectedColumns);
-    }
-
-    modalClosed(...args) {
-        console.log(args);
     }
 
     modalWrapper() {
@@ -114,7 +109,7 @@ export default class DetailPortlet extends Component {
             ));
         }
         return (
-            <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} onClosed={() => this.modalClosed()} className="table-settings">
+            <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="table-settings">
                 <ModalHeader toggle={this.toggleModal}>
                     Configure
             </ModalHeader>

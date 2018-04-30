@@ -68,9 +68,9 @@ export default class GenericDetail extends Component {
     }
 
     layoutChanges = (changes) => {
-        const { portlet } = this.state;
+        let { portlet } = this.state;
         portlet.finalColumns = changes;
-        this.setState({ portlet: portlet });
+        this.setState({ portlet });
     }
 
     render() {

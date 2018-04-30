@@ -27,7 +27,7 @@ export default class DetailPortlet extends Component {
 
     render() {
 
-        const { finalColumns, data } = this.state;
+        const { finalColumns, data } = this.props;
 
         return (
             <div className="detail-portlet">
