@@ -133,6 +133,11 @@ class MainApp extends Component {
 
 // store.subscribe(() => ('store', console.log('store dispatch', store.getState())));
 
+function requireAuth() {
+    console.log('Login check')
+  }
+
+
 
 /**
  * Routes under this config will not have header and footer
@@ -145,8 +150,9 @@ class StartRoute extends Component {
             <Router>
                 <Switch>
                     {/* <Router path='/list' component={GenericListing} /> */}
-                    <Route path="/login" component={LoginScene} />
+                    <Route path="/login" component={LoginScene} onEnter={requireAuth()}/>
                     <Route path="/" component={MainApp} />
+                    {/* <PrivateRoute path="/" component={MainApp} /> */}
                 </Switch>
             </Router>
             // </Provider>
@@ -154,3 +160,4 @@ class StartRoute extends Component {
     }
 }
 export default StartRoute;
+

@@ -3,7 +3,13 @@ import './Login.scene.css';
 import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import GLOBAL from './../../Constants/global.constants';
 
+import {
+    Redirect
+} from 'react-router-dom';
+
 import { Post, Get } from './../../Utils/http.utils';
+
+import { updateUser, setCurrentRoute } from './../../';
 
 export default class LoginScene extends Component {
 
@@ -33,33 +39,63 @@ export default class LoginScene extends Component {
         const res = Post({ urlPrefix: GLOBAL.ROUTE_URL, url: 'login', body: { username, password } });
         const login = await res;
         if (login.success) {
-            alert('User logged in successfully');
+            // alert('User logged in successfully');
+            this.loginCheck();
         }
         else {
             alert('Name or Email incorrect');
         }
     }
 
+    async loginCheck() {
+        const res = Get({ urlPrefix: GLOBAL.ROUTE_URL, url: 'loginCheck' });
+        const l = await res;
+        if (l.success) {
+            this.loggedIn(l.response);
+        }
+    }
+
+    loggedIn = (data) => {
+        console.log(data);
+        const a = (this.props.location ? this.props.location.state : null) || { from: { pathname: '/' } };
+        // if (a && a.from) {
+        //     this.props.setCurrentRoute(a.from.pathname);
+        // }
+
+        this.setState({ redirectToReferrer: true });
+    }
+
 
     render() {
+        const { from } = (this.props.location ? this.props.location.state : null) || { from: { pathname: '/' } };
+        const { redirectToReferrer } = this.state
+        // this.props.setCurrentRoute(from)
+        if (redirectToReferrer) {
+            // Global.currentRoute = from;
+            return (
+                <Redirect to={from} />
+            )
+        }
+        const { showPassword } = this.state;
         return (
             <div className="login-form">
                 <Card>
                     <CardBody>
                         <Form>
-                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                                <Label className="mr-sm-2">Email</Label>
+                            <FormGroup>
+                                <Label>Email</Label>
                                 <input autoComplete="off" onChange={(e) => this.setState({ username: e.target.value })} type="email" className="form-control" id="exampleInputEmail1" placeholder="Email" />
                             </FormGroup>
-                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                                <Label className="mr-sm-2">Password</Label>
+                            <FormGroup>
+                                <Label>Password</Label>
                                 <input autoComplete="off" onChange={(e) => this.setState({ password: e.target.value })} className="form-control" type={this.state.showPassword ? 'text' : 'password'} id="exampleInputPassword1" placeholder="Password" />
                             </FormGroup>
-                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                            <FormGroup className="button">
                                 <Button onClick={(event) => { event.preventDefault(); this.validateCredentials({ username: this.state.username, password: this.state.password }) }} className="btn btn-default">Login</Button>
                             </FormGroup>
                         </Form>
                     </CardBody>
+                    <div className="copyright"> Panel 2017-18 © Powered by Drivezy </div>
                 </Card>
             </div>
         )
