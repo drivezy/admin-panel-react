@@ -1,13 +1,11 @@
-@font-face{
+@font-face {
     font-family: adminFont;
-    src:url('../src/Assets/fonts/noway-regular-webfont.woff');
+    src: url('../src/Assets/fonts/noway-regular-webfont.woff');
 }
 
 // import '/node_modules/bootstrap/dist/css/bootstrap.min.css'
 // import 'bootstrap/dist/css/bootstrap.min.css';
-
 body {
-    background: whitesmoke;
     font-family: adminFont;
     font-size: 13px;
     overflow-x: hidden;
@@ -21,7 +19,17 @@ body {
             display: flex;
             height: 100vh;
             .landing-sidebar {}
-            .landing-wrapper {}
+            .landing-wrapper {
+                background: #ebeef0;
+            }
         }
     }
+}
+
+button:focus {
+    outline: none;
+}
+
+* {
+    outline: none;
 }

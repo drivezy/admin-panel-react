@@ -1,9 +1,17 @@
 import React, { Component } from 'react';
 import { GetUrlParams } from './../../Utils/location.utils';
-import { GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
+import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
 import { GetDetailRecord } from './../../Utils/genericDetail.utils';
 
-import DetailIncludes from './../../Components/Detail-Includes/detailIncludes.component';
+import { createFinalObject } from './../../Utils/table.utils';
+
+import DetailPortlet from './../../Components/Detail-Portlet/DetailPortlet';
+import DetailIncludes from './../../Components/Detail-Includes/DetailIncludes';
+
+import TableSettings from './../../Components/Table-Settings/TableSettings';
+
+import { TabContent, TabPane, Nav, NavItem, NavLink, Table } from 'reactstrap';
+
 
 import './genericDetail.css';
 
@@ -22,7 +30,8 @@ export default class GenericDetail extends Component {
             ...GetUrlParams(this.props), // params, queryString
             menuDetail: {},
             portlet: {},
-            tabs: {}
+            tabs: {},
+            tabsPreference: {}
         };
     }
 
@@ -54,44 +63,56 @@ export default class GenericDetail extends Component {
         this.setState({ portlet, tabs });
     }
 
+    getColumn = (preference, dictionary) => {
+        // return preference.column
+    }
+
+    layoutChanges = (changes) => {
+        let { portlet, menuDetail } = this.state;
+        // portlet.finalColumns = changes;
+        menuDetail.preference['menudef.detail.list'] = JSON.stringify(changes);
+        portlet.finalColumns = CreateFinalColumns(portlet.portletColumns, changes);
+        this.setState({ portlet, menuDetail });
+    }
+
     render() {
-        const { portlet = {}, tabs = {} } = this.state;
+
+        const { menuDetail = {}, portlet = {}, tabs = {} } = this.state;
+
         const { finalColumns = [], data = {} } = portlet;
+
+        let selectedColumns = {};
+
+        if (menuDetail.preference) {
+            selectedColumns = JSON.parse(menuDetail.preference['menudef.detail.list'])
+        }
+
         return (
             <div className="generic-detail-container">
-                <Card>
 
-                    {/* <CardImg top width="100%" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=318%C3%97180&w=318&h=180" alt="Card image cap" /> */}
-                    <CardBody>
-                        <CardTitle>
-                            {data.name}
-                        </CardTitle>
-                        <Row>
-                            {finalColumns.map((selectedColumn, key) => (
-                                <Col key={key} xs={selectedColumn.split ? '6' : '12'}>
-                                    {selectedColumn.absPath ?
+                <div className="header">
 
-                                        <Row className="detail-entry" >
-                                            <Col>
-                                                <strong>
-                                                    {selectedColumn.display_name}
-                                                </strong>
+                    <div className="left">
+                    </div>
+                    <div className="right">
 
-                                            </Col>
-                                            <Col>
-                                                {data[selectedColumn.column_name]}
-                                            </Col>
-                                        </Row>
-                                        : null}
-                                </Col>
-                            ))}
-                        </Row>
+                        {portlet.portletColumns ? <TableSettings onSubmit={this.layoutChanges} listName={portlet.listName} selectedColumns={selectedColumns} columns={portlet.portletColumns} finalColumns={finalColumns}>
+                        </TableSettings>
+                            : null}
+                    </div>
+                </div>
 
 
-                    </CardBody>
-                </Card>
+                {
+                    finalColumns.length ?
+                        <DetailPortlet data={data} finalColumns={finalColumns}>
+                        </DetailPortlet> : null}
 
-                <DetailIncludes responseArray={tabs} />
+                {
+                    tabs && tabs.includes ?
+                        <DetailIncludes tabs={tabs} >
+                        </DetailIncludes> : null
+                }
             </div>
         )
     }
