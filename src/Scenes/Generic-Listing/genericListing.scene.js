@@ -32,7 +32,8 @@ export default class GenericListing extends Component {
             const { response = {} } = result;
             const menuDetail = ConvertMenuDetailForGenericPage(response || {});
             if (typeof response.controller_path == 'string' && response.controller_path.includes('genericListingController.js') != -1) {
-                this.setState({ menuDetail });
+                // this.setState({ menuDetail });
+                this.state.menuDetail = menuDetail
                 this.getListingData();
             }
         }

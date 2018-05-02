@@ -171,3 +171,22 @@ export function ConvertMenuDetailForGenericPage(menuDetail) {
         // scripts: menuDetail.scripts,
     };
 }
+
+
+export function CreateInclusions(includes) {
+    var arr = [];
+    var starter = "";
+    var includes = includes.split(",");
+    for (var k in includes) {
+        var inclusions = includes[k].split(".");
+        for (var i in inclusions) {
+            var name = parseInt(i) ? starter + "." + inclusions[i] : inclusions[i];
+            starter = name;
+            if (arr.indexOf(name) == -1) {
+                arr.push(name);
+            }
+        }
+    }
+
+    return arr.join(",");
+}

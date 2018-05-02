@@ -34,6 +34,8 @@ import Header from './../Scenes/Header/header.scene';
 import { GetMenusEndPoint } from './../Constants/api.constants';
 import { Get } from './../Utils/http.utils';
 
+import { GetPreferences } from './../Utils/preference.utils';
+
 /** Actions */
 // import { GetCities } from './../Actions/city.action';
 // import { CurrentRoute } from './../Actions/router.action';
@@ -90,6 +92,9 @@ class MainApp extends Component {
             this.menus = result.response;
             this.setState({ menuFetched: true });
         }
+
+        // Load the preferences
+        const preferences = await GetPreferences();
     }
 
     callback = (method) => {
