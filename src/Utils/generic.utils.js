@@ -88,6 +88,7 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
 /**
  * returns final list of selected columns to be shown on each car for each row
  * Takes columns list being prepared by 'GetColumnsForListing' method, preference list and relationship
+ * same as TableFactory.createFinalObject
  * @param  {object} columns
  * @param  {object} selectedColumns
  * @param  {object} relationship
