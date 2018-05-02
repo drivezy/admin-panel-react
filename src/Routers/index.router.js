@@ -25,6 +25,8 @@ import SideNav from './../Scenes/Side-Nav/sideNav.scene';
 import Header from './../Scenes/Header/header.scene';
 
 
+import { LoginCheck } from './../Utils/user.utils';
+
 // import ContactScene from './../Scenes/Contact-Us-Scene/contact.scene';
 // import LoginScene from './../Scenes/Login-Scene/login.scene';
 // import ProfileScene from './../Scenes/Profile-Scene/profile.scene';
@@ -94,7 +96,8 @@ class MainApp extends Component {
         }
 
         // Load the preferences
-        const preferences = await GetPreferences();
+        GetPreferences();
+        LoginCheck();
     }
 
     callback = (method) => {
@@ -140,7 +143,7 @@ class MainApp extends Component {
 
 function requireAuth() {
     console.log('Login check')
-  }
+}
 
 
 
@@ -155,7 +158,7 @@ class StartRoute extends Component {
             <Router>
                 <Switch>
                     {/* <Router path='/list' component={GenericListing} /> */}
-                    <Route path="/login" component={LoginScene} onEnter={requireAuth()}/>
+                    <Route path="/login" component={LoginScene} onEnter={requireAuth()} />
                     <Route path="/" component={MainApp} />
                     {/* <PrivateRoute path="/" component={MainApp} /> */}
                 </Switch>

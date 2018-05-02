@@ -40,7 +40,7 @@ export default class LoginScene extends Component {
         const login = await res;
         if (login.success) {
             // alert('User logged in successfully');
-            this.loginCheck();
+            // this.loginCheck();
         }
         else {
             alert('Name or Email incorrect');
