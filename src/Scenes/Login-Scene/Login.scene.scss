@@ -1,0 +1,25 @@
+.login-form {
+    background: url(https://s3.ap-south-1.amazonaws.com/drivezy.com-assets/drivezy-city-bg.png) bottom no-repeat; // background-image: url(/assets/images/loginbackground.png) !important;
+    background-size: contain !important;
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    align-items: center;
+    .card {
+        width: 450px;
+        height: 300px;
+        .copyright {
+            color: #525252;
+            text-align: center;
+            font-size: 10px;
+            bottom: 0;
+        }
+        .card-body {
+            margin: 15px;
+            .button {
+                float: right;
+            }
+        }
+    }
+    
+}
