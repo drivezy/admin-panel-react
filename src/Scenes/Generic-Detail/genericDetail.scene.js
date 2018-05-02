@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { GetUrlParams } from './../../Utils/location.utils';
-import { GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
+import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
 import { GetDetailRecord } from './../../Utils/genericDetail.utils';
 
 import { createFinalObject } from './../../Utils/table.utils';
@@ -68,9 +68,11 @@ export default class GenericDetail extends Component {
     }
 
     layoutChanges = (changes) => {
-        let { portlet } = this.state;
-        portlet.finalColumns = changes;
-        this.setState({ portlet });
+        let { portlet, menuDetail } = this.state;
+        // portlet.finalColumns = changes;
+        menuDetail.preference['menudef.detail.list'] = JSON.stringify(changes);
+        portlet.finalColumns = CreateFinalColumns(portlet.portletColumns, changes);
+        this.setState({ portlet, menuDetail });
     }
 
     render() {
