@@ -10,6 +10,8 @@ import { GetUrlParams } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
 import { GetListingRecord } from './../../Utils/genericListing.utils';
 
+import CustomAction from './../../Components/Custom-Action/CustomAction';
+
 export default class GenericListing extends Component {
     constructor(props) {
         super(props);
@@ -56,7 +58,30 @@ export default class GenericListing extends Component {
         //     this.state.pagesOnDisplay = Math.ceil(totalPages);
         // }
         console.log('genericData', genericData);
+
+
+        setTimeout(() => {
+            this.adjustWidth();
+        }, 300)
+
         this.setState({ genericData });
+    }
+
+
+    // According to action width 
+    // width of table is assigned
+    adjustWidth = () => {
+        var actionColumnWidth = document.getElementsByClassName('action-column')[0].clientWidth;
+        var table = document.getElementsByClassName('table')[0];
+        var tableWidth = table.clientWidth;
+
+        var percent = (100 - (actionColumnWidth / tableWidth) * 100);
+
+        table.setAttribute('style','width:calc(' + percent + '% - 2px )')
+        // table.style.width = 'calc(' + percent + '%-10px +)';
+        // // elem.querySelectorAll('.table-responsive').css({ width: 'calc(' + percent + '% - 16px)' });
+        // elem.querySelectorAll('.table-responsive').css({ width: 'calc(' + percent + '% - 16px)' });
+
     }
 
     render() {
@@ -127,8 +152,13 @@ export default class GenericListing extends Component {
                                                     {/* DB Level Ends */}
                                                 </div>
                                             </th>
+
                                         ))
+
                                     }
+                                    <th className="action-header">
+                                        <span className="fa fa-cog fa-lg"></span>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -136,7 +166,7 @@ export default class GenericListing extends Component {
                                     listing.map((listingRow, rowKey) => (
                                         <tr className="table-row" key={rowKey}>
 
-                                            <td>
+                                            <td className="row-key">
                                                 {rowKey + 1}
                                             </td>
 
@@ -147,6 +177,9 @@ export default class GenericListing extends Component {
                                                     </td>
                                                 ))
                                             }
+
+                                            <CustomAction genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} />
+
                                         </tr>
                                     ))
                                 }

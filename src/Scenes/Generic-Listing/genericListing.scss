@@ -6,12 +6,13 @@
         padding: 6px 20px;
     }
     .card {
+        width:97%;
         .card-body {
             padding: 0px; // Table Begins
             .table {
                 border: none;
                 display: block;
-                width: 90%;
+                // width: 90%;
                 overflow-x: auto;
                 thead {
                     border-top: none;
@@ -51,14 +52,15 @@
                             &.action-header {
                                 // border-right: 1px solid #d6d6d6;
                                 // width: 4%;
-                                position: absolute;
-                                right: 8px;
+                                position: absolute; // right: 8px;
+                                right: 30px;
                                 background: white;
                             }
                             &.column-header {
                                 cursor: pointer; // border-bottom: 1px solid #ddd; // border-bottom: none;
                                 white-space: nowrap;
                                 .column-wrapper {
+                                    align-items: center;
                                     display: flex;
                                     .column-title {
                                         color: #6f7c87;
@@ -80,7 +82,7 @@
                                     }
                                     .filter-column {
                                         cursor: pointer;
-                                        margin: -1px 4px;
+                                        margin: 0px 4px;
                                         flex-basis: 5%;
                                         a {
                                             opacity: 0.8;
@@ -139,6 +141,9 @@
                             color: #183247;
                             padding: 8px;
                             white-space: nowrap;
+                            &.row-key {
+                                padding: 8px 15px;
+                            }
                             a {
                                 color: #1e739e;
                                 font-size: 13px;
@@ -179,7 +184,7 @@
                                 border-left: 1px solid #ebeef0; // box-shadow: -8px 0px 25px 2px #f5f5f5bf;
                                 // border-right: 1px solid #d6d6d6;
                                 background: white;
-                                right: 8px;
+                                right: 0px;
                                 position: absolute;
                                 white-space: nowrap;
                                 padding: 8px;
