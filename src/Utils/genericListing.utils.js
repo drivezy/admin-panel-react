@@ -36,6 +36,8 @@ export async function GetListingRecord({ configuration, urlParameter = {}, callb
     // if there is a query in url , add it to the options.query
     options.query += IsUndefinedOrNull(urlParameter.query) ? '' : " and " + urlParameter.query;
 
+    options.query += IsUndefinedOrNull(configuration.restricted_query) ? '' : ' and ' + configuration.restricted_query;
+
     // If a filter is applied , add the query to options.query
     if (urlParameter.filter && Object.keys(urlParameter.filter).length && Array.isArray(configuration.userFilter)) {
         const activeFilter = configuration.userFilter.filter(function (filter) {
