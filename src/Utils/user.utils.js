@@ -1,8 +1,17 @@
+
+
+import GLOBAL from './../Constants/global.constants';
+
+import { Get } from './http.utils';
+
 /************************************
  * All user related utility methods
  ***********************************/
 
 import { GetItem } from './localStorage.utils';
+
+
+let CurrentUser = {};
 
 let fireToken = '';
 /**
@@ -16,3 +25,11 @@ export const GetFireToken = async () => {
     fireToken = GetItem('FIRE_TOKEN');
     return fireToken;
 };
+
+export const LoginCheck = async () => {
+    const result = await Get({ urlPrefix: GLOBAL.ROUTE_URL, url: 'loginCheck' });
+    if (result.success) {
+        CurrentUser = result.response;
+    }
+    return result;
+}

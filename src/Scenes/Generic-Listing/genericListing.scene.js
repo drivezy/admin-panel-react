@@ -7,6 +7,8 @@ import { GetUrlParams } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
 import { GetListingRecord } from './../../Utils/genericListing.utils';
 
+import CustomAction from './../../Components/Custom-Action/CustomAction';
+
 export default class GenericListing extends Component {
     constructor(props) {
         super(props);
@@ -71,6 +73,9 @@ export default class GenericListing extends Component {
                                     <th key={key}> {selectedColumn.display_name}</th>
                                 ))
                             }
+                            <th>
+                                <span className="fa fa-cog fa-lg"></span>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -80,10 +85,12 @@ export default class GenericListing extends Component {
                                     {
                                         finalColumns.map((selectedColumn, key) => (
                                             <td key={key}>
-                                                {eval('listingRow.' + selectedColumn.path)}
+                                                {listingRow[selectedColumn.path]}
+                                                {/* {eval('listingRow.' + selectedColumn.path)} */}
                                             </td>
                                         ))
                                     }
+                                    <CustomAction genericData = {genericData} actions={genericData.nextActions} listingRow={listingRow} />
                                 </tr>
                             ))
                         }
