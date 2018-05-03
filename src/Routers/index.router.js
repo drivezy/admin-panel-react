@@ -110,22 +110,41 @@ class MainApp extends Component {
         const menus = this.menus || [];
         const { sideNavExpanded } = this.state;
         return (
+
+
             <div className="app-container">
-                <div className="page-container">
-                    <div className="landing-sidebar">
-                        <SideNav visible={sideNavExpanded} onCollapse={this.callback} menus={menus} />
+                {
+                    menus && menus.length &&
+                    <div className="page-container">
+                        <div className="landing-sidebar">
+                            <SideNav visible={sideNavExpanded} onCollapse={this.callback} menus={menus} />
+                        </div>
+                        <div className="landing-wrapper {this.state.sideNavExpanded ? 'sidenav-open' : 'sidenav-closed'}" id="main" style={{ width: '100%', height: '100%' }}>
+                            <Header />
+                            <Switch>
+                                {
+                                    menus.map((menu, index) => {
+                                        return menu.menus.map((state, index) => {
+
+                                            if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericListingController.js') != -1) {
+                                                return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericListing {...props} menuId={state.id} />} />)
+                                            } else if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericDetailController.js') != -1) {
+                                                return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericDetail {...props} menuId={state.id} />} />)
+                                            } else {
+                                                // return (<Route key={state.url} path={`${match.path}activeBookings`} component={GenericListing} />)
+                                            }
+                                        })
+                                    })
+                                }
+                                {/* <Route path={`${match.path}activeBookings`} component={GenericListing} /> */}
+                                {/* <Route path={`${match.path}list/:page`} component={GenericListing} />
+                            <Route path={`${match.path}detail/:page/:detailId`} component={GenericDetail} /> */}
+                                <Route exact path='/' component={HomeScene} />
+                                {this.state.sideNavExpanded}
+                            </Switch>
+                        </div>
                     </div>
-                    <div className="landing-wrapper {this.state.sideNavExpanded ? 'sidenav-open' : 'sidenav-closed'}" id="main" style={{ width: '100%', height: '100%' }}>
-                        <Header />
-                        <Switch>
-                            <Route path={`${match.path}list/:page`} component={GenericListing} />
-                            <Route path={`${match.path}detail/:page/:detailId`} component={GenericDetail} />
-                            <Route exact path='/' component={HomeScene} />
-                            {this.state.sideNavExpanded}
-                        </Switch>
-                    </div>
-                </div>
-                {/* <ToastContainer /> */}
+                }
             </div>
         )
     }
@@ -167,5 +186,6 @@ class StartRoute extends Component {
         )
     }
 }
+
 export default StartRoute;
 

@@ -25,8 +25,8 @@ export default class GenericListing extends Component {
 
     getMenuData = async () => {
         const { queryString } = this.state;
-        const { menu_id } = queryString;
-        const result = await GetMenuDetail(menu_id);
+        const { menuId } = this.props;
+        const result = await GetMenuDetail(menuId);
         if (result.success) {
             console.log(result.response);
             const { response = {} } = result;
@@ -64,9 +64,7 @@ export default class GenericListing extends Component {
 
         return (
             <div className="generic-listing-container">
-                <h1 className="table-column-header">
-                    Generic listing
-                </h1>
+
                 <Table striped>
                     <thead>
                         <tr>

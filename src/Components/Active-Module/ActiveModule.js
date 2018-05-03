@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './ActiveModule.css';
 
+import { Link } from 'react-router-dom';
+
 import { SubscribeToEvent } from './../../Utils/stateManager.utils'
 
 
@@ -80,7 +82,7 @@ export default class ActiveModule extends Component {
 
     navigateTo(menu) {
 
-        console.log(menu);
+        // console.log(menu);
     }
 
     render() {
@@ -108,21 +110,15 @@ export default class ActiveModule extends Component {
                         <div className="panel menus">
                             <div className="panel-heading">
                                 Menus
-                    </div>
+                            </div>
                             <div className="panel-body">
-
-                                {this.state.menus.map((menu, key) => (
-                                    <div key={key} className="menu-list" onClick={this.navigateTo(menu)}>
-                                        {menu.name}
-                                    </div>
-                                ))}
-                                {/* <div className="menu-list"
-                                ng-click="activeModule.navigateTo(menu)" ng-repeat="menu in (filteredResults = (activeModule.selectedModule.menus|filter:activeModule.searchText))">
-                                <span className="pull-right" ng-if="activeModule.state.current.name == 'landing.'+menu.state_name">
-                                    <i className="fa fa-check" aria-hidden="true"></i>
-                                </span>
-                            </div> */}
-
+                                {
+                                    this.state.menus.map((menu, key) => {
+                                        return (menu.active == 1) && (menu.visibility == 1) && (<Link to={menu.url} className="menu-list" key={key}>
+                                            {menu.name}
+                                        </Link>)
+                                    })
+                                }
                             </div>
                         </div>
                     </div>
