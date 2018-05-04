@@ -7,13 +7,13 @@ import { Get } from './http.utils';
 * url and menu detail, fetch data and being passed further to components
 * to show listing data
 */
-export async function GetListingRecord({ configuration, urlParameter = {}, callback, data }) {
-    const params = Initialization(configuration, urlParameter);
+export async function GetListingRecord({ configuration, queryString = {}, callback, data }) {
+    const params = Initialization(configuration, queryString);
 
     let tempQuery;
     const options = GetDefaultOptions();
 
-    params.page = urlParameter.page ? parseInt(urlParameter.page) : data.currentPage;
+    params.page = queryString.page ? parseInt(queryString.page) : data.currentPage;
     options.includes = params.includes;
     options.order = params.order + "," + params.sort;
 
@@ -34,16 +34,16 @@ export async function GetListingRecord({ configuration, urlParameter = {}, callb
     // }
 
     // if there is a query in url , add it to the options.query
-    options.query += IsUndefinedOrNull(urlParameter.query) ? '' : " and " + urlParameter.query;
+    options.query += IsUndefinedOrNull(queryString.query) ? '' : " and " + queryString.query;
 
     options.query += IsUndefinedOrNull(configuration.restricted_query) ? '' : ' and ' + configuration.restricted_query;
 
     // If a filter is applied , add the query to options.query
-    if (urlParameter.filter && Object.keys(urlParameter.filter).length && Array.isArray(configuration.userFilter)) {
+    if (queryString.filter && Object.keys(queryString.filter).length && Array.isArray(configuration.userFilter)) {
         const activeFilter = configuration.userFilter.filter(function (filter) {
-            return filter.id == urlParameter.filter.id;
+            return filter.id == queryString.filter.id;
         })[0];
-        if (!urlParameter.query) {
+        if (!queryString.query) {
             options.query += " and " + activeFilter.filter_query;
         }
     }
@@ -54,17 +54,17 @@ export async function GetListingRecord({ configuration, urlParameter = {}, callb
     // If currentUser is specified in the query replace it with the currentUsers id
     // options.query = options.query.replace("'currentUser'", currentUser.id);
 
-    options.stats = (data.stats && IsUndefinedOrNull(urlParameter.query)) ? false : true;
+    options.stats = (data.stats && IsUndefinedOrNull(queryString.query)) ? false : true;
     // To be used to fetch stats when user selects some query and then deselects it
 
     // @TODO dont fetch dictionary if already available
     options.dictionary = data.dictionary ? false : true;
 
-    options.page = data.currentPage || options.page;
-    options.limit = urlParameter.size || 20;
+    options.page = queryString.page || options.page;
+    options.limit = queryString.size || 20;
 
-    if (urlParameter.scopes) {
-        options.scopes = urlParameter.scopes;
+    if (queryString.scopes) {
+        options.scopes = queryString.scopes;
     }
 
     /** 

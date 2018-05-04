@@ -8,6 +8,7 @@ import { GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/ge
 import { GetListingRecord } from './../../Utils/genericListing.utils';
 
 import CustomAction from './../../Components/Custom-Action/CustomAction';
+import ListingPagination from './../../Components/Listing-Pagination/ListingPagination';
 
 export default class GenericListing extends Component {
     constructor(props) {
@@ -25,7 +26,7 @@ export default class GenericListing extends Component {
 
     getMenuData = async () => {
         const { queryString } = this.state;
-        const { menuId } = this.props;
+        const { menuId, limit, page } = this.props;
         const result = await GetMenuDetail(menuId);
         if (result.success) {
             console.log(result.response);
@@ -40,8 +41,8 @@ export default class GenericListing extends Component {
     }
 
     getListingData = () => {
-        const { menuDetail, genericData, urlParameter } = this.state;
-        GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, urlParameter });
+        const { menuDetail, genericData, queryString } = this.state;
+        GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString });
     }
 
     dataFetched = (genericData) => {
@@ -90,12 +91,13 @@ export default class GenericListing extends Component {
                                             </td>
                                         ))
                                     }
-                                    <CustomAction genericData = {genericData} actions={genericData.nextActions} listingRow={listingRow} />
+                                    <CustomAction genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} />
                                 </tr>
                             ))
                         }
                     </tbody>
                 </Table>
+                <ListingPagination genericData={genericData} />
             </div>
         );
     }
