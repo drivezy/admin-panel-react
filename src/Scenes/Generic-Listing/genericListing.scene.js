@@ -12,6 +12,8 @@ import { GetListingRecord } from './../../Utils/genericListing.utils';
 
 import CustomAction from './../../Components/Custom-Action/CustomAction';
 
+import TableSettings from './../../Components/Table-Settings/TableSettings';
+
 export default class GenericListing extends Component {
     constructor(props) {
         super(props);
@@ -77,10 +79,11 @@ export default class GenericListing extends Component {
 
         var percent = (100 - (actionColumnWidth / tableWidth) * 100);
 
-        table.setAttribute('style','width:calc(' + percent + '% - 2px )')
-        // table.style.width = 'calc(' + percent + '%-10px +)';
-        // // elem.querySelectorAll('.table-responsive').css({ width: 'calc(' + percent + '% - 16px)' });
-        // elem.querySelectorAll('.table-responsive').css({ width: 'calc(' + percent + '% - 16px)' });
+        table.setAttribute('style', 'width:calc(' + percent + '% - 2px )')
+    }
+
+    layoutChanges = (columns) => {
+        console.log(columns);
 
     }
 
@@ -90,6 +93,26 @@ export default class GenericListing extends Component {
 
         return (
             <div className="generic-listing-container">
+                <div className="page-bar">
+                    <div className="search-wrapper">
+
+                    </div>
+                    <div className="header-actions">
+
+                        <div className="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" className="btn btn-sm btn-secondary">Left</button>
+                            <button type="button" className="btn btn-sm btn-secondary">Middle</button>
+                            <button type="button" className="btn btn-sm btn-secondary">Right</button>
+
+                            {genericData.columns ? <TableSettings onSubmit={this.layoutChanges} listName={genericData.listName} selectedColumns={genericData.selectedColumns} columns={genericData.columns}>
+                            </TableSettings>
+                                : null}
+
+
+                        </div>
+
+                    </div>
+                </div>
                 <Card>
                     <CardBody>
                         <Table striped>

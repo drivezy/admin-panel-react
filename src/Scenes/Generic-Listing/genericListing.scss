@@ -1,18 +1,29 @@
 .generic-listing-container {
     font-size: 12px;
-    padding: 15px;
+    // padding: 15px;
     .header {
         font-size: 16px;
         padding: 6px 20px;
     }
+    .page-bar {
+        height: 40px;
+        display: flex;
+        justify-content: space-around;
+        padding: 4px 6px;
+        background: #f1f1f1;
+        border-bottom: 1px solid #d4d4d4;
+        .search-wrapper {}
+        .header-actions {}
+    }
     .card {
-        width:97%;
+        width: 95%;
+        margin: 8px;
         .card-body {
             padding: 0px; // Table Begins
             .table {
                 border: none;
-                display: block;
-                // width: 90%;
+                display: block; // width: 90%;
+                margin-bottom: 0px;
                 overflow-x: auto;
                 thead {
                     border-top: none;
@@ -53,7 +64,7 @@
                                 // border-right: 1px solid #d6d6d6;
                                 // width: 4%;
                                 position: absolute; // right: 8px;
-                                right: 30px;
+                                right: 0px;
                                 background: white;
                             }
                             &.column-header {
