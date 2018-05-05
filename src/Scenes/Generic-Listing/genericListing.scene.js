@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
 
-import { Table } from 'reactstrap';
+import {
+    Table, Card, CardImg, CardText, CardBody,
+    CardTitle, CardSubtitle, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
+} from 'reactstrap';
 
 import './genericListing.css';
 import { GetUrlParams } from './../../Utils/location.utils';
-import { GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
+import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
 import { GetListingRecord } from './../../Utils/genericListing.utils';
 
-import CustomAction from './../../Components/Custom-Action/CustomAction';
+
 import ListingPagination from './../../Components/Listing-Pagination/ListingPagination';
+
+import TableSettings from './../../Components/Table-Settings/TableSettings';
+
+import PortletTable from './../../Components/Portlet-Table/PortletTable';
 
 export default class GenericListing extends Component {
     constructor(props) {
@@ -55,7 +62,16 @@ export default class GenericListing extends Component {
         //     // this.setState({ pagesOnDisplay: totalPages });
         //     this.state.pagesOnDisplay = Math.ceil(totalPages);
         // }
-        console.log('genericData', genericData);
+        this.setState({ genericData });
+    }
+
+
+
+    layoutChanges = (selectedColumns) => {
+
+        let { genericData } = this.state;
+        genericData.selectedColumns = selectedColumns;
+        genericData.finalColumns = CreateFinalColumns(genericData.columns, selectedColumns, genericData.relationship);
         this.setState({ genericData });
     }
 
@@ -65,39 +81,32 @@ export default class GenericListing extends Component {
 
         return (
             <div className="generic-listing-container">
+                <div className="page-bar">
+                    <div className="search-wrapper">
 
-                <Table striped>
-                    <thead>
-                        <tr>
-                            {
-                                finalColumns.map((selectedColumn, key) => (
-                                    <th key={key}> {selectedColumn.display_name}</th>
-                                ))
-                            }
-                            <th>
-                                <span className="fa fa-cog fa-lg"></span>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                    </div>
+                    <div className="header-actions">
+
+                        <div className="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" className="btn btn-sm btn-secondary">Left</button>
+                            <button type="button" className="btn btn-sm btn-secondary">Middle</button>
+                            <button type="button" className="btn btn-sm btn-secondary">Right</button>
+
+                            {genericData.columns ? <TableSettings onSubmit={this.layoutChanges} listName={genericData.listName} selectedColumns={genericData.selectedColumns} columns={genericData.columns}>
+                            </TableSettings>
+                                : null}
+                        </div>
+                    </div>
+                </div>
+                <Card>
+                    <CardBody>
                         {
-                            listing.map((listingRow, rowKey) => (
-                                <tr key={rowKey}>
-                                    {
-                                        finalColumns.map((selectedColumn, key) => (
-                                            <td key={key}>
-                                                {listingRow[selectedColumn.path]}
-                                                {/* {eval('listingRow.' + selectedColumn.path)} */}
-                                            </td>
-                                        ))
-                                    }
-                                    <CustomAction genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} />
-                                </tr>
-                            ))
+                            (finalColumns && finalColumns.length) ?
+                                <PortletTable genericData={genericData} finalColumns={finalColumns} listing={listing}></PortletTable> : null
                         }
-                    </tbody>
-                </Table>
-                <ListingPagination genericData={genericData} />
+                    <ListingPagination genericData={genericData} />
+                    </CardBody>
+                </Card>
             </div>
         );
     }

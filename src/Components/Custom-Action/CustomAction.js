@@ -109,7 +109,7 @@ export default class CustomAction extends Component {
 
 
         };
-        
+
     }
 
 
@@ -148,14 +148,15 @@ export default class CustomAction extends Component {
         }
     }
 
-
     render() {
         const { actions = [], listingRow = [] } = this.props;
         return (
-            <td className="custom-action">
+            <td className="custom-action action-column">
                 {
                     actions.map((action, key) => (
-                        <button onClick={() => { this.callFunction(action, listingRow) }} type="button" key={key} className={`fas ${action.icon}`}></button>
+                        <button onClick={() => { this.callFunction(action, listingRow) }} type="button" key={key} className="btn btn-sm btn-light">
+                            <i className={`fas ${action.icon}`} ></i>
+                        </button>
                     ))
                 }
             </td>
