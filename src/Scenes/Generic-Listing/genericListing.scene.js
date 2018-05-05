@@ -11,6 +11,8 @@ import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } fr
 import { GetListingRecord } from './../../Utils/genericListing.utils';
 
 
+import ListingPagination from './../../Components/Listing-Pagination/ListingPagination';
+
 import TableSettings from './../../Components/Table-Settings/TableSettings';
 
 import PortletTable from './../../Components/Portlet-Table/PortletTable';
@@ -31,7 +33,7 @@ export default class GenericListing extends Component {
 
     getMenuData = async () => {
         const { queryString } = this.state;
-        const { menuId } = this.props;
+        const { menuId, limit, page } = this.props;
         const result = await GetMenuDetail(menuId);
         if (result.success) {
             console.log(result.response);
@@ -46,8 +48,8 @@ export default class GenericListing extends Component {
     }
 
     getListingData = () => {
-        const { menuDetail, genericData, urlParameter } = this.state;
-        GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, urlParameter });
+        const { menuDetail, genericData, queryString } = this.state;
+        GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString });
     }
 
     dataFetched = (genericData) => {
@@ -102,6 +104,7 @@ export default class GenericListing extends Component {
                             (finalColumns && finalColumns.length) ?
                                 <PortletTable genericData={genericData} finalColumns={finalColumns} listing={listing}></PortletTable> : null
                         }
+                    <ListingPagination genericData={genericData} />
                     </CardBody>
                 </Card>
             </div>
