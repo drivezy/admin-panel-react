@@ -2,17 +2,18 @@ import React, { Component } from 'react';
 
 import {
     Table, Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle,
+    CardTitle, CardSubtitle, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from 'reactstrap';
 
 import './genericListing.css';
 import { GetUrlParams } from './../../Utils/location.utils';
-import { GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
+import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
 import { GetListingRecord } from './../../Utils/genericListing.utils';
 
-import CustomAction from './../../Components/Custom-Action/CustomAction';
 
 import TableSettings from './../../Components/Table-Settings/TableSettings';
+
+import PortletTable from './../../Components/Portlet-Table/PortletTable';
 
 export default class GenericListing extends Component {
     constructor(props) {
@@ -59,32 +60,17 @@ export default class GenericListing extends Component {
         //     // this.setState({ pagesOnDisplay: totalPages });
         //     this.state.pagesOnDisplay = Math.ceil(totalPages);
         // }
-        console.log('genericData', genericData);
-
-
-        setTimeout(() => {
-            this.adjustWidth();
-        }, 300)
-
         this.setState({ genericData });
     }
 
 
-    // According to action width 
-    // width of table is assigned
-    adjustWidth = () => {
-        var actionColumnWidth = document.getElementsByClassName('action-column')[0].clientWidth;
-        var table = document.getElementsByClassName('table')[0];
-        var tableWidth = table.clientWidth;
 
-        var percent = (100 - (actionColumnWidth / tableWidth) * 100);
+    layoutChanges = (selectedColumns) => {
 
-        table.setAttribute('style', 'width:calc(' + percent + '% - 2px )')
-    }
-
-    layoutChanges = (columns) => {
-        console.log(columns);
-
+        let { genericData } = this.state;
+        genericData.selectedColumns = selectedColumns;
+        genericData.finalColumns = CreateFinalColumns(genericData.columns, selectedColumns, genericData.relationship);
+        this.setState({ genericData });
     }
 
     render() {
@@ -107,107 +93,15 @@ export default class GenericListing extends Component {
                             {genericData.columns ? <TableSettings onSubmit={this.layoutChanges} listName={genericData.listName} selectedColumns={genericData.selectedColumns} columns={genericData.columns}>
                             </TableSettings>
                                 : null}
-
-
                         </div>
-
                     </div>
                 </div>
                 <Card>
                     <CardBody>
-                        <Table striped>
-                            <thead>
-                                <tr>
-                                    <th>
-                                    </th>
-                                    {
-                                        finalColumns.map((selectedColumn, key) => (
-                                            <th className="column-header" key={key}>
-                                                {/* Column Wrapper */}
-                                                <div className="column-wrapper">
-                                                    {/* Column Title */}
-                                                    <div className="column-title printable">
-                                                        {selectedColumn.display_name}
-                                                        {/* {{ b.columnTitle || selectedColumn.display_name }} */}
-                                                    </div>
-                                                    {/* Column Title Ends */}
-
-                                                    {/* Filter Column */}
-                                                    {
-                                                        selectedColumn.path.split('.').length < 3 &&
-                                                        <div className="filter-column">
-                                                            <a ng-click="portlet.preventDefault($event);portlet.filterColumn(select-edColumn)">
-                                                                <i className="fas fa-filter"></i>
-                                                            </a>
-                                                        </div>
-                                                    }
-                                                    {/* Filter Ends */}
-                                                    {/* DB Level */}
-
-                                                    {
-                                                        (selectedColumn.path.split('.').length == 1) && (selectedColumn.column_type != 118) &&
-                                                        (
-                                                            <div className="db-level-sort">
-                                                                <span>
-                                                                    <a className="dropdown-link" id="simple-dropdown">
-                                                                        <i className="fa fa-sort-amount-asc"></i>
-                                                                    </a>
-
-                                                                </span>
-                                                            </div>
-                                                        )
-                                                    }
-                                                    {/* <div class="db-level-sort" ng-if="selectedColumn.path.split('.').length==1&&selectedColumn.column_type!=118">
-                                                        <span uib-dropdown on-toggle="toggled(open)">
-                                                            <a class="dropdown-link" id="simple-dropdown" uib-dropdown-toggle>
-                                                                <i class="fa fa-sort-amount-asc"></i>
-                                                            </a>
-                                                            <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
-                                                                <li ng-repeat="sort in portlet.sortTypes" ng-click="portlet.sortOnDB(sort, selectedColumn.path)">
-                                                                    <a>
-                                                                        <i class="fa {{sort.icon}}"></i>
-                                                                        {{ sort.caption }}
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </span>
-                                                    </div> */}
-                                                    {/* DB Level Ends */}
-                                                </div>
-                                            </th>
-
-                                        ))
-
-                                    }
-                                    <th className="action-header">
-                                        <span className="fa fa-cog fa-lg"></span>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    listing.map((listingRow, rowKey) => (
-                                        <tr className="table-row" key={rowKey}>
-
-                                            <td className="row-key">
-                                                {rowKey + 1}
-                                            </td>
-
-                                            {
-                                                finalColumns.map((selectedColumn, key) => (
-                                                    <td key={key}>
-                                                        {eval('listingRow.' + selectedColumn.path)}
-                                                    </td>
-                                                ))
-                                            }
-
-                                            <CustomAction genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} />
-
-                                        </tr>
-                                    ))
-                                }
-                            </tbody>
-                        </Table>
+                        {
+                            (finalColumns && finalColumns.length) ?
+                                <PortletTable genericData={genericData} finalColumns={finalColumns} listing={listing}></PortletTable> : null
+                        }
                     </CardBody>
                 </Card>
             </div>

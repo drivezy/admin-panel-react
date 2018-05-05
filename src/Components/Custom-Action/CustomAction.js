@@ -148,7 +148,6 @@ export default class CustomAction extends Component {
         }
     }
 
-
     render() {
         const { actions = [], listingRow = [] } = this.props;
         return (
