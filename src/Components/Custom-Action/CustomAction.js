@@ -7,7 +7,6 @@ let methods = {};
 let self = {};
 export default class CustomAction extends Component {
 
-
     constructor(props) {
         super(props);
 
@@ -17,8 +16,6 @@ export default class CustomAction extends Component {
             actions: props.actions,
             genericData: props.genericData
         };
-
-
     }
 
     componentDidMount = () => {

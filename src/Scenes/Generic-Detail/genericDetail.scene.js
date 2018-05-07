@@ -41,8 +41,9 @@ export default class GenericDetail extends Component {
 
     getMenuData = async () => {
         const { queryString } = this.state;
-        const { menu_id } = queryString;
-        const result = await GetMenuDetail(menu_id);
+        // const { menuId } = queryString;
+        const { menuId } = this.props;
+        const result = await GetMenuDetail(menuId);
         if (result.success) {
             const { response = {} } = result;
             const menuDetail = ConvertMenuDetailForGenericPage(response || {});
@@ -56,6 +57,7 @@ export default class GenericDetail extends Component {
 
     getDetailRecord = () => {
         const { menuDetail, genericData, urlParameter, params } = this.state;
+        // const {menuId} = this.props
         GetDetailRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, urlParameter: params });
     }
 
