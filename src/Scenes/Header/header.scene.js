@@ -16,6 +16,7 @@ export default class Header extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        console.log(nextProps);
     }
 
     render() {
