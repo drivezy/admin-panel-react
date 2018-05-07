@@ -1,24 +1,21 @@
 import React, { Component } from 'react';
 import './CustomAction.css';
 
+import { CreateUrl } from './../../Utils/generic.utils';
+
 let customMethods = {};
-let methods = {};
 
 let self = {};
 export default class CustomAction extends Component {
-
-
+    methods = {};
     constructor(props) {
         super(props);
 
         self = this;
         this.state = {
-
             actions: props.actions,
             genericData: props.genericData
         };
-
-
     }
 
     componentDidMount = () => {
@@ -28,30 +25,16 @@ export default class CustomAction extends Component {
     }
 
     preSelectedMethods() {
-        methods.redirect = function (action, listing) {
+        this.methods.redirect = (action, listing) => {
+            const { history, genericData } = this.props;
 
-            function createUrl(url, obj) {
-                var reg = /(:)\w+/g;
-                var params = url.match(reg);
-                if (!params.length) {
-                    return url;
-                }
-                for (var i in params) {
-                    var attr = params[i].substr(1);
-                    url = url.replace(params[i], obj[attr]);
-                }
-                return url;
-            }
-
-
-            var url = createUrl(action.parameter, listing);
+            var url = CreateUrl({ url: action.parameter, obj: listing });
             // var urlParams;
             // var userQuery = 0;
 
             function createQueryUrl(url, restrictQuery, genericData) {
 
                 var query = '';
-
                 var orderMethod;
 
                 // If query is present 
@@ -84,7 +67,6 @@ export default class CustomAction extends Component {
                 } else {
                     orderMethod = '?';
                 }
-
                 // if (urlParams.order) {
                 //     url += query + orderMethod + "listingOrder=" + urlParams.order + ',' + (urlParams.sort || 'desc');
                 // } else if (this.props.genericData.defaultOrder) {
@@ -95,9 +77,9 @@ export default class CustomAction extends Component {
 
                 return url;
             }
+            url = createQueryUrl(url, genericData.restrictQuery, genericData);
 
-            url = createQueryUrl(url, self.props.genericData.restrictQuery, self.props.genericData);
-
+            history.push(url);
             // if (angular.isDefined(event)) {
             //     if (event.metaKey || event.ctrlKey) {
             //         window.open("#/" + url, "_blank");
@@ -106,10 +88,7 @@ export default class CustomAction extends Component {
             // location.hash = "#/" + url;
             //     }
             // }
-
-
         };
-
     }
 
 
@@ -142,8 +121,8 @@ export default class CustomAction extends Component {
             customMethods[action.name].apply(this, args);
         } else { // For add, edit,delete
             // action.callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : listing.callbackFunction.function) : listing.callbackFunction.function;
-            if (typeof methods[action.name] == "function") {
-                methods[action.name](action, listing);
+            if (typeof this.methods[action.name] == "function") {
+                this.methods[action.name](action, listing);
             }
         }
     }

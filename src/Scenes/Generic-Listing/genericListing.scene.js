@@ -78,6 +78,7 @@ export default class GenericListing extends Component {
     render() {
         const { genericData = {}, pagesOnDisplay, menuDetail = {} } = this.state;
         const { listing = [], finalColumns = [] } = genericData;
+        const { history } = this.props;
 
         return (
             <div className="generic-listing-container">
@@ -92,9 +93,12 @@ export default class GenericListing extends Component {
                             <button type="button" className="btn btn-sm btn-secondary">Middle</button>
                             <button type="button" className="btn btn-sm btn-secondary">Right</button>
 
-                            {genericData.columns ? <TableSettings onSubmit={this.layoutChanges} listName={genericData.listName} selectedColumns={genericData.selectedColumns} columns={genericData.columns}>
-                            </TableSettings>
-                                : null}
+                            {
+                                genericData.columns ?
+                                    <TableSettings onSubmit={this.layoutChanges} listName={genericData.listName} selectedColumns={genericData.selectedColumns} columns={genericData.columns} />
+                                    :
+                                    null
+                            }
                         </div>
                     </div>
                 </div>
@@ -102,9 +106,9 @@ export default class GenericListing extends Component {
                     <CardBody>
                         {
                             (finalColumns && finalColumns.length) ?
-                                <PortletTable genericData={genericData} finalColumns={finalColumns} listing={listing}></PortletTable> : null
+                                <PortletTable history={history} genericData={genericData} finalColumns={finalColumns} listing={listing} /> : null
                         }
-                    <ListingPagination genericData={genericData} />
+                        <ListingPagination genericData={genericData} />
                     </CardBody>
                 </Card>
             </div>

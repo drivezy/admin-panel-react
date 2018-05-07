@@ -4,7 +4,7 @@ import { Get } from './http.utils';
 
 /**
 * prepare query, pagination, and everything required according to
-* url and menu detail, fetch data and being passed further to components
+* url and menu detail, fetch data and passes them further to the components
 * to show listing data
 */
 export async function GetListingRecord({ configuration, queryString = {}, callback, data }) {
