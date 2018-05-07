@@ -128,7 +128,7 @@ class MainApp extends Component {
 
                                             if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericListingController.js') != -1) {
                                                 return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericListing {...props} menuId={state.id} />} />)
-                                            } else if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericDetailController.js') != -1) {
+                                            } else if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericDetailCtrl.js') != -1) {
                                                 return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericDetail {...props} menuId={state.id} />} />)
                                             } else {
                                                 // return (<Route key={state.url} path={`${match.path}activeBookings`} component={GenericListing} />)
