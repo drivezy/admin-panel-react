@@ -42,6 +42,7 @@ export default class PortletTable extends Component {
     render() {
 
         const { genericData, finalColumns, listing } = this.state;
+        const { history } = this.props;
 
         return (
             <Table striped>
@@ -127,7 +128,7 @@ export default class PortletTable extends Component {
                                         </td>
                                     ))
                                 }
-                                <CustomAction genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} />
+                                <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} />
                             </tr>
                         ))
                     }
