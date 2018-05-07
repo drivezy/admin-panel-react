@@ -36,7 +36,7 @@ export default class GenericListing extends Component {
         const { menuId, limit, page } = this.props;
         const result = await GetMenuDetail(menuId);
         if (result.success) {
-            console.log(result.response);
+
             const { response = {} } = result;
             const menuDetail = ConvertMenuDetailForGenericPage(response || {});
             if (typeof response.controller_path == 'string' && response.controller_path.includes('genericListingController.js') != -1) {
