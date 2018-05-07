@@ -1,5 +1,14 @@
 {
     "extends": "rallycoding",
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "node": true,
+        "es6": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 6
+    },
     "rules": {
         "no-undef": "off",
         "max-len": "off",
@@ -7,7 +16,9 @@
         "no-case-declarations": "off",
         "react/sort-comp": "off",
         "no-shadow": "off",
-        "arrow-body-style": ["error"],
+        "arrow-body-style": [
+            "error"
+        ],
         "one-var-declaration-per-line": "off",
         "no-underscore-dangle": "off",
         "one-var": "off",

@@ -7,7 +7,7 @@ import {
 
 // import GLOBAL from './../Constants/global.constants';
 
-// import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 // import { connect } from 'react-redux';
 // import { browserHistory } from 'react-router';
@@ -174,14 +174,17 @@ class StartRoute extends Component {
     render() {
         return (
             // <Provider store={store}>
-            <Router>
-                <Switch>
-                    {/* <Router path='/list' component={GenericListing} /> */}
-                    <Route path="/login" component={LoginScene} onEnter={requireAuth()} />
-                    <Route path="/" component={MainApp} />
-                    {/* <PrivateRoute path="/" component={MainApp} /> */}
-                </Switch>
-            </Router>
+            <div>
+                <Router>
+                    <Switch>
+                        {/* <Router path='/list' component={GenericListing} /> */}
+                        <Route path="/login" component={LoginScene} onEnter={requireAuth()} />
+                        <Route path="/" component={MainApp} />
+                        {/* <PrivateRoute path="/" component={MainApp} /> */}
+                    </Switch>
+                </Router>
+                <ToastContainer />
+            </div>
             // </Provider>
         )
     }
