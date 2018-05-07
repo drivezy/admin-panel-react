@@ -17,6 +17,9 @@ import TableSettings from './../../Components/Table-Settings/TableSettings';
 
 import PortletTable from './../../Components/Portlet-Table/PortletTable';
 
+// import ModalUtils from './../../Utils/modal.utils';
+import ModalManager from './../../Custom-Components/Modal-Wrapper/modalManager';
+
 export default class GenericListing extends Component {
     constructor(props) {
         super(props);
@@ -29,7 +32,9 @@ export default class GenericListing extends Component {
 
     componentDidMount() {
         this.getMenuData();
+        // ModalManager.showModal({ onClose: this.closeModal, headerText: 'sdfsgre', modalBody: () => (<h1> hi</h1>) });
     }
+
 
     getMenuData = async () => {
         const { queryString } = this.state;

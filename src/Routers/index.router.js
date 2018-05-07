@@ -38,6 +38,8 @@ import { Get } from './../Utils/http.utils';
 
 import { GetPreferences } from './../Utils/preference.utils';
 
+import ModalWrapper from './../Custom-Components/Modal-Wrapper/modalWrapper.component';
+import ModalManager from './../Custom-Components/Modal-Wrapper/modalManager';
 /** Actions */
 // import { GetCities } from './../Actions/city.action';
 // import { CurrentRoute } from './../Actions/router.action';
@@ -185,6 +187,9 @@ class StartRoute extends Component {
                     </Switch>
                 </Router>
                 <ToastContainer />
+                <ModalWrapper ref={(elem) => {
+                    ModalManager.registerModal(elem);
+                }} />
             </div>
             // </Provider>
         )
