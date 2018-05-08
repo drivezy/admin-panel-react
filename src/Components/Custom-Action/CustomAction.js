@@ -140,21 +140,25 @@ export default class CustomAction extends Component {
     }
 
     render() {
-        const { actions = [], listingRow = [], genericData = {} } = this.props;
+        const { actions = [], listingRow = [], genericData = {}, placement } = this.props;
         return (
-            <td className="custom-action action-column">
+            <div>
                 {
-                    actions.map((action, key) => (
-                        <button
-                            onClick={() => {
-                                this.callFunction({ action, listingRow });
-                            }}
-                            type="button" key={key} className="btn btn-sm btn-light">
-                            <i className={`fa ${action.icon}`} ></i>
-                        </button>
-                    ))
+                    actions.map((action, key) => {
+                        if (action.placement_id == placement) {
+                            return (
+                                <button
+                                    onClick={() => {
+                                        this.callFunction({ action, listingRow });
+                                    }}
+                                    type="button" key={key} className="btn btn-sm btn-light">
+                                    <i className={`fa ${action.icon}`} ></i>
+                                </button>
+                            );
+                        }
+                    })
                 }
-            </td>
+            </div>
         )
     }
 }

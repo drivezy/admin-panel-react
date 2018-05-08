@@ -118,8 +118,11 @@ export default class DetailPortlet extends Component {
 
             self.resolve.push(resolve);
             this.state.tabContent.push(tab);
-
         }
+
+        const tabContent = this.state.tabContent;
+        this.setState({tabContent});
+        // this.setState({})
 
     }
 
