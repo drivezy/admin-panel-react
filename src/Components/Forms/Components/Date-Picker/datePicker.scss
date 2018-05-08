@@ -1,0 +1,14 @@
+.datepicker {
+    .form-control {
+        cursor: pointer;
+        padding: 0px;
+        .react-bootstrap-daterangepicker-container {
+            padding: .375rem .75rem;
+            display: block !important;
+            .picker {
+                display: block;
+                width: 100%;
+            }
+        }
+    }
+}
