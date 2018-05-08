@@ -19,6 +19,7 @@ import PortletTable from './../../Components/Portlet-Table/PortletTable';
 
 // import ModalUtils from './../../Utils/modal.utils';
 import ModalManager from './../../Custom-Components/Modal-Wrapper/modalManager';
+import ModalWrap from './../../Custom-Components/Modal-Wrapper/modalWrapper.component';
 
 export default class GenericListing extends Component {
     constructor(props) {
@@ -26,15 +27,14 @@ export default class GenericListing extends Component {
         this.state = {
             ...GetUrlParams(this.props), // params, queryString
             menuDetail: {},
-            genericData: {}
+            genericData: {},
         };
     }
 
     componentDidMount() {
         this.getMenuData();
-        // ModalManager.showModal({ onClose: this.closeModal, headerText: 'sdfsgre', modalBody: () => (<h1> hi</h1>) });
+        // ModalManager.showModal({ onClose: this.closeModal, headerText: '1st using method', modalBody: () => (<h1> hi</h1>) });
     }
-
 
     getMenuData = async () => {
         const { queryString } = this.state;
@@ -71,9 +71,7 @@ export default class GenericListing extends Component {
     }
 
 
-
     layoutChanges = (selectedColumns) => {
-
         let { genericData } = this.state;
         genericData.selectedColumns = selectedColumns;
         genericData.finalColumns = CreateFinalColumns(genericData.columns, selectedColumns, genericData.relationship);
@@ -87,6 +85,12 @@ export default class GenericListing extends Component {
 
         return (
             <div className="generic-listing-container">
+                {/* <ModalWrap
+                    isVisible
+                    headerText="tesfh"
+                    modalBody={() => (<h1> h2</h1>)}
+                    closeModal={() => this.setState({ isVisible: false })}
+                /> */}
                 <div className="page-bar">
                     <div className="search-wrapper">
 

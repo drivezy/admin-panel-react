@@ -9,7 +9,7 @@
  *    isVisible={isVisible}
  *    headerText="tesfh" 
  *    modalBody={() => (<h1> hudgdub</h1>)} 
- *    loseModal={() => this.setState({ isVisible: false })}
+ *    closeModal={() => this.setState({ isVisible: false })}
  * />
  */
 
@@ -20,8 +20,7 @@ export default class ModalWrapper extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isVisible: props.isVisible || false,
-
+            ...props
         }
     }
 

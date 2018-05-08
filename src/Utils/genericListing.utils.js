@@ -109,7 +109,7 @@ function PrepareObjectForListing(result, { extraParams }) {
 
         // relationship = result.relationship ? result.relationship : null;
         // gatherObject(result.daDeta);
-        // var modelName = self.configuration.model.name.toLowerCase();
+        const modelName = configuration.model.name.toLowerCase();
 
         // Preparing the generic listing object
         const genericListingObj = {
@@ -128,12 +128,12 @@ function PrepareObjectForListing(result, { extraParams }) {
             columns: GetColumnsForListing(params),
             selectedColumns: configuration.preference[configuration.listName + ".list"] ? JSON.parse(configuration.preference[configuration.listName + ".list"]) : null, // formPreference: configuration.preference[configuration.listName + '.form'] ? JSON.parse(configuration.preference[configuration.listName + '.form']) : null,
             nextActions: configuration.nextActions,
+            formPreference: configuration.preference[modelName + ".form"] ? JSON.parse(configuration.preference[modelName + ".form"]) : null,
+            modelName: configuration.model.name.toLowerCase() + ".form",
+            module: configuration.module,
+            dataModel: configuration.model,
+            
             // userFilter: configuration.userFilter,
-
-            // module: configuration.module,
-            // formPreference: configuration.preference[modelName + ".form"] ? JSON.parse(configuration.preference[modelName + ".form"]) : null,
-            // modelName: configuration.model.name.toLowerCase() + ".form",
-            // dataModel: configuration.model,
             // modelId: configuration.model.id,
             // callbackFunction: callFunction,
             // icon: configuration.image,

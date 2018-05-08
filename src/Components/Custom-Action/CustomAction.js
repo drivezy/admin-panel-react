@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './CustomAction.css';
 
 import { CreateUrl } from './../../Utils/generic.utils';
+import ModalManager from './../../Custom-Components/Modal-Wrapper/modalManager';
 
 let customMethods = {};
 
@@ -25,10 +26,10 @@ export default class CustomAction extends Component {
     }
 
     preSelectedMethods() {
-        this.methods.redirect = (action, listing) => {
+        this.methods.redirect = ({ action, listingRow }) => {
             const { history, genericData } = this.props;
 
-            var url = CreateUrl({ url: action.parameter, obj: listing });
+            var url = CreateUrl({ url: action.parameter, obj: listingRow });
             // var urlParams;
             // var userQuery = 0;
 
@@ -89,6 +90,18 @@ export default class CustomAction extends Component {
             //     }
             // }
         };
+
+        this.methods.add = ({ action, listingRow }) => {
+            const { genericData = {} } = this.props;
+            const payload = { action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module, dataModel: genericData.dataModel };
+            ModalManager.openModal({ payload, headerText: 'Add modal', modalBody: () => (<h1> hi</h1>) });
+        }
+
+        this.methods.edit = ({ action, listingRow }) => {
+            const { genericData = {} } = this.props;
+            const payload = { method: 'edit', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module, dataModel: genericData.dataModel };
+            ModalManager.openModal({ payload, headerText: 'Edit modal', modalBody: () => (<h1> hi</h1>) });
+        }
     }
 
 
@@ -107,8 +120,7 @@ export default class CustomAction extends Component {
     }
 
 
-    callFunction(action, listing) {
-        console.log(action, listing);
+    callFunction({ action, listingRow }) {
         const args = [];
         if (typeof customMethods[action.name] == "function") {
             // var callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : customMethods[action.callback]) : listing.callbackFunction.function;
@@ -122,19 +134,23 @@ export default class CustomAction extends Component {
         } else { // For add, edit,delete
             // action.callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : listing.callbackFunction.function) : listing.callbackFunction.function;
             if (typeof this.methods[action.name] == "function") {
-                this.methods[action.name](action, listing);
+                this.methods[action.name]({ action, listingRow });
             }
         }
     }
 
     render() {
-        const { actions = [], listingRow = [] } = this.props;
+        const { actions = [], listingRow = [], genericData = {} } = this.props;
         return (
             <td className="custom-action action-column">
                 {
                     actions.map((action, key) => (
-                        <button onClick={() => { this.callFunction(action, listingRow) }} type="button" key={key} className="btn btn-sm btn-light">
-                            <i className={`fas ${action.icon}`} ></i>
+                        <button
+                            onClick={() => {
+                                this.callFunction({ action, listingRow });
+                            }}
+                            type="button" key={key} className="btn btn-sm btn-light">
+                            <i className={`fa ${action.icon}`} ></i>
                         </button>
                     ))
                 }

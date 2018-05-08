@@ -4,7 +4,7 @@ module.exports = {
     registerModal: function (ref) {
         this._currentGlobalLoader = ref;
     },
-    showModal: function ({ ...args }) {
+    openModal: function ({ ...args }) {
         if (this._currentGlobalLoader) {
             this._currentGlobalLoader.openModal({ ...args });
             // this._currentGlobalLoader.openModal({ modalBody: () => (<h1> hi</h1>) });
