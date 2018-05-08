@@ -28,10 +28,13 @@ export const GetFireToken = async () => {
 
 export const LoginCheck = async () => {
     const result = await Get({ urlPrefix: GLOBAL.ROUTE_URL, url: 'loginCheck' });
+    let loggedUser = {};
     if (result.success) {
-        StoreEvent({ eventName: 'loggedUser', data: result.response });
+        loggedUser = result.response;
         CurrentUser = result.response;
     }
+
+    StoreEvent({ eventName: 'loggedUser', data: { ...loggedUser, ...{ loggedCheckDone: true } } });
     return result;
 }
 

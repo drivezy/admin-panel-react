@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
     BrowserRouter as Router,
-    Route, Switch
+    Route, Switch, Redirect
 } from 'react-router-dom';
 // import { Provider, connect } from 'react-redux';
 
@@ -13,7 +13,7 @@ import { ToastContainer } from 'react-toastify';
 // import { browserHistory } from 'react-router';
 
 /** Router */
-
+import PrivateRoute from './privateRoute.router';
 /** Router ends */
 
 /** Components */
@@ -50,6 +50,7 @@ import ModalManager from './../Custom-Components/Modal-Wrapper/modalManager';
 /** Store ends*/
 
 import LoadAsync from './../Utils/loadAsyncScripts.utils';
+import { SubscribeToEvent } from './../Utils/stateManager.utils';
 // import { GetProperties } from './../Utils/openProperty.utils';
 
 // import { LoginCheck } from './../Actions/user.action';
@@ -174,7 +175,21 @@ function requireAuth() {
  * Starting Route is the parent level routing definition, 
  */
 class StartRoute extends Component {
+    state = {
+        loggedUser: {}
+    };
+
+    componentDidMount() {
+        SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
+    }
+
+    userDataFetched = (data) => {
+        console.log('data',data);
+        this.setState({ loggedUser: data });
+    }
+
     render() {
+        const { loggedUser } = this.state;
         return (
             // <Provider store={store}>
             <div>
@@ -182,7 +197,7 @@ class StartRoute extends Component {
                     <Switch>
                         {/* <Router path='/list' component={GenericListing} /> */}
                         <Route path="/login" component={LoginScene} onEnter={requireAuth()} />
-                        <Route path="/" component={MainApp} />
+                        <PrivateRoute path="/" loggedUser={loggedUser} component={MainApp} />
                         {/* <PrivateRoute path="/" component={MainApp} /> */}
                     </Switch>
                 </Router>
