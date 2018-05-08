@@ -12,12 +12,10 @@ import { GetListingRecord } from './../../Utils/genericListing.utils';
 
 
 import ListingPagination from './../../Components/Listing-Pagination/ListingPagination';
-
 import TableSettings from './../../Components/Table-Settings/TableSettings';
-
 import PortletTable from './../../Components/Portlet-Table/PortletTable';
+import CustomAction from './../../Components/Custom-Action/CustomAction';
 
-// import ModalUtils from './../../Utils/modal.utils';
 import ModalManager from './../../Custom-Components/Modal-Wrapper/modalManager';
 import ModalWrap from './../../Custom-Components/Modal-Wrapper/modalWrapper.component';
 
@@ -98,9 +96,11 @@ export default class GenericListing extends Component {
                     <div className="header-actions">
 
                         <div className="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" className="btn btn-sm btn-secondary">Left</button>
+                            {/* <button type="button" className="btn btn-sm btn-secondary">Left</button>
                             <button type="button" className="btn btn-sm btn-secondary">Middle</button>
-                            <button type="button" className="btn btn-sm btn-secondary">Right</button>
+                            <button type="button" className="btn btn-sm btn-secondary">Right</button> */}
+
+                            <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
 
                             {
                                 genericData.columns ?
