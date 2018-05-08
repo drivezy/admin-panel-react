@@ -9,7 +9,7 @@
  *    isVisible={isVisible}
  *    headerText="tesfh" 
  *    modalBody={() => (<h1> hudgdub</h1>)} 
- *    loseModal={() => this.setState({ isVisible: false })}
+ *    closeModal={() => this.setState({ isVisible: false })}
  * />
  */
 
@@ -20,7 +20,7 @@ export default class ModalWrapper extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isVisible: props.isVisible || false
+            ...props
         }
     }
 
@@ -30,27 +30,31 @@ export default class ModalWrapper extends Component {
         }
     }
 
-    toggleModal = () => {
-        const { closeModal } = this.props;
+    openModal = ({ ...args }) => {
+        // this.state.modalBody = null;
+        this.setState({ isVisible: true, ...args });
+    }
 
-        // this.setState({ isVisible: false });
-        if (typeof closeModal == 'function') {
-            closeModal();
+    closeModal = () => {
+        const { onClose } = this.state;
+        this.setState({ isVisible: false });
+        if (typeof onClose == 'function') {
+            onClose();
         }
     }
 
     render() {
-        const { headerText, modalHeader, modalBody, modalFooter } = this.props;
+        const { headerText, modalHeader, modalBody, modalFooter } = this.state;
         const { isVisible } = this.state;
 
         return (
-            <Modal isOpen={isVisible} toggle={this.toggleModal} className={this.props.className} backdrop={this.state.backdrop}>
+            <Modal isOpen={isVisible} toggle={this.closeModal} className={this.props.className} backdrop={this.state.backdrop}>
                 {
                     modalHeader ?
-                        <ModalHeader toggle={this.toggleModal}>{modalHeader()}</ModalHeader>
+                        <ModalHeader toggle={this.closeModal}>{modalHeader()}</ModalHeader>
                         :
                         headerText ?
-                            <ModalHeader toggle={this.toggleModal}>{headerText}</ModalHeader>
+                            <ModalHeader toggle={this.closeModal}>{headerText}</ModalHeader>
                             : null
                 }
 
