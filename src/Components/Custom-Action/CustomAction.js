@@ -4,6 +4,8 @@ import './CustomAction.css';
 import { CreateUrl } from './../../Utils/generic.utils';
 import ModalManager from './../../Custom-Components/Modal-Wrapper/modalManager';
 
+import FormCreator from './../Form-Creator/formCreator.component';
+
 let customMethods = {};
 
 let self = {};
@@ -94,13 +96,13 @@ export default class CustomAction extends Component {
         this.methods.add = ({ action, listingRow }) => {
             const { genericData = {} } = this.props;
             const payload = { action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module, dataModel: genericData.dataModel };
-            ModalManager.openModal({ payload, headerText: 'Add modal', modalBody: () => (<h1> hi</h1>) });
+            ModalManager.openModal({ payload, headerText: 'Add modal', modalBody: () => (<FormCreator payload={payload} />) });
         }
 
         this.methods.edit = ({ action, listingRow }) => {
             const { genericData = {} } = this.props;
             const payload = { method: 'edit', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module, dataModel: genericData.dataModel };
-            ModalManager.openModal({ payload, headerText: 'Edit modal', modalBody: () => (<h1> hi</h1>) });
+            ModalManager.openModal({ payload, headerText: 'Edit modal', modalBody: () => (<FormCreator payload={payload} />) });
         }
     }
 

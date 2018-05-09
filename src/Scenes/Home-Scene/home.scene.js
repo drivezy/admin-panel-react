@@ -15,7 +15,6 @@ import { Get } from './../../Utils/http.utils';
 import { withFormik } from 'formik';
 import Yup from 'yup';
 
-
 export const DisplayFormikState = props =>
     <div style={{ margin: '1rem 0' }}>
         <h3 style={{ fontFamily: 'monospace' }} />
