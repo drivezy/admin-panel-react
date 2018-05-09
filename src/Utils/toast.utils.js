@@ -5,10 +5,11 @@
  ************************************************************************/
 
 import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const toastParams = { // default configuration for toast
     autoClose: 2000,
-    position: toast.POSITION.BOTTOM_RIGHT
+    position: toast.POSITION.BOTTOM_TOP
 }
 export default class ToastNotifications {
     /**

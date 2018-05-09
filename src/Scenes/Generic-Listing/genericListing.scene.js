@@ -33,8 +33,9 @@ export default class GenericListing extends Component {
         // console.log(this.state);
         // console.log(GetUrlParams(nextProps));
         const newProps = GetUrlParams(nextProps);
-        this.setState(newProps);
-        this.getMenuData();
+        this.state.params = newProps.params;
+        this.state.queryString = newProps.queryString;
+        this.getListingData();
     }
 
     componentDidMount() {
@@ -75,7 +76,6 @@ export default class GenericListing extends Component {
         // }
         // console.log(genericData);
         this.setState({ genericData });
-        this.forceUpdate()
     }
 
 
@@ -125,7 +125,7 @@ export default class GenericListing extends Component {
                     <CardBody>
                         {
                             (finalColumns && finalColumns.length) ?
-                                <PortletTable history={history} genericData={genericData} finalColumns={finalColumns} listing={listing} /> : null
+                                <PortletTable history={history} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} /> : null
                         }
                         <ListingPagination history={history} match={match} genericData={genericData} />
                     </CardBody>
