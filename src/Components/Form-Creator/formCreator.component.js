@@ -12,7 +12,7 @@ import { withFormik, Field, Form } from 'formik';
 import Yup from 'yup';
 
 import SelectBox from './../Forms/Components/Select-Box/selectBox';
-
+import ReferenceInput from './../Forms/Components/Reference-Input/referenceInput';
 
 const DisplayFormikState = props => (
     <div style={{ margin: '1rem 0' }}>
@@ -33,7 +33,7 @@ const DisplayFormikState = props => (
 // {/* <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small> */ }
 
 
-const inputElement = ({ values, column, shouldColumnSplited, key }) => {
+const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
 
     const elements = {
         107: <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
@@ -47,21 +47,26 @@ const inputElement = ({ values, column, shouldColumnSplited, key }) => {
         109: 'datepicker',
         746: 'time',
         110: 'datetime',
-        // 111: 'boolean',
         111: <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
             <label htmlFor="exampleInputEmail1">{column.display_name}</label>
-            {/* <SelectBox value={values[column.column_name]} options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} /> */}
             <Field
                 name={column.column_name}
                 render={({ field /* _form */ }) => (
-                    <SelectBox value={values[column.column_name]} options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                    <SelectBox name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
                 )}
             />
-
-
         </div>,
         116: 'dropdown',
-        117: 'reference',
+        117: <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
+            <label htmlFor="exampleInputEmail1">{column.display_name}</label>
+            <Field
+                name={column.column_name}
+                render={({ field /* _form */ }) => (
+                    <ReferenceInput column={column} name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />
+                )}
+            />
+        </div>,
+
         119: 'switch',
         160: 'textArea',
         411: 'script',
@@ -105,7 +110,7 @@ const formElements = props => {
                         if (typeof preference != 'string') {
                             const column = payload.columns[preference.column];
 
-                            return inputElement({ values, column, shouldColumnSplited, key });
+                            return inputElement({ props, values, column, shouldColumnSplited, key });
 
                         } else if (typeof preference == 'string') {
                             shouldColumnSplited = preference.includes('s-split-') ? true : preference.includes('e-split-') ? false : shouldColumnSplited;
@@ -161,6 +166,9 @@ const FormContents = withFormik({
             alert(JSON.stringify(values, null, 2));
             setSubmitting(false);
         }, 1000);
+    },
+    setFieldValue: (val) => {
+        console.log(val);
     },
     displayName: 'BasicForm', // helps with React DevTools
 })(formElements);

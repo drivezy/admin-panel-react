@@ -20,7 +20,7 @@ export default class SelectBox extends Component {
             async: this.props.async,
 
             multi: this.props.multi,
-            selectedOption: [],
+            selectedOption: this.props.value || '',
             field: this.props.field || 'name',
             key: this.props.key || 'id'
         };
@@ -39,7 +39,7 @@ export default class SelectBox extends Component {
         this.setState({ selectedOption });
 
         if (this.props.onChange) {
-            this.props.onChange(this.props.model, selectedOption);
+            this.props.onChange(this.props.name, selectedOption[this.state.key]);
         }
     }
 
@@ -76,7 +76,7 @@ export default class SelectBox extends Component {
                         <div>
                             <Async
                                 name="form-field-name"
-                                // value={selectedOption}
+                                value={selectedOption}
                                 loadOptions={this.getOptions}
                                 onChange={this.handleChange}
                                 multi={this.props.multi}
