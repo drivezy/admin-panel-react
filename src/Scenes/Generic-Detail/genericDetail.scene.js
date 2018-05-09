@@ -1,27 +1,22 @@
 import React, { Component } from 'react';
-import { GetUrlParams } from './../../Utils/location.utils';
-import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
-import { GetDetailRecord } from './../../Utils/genericDetail.utils';
-
-import { createFinalObject } from './../../Utils/table.utils';
-
-import DetailPortlet from './../../Components/Detail-Portlet/DetailPortlet';
-import DetailIncludes from './../../Components/Detail-Includes/DetailIncludes';
-
-import TableSettings from './../../Components/Table-Settings/TableSettings';
-
-import { TabContent, TabPane, Nav, NavItem, NavLink, Table } from 'reactstrap';
-
-
-import './genericDetail.css';
-
 
 import {
     Card, CardImg, CardText, CardBody,
     CardTitle, CardSubtitle, Button,
     Container,
-    Row, Col
+    Row, Col, TabContent, TabPane, Nav, NavItem, NavLink, Table
 } from 'reactstrap';
+
+import DetailPortlet from './../../Components/Detail-Portlet/DetailPortlet';
+import DetailIncludes from './../../Components/Detail-Includes/DetailIncludes';
+import TableSettings from './../../Components/Table-Settings/TableSettings';
+
+import { GetUrlParams } from './../../Utils/location.utils';
+import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
+import { GetDetailRecord } from './../../Utils/genericDetail.utils';
+import { createFinalObject } from './../../Utils/table.utils';
+
+import './genericDetail.css';
 
 export default class GenericDetail extends Component {
     constructor(props) {
@@ -78,11 +73,8 @@ export default class GenericDetail extends Component {
     }
 
     render() {
-
         const { menuDetail = {}, portlet = {}, tabs = {} } = this.state;
-
         const { finalColumns = [], data = {} } = portlet;
-
         let selectedColumns = {};
 
         if (menuDetail.preference) {
@@ -93,27 +85,25 @@ export default class GenericDetail extends Component {
             <div className="generic-detail-container">
 
                 <div className="header">
+                    <div className="left" />
 
-                    <div className="left">
-                    </div>
                     <div className="right">
-
                         {portlet.portletColumns ? <TableSettings onSubmit={this.layoutChanges} listName={portlet.listName} selectedColumns={selectedColumns} columns={portlet.portletColumns} finalColumns={finalColumns}>
                         </TableSettings>
                             : null}
                     </div>
                 </div>
 
-
                 {
                     finalColumns.length ?
-                        <DetailPortlet data={data} finalColumns={finalColumns}>
-                        </DetailPortlet> : null}
+                        <DetailPortlet data={data} finalColumns={finalColumns} />
+                        : null
+                }
 
                 {
                     tabs && tabs.includes ?
-                        <DetailIncludes tabs={tabs} >
-                        </DetailIncludes> : null
+                        <DetailIncludes tabs={tabs} />
+                        : null
                 }
             </div>
         )

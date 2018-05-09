@@ -30,18 +30,22 @@ export default class PortletTable extends Component {
     // According to action width 
     // width of table is assigned
     adjustWidth = () => {
-        var actionColumnWidth = document.getElementsByClassName('action-column')[0].clientWidth;
-        var table = document.getElementsByClassName('table')[0];
-        var tableWidth = table.clientWidth;
+        const actionColumnEle = document.getElementsByClassName('action-column')[0];
+        if (actionColumnEle) {
+            var actionColumnWidth = actionColumnEle.clientWidth;
+            var table = document.getElementsByClassName('table')[0];
+            var tableWidth = table.clientWidth;
 
-        var percent = (100 - (actionColumnWidth / tableWidth) * 100);
+            var percent = (100 - (actionColumnWidth / tableWidth) * 100);
 
-        table.setAttribute('style', 'width:calc(' + percent + '% - 2px )')
+            table.setAttribute('style', 'width:calc(' + percent + '% - 2px )');
+        }
     }
 
     render() {
 
         const { genericData, finalColumns, listing } = this.state;
+        const { history } = this.props;
 
         return (
             <Table striped>
@@ -127,7 +131,9 @@ export default class PortletTable extends Component {
                                         </td>
                                     ))
                                 }
-                                <CustomAction genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} />
+                                <td className="custom-action action-column">
+                                    <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} placement={167} />
+                                </td>
                             </tr>
                         ))
                     }

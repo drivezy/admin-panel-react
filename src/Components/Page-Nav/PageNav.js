@@ -4,6 +4,8 @@ import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reac
 
 import GLOBAL from './../../Constants/global.constants';
 
+import { SubscribeToEvent } from './../../Utils/stateManager.utils';
+
 import { Get } from './../../Utils/http.utils';
 
 import {
@@ -17,8 +19,17 @@ export default class PageNav extends Component {
 
         this.toggle = this.toggle.bind(this);
         this.state = {
-            dropdownOpen: false
+            dropdownOpen: false,
+            currentUser: {}
         };
+    }
+
+    componentDidMount() {
+        SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
+    }
+
+    userDataFetched = (data) => {
+        this.setState({ currentUser: data });
     }
 
     toggle() {
@@ -42,7 +53,11 @@ export default class PageNav extends Component {
         }
     }
 
+
+
     render() {
+
+        const { currentUser } = this.state;
         const { from } = (this.props.location ? this.props.location.state : null) || { from: { pathname: '/login' } };
         const { redirectToReferrer } = this.state
         // this.props.setCurrentRoute(from)
@@ -63,12 +78,25 @@ export default class PageNav extends Component {
                     <DropdownToggle>
 
                         <div className="user-profile">
-                            <div className="profile-image"></div>
+                            <div className="profile-image">
+                                <img src={`${this.state.currentUser.photograph}`} />
+                            </div>
                         </div>
 
                     </DropdownToggle>
 
                     <DropdownMenu>
+                        <DropdownItem>
+                            <a className="user-details">
+                                <div className="display-name">
+                                    {this.state.currentUser.display_name}
+                                </div>
+                                <div className="email">
+                                    {this.state.currentUser.email}
+                                    <i className="fas fa-cog" aria-hidden="true"></i>
+                                </div>
+                            </a>
+                        </DropdownItem>
                         <DropdownItem>Clear Storage</DropdownItem>
                         <DropdownItem>Set Homepage</DropdownItem>
                         <DropdownItem>Change Password</DropdownItem>

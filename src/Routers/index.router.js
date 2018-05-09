@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import {
     BrowserRouter as Router,
-    Route, Switch
+    Route, Switch, Redirect
 } from 'react-router-dom';
 // import { Provider, connect } from 'react-redux';
 
 // import GLOBAL from './../Constants/global.constants';
 
-// import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 // import { connect } from 'react-redux';
 // import { browserHistory } from 'react-router';
 
 /** Router */
-
+import PrivateRoute from './privateRoute.router';
 /** Router ends */
 
 /** Components */
@@ -38,6 +38,8 @@ import { Get } from './../Utils/http.utils';
 
 import { GetPreferences } from './../Utils/preference.utils';
 
+import ModalWrapper from './../Custom-Components/Modal-Wrapper/modalWrapper.component';
+import ModalManager from './../Custom-Components/Modal-Wrapper/modalManager';
 /** Actions */
 // import { GetCities } from './../Actions/city.action';
 // import { CurrentRoute } from './../Actions/router.action';
@@ -48,6 +50,7 @@ import { GetPreferences } from './../Utils/preference.utils';
 /** Store ends*/
 
 import LoadAsync from './../Utils/loadAsyncScripts.utils';
+import { SubscribeToEvent } from './../Utils/stateManager.utils';
 // import { GetProperties } from './../Utils/openProperty.utils';
 
 // import { LoginCheck } from './../Actions/user.action';
@@ -129,7 +132,8 @@ class MainApp extends Component {
                                             if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericListingController.js') != -1) {
                                                 return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericListing {...props} menuId={state.id} />} />)
                                             } else if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericDetailCtrl.js') != -1) {
-                                                return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericDetail {...props} menuId={state.id} />} />)
+                                                return (<Route key={state.url} path={state.url} render={props => <GenericDetail {...props} menuId={state.id} />} />)
+                                                // return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericDetail {...props} menuId={state.id} />} />)
                                             } else {
                                                 // return (<Route key={state.url} path={`${match.path}activeBookings`} component={GenericListing} />)
                                             }
@@ -171,17 +175,37 @@ function requireAuth() {
  * Starting Route is the parent level routing definition, 
  */
 class StartRoute extends Component {
+    state = {
+        loggedUser: {}
+    };
+
+    componentDidMount() {
+        SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
+    }
+
+    userDataFetched = (data) => {
+        console.log('data',data);
+        this.setState({ loggedUser: data });
+    }
+
     render() {
+        const { loggedUser } = this.state;
         return (
             // <Provider store={store}>
-            <Router>
-                <Switch>
-                    {/* <Router path='/list' component={GenericListing} /> */}
-                    <Route path="/login" component={LoginScene} onEnter={requireAuth()} />
-                    <Route path="/" component={MainApp} />
-                    {/* <PrivateRoute path="/" component={MainApp} /> */}
-                </Switch>
-            </Router>
+            <div>
+                <Router>
+                    <Switch>
+                        {/* <Router path='/list' component={GenericListing} /> */}
+                        <Route path="/login" component={LoginScene} onEnter={requireAuth()} />
+                        <PrivateRoute path="/" loggedUser={loggedUser} component={MainApp} />
+                        {/* <PrivateRoute path="/" component={MainApp} /> */}
+                    </Switch>
+                </Router>
+                <ToastContainer />
+                <ModalWrapper ref={(elem) => {
+                    ModalManager.registerModal(elem);
+                }} />
+            </div>
             // </Provider>
         )
     }

@@ -334,7 +334,9 @@ function CreateUrl({ url, urlParameter }) {
     }
     for (var i in params) {
         // url = url.replace(params[i], $stateParams[params[i].split(":")[1]]);
-        url = url.replace(params[i], urlParameter.detailId);
+        const key = params[i];
+
+        url = url.replace(key, urlParameter[key.substr(1)]);
     }
     return url;
 }

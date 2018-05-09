@@ -3,7 +3,7 @@
 import GLOBAL from './../Constants/global.constants';
 
 import { Get } from './http.utils';
-
+import { StoreEvent } from './stateManager.utils';
 /************************************
  * All user related utility methods
  ***********************************/
@@ -28,8 +28,17 @@ export const GetFireToken = async () => {
 
 export const LoginCheck = async () => {
     const result = await Get({ urlPrefix: GLOBAL.ROUTE_URL, url: 'loginCheck' });
+    let loggedUser = {};
     if (result.success) {
+        loggedUser = result.response;
         CurrentUser = result.response;
     }
+
+    StoreEvent({ eventName: 'loggedUser', data: { ...loggedUser, ...{ loggedCheckDone: true } } });
     return result;
+}
+
+
+export const GetUser = () => {
+    return CurrentUser;
 }

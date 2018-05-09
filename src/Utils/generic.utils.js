@@ -190,3 +190,22 @@ export function CreateInclusions(includes) {
 
     return arr.join(",");
 }
+/**
+ * parse url string to actual one
+ * this method seek for ':', whenever it encounters one, replace with actual data
+ * for e.g. booking/:id is converted to booking/12
+ * @param  {string} url='' 
+ * @param  {object} obj
+ */
+export function CreateUrl({ url = '', obj }) {
+    const reg = /(:)\w+/g;
+    const params = url.match(reg);
+    if (!params.length) {
+        return url;
+    }
+    for (let i in params) {
+        const attr = params[i].substr(1);
+        url = url.replace(params[i], obj[attr]);
+    }
+    return url;
+}
