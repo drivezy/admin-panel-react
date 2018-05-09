@@ -120,7 +120,7 @@ export function GetDetailRecord({ configuration: genericDetailObject, callback, 
         options.includes = params.includes;
     }
     options.dictionary = params.dictionary ? false : true;
-    const module = CreateUrl({ url: genericDetailObject.url, urlParameter });
+    const module = CreateUrlForFetchingDetailRecords({ url: genericDetailObject.url, urlParameter });
     if (!module) {
         alert("No Url has been set for this menu, Contact Admin");
         return false;
@@ -323,7 +323,7 @@ function PrepareObjectForDetailPage(result, { extraParams }) {
  * Evaluates value against url
  * @param  {} url
  */
-function CreateUrl({ url, urlParameter }) {
+function CreateUrlForFetchingDetailRecords({ url, urlParameter }) {
     if (!url) {
         return false;
     }
