@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import './CustomAction.css';
 
 import { CreateUrl } from './../../Utils/generic.utils';
-import ModalManager from './../../Custom-Components/Modal-Wrapper/modalManager';
+import { IsUndefinedOrNull } from './../../Utils/common.utils';
+import { Delete } from './../../Utils/http.utils';
+import ToastNotifications from './../../Utils/toast.utils';
 
+import ModalManager from './../../Custom-Components/Modal-Wrapper/modalManager';
 let customMethods = {};
 
 let self = {};
@@ -102,6 +105,20 @@ export default class CustomAction extends Component {
             const payload = { method: 'edit', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module, dataModel: genericData.dataModel };
             ModalManager.openModal({ payload, headerText: 'Edit modal', modalBody: () => (<h1> hi</h1>) });
         }
+
+        this.methods.delete = async ({ action, listingRow }) => {
+            ToastNotifications.success('Records has been deleted');
+            const { genericData } = this.props;
+            const deletekey = IsUndefinedOrNull(action.redirectValueName) ? listingRow.id : listingRow[action.redirectValueName];
+            console.log(deletekey, genericData);
+            if (window.confirm('Are you sure you want to delete this record?')) {
+                const result = await Delete({ url: `${genericData.module}/${deletekey}` });
+                if (result.success) {
+                    action.callback();
+                    ToastNotifications.success('Records has been deleted');
+                }
+            }
+        }
     }
 
 
@@ -120,7 +137,7 @@ export default class CustomAction extends Component {
     }
 
 
-    callFunction({ action, listingRow }) {
+    callFunction = ({ action, listingRow }) => {
         const args = [];
         if (typeof customMethods[action.name] == "function") {
             // var callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : customMethods[action.callback]) : listing.callbackFunction.function;
@@ -132,7 +149,8 @@ export default class CustomAction extends Component {
 
             customMethods[action.name].apply(this, args);
         } else { // For add, edit,delete
-            // action.callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : listing.callbackFunction.function) : listing.callbackFunction.function;
+            const callback = this.props.callback;
+            action.callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : callback) : callback;
             if (typeof this.methods[action.name] == "function") {
                 this.methods[action.name]({ action, listingRow });
             }

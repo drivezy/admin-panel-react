@@ -44,7 +44,7 @@ export default class PortletTable extends Component {
 
     render() {
 
-        const { genericData, finalColumns, listing, history } = this.props;
+        const { genericData, finalColumns, listing, history, callback } = this.props;
         return (
             <Table striped>
                 <thead>
@@ -116,7 +116,6 @@ export default class PortletTable extends Component {
                 <tbody>
                     {
                         listing.map((listingRow, rowKey) => {
-                            console.log(listingRow.id);
                             return (
                                 <tr className="table-row" key={rowKey}>
 
@@ -132,7 +131,7 @@ export default class PortletTable extends Component {
                                         ))
                                     }
                                     <td className="custom-action action-column">
-                                        <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} placement={167} />
+                                        <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} placement={167} callback={callback} />
                                     </td>
                                 </tr>
                             )
