@@ -13,11 +13,11 @@ export default class PortletTable extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            finalColumns: this.props.finalColumns,
-            listing: this.props.listing,
-            genericData: this.props.genericData
-        };
+        // this.state = {
+        //     finalColumns: this.props.finalColumns,
+        //     listing: this.props.listing,
+        //     genericData: this.props.genericData
+        // };
     }
 
     componentDidMount() {
@@ -44,9 +44,7 @@ export default class PortletTable extends Component {
 
     render() {
 
-        const { genericData, finalColumns, listing } = this.state;
-        const { history } = this.props;
-
+        const { genericData, finalColumns, listing, history, callback } = this.props;
         return (
             <Table striped>
                 <thead>
@@ -117,25 +115,27 @@ export default class PortletTable extends Component {
                 </thead>
                 <tbody>
                     {
-                        listing.map((listingRow, rowKey) => (
-                            <tr className="table-row" key={rowKey}>
+                        listing.map((listingRow, rowKey) => {
+                            return (
+                                <tr className="table-row" key={rowKey}>
 
-                                <td className="row-key">
-                                    {rowKey + 1}
-                                </td>
+                                    <td className="row-key">
+                                        {rowKey + 1}
+                                    </td>
 
-                                {
-                                    finalColumns.map((selectedColumn, key) => (
-                                        <td key={key}>
-                                            {eval('listingRow.' + selectedColumn.path)}
-                                        </td>
-                                    ))
-                                }
-                                <td className="custom-action action-column">
-                                    <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} placement={167} />
-                                </td>
-                            </tr>
-                        ))
+                                    {
+                                        finalColumns.map((selectedColumn, key) => (
+                                            <td key={key}>
+                                                {eval('listingRow.' + selectedColumn.path)}
+                                            </td>
+                                        ))
+                                    }
+                                    <td className="custom-action action-column">
+                                        <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} placement={167} callback={callback} />
+                                    </td>
+                                </tr>
+                            )
+                        })
                     }
                 </tbody>
             </Table>
