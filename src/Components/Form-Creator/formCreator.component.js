@@ -8,7 +8,7 @@ import {
     Row, Col
 } from 'reactstrap';
 
-import { withFormik } from 'formik';
+import { withFormik, Field, Form } from 'formik';
 import Yup from 'yup';
 
 import SelectBox from './../Forms/Components/Select-Box/selectBox';
@@ -30,20 +30,45 @@ const DisplayFormikState = props => (
     </div>
 );
 
+// {/* <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small> */ }
 
-const inputElement = ({ column, shouldColumnSplited,key }) => {
+
+const inputElement = ({ values, column, shouldColumnSplited, key }) => {
 
     const elements = {
         107: <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
             <label htmlFor="exampleInputEmail1">{column.display_name}</label>
-            <input type="number" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder={`Enter ${column.display_name}`} />
-            <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+            <Field className="form-control" type="number" name={column.column_name} placeholder={`Enter ${column.display_name}`} />
         </div>,
         108: <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
             <label htmlFor="exampleInputEmail1">{column.display_name}</label>
-            <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder={`Enter ${column.display_name}`} />
-            <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
-        </div>
+            <Field className="form-control" type="text" name={column.column_name} placeholder={`Enter ${column.display_name}`} />
+        </div>,
+        109: 'datepicker',
+        746: 'time',
+        110: 'datetime',
+        // 111: 'boolean',
+        111: <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
+            <label htmlFor="exampleInputEmail1">{column.display_name}</label>
+            {/* <SelectBox value={values[column.column_name]} options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} /> */}
+            <Field
+                name={column.column_name}
+                render={({ field /* _form */ }) => (
+                    <SelectBox value={values[column.column_name]} options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                )}
+            />
+
+
+        </div>,
+        116: 'dropdown',
+        117: 'reference',
+        119: 'switch',
+        160: 'textArea',
+        411: 'script',
+        465: 'list type',
+        684: 'serialize',
+        708: 'upload',
+        768: 'static display',
     }
 
     return elements[column.column_type];
@@ -70,7 +95,7 @@ const formElements = props => {
     let shouldColumnSplited = false;
 
     return (
-        <form onSubmit={handleSubmit}>
+        <Form>
 
             <div className="form-row">
 
@@ -80,7 +105,7 @@ const formElements = props => {
                         if (typeof preference != 'string') {
                             const column = payload.columns[preference.column];
 
-                            return inputElement({ column, shouldColumnSplited,key });
+                            return inputElement({ values, column, shouldColumnSplited, key });
 
                         } else if (typeof preference == 'string') {
                             shouldColumnSplited = preference.includes('s-split-') ? true : preference.includes('e-split-') ? false : shouldColumnSplited;
@@ -90,22 +115,7 @@ const formElements = props => {
             </div>
 
 
-            {/* <SelectBox model="city" onChange={setFieldValue} async="city" value={values.city} />
 
-            <label htmlFor="email" style={{ display: 'block' }}>
-                Email
-            </label>
-            <input
-                id="email"
-                placeholder="Enter your email"
-                type="text"
-                value={values.email}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={errors.email && touched.email ? 'text-input error' : 'text-input'}
-            />
-            {errors.email &&
-                touched.email && <div className="input-feedback">{errors.email}</div>}
 
             <button
                 type="button"
@@ -117,16 +127,30 @@ const formElements = props => {
     </button>
             <button type="submit" disabled={isSubmitting}>
                 Submit
-    </button> */}
+    </button>
 
-            {/* <DisplayFormikState {...props} /> */}
-        </form>
+            <DisplayFormikState {...props.values} />
+        </Form>
     );
 }
 
 
 const FormContents = withFormik({
-    mapPropsToValues: () => ({ email: '', city: '' }),
+    mapPropsToValues: props => {
+
+        const { payload } = props;
+
+        let response = {}
+
+        payload.formPreference.forEach((preference) => {
+            if (typeof preference != 'string') {
+                let column = payload.columns[preference.column];
+                response[column.column_name] = payload.listingRow[column.column_name] || '';
+            }
+        });
+
+        return response;
+    },
     validationSchema: Yup.object().shape({
         email: Yup.string()
             .email('Invalid email address')

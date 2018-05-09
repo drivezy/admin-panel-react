@@ -38,7 +38,9 @@ export default class SelectBox extends Component {
     handleChange = (selectedOption) => {
         this.setState({ selectedOption });
 
-        this.props.onChange(this.props.model, selectedOption);
+        if (this.props.onChange) {
+            this.props.onChange(this.props.model, selectedOption);
+        }
     }
 
     removeSelected = (selectedOption) => {
