@@ -29,7 +29,7 @@
             background: #f9f9f9;
             color: #848484;
         }
-        div.profile-image {
+        .profile-image {
             width: 32px;
             height: 32px;
             transition: all 200ms;
@@ -40,7 +40,22 @@
     }
 
     .dropdown-menu {
-        left: -108px;
+        left: -108px !important;
+        .user-details {
+            border-bottom: 1px solid #efefef;
+            background: whitesmoke;
+            .display-name {
+                padding: 0px 10px;
+                font-weight: 500;
+            }
+            .email {
+                color: #944310;
+                padding: 0px 10px;
+                .fa {
+                    color: #456263;
+                }
+            }
+        }
     }
     
 }

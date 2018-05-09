@@ -11,9 +11,13 @@ import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } fr
 import { GetListingRecord } from './../../Utils/genericListing.utils';
 
 
+import ListingPagination from './../../Components/Listing-Pagination/ListingPagination';
 import TableSettings from './../../Components/Table-Settings/TableSettings';
-
 import PortletTable from './../../Components/Portlet-Table/PortletTable';
+import CustomAction from './../../Components/Custom-Action/CustomAction';
+
+import ModalManager from './../../Custom-Components/Modal-Wrapper/modalManager';
+import ModalWrap from './../../Custom-Components/Modal-Wrapper/modalWrapper.component';
 
 export default class GenericListing extends Component {
     constructor(props) {
@@ -21,17 +25,18 @@ export default class GenericListing extends Component {
         this.state = {
             ...GetUrlParams(this.props), // params, queryString
             menuDetail: {},
-            genericData: {}
+            genericData: {},
         };
     }
 
     componentDidMount() {
         this.getMenuData();
+        // ModalManager.showModal({ onClose: this.closeModal, headerText: '1st using method', modalBody: () => (<h1> hi</h1>) });
     }
 
     getMenuData = async () => {
         const { queryString } = this.state;
-        const { menuId } = this.props;
+        const { menuId, limit, page } = this.props;
         const result = await GetMenuDetail(menuId);
         if (result.success) {
 
@@ -46,8 +51,8 @@ export default class GenericListing extends Component {
     }
 
     getListingData = () => {
-        const { menuDetail, genericData, urlParameter } = this.state;
-        GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, urlParameter });
+        const { menuDetail, genericData, queryString } = this.state;
+        GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString });
     }
 
     dataFetched = (genericData) => {
@@ -64,9 +69,7 @@ export default class GenericListing extends Component {
     }
 
 
-
     layoutChanges = (selectedColumns) => {
-
         let { genericData } = this.state;
         genericData.selectedColumns = selectedColumns;
         genericData.finalColumns = CreateFinalColumns(genericData.columns, selectedColumns, genericData.relationship);
@@ -76,9 +79,16 @@ export default class GenericListing extends Component {
     render() {
         const { genericData = {}, pagesOnDisplay, menuDetail = {} } = this.state;
         const { listing = [], finalColumns = [] } = genericData;
+        const { history } = this.props;
 
         return (
             <div className="generic-listing-container">
+                {/* <ModalWrap
+                    isVisible
+                    headerText="tesfh"
+                    modalBody={() => (<h1> h2</h1>)}
+                    closeModal={() => this.setState({ isVisible: false })}
+                /> */}
                 <div className="page-bar">
                     <div className="search-wrapper">
 
@@ -86,13 +96,18 @@ export default class GenericListing extends Component {
                     <div className="header-actions">
 
                         <div className="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" className="btn btn-sm btn-secondary">Left</button>
+                            {/* <button type="button" className="btn btn-sm btn-secondary">Left</button>
                             <button type="button" className="btn btn-sm btn-secondary">Middle</button>
-                            <button type="button" className="btn btn-sm btn-secondary">Right</button>
+                            <button type="button" className="btn btn-sm btn-secondary">Right</button> */}
 
-                            {genericData.columns ? <TableSettings onSubmit={this.layoutChanges} listName={genericData.listName} selectedColumns={genericData.selectedColumns} columns={genericData.columns}>
-                            </TableSettings>
-                                : null}
+                            <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
+
+                            {
+                                genericData.columns ?
+                                    <TableSettings onSubmit={this.layoutChanges} listName={genericData.listName} selectedColumns={genericData.selectedColumns} columns={genericData.columns} />
+                                    :
+                                    null
+                            }
                         </div>
                     </div>
                 </div>
@@ -100,8 +115,9 @@ export default class GenericListing extends Component {
                     <CardBody>
                         {
                             (finalColumns && finalColumns.length) ?
-                                <PortletTable genericData={genericData} finalColumns={finalColumns} listing={listing}></PortletTable> : null
+                                <PortletTable history={history} genericData={genericData} finalColumns={finalColumns} listing={listing} /> : null
                         }
+                        <ListingPagination genericData={genericData} />
                     </CardBody>
                 </Card>
             </div>

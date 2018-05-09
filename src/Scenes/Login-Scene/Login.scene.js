@@ -7,6 +7,7 @@ import {
     Redirect
 } from 'react-router-dom';
 
+import { LoginCheck } from './../../Utils/user.utils';
 import { Post, Get } from './../../Utils/http.utils';
 
 import { updateUser, setCurrentRoute } from './../../';
@@ -41,17 +42,13 @@ export default class LoginScene extends Component {
         if (login.success) {
             // alert('User logged in successfully');
             // this.loginCheck();
+            const res = await LoginCheck();
+            if (res.success) {
+                this.loggedIn(res.response);
+            }
         }
         else {
             alert('Name or Email incorrect');
-        }
-    }
-
-    async loginCheck() {
-        const res = Get({ urlPrefix: GLOBAL.ROUTE_URL, url: 'loginCheck' });
-        const l = await res;
-        if (l.success) {
-            this.loggedIn(l.response);
         }
     }
 
