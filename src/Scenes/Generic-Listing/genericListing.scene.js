@@ -29,6 +29,14 @@ export default class GenericListing extends Component {
         };
     }
 
+    componentWillReceiveProps(nextProps) {
+        // console.log(this.state);
+        // console.log(GetUrlParams(nextProps));
+        const newProps = GetUrlParams(nextProps);
+        this.setState(newProps);
+        this.getMenuData();
+    }
+
     componentDidMount() {
         this.getMenuData();
         // ModalManager.showModal({ onClose: this.closeModal, headerText: '1st using method', modalBody: () => (<h1> hi</h1>) });
@@ -65,7 +73,9 @@ export default class GenericListing extends Component {
         //     // this.setState({ pagesOnDisplay: totalPages });
         //     this.state.pagesOnDisplay = Math.ceil(totalPages);
         // }
+        // console.log(genericData);
         this.setState({ genericData });
+        this.forceUpdate()
     }
 
 
@@ -79,7 +89,7 @@ export default class GenericListing extends Component {
     render() {
         const { genericData = {}, pagesOnDisplay, menuDetail = {} } = this.state;
         const { listing = [], finalColumns = [] } = genericData;
-        const { history } = this.props;
+        const { history, match } = this.props;
 
         return (
             <div className="generic-listing-container">
@@ -117,7 +127,7 @@ export default class GenericListing extends Component {
                             (finalColumns && finalColumns.length) ?
                                 <PortletTable history={history} genericData={genericData} finalColumns={finalColumns} listing={listing} /> : null
                         }
-                        <ListingPagination genericData={genericData} />
+                        <ListingPagination history={history} match={match} genericData={genericData} />
                     </CardBody>
                 </Card>
             </div>
