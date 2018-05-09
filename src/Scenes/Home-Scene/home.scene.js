@@ -50,7 +50,7 @@ const MyInnerForm = props => {
     return (
         <form onSubmit={handleSubmit}>
 
-                    <SelectBox model="city" onChange={setFieldValue} async="city" value={values.city} />
+            <SelectBox model="city" onChange={setFieldValue} async="city" value={values.city} />
 
 
             <label htmlFor="email" style={{ display: 'block' }}>
@@ -87,7 +87,7 @@ const MyInnerForm = props => {
 
 
 const EnhancedForm = withFormik({
-    mapPropsToValues: () => ({ email: '',city:'' }),
+    mapPropsToValues: () => ({ email: '', city: '' }),
     validationSchema: Yup.object().shape({
         email: Yup.string()
             .email('Invalid email address')
@@ -133,7 +133,7 @@ export default class Home extends Component {
         return (
             <div className="home-scene">
 
-            <EnhancedForm />
+                <EnhancedForm />
 
                 <form>
                     {/* <div className="form-group">
