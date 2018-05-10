@@ -3,6 +3,8 @@ import {
     Card, CardImg, CardText, CardBody,
     CardTitle, CardSubtitle, Button, Row, Col, Progress
 } from 'reactstrap';
+// import { TabContent, TabPane, Nav, NavItem, NavLink, Card, CardBody, Button, CardTitle, CardText, Row, Col, Progress } from 'reactstrap';
+import classnames from 'classnames';
 
 import GLOBAL from './../../Constants/global.constants';
 import { Get } from './../../Utils/http.utils';
@@ -32,17 +34,28 @@ export default class BookingDetail extends Component {
 
         if (result.success) {
             const bookingDetail = result.response;
+            console.log(bookingDetail);
             this.setState({ bookingDetail });
         }
     }
 
+    // toggle = (tab) => {
+    //     if (this.state.activeTab !== tab) {
+    //         this.setState({
+    //             activeTab: tab
+    //         });
+    //     }
+    // }
+
     render() {
+
+        // const tabs = ['booking_payment', 'extension'];
+
+
+
         const { bookingDetail = {} } = this.state;
-        // const { venue_pick = {}, venue_drop = {}, status = {}, vehicle = {} } = bookingDetail;
-        // const { city = {} } = venue_pick;
 
         return (
-
             <div className="booking-user">
 
                 <UserCard userData={bookingDetail.user} />
@@ -187,6 +200,65 @@ export default class BookingDetail extends Component {
                                 </div>
                             </Card>
                         </Col>
+                        {/* <Row>
+
+                            <Nav tabs>
+                                {
+                                    tabs.map((tab, key) => (
+                                        <NavItem key={key}>
+                                            <NavLink
+                                                className={classnames({ active: this.state.activeTab === key ? 'active' : '' })}
+                                                onClick={() => { this.toggle(key); }}>
+                                                {tab}
+                                            </NavLink>
+                                        </NavItem>
+                                    ))
+                                }
+                            </Nav>
+                            <TabContent activeTab={this.state.activeTab}>
+                                {
+                                    tabs.map((tab, key) => (
+                                        <TabPane key={key} tabId={key}>
+
+
+
+
+                                            <Table striped>
+                                                <thead>
+                                                    <tr>
+                                                        {
+                                                            tabContent[key].finalColumns.map((column, key) => (
+                                                                <th key={key}> {column.display_name}</th>
+                                                            ))
+                                                        }
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {
+                                                        tabs.data[tab.index].map((listingRow, rowKey) => (
+                                                            <tr key={rowKey}>
+                                                                {tabContent[key].finalColumns.map((column, key) => (
+                                                                    <td key={key}>{listingRow[column.column_name]}</td>
+                                                                ))}
+                                                            </tr>
+                                                        ))
+                                                    }
+                                                </tbody>
+                                            </Table>
+
+
+
+
+
+
+
+
+                                        </TabPane>
+                                    ))
+                                }
+                            </TabContent>
+
+                        </Row> */}
                     </Row>
                 }
             </div>
