@@ -1,0 +1,33 @@
+.user-card {
+    .no-padding {
+        padding: 0px;
+    }
+    .user-info {
+        display: flex;
+        margin-top: 8px;
+        padding-left: 20px;
+        .user-image {
+            padding-right: 10px;
+            display: table-cell;
+            vertical-align: top;
+        }
+        .user-object {
+            border: 1px solid #eee;
+            width: 75px;
+            height: 75px;
+        }
+        .user-body {
+            padding-left: 20px;
+            .user-list {
+                font-size: 15px;
+                p {
+                    margin-top: 4px;
+                    margin-bottom: 4px;
+                    i {
+                        padding-right: 20px;
+                    }
+                }
+            }
+        }
+    }
+}

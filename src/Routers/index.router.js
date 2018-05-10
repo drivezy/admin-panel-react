@@ -23,7 +23,7 @@ import GenericListing from './../Scenes/Generic-Listing/genericListing.scene';
 import GenericDetail from './../Scenes/Generic-Detail/genericDetail.scene';
 import SideNav from './../Scenes/Side-Nav/sideNav.scene';
 import Header from './../Scenes/Header/header.scene';
-
+import BookingDetail from './../Scenes/Booking-Detail/bookingDetail.scene';
 
 import { LoginCheck } from './../Utils/user.utils';
 
@@ -135,7 +135,7 @@ class MainApp extends Component {
                                                 return (<Route key={state.url} path={state.url} render={props => <GenericDetail {...props} menuId={state.id} />} />)
                                                 // return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericDetail {...props} menuId={state.id} />} />)
                                             } else {
-                                                // return (<Route key={state.url} path={`${match.path}activeBookings`} component={GenericListing} />)
+                                                // return (<Route key={state.url} path={state.url} component={BookingDetail} />)
                                             }
                                         })
                                     })
@@ -143,6 +143,8 @@ class MainApp extends Component {
                                 {/* <Route path={`${match.path}activeBookings`} component={GenericListing} /> */}
                                 {/* <Route path={`${match.path}list/:page`} component={GenericListing} />
                             <Route path={`${match.path}detail/:page/:detailId`} component={GenericDetail} /> */}
+
+                                <Route exact path='/booking/:bookingId' component={BookingDetail} />
                                 <Route exact path='/' component={HomeScene} />
                                 {this.state.sideNavExpanded}
                             </Switch>
@@ -184,7 +186,7 @@ class StartRoute extends Component {
     }
 
     userDataFetched = (data) => {
-        console.log('data',data);
+        console.log('data', data);
         this.setState({ loggedUser: data });
     }
 
