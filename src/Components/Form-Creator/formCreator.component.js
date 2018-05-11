@@ -13,6 +13,8 @@ import Yup from 'yup';
 
 import SelectBox from './../Forms/Components/Select-Box/selectBox';
 import ReferenceInput from './../Forms/Components/Reference-Input/referenceInput';
+import DatePicker from './../Forms/Components/Date-Picker/datePicker';
+
 
 const DisplayFormikState = props => (
     <div style={{ margin: '1rem 0' }}>
@@ -46,7 +48,15 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         </div>,
         109: 'datepicker',
         746: 'time',
-        110: 'datetime',
+        110: <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
+            <label htmlFor="exampleInputEmail1">{column.display_name}</label>
+            <Field
+                name={column.column_name}
+                render={({ field /* _form */ }) => (
+                    <DatePicker single="true" name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />
+                )}
+            />
+        </div>,
         111: <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
             <label htmlFor="exampleInputEmail1">{column.display_name}</label>
             <Field

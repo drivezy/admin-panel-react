@@ -43,11 +43,17 @@ export default class SelectBox extends Component {
 
     handleChange = (value) => {
         // this.setState({ value: value[this.state.key] });
-        this.setState({ value });
+
+        if (this.state.async) {
+            this.setState({ value: value[this.state.key] });
+        } else {
+            this.setState({ value });
+        }
+
 
         if (this.props.onChange) {
             console.log(this.props.name, value[this.state.key]);
-            this.props.onChange(this.props.name, value[this.state.key]);
+            // this.props.onChange(this.props.name, value[this.state.key]);
         }
     }
 

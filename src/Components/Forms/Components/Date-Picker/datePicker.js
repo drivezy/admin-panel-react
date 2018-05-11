@@ -42,7 +42,7 @@ export default class DatePicker extends Component {
             <div className="form-group datepicker">
                 <label htmlFor="exampleInputEmail1">Date Picker</label>
                 <div className="form-control">
-                    <DateRangePicker startDate="1/1/2014" endDate="3/1/2014" onApply={this.applyDate}>
+                    <DateRangePicker singleDatePicker={this.props.single} startDate="1/1/2014" endDate="3/1/2014" onApply={this.applyDate}>
                         <div className="picker">
                             {startDate} - {endDate}
                         </div>
