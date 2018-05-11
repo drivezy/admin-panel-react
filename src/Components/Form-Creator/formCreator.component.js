@@ -62,7 +62,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
             <Field
                 name={column.column_name}
                 render={({ field /* _form */ }) => (
-                    <ReferenceInput column={column} name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />
+                    <ReferenceInput column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />
                 )}
             />
         </div>,
@@ -122,12 +122,10 @@ const formElements = props => {
 
 
 
-            <button
-                type="button"
+            <button type="button"
                 className="outline"
                 onClick={handleReset}
-                disabled={!dirty || isSubmitting}
-            >
+                disabled={!dirty || isSubmitting}>
                 Reset
     </button>
             <button type="submit" disabled={isSubmitting}>

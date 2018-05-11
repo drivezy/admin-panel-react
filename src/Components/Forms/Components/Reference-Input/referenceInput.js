@@ -17,7 +17,7 @@ export default class ReferenceInput extends Component {
 
         this.state = {
             url: '',
-            value: ''
+            value: this.props.model || ''
         }
     }
 
@@ -36,13 +36,7 @@ export default class ReferenceInput extends Component {
             url = route.split('api/admin/')[1]
         }
 
-        url += '?query=' + 'id' + '=' + this.props.value
-
-        const result = await Get({ url });
-
-        if (result.success && result.response.length) {
-            this.setState({ value: result.response[0] });
-        }
+        this.setState({ url });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -53,13 +47,13 @@ export default class ReferenceInput extends Component {
 
     render() {
 
-        const { column, value } = this.props;
+        const { column } = this.props;
 
-        const { url } = this.state;
+        const { url, value } = this.state;
 
         return (
             <div className="reference-input">
-                <SelectBox async={url} value={value} />
+                <SelectBox name={this.props.name} onChange={this.props.onChange} field={column.referenced_model.display_column || column.display_column} sortingType={column.sorting_type} async={url} value={value} />
             </div>
         );
     }
