@@ -3,6 +3,7 @@ import './DetailIncludes.css';
 
 
 import { CreateInclusions, GetColumnsForListing, CreateFinalColumns } from './../../Utils/generic.utils';
+import { GetColumnsForDetail } from './../../Utils/genericDetail.utils';
 
 import {
     Card, CardImg, CardText, CardBody,
@@ -13,63 +14,68 @@ import {
 
 import { TabContent, TabPane, Nav, NavItem, NavLink, Table } from 'reactstrap';
 
+import PortletTable from './../../Components/Portlet-Table/PortletTable';
+
 export default class DetailPortlet extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             tabs: this.props.tabs,
-            tabContent: []
+            tabContent: [],
+            activeTab: 0
         }
     }
 
     componentDidMount() {
-
         this.buildTabData(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
-
-        // this.buildTabData(nextProps);
+        this.setState({ tabs: nextProps.tabs });
+        this.buildTabData(nextProps);
     }
 
     buildTabData = (props) => {
-// 
-        var self = this;
+        // 
+        const data = props.tabs;
 
-        var data = props.tabs;
+        // this.resolve = [];
+        const includes = data.includes.split(",");
 
-        self.resolve = [];
+        this.preferences = {};
 
-        var includes = data.includes.split(",");
+        for (const i in includes) {
+            const tab = {};
+            const inclusions = includes[i].split(".");
+            const index = data.starter + "." + inclusions[0];
+            const relationship = data.relationship[index];
+            const configure = data.dictionary[index];
 
-        self.preferences = {};
+            tab.listName = index + ".list";
+            tab.modelName = index + ".form"; // earlier formName in old panel
+            // tab.formName = index + ".form"; // earlier formName in old panel
 
-        for (var i in includes) {
-            var tab = {};
-            var inclusions = includes[i].split(".");
-            var index = data.starter + "." + inclusions[0];
-            var relationship = data.relationship[index];
+            tab.relationship = relationship;
+            tab.dataModel = relationship.related_model; // new entry
+            if (relationship.related_model && relationship.related_model.route_name) {
+                tab.module = relationship.related_model.route_name.replace('api/admin/', '');
+            }
 
             tab.name = relationship.alias_name;
             tab.image = relationship.image;
-            var configure = data.dictionary[index];
-            tab.relationship = relationship;
-
-            tab.index = index;
             tab.path = relationship.route_name;
+
+            tab.index = index; // earlier index in old panel
             tab.identifier = inclusions[0];
-            tab.listName = data.starter + "." + inclusions[0] + ".list";
-            tab.formName = data.starter + "." + inclusions[0] + ".form";
             tab.preference = "";
             tab.fixedParams = data.fixedParams;
-            tab.callFunction = data.callFunction;
+            tab.refreshContent = data.refreshContent; //  function to refresh whole detail content
             tab.scripts = [];
-            self.formPreferences = [];
+            // this.formPreferences = []; // @TODO seems useless, remove line after sometime, 
 
             // check if there are other includes of the same identifier
-            var finalIncludes = includes[i];
-            for (var j in includes) {
+            let finalIncludes = includes[i];
+            for (const j in includes) {
                 if (includes[i] != includes[j]) {
                     if (includes[j].split(".")[0] == inclusions[0]) {
                         finalIncludes += "," + includes[j];
@@ -78,17 +84,20 @@ export default class DetailPortlet extends Component {
                 }
             }
 
-            var params = {
+            const params = {
                 includes: CreateInclusions(finalIncludes), starter: data.starter, dictionary: {}
             };
 
-            var dictionary = params.includes.split(",");
-            for (var k in dictionary) {
-                var dicIndex = data.starter + "." + dictionary[k];
+            const dictionary = params.includes.split(",");
+            for (const k in dictionary) {
+                const dicIndex = data.starter + "." + dictionary[k];
                 params.dictionary[dicIndex] = data.dictionary[dicIndex];
             }
             params.relationship = data.relationship;
-            tab.columns = GetColumnsForListing(params);
+
+            // list of columns of all included models, used to configure view columns
+            tab.columns = GetColumnsForDetail(params);
+            // tab.columns = GetColumnsForListing(params);
             // tab.columns = MenuService.getColumns(params);
 
             params.includes = inclusions[0];
@@ -96,36 +105,49 @@ export default class DetailPortlet extends Component {
             params.dictionary[index] = configure;
             params.excludeStarter = 1;
 
+            // list of columns only related to particular model, used to configure generic forms
             tab.configure = GetColumnsForListing(params);
 
-            tab.actions = relationship.actions;
+            relationship.actions.map((action) => (
+                action.callback = tab.refreshContent
+            ));
 
+            tab.nextActions = relationship.actions; // generic actions (can be predefined or custom ones)
+
+
+            // @TODO script incjection is disabled as of now
             // var scripts = InjectScriptFactory.returnMatchingScripts({
-            //     preference: index, scripts: self.responseArray.scripts, searchConstraint: "startsWith"
+            //     preference: index, scripts: this.responseArray.scripts, searchConstraint: "startsWith"
             // });
             // Array.prototype.push.apply(tab.scripts, scripts);
 
-            self.preferences[tab.identifier] = relationship.preferences[tab.listName] ? JSON.parse(relationship.preferences[tab.listName]) : null;
-            tab.formPreferences = relationship.preferences[tab.formName] ? JSON.parse(relationship.preferences[tab.formName]) : null;
+            this.preferences[tab.identifier] = relationship.preferences[tab.listName] ? JSON.parse(relationship.preferences[tab.listName]) : null;
 
-            tab.finalColumns = CreateFinalColumns(tab.columns, self.preferences[tab.identifier], params.relationship);
+            // preference for form of particular tab
+            tab.formPreference = relationship.preferences[tab.modelName] ? JSON.parse(relationship.preferences[tab.modelName]) : null;
 
-            var resolve = {
-                resolve: {
-                    modelAliasId: relationship.id
-                }
-            };
+            // list of selected column preference
+            tab.finalColumns = CreateFinalColumns(tab.columns, this.preferences[tab.identifier], params.relationship);
 
-            self.resolve.push(resolve);
+            // var resolve = {
+            //     resolve: {
+            //         modelAliasId: relationship.id
+            //     }
+            // };
+
+            // this.resolve.push(resolve);
             this.state.tabContent.push(tab);
         }
 
         const tabContent = this.state.tabContent;
-        this.setState({tabContent});
+        this.setState({ tabContent });
         // this.setState({})
-
     }
 
+    /**
+     * Change tab selection
+     * @param  {int} tab - tab index
+     */
     toggle = (tab) => {
         if (this.state.activeTab !== tab) {
             this.setState({
@@ -134,12 +156,13 @@ export default class DetailPortlet extends Component {
         }
     }
 
+    rowTemplate({ listingRow, selectedColumn }) {
+        return (<span>{eval('listingRow.' + selectedColumn.path)} </span>);
+    }
+
     render() {
-
         const { tabs, tabContent } = this.state;
-
         const arr = [];
-
         // Object.keys(tabs.data).map((tab)=>(
 
         // ))
@@ -165,8 +188,15 @@ export default class DetailPortlet extends Component {
                         tabContent.length ?
                             tabContent.map((tab, key) => (
                                 <TabPane key={key} tabId={key}>
+                                    <PortletTable
+                                        finalColumns={tab.finalColumns}
+                                        listing={tabs.data[tab.index]}
+                                        rowTemplate={this.rowTemplate}
+                                        genericData={tabContent[key]}
+                                        callback={tab.refreshContent}
+                                    />
 
-                                    <Table striped>
+                                    {/* <Table striped>
                                         <thead>
                                             <tr>
                                                 {
@@ -181,13 +211,15 @@ export default class DetailPortlet extends Component {
                                                 tabs.data[tab.index].map((listingRow, rowKey) => (
                                                     <tr key={rowKey}>
                                                         {tabContent[key].finalColumns.map((column, key) => (
-                                                            <td key={key}>{listingRow[column.column_name]}</td>
+                                                            <td key={key}>
+                                                                {eval('listingRow.' + column.column_name)}
+                                                            </td>
                                                         ))}
                                                     </tr>
                                                 ))
                                             }
                                         </tbody>
-                                    </Table>
+                                    </Table> */}
                                 </TabPane>
                             ))
                             : null}

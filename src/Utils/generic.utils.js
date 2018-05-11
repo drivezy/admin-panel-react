@@ -174,13 +174,13 @@ export function ConvertMenuDetailForGenericPage(menuDetail) {
 
 
 export function CreateInclusions(includes) {
-    var arr = [];
-    var starter = "";
-    var includes = includes.split(",");
-    for (var k in includes) {
-        var inclusions = includes[k].split(".");
-        for (var i in inclusions) {
-            var name = parseInt(i) ? starter + "." + inclusions[i] : inclusions[i];
+    const arr = [];
+    let starter = "";
+    includes = includes.split(",");
+    for (const k in includes) {
+        const inclusions = includes[k].split(".");
+        for (const i in inclusions) {
+            const name = parseInt(i) ? starter + "." + inclusions[i] : inclusions[i];
             starter = name;
             if (arr.indexOf(name) == -1) {
                 arr.push(name);
@@ -190,6 +190,7 @@ export function CreateInclusions(includes) {
 
     return arr.join(",");
 }
+
 /**
  * parse url string to actual one
  * this method seek for ':', whenever it encounters one, replace with actual data

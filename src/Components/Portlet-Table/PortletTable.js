@@ -44,7 +44,7 @@ export default class PortletTable extends Component {
 
     render() {
 
-        const { genericData, finalColumns, listing, history, callback } = this.props;
+        const { genericData, finalColumns, listing, history, callback, rowTemplate } = this.props;
         return (
             <Table striped>
                 <thead>
@@ -126,7 +126,11 @@ export default class PortletTable extends Component {
                                     {
                                         finalColumns.map((selectedColumn, key) => (
                                             <td key={key}>
-                                                {eval('listingRow.' + selectedColumn.path)}
+                                                {
+                                                    rowTemplate ?
+                                                        rowTemplate({ listingRow, selectedColumn }) :
+                                                        eval('listingRow.' + selectedColumn.path)
+                                                }
                                             </td>
                                         ))
                                     }

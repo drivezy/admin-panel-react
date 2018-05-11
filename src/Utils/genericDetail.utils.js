@@ -62,7 +62,7 @@ export function GetDataForPortlet({ data, genericDetailObject, params, selectedC
 /**
  * returns columns array
  * same as menu service' getColumns
- * @param  {} params
+ * @param  {} params - should contain includes, relationship, starter, dictionary, 
  * @param  {} excludeStarter
  */
 export function GetColumnsForDetail(params, excludeStarter) {
