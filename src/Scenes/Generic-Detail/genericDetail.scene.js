@@ -67,7 +67,8 @@ export default class GenericDetail extends Component {
     layoutChanges = (changes) => {
         let { portlet, menuDetail } = this.state;
         // portlet.finalColumns = changes;
-        menuDetail.preference['menudef.detail.list'] = JSON.stringify(changes);
+        // menuDetail.preference['menudef.detail.list'] = JSON.stringify(changes);
+        menuDetail.preference[portlet.listPortlet] = JSON.stringify(changes);
         portlet.finalColumns = CreateFinalColumns(portlet.portletColumns, changes);
         this.setState({ portlet, menuDetail });
     }
@@ -77,8 +78,8 @@ export default class GenericDetail extends Component {
         const { finalColumns = [], data = {} } = portlet;
         let selectedColumns = {};
 
-        if (menuDetail.preference) {
-            selectedColumns = JSON.parse(menuDetail.preference['menudef.detail.list'])
+        if (menuDetail.preference && portlet.listPortlet) {
+            selectedColumns = JSON.parse(menuDetail.preference[portlet.listPortlet])
         }
 
         return (

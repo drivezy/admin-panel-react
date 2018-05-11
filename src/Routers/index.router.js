@@ -195,10 +195,8 @@ class StartRoute extends Component {
             <div>
                 <Router>
                     <Switch>
-                        {/* <Router path='/list' component={GenericListing} /> */}
                         <Route path="/login" component={LoginScene} onEnter={requireAuth()} />
                         <PrivateRoute path="/" loggedUser={loggedUser} component={MainApp} />
-                        {/* <PrivateRoute path="/" component={MainApp} /> */}
                     </Switch>
                 </Router>
                 <ToastContainer />
