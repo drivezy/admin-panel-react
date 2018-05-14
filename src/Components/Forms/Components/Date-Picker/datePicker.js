@@ -10,6 +10,7 @@ import './datePicker.css';
 
 
 import GLOBAL from './../../../../Constants/global.constants';
+import { spawn } from 'child_process';
 
 export default class DatePicker extends Component {
 
@@ -20,37 +21,53 @@ export default class DatePicker extends Component {
             format: this.props.format || GLOBAL.DATE_FORMAT,
             minDate: this.props.minDate,
             maxDate: this.props.maxDate,
-            model: {},
-
+            value: this.props.value || '',
         }
     }
 
     applyDate = (event, picker) => {
-        console.log(picker);
-        const { model } = this.state;
-        model.startDate = picker.startDate.format(this.state.format);
-        model.endDate = picker.startDate.format(this.state.format)
-        this.setState({ model });
+        // console.log(picker);
+        let { value } = this.state;
+
+        if (this.props.single) {
+            value = picker.startDate.format(this.state.format);
+        } else {
+            value.startDate = picker.startDate.format(this.state.format);
+            value.endDate = picker.endDate.format(this.state.format)
+        }
+        this.setState({ value });
     }
 
     render() {
 
-        const { startDate, endDate } = this.state.model;
+
+        var value=0;
+
+        if (this.props.single) {
+            var value = this.state.value;
+            // const { value } = this.state;
+        } else {
+            var { startDate, endDate } = this.state.value;
+        }
 
         return (
 
             <div className="form-group datepicker">
-                <label htmlFor="exampleInputEmail1">Date Picker</label>
                 <div className="form-control">
-                    <DateRangePicker singleDatePicker={this.props.single} startDate="1/1/2014" endDate="3/1/2014" onApply={this.applyDate}>
-                        <div className="picker">
-                            {startDate} - {endDate}
-                        </div>
-                    </DateRangePicker>
+                    {
+                        this.props.single ?
+                            <DateRangePicker timePicker={this.props.timePicker} singleDatePicker onApply={this.applyDate}>
+                                <div className="picker">
+                                    {value}
+                                </div>
+                            </DateRangePicker>
+                            : <DateRangePicker timePicker={this.props.timePicker} onApply={this.applyDate}>
+                                <div className="picker">
+                                    {/* {startDate} - {endDate} */}
+                                </div>
+                            </DateRangePicker>
+                    }
                 </div>
-                <small id="emailHelp" className="form-text text-muted">
-                    We'll never share your email with anyone else.
-                </small>
             </div>
         );
     }

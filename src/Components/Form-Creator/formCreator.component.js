@@ -53,7 +53,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
             <Field
                 name={column.column_name}
                 render={({ field /* _form */ }) => (
-                    <DatePicker single="true" name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />
+                    <DatePicker single={true} name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />
                 )}
             />
         </div>,
