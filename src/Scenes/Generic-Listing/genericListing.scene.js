@@ -10,6 +10,8 @@ import { GetUrlParams } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
 import { GetListingRecord } from './../../Utils/genericListing.utils';
 
+import DynamicFilter from './../../Components/Dynamic-Filter/dynamicFilter.component';
+import ConfigureDynamicFilter from './../../Components/Dynamic-Filter/configureFilter.component';
 
 import ListingPagination from './../../Components/Listing-Pagination/ListingPagination';
 import TableSettings from './../../Components/Table-Settings/TableSettings';
@@ -101,7 +103,7 @@ export default class GenericListing extends Component {
                 /> */}
                 <div className="page-bar">
                     <div className="search-wrapper">
-
+                        <DynamicFilter />
                     </div>
                     <div className="header-actions">
 
@@ -121,6 +123,11 @@ export default class GenericListing extends Component {
                         </div>
                     </div>
                 </div>
+
+                <div>
+                    <ConfigureDynamicFilter />
+                </div>
+
                 <Card>
                     <CardBody>
                         {
