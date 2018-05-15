@@ -14,6 +14,8 @@ import Yup from 'yup';
 import SelectBox from './../Forms/Components/Select-Box/selectBox';
 import ReferenceInput from './../Forms/Components/Reference-Input/referenceInput';
 import DatePicker from './../Forms/Components/Date-Picker/datePicker';
+import TimePicker from './../Forms/Components/Time-Picker/timePicker';
+import ListSelect from './../Forms/Components/List-Select/listSelect';
 
 
 const DisplayFormikState = props => (
@@ -38,44 +40,44 @@ const DisplayFormikState = props => (
 const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
 
     const elements = {
-        107: <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
-            <label htmlFor="exampleInputEmail1">{column.display_name}</label>
-            <Field className="form-control" type="number" name={column.column_name} placeholder={`Enter ${column.display_name}`} />
-        </div>,
-        108: <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
-            <label htmlFor="exampleInputEmail1">{column.display_name}</label>
-            <Field className="form-control" type="text" name={column.column_name} placeholder={`Enter ${column.display_name}`} />
-        </div>,
-        109: 'datepicker',
-        746: 'time',
-        110: <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
-            <label htmlFor="exampleInputEmail1">{column.display_name}</label>
-            <Field
-                name={column.column_name}
-                render={({ field /* _form */ }) => (
-                    <DatePicker single={true} name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />
-                )}
-            />
-        </div>,
-        111: <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
-            <label htmlFor="exampleInputEmail1">{column.display_name}</label>
-            <Field
-                name={column.column_name}
-                render={({ field /* _form */ }) => (
-                    <SelectBox name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
-                )}
-            />
-        </div>,
-        116: 'dropdown',
-        117: <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
-            <label htmlFor="exampleInputEmail1">{column.display_name}</label>
-            <Field
-                name={column.column_name}
-                render={({ field /* _form */ }) => (
-                    <ReferenceInput column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />
-                )}
-            />
-        </div>,
+        107: <Field className="form-control" type="number" name={column.column_name} placeholder={`Enter ${column.display_name}`} />,
+        108: <Field className="form-control" type="text" name={column.column_name} placeholder={`Enter ${column.display_name}`} />,
+        109: <Field
+            name={column.column_name}
+            render={({ field /* _form */ }) => (
+                <DatePicker single={true} name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />
+            )}
+        />,
+        746: <Field
+            name={column.column_name}
+            render={({ field /* _form */ }) => (
+                <TimePicker name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />
+            )}
+        />,
+        110: <Field
+            name={column.column_name}
+            render={({ field /* _form */ }) => (
+                <DatePicker single={true} timePicker={true} name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />
+            )}
+        />,
+        111: <Field
+            name={column.column_name}
+            render={({ field /* _form */ }) => (
+                <SelectBox name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+            )}
+        />,
+        116: <Field
+            name={column.column_name}
+            render={({ field /* _form */ }) => (
+                <ListSelect column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />
+            )}
+        />,
+        117: <Field
+            name={column.column_name}
+            render={({ field /* _form */ }) => (
+                <ReferenceInput column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />
+            )}
+        />,
 
         119: 'switch',
         160: 'textArea',
@@ -117,20 +119,27 @@ const formElements = props => {
                 {
                     payload.formPreference.map((preference, key) => {
 
-                        if (typeof preference != 'string') {
-                            const column = payload.columns[preference.column];
+                        let inputElement,column;
 
-                            return inputElement({ props, values, column, shouldColumnSplited, key });
+                        if (typeof preference != 'string') {
+                            column = payload.columns[preference.column];
+
+                            inputElement = inputElement({ props, values, column, shouldColumnSplited, key });
 
                         } else if (typeof preference == 'string') {
                             shouldColumnSplited = preference.includes('s-split-') ? true : preference.includes('e-split-') ? false : shouldColumnSplited;
                         }
+
+                        return (<div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
+                            <label htmlFor="exampleInputEmail1">{column.display_name}</label>
+
+                            {inputElement}
+                        </div>)
+
                     })
+
                 }
             </div>
-
-
-
 
             <button type="button"
                 className="outline"

@@ -5,12 +5,13 @@ import React, { Component } from 'react';
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 
+import moment from 'moment';
+
 
 import './datePicker.css';
 
 
 import GLOBAL from './../../../../Constants/global.constants';
-import { spawn } from 'child_process';
 
 export default class DatePicker extends Component {
 
@@ -35,16 +36,21 @@ export default class DatePicker extends Component {
             value.startDate = picker.startDate.format(this.state.format);
             value.endDate = picker.endDate.format(this.state.format)
         }
+
+        if (this.props.onChange) {
+            this.props.onChange(this.props.name, value);
+        }
+
         this.setState({ value });
     }
 
     render() {
 
 
-        var value=0;
+        var value = 0;
 
         if (this.props.single) {
-            var value = this.state.value;
+            value = moment(this.state.value).format('DD/MM/YYYY HH:MM');
             // const { value } = this.state;
         } else {
             var { startDate, endDate } = this.state.value;
@@ -56,14 +62,14 @@ export default class DatePicker extends Component {
                 <div className="form-control">
                     {
                         this.props.single ?
-                            <DateRangePicker timePicker={this.props.timePicker} singleDatePicker onApply={this.applyDate}>
+                            <DateRangePicker timePicker={this.props.timePicker} startDate="1/1/2018 10:10" singleDatePicker onApply={this.applyDate}>
                                 <div className="picker">
                                     {value}
                                 </div>
                             </DateRangePicker>
-                            : <DateRangePicker timePicker={this.props.timePicker} onApply={this.applyDate}>
+                            : <DateRangePicker timePicker={this.props.timePicker} startDate={startDate} endDate={endDate} onApply={this.applyDate}>
                                 <div className="picker">
-                                    {/* {startDate} - {endDate} */}
+                                    {startDate} - {endDate}
                                 </div>
                             </DateRangePicker>
                     }
