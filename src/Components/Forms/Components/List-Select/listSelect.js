@@ -6,22 +6,23 @@ import React, { Component } from 'react';
 import GLOBAL from './../../../../Constants/global.constants';
 
 import SelectBox from './../Select-Box/selectBox';
-import './referenceInput.css';
+import './listSelect.css';
 
 import { Get } from './../../../../Utils/http.utils';
 
-export default class ReferenceInput extends Component {
+export default class ListSelect extends Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
             url: '',
-            value: this.props.model || ''
+            value: this.props.model || '',
+            options: []
         }
     }
 
-    loadInitialContent = async (column) => {
+    loadOptions = async (column) => {
 
         let url = '';
 
@@ -36,12 +37,19 @@ export default class ReferenceInput extends Component {
             url = route.split('api/admin/')[1]
         }
 
-        this.setState({ url });
+        const result = await Get({ url: url });
+
+        if (result.success) {
+
+            const options = result.response;
+
+            this.setState({ options });
+        }
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.column) {
-            this.loadInitialContent(nextProps.column);
+            this.loadOptions(nextProps.column);
         }
     }
 
@@ -49,11 +57,11 @@ export default class ReferenceInput extends Component {
 
         const { column } = this.props;
 
-        const { url, value } = this.state;
+        const { url, value, options } = this.state;
 
         return (
             <div className="reference-input">
-                <SelectBox name={this.props.name} onChange={this.props.onChange} field={column.referenced_model.display_column || column.display_column} sortingType={column.sorting_type} async={url} value={value} />
+                <SelectBox multi={this.props.multi} options={options} name={this.props.name} onChange={this.props.onChange} field={column.referenced_model.display_column || column.display_column} sortingType={column.sorting_type} async={url} value={value} />
             </div>
         );
     }

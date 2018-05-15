@@ -132,19 +132,8 @@ export default class Home extends Component {
         return (
             <div className="home-scene">
 
-                <EnhancedForm />
+                {/* <EnhancedForm /> */}
 
-                <form>
-                    {/* <div className="form-group">
-                        <label htmlFor="exampleInputE3mail1">Email address</label>
-                        <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
-                        <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
-                    </div> */}
-                    {/* <DatePicker /> */}
-
-
-                </form>
-                {/* <Switch /> */}
             </div>
         )
     }
