@@ -13,11 +13,14 @@ export default class PortletTable extends Component {
     constructor(props) {
         super(props);
 
-        // this.state = {
-        //     finalColumns: this.props.finalColumns,
-        //     listing: this.props.listing,
-        //     genericData: this.props.genericData
-        // };
+        this.state = {
+            finalColumns: this.props.finalColumns,
+            listing: this.props.listing,
+            genericData: this.props.genericData,
+            sortKey: '',
+            reverse: false
+        };
+        this.onSort = this.onSort.bind(this)
     }
 
     componentDidMount() {
@@ -42,24 +45,53 @@ export default class PortletTable extends Component {
         }
     }
 
+    onSort(event, sortKey) {
+        const listing = this.state.listing;
+
+        function generateSortFn(prop, reverse) {
+            return function (a, b) {
+                if (eval('a.' + prop) < eval('b.' + prop)) return reverse ? 1 : -1;
+                if (eval('a.' + prop) > eval('b.' + prop)) return reverse ? -1 : 1;
+                return 0;
+            };
+        }
+
+        let reverse = this.state.reverse;
+
+        if (this.state.sortKey == sortKey) {
+
+            reverse = !reverse;
+            listing.sort(generateSortFn(sortKey, reverse));
+
+        } else {
+            reverse = false;
+            listing.sort(generateSortFn(sortKey, reverse));
+        }
+
+        this.setState({ listing, sortKey, reverse })
+    }
+
     render() {
 
-        const { genericData, finalColumns, listing, history, callback, rowTemplate } = this.props;
+        const { genericData, finalColumns, listing, history, callback, rowTemplate } = this.state;
         return (
-            <Table striped>
+            <Table striped className="sortable">
                 <thead>
                     <tr>
                         <th>
                         </th>
                         {
                             finalColumns.map((selectedColumn, key) => (
-                                <th className="column-header" key={key}>
+                                <th className="column-header" key={key} onClick={e => this.onSort(e, selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName))}>
                                     {/* Column Wrapper */}
                                     <div className="column-wrapper">
                                         {/* Column Title */}
                                         <div className="column-title printable">
                                             {selectedColumn.display_name}
+                                            {/* <i className={`fas ${'fa-chevron-left ' + this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName)) && !this.state.reverse, 'fa-chevron-down ' + this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName)) && this.state.reverse}`} /> */}
                                             {/* {{ b.columnTitle || selectedColumn.display_name }} */}
+                                            <i className={`fas ${(this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName))) && !this.state.reverse ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                                            {/* <i className={`fas ${this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName)) && !this.state.reverse + 'fa-chevron-left' , this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName)) && this.state.reverse + 'fa-chevron-down' }`} /> */}
                                         </div>
                                         {/* Column Title Ends */}
 
@@ -115,6 +147,7 @@ export default class PortletTable extends Component {
                 </thead>
                 <tbody>
                     {
+
                         listing.map((listingRow, rowKey) => {
                             return (
                                 <tr className="table-row" key={rowKey}>
