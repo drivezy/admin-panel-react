@@ -51,8 +51,13 @@
                 left: 29px;
                 top: -30px;
             }
+            &:last-child {
+                &::before {
+                    height: 55.56px !important;
+                }
+            }
             &:first-child:before {
-                height: 0;
+                height: 0 !important;
             }
             .join-line {
                 @include join-mixin;
@@ -63,11 +68,11 @@
                 // }
             }
         }
-        .parent-filter:last-child {
-            &::before {
-                height: 55.56px !important;
-            }
-        }
+        // .parent-filter:last-child {
+        //     &::before {
+        //         height: 55.56px !important;
+        //     }
+        // }
         .fa-plus {
             border: 1px solid #b7c4cd;
             color: #b7c4cd;
@@ -134,7 +139,8 @@
                     border: 1px solid #b7c4cd;
                     color: #b7c4cd;
                     border-radius: 50%;
-                    padding: 8px 7px 2px 6px;
+                    padding: 8px;
+                    // padding: 8px 7px 2px 6px;
                     cursor: pointer;
                     &:hover {
                         color: #60baf9;
@@ -189,14 +195,15 @@
         .add_button_section {
             margin: 0 10px;
             position: relative;
-            top: -27px;
+            top: -12px;
             &:before {
                 content: '';
-                border: .1px solid rgb(196, 219, 238);
-                width: 1px; // height: 31px;
+                border: 0.1px solid #c4dbee;
+                width: 1px;
                 position: absolute;
-                left: 25px;
-                top: -102%;
+                left: 20px;
+                top: -66%;
+                height: 20px;
             }
             .add_button {
                 color: #67b0e9;
@@ -222,7 +229,6 @@
     .footer-content {
         background: white !important;
         border: 1px solid rgba(0, 0, 0, .1);
-        margin-top: -18px;
     }
     .custom-portlet {
         background-color: #f6f6f6;

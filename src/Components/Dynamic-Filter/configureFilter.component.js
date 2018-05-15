@@ -85,8 +85,6 @@ export default class ConfigureDynamicFilter extends Component {
             }
         }
 
-        console.log(this.state);
-
         this.setState({ isCollapsed: collapse });
     }
 
@@ -101,7 +99,6 @@ export default class ConfigureDynamicFilter extends Component {
         this.state.filterArr = [
             [{ ...this.filterObj }]
         ];
-        console.log(this.state.filterArr);
         // this.setState({ filterArr: [this.filterObj] });
     }
 
@@ -118,7 +115,7 @@ export default class ConfigureDynamicFilter extends Component {
     /**
      * Adds and column
      */
-    addColumn() {
+    addColumn = () => {
         const { filterArr } = this.state;
         const arr = [];
         arr.push({ ...this.filterObj });
@@ -243,15 +240,17 @@ export default class ConfigureDynamicFilter extends Component {
         const { filterArr } = this.state;
 
         if (setValue) {
-            filter[parentIndex][childIndex].filter = filter;
+            filter = filter.value; // @TODO once select box is fixed, remove this line
+            filterArr[parentIndex][childIndex].filter = filter;
+            // filterArr[parentIndex][childIndex].filter = filter;
             this.setState({ filterArr });
         }
-        const column = filterArr[parentIndex][childIndex].column.selected;
+        const column = filterArr[parentIndex][childIndex].column;
 
         // html, inputField are fields used by different filters, so initiailizing it
         filterArr[parentIndex][childIndex].html = null;
 
-        if (filter.contains("IS NULL") || filter.contains("IS NOT NULL")) {
+        if (filter.includes("IS NULL") || filter.includes("IS NOT NULL")) {
             return false;
         }
         let child;
@@ -511,10 +510,18 @@ export default class ConfigureDynamicFilter extends Component {
         });
     }
 
+    removeThisRow = ({ parentIndex, childIndex }) => {
+        const { filterArr } = this.state;
+        filterArr[parentIndex].splice(childIndex, 1);
+        if (filterArr[parentIndex].length == 0) {
+            filterArr.splice(parentIndex, 1);
+        }
+        this.setState({ filterArr });
+    };
+
     render() {
         const { isCollapsed, filterArr } = this.state;
         const { content } = this.props;
-        console.log(filterArr);
         return (
             <Collapse isOpen={!isCollapsed}>
                 <div className="configure-filter-container">
@@ -540,6 +547,8 @@ export default class ConfigureDynamicFilter extends Component {
 
                                                 {
                                                     parent.map((child, childIndex) => {
+                                                        const childfilterField = [];
+                                                        child.filterField.forEach(filter => childfilterField.push({ name: filter, id: filter }));
                                                         return (
                                                             <div key={childIndex}>
                                                                 <div className="flex-box filter-row event-flow">
@@ -548,8 +557,7 @@ export default class ConfigureDynamicFilter extends Component {
                                                                             place-holder="Column" obj="child.selectField" iterate-item="display_name" required="true">
                                                                         </custom-select-field> */}
 
-                                                                        <SelectBox onChange={(data) => {
-                                                                            console.log(this);
+                                                                        <SelectBox onChange={(name, data) => {
                                                                             this.columnChange(data, { parentIndex, childIndex, setValue: true })
                                                                         }}
                                                                             value={child.column} field='display_name' options={child.selectField} placeholder='Column' />
@@ -559,7 +567,7 @@ export default class ConfigureDynamicFilter extends Component {
                                                                             place-holder="Filter" obj="child.filterField">
                                                                         </custom-select-field> */}
 
-                                                                        <SelectBox onChange={(data) => this.filterChange(data, { parentIndex, childIndex, setValue: true })} value={child.filter} field='display_name' options={child.filterField} placeholder='Column' />
+                                                                        <SelectBox onChange={(name, data) => this.filterChange(data, { parentIndex, childIndex, setValue: true })} value={child.filter} options={childfilterField} placeholder='Column' />
                                                                     </div>
                                                                     <div className="operator-select">
                                                                         {/* <span id="inject" dynamic="child.html"></span> */}
@@ -575,9 +583,9 @@ export default class ConfigureDynamicFilter extends Component {
                                                                     }
 
                                                                     {
-                                                                        filterArr.length == 1 && parent.length == 1 &&
+                                                                        !(filterArr.length == 1 && parent.length == 1) &&
                                                                         <div className="remove-event" >
-                                                                            <i className="fa fa-times fa-lg" onClick="this.removeThisRow({index:childIndex,parentIndex:parentIndex})" aria-hidden="true"></i>
+                                                                            <i className="fa fa-times fa-lg" onClick={() => this.removeThisRow({ childIndex, parentIndex })} aria-hidden="true"></i>
                                                                         </div>
                                                                     }
 
@@ -598,10 +606,47 @@ export default class ConfigureDynamicFilter extends Component {
                                     })
                                 }
                             </div>
+
+                            <div className="add_button_section">
+                                <div className="add_button cursor-pointer">
+                                    <i className="fa fa-plus fa-lg" onClick={this.addColumn} aria-hidden="true"></i>
+                                </div>
+                            </div>
+
+                            <div className="footer-content nomargin">
+                                {/* <div className="col-lg-3 col-md-3 col-sm-3 col-xs-3 border-select-filter margin-top-8">
+                                    <custom-select-field ng-model="configureFilter.order" place-holder="Order" obj="configureFilter.dictionary" iterate-item="column_name">
+                                    </custom-select-field>
+                                </div>
+                                <div className="col-lg-3 col-md-3 col-sm-3 col-xs-3 border-select-filter margin-top-8">
+                                    <custom-select-field ng-model="configureFilter.sort" place-holder="Sort" obj="configureFilter.sorts">
+                                    </custom-select-field>
+                                </div>
+                                <div className="col-lg-3 col-md-3 col-sm-3 col-xs-3 border-select-filter margin-top-8" ng-if="configureFilter.scopeGroup.length">
+                                    <div className='form-group'>
+                                        <div className="input-group select-input-form admin-ui-select">
+                                            <span className="input-group-addon">
+                                                <i className="fa fa-superscript"></i>
+                                            </span>
+                                            <multiple-select-field-async ng-model="configureFilter.scopes" obj="configureFilter.scopeGroup" place-holder="Select scopes list"
+                                                iterate-item="alias_name">
+                                            </multiple-select-field-async>
+                                        </div>
+                                    </div>
+                                </div> */}
+                                <div className="text-right">
+                                    <button className="btn btn-default" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
+                                        Close
+                                    </button>
+                                    <button className="btn btn-info" onClick={this.submit} style={{ margin: '8px' }}>
+                                        Go
+                                    </button>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
-            </Collapse>
+            </Collapse >
         );
     }
 }
