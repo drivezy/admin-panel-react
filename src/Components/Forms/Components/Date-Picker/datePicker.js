@@ -5,6 +5,8 @@ import React, { Component } from 'react';
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 
+import moment from 'moment';
+
 
 import './datePicker.css';
 
@@ -20,37 +22,58 @@ export default class DatePicker extends Component {
             format: this.props.format || GLOBAL.DATE_FORMAT,
             minDate: this.props.minDate,
             maxDate: this.props.maxDate,
-            model: {},
-
+            value: this.props.value || '',
         }
     }
 
     applyDate = (event, picker) => {
-        console.log(picker);
-        const { model } = this.state;
-        model.startDate = picker.startDate.format(this.state.format);
-        model.endDate = picker.startDate.format(this.state.format)
-        this.setState({ model });
+        // console.log(picker);
+        let { value } = this.state;
+
+        if (this.props.single) {
+            value = picker.startDate.format(this.state.format);
+        } else {
+            value.startDate = picker.startDate.format(this.state.format);
+            value.endDate = picker.endDate.format(this.state.format)
+        }
+
+        if (this.props.onChange) {
+            this.props.onChange(this.props.name, value);
+        }
+
+        this.setState({ value });
     }
 
     render() {
 
-        const { startDate, endDate } = this.state.model;
+
+        var value = 0;
+
+        if (this.props.single) {
+            value = moment(this.state.value).format('DD/MM/YYYY HH:MM');
+            // const { value } = this.state;
+        } else {
+            var { startDate, endDate } = this.state.value;
+        }
 
         return (
 
             <div className="form-group datepicker">
-                <label htmlFor="exampleInputEmail1">Date Picker</label>
                 <div className="form-control">
-                    <DateRangePicker startDate="1/1/2014" endDate="3/1/2014" onApply={this.applyDate}>
-                        <div className="picker">
-                            {startDate} - {endDate}
-                        </div>
-                    </DateRangePicker>
+                    {
+                        this.props.single ?
+                            <DateRangePicker timePicker={this.props.timePicker} startDate="1/1/2018 10:10" singleDatePicker onApply={this.applyDate}>
+                                <div className="picker">
+                                    {value}
+                                </div>
+                            </DateRangePicker>
+                            : <DateRangePicker timePicker={this.props.timePicker} startDate={startDate} endDate={endDate} onApply={this.applyDate}>
+                                <div className="picker">
+                                    {startDate} - {endDate}
+                                </div>
+                            </DateRangePicker>
+                    }
                 </div>
-                <small id="emailHelp" className="form-text text-muted">
-                    We'll never share your email with anyone else.
-                </small>
             </div>
         );
     }
