@@ -146,7 +146,7 @@ export default class PortletTable extends Component {
                                                                     {
                                                                         sortTypes.map((sort, key) => {
                                                                             return (
-                                                                                <div class="dropdown-item" key={key} onClick={e => this.sortOnDB(sort, selectedColumn.path)}>
+                                                                                <div className="dropdown-item" key={key} onClick={e => this.sortOnDB(sort, selectedColumn.path)}>
                                                                                     <i className={`fas ${sort.icon}`} /> {sort.caption}
                                                                                 </div>
                                                                             )
