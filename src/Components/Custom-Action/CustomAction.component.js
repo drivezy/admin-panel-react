@@ -117,7 +117,12 @@ export default class CustomAction extends Component {
         this.methods.edit = ({ action, listingRow }) => {
             const { genericData = {} } = this.props;
             const payload = { method: 'edit', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module, dataModel: genericData.dataModel };
-            ModalManager.openModal({ payload, headerText: 'Edit modal', modalBody: () => (<FormCreator payload={payload} />) });
+            ModalManager.openModal({
+                payload,
+                modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),
+                // headerText: 'Edit modal',
+                modalBody: () => (<FormCreator payload={payload} />)
+            });
         }
 
         this.methods.delete = async ({ action, listingRow }) => {
@@ -183,7 +188,7 @@ export default class CustomAction extends Component {
                                     onClick={() => {
                                         this.callFunction({ action, listingRow });
                                     }}
-                                    type="button" key={key} className="btn btn-sm btn-light">
+                                    type="button" key={key} className="btn btn-sm">
                                     <i className={`fa ${action.icon}`} ></i>
                                 </button>
                             );

@@ -12,6 +12,8 @@ import {
 import { withFormik, Field, Form } from 'formik';
 import Yup from 'yup';
 
+import TableSettings from './../../../../Components/Table-Settings/TableSettings.component';
+// import {}
 // import { Post, Put } from './../../Utils/http.utils';
 
 export default class ModalHeaderComponent extends Component {
@@ -31,15 +33,16 @@ export default class ModalHeaderComponent extends Component {
         const { payload } = this.props;
 
         return (
-            <div className="modal-footerf">
+            <div className="">
                 <div className="row justify-content-">
-                    <div className="left">
-                        <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
 
-                    </div>
-                    <div className="right">
+                    {/* <div className="left"> */}
+                        {/* <ModalHeader toggle={this.toggle}>Modal title</ModalHeader> */}
 
-                    </div>
+                    {/* </div> */}
+                    {/* <div className="right">
+
+                    </div> */}
                 </div>
             </div>
         )

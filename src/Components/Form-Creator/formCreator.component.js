@@ -19,7 +19,8 @@ import DatePicker from './../Forms/Components/Date-Picker/datePicker';
 import TimePicker from './../Forms/Components/Time-Picker/timePicker';
 import ListSelect from './../Forms/Components/List-Select/listSelect';
 import Switch from './../Forms/Components/Switch/switch';
-import ModalManager from './../../Custom-Components/Modal-Wrapper/modalManager';
+import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
+import TableSettings from './../Table-Settings/TableSettings.component';
 
 
 
@@ -192,6 +193,15 @@ const formElements = props => {
             </div>
 
             <div className="modal-actions row justify-content-end">
+
+                {/* {
+                    payload.columns ?
+                        <TableSettings onSubmit={this.layoutChanges} listName={payload.listName} selectedColumns={payload.selectedColumns} columns={payload.columns} />
+                        :
+                        null
+                } */}
+
+
                 <Button color="secondary" onClick={handleReset}>
                     Clear
                 </Button>
@@ -228,6 +238,42 @@ const FormContents = withFormik({
     //         .email('Invalid email address')
     //         .required('Email is required!'),
     // }),
+
+    validationSchema: (props, values) => {
+
+        // let da = {}
+
+
+        // let fields = Object.keys(props.payload.columns);
+
+        // const { columns } = props.payload;
+
+        // fields.forEach((column) => {
+
+        //     if (columns[column].mandatory) {
+        //         da[column.column_name] = Yup.string().required;
+        //     }
+        // });
+
+        // return Yup.object().shape(da);
+
+        // return Yup.object().shape({
+        //     friends: Yup.array()
+        //         .of(
+        //             Yup.object().shape({
+        //                 name: Yup.string()
+        //                     .min(4, 'too short')
+        //                     .required('Required'), // these constraints take precedence
+        //                 salary: Yup.string()
+        //                     .min(3, 'cmon')
+        //                     .required('Required'), // these constraints take precedence
+        //             })
+        //         )
+        //         .required('Must have friends') // these constraints are shown if and only if inner constraints are satisfied
+        //         .min(3, 'Minimum of 3 friends'),
+        // })
+    },
+
     handleReset: (values) => {
         console.log(values);
     },
@@ -276,6 +322,9 @@ export default class FormCreator extends Component {
                         <FormContents onSubmit={this.closeModal} payload={payload} />
                     </CardBody>
                 </Card>
+
+
+
             </div>
         )
     }

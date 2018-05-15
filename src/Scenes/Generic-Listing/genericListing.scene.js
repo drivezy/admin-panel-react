@@ -16,8 +16,8 @@ import TableSettings from './../../Components/Table-Settings/TableSettings.compo
 import PortletTable from './../../Components/Portlet-Table/PortletTable.component';
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 
-import ModalManager from './../../Custom-Components/Modal-Wrapper/modalManager';
-import ModalWrap from './../../Custom-Components/Modal-Wrapper/modalWrapper.component';
+import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
+import ModalWrap from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
 
 export default class GenericListing extends Component {
     constructor(props) {
