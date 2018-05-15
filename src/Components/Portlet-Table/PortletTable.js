@@ -81,64 +81,63 @@ export default class PortletTable extends Component {
                         <th>
                         </th>
                         {
-                            finalColumns.map((selectedColumn, key) => (
-                                <th className="column-header" key={key} onClick={e => this.onSort(e, selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName))}>
-                                    {/* Column Wrapper */}
-                                    <div className="column-wrapper">
-                                        {/* Column Title */}
-                                        <div className="column-title printable">
-                                            {selectedColumn.display_name}
-                                            {/* <i className={`fas ${'fa-chevron-left ' + this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName)) && !this.state.reverse, 'fa-chevron-down ' + this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName)) && this.state.reverse}`} /> */}
-                                            {/* {{ b.columnTitle || selectedColumn.display_name }} */}
-                                            <i className={`fas ${(this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName))) && !this.state.reverse ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
-                                            {/* <i className={`fas ${this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName)) && !this.state.reverse + 'fa-chevron-left' , this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName)) && this.state.reverse + 'fa-chevron-down' }`} /> */}
-                                        </div>
-                                        {/* Column Title Ends */}
-
-                                        {/* Filter Column */}
-                                        {
-                                            selectedColumn.path.split('.').length < 3 &&
-                                            <div className="filter-column">
-                                                <a ng-click="portlet.preventDefault($event);portlet.filterColumn(select-edColumn)">
-                                                    <i className="fas fa-filter"></i>
-                                                </a>
+                            finalColumns.map((selectedColumn, key) => {
+                                return (
+                                    <th className="column-header" key={key} onClick={e => this.onSort(e, selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName))}>
+                                        {/* Column Wrapper */}
+                                        <div className="column-wrapper">
+                                            {/* Column Title */}
+                                            <div className="column-title printable">
+                                                {selectedColumn.display_name}
+                                                <i className={`fas ${(this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.column_name))) ? (this.state.reverse ? 'fa-chevron-up' : 'fa-chevron-down') : ''}`} />
                                             </div>
-                                        }
-                                        {/* Filter Ends */}
-                                        {/* DB Level */}
+                                            {/* Column Title Ends */}
 
-                                        {
-                                            (selectedColumn.path.split('.').length == 1) && (selectedColumn.column_type != 118) &&
-                                            (
-                                                <div className="db-level-sort">
-
-                                                    {/* <span>
-                                                    <a className="dropdown-link" id="simple-dropdown">
-                                                        <i className="fa fa-sort-amount-asc"></i>
+                                            {/* Filter Column */}
+                                            {
+                                                selectedColumn.path.split('.').length < 3 &&
+                                                <div className="filter-column">
+                                                    <a ng-click="portlet.preventDefault($event);portlet.filterColumn(select-edColumn)">
+                                                        <i className="fas fa-filter"></i>
                                                     </a>
-                                                </span> */}
                                                 </div>
-                                            )
-                                        }
-                                        {/* <div class="db-level-sort" ng-if="selectedColumn.path.split('.').length==1&&selectedColumn.column_type!=118">
-                                        <span uib-dropdown on-toggle="toggled(open)">
-                                            <a class="dropdown-link" id="simple-dropdown" uib-dropdown-toggle>
-                                                <i class="fa fa-sort-amount-asc"></i>
-                                            </a>
-                                            <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
-                                                <li ng-repeat="sort in portlet.sortTypes" ng-click="portlet.sortOnDB(sort, selectedColumn.path)">
-                                                    <a>
-                                                        <i class="fa {{sort.icon}}"></i>
-                                                        {{ sort.caption }}
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </span>
-                                    </div> */}
-                                        {/* DB Level Ends */}
-                                    </div>
-                                </th>
-                            ))
+                                            }
+                                            {/* Filter Ends */}
+                                            {/* DB Level */}
+
+                                            {
+                                                (selectedColumn.path.split('.').length == 1) && (selectedColumn.column_type != 118) &&
+                                                (
+                                                    <div className="db-level-sort">
+
+                                                        {/* <span>
+                                                        <a className="dropdown-link" id="simple-dropdown">
+                                                            <i className="fa fa-sort-amount-asc"></i>
+                                                        </a>
+                                                    </span> */}
+                                                    </div>
+                                                )
+                                            }
+                                            {/* <div class="db-level-sort" ng-if="selectedColumn.path.split('.').length==1&&selectedColumn.column_type!=118">
+                                            <span uib-dropdown on-toggle="toggled(open)">
+                                                <a class="dropdown-link" id="simple-dropdown" uib-dropdown-toggle>
+                                                    <i class="fa fa-sort-amount-asc"></i>
+                                                </a>
+                                                <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                                                    <li ng-repeat="sort in portlet.sortTypes" ng-click="portlet.sortOnDB(sort, selectedColumn.path)">
+                                                        <a>
+                                                            <i class="fa {{sort.icon}}"></i>
+                                                            {{ sort.caption }}
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </span>
+                                        </div> */}
+                                            {/* DB Level Ends */}
+                                        </div>
+                                    </th>
+                                )
+                            })
                         }
                         <th className="action-header">
                             <span className="fa fa-cog fa-lg"></span>
