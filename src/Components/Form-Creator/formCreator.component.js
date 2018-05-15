@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import './DetailPortlet.css';
+import './formCreator.css';
 
 import {
     Card, CardImg, CardText, CardBody,
@@ -142,8 +142,6 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
     return elements[column.column_type];
 }
 
-
-
 const formElements = props => {
     const {
         values,
@@ -163,7 +161,7 @@ const formElements = props => {
     let shouldColumnSplited = false;
 
     return (
-        <Form>
+        <form onSubmit={handleSubmit}>
             <div className="form-row">
                 {
                     payload.formPreference.map((preference, key) => {
@@ -191,18 +189,21 @@ const formElements = props => {
                 }
             </div>
 
-            <button type="button"
-                className="outline"
-                onClick={handleReset}
-                disabled={!dirty || isSubmitting}>
-                Reset
-    </button>
-            <button type="submit" disabled={isSubmitting}>
-                Submit
-    </button>
+            <div className="modal-actions row justify-content-end">
+                <Button color="secondary" onClick={props.handleReset}>
+                    Clear
+                </Button>
+
+                <button type="submit" onClick={handleSubmit}>
+                    Submit
+                </button>
+                {/* <Button type="submit" color="primary">
+                    Submit
+                </Button> */}
+            </div>
 
             <DisplayFormikState {...props.values} />
-        </Form>
+        </form>
     );
 }
 
@@ -229,13 +230,11 @@ const FormContents = withFormik({
             .required('Email is required!'),
     }),
     handleSubmit: (values, { setSubmitting }) => {
-        setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            setSubmitting(false);
-        }, 1000);
-    },
-    setFieldValue: (val) => {
-        console.log(val);
+        console.log(values);
+        // setTimeout(() => {
+        //     alert(JSON.stringify(values, null, 2));
+        //     setSubmitting(false);
+        // }, 1000);
     },
     displayName: 'BasicForm', // helps with React DevTools
 })(formElements);
