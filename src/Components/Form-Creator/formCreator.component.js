@@ -16,6 +16,7 @@ import ReferenceInput from './../Forms/Components/Reference-Input/referenceInput
 import DatePicker from './../Forms/Components/Date-Picker/datePicker';
 import TimePicker from './../Forms/Components/Time-Picker/timePicker';
 import ListSelect from './../Forms/Components/List-Select/listSelect';
+import Switch from './../Forms/Components/Switch/switch';
 
 
 const DisplayFormikState = props => (
@@ -26,8 +27,7 @@ const DisplayFormikState = props => (
                 background: '#f6f8fa',
                 fontSize: '.65rem',
                 padding: '.5rem',
-            }}
-        >
+            }}>
             <strong>props</strong> ={' '}
             {JSON.stringify(props, null, 2)}
         </pre>
@@ -40,52 +40,103 @@ const DisplayFormikState = props => (
 const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
 
     const elements = {
+
+        // Static Display 
+        768: <h5>{values[column.column_name]}</h5>,
+        // Static Ends
+
+        // Number
         107: <Field className="form-control" type="number" name={column.column_name} placeholder={`Enter ${column.display_name}`} />,
+        // Number Ends
+
+        // Text
         108: <Field className="form-control" type="text" name={column.column_name} placeholder={`Enter ${column.display_name}`} />,
-        109: <Field
+        // Text Ends
+
+        // TextArea Begins
+        160: <Field
             name={column.column_name}
             render={({ field /* _form */ }) => (
-                <DatePicker single={true} name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />
+                <textarea name={column.column_name} className="form-control" rows="3" onChange={props.handleChange} value={values[column.column_name]}></textarea>
             )}
         />,
-        746: <Field
+        // TextArea Ends
+
+        // Switch Begins
+        119: <Field
             name={column.column_name}
             render={({ field /* _form */ }) => (
-                <TimePicker name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />
+                <Switch name={column.column_name} rows="3" onChange={props.setFieldValue} value={values[column.column_name]} />
             )}
         />,
-        110: <Field
-            name={column.column_name}
-            render={({ field /* _form */ }) => (
-                <DatePicker single={true} timePicker={true} name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />
-            )}
-        />,
+        // Switch Ends
+
+        // Boolean Select
         111: <Field
             name={column.column_name}
             render={({ field /* _form */ }) => (
                 <SelectBox name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
             )}
         />,
+        // Boolean Ends
+
+        // List Select with options from api
         116: <Field
             name={column.column_name}
             render={({ field /* _form */ }) => (
                 <ListSelect column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />
             )}
         />,
+        // List Select Ends
+
+        // List Multi Select
+        465: <Field
+            name={column.column_name}
+            render={({ field /* _form */ }) => (
+                <ListSelect multi={true} column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />
+            )}
+        />,
+        // List Ends
+
+        // DatePicker
+        109: <Field
+            name={column.column_name}
+            render={({ field /* _form */ }) => (
+                <DatePicker single={true} name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />
+            )}
+        />,
+        // DatePicker Ends
+
+        // Single DatePicker with Timepicker 
+        110: <Field
+            name={column.column_name}
+            render={({ field /* _form */ }) => (
+                <DatePicker single={true} timePicker={true} name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />
+            )}
+        />,
+        // Single Datepicker Ends
+
+        // Time Picker
+        746: <Field
+            name={column.column_name}
+            render={({ field /* _form */ }) => (
+                <TimePicker name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />
+            )}
+        />,
+        // Time Picker Ends
+
+        // Reference Begins
         117: <Field
             name={column.column_name}
             render={({ field /* _form */ }) => (
                 <ReferenceInput column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />
             )}
         />,
+        // Reference Ends
 
-        119: 'switch',
-        160: 'textArea',
         411: 'script',
-        465: 'list type',
         684: 'serialize',
         708: 'upload',
-        768: 'static display',
     }
 
     return elements[column.column_type];
@@ -113,31 +164,30 @@ const formElements = props => {
 
     return (
         <Form>
-
             <div className="form-row">
-
                 {
                     payload.formPreference.map((preference, key) => {
 
-                        let inputElement,column;
+                        let elem, column;
 
                         if (typeof preference != 'string') {
                             column = payload.columns[preference.column];
 
-                            inputElement = inputElement({ props, values, column, shouldColumnSplited, key });
+                            elem = inputElement({ props, values, column, shouldColumnSplited, key });
 
                         } else if (typeof preference == 'string') {
                             shouldColumnSplited = preference.includes('s-split-') ? true : preference.includes('e-split-') ? false : shouldColumnSplited;
                         }
 
-                        return (<div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
-                            <label htmlFor="exampleInputEmail1">{column.display_name}</label>
-
-                            {inputElement}
-                        </div>)
-
+                        if (column) {
+                            return (
+                                <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
+                                    <label htmlFor="exampleInputEmail1">{column.display_name}</label>
+                                    {elem}
+                                </div>
+                            )
+                        }
                     })
-
                 }
             </div>
 

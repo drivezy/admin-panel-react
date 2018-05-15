@@ -19,7 +19,6 @@ export default class SelectBox extends Component {
             options: [],
             async: this.props.async,
 
-            multi: this.props.multi,
             value: this.props.value || '',
             field: this.props.field || 'name',
             key: this.props.key || 'id'
@@ -53,7 +52,7 @@ export default class SelectBox extends Component {
 
         if (this.props.onChange) {
             console.log(this.props.name, value[this.state.key]);
-            // this.props.onChange(this.props.name, value[this.state.key]);
+            this.props.onChange(this.props.name, value[this.state.key]);
         }
     }
 
@@ -105,7 +104,7 @@ export default class SelectBox extends Component {
 
         const { async } = this.props;
 
-        const { value, options, multi } = this.state;
+        const { value, options } = this.state;
 
         return (
             <div>

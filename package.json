@@ -9,6 +9,7 @@
     "jquery": "^3.3.1",
     "moment": "^2.22.1",
     "prop-types": "^15.6.1",
+    "rc-switch": "^1.6.0",
     "rc-time-picker": "^3.3.1",
     "react": "^16.3.2",
     "react-bootstrap-daterangepicker": "^4.1.0",
@@ -16,7 +17,6 @@
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.4",
     "react-select": "^1.2.1",
-    "react-switch": "^2.3.2",
     "react-toastify": "^4.0.1",
     "reactstrap": "^5.0.0-beta.3",
     "yup": "^0.24.1"

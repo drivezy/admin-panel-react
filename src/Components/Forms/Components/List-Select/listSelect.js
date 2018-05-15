@@ -61,7 +61,7 @@ export default class ListSelect extends Component {
 
         return (
             <div className="reference-input">
-                <SelectBox options={options} name={this.props.name} onChange={this.props.onChange} field={column.referenced_model.display_column || column.display_column} sortingType={column.sorting_type} async={url} value={value} />
+                <SelectBox multi={this.props.multi} options={options} name={this.props.name} onChange={this.props.onChange} field={column.referenced_model.display_column || column.display_column} sortingType={column.sorting_type} async={url} value={value} />
             </div>
         );
     }
