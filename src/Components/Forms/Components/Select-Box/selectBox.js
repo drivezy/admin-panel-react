@@ -17,7 +17,6 @@ export default class SelectBox extends Component {
 
         this.state = {
             options: [],
-            async: this.props.async,
 
             value: this.props.value || '',
             field: this.props.field || 'name',
@@ -43,7 +42,7 @@ export default class SelectBox extends Component {
     handleChange = (value) => {
         // this.setState({ value: value[this.state.key] });
 
-        if (this.state.async) {
+        if (this.props.async) {
             this.setState({ value: value[this.state.key] });
         } else {
             this.setState({ value });
@@ -102,33 +101,42 @@ export default class SelectBox extends Component {
 
     render() {
 
-        const { async } = this.props;
+        const { async, getOptions } = this.props;
+
 
         const { value, options } = this.state;
 
+        let elem;
+
+        if (async) {
+            elem = <Async
+                name="form-field-name"
+                value={value}
+                loadOptions={this.getOptions}
+                onChange={this.handleChange}
+                multi={this.props.multi}
+            />
+        } else if (getOptions) {
+            elem = <Async
+                name="form-field-name"
+                value={value}
+                loadOptions={getOptions}
+                onChange={this.handleChange}
+                multi={this.props.multi}
+            />
+        } else {
+            elem = <Select
+                name="form-field-name"
+                value={value}
+                onChange={this.handleChange}
+                options={options}
+                multi={this.props.multi}
+            />
+        }
+
         return (
             <div>
-                {
-                    async ?
-                        <div>
-                            <Async
-                                name="form-field-name"
-                                value={value}
-                                loadOptions={this.getOptions}
-                                onChange={this.handleChange}
-                                multi={this.props.multi}
-                            />
-                        </div> :
-                        <div>
-                            <Select
-                                name="form-field-name"
-                                value={value}
-                                onChange={this.handleChange}
-                                options={options}
-                                multi={this.props.multi}
-                            />
-                        </div>
-                }
+                {elem}
             </div>
         );
     }
