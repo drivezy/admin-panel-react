@@ -6,7 +6,7 @@ import {
     CardTitle, CardSubtitle, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from 'reactstrap';
 
-import CustomAction from './../Custom-Action/CustomAction';
+import CustomAction from './../Custom-Action/CustomAction.component';
 
 export default class PortletTable extends Component {
 

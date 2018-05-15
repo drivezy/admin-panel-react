@@ -7,9 +7,9 @@ import {
     Row, Col, TabContent, TabPane, Nav, NavItem, NavLink, Table
 } from 'reactstrap';
 
-import DetailPortlet from './../../Components/Detail-Portlet/DetailPortlet';
+import DetailPortlet from './../../Components/Detail-Portlet/DetailPortlet.component';
 import DetailIncludes from './../../Components/Detail-Includes/DetailIncludes';
-import TableSettings from './../../Components/Table-Settings/TableSettings';
+import TableSettings from './../../Components/Table-Settings/TableSettings.component';
 
 import { GetUrlParams } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';

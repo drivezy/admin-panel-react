@@ -12,9 +12,9 @@ import { GetListingRecord } from './../../Utils/genericListing.utils';
 
 
 import ListingPagination from './../../Components/Listing-Pagination/ListingPagination';
-import TableSettings from './../../Components/Table-Settings/TableSettings';
-import PortletTable from './../../Components/Portlet-Table/PortletTable';
-import CustomAction from './../../Components/Custom-Action/CustomAction';
+import TableSettings from './../../Components/Table-Settings/TableSettings.component';
+import PortletTable from './../../Components/Portlet-Table/PortletTable.component';
+import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 
 import ModalManager from './../../Custom-Components/Modal-Wrapper/modalManager';
 import ModalWrap from './../../Custom-Components/Modal-Wrapper/modalWrapper.component';

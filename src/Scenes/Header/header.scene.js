@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './header.css';
 
-import ActiveModule from './../../Components/Active-Module/ActiveModule';
+import ActiveModule from './../../Components/Active-Module/ActiveModule.component';
 import PageNav from './../../Components/Page-Nav/PageNav';
 
 export default class Header extends Component {
