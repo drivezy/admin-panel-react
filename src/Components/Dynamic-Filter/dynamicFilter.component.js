@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StoreEvent } from './../../Utils/stateManager.utils';
+import './dynamicFilter.css';
 
 export default class DynamicFilter extends Component {
     constructor(props) {
@@ -19,10 +20,12 @@ export default class DynamicFilter extends Component {
     render() {
         const { isCollapsed } = this.state;
         return (
-            <h3
-                className="cursor-pointer"
+            <div
+                className="dynamic-filter-container cursor-pointer"
                 onClick={() => this.toggleAdvancedFilter()}
-            > Advanced </h3>
+            >
+                Advanced
+            </div>
         );
     }
 }
