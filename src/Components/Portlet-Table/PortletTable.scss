@@ -1,7 +1,40 @@
 /* Sortable tables */
-table.sortable thead {
-    background-color:#eee;
-    color:#666666;
-    font-weight: bold;
-    cursor: default;
+.sortable {
+    .column-wrapper {
+        display: flex;
+        .column-title {
+            color: #6f7c87;
+            margin-right: 10px;
+            -ms-flex-preferred-size: 80%;
+            flex-grow: 1;
+            font-weight: 100;
+            font-size: 13px;
+        }
+        .db-level-sort {
+            cursor: pointer;
+            flex-basis: 5%;
+            .dropdown-link {
+                text-decoration: none;
+                color: #b1493ce8;
+                opacity: 0.8;
+            }
+        }
+        .filter-column {
+            cursor: pointer;
+            margin: -1px 4px;
+            flex-basis: 5%;
+            a {
+                opacity: 0.8;
+            }
+        }
+    }
+    .dropdown-item {
+        display: block;
+        padding: 3px 20px;
+        clear: both;
+        font-weight: 400;
+        line-height: 1.42857143;
+        color: #333;
+        white-space: nowrap;
+    }
 }
