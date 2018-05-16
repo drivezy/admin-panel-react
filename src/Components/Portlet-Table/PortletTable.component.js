@@ -24,6 +24,14 @@ export default class PortletTable extends Component {
         };
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            finalColumns: nextProps.finalColumns,
+            listing: nextProps.listing,
+            genericData: nextProps.genericData
+        });
+    }
+
     componentDidMount() {
         setTimeout(() => {
             this.adjustWidth();

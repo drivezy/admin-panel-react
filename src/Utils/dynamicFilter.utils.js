@@ -34,3 +34,11 @@ export function RawStringQueryToObject(rawQueryString) {
         secondInputField
     };
 };
+
+export function RemoveLastWord(query, loop) {
+    for (let i = 0; i < loop; i++) {
+        const lastIndex = query.lastIndexOf(" ");
+        query = query.substring(0, lastIndex);
+    }
+    return query;
+};
