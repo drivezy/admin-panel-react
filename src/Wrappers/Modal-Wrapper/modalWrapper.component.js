@@ -68,8 +68,6 @@ export default class ModalWrapper extends Component {
                 {
                     modalFooter &&
                     <ModalFooter>
-                        {/* <Button color="primary" onClick={this.toggle}>Do Something</Button>{' '}
-                    <Button color="secondary" onClick={this.toggle}>Cancel</Button> */}
                         {modalFooter()}
                     </ModalFooter>
                 }
