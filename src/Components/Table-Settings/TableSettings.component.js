@@ -8,7 +8,7 @@ import { changeArrayPosition } from './../../Utils/js.utils';
 
 import { Collapse, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-export default class DetailPortlet extends Component {
+export default class TableSettings extends Component {
 
     constructor(props) {
         super(props);
@@ -20,7 +20,6 @@ export default class DetailPortlet extends Component {
             columns: this.props.columns,
             list: {},
             activeColumn: {},
-            onSubmit: this.props.onSubmit
         }
     }
 
@@ -85,7 +84,7 @@ export default class DetailPortlet extends Component {
     applyChanges = async () => {
         const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
         result.success ? this.setState({ modal: !this.state.modal }) : null;
-        this.state.onSubmit(this.state.tempSelectedColumns);
+        this.props.onSubmit(this.state.tempSelectedColumns);
     }
 
     modalWrapper() {
@@ -182,6 +181,7 @@ export default class DetailPortlet extends Component {
     }
 
     render() {
+        console.log('this.state.modal', this.state.modal);
         return (
             <div className="table-settings">
                 <Button color="primary" size="sm" onClick={this.toggleModal}>
