@@ -9,6 +9,7 @@ import './genericListing.css';
 import { GetUrlParams } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
 import { GetListingRecord } from './../../Utils/genericListing.utils';
+import { SubscribeToEvent, UnsubscribeEvent } from './../../Utils/stateManager.utils';
 
 import DynamicFilter from './../../Components/Dynamic-Filter/dynamicFilter.component';
 import ConfigureDynamicFilter from './../../Components/Dynamic-Filter/configureFilter.component';
@@ -31,20 +32,31 @@ export default class GenericListing extends Component {
             genericData: {},
             filterContent: null
         };
+        SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
 
     componentWillReceiveProps(nextProps) {
-        // console.log(this.state);
-        // console.log(GetUrlParams(nextProps));
         const newProps = GetUrlParams(nextProps);
         this.state.params = newProps.params;
         this.state.queryString = newProps.queryString;
-        this.getListingData();
+        if (this.state.menuDetail.url) {
+            this.getListingData();
+        }
     }
 
     componentDidMount() {
-        this.getMenuData();
+        // this.getMenuData();
         // ModalManager.showModal({ onClose: this.closeModal, headerText: '1st using method', modalBody: () => (<h1> hi</h1>) });
+    }
+
+    componentWillUnmount() {
+        // UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
+    }
+
+    userDataArrived = (user) => {
+        this.state.currentUser = user;
+        this.getMenuData();  
+        // this.setState({ currentUser: data });
     }
 
     getMenuData = async () => {
@@ -64,8 +76,8 @@ export default class GenericListing extends Component {
     }
 
     getListingData = () => {
-        const { menuDetail, genericData, queryString } = this.state;
-        GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString });
+        const { menuDetail, genericData, queryString, currentUser } = this.state;
+        GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser });
     }
 
     dataFetched = ({ genericData, filterContent }) => {
@@ -78,9 +90,6 @@ export default class GenericListing extends Component {
         //     // this.setState({ pagesOnDisplay: totalPages });
         //     this.state.pagesOnDisplay = Math.ceil(totalPages);
         // }
-        // console.log(genericData);
-
-
         this.setState({ genericData, filterContent });
     }
 
@@ -132,8 +141,8 @@ export default class GenericListing extends Component {
                     {
                         filterContent &&
                         <ConfigureDynamicFilter
-                            history={history}  
-                            match={match} 
+                            history={history}
+                            match={match}
                             filters={genericData.userFilter}
                             content={filterContent}
                         />
