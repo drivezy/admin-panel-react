@@ -47,7 +47,6 @@ export default class ConfigureDynamicFilter extends Component {
         };
         SubscribeToEvent({ eventName: 'ToggleAdvancedFilter', callback: this.listenToggleAdvancedFilter });
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
-
     }
 
     componentWillUnmount() {
@@ -377,7 +376,7 @@ export default class ConfigureDynamicFilter extends Component {
      * @param  {} index
      * @param  {} queryField
      */
-    getInputRecord = async ({ input: val, parentIndex, childIndex, queryField }) => {
+    getInputRecord = async ({ input: val, parentIndex, childIndex, queryField } = {}) => {
         if (val) {
             const { filterArr } = this.state;
             const displayName = filterArr[parentIndex][childIndex].column.referenced_model.display_column;
@@ -442,7 +441,6 @@ export default class ConfigureDynamicFilter extends Component {
         parentQueries.forEach((parentValue, parentIndex) => {
             filterArr[parentIndex] = [];
             const queries = parentValue.split(" OR ");
-
             queries.forEach(async (value, key) => {
                 filterArr[parentIndex].push({ ...this.filterObj });
 
@@ -454,6 +452,7 @@ export default class ConfigureDynamicFilter extends Component {
 
                 filterArr[parentIndex][key].column = SelectFromOptions(this.filterObj.selectField, queryObj.selectedColumn, "column_name");
 
+                console.log(filterArr[parentIndex][key].column);
                 if (filterArr[parentIndex][key].column.column_type == 116) {
                     const res = await this.columnChange(filterArr[parentIndex][key].column, {
                         parentIndex: parentIndex,
@@ -497,9 +496,9 @@ export default class ConfigureDynamicFilter extends Component {
                     childIndex: key
                 });
                 // assign the selected value of input field , first value
-                filterArr[parentIndex][key].slot.startDate = queryObj.selectedInput;
+                // filterArr[parentIndex][key].slot.startDate = queryObj.selectedInput;
                 filterArr[parentIndex][key].inputField = queryObj.selectedInput;
-                filterArr[parentIndex][key].slot.endDate = queryObj.secondInputField;
+                filterArr[parentIndex][key].secondInputField = queryObj.secondInputField;
 
                 filterArr[parentIndex][key].filter = queryObj.selectedFilter;
                 this.setState({ filterArr });
