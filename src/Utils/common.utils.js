@@ -69,6 +69,15 @@ export function ArrayToObject(key) {
     return obj;
 }
 
+export function CopyToClipBoard(text) {
+    const temp = document.createElement("textarea");
+    temp.innerHTML = text;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand("copy");
+    document.body.removeChild(temp);
+}
+
 /**
  * Checks if two given objects are same 
  * NOTE: Mainly used in persitance for identifying if two params are same
