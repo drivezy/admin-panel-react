@@ -110,12 +110,8 @@ export default class SelectBox extends Component {
     }
 
     render() {
-
         const { async, getOptions } = this.props;
-
-
         const { value, options } = this.state;
-
         let elem;
 
         if (async) {

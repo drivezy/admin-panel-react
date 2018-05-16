@@ -23,6 +23,14 @@ export default class PortletTable extends Component {
         this.onSort = this.onSort.bind(this)
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            finalColumns: nextProps.finalColumns,
+            listing: nextProps.listing,
+            genericData: nextProps.genericData
+        });
+    }
+
     componentDidMount() {
         setTimeout(() => {
             this.adjustWidth();
