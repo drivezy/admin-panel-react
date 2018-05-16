@@ -49,7 +49,7 @@ export class Location {
         if (!props.location) {
             props.location = window.location;
         }
-        let urlParams = GenerateObjectFromUrlParams(props.location.search)
+        let urlParams = GenerateObjectFromUrlParams(decodeURIComponent(props.location.search))
         if (!(obj && Object.keys(obj).length)) {
             return urlParams;
         }
