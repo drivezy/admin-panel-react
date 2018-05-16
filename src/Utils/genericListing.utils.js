@@ -87,7 +87,7 @@ export async function GetListingRecord({ configuration, queryString = {}, callba
 function PrepareObjectForListing(result, { extraParams }) {
     const { callback, page, data, configuration, params } = extraParams;
     if (result && result.response) {
-        // self.dictionary = params.dictionary[params.starter];
+        
         // if (columns && columns.length === 0) {
         //     self.orderColumns = params.dictionary[params.starter];
         // }
@@ -132,7 +132,8 @@ function PrepareObjectForListing(result, { extraParams }) {
             modelName: configuration.model.name.toLowerCase() + ".form",
             module: configuration.module,
             dataModel: configuration.model,
-            
+            // scopes: data.scopes,
+            // restrictColumn: configuration.restrictColumnFilter,
             // userFilter: configuration.userFilter,
             // modelId: configuration.model.id,
             // callbackFunction: callFunction,
@@ -143,24 +144,22 @@ function PrepareObjectForListing(result, { extraParams }) {
             // formPreferenceName: configuration.formPreferenceName,
             // preference: configuration.preference,
             // scripts: configuration.scripts,
-            // restrictColumn: configuration.restrictColumnFilter,
             // restrictQuery: configuration.query,
             // url: configuration.url,
             // listingOptions: listingOptions,
-            // scopes: data.scopes,
         };
         // Prepairing object for configure-filter directive
-        // filterContent = {
-        //     dictionary: dictionary,
-        //     selectedColumns: genericListingObj.selectedColumns,
-        //     restrictColumn: genericListingObj.restrictColumnFilter,
-        //     scopes: genericListingObj.scopes
-        // };
+        const filterContent = {
+            dictionary: genericListingObj.dictionary[params.starter],
+            selectedColumns: genericListingObj.selectedColumns,
+            restrictColumns: configuration.restrictColumnFilter,
+            scopes: data.scopes
+        };
 
         // Build the final columns that is required for the portlet table
         genericListingObj.finalColumns = CreateFinalColumns(genericListingObj.columns, genericListingObj.selectedColumns, genericListingObj.relationship);
         if (typeof callback == 'function') {
-            callback(genericListingObj);
+            callback({ genericData: genericListingObj, filterContent });
         }
     }
 }
