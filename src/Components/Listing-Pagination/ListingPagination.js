@@ -41,12 +41,12 @@ export default class ListingPagination extends Component {
             <div className="listing-pagination">
                 <Pagination size="sm">
                     <PaginationItem disabled={previousPage == 0}>
-                        <PaginationLink previous onClick={() => this.redirectToPage(`?query=limit=20&page=${previousPage}`)} />
+                        <PaginationLink previous onClick={() => this.redirectToPage(`?limit=20&page=${previousPage}`)} />
                     </PaginationItem>
                     {
                         pages && pages.length && pages.map((key, count) => {
                             return (
-                                <PaginationItem onClick={() => this.redirectToPage(`?query=limit=20&page=${key.page}`)} className={genericData.currentPage == key.page ? 'highlighted-page' : ''} key={count}>
+                                <PaginationItem onClick={() => this.redirectToPage(`?limit=20&page=${key.page}`)} className={genericData.currentPage == key.page ? 'highlighted-page' : ''} key={count}>
                                     <PaginationLink >
                                         {key.page}
                                     </PaginationLink>

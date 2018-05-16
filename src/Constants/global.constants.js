@@ -7,7 +7,8 @@ module.exports = {
         TEXT_COLOR: '#333',
         PRIMARY_COLOR: '#31b6e7'
     },
-    DATE_FORMAT: 'YYYY-MM-DD HH:mm',
-    API_DATE_FORMAT: 'YYYY-MM-DD HH:mm:ss',
-    DISPLAY_DATE_FORMAT: 'DD MMM YYYY, HH:mm'
+    DATE_TIME_FORMAT: 'YYYY-MM-DD HH:mm',
+    API_DATE_TIME_FORMAT: 'YYYY-MM-DD HH:mm:ss',
+    DISPLAY_DATE_TIME_FORMAT: 'DD MMM YYYY, HH:mm',
+    DATE_FORMAT: 'YYYY-MM-DD'
 }

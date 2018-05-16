@@ -57,6 +57,7 @@ export default class GenericDetail extends Component {
     }
 
     dataFetched = ({ tabs, portlet }) => {
+        tabs.refreshContent = this.getDetailRecord;
         this.setState({ portlet, tabs });
     }
 

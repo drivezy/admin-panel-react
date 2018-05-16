@@ -30,6 +30,10 @@ export default class CustomAction extends Component {
         };
     }
 
+    componentWillReceiveProps({ genericData }) {
+        this.setState({ genericData });
+    }
+
     componentDidMount = () => {
         const { actions } = this.state
         this.registerMethod(actions);
@@ -126,10 +130,8 @@ export default class CustomAction extends Component {
         }
 
         this.methods.delete = async ({ action, listingRow }) => {
-            ToastNotifications.success('Records has been deleted');
             const { genericData } = this.props;
             const deletekey = IsUndefinedOrNull(action.redirectValueName) ? listingRow.id : listingRow[action.redirectValueName];
-            console.log(deletekey, genericData);
             if (window.confirm('Are you sure you want to delete this record?')) {
                 const result = await Delete({ url: `${genericData.module}/${deletekey}` });
                 if (result.success) {
@@ -139,7 +141,6 @@ export default class CustomAction extends Component {
             }
         }
     }
-
 
     // Register all the methods coming from db
     registerMethod(method) {

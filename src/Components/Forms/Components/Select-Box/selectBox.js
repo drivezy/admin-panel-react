@@ -16,33 +16,44 @@ export default class SelectBox extends Component {
         super(props);
 
         this.state = {
-            options: [],
-
-            value: this.props.value || '',
+            // options: [],
+            // value: this.props.value || '',
+            ...this.setOptions(props),
             field: this.props.field || 'name',
             key: this.props.key || 'id'
+            // key: this.props.key
         };
+
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.options && nextProps.options.length) {
-            const options = nextProps.options.map((option) => (
-                { ...option, ...{ label: option[this.state.field], value: option[this.state.key] } }
-            ));
-            this.setState({ options });
+        this.setState({ ...this.setOptions(nextProps) });
+    }
+
+    setOptions = props => {
+        let options = [];
+        let value = '';
+        if (props.options && props.options.length) {
+            options = props.options.map((option) => {
+                return { ...option, ...{ label: option[this.props.field || 'name'], value: option[this.props.key || 'id'] } }
+            });
+            // this.setState({ options });
         }
 
-        if (nextProps.value && nextProps.value != this.state.value) {
-            const { value } = nextProps;
-            this.setState({ value });
+        if (props.value) {
+            value = props.value;
+            // this.setState({ value });
         }
-
+        return { value, options };
     }
 
     handleChange = (value) => {
         // this.setState({ value: value[this.state.key] });
-
+        if (!value) {
+            return;
+        }
         if (this.props.async) {
+            // this.setState({ value: this.props.key ? value[this.state.key] : value });
             this.setState({ value: value[this.state.key] });
         } else {
             this.setState({ value });
@@ -50,8 +61,7 @@ export default class SelectBox extends Component {
 
 
         if (this.props.onChange) {
-            console.log(this.props.name, value[this.state.key]);
-            this.props.onChange(this.props.name, value[this.state.key]);
+            this.props.onChange(this.props.name, this.props.key ? value[this.state.key] : value);
         }
     }
 
@@ -100,12 +110,8 @@ export default class SelectBox extends Component {
     }
 
     render() {
-
         const { async, getOptions } = this.props;
-
-
         const { value, options } = this.state;
-
         let elem;
 
         if (async) {
