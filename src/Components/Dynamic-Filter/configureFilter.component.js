@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Collapse, Button, CardBody, Card } from 'reactstrap';
 
 import { SubscribeToEvent, UnsubscribeEvent } from './../../Utils/stateManager.utils';
-import { SelectFromOptions, BuildUrlForGetCall } from './../../Utils/common.utils';
-import { RawStringQueryToObject } from './../../Utils/dynamicFilter.utils';
+import { SelectFromOptions, BuildUrlForGetCall, IsUndefinedOrNull, IsUndefined } from './../../Utils/common.utils';
+import { RawStringQueryToObject, RemoveLastWord } from './../../Utils/dynamicFilter.utils';
 import { Get } from './../../Utils/http.utils';
 import { GetTime } from './../../Utils/time.utils';
 
@@ -11,6 +11,7 @@ import SelectBox from './../Forms/Components/Select-Box/selectBox';
 
 import GLOBAL from './../../Constants/global.constants';
 
+import { Location } from './../../Utils/location.utils';
 import './dynamicFilter.css';
 
 export default class ConfigureDynamicFilter extends Component {
@@ -27,11 +28,10 @@ export default class ConfigureDynamicFilter extends Component {
         name: "No"
     }];
     sorts = ["desc", "asc"];
-    scopes = [];
     dateFormat = GLOBAL.DATE_FORMAT;
     firstLoad = true;
 
-    urlParams = {};
+    urlParams = Location.search();
 
     constructor(props) {
         super(props);
@@ -39,12 +39,14 @@ export default class ConfigureDynamicFilter extends Component {
             isCollapsed: true,
             filterArr: [],
             query: '',
-            sort: {},
-            order: {},
-            activeFilter: {}
+            sort: null,
+            order: null,
+            activeFilter: {},
+            scopes: []
         };
         SubscribeToEvent({ eventName: 'ToggleAdvancedFilter', callback: this.listenToggleAdvancedFilter });
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
+
     }
 
     componentWillUnmount() {
@@ -57,7 +59,7 @@ export default class ConfigureDynamicFilter extends Component {
     }
 
     listenToggleAdvancedFilter = (collapse, filterContent) => {
-        // urlParams = $location.search();
+        // urlParams = Location.search();
 
         // Filter Content from portlet table is assigned to
         // content here so , the input fields are preselected
@@ -253,14 +255,14 @@ export default class ConfigureDynamicFilter extends Component {
         if (filter.includes("IS NULL") || filter.includes("IS NOT NULL")) {
             return false;
         }
-        let child;
+        let child = filterArr[parentIndex][childIndex];
         switch (column.column_type) {
             case 107: // column type number
-                filterArr[parentIndex][childIndex].html = (<input type='text' className='form-control' ng-model='b.inputField' placeholder='Input Value' />);
+                filterArr[parentIndex][childIndex].html = (<input type='text' className='form-control' onChange={(data) => this.convertToInputField({ data: data.target.value, parentIndex, childIndex })} value={child.inputField} placeholder='Input Value' />);
                 break;
 
             case 108: // column type string
-                filterArr[parentIndex][childIndex].html = <input type='text' className='form-control' ng-model='b.inputField' placeholder='Input Value' />;
+                filterArr[parentIndex][childIndex].html = <input type='text' className='form-control' onChange={(data) => this.convertToInputField({ data: data.target.value, parentIndex, childIndex })} value={child.inputField} placeholder='Input Value' />;
                 break;
 
             // @TODO add date field
@@ -274,14 +276,12 @@ export default class ConfigureDynamicFilter extends Component {
             //     break;
 
             case 111:
-                child = filterArr[parentIndex][childIndex];
                 filterArr[parentIndex][childIndex].html = (<SelectBox onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex })} value={child.selectValue} options={this.booleanObj} field='name' place-holder="Select Value" />);
                 // filterArr[parentIndex][childIndex].html = (<custom-select-field ng-model="b.selectValue" extra-params="{parentIndex: $parent.$childIndex, childIndex: $childIndex}" call-it="configureFilter.convertToInputField" place-holder="Select Value" iterate-item="name" obj="configureFilter.booleanObj" />);
                 valueColumnType = "select";
                 break;
 
             case 116: // for reference data , prefilled
-                child = filterArr[parentIndex][childIndex];
                 filterArr[parentIndex][childIndex].inputField = null;
                 filterArr[parentIndex][childIndex].html = (<SelectBox onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex })} value={child.selectValue} options={child.referenceObj} field='name' place-holder="Select Value" />);
                 // filterArr[parentIndex][childIndex].html = (<custom-select-field ng-model="b.selectValue" extra-params="{parentIndex: $parent.$childIndex, childIndex: $childIndex}" call-it="configureFilter.convertToInputField" place-holder="Select Value" iterate-item="{{b.column.selected.referenced_model.display_column}}" obj="b.referenceObj" />);
@@ -291,7 +291,7 @@ export default class ConfigureDynamicFilter extends Component {
             case 117: // for reference : async
                 filterArr[parentIndex][childIndex].inputField = null;
 
-                if (filterArr[parentIndex][childIndex].column.selected.referenced_model.name == "User" && !filterArr[parentIndex][childIndex].asyncResults) {
+                if (filterArr[parentIndex][childIndex].column.referenced_model.name == "User" && !filterArr[parentIndex][childIndex].asyncResults) {
                     filterArr[parentIndex][childIndex].asyncResults = [{
                         id: this.state.currentUser.id,
                         email: "Current User"
@@ -302,12 +302,12 @@ export default class ConfigureDynamicFilter extends Component {
                     <SelectBox
                         onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex })}
                         value={child.selectValue}
-                        field={child.column.selected.referenced_model.display_column}
+                        field={child.column.referenced_model.display_column}
                         place-holder="Select Value"
                         getOptions={(input) => this.getInputRecord({ input, parentIndex, childIndex })}
                     />
                 );
-                // filterArr[parentIndex][childIndex].html = (<custom-select-field required="true" ng-model="b.selectValue" call-it="configureFilter.convertToInputField" extra-params="{parentIndex: $parent.$childIndex, childIndex: $childIndex}" place-holder="Type to load data" iterate-item="{{b.column.selected.referenced_model.display_column}}" async="configureFilter.getInputRecord(search,{parentIndex: $parent.$childIndex, childIndex: $childIndex})" obj="b.asyncResults" />);
+                // filterArr[parentIndex][childIndex].html = (<custom-select-field required="true" ng-model="b.selectValue" call-it="configureFilter.convertToInputField" extra-params="{parentIndex: $parent.$childIndex, childIndex: $childIndex}" place-holder="Type to load data" iterate-item="{{b.column.referenced_model.display_column}}" async="configureFilter.getInputRecord(search,{parentIndex: $parent.$childIndex, childIndex: $childIndex})" obj="b.asyncResults" />);
                 break;
 
             default:
@@ -341,23 +341,24 @@ export default class ConfigureDynamicFilter extends Component {
     getInputRecord = async ({ input: val, parentIndex, childIndex, queryField }) => {
         if (val) {
             const { filterArr } = this.state;
-            queryField = queryField ? queryField : filterArr[parentIndex][childIndex].column.selected.referenced_model.display_column;
-            let url = filterArr[parentIndex][childIndex].column.selected.referenced_model.route_name;
+            const displayName = filterArr[parentIndex][childIndex].column.referenced_model.display_column;
+            queryField = queryField ? queryField : displayName;
+            let url = filterArr[parentIndex][childIndex].column.referenced_model.route_name;
             const options = {
-                query: queryField + " like \"%" + val + "%\""
+                query: queryField + ' like %22%25' + val + '%25%22'
             };
             // If a sorting type is specified append it
-            if (filterArr[parentIndex][childIndex].column.selected.sorting_type) {
-                options.query += " and " + filterArr[parentIndex][childIndex].column.selected.sorting_type;
+            if (filterArr[parentIndex][childIndex].column.sorting_type) {
+                options.query += " and " + filterArr[parentIndex][childIndex].column.sorting_type;
             }
             url = BuildUrlForGetCall(url, options);
-            const response = await Get({ url });
+            const result = await Get({ url, urlPrefix: GLOBAL.ROUTE_URL });
             // Assign the results to array for async ui select
 
             // @TODO User
-            // if (filterArr[parentIndex][childIndex].column.selected.referenced_model.name == "User") {
+            // if (filterArr[parentIndex][childIndex].column.referenced_model.name == "User") {
             //     filterArr[parentIndex][childIndex].asyncResults = [{
-            //         id: UserFactory.getUser().id,
+            //         id: this.state.currentUser.id,
             //         email: "Current User"
             //     }];
             // } else {
@@ -367,7 +368,10 @@ export default class ConfigureDynamicFilter extends Component {
             // // Push the content to the array
             // Array.prototype.push.apply(filterArr[parentIndex][childIndex].asyncResults, response.data.response);
             // this.setState({ filterArr });
-            return response.data.response;
+            const response = result.response.map((option) => {
+                return { ...option, ...{ label: option[displayName], value: option['id'] } }
+            });
+            return response;
         }
     }
 
@@ -375,7 +379,11 @@ export default class ConfigureDynamicFilter extends Component {
     convertToInputField = function ({ data, parentIndex, childIndex }) {
         if (data) {
             const { filterArr } = this.state;
-            filterArr[parentIndex][childIndex].inputField = data.id;
+            if (typeof data == 'string') {
+                filterArr[parentIndex][childIndex].inputField = data;
+            } else {
+                filterArr[parentIndex][childIndex].inputField = data.id;
+            }
             this.setState({ filterArr });
         }
     };
@@ -488,7 +496,7 @@ export default class ConfigureDynamicFilter extends Component {
             this.state.order = SelectFromOptions(content.dictionary, this.urlParams.order, "column_name");
         }
 
-        // var active_filter = $location.search().filter;
+        // var active_filter = Location.search().filter;
         let active_filter;
 
         // IF there is an active filter then add that first 
@@ -502,8 +510,9 @@ export default class ConfigureDynamicFilter extends Component {
     }
 
     activeFilter = (index) => {
-        this.activeFilter = {};
-        this.filters.forEach((filter, key) => {
+        this.state.activeFilter = {};
+        const { filters = [] } = this.props;
+        filters.forEach((filter, key) => {
             if (index == filter.id) {
                 this.setState({ activeFilter: filter });
             }
@@ -519,9 +528,119 @@ export default class ConfigureDynamicFilter extends Component {
         this.setState({ filterArr });
     };
 
+    submit = () => {
+
+        const { filterArr, currentUser, activeFilter, sort, order, scopes } = this.state;
+        const paramProps = {
+            history: this.props.history, match: this.props.match
+        };
+        let query = '';
+
+        filterArr.forEach(parentValue => {
+            query += parentValue.length > 1 ? '(' : '';
+            parentValue.forEach(value => {
+                if (!IsUndefinedOrNull(value.column) && Object.keys(value.column).length) {
+                    const joinMethod = value.joinMethod;
+                    if (value.filter.includes('IS NULL') || value.filter.includes('IS NOT NULL')) {
+                        query += value.column.column_name + value.filter + ' AND ';
+                    } else if (value.filter == ' BETWEEN ' || value.filter == ' NOT BETWEEN ') {
+                        // query += value.column.column_name + value.filter + ''' + value.slot.startDate + "' and '" + value.slot.endDate + "'" + joinMethod;
+                        query += `${value.column.column_name}${value.filter} '${value.slot.startDate}' and '${value.slot.endDate}'${joinMethod}`;
+                    } else if (!IsUndefined(value.inputField)) {
+                        switch (value.column.column_type) {
+                            case 117:
+                                // if its a reference column ,
+
+                                // If the reference model is User add
+                                if (value.column.referenced_model.name == 'User' && value.selectValue.id == currentUser.id) {
+                                    query += `${value.column.column_name}${value.filter}'currentUser'${joinMethod}`;
+                                    // query += value.column.column_name + value.filter + "'" + "currentUser" + "'" + joinMethod;
+                                } else {
+                                    if (value.column.hasOwnProperty('referenced_column')) {
+                                        query += (value.column.referenced_column ? value.column.referenced_column : value.column.column_name) + value.filter + "'" + (value.column.referenced_column ? value.selectValue.id : value.selectValue[value.column.referenced_model.display_column]) + "'" + joinMethod;
+                                    } else {
+                                        query += value.column.column_name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
+                                    }
+                                }
+                                break;
+
+                            case 118:
+                                query += value.column.column_name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
+                                break;
+
+                            case 116:
+                                if (value.column.hasOwnProperty('referenced_column')) {
+                                    query += (value.column.referenced_column ? value.column.referenced_column : value.column.column_name) + value.filter + "'" + (value.column.referenced_column ? value.selectValue.id : value.selectValue[value.column.referenced_model.display_column]) + "'" + joinMethod;
+                                } else {
+                                    query += value.column.column_name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
+                                }
+                                break;
+
+                            case 111:
+                                query += value.column.column_name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
+                                break;
+
+                            default:
+                                query += value.column.column_name + value.filter + "'" + value.inputField + "'" + joinMethod;
+                                break;
+                        }
+                    }
+                }
+            });
+            query = RemoveLastWord(query, 2);
+            query += parentValue.length > 1 ? ')' : '';
+            query += ' AND ';
+        });
+
+        if (query.replace(' AND ', '')) {
+            query = RemoveLastWord(query, 2);
+
+            // If query is added to an existing filter , add that filter 
+            // TODO : Updates to an existing filter should be done here 
+            // IF there is an active filter then add that first 
+            const active_filter = this.urlParams.filter;
+            this.activeFilter(active_filter);
+
+            const urlParams = this.urlParams;
+
+            if (activeFilter.id) {
+                urlParams.filter = activeFilter.id;
+                urlParams.query = query;
+                Location.search(urlParams, { props: paramProps });
+            } else {
+                urlParams.query = query;
+                Location.search(urlParams, { props: paramProps });
+            }
+        }
+
+        if (sort) {
+            Location.search({ sort }, { props: paramProps });
+            // Location.search("sort", sort);
+        }
+
+        if (order) {
+            // Location.search("order", order.column_name);
+            Location.search({ order: order.column_name }, { props: paramProps });
+        }
+
+        if (scopes && scopes.length) {
+            var localScopes = [];
+            scopes.forEach(function (scope) {
+                localScopes.push(scope.alias_name, );
+            });
+
+            // Location.search("scopes", localScopes.join(','));
+            Location.search({ scopes: localScopes.join(',') }, { props: paramProps });
+        }
+
+        this.setState({ isCollapsed: true });
+    }
+
     render() {
+        const { props } = this;
         const { isCollapsed, filterArr } = this.state;
-        const { content } = this.props;
+        const { content, history } = this.props;
+
         return (
             <Collapse isOpen={!isCollapsed}>
                 <div className="configure-filter-container">
@@ -613,8 +732,10 @@ export default class ConfigureDynamicFilter extends Component {
                                 </div>
                             </div>
 
-                            <div className="footer-content nomargin">
-                                {/* <div className="col-lg-3 col-md-3 col-sm-3 col-xs-3 border-select-filter margin-top-8">
+
+                        </form>
+                        <div className="footer-content nomargin">
+                            {/* <div className="col-lg-3 col-md-3 col-sm-3 col-xs-3 border-select-filter margin-top-8">
                                     <custom-select-field ng-model="configureFilter.order" place-holder="Order" obj="configureFilter.dictionary" iterate-item="column_name">
                                     </custom-select-field>
                                 </div>
@@ -634,16 +755,16 @@ export default class ConfigureDynamicFilter extends Component {
                                         </div>
                                     </div>
                                 </div> */}
-                                <div className="text-right">
-                                    <button className="btn btn-default" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
-                                        Close
+                            <div className="text-right">
+                                <button className="btn btn-default" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
+                                    Close
                                     </button>
-                                    <button className="btn btn-info" onClick={this.submit} style={{ margin: '8px' }}>
-                                        Go
+                                {/* <button className="btn btn-info" style={{ margin: '8px' }}> */}
+                                <button className="btn btn-info" onClick={this.submit} style={{ margin: '8px' }}>
+                                    GoDaddy
                                     </button>
-                                </div>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </Collapse >
