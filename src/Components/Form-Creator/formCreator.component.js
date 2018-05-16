@@ -194,12 +194,12 @@ const formElements = props => {
 
             <div className="modal-actions row justify-content-end">
 
-                {/* {
+                {
                     payload.columns ?
-                        <TableSettings onSubmit={this.layoutChanges} listName={payload.listName} selectedColumns={payload.selectedColumns} columns={payload.columns} />
+                        <TableSettings onSubmit={props.layoutChanged} listName={payload.modelName} selectedColumns={payload.formPreference} columns={payload.columns} />
                         :
                         null
-                } */}
+                }
 
 
                 <Button color="secondary" onClick={handleReset}>
@@ -304,6 +304,7 @@ export default class FormCreator extends Component {
         super(props);
 
         this.state = {
+            payload: this.props.payload
         }
     }
 
@@ -311,20 +312,25 @@ export default class FormCreator extends Component {
         ModalManager.closeModal();
     }
 
+    layoutChanged = (selectedColumns) => {
+        let { payload } = this.state;
+        payload.formPreference = selectedColumns
+        // payload.selectedColumns = selectedColumns;
+        // payload.finalColumns = CreateFinalColumns(payload.columns, selectedColumns, payload.relationship);
+        this.setState({ payload });
+    }
+
     render() {
 
-        const { payload } = this.props;
+        const { payload } = this.state;
 
         return (
             <div className="form-creator">
                 <Card>
                     <CardBody>
-                        <FormContents onSubmit={this.closeModal} payload={payload} />
+                        <FormContents layoutChanged={this.layoutChanged} onSubmit={this.closeModal} payload={payload} />
                     </CardBody>
                 </Card>
-
-
-
             </div>
         )
     }
