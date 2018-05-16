@@ -14,7 +14,7 @@ import {
 
 import { TabContent, TabPane, Nav, NavItem, NavLink, Table } from 'reactstrap';
 
-import PortletTable from './../../Components/Portlet-Table/PortletTable';
+import PortletTable from './../../Components/Portlet-Table/PortletTable.component';
 
 export default class DetailPortlet extends Component {
     constructor(props) {

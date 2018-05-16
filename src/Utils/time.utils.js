@@ -45,6 +45,13 @@ export function ReturnTimeObject(time) {
     };
 }
 
+export function TimeOperation({ method, parameter, value, format, time = null }) {
+    const dateTime = time ? moment(time) : moment();
+    return time ? moment(time)[method](value, parameter).format(format) : moment()[method](value, parameter).format(format);
+    // moment().subtract(1, "day").format(this.dateFormat);
+
+}
+
 export function SetTimeInExistingDate(newDate, existingdateTime) {
     if (!newDate || !existingdateTime) return;
     return newDate.set({
