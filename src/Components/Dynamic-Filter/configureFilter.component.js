@@ -45,6 +45,9 @@ export default class ConfigureDynamicFilter extends Component {
             activeFilter: {},
             scopes: []
         };
+    }
+
+    componentDidMount() {
         SubscribeToEvent({ eventName: 'ToggleAdvancedFilter', callback: this.listenToggleAdvancedFilter });
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
     }
@@ -129,20 +132,19 @@ export default class ConfigureDynamicFilter extends Component {
     // For all the datetime input filters inject a daterange picker
     dateInput({ filter, filterArr, parentIndex, childIndex }) {
         const child = filterArr[parentIndex][childIndex];
-        console.log(TimeOperation({ method: 'subtract', parameter: 'day', format: this.dateFormat, value: 1 }));
         const startDate = filterArr[parentIndex][childIndex].inputField = TimeOperation({ method: 'subtract', parameter: 'day', format: this.dateFormat, value: 1 });
         // filterArr[parentIndex][childIndex].inputField = moment().subtract(1, "day").format(this.dateFormat);
         const endDate = filterArr[parentIndex][childIndex].secondInputField = GetTime({ format: this.dateFormat });
         switch (filter) {
             case " BETWEEN ":
                 //	<daterangepicker> is injected to the template with the format and selected value
-                filterArr[parentIndex][childIndex].html = (<DatePicker format={GLOBAL.DATE_TIME_FORMAT} timePicker={true} onChange={(event, data) => this.convertToInputField({ data, parentIndex, childIndex, dateRange: true, })} value={{ startDate, endDate }} />);
+                filterArr[parentIndex][childIndex].html = (<DatePicker  format={this.dateFormat} timePicker={true} onChange={(event, data) => this.convertToInputField({ data, parentIndex, childIndex, dateRange: true, })} value={{ startDate, endDate }} />);
                 // filterArr[parentIndex][childIndex].html = (<daterange-picker ng-model="b.slot" format="{{configureFilter.dateFormat}}" />);
                 // filterArr[parentIndex][childIndex].html = "<div class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding-left\"><daterange-picker ng-model=\"b.slot\" format=\"{{configureFilter.dateFormat}}\"></daterange-picker></div>";
                 break;
 
             case " NOT BETWEEN ":
-                filterArr[parentIndex][childIndex].html = <DatePicker format={GLOBAL.DATE_TIME_FORMAT} timePicker={true} onChange={(event, data) => this.convertToInputField({ data, parentIndex, childIndex, dateRange: true })} value={{ startDate, endDate }} />;
+                filterArr[parentIndex][childIndex].html = <DatePicker format={this.dateFormat} timePicker={true} onChange={(event, data) => this.convertToInputField({ data, parentIndex, childIndex, dateRange: true })} value={{ startDate, endDate }} />;
                 // filterArr[parentIndex][childIndex].html = "<div class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding-left\"><daterange-picker ng-model=\"b.slot\" format=\"{{configureFilter.dateFormat}}\"></daterange-picker></div>";
                 break;
 
@@ -155,7 +157,7 @@ export default class ConfigureDynamicFilter extends Component {
                 break;
 
             default:
-                filterArr[parentIndex][childIndex].html = (<DatePicker single={true} timePicker={true} onChange={(event, data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'inputField' })} value={child.inputField} />);
+                filterArr[parentIndex][childIndex].html = (<DatePicker single={true} format={this.dateFormat} timePicker={true} onChange={(event, data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'inputField' })} value={child.inputField} />);
                 // filterArr[parentIndex][childIndex].html = "<daterange-picker single = \"true\" ng-model=\"b.inputField\" format=\"{{configureFilter.dateFormat}}\"></daterange-picker>";
                 break;
         }
@@ -424,7 +426,7 @@ export default class ConfigureDynamicFilter extends Component {
             } else {
                 filterArr[parentIndex][childIndex][attr] = data;
             }
-            
+
             this.setState({ filterArr });
         }
     };

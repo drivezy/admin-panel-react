@@ -24,7 +24,8 @@ export function GenerateObjectFromUrlParams(searchString) {
     // }   
     // console.log((searchString).replace(/(^\?)/, '').split("&").map(function (n) { return n = n.split("="), this[n[0]] = n[1], this }.bind({}))[0]);
     if (searchString) {
-        return (searchString).replace(/(^\?)/, '').split("&").map(function (n) { return n = n.split("="), this[n[0]] = n[1], this }.bind({}))[0];
+        return (searchString).replace(/(^\?)/, '').split("&").map(function (n) { return n = n.split(/=(.+)/), this[n[0]] = n[1], this }.bind({}))[0];
+        // return (searchString).replace(/(^\?)/, '').split("&").map(function (n) { return n = n.split("="), this[n[0]] = n[1], this }.bind({}))[0];
     } else {
         return {};
     }
@@ -39,7 +40,7 @@ export function SerializeObj(obj) {
 
 export function GetUrlParams(props) {
     return {
-        queryString: GenerateObjectFromUrlParams(props.location.search),
+        queryString: GenerateObjectFromUrlParams(decodeURIComponent(props.location.search)),
         params: props.match.params
     }
 }
