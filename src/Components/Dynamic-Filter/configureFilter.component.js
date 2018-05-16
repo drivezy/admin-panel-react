@@ -138,7 +138,7 @@ export default class ConfigureDynamicFilter extends Component {
         switch (filter) {
             case " BETWEEN ":
                 //	<daterangepicker> is injected to the template with the format and selected value
-                filterArr[parentIndex][childIndex].html = (<DatePicker  format={this.dateFormat} timePicker={true} onChange={(event, data) => this.convertToInputField({ data, parentIndex, childIndex, dateRange: true, })} value={{ startDate, endDate }} />);
+                filterArr[parentIndex][childIndex].html = (<DatePicker format={this.dateFormat} timePicker={true} onChange={(event, data) => this.convertToInputField({ data, parentIndex, childIndex, dateRange: true, })} value={{ startDate, endDate }} />);
                 // filterArr[parentIndex][childIndex].html = (<daterange-picker ng-model="b.slot" format="{{configureFilter.dateFormat}}" />);
                 // filterArr[parentIndex][childIndex].html = "<div class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding-left\"><daterange-picker ng-model=\"b.slot\" format=\"{{configureFilter.dateFormat}}\"></daterange-picker></div>";
                 break;
@@ -470,7 +470,7 @@ export default class ConfigureDynamicFilter extends Component {
                     queryObj.selectedInput = parseInt(queryObj.selectedInput);
                 } else if (filterArr[parentIndex][key].column.column_type == 117) { // If the column is of reference type
                     // If selectedInput is currentUser / change it to currentUser id
-                    if (queryObj.selectedInput == 'currentUser') {
+                    if (queryObj.selectedInput == 'currentUser' && this.state.currentUser) {
                         queryObj.selectedInput = this.state.currentUser.id;
                         filterArr[parentIndex][key].asyncResults = [{
                             id: this.state.currentUser.id,
@@ -680,8 +680,13 @@ export default class ConfigureDynamicFilter extends Component {
 
     render() {
         const { props } = this;
-        const { isCollapsed, filterArr } = this.state;
+        const { isCollapsed, filterArr, sort, order } = this.state;
         const { content, history } = this.props;
+
+        const sorts = [];
+        this.sorts.forEach((sort, key) => {
+            sorts[key] = { name: sort, value: sort };
+        })
 
         return (
             <Collapse isOpen={!isCollapsed}>
@@ -774,36 +779,47 @@ export default class ConfigureDynamicFilter extends Component {
                                 </div>
                             </div>
 
-
                         </form>
-                        <div className="footer-content nomargin">
-                            {/* <div className="col-lg-3 col-md-3 col-sm-3 col-xs-3 border-select-filter margin-top-8">
-                                    <custom-select-field ng-model="configureFilter.order" place-holder="Order" obj="configureFilter.dictionary" iterate-item="column_name">
-                                    </custom-select-field>
-                                </div>
-                                <div className="col-lg-3 col-md-3 col-sm-3 col-xs-3 border-select-filter margin-top-8">
-                                    <custom-select-field ng-model="configureFilter.sort" place-holder="Sort" obj="configureFilter.sorts">
-                                    </custom-select-field>
-                                </div>
-                                <div className="col-lg-3 col-md-3 col-sm-3 col-xs-3 border-select-filter margin-top-8" ng-if="configureFilter.scopeGroup.length">
-                                    <div className='form-group'>
-                                        <div className="input-group select-input-form admin-ui-select">
+                        <div className="row footer-content nomargin">
+                            <div className="col-sm-3 col-xs-3 border-select-filter margin-top-8">
+                                {/* <custom-select-field ng-model="configureFilter.order" place-holder="Order" obj="configureFilter.dictionary" iterate-item="column_name">
+                                    </custom-select-field> */}
+                                <SelectBox
+                                    onChange={(name, data) => {
+                                        this.setState({ order: data });
+                                    }}
+                                    value={order} field='column_name' options={content.dictionary} placeholder='Order'
+                                />
+                            </div>
+                            <div className="col-sm-3 col-xs-3 border-select-filter margin-top-8">
+                                {/* <custom-select-field ng-model="configureFilter.sort" place-holder="Sort" obj="configureFilter.sorts">
+                                    </custom-select-field> */}
+                                <SelectBox
+                                    onChange={(name, data) => {
+                                        this.setState({ sort: data });
+                                    }}
+                                    value={sort} field='name' options={sorts} placeholder='Sort'
+                                />
+                            </div>
+                            <div className="col-sm-3 col-xs-3 border-select-filter margin-top-8" ng-if="configureFilter.scopeGroup.length">
+                                <div className='form-group'>
+                                    {/* <div className="input-group select-input-form admin-ui-select">
                                             <span className="input-group-addon">
                                                 <i className="fa fa-superscript"></i>
                                             </span>
                                             <multiple-select-field-async ng-model="configureFilter.scopes" obj="configureFilter.scopeGroup" place-holder="Select scopes list"
                                                 iterate-item="alias_name">
                                             </multiple-select-field-async>
-                                        </div>
-                                    </div>
-                                </div> */}
+                                        </div> */}
+                                </div>
+                            </div>
                             <div className="text-right">
                                 <button className="btn btn-default" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
                                     Close
                                     </button>
                                 {/* <button className="btn btn-info" style={{ margin: '8px' }}> */}
                                 <button className="btn btn-info" onClick={this.submit} style={{ margin: '8px' }}>
-                                    GoDaddy
+                                    Go
                                     </button>
                             </div>
                         </div>
