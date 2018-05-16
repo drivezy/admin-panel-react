@@ -202,15 +202,6 @@ const formElements = props => {
             </div>
 
             <div className="modal-actions row justify-content-end">
-
-                {
-                    payload.columns ?
-                        <TableSettings onSubmit={props.layoutChanged} listName={payload.modelName} selectedColumns={payload.formPreference} columns={payload.columns} />
-                        :
-                        null
-                }
-
-
                 <Button color="secondary" onClick={handleReset}>
                     Clear
                 </Button>
@@ -219,8 +210,6 @@ const formElements = props => {
                     Submit
                 </button>
             </div>
-
-            {/* <DisplayFormikState {...props.values} /> */}
         </Form>
     );
 }
@@ -331,6 +320,12 @@ export default class FormCreator extends Component {
 
         return (
             <div className="form-creator">
+                {
+                    payload.columns ?
+                        <TableSettings onSubmit={this.layoutChanged} listName={payload.modelName} selectedColumns={payload.formPreference} columns={payload.columns} />
+                        :
+                        null
+                }
                 <Card>
                     <CardBody>
                         <FormContents layoutChanged={this.layoutChanged} onSubmit={this.closeModal} payload={payload} />

@@ -111,10 +111,10 @@ export default class CustomAction extends Component {
             const payload = { action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module, dataModel: genericData.dataModel };
             ModalManager.openModal({
                 payload,
-                // headerText: 'Add modal',
-                modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),
+                headerText: 'Add modal',
+                // modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),
                 modalBody: () => (<FormCreator payload={payload} />),
-                modalFooter: () => (<ModalFooter payload={payload}></ModalFooter>)
+                // modalFooter: () => (<ModalFooter payload={payload}></ModalFooter>)
             });
         }
 
@@ -123,8 +123,8 @@ export default class CustomAction extends Component {
             const payload = { method: 'edit', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module, dataModel: genericData.dataModel };
             ModalManager.openModal({
                 payload,
-                modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),
-                // headerText: 'Edit modal',
+                // modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),
+                headerText: 'Edit modal',
                 modalBody: () => (<FormCreator payload={payload} />)
             });
         }
@@ -189,7 +189,7 @@ export default class CustomAction extends Component {
                                     onClick={() => {
                                         this.callFunction({ action, listingRow });
                                     }}
-                                    type="button" key={key} className="btn btn-sm">
+                                    type="button" key={key} className="btn btn-sm btn-light">
                                     <i className={`fa ${action.icon}`} ></i>
                                 </button>
                             );

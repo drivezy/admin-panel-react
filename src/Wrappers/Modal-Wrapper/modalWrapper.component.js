@@ -16,6 +16,8 @@
 import React, { Component } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
+import './modalWrapper.component.css';
+
 export default class ModalWrapper extends Component {
     constructor(props) {
         super(props);

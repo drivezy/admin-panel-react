@@ -81,7 +81,10 @@ export default class PortletTable extends Component {
 
     render() {
 
-        const { genericData, finalColumns, listing, history, callback, rowTemplate } = this.state;
+        const { genericData, finalColumns, listing, callback, rowTemplate } = this.state;
+
+        const { history } = this.props;
+
         return (
             <Table striped className="sortable">
                 <thead>
