@@ -35,7 +35,7 @@ export default class SelectBox extends Component {
         let value = '';
         if (props.options && props.options.length) {
             options = props.options.map((option) => {
-                return { ...option, ...{ label: option[this.props.field || 'name'], value: option[this.props.key || 'id'] } }
+                return { ...option, ...{ label: option[props.field || 'name'], value: option[props.key || 'id'] } }
             });
             // this.setState({ options });
         }
@@ -44,7 +44,7 @@ export default class SelectBox extends Component {
             value = props.value;
             // this.setState({ value });
         }
-        return { value, options };
+        return { value, options, key: props.key || 'id' };
     }
 
     handleChange = (value) => {
@@ -111,7 +111,7 @@ export default class SelectBox extends Component {
 
     render() {
         const { async, getOptions } = this.props;
-        const { value, options } = this.state;
+        const { value, options, field } = this.state;
         let elem;
 
         if (async) {

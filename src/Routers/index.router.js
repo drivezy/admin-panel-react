@@ -168,7 +168,6 @@ class MainApp extends Component {
 // store.subscribe(() => ('store', console.log('store dispatch', store.getState())));
 
 function requireAuth() {
-    console.log('Login check')
 }
 
 
@@ -187,7 +186,6 @@ class StartRoute extends Component {
     }
 
     userDataFetched = (data) => {
-        console.log('data', data);
         this.setState({ loggedUser: data });
     }
 
