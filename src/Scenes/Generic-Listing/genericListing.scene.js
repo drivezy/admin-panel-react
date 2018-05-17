@@ -21,6 +21,8 @@ import CustomAction from './../../Components/Custom-Action/CustomAction.componen
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import ModalWrap from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
 
+import PredefinedFilter from './../../Components/Dropdown-Filter/filter.component';
+
 export default class GenericListing extends Component {
     filterContent = {};
     constructor(props) {
@@ -109,12 +111,27 @@ export default class GenericListing extends Component {
                     <div className="search-wrapper">
                         <DynamicFilter />
                     </div>
+
                     <div className="header-actions">
+
+                        {
+                            menuDetail.userFilter ?
+                                <PredefinedFilter userFilter={menuDetail.userFilter} />
+                                :
+                                null
+                        }
+
+
 
                         <div className="btn-group" role="group" aria-label="Basic example">
                             {/* <button type="button" className="btn btn-sm btn-secondary">Left</button>
                             <button type="button" className="btn btn-sm btn-secondary">Middle</button>
+
+                            
+
                             <button type="button" className="btn btn-sm btn-secondary">Right</button> */}
+
+
 
                             <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
 
@@ -132,8 +149,8 @@ export default class GenericListing extends Component {
                     {
                         filterContent &&
                         <ConfigureDynamicFilter
-                            history={history}  
-                            match={match} 
+                            history={history}
+                            match={match}
                             filters={genericData.userFilter}
                             content={filterContent}
                         />
