@@ -19,10 +19,10 @@ export default class DatePicker extends Component {
         super(props);
 
         this.state = {
-            format: this.props.format || GLOBAL.DATE_TIME_FORMAT,
-            minDate: this.props.minDate,
-            maxDate: this.props.maxDate,
-            value: this.props.value || '',
+            format: props.format || GLOBAL.DATE_TIME_FORMAT,
+            minDate: props.minDate,
+            maxDate: props.maxDate,
+            value: props.value || '',
         }
     }
 

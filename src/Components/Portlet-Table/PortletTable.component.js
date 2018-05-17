@@ -11,6 +11,18 @@ import RightClick from './../../Components/Right-Click/rightClick.component';
 
 export default class PortletTable extends Component {
 
+    sortTypes = [{
+        id: 0,
+        icon: 'fa-sort-numeric-down',
+        caption: 'Sort Asc',
+        type: 'asc'
+    }, {
+        id: 1,
+        icon: 'fa-sort-numeric-up',
+        caption: 'Sort Desc',
+        type: 'desc'
+    }];
+
     constructor(props) {
         super(props);
 
@@ -93,18 +105,6 @@ export default class PortletTable extends Component {
 
     render() {
 
-        const sortTypes = [{
-            id: 0,
-            icon: 'fa-sort-numeric-down',
-            caption: 'Sort Asc',
-            type: 'asc'
-        }, {
-            id: 1,
-            icon: 'fa-sort-numeric-up',
-            caption: 'Sort Desc',
-            type: 'desc'
-        }];
-
         const { genericData, finalColumns, listing, callback, rowTemplate } = this.state;
         const { history, match } = this.props;
         return (
@@ -154,7 +154,7 @@ export default class PortletTable extends Component {
                                                                 </DropdownToggle>
                                                                 <DropdownMenu>
                                                                     {
-                                                                        sortTypes.map((sort, key) => {
+                                                                        this.sortTypes.map((sort, key) => {
                                                                             return (
                                                                                 <div className="dropdown-item" key={key} onClick={e => this.sortOnDB(sort, selectedColumn.path)}>
                                                                                     <i className={`fas ${sort.icon}`} /> {sort.caption}
