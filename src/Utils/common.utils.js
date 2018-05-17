@@ -44,6 +44,10 @@ export function IsUndefinedOrNull(value) {
     return value == null || value === '';
 }
 
+export function IsUndefined(value) {
+    return value === '';
+}
+
 export function isMobile() {
     const mobile = (/iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase()));
     return mobile;
@@ -67,6 +71,15 @@ export function ArrayToObject(key) {
         }
     });
     return obj;
+}
+
+export function CopyToClipBoard(text) {
+    const temp = document.createElement("textarea");
+    temp.innerHTML = text;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand("copy");
+    document.body.removeChild(temp);
 }
 
 /**

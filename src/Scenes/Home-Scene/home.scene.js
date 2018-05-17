@@ -116,13 +116,41 @@ export default class Home extends Component {
         // this.getCities();
     }
 
-    getCities = async () => {
+    // const getOptions = (input) => {
+    //     return fetch(`/users/${input}.json`)
+    //       .then((response) => {
+    //         return response.json();
+    //       }).then((json) => {
+    //         return { options: json };
+    //       });
+    //   }
+
+    getCities = async (input) => {
         const url = 'city';
         const result = await Get({ url });
+
         if (result.success) {
-            const cities = result.response;
-            this.setState({ cities });
+            const cities = result.response.map((option) => (
+                { ...option, ...{ label: option.name, value: option[this.state.key] } }
+            ));
+
+
+            return { options: cities };
+
         }
+    }
+
+    getCitiesAlso = (input) => {
+
+        const url = 'city';
+        return Get({ url }).then((result) => {
+            if (result.success) {
+                const cities = result.response.map((option) => (
+                    { ...option, ...{ label: option.name, value: option[this.state.key] } }
+                ));
+                return { options: cities };
+            }
+        });
     }
 
     render() {
@@ -131,20 +159,7 @@ export default class Home extends Component {
 
         return (
             <div className="home-scene">
-
-                <EnhancedForm />
-
-                <form>
-                    {/* <div className="form-group">
-                        <label htmlFor="exampleInputE3mail1">Email address</label>
-                        <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
-                        <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
-                    </div> */}
-                    {/* <DatePicker /> */}
-
-
-                </form>
-                {/* <Switch /> */}
+                {/* <SelectBox getOptions={this.getCities} /> */}
             </div>
         )
     }
