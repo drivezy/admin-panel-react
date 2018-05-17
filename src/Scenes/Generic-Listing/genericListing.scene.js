@@ -57,7 +57,7 @@ export default class GenericListing extends Component {
 
     userDataArrived = (user) => {
         this.state.currentUser = user;
-        this.getMenuData();  
+        this.getMenuData();
         // this.setState({ currentUser: data });
     }
 
@@ -123,9 +123,11 @@ export default class GenericListing extends Component {
 
                     <div className="header-actions">
 
+                        {/* <div>Hi</div> */}
+
                         {
                             menuDetail.userFilter ?
-                                <PredefinedFilter userFilter={menuDetail.userFilter} />
+                                <PredefinedFilter userFilter={menuDetail.userFilter} history={history} match={match} />
                                 :
                                 null
                         }
