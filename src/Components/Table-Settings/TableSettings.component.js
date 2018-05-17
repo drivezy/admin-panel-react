@@ -195,3 +195,6 @@ export default class TableSettings extends Component {
         )
     }
 }
+
+
+
