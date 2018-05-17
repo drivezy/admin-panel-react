@@ -54,10 +54,6 @@ export class Location {
         if (!obj) {
             return urlParams;
         }
-        if (!Object.keys(obj).length) {
-            props.history.push(props.match.url);
-            return;
-        }
         const finalObj = {};
         Object.keys(obj).forEach((key) => {
             if (obj[key] == null && urlParams[key]) {
@@ -68,6 +64,11 @@ export class Location {
         });
 
         urlParams = reset ? { ...{}, finalObj } : { ...urlParams, ...finalObj };
+
+        if (!Object.keys(urlParams).length || (!Object.keys(finalObj).length)) {
+            props.history.push(props.match.url);
+            return;
+        }
         if (props.history) {
             const queryUrl = SerializeObj(urlParams);
             props.history.push(props.match.url + queryUrl);

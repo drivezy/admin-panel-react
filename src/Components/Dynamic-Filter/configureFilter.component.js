@@ -47,6 +47,10 @@ export default class ConfigureDynamicFilter extends Component {
         };
     }
 
+    componentWillReceiveProps() {
+        this.urlParams = Location.search();
+    }
+
     componentDidMount() {
         SubscribeToEvent({ eventName: 'ToggleAdvancedFilter', callback: this.listenToggleAdvancedFilter });
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
@@ -372,7 +376,7 @@ export default class ConfigureDynamicFilter extends Component {
      * @param  {} index
      * @param  {} queryField
      */
-    getInputRecord = async ({ input: val, parentIndex, childIndex, queryField:queryFieldName } = {}) => {
+    getInputRecord = async ({ input: val, parentIndex, childIndex, queryField: queryFieldName } = {}) => {
         if (val) {
             const { filterArr } = this.state;
             const displayName = filterArr[parentIndex][childIndex].column.referenced_model.display_column;
