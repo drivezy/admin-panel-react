@@ -1,6 +1,12 @@
 import GLOBAL from './../Constants/global.constants';
 const moment = require('moment');
 
+
+export function GetTime({ dateTime, format }) {
+    const dt = dateTime ? new Date(dateTime) : moment();
+    return moment(dt).format(format || GLOBAL.API_DATE_FORMAT);
+}
+
 /**
  * Function to convert seconds to mm:ss format
  * @param  {number} secs
@@ -27,11 +33,6 @@ export function CalculateTime({ time, value, paramName, format, method }) {
     return moment(newTime)[method](value, paramName || 'minutes').format(format || GLOBAL.API_DATE_FORMAT);
 }
 
-export function GetTime({ dateTime, format }) {
-    const dt = dateTime ? new Date(dateTime) : moment();
-    return moment(dt).format(format || GLOBAL.API_DATE_FORMAT);
-}
-
 export function ConvertToDisplayformat(time) {
     return moment(time).format(GLOBAL.DISPLAY_DATE_FORMAT);
 }
@@ -42,6 +43,13 @@ export function ReturnTimeObject(time) {
         minute: moment(time).format('mm'),
         mode: moment(time).format('a')
     };
+}
+
+export function TimeOperation({ method, parameter, value, format, time = null }) {
+    const dateTime = time ? moment(time) : moment();
+    return time ? moment(time)[method](value, parameter).format(format) : moment()[method](value, parameter).format(format);
+    // moment().subtract(1, "day").format(this.dateFormat);
+
 }
 
 export function SetTimeInExistingDate(newDate, existingdateTime) {

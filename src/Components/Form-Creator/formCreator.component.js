@@ -11,12 +11,17 @@ import {
 import { withFormik, Field, Form } from 'formik';
 import Yup from 'yup';
 
+import { Post, Put } from './../../Utils/http.utils';
+
 import SelectBox from './../Forms/Components/Select-Box/selectBox';
 import ReferenceInput from './../Forms/Components/Reference-Input/referenceInput';
 import DatePicker from './../Forms/Components/Date-Picker/datePicker';
 import TimePicker from './../Forms/Components/Time-Picker/timePicker';
 import ListSelect from './../Forms/Components/List-Select/listSelect';
 import Switch from './../Forms/Components/Switch/switch';
+import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
+import TableSettings from './../Table-Settings/TableSettings.component';
+
 
 
 const DisplayFormikState = props => (
@@ -33,9 +38,6 @@ const DisplayFormikState = props => (
         </pre>
     </div>
 );
-
-// {/* <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small> */ }
-
 
 const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
 
@@ -161,7 +163,7 @@ const formElements = props => {
     let shouldColumnSplited = false;
 
     return (
-        <form onSubmit={handleSubmit}>
+        <Form>
             <div className="form-row">
                 {
                     payload.formPreference.map((preference, key) => {
@@ -182,6 +184,7 @@ const formElements = props => {
                                 <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
                                     <label htmlFor="exampleInputEmail1">{column.display_name}</label>
                                     {elem}
+                                    {/* <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small> */}
                                 </div>
                             )
                         }
@@ -190,20 +193,26 @@ const formElements = props => {
             </div>
 
             <div className="modal-actions row justify-content-end">
-                <Button color="secondary" onClick={props.handleReset}>
+
+                {
+                    payload.columns ?
+                        <TableSettings onSubmit={props.layoutChanged} listName={payload.modelName} selectedColumns={payload.formPreference} columns={payload.columns} />
+                        :
+                        null
+                }
+
+
+                <Button color="secondary" onClick={handleReset}>
                     Clear
                 </Button>
 
-                <button type="submit" onClick={handleSubmit}>
+                <button className="btn btn-primary" type="submit">
                     Submit
                 </button>
-                {/* <Button type="submit" color="primary">
-                    Submit
-                </Button> */}
             </div>
 
-            <DisplayFormikState {...props.values} />
-        </form>
+            {/* <DisplayFormikState {...props.values} /> */}
+        </Form>
     );
 }
 
@@ -224,17 +233,66 @@ const FormContents = withFormik({
 
         return response;
     },
-    validationSchema: Yup.object().shape({
-        email: Yup.string()
-            .email('Invalid email address')
-            .required('Email is required!'),
-    }),
-    handleSubmit: (values, { setSubmitting }) => {
+    // validationSchema: Yup.object().shape({
+    //     email: Yup.string()
+    //         .email('Invalid email address')
+    //         .required('Email is required!'),
+    // }),
+
+    validationSchema: (props, values) => {
+
+        // let da = {}
+
+
+        // let fields = Object.keys(props.payload.columns);
+
+        // const { columns } = props.payload;
+
+        // fields.forEach((column) => {
+
+        //     if (columns[column].mandatory) {
+        //         da[column.column_name] = Yup.string().required;
+        //     }
+        // });
+
+        // return Yup.object().shape(da);
+
+        // return Yup.object().shape({
+        //     friends: Yup.array()
+        //         .of(
+        //             Yup.object().shape({
+        //                 name: Yup.string()
+        //                     .min(4, 'too short')
+        //                     .required('Required'), // these constraints take precedence
+        //                 salary: Yup.string()
+        //                     .min(3, 'cmon')
+        //                     .required('Required'), // these constraints take precedence
+        //             })
+        //         )
+        //         .required('Must have friends') // these constraints are shown if and only if inner constraints are satisfied
+        //         .min(3, 'Minimum of 3 friends'),
+        // })
+    },
+
+    handleReset: (values) => {
         console.log(values);
-        // setTimeout(() => {
-        //     alert(JSON.stringify(values, null, 2));
-        //     setSubmitting(false);
-        // }, 1000);
+    },
+    handleSubmit: async (values, { props, setSubmitting }) => {
+
+        const { payload } = props;
+
+        if (payload.method == 'edit') {
+            const result = await Put({ url: payload.module + '/' + payload.listingRow.id, body: values });
+            if (result.response) {
+                props.onSubmit();
+            }
+
+        } else {
+            const result = await Post({ url: payload.module, body: values });
+            if (result.success) {
+                props.onSubmit();
+            }
+        }
     },
     displayName: 'BasicForm', // helps with React DevTools
 })(formElements);
@@ -246,18 +304,31 @@ export default class FormCreator extends Component {
         super(props);
 
         this.state = {
+            payload: this.props.payload
         }
+    }
+
+    closeModal = () => {
+        ModalManager.closeModal();
+    }
+
+    layoutChanged = (selectedColumns) => {
+        let { payload } = this.state;
+        payload.formPreference = selectedColumns
+        // payload.selectedColumns = selectedColumns;
+        // payload.finalColumns = CreateFinalColumns(payload.columns, selectedColumns, payload.relationship);
+        this.setState({ payload });
     }
 
     render() {
 
-        const { payload } = this.props;
+        const { payload } = this.state;
 
         return (
             <div className="form-creator">
                 <Card>
                     <CardBody>
-                        <FormContents payload={payload} />
+                        <FormContents layoutChanged={this.layoutChanged} onSubmit={this.closeModal} payload={payload} />
                     </CardBody>
                 </Card>
             </div>

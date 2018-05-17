@@ -61,7 +61,7 @@ export function SubscribeToEvent({ eventName, callback, extraParams, objParams, 
             SubscribedStoreEvent[eventName] = events;
         }
         // alert('efe');
-        TransmitToAllEvent({ eventName, isMemoryStore });
+        TransmitToSingleEvent({ eventName, isMemoryStore, callback, extraParams });
     });
 }
 
@@ -83,6 +83,22 @@ export function TransmitToAllEvent({ eventName, data, isMemoryStore }) {
             event.callback(data || eventDetail.data, { eventName, extraParams: event.extraParams });
         }
     });
+}
+
+export function TransmitToSingleEvent({ eventName, isMemoryStore, callback, extraParams }) {
+    let eventDetail;
+    if (!isMemoryStore) {
+        eventDetail = Store[eventName];
+    } else {
+        let eventsAvailableInStore = GetItem('memoryStore') || {};
+        eventDetail = eventsAvailableInStore[eventName]; // array of subscribed event for particular event name
+    }
+
+    if (!eventDetail) {
+        return;
+    }
+    callback(eventDetail.data, { eventName, extraParams })
+
 }
 
 export function IsEventAvailable({ eventName, isMemoryStore, objParams }) {
@@ -119,7 +135,8 @@ function IsAlreadySubscribed({ events, callback, objParams }) {
     }
     for (const i in events) {
         const event = events[i];
-        if (Function.prototype.toString(event.callback) == Function.prototype.toString(callback) && IsEqualObject(event.objParams, objParams)) {
+        if (event.callback == callback && IsEqualObject(event.objParams, objParams)) {
+            // if (Function.prototype.toString(event.callback) == Function.prototype.toString(callback) && IsEqualObject(event.objParams, objParams)) {
             return i;
         }
     }

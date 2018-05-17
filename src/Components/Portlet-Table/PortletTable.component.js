@@ -6,7 +6,7 @@ import {
     CardTitle, CardSubtitle, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from 'reactstrap';
 
-import CustomAction from './../Custom-Action/CustomAction';
+import CustomAction from './../Custom-Action/CustomAction.component';
 
 export default class PortletTable extends Component {
 
@@ -21,6 +21,14 @@ export default class PortletTable extends Component {
             reverse: false,
             dropdownOpen: {},
         };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            finalColumns: nextProps.finalColumns,
+            listing: nextProps.listing,
+            genericData: nextProps.genericData
+        });
     }
 
     componentDidMount() {

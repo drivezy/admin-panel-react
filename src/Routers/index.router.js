@@ -38,8 +38,8 @@ import { Get } from './../Utils/http.utils';
 
 import { GetPreferences } from './../Utils/preference.utils';
 
-import ModalWrapper from './../Custom-Components/Modal-Wrapper/modalWrapper.component';
-import ModalManager from './../Custom-Components/Modal-Wrapper/modalManager';
+import ModalWrapper from './../Wrappers/Modal-Wrapper/modalWrapper.component';
+import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 /** Actions */
 // import { GetCities } from './../Actions/city.action';
 // import { CurrentRoute } from './../Actions/router.action';
@@ -86,6 +86,7 @@ class MainApp extends Component {
         // GetProperties();
         LoadAsync.loadStyleSheet({
             src: 'https://use.fontawesome.com/releases/v5.0.10/css/all.css',
+            // src: 'https://use.fontawesome.com/4ca6d82400.js',
             attrs: {
                 integrity: 'sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg',
                 crossorigin: 'anonymous'

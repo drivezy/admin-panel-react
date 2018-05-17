@@ -11,7 +11,7 @@ import moment from 'moment';
 import './datePicker.css';
 
 
-import GLOBAL from './../../../../Constants/global.constants';
+import GLOBAL from './../../../../Constants/global.constants'
 
 export default class DatePicker extends Component {
 
@@ -19,10 +19,10 @@ export default class DatePicker extends Component {
         super(props);
 
         this.state = {
-            format: this.props.format || GLOBAL.DATE_FORMAT,
-            minDate: this.props.minDate,
-            maxDate: this.props.maxDate,
-            value: this.props.value || '',
+            format: props.format || GLOBAL.DATE_TIME_FORMAT,
+            minDate: props.minDate,
+            maxDate: props.maxDate,
+            value: props.value || '',
         }
     }
 
@@ -44,30 +44,43 @@ export default class DatePicker extends Component {
         this.setState({ value });
     }
 
+    componentWillReceiveProps = (nextProps) => {
+        // if (nextProps.single) {
+        console.log(nextProps);
+        this.setState({
+            format: nextProps.format || GLOBAL.DATE_TIME_FORMAT,
+            minDate: nextProps.minDate,
+            maxDate: nextProps.maxDate,
+            value: nextProps.value || '',
+        });
+        // }
+    }
+
     render() {
+        console.log('date picker');
 
-
-        var value = 0;
+        let value, startDate, endDate;
 
         if (this.props.single) {
-            value = moment(this.state.value).format('DD/MM/YYYY HH:MM');
-            // const { value } = this.state;
+            value = moment(this.state.value).format(this.state.format);
         } else {
-            var { startDate, endDate } = this.state.value;
+            // var { startDate, endDate } = this.state.value;
+            startDate = moment(this.state.value.startDate).format(this.state.format)
+            endDate = moment(this.state.value.endDate).format(this.state.format)
         }
 
         return (
 
-            <div className="form-group datepicker">
+            <div className="datepicker">
                 <div className="form-control">
                     {
                         this.props.single ?
-                            <DateRangePicker timePicker={this.props.timePicker} startDate="1/1/2018 10:10" singleDatePicker onApply={this.applyDate}>
+                            <DateRangePicker locale={{ format: this.state.format }} timePicker={this.props.timePicker} startDate={value} singleDatePicker onApply={this.applyDate}>
                                 <div className="picker">
                                     {value}
                                 </div>
                             </DateRangePicker>
-                            : <DateRangePicker timePicker={this.props.timePicker} startDate={startDate} endDate={endDate} onApply={this.applyDate}>
+                            : <DateRangePicker locale={{ format: this.state.format }} timePicker={this.props.timePicker} startDate={startDate} endDate={endDate} onApply={this.applyDate}>
                                 <div className="picker">
                                     {startDate} - {endDate}
                                 </div>

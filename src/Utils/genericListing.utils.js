@@ -7,7 +7,7 @@ import { Get } from './http.utils';
 * url and menu detail, fetch data and passes them further to the components
 * to show listing data
 */
-export async function GetListingRecord({ configuration, queryString = {}, callback, data }) {
+export async function GetListingRecord({ configuration, queryString = {}, callback, data, currentUser = {} }) {
     const params = Initialization(configuration, queryString);
 
     let tempQuery;
@@ -52,7 +52,9 @@ export async function GetListingRecord({ configuration, queryString = {}, callba
     // options.query += IsUndefinedOrNull(configuration.query) ? "" : convertToQuery(configuration.query);
 
     // If currentUser is specified in the query replace it with the currentUsers id
-    // options.query = options.query.replace("'currentUser'", currentUser.id);
+    if (options.query.includes("'currentUser'") && currentUser.id) {
+        options.query = options.query.replace("'currentUser'", currentUser.id);
+    }
 
     options.stats = (data.stats && IsUndefinedOrNull(queryString.query)) ? false : true;
     // To be used to fetch stats when user selects some query and then deselects it
@@ -87,7 +89,7 @@ export async function GetListingRecord({ configuration, queryString = {}, callba
 function PrepareObjectForListing(result, { extraParams }) {
     const { callback, page, data, configuration, params } = extraParams;
     if (result && result.response) {
-        // self.dictionary = params.dictionary[params.starter];
+
         // if (columns && columns.length === 0) {
         //     self.orderColumns = params.dictionary[params.starter];
         // }
@@ -132,7 +134,8 @@ function PrepareObjectForListing(result, { extraParams }) {
             modelName: configuration.model.name.toLowerCase() + ".form",
             module: configuration.module,
             dataModel: configuration.model,
-            
+            // scopes: data.scopes,
+            // restrictColumn: configuration.restrictColumnFilter,
             // userFilter: configuration.userFilter,
             // modelId: configuration.model.id,
             // callbackFunction: callFunction,
@@ -143,24 +146,22 @@ function PrepareObjectForListing(result, { extraParams }) {
             // formPreferenceName: configuration.formPreferenceName,
             // preference: configuration.preference,
             // scripts: configuration.scripts,
-            // restrictColumn: configuration.restrictColumnFilter,
             // restrictQuery: configuration.query,
             // url: configuration.url,
             // listingOptions: listingOptions,
-            // scopes: data.scopes,
         };
         // Prepairing object for configure-filter directive
-        // filterContent = {
-        //     dictionary: dictionary,
-        //     selectedColumns: genericListingObj.selectedColumns,
-        //     restrictColumn: genericListingObj.restrictColumnFilter,
-        //     scopes: genericListingObj.scopes
-        // };
+        const filterContent = {
+            dictionary: genericListingObj.dictionary[params.starter],
+            selectedColumns: genericListingObj.selectedColumns,
+            restrictColumns: configuration.restrictColumnFilter,
+            scopes: data.scopes
+        };
 
         // Build the final columns that is required for the portlet table
         genericListingObj.finalColumns = CreateFinalColumns(genericListingObj.columns, genericListingObj.selectedColumns, genericListingObj.relationship);
         if (typeof callback == 'function') {
-            callback(genericListingObj);
+            callback({ genericData: genericListingObj, filterContent });
         }
     }
 }
