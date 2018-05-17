@@ -225,7 +225,7 @@ export default class ConfigureDynamicFilter extends Component {
                     }
 
                     const res = await Get(url);
-                    filterArr[parentIndex][childIndex].referenceObj = res.data.response;
+                    filterArr[parentIndex][childIndex].referenceObj = res.response;
                     this.callFilterChangeAfterColumnChange(filterArr, { parentIndex, childIndex });
                     return filterArr[parentIndex][childIndex].referenceObj;
                     // defer.resolve(filterArr[parentIndex][childIndex].referenceObj);
@@ -372,7 +372,7 @@ export default class ConfigureDynamicFilter extends Component {
      * @param  {} index
      * @param  {} queryField
      */
-    getInputRecord = async ({ input: val, parentIndex, childIndex, queryFieldName } = {}) => {
+    getInputRecord = async ({ input: val, parentIndex, childIndex, queryField:queryFieldName } = {}) => {
         if (val) {
             const { filterArr } = this.state;
             const displayName = filterArr[parentIndex][childIndex].column.referenced_model.display_column;
@@ -432,7 +432,7 @@ export default class ConfigureDynamicFilter extends Component {
      * once the modal is opened Function prepolates the filterArray with what is in the url
      * @param  {string} query
      */
-    prepopulate = async (query) => {
+    prepopulate = async (query = '') => {
         const filterArr = this.state.filterArr;
         const parentQueries = query.split(" AND ");
 

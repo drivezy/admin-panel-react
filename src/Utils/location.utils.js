@@ -51,11 +51,23 @@ export class Location {
             props.location = window.location;
         }
         let urlParams = GenerateObjectFromUrlParams(decodeURIComponent(props.location.search))
-        if (!(obj && Object.keys(obj).length)) {
+        if (!obj) {
             return urlParams;
         }
+        if (!Object.keys(obj).length) {
+            props.history.push(props.match.url);
+            return;
+        }
+        const finalObj = {};
+        Object.keys(obj).forEach((key) => {
+            if (obj[key] == null && urlParams[key]) {
+                delete urlParams[key];
+            } else {
+                finalObj[key] = obj[key];
+            }
+        });
 
-        urlParams = reset ? { ...{}, obj } : { ...urlParams, ...obj };
+        urlParams = reset ? { ...{}, finalObj } : { ...urlParams, ...finalObj };
         if (props.history) {
             const queryUrl = SerializeObj(urlParams);
             props.history.push(props.match.url + queryUrl);

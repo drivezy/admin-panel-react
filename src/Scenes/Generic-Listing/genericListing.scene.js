@@ -118,7 +118,10 @@ export default class GenericListing extends Component {
                 /> */}
                 <div className="page-bar">
                     <div className="search-wrapper">
-                        <DynamicFilter />
+                        {
+                            filterContent && filterContent.dictionary &&
+                            <DynamicFilter dictionary={filterContent.dictionary} userFilters={menuDetail.userFilter} history={history} match={match} />
+                        }
                     </div>
 
                     <div className="header-actions">
