@@ -8,7 +8,11 @@ import {
 
 import CustomAction from './../Custom-Action/CustomAction.component';
 
+import { Location } from './../../Utils/location.utils';
+
 export default class PortletTable extends Component {
+
+    urlParams = Location.search();
 
     constructor(props) {
         super(props);
@@ -89,6 +93,18 @@ export default class PortletTable extends Component {
         this.setState({ listing, sortKey, reverse })
     }
 
+    sortOnDB = (sort, column) => {
+        const paramProps = {
+            history: this.props.history, match: this.props.match
+        };
+
+        const urlParams = this.urlParams;
+
+        urlParams.order = column;
+        urlParams.sort = sort.type;
+        Location.search(urlParams, { props: paramProps });
+    };
+
 
     render() {
 
@@ -104,7 +120,8 @@ export default class PortletTable extends Component {
             type: 'desc'
         }];
 
-        const { genericData, finalColumns, listing, history, callback, rowTemplate } = this.state;
+        const { genericData, finalColumns, listing, callback, rowTemplate } = this.state;
+        const { history, match } = this.props;
         return (
             <Table striped className="sortable">
                 <thead>
