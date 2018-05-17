@@ -1,0 +1,28 @@
+.context-menu {
+    float: left;
+    min-width: 180px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 13px;
+    background-color: #fff;
+    border: 1px solid #06060626;
+    border-radius: 3px !important;
+    display: block;
+    position: absolute;
+    .react-contextmenu-item {
+        margin-top: 4px;
+        display: block;
+        padding: 7px 20px;
+        clear: both;
+        font-weight: 400;
+        line-height: 1.42857143;
+        color: #333;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+    .react-contextmenu-item:hover {
+        color: white;
+        text-decoration: none;
+        background-color: #5bc0de;
+    }
+}
