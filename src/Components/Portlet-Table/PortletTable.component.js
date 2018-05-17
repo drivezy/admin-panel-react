@@ -14,7 +14,7 @@ import { Location } from './../../Utils/location.utils';
 export default class PortletTable extends Component {
 
     urlParams = Location.search();
-    
+
     sortTypes = [{
         id: 0,
         icon: 'fa-sort-numeric-down',
@@ -70,7 +70,7 @@ export default class PortletTable extends Component {
         }
     }
 
-    toggle = (column) => {
+    dropdownToggle = (column) => {
         let dropdownOpen = this.state.dropdownOpen;
 
         dropdownOpen[column.id] = !dropdownOpen[column.id]
@@ -106,16 +106,28 @@ export default class PortletTable extends Component {
         this.setState({ listing, sortKey, reverse })
     }
 
-    sortOnDB = (sort, column) => {
+    dropdownSortOnDB = (sort, column) => {
         const paramProps = {
             history: this.props.history, match: this.props.match
         };
 
         const urlParams = this.urlParams;
 
-        urlParams.order = column;
+        urlParams.order = column.path;
         urlParams.sort = sort.type;
         Location.search(urlParams, { props: paramProps });
+
+        if (sort.type === 'asc') {
+            this.state.reverse = true;
+        } else {
+            this.state.reverse = false;
+        }
+
+        this.setState({
+            sortKey: column.path,
+        })
+
+        this.dropdownToggle(column);
     };
 
 
@@ -135,6 +147,7 @@ export default class PortletTable extends Component {
 
         const { genericData, finalColumns, listing, callback, rowTemplate } = this.state;
         const { history, match } = this.props;
+
         return (
             <Table striped className="sortable">
                 <thead>
@@ -143,6 +156,7 @@ export default class PortletTable extends Component {
                         </th>
                         {
                             finalColumns.map((selectedColumn, key) => {
+                                let conditionForSorting = (this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.column_name))) ? (this.state.reverse ? 'fa-chevron-up' : 'fa-chevron-down') : ''
                                 return (
                                     <th className="column-header" key={key}>
                                         {/* Column Wrapper */}
@@ -151,7 +165,7 @@ export default class PortletTable extends Component {
                                             <div className="column-title printable">
                                                 <a onClick={e => this.onSort(e, selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName))}>
                                                     <span>{selectedColumn.display_name}</span>
-                                                    <i className={`fas ${(this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.column_name))) ? (this.state.reverse ? 'fa-chevron-up' : 'fa-chevron-down') : ''}`} />
+                                                    <i className={`fas ${conditionForSorting}`} />
                                                 </a>
                                             </div>
                                             {/* Column Title Ends */}
@@ -174,7 +188,7 @@ export default class PortletTable extends Component {
 
                                                     <div className="db-level-sort">
                                                         {
-                                                            <Dropdown isOpen={this.state.dropdownOpen[selectedColumn.id]} toggle={() => this.toggle(selectedColumn)}>
+                                                            <Dropdown isOpen={this.state.dropdownOpen[selectedColumn.id]} toggle={() => this.dropdownToggle(selectedColumn)}>
                                                                 <DropdownToggle tag="span" data-toggle="dropdown" aria-expanded={this.state.dropdownOpen}>
                                                                     <a className="dropdown-link">
                                                                         <i className="fas fa-sort-amount-down"></i>
@@ -184,7 +198,7 @@ export default class PortletTable extends Component {
                                                                     {
                                                                         this.sortTypes.map((sort, key) => {
                                                                             return (
-                                                                                <div className="dropdown-item" key={key} onClick={e => this.sortOnDB(sort, selectedColumn.path)}>
+                                                                                <div className="dropdown-item" key={key} onClick={e => this.dropdownSortOnDB(sort, selectedColumn)}>
                                                                                     <i className={`fas ${sort.icon}`} /> {sort.caption}
                                                                                 </div>
                                                                             )
