@@ -41,9 +41,9 @@ export async function GetListingRecord({ configuration, queryString = {}, callba
     // If a filter is applied , add the query to options.query
     if (queryString.filter && Object.keys(queryString.filter).length && Array.isArray(configuration.userFilter)) {
         const activeFilter = configuration.userFilter.filter(function (filter) {
-            return filter.id == queryString.filter.id;
+            return filter.id == queryString.filter;
         })[0];
-        if (!queryString.query) {
+        if (!queryString.query && activeFilter) {
             options.query += " and " + activeFilter.filter_query;
         }
     }
