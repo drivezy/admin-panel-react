@@ -6,13 +6,26 @@ import {
     CardTitle, CardSubtitle, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from 'reactstrap';
 
-import CustomAction from './../Custom-Action/CustomAction.component';
+import CustomAction from './../../Components/Custom-Action/CustomAction.component';
+import RightClick from './../../Components/Right-Click/rightClick.component';
 
 import { Location } from './../../Utils/location.utils';
 
 export default class PortletTable extends Component {
 
     urlParams = Location.search();
+    
+    sortTypes = [{
+        id: 0,
+        icon: 'fa-sort-numeric-down',
+        caption: 'Sort Asc',
+        type: 'asc'
+    }, {
+        id: 1,
+        icon: 'fa-sort-numeric-up',
+        caption: 'Sort Desc',
+        type: 'desc'
+    }];
 
     constructor(props) {
         super(props);
@@ -169,7 +182,7 @@ export default class PortletTable extends Component {
                                                                 </DropdownToggle>
                                                                 <DropdownMenu>
                                                                     {
-                                                                        sortTypes.map((sort, key) => {
+                                                                        this.sortTypes.map((sort, key) => {
                                                                             return (
                                                                                 <div className="dropdown-item" key={key} onClick={e => this.sortOnDB(sort, selectedColumn.path)}>
                                                                                     <i className={`fas ${sort.icon}`} /> {sort.caption}
@@ -195,7 +208,6 @@ export default class PortletTable extends Component {
                 </thead>
                 <tbody>
                     {
-
                         listing.map((listingRow, rowKey) => {
                             return (
                                 <tr className="table-row" key={rowKey}>
@@ -203,15 +215,10 @@ export default class PortletTable extends Component {
                                     <td className="row-key">
                                         {rowKey + 1}
                                     </td>
-
                                     {
                                         finalColumns.map((selectedColumn, key) => (
                                             <td key={key}>
-                                                {
-                                                    rowTemplate ?
-                                                        rowTemplate({ listingRow, selectedColumn }) :
-                                                        eval('listingRow.' + selectedColumn.path)
-                                                }
+                                                <RightClick history={history} match={match} key={key} renderTag="div" rowTemplate={rowTemplate} listingRow={listingRow} selectedColumn={selectedColumn}></RightClick>
                                             </td>
                                         ))
                                     }
@@ -223,6 +230,7 @@ export default class PortletTable extends Component {
                         })
                     }
                 </tbody>
+
             </Table>
         );
     }
