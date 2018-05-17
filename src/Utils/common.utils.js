@@ -45,7 +45,8 @@ export function IsUndefinedOrNull(value) {
 }
 
 export function IsUndefined(value) {
-    return value === '';
+    return typeof value == 'undefined';
+    // return value === '';
 }
 
 export function isMobile() {
@@ -71,6 +72,15 @@ export function ArrayToObject(key) {
         }
     });
     return obj;
+}
+
+export function CopyToClipBoard(text) {
+    const temp = document.createElement("textarea");
+    temp.innerHTML = text;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand("copy");
+    document.body.removeChild(temp);
 }
 
 /**

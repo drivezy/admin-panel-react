@@ -78,7 +78,14 @@ export default class ListingPagination extends Component {
                     <PaginationItem disabled={nextPage == number_of_pages + 1}>
                         <PaginationLink next onClick={() => this.redirectToPage(`?query=limit=20&page=${nextPage}`)} />
                     </PaginationItem>
+
+                    <div className="pagination-record">
+                        Showing {genericData.currentPage?((((genericData.currentPage)*20)-20)+1):0} - {genericData.currentPage?((genericData.currentPage)*20):0} results from {genericData.stats?genericData.stats.records:0} records.
+                    </div>
+
                 </Pagination>
+
+
             </div>
         )
     }

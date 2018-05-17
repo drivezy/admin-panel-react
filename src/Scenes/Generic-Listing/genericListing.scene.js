@@ -9,6 +9,7 @@ import './genericListing.css';
 import { GetUrlParams } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
 import { GetListingRecord } from './../../Utils/genericListing.utils';
+import { SubscribeToEvent, UnsubscribeEvent } from './../../Utils/stateManager.utils';
 
 import DynamicFilter from './../../Components/Dynamic-Filter/dynamicFilter.component';
 import ConfigureDynamicFilter from './../../Components/Dynamic-Filter/configureFilter.component';
@@ -21,6 +22,8 @@ import CustomAction from './../../Components/Custom-Action/CustomAction.componen
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import ModalWrap from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
 
+import PredefinedFilter from './../../Components/Dropdown-Filter/filter.component';
+
 export default class GenericListing extends Component {
     filterContent = {};
     constructor(props) {
@@ -31,20 +34,31 @@ export default class GenericListing extends Component {
             genericData: {},
             filterContent: null
         };
+        SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
 
     componentWillReceiveProps(nextProps) {
-        // console.log(this.state);
-        // console.log(GetUrlParams(nextProps));
         const newProps = GetUrlParams(nextProps);
         this.state.params = newProps.params;
         this.state.queryString = newProps.queryString;
-        this.getListingData();
+        if (this.state.menuDetail.url) {
+            this.getListingData();
+        }
     }
 
     componentDidMount() {
-        this.getMenuData();
+        // this.getMenuData();
         // ModalManager.showModal({ onClose: this.closeModal, headerText: '1st using method', modalBody: () => (<h1> hi</h1>) });
+    }
+
+    componentWillUnmount() {
+        // UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
+    }
+
+    userDataArrived = (user) => {
+        this.state.currentUser = user;
+        this.getMenuData();
+        // this.setState({ currentUser: data });
     }
 
     getMenuData = async () => {
@@ -64,8 +78,8 @@ export default class GenericListing extends Component {
     }
 
     getListingData = () => {
-        const { menuDetail, genericData, queryString } = this.state;
-        GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString });
+        const { menuDetail, genericData, queryString, currentUser } = this.state;
+        GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser });
     }
 
     dataFetched = ({ genericData, filterContent }) => {
@@ -78,9 +92,6 @@ export default class GenericListing extends Component {
         //     // this.setState({ pagesOnDisplay: totalPages });
         //     this.state.pagesOnDisplay = Math.ceil(totalPages);
         // }
-        // console.log(genericData);
-
-
         this.setState({ genericData, filterContent });
     }
 
@@ -109,12 +120,29 @@ export default class GenericListing extends Component {
                     <div className="search-wrapper">
                         <DynamicFilter />
                     </div>
+
                     <div className="header-actions">
+
+                        {/* <div>Hi</div> */}
+
+                        {
+                            menuDetail.userFilter ?
+                                <PredefinedFilter userFilter={menuDetail.userFilter} history={history} match={match} />
+                                :
+                                null
+                        }
+
+
 
                         <div className="btn-group" role="group" aria-label="Basic example">
                             {/* <button type="button" className="btn btn-sm btn-secondary">Left</button>
                             <button type="button" className="btn btn-sm btn-secondary">Middle</button>
+
+                            
+
                             <button type="button" className="btn btn-sm btn-secondary">Right</button> */}
+
+
 
                             <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
 
@@ -132,8 +160,8 @@ export default class GenericListing extends Component {
                     {
                         filterContent &&
                         <ConfigureDynamicFilter
-                            history={history}  
-                            match={match} 
+                            history={history}
+                            match={match}
                             filters={genericData.userFilter}
                             content={filterContent}
                         />
@@ -144,7 +172,7 @@ export default class GenericListing extends Component {
                     <CardBody>
                         {
                             (finalColumns && finalColumns.length) ?
-                                <PortletTable history={history} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} /> : null
+                                <PortletTable history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} /> : null
                         }
                         <ListingPagination history={history} match={match} genericData={genericData} />
                     </CardBody>

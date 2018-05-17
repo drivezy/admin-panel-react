@@ -14,7 +14,15 @@
         background: #f1f1f1;
         border-bottom: 1px solid #d4d4d4;
         .search-wrapper {}
-        .header-actions {}
+        .header-actions {
+            display: flex;
+            .btn-group{
+                margin: 0px 2px;
+            }
+        }
+        .pre-defined-filter {
+            margin-left: 1100px;
+        }
     }
     .card {
         width: 95%;

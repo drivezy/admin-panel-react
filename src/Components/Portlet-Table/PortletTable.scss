@@ -1,7 +1,79 @@
-/* Sortable tables */
-table.sortable thead {
-    background-color:#eee;
-    color:#666666;
-    font-weight: bold;
-    cursor: default;
+.table-style {
+    .sortable {
+        .column-wrapper {
+            display: flex;
+            .column-title {
+                color: #6f7c87;
+                margin-right: 10px;
+                -ms-flex-preferred-size: 80%;
+                flex-grow: 1;
+                font-weight: 100;
+                font-size: 13px;
+            }
+            .db-level-sort {
+                cursor: pointer;
+                flex-basis: 5%;
+                .dropdown-link {
+                    text-decoration: none;
+                    color: #b1493ce8;
+                    opacity: 0.8;
+                }
+            }
+            .filter-column {
+                cursor: pointer;
+                margin: -1px 4px;
+                flex-basis: 5%;
+                a {
+                    opacity: 0.8;
+                }
+            }
+        }
+        .dropdown-item {
+            display: block;
+            padding: 3px 20px;
+            clear: both;
+            font-weight: 400;
+            line-height: 1.42857143;
+            color: #333;
+            white-space: nowrap;
+        }
+    }
+    .context-menu {
+        z-index: 99999999 !important;
+        display: none;
+        float: left;
+        min-width: 180px;
+        padding: 5px 0;
+        margin: 2px 0 0;
+        list-style: none;
+        font-size: 13px;
+        text-align: left;
+        background-color: #fff;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        border-radius: 3px !important;
+        background-clip: padding-box;
+        box-shadow: 6px 6px 7px 0px rgba(0, 0, 0, 0.298039) !important;
+        border-width: 1px;
+        border-style: solid;
+        display: block;
+        position: absolute;
+        left: 642px;
+        top: 183px;
+        .react-contextmenu-item {
+            margin-top: 4px;
+            display: block;
+            padding: 3px 20px;
+            clear: both;
+            font-weight: 400;
+            line-height: 1.42857143;
+            color: #333;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .react-contextmenu-item:hover {
+            color: white;
+            text-decoration: none;
+            background-color: #5bc0de;
+        }
+    }
 }

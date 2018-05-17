@@ -181,7 +181,6 @@ export default class TableSettings extends Component {
     }
 
     render() {
-        console.log('this.state.modal', this.state.modal);
         return (
             <div className="table-settings">
                 <Button color="primary" size="sm" onClick={this.toggleModal}>
