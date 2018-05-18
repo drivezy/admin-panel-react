@@ -52,7 +52,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // Number Ends
 
         // Text
-        108: <Field className="form-control" type="text" name={column.column_name} placeholder={`Enter ${column.display_name}`} />,
+        108: <Field className={`form-control ${props.errors[column.column_name] && props.touched[column.column_name] ? 'is-invalid' : ''}`} type="text" name={column.column_name} placeholder={`Enter ${column.display_name}`} />,
         // Text Ends
 
         // TextArea Begins
@@ -184,7 +184,16 @@ const formElements = props => {
                                 <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
                                     <label htmlFor="exampleInputEmail1">{column.display_name}</label>
                                     {elem}
-                                    {/* <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small> */}
+
+                                    {/* Showing Errors when there are errors */}
+                                    {
+                                        errors[column.column_name] && touched[column.column_name] ?
+                                            <small id="emailHelp" className="form-text text-danger">
+                                                {errors[column.column_name]}
+                                            </small>
+                                            : null}
+
+                                    {/* Errors Ends */}
                                 </div>
                             )
                         }
@@ -193,15 +202,6 @@ const formElements = props => {
             </div>
 
             <div className="modal-actions row justify-content-end">
-
-                {
-                    payload.columns ?
-                        <TableSettings onSubmit={props.layoutChanged} listName={payload.modelName} selectedColumns={payload.formPreference} columns={payload.columns} />
-                        :
-                        null
-                }
-
-
                 <Button color="secondary" onClick={handleReset}>
                     Clear
                 </Button>
@@ -210,8 +210,6 @@ const formElements = props => {
                     Submit
                 </button>
             </div>
-
-            {/* <DisplayFormikState {...props.values} /> */}
         </Form>
     );
 }
@@ -241,21 +239,19 @@ const FormContents = withFormik({
 
     validationSchema: (props, values) => {
 
-        // let da = {}
+        let da = {}
 
+        let fields = Object.keys(props.payload.columns);
 
-        // let fields = Object.keys(props.payload.columns);
+        const { columns } = props.payload;
 
-        // const { columns } = props.payload;
+        fields.forEach((column) => {
+            if (columns[column].mandatory) {
+                da[columns[column].column_name] = Yup.string().required(columns[column].display_name + ' is required.');
+            }
+        });
 
-        // fields.forEach((column) => {
-
-        //     if (columns[column].mandatory) {
-        //         da[column.column_name] = Yup.string().required;
-        //     }
-        // });
-
-        // return Yup.object().shape(da);
+        return Yup.object().shape(da);
 
         // return Yup.object().shape({
         //     friends: Yup.array()
@@ -315,8 +311,6 @@ export default class FormCreator extends Component {
     layoutChanged = (selectedColumns) => {
         let { payload } = this.state;
         payload.formPreference = selectedColumns
-        // payload.selectedColumns = selectedColumns;
-        // payload.finalColumns = CreateFinalColumns(payload.columns, selectedColumns, payload.relationship);
         this.setState({ payload });
     }
 
@@ -326,6 +320,12 @@ export default class FormCreator extends Component {
 
         return (
             <div className="form-creator">
+                {
+                    payload.columns ?
+                        <TableSettings onSubmit={this.layoutChanged} listName={payload.modelName} selectedColumns={payload.formPreference} columns={payload.columns} />
+                        :
+                        null
+                }
                 <Card>
                     <CardBody>
                         <FormContents layoutChanged={this.layoutChanged} onSubmit={this.closeModal} payload={payload} />

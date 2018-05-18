@@ -133,7 +133,7 @@ export default class PortletTable extends Component {
 
     render() {
 
-        const sortTypes = [{
+      const sortTypes = [{
             id: 0,
             icon: 'fa-sort-numeric-down',
             caption: 'Sort Asc',
