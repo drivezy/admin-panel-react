@@ -87,8 +87,10 @@ export async function CreateQuery({ rawQuery, dictionary = [], finalSql: FinalSq
                     // if column type is select type
                     case 116:
                         const res = await GetInputRecord({ input: queryObj.selectedInput, column, queryField: 'id' });
-                        showSql += res[0][column.referenced_model.display_column];
-                        FinalSql({ sql: showSql, key, parentKey, arr, sqlArray });
+                        if (res && res.success) {
+                            showSql += res.response[0][column.referenced_model.display_column];
+                            FinalSql({ sql: showSql, key, parentKey, arr, sqlArray });
+                        }
                         break;
 
                     // if column type is referenced
@@ -132,7 +134,7 @@ export async function CreateQuery({ rawQuery, dictionary = [], finalSql: FinalSq
                 }
             } else {
                 // appendOr(showSql, queries, key, parentKey);
-                FinalSql({ sql:showSql, key, parentKey, arr, sqlArray });
+                FinalSql({ sql: showSql, key, parentKey, arr, sqlArray });
             }
         });
     });

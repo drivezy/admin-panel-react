@@ -34,7 +34,9 @@ export default class SelectBox extends Component {
             props.options.forEach(option => {
                 options.push({ label: option });
             });
-            value = { label: props.value };
+            if(props.value && Object.keys(props.value).length) { 
+                value = { label: props.value };
+            }
         } else {
             options = props.options;
             value = props.value || {};
