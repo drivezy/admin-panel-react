@@ -145,8 +145,8 @@ export default class PortletTable extends Component {
             type: 'desc'
         }];
 
-        const { genericData, finalColumns, listing, callback, rowTemplate } = this.state;
-        const { history, match } = this.props;
+        const { genericData, finalColumns, listing, callback } = this.state;
+        const { history, match, menuDetail, rowTemplate } = this.props;
 
         return (
             <Table striped className="sortable">
@@ -232,7 +232,7 @@ export default class PortletTable extends Component {
                                     {
                                         finalColumns.map((selectedColumn, key) => (
                                             <td key={key}>
-                                                <RightClick history={history} match={match} key={key} renderTag="div" rowTemplate={rowTemplate} listingRow={listingRow} selectedColumn={selectedColumn}></RightClick>
+                                                <RightClick history={history} match={match} key={key} renderTag="div" rowTemplate={rowTemplate} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail}></RightClick>
                                             </td>
                                         ))
                                     }

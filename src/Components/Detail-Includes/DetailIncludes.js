@@ -157,7 +157,13 @@ export default class DetailPortlet extends Component {
     }
 
     rowTemplate({ listingRow, selectedColumn }) {
-        return (<span>{eval('listingRow.' + selectedColumn.path)} </span>);
+        let val;
+        try {
+            val = eval('listingRow.' + selectedColumn.path);
+        } catch (e) {
+            val = '';
+        }
+        return (<span>{val}</span>);
     }
 
     render() {
