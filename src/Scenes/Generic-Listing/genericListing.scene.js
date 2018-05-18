@@ -169,7 +169,7 @@ export default class GenericListing extends Component {
                         <ConfigureDynamicFilter
                             history={history}
                             match={match}
-                            filters={genericData.userFilter}
+                            filters={menuDetail.userFilter}
                             content={filterContent}
                         />
                     }

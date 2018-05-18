@@ -6,7 +6,7 @@ import './home.scene.css';
 import DatePicker from './../../Components/Forms/Components/Date-Picker/datePicker';
 
 import SelectBox from './../../Components/Forms/Components/Select-Box/selectBox';
-
+import Select, { Async } from 'react-select';
 import Switch from './../../Components/Forms/Components/Switch/switch';
 
 import { Get } from './../../Utils/http.utils';
@@ -130,13 +130,10 @@ export default class Home extends Component {
         const result = await Get({ url });
 
         if (result.success) {
-            const cities = result.response.map((option) => (
-                { ...option, ...{ label: option.name, value: option[this.state.key] } }
-            ));
-
-
-            return { options: cities };
-
+            // const cities = result.response.map((option) => (
+            //     { ...option, ...{ label: option.name, value: option[this.state.key] } }
+            // ));
+            return { options: result.response };
         }
     }
 
@@ -153,13 +150,35 @@ export default class Home extends Component {
         });
     }
 
-    render() {
+    handleChange = (selectedOption) => {
+        this.setState({ selectedOption });
+    }
 
-        const { cities } = this.state;
+    render() {
+        const options = [
+            { value: 'one', labela: '1' },
+            { value: 'two', labela: '2' },
+        ];
+        const { cities, selectedOption } = this.state;
+        // const options = ['1', '2'];
 
         return (
             <div className="home-scene">
-                {/* <SelectBox getOptions={this.getCities} /> */}
+                {/* <SelectBox
+                    name="form-field-name"
+                    value={selectedOption}
+                    field='value'
+                    onChange={this.handleChange}
+                    options={options}
+                /> */}
+
+                {/* <SelectBox
+                    getOptions={this.getCities}
+                    field='name'
+                    onChange={this.handleChange}
+                    value={selectedOption} /> */}
+
+                    
             </div>
         )
     }
