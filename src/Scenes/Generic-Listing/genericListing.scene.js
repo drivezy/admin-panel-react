@@ -95,6 +95,11 @@ export default class GenericListing extends Component {
         this.setState({ genericData, filterContent });
     }
 
+    predefinedFiltersUpdated = (filters) => {
+        const { menuDetail } = this.state;
+        menuDetail.userFilter = filters;
+        this.setState({ menuDetail });
+    }
 
     layoutChanges = (selectedColumns) => {
         let { genericData } = this.state;
@@ -104,10 +109,9 @@ export default class GenericListing extends Component {
     }
 
     render() {
-        const { genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent } = this.state;
+        const { genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent, currentUser } = this.state;
         const { listing = [], finalColumns = [] } = genericData;
         const { history, match } = this.props;
-
         return (
             <div className="generic-listing-container">
                 {/* <ModalWrap
@@ -120,7 +124,7 @@ export default class GenericListing extends Component {
                     <div className="search-wrapper">
                         {
                             filterContent && filterContent.dictionary &&
-                            <DynamicFilter dictionary={filterContent.dictionary} userFilters={menuDetail.userFilter} history={history} match={match} />
+                            <DynamicFilter menuUpdatedCallback={this.predefinedFiltersUpdated} selectedColumns={genericData.selectedColumns} menuId={menuDetail.menuId} currentUser={currentUser} dictionary={filterContent.dictionary} userFilters={menuDetail.userFilter} history={history} match={match} />
                         }
                     </div>
 

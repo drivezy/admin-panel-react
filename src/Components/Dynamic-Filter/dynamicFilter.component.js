@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import { StoreEvent } from './../../Utils/stateManager.utils';
 import { Location } from './../../Utils/location.utils';
-import { IsEqualObject, SelectFromOptions } from './../../Utils/common.utils';
+import { IsEqualObject, SelectFromOptions, IsUndefinedOrNull } from './../../Utils/common.utils';
 import { CreateQuery } from './../../Utils/dynamicFilter.utils';
+import { Put, Post } from './../../Utils/http.utils';
+import ToastNotifications from './../../Utils/toast.utils';
+
+import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
+import { MenuFilterEndPoint } from './../../Constants/api.constants';
 
 import './dynamicFilter.css';
 
@@ -26,7 +31,7 @@ export default class DynamicFilter extends Component {
         this.state.filters = nextProps.userFilters;
         this.setActiveFilter();
         this.fetchSql(urlParams);
-        
+
         // if (!IsEqualObject(this.state.urlParams, urlParams)) {
         //     // this.setState({ urlParams });
         //     this.state.urlParams = urlParams;
@@ -44,12 +49,23 @@ export default class DynamicFilter extends Component {
         this.setActiveFilter();
     }
 
+    toggleAdvancedFilter = () => {
+        const { isCollapsed } = this.state;
+        this.setState({ isCollapsed: !isCollapsed });
+        StoreEvent({ eventName: 'ToggleAdvancedFilter', data: !isCollapsed });
+    }
+    
+    /**
+     * takes query param from url and convert into array of queries
+     * @param  {object} urlParams
+     */
     fetchSql = async (urlParams) => {
         const { dictionary } = this.props;
         if (urlParams.query) {
             // this.createQuery(urlParams.query);
             const result = await CreateQuery({ rawQuery: urlParams.query, dictionary, finalSql: this.finalSql });
-            console.log(result);
+        } else {
+            this.setState({ sqlArray: [] });
         }
     }
 
@@ -78,7 +94,6 @@ export default class DynamicFilter extends Component {
         // self.prepopulate.collapseMethod(true);
     }
 
-
     finalSql = ({ sql, key, parentKey, arr, sqlArray }) => {
         arr[parentKey] = arr[parentKey] ? arr[parentKey] : [];
         arr[parentKey][key] = sql;
@@ -94,6 +109,7 @@ export default class DynamicFilter extends Component {
     setActiveFilter() {
         const { filter: selectedFilterId } = this.state.urlParams;
         if (!selectedFilterId) {
+            this.setState({ activeFilter: {} });
             return;
         }
         const { filters = [] } = this.state;
@@ -104,27 +120,163 @@ export default class DynamicFilter extends Component {
         });
     }
 
+    clearQuery = () => {
+        const { match, history } = this.props;
+        this.state.sqlArray = [];
+        Location.search({}, { props: { match, history } });
+        // self.prepopulate.collapseMethod(true);
+    }
+
     /**
     * Remove the active saved filter
     */
     removeActiveFilter = () => {
         const { urlParams } = this.state;
         const { match, history } = this.props;
-        delete urlParams.filter;
+        urlParams.filter = null;
         Location.search(urlParams, { props: { match, history } });
         this.setState({ activeFilter: {} });
     }
 
-    toggleAdvancedFilter = () => {
-        const { isCollapsed } = this.state;
-        this.setState({ isCollapsed: !isCollapsed });
-        StoreEvent({ eventName: 'ToggleAdvancedFilter', data: !isCollapsed });
+    /**
+     * Updates the filter with the new filter
+     * @param  {} activeFilter
+     */
+    updateLocalFetchedFilters = (activeFilter) => {
+        let { filters } = this.state;
+        const { menuUpdatedCallback } = this.props;
+        filters.push(activeFilter);
+        this.state.activeFilter = activeFilter;
+        this.state.filters = filters;
+        menuUpdatedCallback(filters);
     }
 
+    /**
+     * Update the existing filter with the query params
+     */
+    updateFilter = async () => {
+        const { currentUser, selectedColumns = {}, match, history } = this.props;
+        const { activeFilter = {}, urlParams } = this.state;
+        if (currentUser.isSuperAdmin) {
+            const result = await Put({
+                url: MenuFilterEndPoint + '/' + activeFilter.id,
+                body: {
+                    filter_query: urlParams.query,
+                    column_definition: JSON.stringify(selectedColumns)
+                }
+            });
+            this.validateResult(result);
+        } else {
+            // Add a new filter
+            this.openSaveFilterModal();
+        }
+    }
+    
+    /**
+     * Once predefined filter is updated for being new created, their result is
+     * passed to this method to validate and take actions on success
+     * @param  {object} result
+     */
+    validateResult = (result) => {
+        const { urlParams, activeFilter } = this.state;
+        const { match, history } = this.props;
+        if (result.success) {
+            this.closeModal();
+            // delete urlParams.query;
+            // Assign the new filter to activeFilter
+            this.updateLocalFetchedFilters(result.response);
+            
+            urlParams.filter = result.response.id;
+            urlParams.query = null;
+            Location.search(urlParams, { props: { match, history } });
+            ToastNotifications.success("Filter updated");
+        }
+    }
+    
+    /**
+     * Triggers modal for taking filter name
+     */
+    openSaveFilterModal = () => {
+        ModalManager.openModal({
+            headerText: 'Input Form',
+            modalBody: this.renderform,
+        });
+    }
+    
+    /**
+     * Closes filter name modal
+     */
+    closeModal = () => {
+        ModalManager.closeModal();
+    }
+
+    /**
+     * Opens modal to save filter for the user
+     * @param  {boolean} override=false
+     */
+    saveFilter = async (override = false) => {
+        const { menuId, selectedColumns } = this.props;
+        const { filterName, urlParams, activeFilter, filters } = this.state;
+        // Get the filter name 
+
+        if (IsUndefinedOrNull(filterName)) {
+            ToastNotifications.error('Please input filter name');
+            return;
+        }
+        const result = await Post({
+            url: MenuFilterEndPoint,
+            body: {
+                source_id: menuId,
+                source_type: 'menu',
+                filter_name: filterName,
+                filter_query: urlParams.query,
+                column_definition: JSON.stringify(selectedColumns),
+                override_all: override
+            }
+        });
+
+        this.validateResult(result);
+    };
+
+    renderform = () => {
+        const { currentUser } = this.props;
+        return (
+            [
+                <div key={1} className="modal-body whitesmoke-bg">
+                    <div className="panel panel-info">
+                        <div className="panel-body">
+                            <div className="form-group">
+                                <label htmlFor="filter">Filter</label>
+                                <input validate="required" type="text"
+                                    onChange={(event) => this.setState({ filterName: event.target.value })}
+                                    className="form-control" placeholder="Enter Filter" />
+                            </div>
+                        </div>
+                    </div>
+                </div>,
+                <div key={2} className="modal-footer ">
+                    <div className="col-md-6 text-left">
+                        {
+                            currentUser.isSuperAdmin ?
+                                <button className="btn btn-danger" onClick={() => this.saveFilter(true)}>
+                                    Save for All
+                                </button>
+                                :
+                                null
+                        }
+                    </div>
+                    <div className="col-md-6">
+                        <button className="btn btn-default" onClick={this.closeModal}> Cancel</button>
+                        <button className="btn btn-success" onClick={() => this.saveFilter()} type="submit"> Save</button>
+                    </div>
+                </div>
+            ]
+        )
+    }
 
     render() {
-        const { isCollapsed, activeFilter, sqlArray = [], currentUser } = this.state;
-        console.log(sqlArray);
+        const { isCollapsed, activeFilter, sqlArray = [] } = this.state;
+        const { currentUser = {} } = this.props;
         return (
             <div className="current-filter-view flex">
                 <div
@@ -172,7 +324,7 @@ export default class DynamicFilter extends Component {
                             sqlArray.length ?
                                 (!activeFilter.id ?
                                     <li className="clear-link">
-                                        <button className="btn btn-xs btn-success" onClick={this.saveFilter}>
+                                        <button className="btn btn-xs btn-success" onClick={this.openSaveFilterModal}>
                                             <i className="fa fa-floppy-o" aria-hidden="true"></i>
                                             Save
                                 </button>

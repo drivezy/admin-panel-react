@@ -59,6 +59,13 @@ export async function GetInputRecord({ input: val, currentUser = null, column, q
     return await Get({ url, urlPrefix: GLOBAL.ROUTE_URL });
 }
 
+/**
+ * takes query param from url and convert into array of queries
+ * @param  {string} {rawQuery
+ * @param  {object} dictionary=[]
+ * @param  {function} finalSql
+ * @param  {object} currentUser}
+ */
 export async function CreateQuery({ rawQuery, dictionary = [], finalSql: FinalSql, currentUser }) {
     // const {sqlArray} = this.state;
     // arr = [];
