@@ -133,7 +133,7 @@ export default class PortletTable extends Component {
 
     render() {
 
-      const sortTypes = [{
+        const sortTypes = [{
             id: 0,
             icon: 'fa-sort-numeric-down',
             caption: 'Sort Asc',
@@ -145,8 +145,8 @@ export default class PortletTable extends Component {
             type: 'desc'
         }];
 
-        const { genericData, finalColumns, listing, callback } = this.state;
-        const { history, match, menuDetail, rowTemplate } = this.props;
+        const { genericData, finalColumns, listing } = this.state;
+        const { history, match, menuDetail, rowTemplate, callback } = this.props;
 
         return (
             <Table striped className="sortable">

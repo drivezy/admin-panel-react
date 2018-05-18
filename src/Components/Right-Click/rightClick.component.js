@@ -191,7 +191,12 @@ export default class RightClick extends Component {
     render() {
 
         const { rowTemplate, renderTag, selectedColumn, listingRow, history, match, menuDetail } = this.props;
-
+        let displayName;
+        try {
+            displayName = eval('listingRow.' + selectedColumn.path)
+        } catch (e) {
+            displayName = ''
+        }
         return (
             <div>
                 <ContextMenuTrigger renderTag={renderTag} id={listingRow.id + selectedColumn.path} holdToDisplay={1000}>
@@ -199,7 +204,7 @@ export default class RightClick extends Component {
                         {
                             rowTemplate ?
                                 rowTemplate({ listingRow, selectedColumn }) :
-                                eval('listingRow.' + selectedColumn.path)
+                                displayName
                         }
                     </span>
                 </ContextMenuTrigger>

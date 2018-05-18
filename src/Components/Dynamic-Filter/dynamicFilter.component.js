@@ -54,7 +54,7 @@ export default class DynamicFilter extends Component {
         this.setState({ isCollapsed: !isCollapsed });
         StoreEvent({ eventName: 'ToggleAdvancedFilter', data: !isCollapsed });
     }
-    
+
     /**
      * takes query param from url and convert into array of queries
      * @param  {object} urlParams
@@ -86,7 +86,7 @@ export default class DynamicFilter extends Component {
         if (params.query) {
             Location.search(params, { props: { history, match } });
         } else {
-            delete params.query;
+            params.query = null;
             Location.search(params, { props: { history, match } });
             this.setState({ sqlArray: [] });
         }
@@ -171,7 +171,7 @@ export default class DynamicFilter extends Component {
             this.openSaveFilterModal();
         }
     }
-    
+
     /**
      * Once predefined filter is updated for being new created, their result is
      * passed to this method to validate and take actions on success
@@ -185,14 +185,14 @@ export default class DynamicFilter extends Component {
             // delete urlParams.query;
             // Assign the new filter to activeFilter
             this.updateLocalFetchedFilters(result.response);
-            
+
             urlParams.filter = result.response.id;
             urlParams.query = null;
             Location.search(urlParams, { props: { match, history } });
             ToastNotifications.success("Filter updated");
         }
     }
-    
+
     /**
      * Triggers modal for taking filter name
      */
@@ -202,7 +202,7 @@ export default class DynamicFilter extends Component {
             modalBody: this.renderform,
         });
     }
-    
+
     /**
      * Closes filter name modal
      */
