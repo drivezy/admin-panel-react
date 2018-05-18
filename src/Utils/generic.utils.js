@@ -1,8 +1,13 @@
+import React, { Component } from 'react';
 import { Get } from './http.utils';
 import { IsUndefinedOrNull } from './common.utils';
+import ToastNotifications from './../Utils/toast.utils';
+import {Delete} from './../Utils/http.utils';
 
+import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 import { GetMenuDetailEndPoint } from './../Constants/api.constants';
 
+import FormCreator from './../Components/Form-Creator/formCreator.component'
 /**
  * Fetches Menu detail to render generic page
  * @param  {id} menuId
@@ -20,12 +25,14 @@ export function GetMenuDetail(menuId, callback) {
  * @returns evaluated query
  */
 export function ConvertToQuery(params) {
+    console.log(this);
+    console.log('params', params);
     const reg = /(:[$\w.]*)\w+/g;
     const tempArr = params.match(reg);
 
     for (const i in tempArr) {
         if (tempArr[i] && typeof tempArr[i] == 'string') {
-            const a = eval(tempArr[i].split(':')[1]);
+            const a = eval('this.' + tempArr[i].split(':')[1]);
             const b = tempArr[i];
             params = params.replace(b, a);
         }
@@ -191,6 +198,104 @@ export function CreateInclusions(includes) {
     return arr.join(",");
 }
 
+export function GetPreSelectedMethods() {
+    const methods = {};
+    methods.redirect = ({ action, listingRow, history, genericData }) => {
+        let url = CreateUrl({ url: action.parameter, obj: listingRow });
+        // var urlParams;
+        // var userQuery = 0;
+
+        url = createQueryUrl(url, genericData.restrictQuery, genericData);
+        history.push(url);
+        // if (angular.isDefined(event)) {
+        //     if (event.metaKey || event.ctrlKey) {
+        //         window.open("#/" + url, "_blank");
+        //     } else {
+        // $location.url(url);
+        // location.hash = "#/" + url;
+        //     }
+        // }
+    };
+
+    methods.add = ({ action, listingRow, genericData }) => {
+        const payload = { action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module, dataModel: genericData.dataModel };
+        ModalManager.openModal({
+            payload,
+            headerText: 'Add modal',
+            // modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),
+            modalBody: () => (<FormCreator payload={payload} />),
+            // modalFooter: () => (<ModalFooter payload={payload}></ModalFooter>)
+        });
+    }
+
+    methods.edit = ({ action, listingRow, genericData }) => {
+        const payload = { method: 'edit', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module, dataModel: genericData.dataModel };
+        ModalManager.openModal({
+            payload,
+            // modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),
+            headerText: 'Edit modal',
+            modalBody: () => (<FormCreator payload={payload} />)
+        });
+    }
+
+    methods.delete = async ({ action, listingRow, genericData }) => {
+        const deletekey = IsUndefinedOrNull(action.redirectValueName) ? listingRow.id : listingRow[action.redirectValueName];
+        if (window.confirm('Are you sure you want to delete this record?')) {
+            const result = await Delete({ url: `${genericData.module}/${deletekey}` });
+            if (result.success) {
+                action.callback();
+                ToastNotifications.success('Records has been deleted');
+            }
+        }
+    }
+
+    function createQueryUrl(url, restrictQuery, genericData) {
+
+        var query = '';
+        var orderMethod;
+
+        // If query is present 
+        // we add it ,
+        // else we check if there is a filter in the url , 
+        // then append the respective filter query 
+        // if (urlParams.query) {
+        //     query += urlParams.query;
+        // } else {
+        //     if (urlParams.filter) {
+        //         var filter = this.props.genericData.userFilter.filter(function (userFilter) {
+        //             return userFilter.id == urlParams.filter;
+        //         })[0];
+        //         query += filter.filter_query;
+        //     }
+        // }
+
+        if (restrictQuery) {
+            if (query) {
+                query += restrictQuery;
+            } else {
+                query += restrictQuery.split('and ')[1];
+            }
+        }
+
+        if (query) {
+            query = '?redirectQuery=' + query;
+            orderMethod = '&';
+        } else {
+            orderMethod = '?';
+        }
+        // if (urlParams.order) {
+        //     url += query + orderMethod + "listingOrder=" + urlParams.order + ',' + (urlParams.sort || 'desc');
+        // } else if (this.props.genericData.defaultOrder) {
+        //     url += query + orderMethod + "listingOrder=" + this.props.genericData.defaultOrder;
+        // } else {
+        //     url += query;
+        // }
+
+        return url;
+    }
+    return methods;
+}
+
 /**
  * parse url string to actual one
  * this method seek for ':', whenever it encounters one, replace with actual data
@@ -209,4 +314,37 @@ export function CreateUrl({ url = '', obj }) {
         url = url.replace(params[i], obj[attr]);
     }
     return url;
+}
+
+export function ConvertDependencyInjectionToArgs(dependencies) {
+    if (!dependencies) {
+        return [];
+    }
+
+    var args = [];
+    var dependency = dependencies.split(",");
+    for (var i in dependency) {
+        args.push('this.'+eval(dependency[i]));
+    }
+
+    return args;
+}
+
+/**
+ * Register all the methods coming from db
+ * @param  {} method
+ */
+export function RegisterMethod(methodArr) {
+    const methods = {};
+    for (var i in methodArr) {
+        const methodObj = methodArr[i];
+        if (methodObj.definition && typeof methodObj.definition == 'object' && methodObj.definition.script) {
+            if (methodObj.dependency) {
+                methods[methodObj.name] = new Function("callback", methodObj.dependency, methodObj.definition.script);
+            } else {
+                methods[methodObj.name] = new Function("callback", methodObj.definition.script);
+            }
+        }
+    }
+    return methods;
 }

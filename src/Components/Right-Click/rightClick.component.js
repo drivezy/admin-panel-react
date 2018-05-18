@@ -45,7 +45,7 @@ export default class RightClick extends Component {
         name: "Filter More",
         icon: 'fa-filter',
         onClick: function (data) {
-            
+
         }
     }, {
         id: 4,
@@ -138,7 +138,12 @@ export default class RightClick extends Component {
     render() {
 
         const { rowTemplate, renderTag, selectedColumn, listingRow, history, match } = this.props;
-
+        let displayName;
+        try {
+            displayName = eval('listingRow.' + selectedColumn.path)
+        } catch (e) {
+            displayName = ''
+        }
         return (
             <div>
                 <ContextMenuTrigger renderTag={renderTag} name={listingRow.name} id={listingRow.id + selectedColumn.path} holdToDisplay={1000}>
@@ -146,7 +151,7 @@ export default class RightClick extends Component {
                         {
                             rowTemplate ?
                                 rowTemplate({ listingRow, selectedColumn }) :
-                                eval('listingRow.' + selectedColumn.path)
+                                displayName
                         }
                     </span>
                 </ContextMenuTrigger>

@@ -1,5 +1,6 @@
+
 import { IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall } from './common.utils';
-import { GetColumnsForListing, ConvertToQuery, CreateFinalColumns } from './generic.utils';
+import { GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods } from './generic.utils';
 import { Get } from './http.utils';
 
 /**
@@ -7,9 +8,10 @@ import { Get } from './http.utils';
 * url and menu detail, fetch data and passes them further to the components
 * to show listing data
 */
-export async function GetListingRecord({ configuration, queryString = {}, callback, data, currentUser = {} }) {
+export const GetListingRecord = async ({ configuration, queryString = {}, callback, data, currentUser = {} }) => {
     const params = Initialization(configuration, queryString);
-
+    // const this = {};
+    this.currentUser = currentUser;
     let tempQuery;
     const options = GetDefaultOptions();
 
@@ -36,7 +38,7 @@ export async function GetListingRecord({ configuration, queryString = {}, callba
     // if there is a query in url , add it to the options.query
     options.query += IsUndefinedOrNull(queryString.query) ? '' : " and " + queryString.query;
 
-    options.query += IsUndefinedOrNull(configuration.restricted_query) ? '' : ' and ' + configuration.restricted_query;
+    options.query += IsUndefinedOrNull(configuration.restricted_query) ? '' : ' and ' + ConvertToQuery.call(this, configuration.restricted_query);
 
     // If a filter is applied , add the query to options.query
     if (queryString.filter && Object.keys(queryString.filter).length && Array.isArray(configuration.userFilter)) {
@@ -49,7 +51,7 @@ export async function GetListingRecord({ configuration, queryString = {}, callba
     }
 
     // @TODO add query
-    // options.query += IsUndefinedOrNull(configuration.query) ? "" : convertToQuery(configuration.query);
+    // options.query += IsUndefinedOrNull(configuration.query) ? "" : ConvertToQuery.bind(this)(configuration.query);
 
     // If currentUser is specified in the query replace it with the currentUsers id
     if (options.query.includes("'currentUser'") && currentUser.id) {
@@ -160,6 +162,8 @@ function PrepareObjectForListing(result, { extraParams }) {
 
         // Build the final columns that is required for the portlet table
         genericListingObj.finalColumns = CreateFinalColumns(genericListingObj.columns, genericListingObj.selectedColumns, genericListingObj.relationship);
+        genericListingObj.preDefinedmethods = GetPreSelectedMethods(genericListingObj.nextActions);
+        genericListingObj.methods = RegisterMethod(genericListingObj.nextActions);
         if (typeof callback == 'function') {
             callback({ genericData: genericListingObj, filterContent });
         }
