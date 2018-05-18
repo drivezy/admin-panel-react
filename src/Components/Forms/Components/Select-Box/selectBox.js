@@ -30,17 +30,16 @@ export default class SelectBox extends Component {
      */
     returnStateObj(props) {
         let options = [], value = {};
-        if (Array.isArray(props.options)) {
-            if (typeof props.options[0] != 'object') {
-                props.options.forEach(option => {
-                    options.push({ label: option });
-                });
-                value = { label: props.value };
-            } else {
-                options = props.options;
-                value = props.value;
-            }
+        if (Array.isArray(props.options) && typeof props.options[0] != 'object') {
+            props.options.forEach(option => {
+                options.push({ label: option });
+            });
+            value = { label: props.value };
+        } else {
+            options = props.options;
+            value = props.value || {};
         }
+
         return {
             options,
             value,
@@ -90,7 +89,6 @@ export default class SelectBox extends Component {
         const { async, getOptions, multi } = this.props;
         const { value, options, field } = this.state;
         let elem;
-
         if (async) {
             elem = <Async
                 name="form-field-name"
