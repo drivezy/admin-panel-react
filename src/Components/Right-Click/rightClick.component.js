@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
 import './rightClick.css';
 
+import { ContextMenu, MenuItem, ContextMenuTrigger, SubMenu } from "react-contextmenu";
+
+import GLOBAL from './../../Constants/global.constants';
+
+import { Get } from './../../Utils/http.utils';
+import { BuildUrlForGetCall } from './../../Utils/common.utils';
 import { CopyToClipBoard } from './../../Utils/common.utils';
 import ToastNotifications from './../../Utils/toast.utils';
-
-import { ContextMenu, MenuItem, ContextMenuTrigger, SubMenu } from "react-contextmenu";
 import { Location } from './../../Utils/location.utils';
+import { GetDefaultOptions } from './../../Utils/genericListing.utils';
 
 export default class RightClick extends Component {
 
@@ -16,7 +21,6 @@ export default class RightClick extends Component {
     constructor(props) {
         super(props);
     }
-
 
     rowOptions = [{
         id: 0,
@@ -59,9 +63,9 @@ export default class RightClick extends Component {
         name: "Aggregation",
         icon: 'fa-chart-line',
         subMenu: true,
-        onClick: function (data, operator) {
+        onClick: (data, operator) => {
             console.log(data, operator);
-            openAggregationResult(operator.toLowerCase(), operator + ' of ' + data.selectedColumn.display_name + ' equals : ', data)
+            this.openAggregationResult(operator.name.toLowerCase(), operator.name + ' of ' + data.selectedColumn.display_name + ' equals : ', data)
         }
     }, { subMenu: null },
     {
@@ -79,7 +83,7 @@ export default class RightClick extends Component {
     }, {
         id: 4,
         name: "Redirect Model Detail",
-        icon: 'fa-language',
+        icon: 'fa-info-circle',
         subMenu: false,
         onClick: (data) => {
             const { history, match } = this.props;
@@ -90,6 +94,21 @@ export default class RightClick extends Component {
         }
     }];
 
+    openAggregationResult = async (operator, caption, data) => {
+
+        let options = GetDefaultOptions();
+        options.aggregation_column = data.selectedColumn.column_name;
+        options.aggregation_operator = operator;
+
+        const url = BuildUrlForGetCall(data.menuDetail.url, options);
+
+        const result = await Get({ url });
+
+        if (result.success) {
+            ToastNotifications.success(caption + result.response);
+        }
+    }
+
     filterTable = (data, method) => {
 
         const paramProps = {
@@ -99,13 +118,13 @@ export default class RightClick extends Component {
         console.log(data, method);
         let query = '';
         if (data.selectedColumn.path.split(".").length == 1) { // for columns which is child of table itself
-            // var url = Location.search();
-            if (this.urlParams.query) { // if previous query present then it will executed                    var newquery = data.selectedColumn.column_name;
-                var a = {};
-                var f = 0;
+            if (this.urlParams.query) { // if previous query present then it will executed
+                let a = {};
+                let f = 0;
                 a = this.urlParams.query.split(" AND ");
-                for (var i = 0; i < a.length; i++) { // for checking overlapping query
-                    var b = {};
+                for (let i = 0; i < a.length; i++) { // for checking overlapping query
+                    let b = {};
+                    let newquery;
                     b = a[i].split(" LIKE ");
                     if (newquery == b[0]) {
                         f = 1;
@@ -132,15 +151,15 @@ export default class RightClick extends Component {
                 Location.search(this.urlParams, { props: paramProps });
             }
         } else if (data.selectedColumn.path.split(".").length == 2) { // This will executed when showmatching clicked second time
-            var regex = /.([^.]*)$/; // filters out anything before first '.'
-            var path = data.selectedColumn.path.replace(regex, "");
+            let regex = /.([^.]*)$/; // filters out anything before first '.'
+            let path = data.selectedColumn.path.replace(regex, "");
             if (this.urlParams.query) { // if previous query present then it will executed
-                var newquery = data.selectedColumn["parentColumn"];
-                var a = {};
-                var f = 0;
+                let newquery = data.selectedColumn["parentColumn"];
+                let a = {};
+                let f = 0;
                 a = this.urlParams.query.split(" AND ");
-                for (var i = 0; i < a.length; i++) { // for checking overlapping query
-                    var b = {};
+                for (let i = 0; i < a.length; i++) { // for checking overlapping query
+                    let b = {};
                     b = a[i].split(" = ");
                     if (newquery == b[0]) {
                         f = 1;
@@ -185,42 +204,31 @@ export default class RightClick extends Component {
                     </span>
                 </ContextMenuTrigger>
 
-                <ContextMenu id={listingRow.id + selectedColumn.path} className="context-menu">
+                <ContextMenu id={listingRow.id + selectedColumn.path}>
                     {
                         this.rowOptions.map((rowOption, key) => {
                             if (rowOption.name) {
                                 return (
-                                    <div key={key}>
-                                        {
-                                            rowOption.subMenu == false &&
-                                            <MenuItem key={key} onClick={() => rowOption.onClick(this.props)} data={this.props}>
-                                                <i className={`fas ${rowOption.icon}`} /> {rowOption.name}
-                                            </MenuItem>
-                                        }
-
-                                        {
-                                            rowOption.subMenu == true &&
-                                            <MenuItem><i className={`fas ${rowOption.icon}`} />
-                                                <SubMenu title={rowOption.name}>
-                                                    {
-                                                        this.aggregationOperators.map((operator, index) => {
-                                                            return (
-                                                                <MenuItem key={index} onClick={() => rowOption.onClick(this.props, operator)} data={this.props}>
-                                                                    {operator.name}
-                                                                </MenuItem>
-                                                            )
-                                                        })
-                                                    }
-                                                </SubMenu>
-                                            </MenuItem>
-
-                                        }
-                                    </div>
+                                    !rowOption.subMenu ?
+                                        <MenuItem key={key} onClick={() => rowOption.onClick(this.props)} data={this.props}>
+                                            <i className={`fas ${rowOption.icon}`} />
+                                            <span className="space-icon">{rowOption.name}</span>
+                                        </MenuItem> :
+                                        <SubMenu key={key} title={[<i key={1} className={`fas ${rowOption.icon}`} />, <span key={2}> {rowOption.name}</span>]}>
+                                            {
+                                                this.aggregationOperators.map((operator, index) => {
+                                                    return (
+                                                        <MenuItem key={index} onClick={() => rowOption.onClick(this.props, operator)} data={this.props}>
+                                                            {operator.name}
+                                                        </MenuItem>
+                                                    )
+                                                })
+                                            }
+                                        </SubMenu>
                                 )
                             } else {
                                 return (<MenuItem key={key} divider />);
                             }
-
                         })
                     }
                 </ContextMenu>
