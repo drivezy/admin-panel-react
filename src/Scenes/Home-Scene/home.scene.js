@@ -159,7 +159,7 @@ export default class Home extends Component {
 
         return (
             <div className="home-scene">
-                {/* <SelectBox getOptions={this.getCities} /> */}
+                <SelectBox value={1} options={[1,2]} />
             </div>
         )
     }

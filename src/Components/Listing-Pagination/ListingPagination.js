@@ -39,53 +39,56 @@ export default class ListingPagination extends Component {
 
         return (
             <div className="listing-pagination">
-                <Pagination size="sm">
-                    <PaginationItem disabled={previousPage == 0}>
-                        <PaginationLink previous onClick={() => this.redirectToPage(`?limit=20&page=${previousPage}`)} />
-                    </PaginationItem>
-                    {
-                        pages && pages.length && pages.map((key, count) => {
-                            return (
-                                <PaginationItem onClick={() => this.redirectToPage(`?limit=20&page=${key.page}`)} className={genericData.currentPage == key.page ? 'highlighted-page' : ''} key={count}>
-                                    <PaginationLink >
-                                        {key.page}
+
+
+                <div className="pagination-wrapper">
+                    <Pagination size="sm">
+                        <PaginationItem disabled={previousPage == 0}>
+                            <PaginationLink previous onClick={() => this.redirectToPage(`?limit=20&page=${previousPage}`)} />
+                        </PaginationItem>
+                        {
+                            pages && pages.length && pages.map((key, count) => {
+                                return (
+                                    <PaginationItem onClick={() => this.redirectToPage(`?limit=20&page=${key.page}`)} className={genericData.currentPage == key.page ? 'highlighted-page' : ''} key={count}>
+                                        <PaginationLink >
+                                            {key.page}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                )
+                            })
+                        }
+
+                        {
+                            number_of_pages > showPages ?
+                                <PaginationItem>
+                                    <PaginationLink onClick={() => this.redirectToPage(`?query=limit=20&page=${nextPage}`)}>
+                                        {genericData.currentPage} {showFlag}
                                     </PaginationLink>
                                 </PaginationItem>
-                            )
-                        })
-                    }
+                                :
+                                null
+                        }
 
-                    {
-                        number_of_pages > showPages ?
+                        {
+                            showPages < number_of_pages &&
                             <PaginationItem>
-                                <PaginationLink onClick={() => this.redirectToPage(`?query=limit=20&page=${nextPage}`)}>
-                                    {genericData.currentPage} {showFlag}
+                                <PaginationLink onClick={() => this.redirectToPage(`?query=limit=20&page=${number_of_pages}`)} >
+                                    {number_of_pages}
                                 </PaginationLink>
                             </PaginationItem>
-                            :
-                            null
-                    }
+                        }
 
-                    {
-                        showPages < number_of_pages &&
-                        <PaginationItem>
-                            <PaginationLink onClick={() => this.redirectToPage(`?query=limit=20&page=${number_of_pages}`)} >
-                                {number_of_pages}
-                            </PaginationLink>
+                        <PaginationItem disabled={nextPage == number_of_pages + 1}>
+                            <PaginationLink next onClick={() => this.redirectToPage(`?query=limit=20&page=${nextPage}`)} />
                         </PaginationItem>
-                    }
 
-                    <PaginationItem disabled={nextPage == number_of_pages + 1}>
-                        <PaginationLink next onClick={() => this.redirectToPage(`?query=limit=20&page=${nextPage}`)} />
-                    </PaginationItem>
-
-                    <div className="pagination-record">
-                        Showing {genericData.currentPage?((((genericData.currentPage)*20)-20)+1):0} - {genericData.currentPage?((genericData.currentPage)*20):0} results from {genericData.stats?genericData.stats.records:0} records.
-                    </div>
-
-                </Pagination>
+                    </Pagination>
+                </div>
 
 
+                <div className="pagination-record">
+                    Showing {genericData.currentPage ? ((((genericData.currentPage) * 20) - 20) + 1) : 0} - {genericData.currentPage ? ((genericData.currentPage) * 20) : 0} results from {genericData.stats ? genericData.stats.records : 0} records.
+                </div>
             </div>
         )
     }

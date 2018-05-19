@@ -1,8 +1,38 @@
-.form-creator{
+.form-creator {
     // background: black;
-    .modal-actions{
-        button{
+    .modal-actions {
+        button {
             margin: 0 5px;
         }
-    }    
+    }
+    .file-uploads {
+        display: flex;
+        flex-wrap: wrap;
+        .thumbnail {
+            position: relative;
+            border: 1px solid #d4d4d4;
+            border-radius: 2px;
+            padding: 5px 14px;
+            background: #f3f3f3;
+            margin: 4px;
+            .delete-icon {
+                cursor: pointer;
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: white;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                justify-content: center;
+                display: flex;
+                align-items: center;
+                color: #824747;
+                &:hover {
+                    background: #969696;
+                    color: white;
+                }
+            }
+        }
+    }
 }
