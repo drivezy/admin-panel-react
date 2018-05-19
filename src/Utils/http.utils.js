@@ -101,6 +101,77 @@ export function Delete(obj) {
 }
 
 /**
+* Upload file implementation
+* All upload calls are made through this method
+* @param  {object} obj - contains url, params(optional){proccessed and attached to url}, 
+* headers(optional)
+*/
+export function Upload(url, file) {
+
+    var formData = new FormData();
+    formData.append('file', file);
+
+    // const headers = createHeader({});
+
+
+    return fetch(GLOBAL.API_HOST + url, { // Your POST endpoint
+        method: 'POST',
+        headers: {
+            "Content-Type": "multipart/form-data",
+            // 'admin-url': https://uatadmin.justride.in/#/modelDetails/42,
+            'App-Type': 313,
+            'App-Version': '1.0.1'
+        },
+        credentials: 'same-origin',
+        body: formData
+    }).then(
+        response => response.json() // if the response is a JSON object
+    ).then(
+        success => console.log(success) // Handle the success response object
+    ).catch(
+        error => console.log(error) // Handle the error response object
+    );
+}
+
+
+function StoreImageToAws(data, bookingId, type, nextIndex) {
+    const { imagesArray, booking } = this.state;
+    var photo = {
+        uri: data,
+        type: 'image/jpeg',
+        name: 'file1' + nextIndex + '.jpg',
+    };
+
+    var formData = new FormData();
+    formData.append('file', photo);
+
+    return fetch(GLOBAL.BASE_URL + 'api/multipleUpload', {
+        method: 'POST',
+        headers: {
+            'App-Type': GLOBAL.APP_ID,
+            'Content-Type': 'multipart/form-data',
+            'Firebase-Id': GLOBAL.FIRE_TOKEN
+        },
+        credentials: 'same-origin',
+        body: formData
+    })
+        .then((response) => response.text())
+        .then((responseText) => {
+            var response = JSON.parse(responseText).response
+            if (nextIndex < imagesArray.length) {
+                this.StoreImageToAws(imagesArray[nextIndex], bookingId, type, nextIndex + 1)
+            }
+            return response[0].document_link
+        })
+        .catch((error) => {
+            return ''
+        });
+}
+
+
+
+
+/**
  * final level method to make api call
  * used for all kind of methods(get, put, post), except delete
  * @param  {string} {url

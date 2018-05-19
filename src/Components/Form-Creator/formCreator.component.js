@@ -11,7 +11,7 @@ import {
 import { withFormik, Field, Form } from 'formik';
 import Yup from 'yup';
 
-import { Post, Put } from './../../Utils/http.utils';
+import { Upload, Post, Put } from './../../Utils/http.utils';
 
 import SelectBox from './../Forms/Components/Select-Box/selectBox';
 import ReferenceInput from './../Forms/Components/Reference-Input/referenceInput';
@@ -298,23 +298,35 @@ const FormContents = withFormik({
 
         const { payload } = props;
 
-        if (payload.method == 'edit') {
-            const result = await Put({ url: payload.module + '/' + payload.listingRow.id, body: values });
-            if (result.response) {
-                props.onSubmit();
-            }
-
+        if (props.fileUploads.length) {
+            uploadImages(props).then((result) => {
+                submitGenericForm();
+            });
         } else {
-            const result = await Post({ url: payload.module, body: values });
-            if (result.success) {
-                props.onSubmit();
+            submitGenericForm();
+        }
+
+        async function submitGenericForm() {
+            if (payload.method == 'edit') {
+                const result = await Put({ url: payload.module + '/' + payload.listingRow.id, body: values });
+                if (result.response) {
+                    props.onSubmit();
+                }
+
+            } else {
+                const result = await Post({ url: payload.module, body: values });
+                if (result.success) {
+                    props.onSubmit();
+                }
             }
+        }
+
+        function uploadImages() {
+            return Promise.all(props.fileUploads.map(entry => Upload('uploadFile', entry.image)))
         }
     },
     displayName: 'BasicForm', // helps with React DevTools
 })(formElements);
-
-
 
 export default class FormCreator extends Component {
     constructor(props) {
@@ -375,7 +387,6 @@ export default class FormCreator extends Component {
     removeImage = (index) => {
         let fileUploads = this.state.fileUploads;
         fileUploads.splice(index, 1);
-        // fileUploads.push({ column: column, image: file });
         this.setState({ fileUploads });
     }
 
