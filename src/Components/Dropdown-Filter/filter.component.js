@@ -4,6 +4,8 @@ import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap
 import { Location } from './../../Utils/location.utils';
 import ToastNotifications from './../../Utils/toast.utils';
 import { Delete } from './../../Utils/http.utils';
+import { IsUndefined } from '../../Utils/common.utils';
+
 import { MenuFilterEndPoint } from './../../Constants/api.constants';
 
 import './filter.component.css';
@@ -55,8 +57,8 @@ export default class PredefinedFilter extends React.Component {
      * Filters out list of filters according to text entered
      * @param  {object} event
      */
-    searchFilter = (event) => {
-        const searchText = event.target.value || '';
+    searchFilter = ({ target = {}, value } = {}) => {
+        const searchText = IsUndefined(value) ? target.value : '';
         const { userFilter } = this.props;
 
         const filteredUserFilter = userFilter.filter(filter => filter.filter_name.toLowerCase().includes(searchText.toLowerCase()));
@@ -78,6 +80,7 @@ export default class PredefinedFilter extends React.Component {
                 <Dropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                     {/* <DropdownToggle data-toggle="dropdown" aria-expanded={this.state.dropdownOpen}> */}
                     <DropdownToggle caret
+                        className='dropdown-button'
                         color="primary"
                         onClick={this.toggle}
                         data-toggle="dropdown"
@@ -91,7 +94,7 @@ export default class PredefinedFilter extends React.Component {
                                 <div>
                                     <div className="form-group has-feedback">
                                         <input value={searchText} onChange={this.searchFilter} type="text" className="form-control" id="search-operation" placeholder='Search Actions' />
-                                        <i className="fa fa-search form-control-feedback" aria-hidden="true"></i>
+                                        <i onClick={() => searchText ? this.searchFilter({ value: null }) : null} className={`fa fa-${searchText ? 'times-circle cursor-pointer' : 'search'} form-control-feedback`} aria-hidden="true"></i>
                                     </div>
                                 </div>
                                 :
