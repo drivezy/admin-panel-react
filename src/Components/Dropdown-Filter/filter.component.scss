@@ -10,3 +10,78 @@
         }
     }
 }
+
+
+// Styles for the directive
+.dropdown {
+    .dropdown-menu {
+        padding: 0px;
+        &.menu-operations {
+            margin-top: 3px;
+            .form-group.has-feedback {
+                margin: 4px;
+                .glyphicon {
+                    color: #c7ccd2; // margin: 8px;
+                }
+            } // for list item
+            .menu-item {
+                padding: 6px;
+                margin: 2px;
+                a.menu-link {
+                    font-size: 14px;
+                    cursor: pointer;
+                    padding: 8px 10px;
+                    span.badge {
+                        box-shadow: none;
+                        width: 18px;
+                        height: 18px;
+                        opacity: 0.5;
+                        padding: 2px;
+                        color: #901a1a;
+                        background: transparent;
+                        float: right;
+                        &:hover {
+                            opacity: 1;
+                        }
+                    }
+                }
+                &:hover {
+                    color: #262626;
+                    text-decoration: none;
+                    background-color: #f5f5f5;
+                }
+            }
+        }
+    }
+
+    .has-feedback { 
+        position: relative;
+        input { 
+            font-size: 12px;
+            box-shadow: none !important;
+        }
+        i { 
+            position: absolute;
+            right: 10px;
+            top: .5rem;
+            font-size: 14px;
+            opacity: .3;
+        }
+    }
+}
+
+.dropdown-menu {
+    max-height: 500px;
+    min-width: 230px;
+    left: -30px;
+    overflow-y: scroll;
+    &.menu-operations {
+        margin-top: 3px;
+        .form-group.has-feedback {
+            margin: 4px;
+            .glyphicon {
+                // margin: 8px;
+            }
+        }
+    }
+}

@@ -134,7 +134,7 @@ export default class GenericListing extends Component {
 
                         {
                             menuDetail.userFilter ?
-                                <PredefinedFilter userFilter={menuDetail.userFilter} history={history} match={match} />
+                                <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} userFilter={menuDetail.userFilter} history={history} match={match} />
                                 :
                                 null
                         }
@@ -179,7 +179,7 @@ export default class GenericListing extends Component {
                     <CardBody>
                         {
                             (finalColumns && finalColumns.length) ?
-                                <PortletTable history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail}/> : null
+                                <PortletTable history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} /> : null
                         }
                         <ListingPagination history={history} match={match} genericData={genericData} />
                     </CardBody>

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import './home.scene.css';
 
-
 import DatePicker from './../../Components/Forms/Components/Date-Picker/datePicker';
 
 import SelectBox from './../../Components/Forms/Components/Select-Box/selectBox';
@@ -10,7 +9,6 @@ import Select, { Async } from 'react-select';
 import Switch from './../../Components/Forms/Components/Switch/switch';
 
 import { Get } from './../../Utils/http.utils';
-
 
 import { withFormik } from 'formik';
 import Yup from 'yup';
