@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
-import './TableSettings.css';
+import './FormSettings.css';
 import _ from 'lodash';
 
 import { SetPreference } from './../../Utils/preference.utils';
 
 import { changeArrayPosition } from './../../Utils/js.utils';
 
-import { Collapse, Card, CardBody, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Collapse, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-import Switch from './../../Components/Forms/Components/Switch/switch';
-import ColumnSetting from './Components/Column-Setting/columnSetting.component';
-
-export default class TableSettings extends Component {
+export default class FormSettings extends Component {
 
     constructor(props) {
         super(props);
@@ -50,10 +47,6 @@ export default class TableSettings extends Component {
         });
 
         this.setState({ tempSelectedColumns: selectedColumns })
-    }
-
-    toggleColumn = (column) => {
-        column.expanded = !column.expanded
     }
 
     selectColumn = (column, index) => {
@@ -115,7 +108,7 @@ export default class TableSettings extends Component {
             ));
         }
         return (
-            <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="table-settings">
+            <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="form-settings">
                 <ModalHeader toggle={this.toggleModal}>
                     Configure
             </ModalHeader>
@@ -147,31 +140,33 @@ export default class TableSettings extends Component {
                         <Button color="primary" size="sm" onClick={this.moveSelectedUp}>
                             <i className="fa fa-arrow-up"></i>
                         </Button>
-
                         <Button color="primary" size="sm" onClick={this.moveSelectedDown}>
                             <i className="fa fa-arrow-down"></i>
                         </Button>
 
                         <Button color="primary" size="sm" onClick={this.addSplit}>
                             Add Split
-                       </Button>
+                    </Button>
+
                     </div>
 
                     <div className="right">
+
                         {activeColumn.column ? activeColumn.column.column : null}
                         <ListGroup>
                             {
-                                tempSelectedColumns.map((column, index) => {
-                                    return ((typeof column == 'string') ?
-                                        <ListGroupItem tag="button" action key={index}>
-                                            ---- {column} ----
+                                tempSelectedColumns.map((column, index) => (
+                                    <div key={index}>
+                                        {typeof column == 'string' ?
+                                            <ListGroupItem tag="button" action>
+                                                ---- {column} ----
                                         </ListGroupItem>
-                                        :
-                                        // Component Manages column props
-                                        <Column-Setting columns={columns} onSelect={this.selectColumn} className={`${activeColumn.column == column.column ? 'active' : ''}`} column={column} key={index} />
-                                        // Column Setting Ends
-                                    )
-                                })
+                                            : <ListGroupItem tag="button" action onClick={() => this.selectColumn(column, index)} className={`${activeColumn.column == column.column ? 'active' : ''}`}>
+                                                {column.columnTitle ? column.columnTitle : columns[column.column].column_name}
+                                            </ListGroupItem>
+                                        }
+                                    </div>
+                                ))
                             }
                         </ListGroup>
                     </div>

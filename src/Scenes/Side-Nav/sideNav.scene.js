@@ -85,7 +85,7 @@ export default class Sidenav extends Component {
                             <img src={require('./../../Assets/images/logo-main.png')} />
                         </span> */}
                         <span className="toggle-icon" onClick={() => this.toggleNav()}>
-                            <i className={`fas ${visible ? 'fa-chevron-left' : 'fa-chevron-down'}`}></i>
+                            <i className={`fa ${visible ? 'fa-chevron-left' : 'fa-chevron-down'}`}></i>
                         </span>
 
                     </div>
@@ -96,7 +96,7 @@ export default class Sidenav extends Component {
                                     <div className="menu-item" key={key} onClick={() => this.toggleMenu(menu)}>
                                         <div className="menu-label">
                                             <div className="menu-icon">
-                                                <i className={`menu-icon fas ${menu.image}`}></i>
+                                                <i className={`menu-icon fa ${menu.image}`}></i>
 
                                             </div>
                                             <div className="item-label `${visible ? 'menu-visible' : 'menu-hide'}`">
