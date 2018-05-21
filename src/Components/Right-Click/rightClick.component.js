@@ -55,8 +55,9 @@ export default class RightClick extends Component {
         name: "Filter More",
         icon: 'fa-filter',
         subMenu: false,
-        onClick: function (data) {
-
+        onClick: (data) => {
+            this.props.filteredColumn(data.selectedColumn);
+            return data.selectedColumn.path.split(".").length < 3;
         }
     }, {
         id: 4,
@@ -190,7 +191,7 @@ export default class RightClick extends Component {
 
     render() {
 
-        const { rowTemplate, renderTag, selectedColumn, listingRow, history, match, menuDetail } = this.props;
+        const { rowTemplate, renderTag, selectedColumn, listingRow, history, match, menuDetail, filteredColumn } = this.props;
         let displayName;
         try {
             displayName = eval('listingRow.' + selectedColumn.path)
