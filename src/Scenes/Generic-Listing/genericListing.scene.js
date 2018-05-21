@@ -23,6 +23,7 @@ import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import ModalWrap from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
 
 import PredefinedFilter from './../../Components/Dropdown-Filter/filter.component';
+import { StoreEvent } from './../../Utils/stateManager.utils';
 
 export default class GenericListing extends Component {
     filterContent = {};
@@ -73,6 +74,7 @@ export default class GenericListing extends Component {
                 // this.setState({ menuDetail });
                 this.state.menuDetail = menuDetail
                 this.getListingData();
+                StoreEvent({ eventName: 'showMenuName', data: {menuName: this.state.menuDetail.pageName} });
             }
         }
     }
@@ -144,15 +146,6 @@ export default class GenericListing extends Component {
 
                         {/* <div>Hi</div> */}
 
-                        {
-                            menuDetail.userFilter ?
-                                <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} userFilter={menuDetail.userFilter} history={history} match={match} />
-                                :
-                                null
-                        }
-
-
-
                         <div className="btn-group" role="group" aria-label="Basic example">
                             {/* <button type="button" className="btn btn-sm btn-secondary">Left</button>
                             <button type="button" className="btn btn-sm btn-secondary">Middle</button>
@@ -167,17 +160,23 @@ export default class GenericListing extends Component {
 
                             {
                                 genericData.columns ?
-                                    <TableSettings 
-                                    onSubmit={this.layoutChanges} 
-                                    listName={genericData.listName} 
-                                    selectedColumns={genericData.selectedColumns} 
-                                    columns={genericData.columns}
-                                    rowTemplate={this.rowTemplate}
+                                    <TableSettings
+                                        onSubmit={this.layoutChanges}
+                                        listName={genericData.listName}
+                                        selectedColumns={genericData.selectedColumns}
+                                        columns={genericData.columns}
+                                        rowTemplate={this.rowTemplate}
                                     />
                                     :
                                     null
                             }
                         </div>
+                        {
+                            menuDetail.userFilter ?
+                                <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} userFilter={menuDetail.userFilter} history={history} match={match} />
+                                :
+                                null
+                        }
                     </div>
                 </div>
 
