@@ -22,7 +22,7 @@ export default class ListingPagination extends Component {
         let previousPage;
         let nextPage;
         const pages = [];
-        const showPages = 5;
+        const showPages = 10;
         let showFlag = '.....';
 
         if (genericData.stats) {
@@ -58,8 +58,8 @@ export default class ListingPagination extends Component {
                     {
                         number_of_pages > showPages ?
                             <PaginationItem>
-                                <PaginationLink onClick={() => this.redirectToPage(`?query=limit=20&page=${nextPage}`)}>
-                                    {genericData.currentPage} {showFlag}
+                                <PaginationLink onClick={() => this.redirectToPage(`?limit=20&page=${nextPage}`)}>
+                                    {showFlag}
                                 </PaginationLink>
                             </PaginationItem>
                             :
@@ -69,14 +69,14 @@ export default class ListingPagination extends Component {
                     {
                         showPages < number_of_pages &&
                         <PaginationItem>
-                            <PaginationLink onClick={() => this.redirectToPage(`?query=limit=20&page=${number_of_pages}`)} >
+                            <PaginationLink onClick={() => this.redirectToPage(`?limit=20&page=${number_of_pages}`)} >
                                 {number_of_pages}
                             </PaginationLink>
                         </PaginationItem>
                     }
 
                     <PaginationItem disabled={nextPage == number_of_pages + 1}>
-                        <PaginationLink next onClick={() => this.redirectToPage(`?query=limit=20&page=${nextPage}`)} />
+                        <PaginationLink next onClick={() => this.redirectToPage(`?limit=20&page=${nextPage}`)} />
                     </PaginationItem>
 
                     <div className="pagination-record">
