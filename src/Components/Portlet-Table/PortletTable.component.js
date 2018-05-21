@@ -130,6 +130,25 @@ export default class PortletTable extends Component {
         this.dropdownToggle(column);
     };
 
+    filterColumn = (column) => {
+        if (column.path.split(".").length == 1) { // for columns which is child of table itself
+            var selected = column.column_name;
+        } else if (column.path.split(".").length == 2) { // for reference columns (for e.g. Created by table in with any menu)
+            selected = column.parentColumn;
+        }
+
+        var obj = {
+            dictionary: this.state.genericData.dictionary[this.state.genericData.starter],
+            selectedColumns: this.state.genericData.selectedColumns,
+            restrictColumn: {},
+            single: selected
+        };
+
+        console.log(obj);
+        // Passing the necessary data to configure filter directive
+        // prepopulate.collapseMethod(false, obj);
+    };
+
 
     render() {
 
@@ -174,7 +193,7 @@ export default class PortletTable extends Component {
                                             {
                                                 selectedColumn.path.split('.').length < 3 &&
                                                 <div className="filter-column">
-                                                    <a ng-click="portlet.preventDefault($event);portlet.filterColumn(select-edColumn)">
+                                                    <a onClick={e => this.filterColumn(selectedColumn)}>
                                                         <i className="fas fa-filter"></i>
                                                     </a>
                                                 </div>
@@ -232,7 +251,7 @@ export default class PortletTable extends Component {
                                     {
                                         finalColumns.map((selectedColumn, key) => (
                                             <td key={key}>
-                                                <RightClick history={history} match={match} key={key} renderTag="div" rowTemplate={rowTemplate} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail}></RightClick>
+                                                <RightClick history={history} match={match} key={key} renderTag="div" rowTemplate={rowTemplate} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail} filteredColumn={this.filterColumn}></RightClick>
                                             </td>
                                         ))
                                     }
