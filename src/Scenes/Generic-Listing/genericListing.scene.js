@@ -5,11 +5,10 @@ import {
     CardTitle, CardSubtitle, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from 'reactstrap';
 
-import './genericListing.css';
 import { GetUrlParams } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
 import { GetListingRecord } from './../../Utils/genericListing.utils';
-import { SubscribeToEvent, UnsubscribeEvent } from './../../Utils/stateManager.utils';
+import { SubscribeToEvent, UnsubscribeEvent, StoreEvent } from './../../Utils/stateManager.utils';
 
 import DynamicFilter from './../../Components/Dynamic-Filter/dynamicFilter.component';
 import ConfigureDynamicFilter from './../../Components/Dynamic-Filter/configureFilter.component';
@@ -25,6 +24,8 @@ import ModalWrap from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
 import PredefinedFilter from './../../Components/Dropdown-Filter/filter.component';
 import { StoreEvent } from './../../Utils/stateManager.utils';
 
+import './genericListing.css';
+
 export default class GenericListing extends Component {
     filterContent = {};
     constructor(props) {
@@ -33,7 +34,8 @@ export default class GenericListing extends Component {
             ...GetUrlParams(this.props), // params, queryString
             menuDetail: {},
             genericData: {},
-            filterContent: null
+            filterContent: null,
+            isCollapsed: true
         };
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
@@ -45,6 +47,12 @@ export default class GenericListing extends Component {
         if (this.state.menuDetail.url) {
             this.getListingData();
         }
+    }
+
+    toggleAdvancedFilter = (payload = {}) => {
+        const { isCollapsed } = this.state;
+        this.setState({ isCollapsed: !isCollapsed });
+        StoreEvent({ eventName: 'ToggleAdvancedFilter', data: { isCollapsed: !isCollapsed, ...payload } });
     }
 
     componentDidMount() {
@@ -138,7 +146,7 @@ export default class GenericListing extends Component {
                     <div className="search-wrapper">
                         {
                             filterContent && filterContent.dictionary &&
-                            <DynamicFilter menuUpdatedCallback={this.predefinedFiltersUpdated} selectedColumns={genericData.selectedColumns} menuId={menuDetail.menuId} currentUser={currentUser} dictionary={filterContent.dictionary} userFilters={menuDetail.userFilter} history={history} match={match} />
+                            <DynamicFilter toggleAdvancedFilter={this.toggleAdvancedFilter} menuUpdatedCallback={this.predefinedFiltersUpdated} selectedColumns={genericData.selectedColumns} menuId={menuDetail.menuId} currentUser={currentUser} dictionary={filterContent.dictionary} userFilters={menuDetail.userFilter} history={history} match={match} />
                         }
                     </div>
 
@@ -196,7 +204,7 @@ export default class GenericListing extends Component {
                     <CardBody>
                         {
                             (finalColumns && finalColumns.length) ?
-                                <PortletTable history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} /> : null
+                                <PortletTable toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} /> : null
                         }
                         <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
                     </CardBody>
