@@ -183,7 +183,7 @@ export default class ConfigureDynamicFilter extends Component {
         let selectedFieldToBeReturned;
         switch (column.column_type) {
             // if column type is number or string
-            case 107: case 108:
+            case 107: case 108: case 708:
                 // for a column of type string , stringFilterArr is to be assiged to second filter
                 filterArr[parentIndex][childIndex].filterField = column.column_type == 107 ? this.numericFilterArr : this.stringFilterArr;
                 filterArr[parentIndex][childIndex].inputField = column.column_type == 107 ? 0 : '';
@@ -206,9 +206,9 @@ export default class ConfigureDynamicFilter extends Component {
                 return filterArr[parentIndex][childIndex].inputField;
 
             // if column type is boolean
-            case 111:
+            case 119: case 111:
                 filterArr[parentIndex][childIndex].filterField = this.booleanFilterArr;
-                filterArr[parentIndex][childIndex].selectValue.selected = this.booleanObj[0];
+                filterArr[parentIndex][childIndex].selectValue = this.booleanObj[0];
                 this.callFilterChangeAfterColumnChange(filterArr, { parentIndex, childIndex });
                 return filterArr[parentIndex][childIndex].inputField;
             // defer.resolve(filterArr[parentIndex][childIndex].inputField);
@@ -305,7 +305,7 @@ export default class ConfigureDynamicFilter extends Component {
                 filterArr = this.dateInput({ filterArr, filter, parentIndex, childIndex });
                 break;
 
-            case 111:
+            case 119: case 111:
                 filterArr[parentIndex][childIndex].html = () => (<SelectBox onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'selectValue' })} value={child.selectValue} options={this.booleanObj} field='name' placeholder="Select Value" />);
                 // filterArr[parentIndex][childIndex].html = (<custom-select-field ng-model="b.selectValue" extra-params="{parentIndex: $parent.$childIndex, childIndex: $childIndex}" call-it="configureFilter.convertToInputField" place-holder="Select Value" iterate-item="name" obj="configureFilter.booleanObj" />);
                 valueColumnType = "select";
@@ -484,7 +484,7 @@ export default class ConfigureDynamicFilter extends Component {
         if (!isCollapsed) {
             return;
         }
-        
+
         const filterArr = this.state.filterArr;
         const parentQueries = query.split(" AND ");
 
@@ -678,7 +678,7 @@ export default class ConfigureDynamicFilter extends Component {
                                 }
                                 break;
 
-                            case 111:
+                            case 111: case 119:
                                 query += value.column.column_name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
                                 break;
 
@@ -742,10 +742,10 @@ export default class ConfigureDynamicFilter extends Component {
         const { isCollapsed, filterArr, sort, order } = this.state;
         const { content, history } = this.props;
 
-        const sorts = [];
-        this.sorts.forEach((sort, key) => {
-            sorts[key] = { name: sort, value: sort };
-        })
+        // const sorts = [];
+        // this.sorts.forEach((sort, key) => {
+        //     sorts[key] = { name: sort, value: sort };
+        // })
 
         return (
             <Collapse isOpen={!isCollapsed}>
@@ -844,7 +844,7 @@ export default class ConfigureDynamicFilter extends Component {
                                 {/* <custom-select-field ng-model="configureFilter.order" place-holder="Order" obj="configureFilter.dictionary" iterate-item="column_name">
                                     </custom-select-field> */}
                                 <SelectBox
-                                    onChange={(name, data) => {
+                                    onChange={(data) => {
                                         this.setState({ order: data });
                                     }}
                                     value={order} field='column_name' options={content.dictionary} placeholder='Order'
@@ -854,10 +854,10 @@ export default class ConfigureDynamicFilter extends Component {
                                 {/* <custom-select-field ng-model="configureFilter.sort" place-holder="Sort" obj="configureFilter.sorts">
                                     </custom-select-field> */}
                                 <SelectBox
-                                    onChange={(name, data) => {
+                                    onChange={(data) => {
                                         this.setState({ sort: data });
                                     }}
-                                    value={sort} field='name' options={sorts} placeholder='Sort'
+                                    value={sort} options={this.sorts} placeholder='Sort' 
                                 />
                             </div>
                             <div className="col-sm-3 col-xs-3 border-select-filter margin-top-8" ng-if="configureFilter.scopeGroup.length">
