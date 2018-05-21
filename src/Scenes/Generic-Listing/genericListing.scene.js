@@ -82,6 +82,18 @@ export default class GenericListing extends Component {
         GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser });
     }
 
+    rowTemplate({ listingRow, selectedColumn }) {
+        let val;
+        try {
+            val = eval('listingRow.' + selectedColumn.path);
+        } catch (e) {
+            val = '';
+        }
+        return (<span>{val}</span>);
+    }
+
+
+
     dataFetched = ({ genericData, filterContent }) => {
         // const totalPages = Math.ceil((genericData.stats.records / genericData.stats.count));
 
@@ -155,7 +167,13 @@ export default class GenericListing extends Component {
 
                             {
                                 genericData.columns ?
-                                    <TableSettings onSubmit={this.layoutChanges} listName={genericData.listName} selectedColumns={genericData.selectedColumns} columns={genericData.columns} />
+                                    <TableSettings 
+                                    onSubmit={this.layoutChanges} 
+                                    listName={genericData.listName} 
+                                    selectedColumns={genericData.selectedColumns} 
+                                    columns={genericData.columns}
+                                    rowTemplate={this.rowTemplate}
+                                    />
                                     :
                                     null
                             }

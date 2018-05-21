@@ -9,6 +9,7 @@ import { changeArrayPosition } from './../../Utils/js.utils';
 import { Collapse, Card, CardBody, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import Switch from './../../Components/Forms/Components/Switch/switch';
+// import ColumnSetting from './Components/ColumnSetting/columnSetting.component';
 import ColumnSetting from './Components/Column-Setting/columnSetting.component';
 
 export default class TableSettings extends Component {
@@ -168,7 +169,7 @@ export default class TableSettings extends Component {
                                         </ListGroupItem>
                                         :
                                         // Component Manages column props
-                                        <Column-Setting columns={columns} onSelect={this.selectColumn} className={`${activeColumn.column == column.column ? 'active' : ''}`} column={column} key={index} />
+                                        <ColumnSetting columns={columns} activeColumn={activeColumn} selectColumn={this.selectColumn} column={column} index={index} key={index} />
                                         // Column Setting Ends
                                     )
                                 })

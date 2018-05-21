@@ -26,6 +26,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            &:hover{
+                background: whitesmoke;
+
+            }
         }
     }
     .column-handle {}

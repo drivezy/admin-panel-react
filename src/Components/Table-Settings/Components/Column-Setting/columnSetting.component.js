@@ -10,41 +10,67 @@ import { Collapse, Card, CardBody, ListGroup, ListGroupItem, Button, Modal, Moda
 
 import Switch from './../../../Forms/Components/Switch/switch';
 
-export default class TableSettings extends Component {
+export default class ColumnSetting extends Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            column: this.props.column
+            column: this.props.column,
+            // formContent: {}
         }
     }
 
     toggleSetting = () => {
         let column = this.state.column;
         column.expanded = !column.expanded;
-        this.setState(column);
+        this.setState({ column });
+    }
+
+    updateColumnHyperlink = (field, value) => {
+
+        let { column } = this.state;
+
+        column.route = value ? true : false;
+
+        this.setState({ column });
+    }
+
+    columnNameChange = (event) => {
+        let { column } = this.state;
+
+        column.columnTitle = event.target.value;
+
+        this.setState({ column });
+    }
+
+    columnUpdate = (event) => {
+        event.preventDefault();
+        // console.log()
     }
 
     componentDidMount() {
     }
 
     componentWillReceiveProps(nextProps) {
+        if (nextProps.column) {
+            this.setState({ column: nextProps.column });
+        }
     }
 
     render() {
         const { column } = this.state;
-        const { columns } = this.props;
+        const { columns, activeColumn } = this.props;
+        const { columnTitle, route } = column;
 
         return (
-
-            <div className="column-setting">
+            <div className={`column-setting ${activeColumn.column == column.column ? 'active' : ''}`} >
                 <div className="column-label">
-                    <div className="item-label" onClick={() => this.props.selectColumn(column)}>
+                    <div className="item-label" onClick={() => this.props.selectColumn(column, this.props.index)}>
                         {column.columnTitle ? column.columnTitle : columns[column.column].column_name}
                     </div>
                     <div className="column-toggle" onClick={this.toggleSetting}>
-                        <i className="fa fa-chevron-down"></i>
+                        <i className={`fa ${column.expanded ? ' fa-chevron-down' : ' fa-chevron-right'}`}></i>
                     </div>
                 </div>
 
@@ -52,19 +78,19 @@ export default class TableSettings extends Component {
                 <Collapse isOpen={column.expanded} className="column-configuration">
                     <Card>
                         <CardBody>
-                            <form>
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">Column Header</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Column Name" />
+                            <form onSubmit={this.columnUpdate}>
+                                <div className="form-group">
+                                    <label htmlFor="exampleInputEmail1">Column Header</label>
+                                    <input value={columnTitle} onChange={this.columnNameChange} type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Column Name" />
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">
+                                <div className="form-group">
+                                    <label htmlFor="exampleInputEmail1">
                                         Hyperlink
-                                                                </label>
-                                    <Switch name="column_hyperlink" />
+                                    </label>
+                                    <Switch name="route" onChange={this.updateColumnHyperlink} value={route} />
                                 </div>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="button" onClick={this.toggleSetting} className="btn btn-secondary">Close</button>
                             </form>
                         </CardBody>
                     </Card>
