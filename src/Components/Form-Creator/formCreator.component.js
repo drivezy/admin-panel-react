@@ -11,7 +11,7 @@ import {
 import { withFormik, Field, Form } from 'formik';
 import Yup from 'yup';
 
-import { Post, Put } from './../../Utils/http.utils';
+import { Upload, Post, Put } from './../../Utils/http.utils';
 
 import SelectBox from './../Forms/Components/Select-Box/selectBox';
 import ReferenceInput from './../Forms/Components/Reference-Input/referenceInput';
@@ -20,6 +20,9 @@ import TimePicker from './../Forms/Components/Time-Picker/timePicker';
 import ListSelect from './../Forms/Components/List-Select/listSelect';
 import Switch from './../Forms/Components/Switch/switch';
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
+import ImageUpload from './../Forms/Components/Image-Upload/imageUpload.component';
+import ImageThumbnail from './../Forms/Components/Image-Thumbnail/imageThumbnail.component';
+import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from 'constants';
 import FormSettings from './../Form-Settings/FormSettings.component';
 
 
@@ -138,7 +141,15 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
 
         411: 'script',
         684: 'serialize',
-        708: 'upload',
+
+        // Image Upload
+        708: <Field
+            name={column.column_name}
+            render={({ field /* _form */ }) => (
+                <ImageUpload name={column.column_name} onRemove={props.onFileRemove} onSelect={props.onFileUpload} />
+            )}
+        />,
+        // Image Upload Ends
     }
 
     return elements[column.column_type];
@@ -159,8 +170,11 @@ const formElements = props => {
     } = props;
 
     const { payload } = props;
-
     let shouldColumnSplited = false;
+
+    // removeImage = (image) => {
+    //     console.log(image);
+    // }
 
     return (
         <Form>
@@ -200,6 +214,16 @@ const formElements = props => {
                     })
                 }
             </div>
+
+            {/* Uploaded file thumbnails */}
+            {/* <div className="file-uploads">
+                {
+                    props.fileUploads.map((file, index) => (
+                        <ImageThumbnail file={file} key={index} index={index} removeImage={props.removeImage} />
+                    ))
+                }
+            </div> */}
+            {/* Uploaded file thumbnails Ends*/}
 
             <div className="modal-actions row justify-content-end">
                 <Button color="secondary" onClick={handleReset}>
@@ -271,36 +295,66 @@ const FormContents = withFormik({
     },
 
     handleReset: (values) => {
-        console.log(values);
     },
+
     handleSubmit: async (values, { props, setSubmitting }) => {
 
         const { payload } = props;
 
-        if (payload.method == 'edit') {
-            const result = await Put({ url: payload.module + '/' + payload.listingRow.id, body: values });
-            if (result.response) {
-                props.onSubmit();
-            }
-
+        if (props.fileUploads.length) {
+            uploadImages(props).then((result) => {
+                console.log(result)
+                submitGenericForm();
+            });
         } else {
-            const result = await Post({ url: payload.module, body: values });
-            if (result.success) {
-                props.onSubmit();
+            submitGenericForm();
+        }
+
+        async function submitGenericForm() {
+            if (payload.method == 'edit') {
+                const result = await Put({ url: payload.module + '/' + payload.listingRow.id, body: values });
+                if (result.response) {
+                    props.onSubmit();
+                }
+
+            } else {
+                const result = await Post({ url: payload.module, body: values });
+                if (result.success) {
+                    props.onSubmit();
+                }
             }
+        }
+
+        function uploadImages() {
+            return Promise.all(props.fileUploads.map((entry) => {
+                return Upload('uploadFile', entry).then((result) => {
+
+                    values[entry.column] = result.response;
+
+                    return result;
+
+                }, (error) => {
+                    console.log(error);
+                    return error;
+                }, (progress) => {
+                    console.log(progress);
+                    return progress;
+                })
+            }))
+
+            // return Promise.all(props.fileUploads.map(entry=> Upload('uploadFile', entry)))
         }
     },
     displayName: 'BasicForm', // helps with React DevTools
 })(formElements);
-
-
 
 export default class FormCreator extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            payload: this.props.payload
+            payload: this.props.payload,
+            fileUploads: []
         }
     }
 
@@ -314,9 +368,53 @@ export default class FormCreator extends Component {
         this.setState({ payload });
     }
 
+    pushFiles = (column, file) => {
+        let fileUploads = this.state.fileUploads;
+
+        // Check if a file is already added for the column 
+        // If yes , alert user if he needs to continue 
+        var alreadyPresent = -1;
+        var firstTime = false;
+
+        // self.fileUploads.filter(function (uploadedFile) {
+        //     return uploadedFile.column == file.column;
+        // });
+
+        if (fileUploads.length) {
+            fileUploads.forEach((uploadedFile, index) => {
+                if (uploadedFile.column == column) {
+                    alreadyPresent = index;
+                }
+            })
+        } else {
+            firstTime = true;
+            // self.fileUploads.push(file);
+            alreadyPresent = 0;
+        }
+
+        if (!firstTime && alreadyPresent != -1) {
+            console.log('already present');
+            // ModalService.confirm('There is an attachement for ' + file.column + ' already uploaded. Do you want to replace it?').then(function (result) {
+            //     self.fileUploads[alreadyPresent] = file;
+            // });
+        } else {
+            fileUploads.push({ column: column, image: file });
+        }
+
+        this.setState({ fileUploads });
+    }
+
+    removeFile = (index) => {
+        let fileUploads = this.state.fileUploads;
+        fileUploads = fileUploads.filter((file) => (file.column != index))
+
+        // fileUploads.splice(index, 1);
+        this.setState({ fileUploads });
+    }
+
     render() {
 
-        const { payload } = this.state;
+        const { payload, fileUploads } = this.state;
 
         return (
             <div className="form-creator">
@@ -328,7 +426,7 @@ export default class FormCreator extends Component {
                 }
                 <Card>
                     <CardBody>
-                        <FormContents layoutChanged={this.layoutChanged} onSubmit={this.closeModal} payload={payload} />
+                        <FormContents fileUploads={fileUploads} removeImage={this.removeImage} onFileUpload={this.pushFiles} onFileRemove={this.removeFile} onSubmit={this.closeModal} payload={payload} />
                     </CardBody>
                 </Card>
             </div>

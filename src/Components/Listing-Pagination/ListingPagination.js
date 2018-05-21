@@ -10,7 +10,7 @@ export default class ListingPagination extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        
+
     }
 
     redirectToPage = (pageUrl) => {

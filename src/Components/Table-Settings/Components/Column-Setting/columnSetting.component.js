@@ -17,6 +17,7 @@ export default class ColumnSetting extends Component {
 
         this.state = {
             column: this.props.column,
+            // tempColumn: this.props.column
             // formContent: {}
         }
     }

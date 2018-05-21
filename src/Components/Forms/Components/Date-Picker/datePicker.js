@@ -46,7 +46,6 @@ export default class DatePicker extends Component {
 
     componentWillReceiveProps = (nextProps) => {
         // if (nextProps.single) {
-        console.log(nextProps);
         this.setState({
             format: nextProps.format || GLOBAL.DATE_TIME_FORMAT,
             minDate: nextProps.minDate,
@@ -57,7 +56,6 @@ export default class DatePicker extends Component {
     }
 
     render() {
-        console.log('date picker');
 
         let value, startDate, endDate;
 
