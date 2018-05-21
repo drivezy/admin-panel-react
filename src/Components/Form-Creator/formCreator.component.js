@@ -361,6 +361,14 @@ export default class FormCreator extends Component {
     closeModal = () => {
         ModalManager.closeModal();
     }
+    
+    /**
+     * On submit press
+     */
+    formSubmitted = () => {
+        this.props.payload.action.callback(); // callback to refresh content
+        ModalManager.closeModal();
+    }
 
     layoutChanged = (selectedColumns) => {
         let { payload } = this.state;
@@ -426,7 +434,7 @@ export default class FormCreator extends Component {
                 }
                 <Card>
                     <CardBody>
-                        <FormContents fileUploads={fileUploads} removeImage={this.removeImage} onFileUpload={this.pushFiles} onFileRemove={this.removeFile} onSubmit={this.closeModal} payload={payload} />
+                        <FormContents fileUploads={fileUploads} removeImage={this.removeImage} onFileUpload={this.pushFiles} onFileRemove={this.removeFile} onSubmit={this.formSubmitted} payload={payload} />
                     </CardBody>
                 </Card>
             </div>
