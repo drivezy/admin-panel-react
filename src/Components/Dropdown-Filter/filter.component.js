@@ -69,6 +69,11 @@ export default class PredefinedFilter extends React.Component {
         const urlParams = Location.search();
         urlParams.filter = filter.id;
         this.setUrlProps(urlParams);
+
+        let dropdownOpen = this.state.dropdownOpen;
+        this.setState({
+            dropdownOpen: false
+        });
     }
 
     render() {
