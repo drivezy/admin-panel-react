@@ -69,14 +69,12 @@ export default class ScriptInput extends Component {
 
                             <div className="col">
                                 {
-                                    // value ?
-                                    // value[columns[column.column_name]]
                                     value ?
-                                        <CodeEditor onSubmit={this.onSubmit} buttonComponent={() => (<button className="btn btn-secondary">Edit Script</button>)} scriptId={value} />
+                                        <CodeEditor onSubmit={this.onSubmit} scriptId={value} />
+                                        // <CodeEditor onSubmit={this.onSubmit} buttonComponent={() => (<button onClick={() => this.editScript(value)} className="btn btn-secondary">Edit Script</button>)} scriptId={value} />
                                         :
-                                        <CodeEditor onSubmit={this.onSubmit} buttonComponent={() => (<button className="btn btn-secondary">Add Script</button>)} />
-
-                                    // <CodeEditor scriptId={value} />
+                                        <CodeEditor onSubmit={this.onSubmit} scriptId={value} />
+                                       // <CodeEditor onSubmit={this.onSubmit} buttonComponent={() => (<button onClick={() => this.addScript(value)} className="btn btn-secondary">Add Script</button>)} />
                                 }
                             </div>
                             <div className="col">

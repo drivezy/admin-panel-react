@@ -156,9 +156,10 @@ export default class CodeEditor extends Component {
             <div>
                 {
                     buttonComponent ? // @TODO trigger component can be sent from parent component, as of now its not fully functional
-                        buttonComponent()
+                        // buttonComponent()
+                        <Button onClick={(e) => this.openEditor(e)} color="danger">Edit Script</Button>
                         :
-                        <Button onClick={(e) => this.openEditor(e)} color="primary">Open Editor</Button>
+                        <Button onClick={(e) => this.openEditor(e)} color="primary">{this.state.value ? 'Edit' : 'Add'} Script</Button>
                 }
 
                 {this.modalElement()}
