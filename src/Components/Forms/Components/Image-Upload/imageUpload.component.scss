@@ -1,3 +1,29 @@
-.drop-zone {
-    width: 100%;
+.image-upload {
+    .drop-zone {
+        width: 100%;
+    }
+    .uploaded-file {
+        display: flex;
+        justify-content: space-between;
+        margin: 0px 2px;
+        background: #c2e697;
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+        .file-label {
+            padding: 4px 8px;
+        }
+        .close-icon {
+            width: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            background: #fbe4e4;
+            color: #c5a5a5;
+            &:hover {
+                background: #fbdada;
+                color: #9c7172;
+            }
+        }
+    }
 }

@@ -2,6 +2,7 @@
 
 body {
     width: 100%;
+    font-size: 14px;
 }
 
 .drivezy-page-container {
@@ -167,6 +168,10 @@ body {
     padding-top: 5%;
 }
 
+.padding-left-10 { 
+    padding-left: 10px;
+}
+
 .or-divider {
     text-align: center;
     opacity: .8;
@@ -247,3 +252,32 @@ Non critical css goes here
 .margin-top-8 {
     margin-top: 8px;
 }
+
+.dropdown-button { 
+    border: 1px solid #dadfe3 !important;
+    color: #35485a ;
+    background-color: #fff;
+    cursor: pointer;
+    vertical-align: middle;
+    -webkit-font-smoothing: antialiased;
+    transition: .1s ease-in;
+    color: #183247;
+    padding: 5px 10px;
+    text-align: center;
+    box-shadow: none !important;
+
+    &:hover {
+        background: #dadfe3;
+        border: 1px solid #dadfe3;
+        color: #35485a;
+    }
+}
+
+.modal-xl { 
+    width: 92%;
+    max-width: 92%;
+}
+
+.Select-menu-outer {  // for select box to appear on top
+    z-index: 1066;
+} 

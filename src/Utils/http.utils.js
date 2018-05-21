@@ -110,15 +110,13 @@ export function Delete(obj) {
 export function Upload(url, file) {
 
     var formData = new FormData();
-    formData.append('file', file);
-
-    // const headers = createHeader({});
-
+    formData.append('file', file.image);
+    formData.append('column', file.column);
 
     return fetch(GLOBAL.API_HOST + url, { // Your POST endpoint
         method: 'POST',
         headers: {
-            'Content-Type': 'multipart/form-data',
+            // 'Content-Type': 'multipart/form-data',
             // 'admin-url': https://uatadmin.justride.in/#/modelDetails/42,
             'App-Type': 313,
             'App-Version': '1.0.1',
@@ -126,13 +124,17 @@ export function Upload(url, file) {
         },
         credentials: 'include',
         body: formData
-    }).then(
-        response => response.json() // if the response is a JSON object
-    ).then(
-        success => console.log(success) // Handle the success response object
-    ).catch(
-        error => console.log(error) // Handle the error response object
-    );
+    }).then((result) => {
+
+        return result.json();
+
+    }, (error) => {
+        console.log(error);
+        return error;
+    }, (progress) => {
+        console.log(progress);
+        return progress;
+    })
 }
 
 

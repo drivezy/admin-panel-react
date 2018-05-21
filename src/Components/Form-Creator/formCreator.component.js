@@ -20,10 +20,10 @@ import TimePicker from './../Forms/Components/Time-Picker/timePicker';
 import ListSelect from './../Forms/Components/List-Select/listSelect';
 import Switch from './../Forms/Components/Switch/switch';
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
-import TableSettings from './../Table-Settings/TableSettings.component';
 import ImageUpload from './../Forms/Components/Image-Upload/imageUpload.component';
 import ImageThumbnail from './../Forms/Components/Image-Thumbnail/imageThumbnail.component';
 import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from 'constants';
+import FormSettings from './../Form-Settings/FormSettings.component';
 
 
 
@@ -141,12 +141,15 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
 
         411: 'script',
         684: 'serialize',
+
+        // Image Upload
         708: <Field
             name={column.column_name}
             render={({ field /* _form */ }) => (
-                <ImageUpload name={column.column_name} onSelect={props.onFileUpload} />
+                <ImageUpload name={column.column_name} onRemove={props.onFileRemove} onSelect={props.onFileUpload} />
             )}
         />,
+        // Image Upload Ends
     }
 
     return elements[column.column_type];
@@ -213,13 +216,13 @@ const formElements = props => {
             </div>
 
             {/* Uploaded file thumbnails */}
-            <div className="file-uploads">
+            {/* <div className="file-uploads">
                 {
                     props.fileUploads.map((file, index) => (
                         <ImageThumbnail file={file} key={index} index={index} removeImage={props.removeImage} />
                     ))
                 }
-            </div>
+            </div> */}
             {/* Uploaded file thumbnails Ends*/}
 
             <div className="modal-actions row justify-content-end">
@@ -300,6 +303,7 @@ const FormContents = withFormik({
 
         if (props.fileUploads.length) {
             uploadImages(props).then((result) => {
+                console.log(result)
                 submitGenericForm();
             });
         } else {
@@ -322,7 +326,23 @@ const FormContents = withFormik({
         }
 
         function uploadImages() {
-            return Promise.all(props.fileUploads.map(entry => Upload('uploadFile', entry.image)))
+            return Promise.all(props.fileUploads.map((entry) => {
+                return Upload('uploadFile', entry).then((result) => {
+
+                    values[entry.column] = result.response;
+
+                    return result;
+
+                }, (error) => {
+                    console.log(error);
+                    return error;
+                }, (progress) => {
+                    console.log(progress);
+                    return progress;
+                })
+            }))
+
+            // return Promise.all(props.fileUploads.map(entry=> Upload('uploadFile', entry)))
         }
     },
     displayName: 'BasicForm', // helps with React DevTools
@@ -384,9 +404,11 @@ export default class FormCreator extends Component {
         this.setState({ fileUploads });
     }
 
-    removeImage = (index) => {
+    removeFile = (index) => {
         let fileUploads = this.state.fileUploads;
-        fileUploads.splice(index, 1);
+        fileUploads = fileUploads.filter((file) => (file.column != index))
+
+        // fileUploads.splice(index, 1);
         this.setState({ fileUploads });
     }
 
@@ -398,13 +420,13 @@ export default class FormCreator extends Component {
             <div className="form-creator">
                 {
                     payload.columns ?
-                        <TableSettings onSubmit={this.layoutChanged} listName={payload.modelName} selectedColumns={payload.formPreference} columns={payload.columns} />
+                        <FormSettings onSubmit={this.layoutChanged} listName={payload.modelName} selectedColumns={payload.formPreference} columns={payload.columns} />
                         :
                         null
                 }
                 <Card>
                     <CardBody>
-                        <FormContents fileUploads={fileUploads} removeImage={this.removeImage} onFileUpload={this.pushFiles} onSubmit={this.closeModal} payload={payload} />
+                        <FormContents fileUploads={fileUploads} removeImage={this.removeImage} onFileUpload={this.pushFiles} onFileRemove={this.removeFile} onSubmit={this.closeModal} payload={payload} />
                     </CardBody>
                 </Card>
             </div>

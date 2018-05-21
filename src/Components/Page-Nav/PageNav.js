@@ -93,7 +93,7 @@ export default class PageNav extends Component {
                                 </div>
                                 <div className="email">
                                     {this.state.currentUser.email}
-                                    <i className="fas fa-cog" aria-hidden="true"></i>
+                                    <i className="fa fa-cog" aria-hidden="true"></i>
                                 </div>
                             </a>
                         </DropdownItem>

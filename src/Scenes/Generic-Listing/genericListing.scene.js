@@ -82,6 +82,18 @@ export default class GenericListing extends Component {
         GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser });
     }
 
+    rowTemplate({ listingRow, selectedColumn }) {
+        let val;
+        try {
+            val = eval('listingRow.' + selectedColumn.path);
+        } catch (e) {
+            val = '';
+        }
+        return (<span>{val}</span>);
+    }
+
+
+
     dataFetched = ({ genericData, filterContent }) => {
         // const totalPages = Math.ceil((genericData.stats.records / genericData.stats.count));
 
@@ -95,6 +107,11 @@ export default class GenericListing extends Component {
         this.setState({ genericData, filterContent });
     }
 
+    predefinedFiltersUpdated = (filters) => {
+        const { menuDetail } = this.state;
+        menuDetail.userFilter = filters;
+        this.setState({ menuDetail });
+    }
 
     layoutChanges = (selectedColumns) => {
         let { genericData } = this.state;
@@ -104,10 +121,9 @@ export default class GenericListing extends Component {
     }
 
     render() {
-        const { genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent } = this.state;
+        const { genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent, currentUser } = this.state;
         const { listing = [], finalColumns = [] } = genericData;
         const { history, match } = this.props;
-
         return (
             <div className="generic-listing-container">
                 {/* <ModalWrap
@@ -118,7 +134,10 @@ export default class GenericListing extends Component {
                 /> */}
                 <div className="page-bar">
                     <div className="search-wrapper">
-                        <DynamicFilter />
+                        {
+                            filterContent && filterContent.dictionary &&
+                            <DynamicFilter menuUpdatedCallback={this.predefinedFiltersUpdated} selectedColumns={genericData.selectedColumns} menuId={menuDetail.menuId} currentUser={currentUser} dictionary={filterContent.dictionary} userFilters={menuDetail.userFilter} history={history} match={match} />
+                        }
                     </div>
 
                     <div className="header-actions">
@@ -127,7 +146,7 @@ export default class GenericListing extends Component {
 
                         {
                             menuDetail.userFilter ?
-                                <PredefinedFilter userFilter={menuDetail.userFilter} history={history} match={match} />
+                                <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} userFilter={menuDetail.userFilter} history={history} match={match} />
                                 :
                                 null
                         }
@@ -148,7 +167,13 @@ export default class GenericListing extends Component {
 
                             {
                                 genericData.columns ?
-                                    <TableSettings onSubmit={this.layoutChanges} listName={genericData.listName} selectedColumns={genericData.selectedColumns} columns={genericData.columns} />
+                                    <TableSettings 
+                                    onSubmit={this.layoutChanges} 
+                                    listName={genericData.listName} 
+                                    selectedColumns={genericData.selectedColumns} 
+                                    columns={genericData.columns}
+                                    rowTemplate={this.rowTemplate}
+                                    />
                                     :
                                     null
                             }
@@ -162,7 +187,7 @@ export default class GenericListing extends Component {
                         <ConfigureDynamicFilter
                             history={history}
                             match={match}
-                            filters={genericData.userFilter}
+                            filters={menuDetail.userFilter}
                             content={filterContent}
                         />
                     }
@@ -172,9 +197,9 @@ export default class GenericListing extends Component {
                     <CardBody>
                         {
                             (finalColumns && finalColumns.length) ?
-                                <PortletTable history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} /> : null
+                                <PortletTable history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} /> : null
                         }
-                        <ListingPagination history={history} match={match} genericData={genericData} />
+                        <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
                     </CardBody>
                 </Card>
             </div>

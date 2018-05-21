@@ -40,7 +40,7 @@ export default class ImageThumbnail extends React.Component {
         return (
             <div className="thumbnail">
                 <span className="delete-icon" onClick={() => this.props.removeImage(this.props.index)}>
-                    <i className="fas fa-times"></i>
+                    <i className="fa fa-times"></i>
                 </span>
                 <img src={thumb}
                     alt={file.column}
