@@ -7,9 +7,10 @@ import './ListingPagination.css';
 export default class ListingPagination extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            genericData: props.genericData
-        };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        
     }
 
     redirectToPage = (pageUrl) => {
@@ -18,23 +19,23 @@ export default class ListingPagination extends Component {
     }
 
     render() {
-        const { genericData = {} } = this.props;
+        const { statsData = {}, currentPage = 1 } = this.props;
         let previousPage;
         let nextPage;
         const pages = [];
         const showPages = 10;
         let showFlag = '.....';
 
-        if (genericData.stats) {
-            var number_of_pages = Math.round(genericData.stats.records / genericData.stats.count);
+        if (statsData) {
+            var number_of_pages = Math.round(statsData.records / statsData.count);
             for (let i = 1; i <= showPages; i++) {
                 pages.push({ page: i });
             }
         }
 
-        if (genericData.currentPage) {
-            previousPage = parseInt(genericData.currentPage) - 1;
-            nextPage = parseInt(genericData.currentPage) + 1;
+        if (currentPage) {
+            previousPage = parseInt(currentPage) - 1;
+            nextPage = parseInt(currentPage) + 1;
         }
 
         return (
@@ -46,7 +47,7 @@ export default class ListingPagination extends Component {
                     {
                         pages && pages.length && pages.map((key, count) => {
                             return (
-                                <PaginationItem onClick={() => this.redirectToPage(`?limit=20&page=${key.page}`)} className={genericData.currentPage == key.page ? 'highlighted-page' : ''} key={count}>
+                                <PaginationItem onClick={() => this.redirectToPage(`?limit=20&page=${key.page}`)} className={currentPage == key.page ? 'highlighted-page' : ''} key={count}>
                                     <PaginationLink >
                                         {key.page}
                                     </PaginationLink>
@@ -79,13 +80,15 @@ export default class ListingPagination extends Component {
                         <PaginationLink next onClick={() => this.redirectToPage(`?limit=20&page=${nextPage}`)} />
                     </PaginationItem>
 
-                    <div className="pagination-record">
-                        Showing {genericData.currentPage?((((genericData.currentPage)*20)-20)+1):0} - {genericData.currentPage?((genericData.currentPage)*20):0} results from {genericData.stats?genericData.stats.records:0} records.
-                    </div>
 
                 </Pagination>
 
-
+                {
+                    statsData && statsData.records > 0 &&
+                    <div className="pagination-record">
+                        Showing {currentPage ? ((((currentPage) * 20) - 20) + 1) : 0} - {currentPage ? ((currentPage) * 20) : 0} results from {statsData ? statsData.records : 0} records.
+                    </div>
+                }
             </div>
         )
     }

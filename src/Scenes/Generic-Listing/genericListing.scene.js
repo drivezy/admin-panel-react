@@ -199,7 +199,7 @@ export default class GenericListing extends Component {
                             (finalColumns && finalColumns.length) ?
                                 <PortletTable history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} /> : null
                         }
-                        <ListingPagination history={history} match={match} genericData={genericData} />
+                        <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
                     </CardBody>
                 </Card>
             </div>

@@ -1,5 +1,7 @@
 .listing-pagination {
-    margin-top:10px;
+    padding:10px;
+    display: flex;
+    justify-content:space-between;
     .highlighted-page { 
         a { 
             background: #2f4d69 !important;
@@ -7,7 +9,6 @@
         }
     }
     .pagination-record {
-        margin-left: 825px;
         margin-top: 10px;
     }
 } 
