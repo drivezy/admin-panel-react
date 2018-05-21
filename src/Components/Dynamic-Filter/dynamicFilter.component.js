@@ -317,7 +317,7 @@ export default class DynamicFilter extends Component {
                                 (!activeFilter.id ?
                                     <li className="clear-link">
                                         <button className="btn btn-xs btn-success" onClick={this.openSaveFilterModal}>
-                                            <i className="fa fa-floppy-o" aria-hidden="true"></i>
+                                            <i className="fa fa-floppy-o" aria-hidden="true"></i> &nbsp;
                                             Save
                                 </button>
                                     </li>
