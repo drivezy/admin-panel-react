@@ -66,19 +66,19 @@ export default class ConfigureDynamicFilter extends Component {
         // this.setState({ currentUser: data });
     }
 
-    listenToggleAdvancedFilter = (collapse, filterContent) => {
-        // urlParams = Location.search();
-
-        // Filter Content from portlet table is assigned to
-        // content here so , the input fields are preselected
-        if (filterContent) {
-            // self.content = filterContent;
-        }
-
+    /**
+     * Entry point for toggling advance filter 
+     * @param  {boolean} {isCollapsed
+     * @param  {string} single - takes column name and prepopulated it
+     * @param  {boolean} listenToInput} - if true, whatever value of isCollapsed is passed, will be assigned otherwise isCollapsed is always toggled by default
+     */
+    listenToggleAdvancedFilter = ({ isCollapsed: collapse, single, forcefullyUpdate }) => {
         if (this.firstLoad) { // makes sure initialize is called only once
             this.firstLoad = false;
             this.initialize();
         }
+        const { isCollapsed } = this.state;
+        collapse = forcefullyUpdate ? collapse : !isCollapsed;
 
         if (!collapse) {
             const active_filter = this.urlParams.filter;
@@ -93,9 +93,38 @@ export default class ConfigureDynamicFilter extends Component {
             } else {
                 this.resetColumns();
             }
-        }
+            // // @TODO because of async call in prepopulate, existing query gets overrided by this method, to prevent that calling after 1s
+            setTimeout(() => this.assignSelectedFilterColumn({ single }), 1000); // checks if filter column is passed, prepopulate that column
 
+            // this.assignSelectedFilterColumn({ single })
+        }
         this.setState({ isCollapsed: collapse });
+    }
+
+    assignSelectedFilterColumn = ({ single }) => {
+        // If the dynamic filter is only for the column the select field should be preselected
+        const { filterArr } = this.state;
+        const { content } = this.props;
+        console.log(single);
+        if (single) {
+            let arrayIndex;
+            if (IsUndefinedOrNull(filterArr[filterArr.length - 1][0].html)) {
+                arrayIndex = filterArr.length - 1;
+            } else {
+                arrayIndex = filterArr.length;
+            }
+            // Push an array to the current one
+            // this is a fallback if there is query that is to be prepopulated
+            filterArr[arrayIndex] = [[...this.filterObj]];
+            // to the last element in the array , push the column
+            filterArr[arrayIndex][0].column = SelectFromOptions(content.dictionary, single, 'column_name');
+            // once the column is selected , columnChange should be called to load necessary data for the column
+            this.columnChange(filterArr[arrayIndex][0].column, {
+                parentIndex: filterArr.length - 1,
+                childIndex: 0,
+                setValue: true
+            });
+        }
     }
 
     /**
@@ -307,15 +336,21 @@ export default class ConfigureDynamicFilter extends Component {
                     }];
                 }
 
-                filterArr[parentIndex][childIndex].html = () => (
-                    <SelectBox
-                        onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'selectValue' })}
-                        value={child.selectValue}
-                        field={child.column.referenced_model.display_column}
-                        placeholder="Select Value for any reason"
-                        getOptions={(input) => this.getInputRecord({ input, parentIndex, childIndex })}
-                    />
-                );
+                if (child.column.referenced_model && child.column.referenced_model.display_column) {
+                    filterArr[parentIndex][childIndex].html = () => (
+                        <SelectBox
+                            onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'selectValue' })}
+                            value={child.selectValue}
+                            field={child.column.referenced_model.display_column}
+                            placeholder="Select Value for any reason"
+                            getOptions={(input) => this.getInputRecord({ input, parentIndex, childIndex })}
+                        />
+                    );
+                } else {
+                    filterArr[parentIndex][childIndex].html = () => null
+                }
+
+
                 // filterArr[parentIndex][childIndex].html = (<custom-select-field required="true" ng-model="b.selectValue" call-it="configureFilter.convertToInputField" extra-params="{parentIndex: $parent.$childIndex, childIndex: $childIndex}" place-holder="Type to load data" iterate-item="{{b.column.referenced_model.display_column}}" async="configureFilter.getInputRecord(search,{parentIndex: $parent.$childIndex, childIndex: $childIndex})" obj="b.asyncResults" />);
                 break;
 
@@ -445,6 +480,11 @@ export default class ConfigureDynamicFilter extends Component {
      * @param  {string} query
      */
     prepopulate = async (query = '') => {
+        const { isCollapsed } = this.state;
+        if (!isCollapsed) {
+            return;
+        }
+        
         const filterArr = this.state.filterArr;
         const parentQueries = query.split(" AND ");
 
@@ -526,7 +566,7 @@ export default class ConfigureDynamicFilter extends Component {
     // Initialize the controller
     initialize() {
         const { content } = this.props;
-
+        const { filterArr } = this.state;
         // filterObj is a basic data structure that is defined and used
         // across this controller
         // @todo Should rewrite this part
@@ -555,7 +595,6 @@ export default class ConfigureDynamicFilter extends Component {
 
         // var active_filter = Location.search().filter;
         let active_filter;
-
         // IF there is an active filter then add that first 
         if (active_filter) {
             this.activeFilter(active_filter)
@@ -563,6 +602,7 @@ export default class ConfigureDynamicFilter extends Component {
         } else {
             this.state.query = '';
         }
+
         this.setState({ order: this.state.order });
     }
 
@@ -585,6 +625,10 @@ export default class ConfigureDynamicFilter extends Component {
         }
         this.setState({ filterArr });
     };
+
+    closeForm = () => {
+        this.setState({ isCollapsed: true });
+    }
 
     submit = () => {
         const { filterArr, currentUser, activeFilter, sort, order, scopes } = this.state;

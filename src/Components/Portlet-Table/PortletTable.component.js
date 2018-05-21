@@ -131,24 +131,17 @@ export default class PortletTable extends Component {
     };
 
     filterColumn = (column) => {
+        let selected;
         if (column.path.split(".").length == 1) { // for columns which is child of table itself
-            var selected = column.column_name;
+            selected = column.column_name;
         } else if (column.path.split(".").length == 2) { // for reference columns (for e.g. Created by table in with any menu)
             selected = column.parentColumn;
         }
 
-        var obj = {
-            dictionary: this.state.genericData.dictionary[this.state.genericData.starter],
-            selectedColumns: this.state.genericData.selectedColumns,
-            restrictColumn: {},
-            single: selected
-        };
-
-        // console.log(obj);
-        // Passing the necessary data to configure filter directive
-        // prepopulate.collapseMethod(false, obj);
+        if (typeof this.props.toggleAdvancedFilter == 'function') {
+            this.props.toggleAdvancedFilter({ single: selected });
+        }
     };
-
 
     render() {
 

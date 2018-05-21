@@ -99,7 +99,7 @@ export async function CreateQuery({ rawQuery, dictionary = [], finalSql: FinalSq
                         // If its a currentUser show Current User instead of showing the display_column
                         if (queryObj.selectedInput == 'currentUser') {
                             showSql += 'Current User';
-                        } else {
+                        } else if (Array.isArray(result.response) && result.response.length) {
                             showSql += result.response[0][column.referenced_model.display_column];
                         }
                         // appendOr(showSql, queries, key, parentKey);

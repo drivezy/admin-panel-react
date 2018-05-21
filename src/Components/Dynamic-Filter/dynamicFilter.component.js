@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { StoreEvent } from './../../Utils/stateManager.utils';
 import { Location } from './../../Utils/location.utils';
 import { IsEqualObject, SelectFromOptions, IsUndefinedOrNull } from './../../Utils/common.utils';
 import { CreateQuery } from './../../Utils/dynamicFilter.utils';
@@ -15,7 +14,6 @@ export default class DynamicFilter extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isCollapsed: true,
             urlParams: Location.search(),
             activeFilter: {},
             filters: props.userFilters,
@@ -47,12 +45,6 @@ export default class DynamicFilter extends Component {
         this.fetchSql(urlParams);
         // Find the active filter from the url
         this.setActiveFilter();
-    }
-
-    toggleAdvancedFilter = () => {
-        const { isCollapsed } = this.state;
-        this.setState({ isCollapsed: !isCollapsed });
-        StoreEvent({ eventName: 'ToggleAdvancedFilter', data: !isCollapsed });
     }
 
     /**
@@ -275,13 +267,13 @@ export default class DynamicFilter extends Component {
     }
 
     render() {
-        const { isCollapsed, activeFilter, sqlArray = [] } = this.state;
-        const { currentUser = {} } = this.props;
+        const { activeFilter, sqlArray = [] } = this.state;
+        const { currentUser = {}, toggleAdvancedFilter } = this.props;
         return (
             <div className="current-filter-view flex">
                 <div
                     className="dynamic-filter-container cursor-pointer"
-                    onClick={() => this.toggleAdvancedFilter()}
+                    onClick={() => toggleAdvancedFilter()}
                 >
                     Advanced
                 </div>
@@ -332,7 +324,7 @@ export default class DynamicFilter extends Component {
                                     :
                                     <li className="clear-link" >
                                         <button className="btn btn-xs btn-success" onClick={this.updateFilter}>
-                                            <i className="fa fa-floppy-o" aria-hidden="true"></i>
+                                            <i className="fa fa-floppy-o" aria-hidden="true"></i> &nbsp;
                                             {currentUser.isSuperAdmin ? 'Update for All' : 'Create New'}
                                         </button>
                                     </li>
