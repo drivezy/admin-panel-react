@@ -20,7 +20,7 @@ import TimePicker from './../Forms/Components/Time-Picker/timePicker';
 import ListSelect from './../Forms/Components/List-Select/listSelect';
 import Switch from './../Forms/Components/Switch/switch';
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
-import TableSettings from './../Table-Settings/TableSettings.component';
+import FormSettings from './../Form-Settings/FormSettings.component';
 
 
 
@@ -322,7 +322,7 @@ export default class FormCreator extends Component {
             <div className="form-creator">
                 {
                     payload.columns ?
-                        <TableSettings onSubmit={this.layoutChanged} listName={payload.modelName} selectedColumns={payload.formPreference} columns={payload.columns} />
+                        <FormSettings onSubmit={this.layoutChanged} listName={payload.modelName} selectedColumns={payload.formPreference} columns={payload.columns} />
                         :
                         null
                 }

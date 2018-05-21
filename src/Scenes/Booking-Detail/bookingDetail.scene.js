@@ -119,7 +119,7 @@ export default class BookingDetail extends Component {
                                             <Col sm="2">
                                                 <div className="jr-time-icon">
                                                     <div className="no-padding margin-top-12 " align="center">
-                                                        <i className="fas fa-car" aria-hidden="true"></i>
+                                                        <i className="fa fa-car" aria-hidden="true"></i>
                                                     </div>
                                                     <div className="no-padding light-red  font-11" align="center">
                                                         53 Hrs.
@@ -158,7 +158,7 @@ export default class BookingDetail extends Component {
                                             <Col sm="4">
                                                 <div className="jr-time-icon">
                                                     <div className="no-padding margin-top-12 " align="center">
-                                                        <i className="fas fa-car" aria-hidden="true"></i>
+                                                        <i className="fa fa-car" aria-hidden="true"></i>
                                                     </div>
                                                     <div className="no-padding light-red  font-11" align="center">
                                                         53 Hrs.
@@ -185,13 +185,13 @@ export default class BookingDetail extends Component {
                                         <Row className="gray-border-bottom">
                                             <Col sm="6">
                                                 <div className="jr-start-time">
-                                                    <i className="fas fa-car" aria-hidden="true"></i>
+                                                    <i className="fa fa-car" aria-hidden="true"></i>
                                                     {bookingDetail.ride_return.handover_user.display_name}
                                                 </div>
                                             </Col>
                                             <Col sm="6">
                                                 <div className="jr-time-icon">
-                                                    <i className="fas fa-car" aria-hidden="true"></i>
+                                                    <i className="fa fa-car" aria-hidden="true"></i>
                                                     {bookingDetail.ride_return.picker_user.display_name}
                                                 </div>
                                             </Col>
