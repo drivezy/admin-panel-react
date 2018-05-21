@@ -2,6 +2,7 @@
 
 body {
     width: 100%;
+    font-size: 14px;
 }
 
 .drivezy-page-container {
@@ -167,6 +168,10 @@ body {
     padding-top: 5%;
 }
 
+.padding-left-10 { 
+    padding-left: 10px;
+}
+
 .or-divider {
     text-align: center;
     opacity: .8;
@@ -268,3 +273,11 @@ Non critical css goes here
     }
 }
 
+.modal-xl { 
+    width: 92%;
+    max-width: 92%;
+}
+
+.Select-menu-outer {  // for select box to appear on top
+    z-index: 1066;
+} 
