@@ -198,6 +198,60 @@ export function CreateInclusions(includes) {
     return arr.join(",");
 }
 
+
+/**
+ * parse url string to actual one
+ * this method seek for ':', whenever it encounters one, replace with actual data
+ * for e.g. booking/:id is converted to booking/12
+ * @param  {string} url='' 
+ * @param  {object} obj
+ */
+export function CreateUrl({ url = '', obj }) {
+    const reg = /(:)\w+/g;
+    const params = url.match(reg);
+    if (!params.length) {
+        return url;
+    }
+    for (let i in params) {
+        const attr = params[i].substr(1);
+        url = url.replace(params[i], obj[attr]);
+    }
+    return url;
+}
+
+export function ConvertDependencyInjectionToArgs(dependencies) {
+    if (!dependencies) {
+        return [];
+    }
+
+    var args = [];
+    var dependency = dependencies.split(",");
+    for (var i in dependency) {
+        args.push('this.'+eval(dependency[i]));
+    }
+
+    return args;
+}
+
+/**
+ * Register all the methods coming from db
+ * @param  {} method
+ */
+export function RegisterMethod(methodArr) {
+    const methods = {};
+    for (var i in methodArr) {
+        const methodObj = methodArr[i];
+        if (methodObj.definition && typeof methodObj.definition == 'object' && methodObj.definition.script) {
+            if (methodObj.dependency) {
+                methods[methodObj.name] = new Function("callback", methodObj.dependency, methodObj.definition.script);
+            } else {
+                methods[methodObj.name] = new Function("callback", methodObj.definition.script);
+            }
+        }
+    }
+    return methods;
+}
+
 export function GetPreSelectedMethods() {
     const methods = {};
     methods.redirect = ({ action, listingRow, history, genericData }) => {
@@ -292,59 +346,6 @@ export function GetPreSelectedMethods() {
         // }
 
         return url;
-    }
-    return methods;
-}
-
-/**
- * parse url string to actual one
- * this method seek for ':', whenever it encounters one, replace with actual data
- * for e.g. booking/:id is converted to booking/12
- * @param  {string} url='' 
- * @param  {object} obj
- */
-export function CreateUrl({ url = '', obj }) {
-    const reg = /(:)\w+/g;
-    const params = url.match(reg);
-    if (!params.length) {
-        return url;
-    }
-    for (let i in params) {
-        const attr = params[i].substr(1);
-        url = url.replace(params[i], obj[attr]);
-    }
-    return url;
-}
-
-export function ConvertDependencyInjectionToArgs(dependencies) {
-    if (!dependencies) {
-        return [];
-    }
-
-    var args = [];
-    var dependency = dependencies.split(",");
-    for (var i in dependency) {
-        args.push('this.'+eval(dependency[i]));
-    }
-
-    return args;
-}
-
-/**
- * Register all the methods coming from db
- * @param  {} method
- */
-export function RegisterMethod(methodArr) {
-    const methods = {};
-    for (var i in methodArr) {
-        const methodObj = methodArr[i];
-        if (methodObj.definition && typeof methodObj.definition == 'object' && methodObj.definition.script) {
-            if (methodObj.dependency) {
-                methods[methodObj.name] = new Function("callback", methodObj.dependency, methodObj.definition.script);
-            } else {
-                methods[methodObj.name] = new Function("callback", methodObj.definition.script);
-            }
-        }
     }
     return methods;
 }

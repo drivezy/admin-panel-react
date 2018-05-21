@@ -22,7 +22,6 @@ import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import ModalWrap from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
 
 import PredefinedFilter from './../../Components/Dropdown-Filter/filter.component';
-import { StoreEvent } from './../../Utils/stateManager.utils';
 
 import './genericListing.css';
 
