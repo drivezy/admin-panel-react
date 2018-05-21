@@ -34,7 +34,7 @@ export default class SelectBox extends Component {
             props.options.forEach(option => {
                 options.push({ label: option });
             });
-            if(props.value && Object.keys(props.value).length) { 
+            if (props.value && Object.keys(props.value).length) {
                 value = { label: props.value };
             }
         } else {
@@ -65,24 +65,33 @@ export default class SelectBox extends Component {
     }
 
     getOptions = async (input, callback) => {
-        const { async, queryField, value, key } = this.props;
+        const { async, queryField, value, index } = this.props;
 
         // For first time match the id with provided value to preselect the field 
         if (input) {
             const url = async + '?query=' + queryField + ' LIKE \'%' + input + '%\'';
             const result = await Get({ url });
+            alert('jnr');
             if (result.success) {
                 callback(null, {
                     options: result.response
                 });
             }
         } else if (value) {
-            let preloadUrl = async + '?query=' + key + '=' + value
+            console.log(value);
+            let preloadUrl = async + '?query=' + index + '=' + value
             const result = await Get({ url: preloadUrl });
+
             if (result.success) {
+                console.log(result);
+
                 callback(null, {
-                    options: result.response
+                    options: result.response,
+                    // value: result.response[0]
                 });
+
+                this.props.onChange(result.response[0]);
+                // this.setState({ value: result.response[0] });
             }
         }
     }
