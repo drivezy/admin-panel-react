@@ -14,6 +14,7 @@ import { Button } from 'reactstrap';
 
 import SelectBox from './../Forms/Components/Select-Box/selectBox';
 import { SelectFromOptions } from './../../Utils/common.utils';
+import { Get } from './../../Utils/http.utils';
 
 import 'brace/mode/php';
 import 'brace/mode/javascript';
@@ -32,12 +33,13 @@ export default class CodeEditor extends Component {
         this.state = {
             isModalVisible: true,
             mode,
-            value: props.value || ''
+            value: props.value || '',
+            scriptId: props.scriptId || ''
         }
     }
 
-    onChange(newValue) {
-        console.log('change', newValue);
+    onChange = (newValue) => {
+        // this.setState({ value: newValue });
     }
 
     editorComponent = () => {
@@ -71,7 +73,7 @@ export default class CodeEditor extends Component {
         const { mode } = this.state;
         return (
             <div className='flex code-editor-header'>
-                <div className='code-title padding-left-10'>
+                <div className='code-title'>
                     Code editor
                 </div>
 
@@ -90,6 +92,22 @@ export default class CodeEditor extends Component {
         )
     }
 
+    modalFooter = () => {
+        return (
+            <div className="modal-footer row justify-content-space-between">
+                <div className="col">
+                </div>
+                <div className="col">
+                    {/* <Button color="secondary" onClick={handleReset}>
+                        Clear
+                    </Button> */}
+                    <button className="btn btn-primary" type="button" onClick={this.onSubmit}>
+                        Submit
+                    </button>
+                </div>
+            </div>
+        )
+    }
 
     modalElement = () => {
         const { isVisible } = this.state;
@@ -99,19 +117,48 @@ export default class CodeEditor extends Component {
                 isVisible={isVisible}
                 modalBody={this.editorComponent}
                 modalHeader={this.modalHeader}
+                modalFooter={this.modalFooter}
             />
         );
     }
 
+
+    // Open the editor
+    openEditor = async (event) => {
+
+        // If meta key or ctrl is pressed , open in new editor
+        if ((event.metaKey || event.ctrlKey)) {
+            // window.open(location.origin + "/codeEditor/" + this.state.scriptId, "_blank");
+            return false;
+        }
+
+        // If there is script id , load it
+        if (this.state.scriptId) {
+            const result = await Get({ url: 'systemScript/' + this.state.scriptId });
+            if (result.success) {
+                this.setState({ isVisible: true, value: result.response.script });
+            }
+        } else {
+            // Else show plain editor
+            this.setState({ isVisible: true });
+        }
+    }
+
+
+    onSubmit = () => {
+        console.log(this.state);
+
+    }
+
     render() {
-        const { buttonComponent } = this.state;
+        const { buttonComponent } = this.props;
         return (
             <div>
                 {
                     buttonComponent ? // @TODO trigger component can be sent from parent component, as of now its not fully functional
                         buttonComponent()
                         :
-                        <Button onClick={() => this.setState({ isVisible: true })} color="primary">Open Editor</Button>
+                        <Button onClick={(e) => this.openEditor(e)} color="primary">Open Editor</Button>
                 }
 
                 {this.modalElement()}
