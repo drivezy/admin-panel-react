@@ -38,8 +38,8 @@ export default class CodeEditor extends Component {
         }
     }
 
-    onChange(newValue) {
-        console.log('change', newValue);
+    onChange = (newValue) => {
+        // this.setState({ value: newValue });
     }
 
     editorComponent = () => {
@@ -146,11 +146,12 @@ export default class CodeEditor extends Component {
 
 
     onSubmit = () => {
+        console.log(this.state);
 
     }
 
     render() {
-        const { buttonComponent } = this.state;
+        const { buttonComponent } = this.props;
         return (
             <div>
                 {

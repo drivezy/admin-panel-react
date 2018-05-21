@@ -21,6 +21,10 @@ export default class ScriptInput extends Component {
         }
     }
 
+    onSubmit = () => {
+
+    }
+
     toggleModal = () => {
     }
 
@@ -65,11 +69,14 @@ export default class ScriptInput extends Component {
 
                             <div className="col">
                                 {
-                                    value[columns[column.column_name]]
-                                        ?
-                                        <CodeEditor scriptId={value} />
+                                    // value ?
+                                    // value[columns[column.column_name]]
+                                    value ?
+                                        <CodeEditor onSubmit={this.onSubmit} buttonComponent={() => (<button className="btn btn-secondary">Edit Script</button>)} scriptId={value} />
                                         :
-                                        <CodeEditor scriptId={value} />
+                                        <CodeEditor onSubmit={this.onSubmit} buttonComponent={() => (<button className="btn btn-secondary">Add Script</button>)} />
+
+                                    // <CodeEditor scriptId={value} />
                                 }
                             </div>
                             <div className="col">
