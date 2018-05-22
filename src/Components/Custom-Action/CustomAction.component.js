@@ -64,7 +64,7 @@ export default class CustomAction extends Component {
     render() {
         const { actions = [], listingRow = [], genericData = {}, placement } = this.props;
         return (
-            <div>
+            <div className="custom-actions">
                 {
                     actions.map((action, key) => {
                         if (action.placement_id == placement) {

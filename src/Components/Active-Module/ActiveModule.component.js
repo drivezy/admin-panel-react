@@ -96,6 +96,7 @@ export default class ActiveModule extends Component {
 
     clickedValue = (menu) => {
         this.setState({
+            collapsed: true,
             menuName: menu.name
         })
     }
