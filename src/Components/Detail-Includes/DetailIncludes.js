@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './DetailIncludes.css';
 
 
-import { CreateInclusions, GetColumnsForListing, CreateFinalColumns } from './../../Utils/generic.utils';
+import { CreateInclusions, GetColumnsForListing, CreateFinalColumns, RegisterMethod } from './../../Utils/generic.utils';
 import { GetColumnsForDetail } from './../../Utils/genericDetail.utils';
 
 import {
@@ -71,6 +71,7 @@ export default class DetailPortlet extends Component {
             tab.fixedParams = data.fixedParams;
             tab.refreshContent = data.refreshContent; //  function to refresh whole detail content
             tab.scripts = [];
+
             // this.formPreferences = []; // @TODO seems useless, remove line after sometime, 
 
             // check if there are other includes of the same identifier
@@ -113,7 +114,8 @@ export default class DetailPortlet extends Component {
             ));
 
             tab.nextActions = relationship.actions; // generic actions (can be predefined or custom ones)
-
+            tab.preDefinedmethods = data.preDefinedmethods;
+            tab.methods = RegisterMethod(tab.nextActions);
 
             // @TODO script incjection is disabled as of now
             // var scripts = InjectScriptFactory.returnMatchingScripts({
