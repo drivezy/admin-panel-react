@@ -34,7 +34,7 @@ export default class SelectBox extends Component {
             props.options.forEach(option => {
                 options.push({ label: option });
             });
-            if(props.value && Object.keys(props.value).length) { 
+            if (props.value && Object.keys(props.value).length) {
                 value = { label: props.value };
             }
         } else {
@@ -90,6 +90,7 @@ export default class SelectBox extends Component {
     render() {
         const { async, getOptions, multi, placeholder } = this.props;
         const { value, options, field } = this.state;
+
         let elem;
         if (async) {
             elem = <Async
