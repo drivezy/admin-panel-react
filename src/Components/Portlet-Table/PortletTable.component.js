@@ -160,8 +160,9 @@ export default class PortletTable extends Component {
         const { genericData, finalColumns, listing } = this.state;
         const { history, match, menuDetail, rowTemplate, callback } = this.props;
 
-        return (
-            <Table striped className="sortable">
+        let renderItem;
+        if (listing.length) {
+            renderItem = <Table striped className="sortable">
                 <thead>
                     <tr>
                         <th>
@@ -248,7 +249,7 @@ export default class PortletTable extends Component {
                                             </td>
                                         ))
                                     }
-                                    <td className="custom-action action-column">
+                                    <td className="action-column">
                                         <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} placement={167} callback={callback} />
                                     </td>
                                 </tr>
@@ -258,6 +259,19 @@ export default class PortletTable extends Component {
                 </tbody>
 
             </Table>
+        } else {
+            renderItem = (
+                <div className='no-data-to-show'>
+                    No Data to show
+                </div>
+            )
+        }
+
+
+        return (
+            <div>
+                {renderItem}
+            </div>
         );
     }
 }

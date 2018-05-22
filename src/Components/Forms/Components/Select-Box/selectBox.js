@@ -71,7 +71,6 @@ export default class SelectBox extends Component {
         if (input) {
             const url = async + '?query=' + queryField + ' LIKE \'%' + input + '%\'';
             const result = await Get({ url });
-            alert('jnr');
             if (result.success) {
                 callback(null, {
                     options: result.response
