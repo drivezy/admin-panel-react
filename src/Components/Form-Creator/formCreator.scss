@@ -1,5 +1,45 @@
+.modal-header {
+    border-bottom: none;
+    padding: 15px 30px;
+    color: #1b242ec7;
+}
+
+.modal-actions {
+    .btn-primary {
+        background-color: #496f98;
+    }
+}
+
+.modal-body {
+    background: white;
+}
+
 .form-creator {
     // background: black;
+    .card {
+        border: none;
+        .card-body {
+            padding: 0px 15px;
+        }
+    }
+    .form-group {
+        label {
+            font-weight: bold;
+            font-weight: bold;
+            font-size: 12px;
+            color: #330a0a9c;
+        }
+        input.form-control {
+            border: none;
+            border-radius: 0px;
+            border-bottom: 1px solid #c7c7c7;
+            padding: 5px 0px;
+            &:focus {
+                box-shadow: none;
+                border-bottom: 1px solid #964d4d66;
+            }
+        }
+    }
     .modal-actions {
         button {
             margin: 0 5px;
