@@ -24,7 +24,7 @@ import ImageUpload from './../Forms/Components/Image-Upload/imageUpload.componen
 import ImageThumbnail from './../Forms/Components/Image-Thumbnail/imageThumbnail.component';
 import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from 'constants';
 import FormSettings from './../Form-Settings/FormSettings.component';
-
+import ScriptInput from './../Forms/Components/Script-Input/scriptInput.component';
 
 
 const DisplayFormikState = props => (
@@ -51,7 +51,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // Static Ends
 
         // Number
-        107: <Field className="form-control" type="number" name={column.column_name} placeholder={`Enter ${column.display_name}`} />,
+        107: <Field autocomplete="off" className="form-control" type="number" name={column.column_name} placeholder={`Enter ${column.display_name}`} />,
         // Number Ends
 
         // Text
@@ -80,7 +80,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         111: <Field
             name={column.column_name}
             render={({ field /* _form */ }) => (
-                <SelectBox name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                <SelectBox name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
             )}
         />,
         // Boolean Ends
@@ -139,7 +139,10 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         />,
         // Reference Ends
 
-        411: 'script',
+        // Script Input
+        411: <ScriptInput value={values[column.column_name]} columns={props.payload.columns} method={props.payload.method} column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />,
+        // Script Input Ends
+
         684: 'serialize',
 
         // Image Upload
@@ -361,6 +364,14 @@ export default class FormCreator extends Component {
     closeModal = () => {
         ModalManager.closeModal();
     }
+    
+    /**
+     * On submit press
+     */
+    formSubmitted = () => {
+        this.props.payload.action.callback(); // callback to refresh content
+        ModalManager.closeModal();
+    }
 
     layoutChanged = (selectedColumns) => {
         let { payload } = this.state;
@@ -426,7 +437,7 @@ export default class FormCreator extends Component {
                 }
                 <Card>
                     <CardBody>
-                        <FormContents fileUploads={fileUploads} removeImage={this.removeImage} onFileUpload={this.pushFiles} onFileRemove={this.removeFile} onSubmit={this.closeModal} payload={payload} />
+                        <FormContents fileUploads={fileUploads} removeImage={this.removeImage} onFileUpload={this.pushFiles} onFileRemove={this.removeFile} onSubmit={this.formSubmitted} payload={payload} />
                     </CardBody>
                 </Card>
             </div>
