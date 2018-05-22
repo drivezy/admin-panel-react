@@ -140,7 +140,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // Reference Ends
 
         // Script Input
-        411: <ScriptInput value={values[column.column_name]} columns={props.payload.columns} method={props.payload.method} column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />,
+        411: <ScriptInput value={values[column.column_name]} columns={props.payload.columns} payload={props.payload} column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />,
         // Script Input Ends
 
         684: 'serialize',
