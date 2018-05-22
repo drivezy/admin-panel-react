@@ -25,8 +25,6 @@ export function GetMenuDetail(menuId, callback) {
  * @returns evaluated query
  */
 export function ConvertToQuery(params) {
-    console.log(this);
-    console.log('params', params);
     const reg = /(:[$\w.]*)\w+/g;
     const tempArr = params.match(reg);
 

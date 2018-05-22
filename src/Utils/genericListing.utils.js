@@ -3,6 +3,8 @@ import { IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall } from './comm
 import { GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods } from './generic.utils';
 import { Get } from './http.utils';
 
+let tempQuery; // used to decide if stats is to be fetched from server
+
 /**
 * prepare query, pagination, and everything required according to
 * url and menu detail, fetch data and passes them further to the components
@@ -12,7 +14,6 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
     const params = Initialization(configuration, queryString);
     // const this = {};
     this.currentUser = currentUser;
-    let tempQuery;
     const options = GetDefaultOptions();
 
     params.page = queryString.page ? parseInt(queryString.page) : data.currentPage;
@@ -58,7 +59,8 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
         options.query = options.query.replace("'currentUser'", currentUser.id);
     }
 
-    options.stats = (data.stats && IsUndefinedOrNull(queryString.query)) ? false : true;
+    options.stats = (data.stats && IsUndefinedOrNull(queryString.query) && tempQuery) ? false : true;
+    tempQuery = IsUndefinedOrNull(queryString.query);
     // To be used to fetch stats when user selects some query and then deselects it
 
     // @TODO dont fetch dictionary if already available
