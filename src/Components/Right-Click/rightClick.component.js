@@ -62,7 +62,7 @@ export default class RightClick extends Component {
     }, {
         id: 4,
         name: "Aggregation",
-        icon: 'fa-chart-line',
+        icon: 'fa-bar-chart',
         subMenu: true,
         onClick: (data, operator) => {
             console.log(data, operator);
@@ -217,7 +217,7 @@ export default class RightClick extends Component {
                                 return (
                                     !rowOption.subMenu ?
                                         <MenuItem key={key} onClick={() => rowOption.onClick(this.props)} data={this.props}>
-                                            <i className={`fa ${rowOption.icon}`} />
+                                            <i className={`fa ${rowOption.icon}`} /> &nbsp;
                                             <span className="space-icon">{rowOption.name}</span>
                                         </MenuItem> :
                                         <SubMenu key={key} title={[<i key={1} className={`fa ${rowOption.icon}`} />, <span key={2}> {rowOption.name}</span>]}>
