@@ -1,0 +1,23 @@
+.ace_print-margin {
+    visibility: hidden !important;
+}
+
+.modal-title {
+    width: 90%
+}
+
+.code-editor-header {
+    display: flex;
+    justify-content: space-between;
+    .code-title {
+        // flex-basis: 10%;
+    }
+    .select-box-container {
+        font-size: 14px;
+        flex-basis: 90%;
+        justify-content: flex-end;
+    }
+    .mode-selection {
+        flex-basis: 15%;
+    }
+}

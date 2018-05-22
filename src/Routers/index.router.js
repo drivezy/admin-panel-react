@@ -85,7 +85,8 @@ class MainApp extends Component {
         LoadAsync.loadStyleSheetGlobal();
         // GetProperties();
         LoadAsync.loadStyleSheet({
-            src: 'https://use.fontawesome.com/releases/v5.0.10/css/all.css',
+            src: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css',
+            // src: 'https://use.fontawesome.com/releases/v5.0.10/css/all.css',
             // src: 'https://use.fontawesome.com/4ca6d82400.js',
             attrs: {
                 integrity: 'sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg',

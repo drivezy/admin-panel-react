@@ -130,6 +130,18 @@ export default class PortletTable extends Component {
         this.dropdownToggle(column);
     };
 
+    filterColumn = (column) => {
+        let selected;
+        if (column.path.split(".").length == 1) { // for columns which is child of table itself
+            selected = column.column_name;
+        } else if (column.path.split(".").length == 2) { // for reference columns (for e.g. Created by table in with any menu)
+            selected = column.parentColumn;
+        }
+
+        if (typeof this.props.toggleAdvancedFilter == 'function') {
+            this.props.toggleAdvancedFilter({ single: selected });
+        }
+    };
 
     render() {
 
@@ -145,8 +157,8 @@ export default class PortletTable extends Component {
             type: 'desc'
         }];
 
-        const { genericData, finalColumns, listing, callback, rowTemplate } = this.state;
-        const { history, match } = this.props;
+        const { genericData, finalColumns, listing } = this.state;
+        const { history, match, menuDetail, rowTemplate, callback } = this.props;
 
         return (
             <Table striped className="sortable">
@@ -165,7 +177,7 @@ export default class PortletTable extends Component {
                                             <div className="column-title printable">
                                                 <a onClick={e => this.onSort(e, selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName))}>
                                                     <span>{selectedColumn.display_name}</span>
-                                                    <i className={`fas ${conditionForSorting}`} />
+                                                    <i className={`fa ${conditionForSorting}`} />
                                                 </a>
                                             </div>
                                             {/* Column Title Ends */}
@@ -174,8 +186,8 @@ export default class PortletTable extends Component {
                                             {
                                                 selectedColumn.path.split('.').length < 3 &&
                                                 <div className="filter-column">
-                                                    <a ng-click="portlet.preventDefault($event);portlet.filterColumn(select-edColumn)">
-                                                        <i className="fas fa-filter"></i>
+                                                    <a onClick={e => this.filterColumn(selectedColumn)}>
+                                                        <i className="fa fa-filter"></i>
                                                     </a>
                                                 </div>
                                             }
@@ -191,7 +203,7 @@ export default class PortletTable extends Component {
                                                             <Dropdown isOpen={this.state.dropdownOpen[selectedColumn.id]} toggle={() => this.dropdownToggle(selectedColumn)}>
                                                                 <DropdownToggle tag="span" data-toggle="dropdown" aria-expanded={this.state.dropdownOpen}>
                                                                     <a className="dropdown-link">
-                                                                        <i className="fas fa-sort-amount-down"></i>
+                                                                        <i className="fa fa-sort-amount-down"></i>
                                                                     </a>
                                                                 </DropdownToggle>
                                                                 <DropdownMenu>
@@ -199,7 +211,7 @@ export default class PortletTable extends Component {
                                                                         this.sortTypes.map((sort, key) => {
                                                                             return (
                                                                                 <div className="dropdown-item" key={key} onClick={e => this.dropdownSortOnDB(sort, selectedColumn)}>
-                                                                                    <i className={`fas ${sort.icon}`} /> {sort.caption}
+                                                                                    <i className={`fa ${sort.icon}`} /> {sort.caption}
                                                                                 </div>
                                                                             )
                                                                         })
@@ -232,7 +244,7 @@ export default class PortletTable extends Component {
                                     {
                                         finalColumns.map((selectedColumn, key) => (
                                             <td key={key}>
-                                                <RightClick history={history} match={match} key={key} renderTag="div" rowTemplate={rowTemplate} listingRow={listingRow} selectedColumn={selectedColumn}></RightClick>
+                                                <RightClick history={history} match={match} key={key} renderTag="div" rowTemplate={rowTemplate} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail} filteredColumn={this.filterColumn}></RightClick>
                                             </td>
                                         ))
                                     }

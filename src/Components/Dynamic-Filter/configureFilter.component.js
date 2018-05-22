@@ -47,6 +47,10 @@ export default class ConfigureDynamicFilter extends Component {
         };
     }
 
+    componentWillReceiveProps() {
+        this.urlParams = Location.search();
+    }
+
     componentDidMount() {
         SubscribeToEvent({ eventName: 'ToggleAdvancedFilter', callback: this.listenToggleAdvancedFilter });
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
@@ -62,19 +66,19 @@ export default class ConfigureDynamicFilter extends Component {
         // this.setState({ currentUser: data });
     }
 
-    listenToggleAdvancedFilter = (collapse, filterContent) => {
-        // urlParams = Location.search();
-
-        // Filter Content from portlet table is assigned to
-        // content here so , the input fields are preselected
-        if (filterContent) {
-            // self.content = filterContent;
-        }
-
+    /**
+     * Entry point for toggling advance filter 
+     * @param  {boolean} {isCollapsed
+     * @param  {string} single - takes column name and prepopulated it
+     * @param  {boolean} listenToInput} - if true, whatever value of isCollapsed is passed, will be assigned otherwise isCollapsed is always toggled by default
+     */
+    listenToggleAdvancedFilter = ({ isCollapsed: collapse, single, forcefullyUpdate }) => {
         if (this.firstLoad) { // makes sure initialize is called only once
             this.firstLoad = false;
             this.initialize();
         }
+        const { isCollapsed } = this.state;
+        collapse = forcefullyUpdate ? collapse : !isCollapsed;
 
         if (!collapse) {
             const active_filter = this.urlParams.filter;
@@ -89,9 +93,38 @@ export default class ConfigureDynamicFilter extends Component {
             } else {
                 this.resetColumns();
             }
-        }
+            // // @TODO because of async call in prepopulate, existing query gets overrided by this method, to prevent that calling after 1s
+            setTimeout(() => this.assignSelectedFilterColumn({ single }), 1000); // checks if filter column is passed, prepopulate that column
 
+            // this.assignSelectedFilterColumn({ single })
+        }
         this.setState({ isCollapsed: collapse });
+    }
+
+    assignSelectedFilterColumn = ({ single }) => {
+        // If the dynamic filter is only for the column the select field should be preselected
+        const { filterArr } = this.state;
+        const { content } = this.props;
+        console.log(single);
+        if (single) {
+            let arrayIndex;
+            if (IsUndefinedOrNull(filterArr[filterArr.length - 1][0].html)) {
+                arrayIndex = filterArr.length - 1;
+            } else {
+                arrayIndex = filterArr.length;
+            }
+            // Push an array to the current one
+            // this is a fallback if there is query that is to be prepopulated
+            filterArr[arrayIndex] = [[...this.filterObj]];
+            // to the last element in the array , push the column
+            filterArr[arrayIndex][0].column = SelectFromOptions(content.dictionary, single, 'column_name');
+            // once the column is selected , columnChange should be called to load necessary data for the column
+            this.columnChange(filterArr[arrayIndex][0].column, {
+                parentIndex: filterArr.length - 1,
+                childIndex: 0,
+                setValue: true
+            });
+        }
     }
 
     /**
@@ -129,41 +162,6 @@ export default class ConfigureDynamicFilter extends Component {
         this.setState({ filterArr });
     };
 
-    // For all the datetime input filters inject a daterange picker
-    dateInput({ filter, filterArr, parentIndex, childIndex }) {
-        const child = filterArr[parentIndex][childIndex];
-        const startDate = filterArr[parentIndex][childIndex].inputField = TimeOperation({ method: 'subtract', parameter: 'day', format: this.dateFormat, value: 1 });
-        // filterArr[parentIndex][childIndex].inputField = moment().subtract(1, "day").format(this.dateFormat);
-        const endDate = filterArr[parentIndex][childIndex].secondInputField = GetTime({ format: this.dateFormat });
-        switch (filter) {
-            case " BETWEEN ":
-                //	<daterangepicker> is injected to the template with the format and selected value
-                filterArr[parentIndex][childIndex].html = () => (<DatePicker format={this.dateFormat} timePicker={true} onChange={(event, data) => this.convertToInputField({ data, parentIndex, childIndex, dateRange: true, })} value={{ startDate, endDate }} />);
-                // filterArr[parentIndex][childIndex].html = (<daterange-picker ng-model="b.slot" format="{{configureFilter.dateFormat}}" />);
-                // filterArr[parentIndex][childIndex].html = "<div class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding-left\"><daterange-picker ng-model=\"b.slot\" format=\"{{configureFilter.dateFormat}}\"></daterange-picker></div>";
-                break;
-
-            case " NOT BETWEEN ":
-                filterArr[parentIndex][childIndex].html = () => <DatePicker format={this.dateFormat} timePicker={true} onChange={(event, data) => this.convertToInputField({ data, parentIndex, childIndex, dateRange: true })} value={{ startDate, endDate }} />;
-                // filterArr[parentIndex][childIndex].html = "<div class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding-left\"><daterange-picker ng-model=\"b.slot\" format=\"{{configureFilter.dateFormat}}\"></daterange-picker></div>";
-                break;
-
-            case " IS NULL ":
-                filterArr[parentIndex][childIndex].inputField = null;
-                break;
-
-            case " IS NOT NULL":
-                filterArr[parentIndex][childIndex].inputField = null;
-                break;
-
-            default:
-                filterArr[parentIndex][childIndex].html = () => (<DatePicker single={true} format={this.dateFormat} timePicker={true} onChange={(event, data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'inputField' })} value={child.inputField} />);
-                // filterArr[parentIndex][childIndex].html = "<daterange-picker single = \"true\" ng-model=\"b.inputField\" format=\"{{configureFilter.dateFormat}}\"></daterange-picker>";
-                break;
-        }
-        return filterArr;
-    }
-
     // Invoked when column is selected
     columnChange = async (column, { parentIndex, childIndex, setValue = false }) => {
         const { filterArr } = this.state;
@@ -185,7 +183,7 @@ export default class ConfigureDynamicFilter extends Component {
         let selectedFieldToBeReturned;
         switch (column.column_type) {
             // if column type is number or string
-            case 107: case 108:
+            case 107: case 108: case 708:
                 // for a column of type string , stringFilterArr is to be assiged to second filter
                 filterArr[parentIndex][childIndex].filterField = column.column_type == 107 ? this.numericFilterArr : this.stringFilterArr;
                 filterArr[parentIndex][childIndex].inputField = column.column_type == 107 ? 0 : '';
@@ -208,9 +206,9 @@ export default class ConfigureDynamicFilter extends Component {
                 return filterArr[parentIndex][childIndex].inputField;
 
             // if column type is boolean
-            case 111:
+            case 119: case 111:
                 filterArr[parentIndex][childIndex].filterField = this.booleanFilterArr;
-                filterArr[parentIndex][childIndex].selectValue.selected = this.booleanObj[0];
+                filterArr[parentIndex][childIndex].selectValue = this.booleanObj[0];
                 this.callFilterChangeAfterColumnChange(filterArr, { parentIndex, childIndex });
                 return filterArr[parentIndex][childIndex].inputField;
             // defer.resolve(filterArr[parentIndex][childIndex].inputField);
@@ -224,8 +222,8 @@ export default class ConfigureDynamicFilter extends Component {
                         url += "?query=" + column.sorting_type;
                     }
 
-                    const res = await Get(url);
-                    filterArr[parentIndex][childIndex].referenceObj = res.data.response;
+                    const res = await Get({ url, urlPrefix: GLOBAL.ROUTE_URL });
+                    filterArr[parentIndex][childIndex].referenceObj = res.response;
                     this.callFilterChangeAfterColumnChange(filterArr, { parentIndex, childIndex });
                     return filterArr[parentIndex][childIndex].referenceObj;
                     // defer.resolve(filterArr[parentIndex][childIndex].referenceObj);
@@ -274,7 +272,6 @@ export default class ConfigureDynamicFilter extends Component {
         let { filterArr } = this.state;
 
         if (setValue) {
-            filter = filter.value; // @TODO once select box is fixed, remove this line
             filterArr[parentIndex][childIndex].filter = filter;
             // filterArr[parentIndex][childIndex].filter = filter;
             this.setState({ filterArr });
@@ -298,7 +295,6 @@ export default class ConfigureDynamicFilter extends Component {
                 filterArr[parentIndex][childIndex].html = () => <input type='text' className='form-control' onChange={(data) => this.convertToInputField({ data: data.target.value, parentIndex, childIndex })} value={child.inputField} placeholder='Input Value' />;
                 break;
 
-            // @TODO add date field
             case 109: // if a date picker is required
                 filterArr = this.dateInput({ filterArr, filter, parentIndex, childIndex }, this.dateFormat);
                 break;
@@ -309,15 +305,23 @@ export default class ConfigureDynamicFilter extends Component {
                 filterArr = this.dateInput({ filterArr, filter, parentIndex, childIndex });
                 break;
 
-            case 111:
-                filterArr[parentIndex][childIndex].html = () => (<SelectBox onChange={(event, data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'selectValue' })} value={child.selectValue} options={this.booleanObj} field='name' placeholder="Select Value" />);
+            case 119: case 111:
+                filterArr[parentIndex][childIndex].html = () => (<SelectBox onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'selectValue' })} value={child.selectValue} options={this.booleanObj} field='name' placeholder="Select Value" />);
                 // filterArr[parentIndex][childIndex].html = (<custom-select-field ng-model="b.selectValue" extra-params="{parentIndex: $parent.$childIndex, childIndex: $childIndex}" call-it="configureFilter.convertToInputField" place-holder="Select Value" iterate-item="name" obj="configureFilter.booleanObj" />);
                 valueColumnType = "select";
                 break;
 
             case 116: // for reference data , prefilled
                 filterArr[parentIndex][childIndex].inputField = null;
-                filterArr[parentIndex][childIndex].html = () => (<SelectBox onChange={(event, data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'selectValue' })} value={child.selectValue} options={child.referenceObj} field='name' placeholder="Select Value" />);
+                filterArr[parentIndex][childIndex].html = () => (
+                    <SelectBox
+                        onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'selectValue' })}
+                        value={child.selectValue} options={child.referenceObj}
+                        field='name'
+                        placeholder="Select Value"
+                        getOptions={(input) => this.getInputRecord({ input, parentIndex, childIndex })}
+                    />
+                );
                 // filterArr[parentIndex][childIndex].html = (<custom-select-field ng-model="b.selectValue" extra-params="{parentIndex: $parent.$childIndex, childIndex: $childIndex}" call-it="configureFilter.convertToInputField" place-holder="Select Value" iterate-item="{{b.column.selected.referenced_model.display_column}}" obj="b.referenceObj" />);
                 valueColumnType = "select";
                 break;
@@ -332,15 +336,21 @@ export default class ConfigureDynamicFilter extends Component {
                     }];
                 }
 
-                filterArr[parentIndex][childIndex].html = () => (
-                    <SelectBox
-                        onChange={(event, data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'selectValue' })}
-                        value={child.selectValue}
-                        field={child.column.referenced_model.display_column}
-                        place-holder="Select Value"
-                        getOptions={(input) => this.getInputRecord({ input, parentIndex, childIndex })}
-                    />
-                );
+                if (child.column.referenced_model && child.column.referenced_model.display_column) {
+                    filterArr[parentIndex][childIndex].html = () => (
+                        <SelectBox
+                            onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'selectValue' })}
+                            value={child.selectValue}
+                            field={child.column.referenced_model.display_column}
+                            placeholder="Select Value for any reason"
+                            getOptions={(input) => this.getInputRecord({ input, parentIndex, childIndex })}
+                        />
+                    );
+                } else {
+                    filterArr[parentIndex][childIndex].html = () => null
+                }
+
+
                 // filterArr[parentIndex][childIndex].html = (<custom-select-field required="true" ng-model="b.selectValue" call-it="configureFilter.convertToInputField" extra-params="{parentIndex: $parent.$childIndex, childIndex: $childIndex}" place-holder="Type to load data" iterate-item="{{b.column.referenced_model.display_column}}" async="configureFilter.getInputRecord(search,{parentIndex: $parent.$childIndex, childIndex: $childIndex})" obj="b.asyncResults" />);
                 break;
 
@@ -366,13 +376,49 @@ export default class ConfigureDynamicFilter extends Component {
         // }
     }
 
+    // For all the datetime input filters inject a daterange picker
+    dateInput({ filter, filterArr, parentIndex, childIndex }) {
+        const child = filterArr[parentIndex][childIndex];
+        const startDate = filterArr[parentIndex][childIndex].inputField = TimeOperation({ method: 'subtract', parameter: 'day', format: this.dateFormat, value: 1 });
+        // filterArr[parentIndex][childIndex].inputField = moment().subtract(1, "day").format(this.dateFormat);
+        const endDate = filterArr[parentIndex][childIndex].secondInputField = GetTime({ format: this.dateFormat });
+        switch (filter) {
+            case " BETWEEN ":
+                //	<daterangepicker> is injected to the template with the format and selected value
+                filterArr[parentIndex][childIndex].html = () => (<DatePicker format={this.dateFormat} timePicker={true} onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex, dateRange: true, })} value={{ startDate, endDate }} />);
+                // filterArr[parentIndex][childIndex].html = (<daterange-picker ng-model="b.slot" format="{{configureFilter.dateFormat}}" />);
+                // filterArr[parentIndex][childIndex].html = "<div class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding-left\"><daterange-picker ng-model=\"b.slot\" format=\"{{configureFilter.dateFormat}}\"></daterange-picker></div>";
+                break;
+
+            case " NOT BETWEEN ":
+                filterArr[parentIndex][childIndex].html = () => <DatePicker format={this.dateFormat} timePicker={true} onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex, dateRange: true })} value={{ startDate, endDate }} />;
+                // filterArr[parentIndex][childIndex].html = "<div class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding-left\"><daterange-picker ng-model=\"b.slot\" format=\"{{configureFilter.dateFormat}}\"></daterange-picker></div>";
+                break;
+
+            case " IS NULL ":
+                filterArr[parentIndex][childIndex].inputField = null;
+                break;
+
+            case " IS NOT NULL":
+                filterArr[parentIndex][childIndex].inputField = null;
+                break;
+
+            default:
+                filterArr[parentIndex][childIndex].html = () => (<DatePicker single={true} format={this.dateFormat} timePicker={true} onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'inputField' })} value={child.inputField} />);
+                // filterArr[parentIndex][childIndex].html = "<daterange-picker single = \"true\" ng-model=\"b.inputField\" format=\"{{configureFilter.dateFormat}}\"></daterange-picker>";
+                break;
+        }
+        return filterArr;
+    }
+
     /**
      * Fetches async data from server and used to select reference type data
      * @param  {string} val
      * @param  {} index
      * @param  {} queryField
      */
-    getInputRecord = async ({ input: val, parentIndex, childIndex, queryFieldName } = {}) => {
+    getInputRecord = async ({ input: val, parentIndex, childIndex, queryField: queryFieldName } = {}) => {
+        console.log(val);
         if (val) {
             const { filterArr } = this.state;
             const displayName = filterArr[parentIndex][childIndex].column.referenced_model.display_column;
@@ -405,10 +451,11 @@ export default class ConfigureDynamicFilter extends Component {
             if (queryFieldName) {
                 return result.response;
             }
-            const response = result.response.map((option) => {
-                return { ...option, ...{ label: option[displayName], value: option['id'] } }
-            });
-            return { options: response };
+            // const response = result.response.map((option) => {
+            //     return { ...option, ...{ label: option[displayName], value: option['id'] } }
+            // });
+            // console.log(response);
+            return { options: result.response };
         }
     }
 
@@ -432,7 +479,12 @@ export default class ConfigureDynamicFilter extends Component {
      * once the modal is opened Function prepolates the filterArray with what is in the url
      * @param  {string} query
      */
-    prepopulate = async (query) => {
+    prepopulate = async (query = '') => {
+        const { isCollapsed } = this.state;
+        if (!isCollapsed) {
+            return;
+        }
+
         const filterArr = this.state.filterArr;
         const parentQueries = query.split(" AND ");
 
@@ -455,7 +507,9 @@ export default class ConfigureDynamicFilter extends Component {
                         parentIndex: parentIndex,
                         childIndex: key
                     })
-                    filterArr[parentIndex][key].selectValue = SelectFromOptions(res, queryObj.selectedInput, 'id');
+                    if (res) {
+                        filterArr[parentIndex][key].selectValue = SelectFromOptions(res, queryObj.selectedInput, 'id');
+                    }
 
                 } else if (filterArr[parentIndex][key].column.column_type == 111) { // Check if column type is boolean
                     filterArr[parentIndex][key].selectValue = SelectFromOptions(this.booleanObj, queryObj.selectedInput, 'id');
@@ -482,8 +536,10 @@ export default class ConfigureDynamicFilter extends Component {
                         });
                         // console.log('res',res);
                         // console.log('filterArr[parentIndex][key].asyncResults',filterArr[parentIndex][key]);
-                        filterArr[parentIndex][key].asyncResults = res;
-                        filterArr[parentIndex][key].selectValue = filterArr[parentIndex][key].asyncResults[0];
+                        if (res) {
+                            filterArr[parentIndex][key].asyncResults = res;
+                            filterArr[parentIndex][key].selectValue = filterArr[parentIndex][key].asyncResults[0];
+                        }
                     }
                 } else {
                     this.columnChange(filterArr[parentIndex][key].column, {
@@ -510,7 +566,7 @@ export default class ConfigureDynamicFilter extends Component {
     // Initialize the controller
     initialize() {
         const { content } = this.props;
-
+        const { filterArr } = this.state;
         // filterObj is a basic data structure that is defined and used
         // across this controller
         // @todo Should rewrite this part
@@ -539,7 +595,6 @@ export default class ConfigureDynamicFilter extends Component {
 
         // var active_filter = Location.search().filter;
         let active_filter;
-
         // IF there is an active filter then add that first 
         if (active_filter) {
             this.activeFilter(active_filter)
@@ -547,6 +602,7 @@ export default class ConfigureDynamicFilter extends Component {
         } else {
             this.state.query = '';
         }
+
         this.setState({ order: this.state.order });
     }
 
@@ -555,7 +611,8 @@ export default class ConfigureDynamicFilter extends Component {
         const { filters = [] } = this.props;
         filters.forEach((filter, key) => {
             if (index == filter.id) {
-                this.setState({ activeFilter: filter });
+                this.state.activeFilter = filter;
+                // this.setState({ activeFilter: filter });
             }
         });
     }
@@ -568,6 +625,10 @@ export default class ConfigureDynamicFilter extends Component {
         }
         this.setState({ filterArr });
     };
+
+    closeForm = () => {
+        this.setState({ isCollapsed: true });
+    }
 
     submit = () => {
         const { filterArr, currentUser, activeFilter, sort, order, scopes } = this.state;
@@ -617,7 +678,7 @@ export default class ConfigureDynamicFilter extends Component {
                                 }
                                 break;
 
-                            case 111:
+                            case 111: case 119:
                                 query += value.column.column_name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
                                 break;
 
@@ -681,10 +742,10 @@ export default class ConfigureDynamicFilter extends Component {
         const { isCollapsed, filterArr, sort, order } = this.state;
         const { content, history } = this.props;
 
-        const sorts = [];
-        this.sorts.forEach((sort, key) => {
-            sorts[key] = { name: sort, value: sort };
-        })
+        // const sorts = [];
+        // this.sorts.forEach((sort, key) => {
+        //     sorts[key] = { name: sort, value: sort };
+        // })
 
         return (
             <Collapse isOpen={!isCollapsed}>
@@ -711,8 +772,8 @@ export default class ConfigureDynamicFilter extends Component {
 
                                                 {
                                                     parent.map((child, childIndex) => {
-                                                        const childfilterField = [];
-                                                        child.filterField.forEach(filter => childfilterField.push({ name: filter, id: filter }));
+                                                        const childfilterField = child.filterField;
+                                                        // child.filterField.forEach(filter => childfilterField.push({ name: filter, id: filter }));
                                                         return (
                                                             <div key={childIndex}>
                                                                 <div className="flex-box filter-row event-flow">
@@ -721,7 +782,7 @@ export default class ConfigureDynamicFilter extends Component {
                                                                             place-holder="Column" obj="child.selectField" iterate-item="display_name" required="true">
                                                                         </custom-select-field> */}
 
-                                                                        <SelectBox onChange={(name, data) => {
+                                                                        <SelectBox onChange={(data) => {
                                                                             this.columnChange(data, { parentIndex, childIndex, setValue: true })
                                                                         }}
                                                                             value={child.column} field='display_name' options={child.selectField} placeholder='Column' />
@@ -731,7 +792,7 @@ export default class ConfigureDynamicFilter extends Component {
                                                                             place-holder="Filter" obj="child.filterField">
                                                                         </custom-select-field> */}
 
-                                                                        <SelectBox onChange={(name, data) => this.filterChange(data, { parentIndex, childIndex, setValue: true })} value={child.filter} options={childfilterField} placeholder='Column' />
+                                                                        <SelectBox onChange={(data) => this.filterChange(data, { parentIndex, childIndex, setValue: true })} value={child.filter} options={childfilterField} placeholder='Column' />
                                                                     </div>
                                                                     <div className="operator-select">
                                                                         {/* <span id="inject" dynamic="child.html"></span> */}
@@ -783,7 +844,7 @@ export default class ConfigureDynamicFilter extends Component {
                                 {/* <custom-select-field ng-model="configureFilter.order" place-holder="Order" obj="configureFilter.dictionary" iterate-item="column_name">
                                     </custom-select-field> */}
                                 <SelectBox
-                                    onChange={(name, data) => {
+                                    onChange={(data) => {
                                         this.setState({ order: data });
                                     }}
                                     value={order} field='column_name' options={content.dictionary} placeholder='Order'
@@ -793,10 +854,10 @@ export default class ConfigureDynamicFilter extends Component {
                                 {/* <custom-select-field ng-model="configureFilter.sort" place-holder="Sort" obj="configureFilter.sorts">
                                     </custom-select-field> */}
                                 <SelectBox
-                                    onChange={(name, data) => {
+                                    onChange={(data) => {
                                         this.setState({ sort: data });
                                     }}
-                                    value={sort} field='name' options={sorts} placeholder='Sort'
+                                    value={sort} options={this.sorts} placeholder='Sort' 
                                 />
                             </div>
                             <div className="col-sm-3 col-xs-3 border-select-filter margin-top-8" ng-if="configureFilter.scopeGroup.length">

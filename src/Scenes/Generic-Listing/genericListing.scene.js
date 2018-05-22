@@ -5,11 +5,10 @@ import {
     CardTitle, CardSubtitle, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from 'reactstrap';
 
-import './genericListing.css';
 import { GetUrlParams } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
 import { GetListingRecord } from './../../Utils/genericListing.utils';
-import { SubscribeToEvent, UnsubscribeEvent } from './../../Utils/stateManager.utils';
+import { SubscribeToEvent, UnsubscribeEvent, StoreEvent } from './../../Utils/stateManager.utils';
 
 import DynamicFilter from './../../Components/Dynamic-Filter/dynamicFilter.component';
 import ConfigureDynamicFilter from './../../Components/Dynamic-Filter/configureFilter.component';
@@ -25,6 +24,8 @@ import ModalWrap from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
 import PredefinedFilter from './../../Components/Dropdown-Filter/filter.component';
 import ListingSearch from './../../Components/Generic-Listing-Search/genericListingSearch.component';
 
+import './genericListing.css';
+
 export default class GenericListing extends Component {
     filterContent = {};
     constructor(props) {
@@ -33,7 +34,8 @@ export default class GenericListing extends Component {
             ...GetUrlParams(this.props), // params, queryString
             menuDetail: {},
             genericData: {},
-            filterContent: null
+            filterContent: null,
+            isCollapsed: true
         };
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
@@ -45,6 +47,12 @@ export default class GenericListing extends Component {
         if (this.state.menuDetail.url) {
             this.getListingData();
         }
+    }
+
+    toggleAdvancedFilter = (payload = {}) => {
+        const { isCollapsed } = this.state;
+        this.setState({ isCollapsed: !isCollapsed });
+        StoreEvent({ eventName: 'ToggleAdvancedFilter', data: { isCollapsed: !isCollapsed, ...payload } });
     }
 
     componentDidMount() {
@@ -74,6 +82,7 @@ export default class GenericListing extends Component {
                 // this.setState({ menuDetail });
                 this.state.menuDetail = menuDetail
                 this.getListingData();
+                StoreEvent({ eventName: 'showMenuName', data: {menuName: this.state.menuDetail.pageName} });
             }
         }
     }
@@ -82,6 +91,18 @@ export default class GenericListing extends Component {
         const { menuDetail, genericData, queryString, currentUser } = this.state;
         GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser });
     }
+
+    rowTemplate({ listingRow, selectedColumn }) {
+        let val;
+        try {
+            val = eval('listingRow.' + selectedColumn.path);
+        } catch (e) {
+            val = '';
+        }
+        return (<span>{val}</span>);
+    }
+
+
 
     dataFetched = ({ genericData, filterContent }) => {
         // const totalPages = Math.ceil((genericData.stats.records / genericData.stats.count));
@@ -96,6 +117,11 @@ export default class GenericListing extends Component {
         this.setState({ genericData, filterContent });
     }
 
+    predefinedFiltersUpdated = (filters) => {
+        const { menuDetail } = this.state;
+        menuDetail.userFilter = filters;
+        this.setState({ menuDetail });
+    }
 
     layoutChanges = (selectedColumns) => {
         let { genericData } = this.state;
@@ -105,10 +131,9 @@ export default class GenericListing extends Component {
     }
 
     render() {
-        const { genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent } = this.state;
+        const { genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent, currentUser } = this.state;
         const { listing = [], finalColumns = [] } = genericData;
         const { history, match } = this.props;
-
         return (
             <div className="generic-listing-container">
                 {/* <ModalWrap
@@ -127,21 +152,15 @@ export default class GenericListing extends Component {
                     </div>
 
                     <div className="search-wrapper">
-                        <DynamicFilter />
+                        {
+                            filterContent && filterContent.dictionary &&
+                            <DynamicFilter toggleAdvancedFilter={this.toggleAdvancedFilter} menuUpdatedCallback={this.predefinedFiltersUpdated} selectedColumns={genericData.selectedColumns} menuId={menuDetail.menuId} currentUser={currentUser} dictionary={filterContent.dictionary} userFilters={menuDetail.userFilter} history={history} match={match} />
+                        }
                     </div>
 
                     <div className="header-actions">
 
                         {/* <div>Hi</div> */}
-
-                        {
-                            menuDetail.userFilter ?
-                                <PredefinedFilter userFilter={menuDetail.userFilter} history={history} match={match} />
-                                :
-                                null
-                        }
-
-
 
                         <div className="btn-group" role="group" aria-label="Basic example">
                             {/* <button type="button" className="btn btn-sm btn-secondary">Left</button>
@@ -157,11 +176,23 @@ export default class GenericListing extends Component {
 
                             {
                                 genericData.columns ?
-                                    <TableSettings onSubmit={this.layoutChanges} listName={genericData.listName} selectedColumns={genericData.selectedColumns} columns={genericData.columns} />
+                                    <TableSettings
+                                        onSubmit={this.layoutChanges}
+                                        listName={genericData.listName}
+                                        selectedColumns={genericData.selectedColumns}
+                                        columns={genericData.columns}
+                                        rowTemplate={this.rowTemplate}
+                                    />
                                     :
                                     null
                             }
                         </div>
+                        {
+                            menuDetail.userFilter ?
+                                <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} userFilter={menuDetail.userFilter} history={history} match={match} />
+                                :
+                                null
+                        }
                     </div>
                 </div>
 
@@ -171,7 +202,7 @@ export default class GenericListing extends Component {
                         <ConfigureDynamicFilter
                             history={history}
                             match={match}
-                            filters={genericData.userFilter}
+                            filters={menuDetail.userFilter}
                             content={filterContent}
                         />
                     }
@@ -181,9 +212,9 @@ export default class GenericListing extends Component {
                     <CardBody>
                         {
                             (finalColumns && finalColumns.length) ?
-                                <PortletTable history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} /> : null
+                                <PortletTable toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} /> : null
                         }
-                        <ListingPagination history={history} match={match} genericData={genericData} />
+                        <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
                     </CardBody>
                 </Card>
             </div>

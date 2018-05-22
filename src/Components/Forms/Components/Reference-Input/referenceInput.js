@@ -53,7 +53,7 @@ export default class ReferenceInput extends Component {
 
         return (
             <div className="reference-input">
-                <SelectBox name={this.props.name} onChange={this.props.onChange} field={column.referenced_model.display_column || column.display_column} sortingType={column.sorting_type} async={url} value={value} />
+                <SelectBox name={this.props.name} onChange={this.props.onChange} index="id" field={column.referenced_model.display_column || column.display_column} sortingType={column.sorting_type} async={url} value={value} />
             </div>
         );
     }
