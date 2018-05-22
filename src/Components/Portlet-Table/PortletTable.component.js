@@ -17,12 +17,12 @@ export default class PortletTable extends Component {
 
     sortTypes = [{
         id: 0,
-        icon: 'fa-sort-numeric-down',
+        icon: 'fa-sort-numeric-asc',
         caption: 'Sort Asc',
         type: 'asc'
     }, {
         id: 1,
-        icon: 'fa-sort-numeric-up',
+        icon: 'fa-sort-numeric-desc',
         caption: 'Sort Desc',
         type: 'desc'
     }];
@@ -145,18 +145,6 @@ export default class PortletTable extends Component {
 
     render() {
 
-        const sortTypes = [{
-            id: 0,
-            icon: 'fa-sort-numeric-down',
-            caption: 'Sort Asc',
-            type: 'asc'
-        }, {
-            id: 1,
-            icon: 'fa-sort-numeric-up',
-            caption: 'Sort Desc',
-            type: 'desc'
-        }];
-
         const { genericData, finalColumns, listing } = this.state;
         const { history, match, menuDetail, rowTemplate, callback } = this.props;
 
@@ -169,7 +157,7 @@ export default class PortletTable extends Component {
                         </th>
                         {
                             finalColumns.map((selectedColumn, key) => {
-                                let conditionForSorting = (this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.column_name))) ? (this.state.reverse ? 'fa-chevron-up' : 'fa-chevron-down') : ''
+                                let conditionForSorting = (this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.column_name))) ? (this.state.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down') : ''
                                 return (
                                     <th className="column-header" key={key}>
                                         {/* Column Wrapper */}
@@ -204,7 +192,7 @@ export default class PortletTable extends Component {
                                                             <Dropdown isOpen={this.state.dropdownOpen[selectedColumn.id]} toggle={() => this.dropdownToggle(selectedColumn)}>
                                                                 <DropdownToggle tag="span" data-toggle="dropdown" aria-expanded={this.state.dropdownOpen}>
                                                                     <a className="dropdown-link">
-                                                                        <i className="fa fa-sort-amount-down"></i>
+                                                                        <i className="fa fa-sort-amount-asc"></i>
                                                                     </a>
                                                                 </DropdownToggle>
                                                                 <DropdownMenu>
