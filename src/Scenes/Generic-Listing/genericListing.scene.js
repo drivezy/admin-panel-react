@@ -100,15 +100,13 @@ export default class GenericListing extends Component {
         let val;
 
         if (selectedColumn.route) {
-
             let id;
-
             if (selectedColumn.path.split('.')[1]) {
-                id = this.convertIt(selectedColumn.path).id;
+                id = this.convertIt(selectedColumn.path);
+                id = eval('listingRow.' + id).id;
             } else {
                 id = listingRow.id;
             }
-
             val = <a href={`${selectedColumn.reference_route}${id}`} >{eval('listingRow.' + selectedColumn.path)}</a>
         } else {
             try {

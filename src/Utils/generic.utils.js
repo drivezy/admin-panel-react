@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Get } from './http.utils';
 import { IsUndefinedOrNull } from './common.utils';
 import ToastNotifications from './../Utils/toast.utils';
-import {Delete} from './../Utils/http.utils';
+import { Delete } from './../Utils/http.utils';
 
 import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 import { GetMenuDetailEndPoint } from './../Constants/api.constants';
@@ -80,14 +80,18 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
             columns[i][j].parent = i;
 
             const relationIndex = columns[i][j].parent;
+
             if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && relationship[relationIndex].hasOwnProperty('related_model')) {
                 columns[i][j].reference_route = relationship[relationIndex].related_model.state_name;
                 columns[i][j].parentColumn = relationship[relationIndex].related_column ? relationship[relationIndex].related_column.column_name : null;
+            } else if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && relationship[relationIndex].state_name) {
+                columns[i][j].reference_route = relationship[relationIndex].state_name;
+                columns[i][j].parentColumn = relationship[relationIndex].parent_column;
             }
-
             selectedColumns[`${columns[i][j].parent}.${columns[i][j].id}`] = columns[i][j];
             // selectedColumns[columns[i][j].id] = columns[i][j];
         }
+
     }
     return selectedColumns;
 }
@@ -227,7 +231,7 @@ export function ConvertDependencyInjectionToArgs(dependencies) {
     var args = [];
     var dependency = dependencies.split(",");
     for (var i in dependency) {
-        args.push('this.'+eval(dependency[i]));
+        args.push('this.' + eval(dependency[i]));
     }
 
     return args;
@@ -270,7 +274,7 @@ export function GetPreSelectedMethods() {
         //     }
         // }
     };
-    
+
     /**
      * Generic add method
      * @param  {object} {action
@@ -287,7 +291,7 @@ export function GetPreSelectedMethods() {
             // modalFooter: () => (<ModalFooter payload={payload}></ModalFooter>)
         });
     }
-    
+
     /**
      * Generic edit method
      * @param  {object} {action
@@ -303,7 +307,7 @@ export function GetPreSelectedMethods() {
             modalBody: () => (<FormCreator payload={payload} />)
         });
     }
-    
+
     /**
      * Passes entire listing row object which is used to prepopulate input fields
      * short cut for adding new record
