@@ -66,10 +66,14 @@ export default class ListingPagination extends Component {
             if (endPage < number_of_pages) {
                 pages.push({ page: '....' })
             }
+        } else {
+            for (let i = startPage - totalPages; i <= endPage - totalPages; i++) {
+                pages.push({ page: i });
+            }
         }
-
-        pages.push({ page: number_of_pages })
-
+        if(startPage != number_of_pages){
+            pages.push({ page: number_of_pages })
+        }
         return pages;
     }
 
@@ -79,7 +83,6 @@ export default class ListingPagination extends Component {
         let previousPage;
         let nextPage;
         let pages = [];
-        // let showFlag = '.....';
 
         if (statsData && statsData.records) {
             var number_of_pages = Math.round(statsData.records / statsData.count);
@@ -109,26 +112,6 @@ export default class ListingPagination extends Component {
                             )
                         })
                     }
-
-                    {/* {
-                        number_of_pages > showPages ?
-                            <PaginationItem>
-                                <PaginationLink onClick={() => this.createNextFewPages()}>
-                                    {showFlag}
-                                </PaginationLink>
-                            </PaginationItem>
-                            :
-                            null
-                    } */}
-
-                    {/* {
-                        showPages < number_of_pages &&
-                        <PaginationItem>
-                            <PaginationLink onClick={() => this.redirectToPage(number_of_pages)} >
-                                {number_of_pages}
-                            </PaginationLink>
-                        </PaginationItem>
-                    } */}
 
                     <PaginationItem disabled={nextPage == number_of_pages + 1}>
                         <PaginationLink next onClick={() => this.redirectToPage(nextPage)} />
