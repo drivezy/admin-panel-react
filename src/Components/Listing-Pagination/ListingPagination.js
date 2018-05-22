@@ -10,7 +10,7 @@ export default class ListingPagination extends Component {
 
         this.state = {
             currentPage: props.currentPage ? props.currentPage : 1,
-            showPages: 5,
+            step: 5,
             statsData: props.statsData ? props.statsData : {}
         }
     }
@@ -27,14 +27,14 @@ export default class ListingPagination extends Component {
         let temPageNumber = pageNumber
         let tempUrl = `${`?limit=20&page=${pageNumber}`}`;
         if (pageNumber === '...') {
-            temPageNumber = this.state.currentPage - this.state.showPages
+            temPageNumber = this.state.currentPage - this.state.step
             if (temPageNumber < 1) {
                 temPageNumber = 1
             }
             tempUrl = `${`?limit=20&page=${temPageNumber}`}`;
         }
         if (pageNumber === '....') {
-            temPageNumber = parseInt(this.state.currentPage) + this.state.showPages
+            temPageNumber = parseInt(this.state.currentPage) + this.state.step
             tempUrl = `${`?limit=20&page=${temPageNumber}`}`;
         }
         this.setState({ currentPage: temPageNumber })
@@ -42,67 +42,64 @@ export default class ListingPagination extends Component {
         history.push(tempUrl);
     }
 
-    // startPage --> current page
-    // totalPages -- pages which you want to show current is 5
-    createPaginationNumber = (startPage, totalPages) => {
+    createPaginationNumber = (currentPage, step) => {
 
         const { statsData } = this.state
-        var number_of_pages = Math.round(statsData.records / statsData.count);
+        var number_of_pages = Math.ceil(statsData.records / statsData.count);
 
         const pages = [];
 
-        if (number_of_pages <= totalPages) {
+        currentPage = parseInt(currentPage);
+
+        if (number_of_pages <= step) {
             for (let i = 1; i <= number_of_pages; i++) {
                 pages.push({ page: i });
             }
             return pages;
         }
 
-        startPage = parseInt(startPage);
+        for (let i = 1; i <= number_of_pages; i++) {
+            if (i == 1) {
+                pages.push({ page: 1 })
+                if (currentPage >= 3) {
+                    pages.push({ page: '...' })
+                }
+            }
 
-        if (startPage >= 2) {
-            pages.push({ page: 1 });
-            if (startPage > 2) {
-                pages.push({ page: '...' })
+            let startIndex = currentPage;
+            let endIndex = currentPage + step
+
+            if (endIndex > number_of_pages && i > 2) {
+                startIndex = startIndex - step;
+                endIndex = number_of_pages
+            }
+
+            if (i >= startIndex && i <= endIndex && i < number_of_pages && i != 1) {
+                pages.push({ page: i })
+            }
+
+            if (i == number_of_pages) {
+                if (endIndex < number_of_pages) {
+                    pages.push({ page: '....' })
+                }
+
+                pages.push({ page: i })
             }
         }
 
-        let endPage = startPage + totalPages;
-
-        if (endPage <= number_of_pages) {
-            for (let i = startPage; i < endPage; i++) {
-                pages.push({ page: i });
-            }
-            if (endPage < number_of_pages) {
-                pages.push({ page: '....' })
-            }
-        } else {
-            let startIndex = startPage - totalPages;
-            let endIndex = endPage - totalPages;
-            if (startIndex <= 0) {
-                startIndex = 1;
-                endIndex = number_of_pages - 1;
-            }
-            for (let i = startIndex; i <= endIndex; i++) {
-                pages.push({ page: i });
-            }
-        }
-        if (startPage != number_of_pages) {
-            pages.push({ page: number_of_pages })
-        }
         return pages;
     }
 
 
     render() {
-        const { currentPage, showPages, statsData } = this.state
+        const { currentPage, step, statsData } = this.state
         let previousPage;
         let nextPage;
         let pages = [];
 
         if (statsData && statsData.records) {
             var number_of_pages = Math.round(statsData.records / statsData.count);
-            pages = this.createPaginationNumber(currentPage, showPages);
+            pages = this.createPaginationNumber(currentPage, step);
         }
 
         if (currentPage) {
