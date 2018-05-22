@@ -23,6 +23,7 @@ import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import ModalWrap from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
 
 import PredefinedFilter from './../../Components/Dropdown-Filter/filter.component';
+import ListingSearch from './../../Components/Generic-Listing-Search/genericListingSearch.component';
 
 export default class GenericListing extends Component {
     filterContent = {};
@@ -117,6 +118,14 @@ export default class GenericListing extends Component {
                     closeModal={() => this.setState({ isVisible: false })}
                 /> */}
                 <div className="page-bar">
+
+                    <div className="generic-listing-search">
+                        {
+                            filterContent && filterContent.dictionary &&
+                            <ListingSearch history={history} match={match} dictionary={filterContent.dictionary} />
+                        }
+                    </div>
+
                     <div className="search-wrapper">
                         <DynamicFilter />
                     </div>

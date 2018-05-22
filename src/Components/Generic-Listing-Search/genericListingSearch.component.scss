@@ -1,0 +1,18 @@
+.listing-search-container {
+    .listing-search-tool {
+        display: flex;
+        .listing-select-tool {
+            width: 250px;
+            .selectbox {
+                width: 150px;
+            }
+        }
+        .listing-input-tool {
+            width: 300px;
+            .input-select {
+                height: 36px;
+                //background-color: #ffffd9;
+            }
+        }
+    }
+}
