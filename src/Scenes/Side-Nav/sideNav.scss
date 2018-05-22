@@ -62,7 +62,6 @@
                     flex-grow: 1;
                     font-size: 14px;
                     height: 40px;
-                    padding: 8px 2px;
                     border-radius: 2px;
                     .menu-icon {
                         width: 30px;
@@ -75,6 +74,9 @@
                         opacity: 1;
                         transition: all 50ms ease-in-out;
                         display: inline-block;
+                    }
+                    &:hover{
+                        background: #2c3e4e;
                     }
                 }
             }

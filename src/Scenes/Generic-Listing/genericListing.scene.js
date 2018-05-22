@@ -206,9 +206,7 @@ export default class GenericListing extends Component {
                 </div>
 
                 {
-                    (finalColumns && finalColumns.length)
-
-                    &&
+                    (finalColumns && finalColumns.length) &&
                     <Card>
                         <CardBody>
 
@@ -218,11 +216,11 @@ export default class GenericListing extends Component {
                             {/* Portlet Table Ends */}
 
                             {/* Listing Pagination */}
-                        {
-                            Array.isArray(listing) && listing.length ?
+                            {
+                                Array.isArray(listing) && listing.length ?
 
-            <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
-:null}
+                                    <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
+                                    : null}
                             {/* Listing Pagination Ends */}
 
                         </CardBody>

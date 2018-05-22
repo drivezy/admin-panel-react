@@ -89,7 +89,7 @@ export default class Sidenav extends Component {
                         </span>
 
                     </div>
-                    <div className="sidebar-menus">
+                    <div className="sidebar-menus `${visible}?'expanded':'collapsed'`">
                         <div className="menus">
                             {
                                 menus.map((menu, key) => (

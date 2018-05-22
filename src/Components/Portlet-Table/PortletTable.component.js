@@ -61,7 +61,7 @@ export default class PortletTable extends Component {
         const actionColumnEle = document.getElementsByClassName('action-column')[0];
         if (actionColumnEle) {
             var actionColumnWidth = actionColumnEle.clientWidth;
-            var table = document.getElementsByClassName('table')[0];
+            var table = document.getElementsByClassName('table-container')[0];
             var tableWidth = table.clientWidth;
 
             var percent = (100 - (actionColumnWidth / tableWidth) * 100);
@@ -269,7 +269,7 @@ export default class PortletTable extends Component {
 
 
         return (
-            <div>
+            <div className="table-container">
                 {renderItem}
             </div>
         );
