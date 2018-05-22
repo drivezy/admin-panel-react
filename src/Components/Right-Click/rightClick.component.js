@@ -216,11 +216,11 @@ export default class RightClick extends Component {
                             if (rowOption.name) {
                                 return (
                                     !rowOption.subMenu ?
-                                        <MenuItem key={key} onClick={() => rowOption.onClick(this.props)} data={this.props}>
+                                        <MenuItem key={key} onClick={() => rowOption.onClick(this.props)} data={this.props} >
                                             <i className={`fa ${rowOption.icon}`} />
                                             <span className="space-icon">{rowOption.name}</span>
                                         </MenuItem> :
-                                        <SubMenu key={key} title={[<i key={1} className={`fa ${rowOption.icon}`} />, <span key={2}> {rowOption.name}</span>]}>
+                                        <SubMenu disabled={selectedColumn.path.split('.').length != 1} key={key} title={[<i key={1} className={`fa ${rowOption.icon}`} />, <span key={2}> {rowOption.name}</span>]}>
                                             {
                                                 this.aggregationOperators.map((operator, index) => {
                                                     return (

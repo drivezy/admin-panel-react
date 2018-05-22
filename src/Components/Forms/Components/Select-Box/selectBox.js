@@ -97,8 +97,9 @@ export default class SelectBox extends Component {
     }
 
     render() {
-        const { async, getOptions, multi } = this.props;
+        const { async, getOptions, multi, placeholder } = this.props;
         const { value, options, field } = this.state;
+
         let elem;
         if (async) {
             elem = <Async
@@ -107,6 +108,7 @@ export default class SelectBox extends Component {
                 loadOptions={this.getOptions}
                 onChange={this.handleChange}
                 labelKey={field}
+                placeholder={placeholder}
                 multi={multi}
             />
         } else if (getOptions) {
@@ -116,6 +118,7 @@ export default class SelectBox extends Component {
                 loadOptions={getOptions}
                 onChange={this.handleChange}
                 labelKey={field}
+                placeholder={placeholder}
                 multi={multi}
             />
         } else {
@@ -125,6 +128,9 @@ export default class SelectBox extends Component {
                 onChange={this.handleChange}
                 options={options}
                 labelKey={field}
+                autoFocus
+                clearable
+                placeholder={placeholder}
                 multi={multi}
             />
         }
