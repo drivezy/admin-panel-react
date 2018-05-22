@@ -48,10 +48,10 @@ export default class ListingPagination extends Component {
 
         const { statsData } = this.state
         var number_of_pages = Math.round(statsData.records / statsData.count);
-        
+
         const pages = [];
 
-        if(number_of_pages <= totalPages){
+        if (number_of_pages <= totalPages) {
             for (let i = 1; i <= number_of_pages; i++) {
                 pages.push({ page: i });
             }
@@ -78,16 +78,16 @@ export default class ListingPagination extends Component {
             }
         } else {
             let startIndex = startPage - totalPages;
-            let endIndex =  endPage - totalPages;
-            if(startIndex <= 0){
+            let endIndex = endPage - totalPages;
+            if (startIndex <= 0) {
                 startIndex = 1;
-                endIndex = number_of_pages-1;
+                endIndex = number_of_pages - 1;
             }
             for (let i = startIndex; i <= endIndex; i++) {
                 pages.push({ page: i });
             }
         }
-        if(startPage != number_of_pages){
+        if (startPage != number_of_pages) {
             pages.push({ page: number_of_pages })
         }
         return pages;
