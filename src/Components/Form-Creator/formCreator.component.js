@@ -13,7 +13,7 @@ import Yup from 'yup';
 
 import { Upload, Post, Put } from './../../Utils/http.utils';
 
-import SelectBox from './../Forms/Components/Select-Box/selectBox';
+import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import ReferenceInput from './../Forms/Components/Reference-Input/referenceInput';
 import DatePicker from './../Forms/Components/Date-Picker/datePicker';
 import TimePicker from './../Forms/Components/Time-Picker/timePicker';

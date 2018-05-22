@@ -218,12 +218,17 @@ export default class GenericListing extends Component {
                             {/* Portlet Table Ends */}
 
                             {/* Listing Pagination */}
-                            <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
+                        {
+                            Array.isArray(listing) && listing.length ?
+
+            <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
+:null}
                             {/* Listing Pagination Ends */}
 
                         </CardBody>
                     </Card>
                 }
+
 
             </div>
         );
