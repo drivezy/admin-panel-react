@@ -81,7 +81,7 @@ export default class GenericListing extends Component {
                 // this.setState({ menuDetail });
                 this.state.menuDetail = menuDetail
                 this.getListingData();
-                StoreEvent({ eventName: 'showMenuName', data: {menuName: this.state.menuDetail.pageName} });
+                StoreEvent({ eventName: 'showMenuName', data: { menuName: this.state.menuDetail.pageName } });
             }
         }
     }
@@ -205,7 +205,13 @@ export default class GenericListing extends Component {
                             (finalColumns && finalColumns.length) ?
                                 <PortletTable toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} /> : null
                         }
-                        <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
+                        {
+                            Array.isArray(listing) && listing.length ?
+                                <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
+                                :
+                                null
+                        }
+
                     </CardBody>
                 </Card>
             </div>
