@@ -51,6 +51,13 @@
             padding-left: 3px;
         }
     }
+    .react-contextmenu-item--disabled,
+    .react-contextmenu-item--disabled:hover {
+        background-color: transparent;
+        border-color: rgba(0,0,0,.15);
+        color: #878a8c;
+    }
+
     .react-contextmenu-item--divider {
         border-bottom: 1px solid #ececec;
         cursor: inherit;
