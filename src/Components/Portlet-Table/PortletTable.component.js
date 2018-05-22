@@ -249,7 +249,7 @@ export default class PortletTable extends Component {
                                             </td>
                                         ))
                                     }
-                                    <td className="custom-action action-column">
+                                    <td className="action-column">
                                         <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} placement={167} callback={callback} />
                                     </td>
                                 </tr>
@@ -267,7 +267,7 @@ export default class PortletTable extends Component {
             )
         }
 
-    
+
         return (
             <div>
                 {renderItem}
