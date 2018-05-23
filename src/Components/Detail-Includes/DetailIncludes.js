@@ -13,6 +13,9 @@ import {
     Row, Col
 } from 'reactstrap';
 
+import { CopyToClipBoard } from './../../Utils/common.utils';
+import ToastNotifications from './../../Utils/toast.utils';
+
 import { TabContent, TabPane, Nav, NavItem, NavLink, Table } from 'reactstrap';
 
 import PortletTable from './../../Components/Portlet-Table/PortletTable.component';
@@ -26,6 +29,18 @@ export default class DetailPortlet extends Component {
             activeTab: 0
         }
     }
+
+    rowOptions = [{
+        id: 0,
+        name: "Copy Row Id",
+        icon: 'fa-copy',
+        subMenu: false,
+        onClick: (data) => {
+            let id = data.listingRow.id;
+            CopyToClipBoard(id);
+            ToastNotifications.success("Id - " + id + " has been copied");
+        }
+    }];
 
     componentDidMount() {
         this.buildTabData(this.props);
@@ -240,6 +255,7 @@ export default class DetailPortlet extends Component {
                                                 rowTemplate={this.rowTemplate}
                                                 genericData={tabContent[key]}
                                                 callback={tab.refreshContent}
+                                                rowOptions={this.rowOptions}
                                             />
                                         </TabPane>
                                     ))
