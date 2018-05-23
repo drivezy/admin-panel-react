@@ -42,11 +42,21 @@ export default class ListingPagination extends Component {
         history.push(tempUrl);
     }
 
+    // startPage --> current page
+    // totalPages -- pages which you want to show current is 5
     createPaginationNumber = (startPage, totalPages) => {
+
         const { statsData } = this.state
         var number_of_pages = Math.round(statsData.records / statsData.count);
 
         const pages = [];
+
+        if (number_of_pages <= totalPages) {
+            for (let i = 1; i <= number_of_pages; i++) {
+                pages.push({ page: i });
+            }
+            return pages;
+        }
 
         startPage = parseInt(startPage);
 
@@ -67,11 +77,17 @@ export default class ListingPagination extends Component {
                 pages.push({ page: '....' })
             }
         } else {
-            for (let i = startPage - totalPages; i <= endPage - totalPages; i++) {
+            let startIndex = startPage - totalPages;
+            let endIndex = endPage - totalPages;
+            if (startIndex <= 0) {
+                startIndex = 1;
+                endIndex = number_of_pages - 1;
+            }
+            for (let i = startIndex; i <= endIndex; i++) {
                 pages.push({ page: i });
             }
         }
-        if(startPage != number_of_pages){
+        if (startPage != number_of_pages) {
             pages.push({ page: number_of_pages })
         }
         return pages;

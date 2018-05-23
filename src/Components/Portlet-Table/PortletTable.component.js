@@ -23,12 +23,12 @@ export default class PortletTable extends Component {
 
     sortTypes = [{
         id: 0,
-        icon: 'fa-sort-numeric-down',
+        icon: 'fa-sort-numeric-asc',
         caption: 'Sort Asc',
         type: 'asc'
     }, {
         id: 1,
-        icon: 'fa-sort-numeric-up',
+        icon: 'fa-sort-numeric-desc',
         caption: 'Sort Desc',
         type: 'desc'
     }];
@@ -317,30 +317,19 @@ export default class PortletTable extends Component {
 
     render() {
 
-        const sortTypes = [{
-            id: 0,
-            icon: 'fa-sort-numeric-down',
-            caption: 'Sort Asc',
-            type: 'asc'
-        }, {
-            id: 1,
-            icon: 'fa-sort-numeric-up',
-            caption: 'Sort Desc',
-            type: 'desc'
-        }];
-
         const { genericData, finalColumns, listing } = this.state;
         const { history, match, menuDetail, rowTemplate, callback } = this.props;
 
-        return (
-            <Table striped className="sortable">
+        let renderItem;
+        if (listing.length) {
+            renderItem = <Table striped className="sortable">
                 <thead>
                     <tr>
                         <th>
                         </th>
                         {
                             finalColumns.map((selectedColumn, key) => {
-                                let conditionForSorting = (this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.column_name))) ? (this.state.reverse ? 'fa-chevron-up' : 'fa-chevron-down') : ''
+                                let conditionForSorting = (this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.column_name))) ? (this.state.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down') : ''
                                 return (
                                     <th className="column-header" key={key}>
                                         {/* Column Wrapper */}
@@ -375,7 +364,7 @@ export default class PortletTable extends Component {
                                                             <Dropdown isOpen={this.state.dropdownOpen[selectedColumn.id]} toggle={() => this.dropdownToggle(selectedColumn)}>
                                                                 <DropdownToggle tag="span" data-toggle="dropdown" aria-expanded={this.state.dropdownOpen}>
                                                                     <a className="dropdown-link">
-                                                                        <i className="fa fa-sort-amount-down"></i>
+                                                                        <i className="fa fa-sort-amount-asc"></i>
                                                                     </a>
                                                                 </DropdownToggle>
                                                                 <DropdownMenu>
@@ -420,7 +409,7 @@ export default class PortletTable extends Component {
                                             </td>
                                         ))
                                     }
-                                    <td className="custom-action action-column">
+                                    <td className="action-column">
                                         <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} placement={167} callback={callback} />
                                     </td>
                                 </tr>
@@ -430,6 +419,19 @@ export default class PortletTable extends Component {
                 </tbody>
 
             </Table>
+        } else {
+            renderItem = (
+                <div className='no-data-to-show'>
+                    No Data to show
+                </div>
+            )
+        }
+
+
+        return (
+            <div>
+                {renderItem}
+            </div>
         );
     }
 }

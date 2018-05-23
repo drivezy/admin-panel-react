@@ -124,7 +124,7 @@ class MainApp extends Component {
                         <div className="landing-sidebar">
                             <SideNav visible={sideNavExpanded} onCollapse={this.callback} menus={menus} />
                         </div>
-                        <div className="landing-wrapper {this.state.sideNavExpanded ? 'sidenav-open' : 'sidenav-closed'}" id="main" style={{ width: '100%', height: '100%' }}>
+                        <div className="landing-wrapper {this.state.sideNavExpanded ? 'sidenav-open' : 'sidenav-closed'}" id="main" style={{ height: '100%' }}>
                             <Header />
                             <Switch>
                                 {

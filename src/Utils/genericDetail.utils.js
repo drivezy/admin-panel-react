@@ -1,5 +1,5 @@
 import { IsUndefinedOrNull, BuildUrlForGetCall } from './common.utils';
-import { CreateFinalColumns } from './generic.utils';
+import { CreateFinalColumns, GetPreSelectedMethods, RegisterMethod } from './generic.utils';
 import { Get } from './http.utils';
 
 /**
@@ -310,6 +310,13 @@ function PrepareObjectForDetailPage(result, { extraParams }) {
     // tabs.callFunction = {
     //     callback: configureDataForDirective
     // };
+
+    const preDefinedmethods = GetPreSelectedMethods();
+    const methods = RegisterMethod(genericDetailObject.nextActions)
+    portlet.methods = methods;
+    // tabs.methods = methods;
+    portlet.preDefinedmethods = preDefinedmethods;
+    tabs.preDefinedmethods = preDefinedmethods;
 
     if (typeof callback == 'function') {
         callback({

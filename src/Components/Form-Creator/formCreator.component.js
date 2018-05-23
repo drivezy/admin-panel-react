@@ -13,7 +13,7 @@ import Yup from 'yup';
 
 import { Upload, Post, Put } from './../../Utils/http.utils';
 
-import SelectBox from './../Forms/Components/Select-Box/selectBox';
+import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import ReferenceInput from './../Forms/Components/Reference-Input/referenceInput';
 import DatePicker from './../Forms/Components/Date-Picker/datePicker';
 import TimePicker from './../Forms/Components/Time-Picker/timePicker';
@@ -140,7 +140,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // Reference Ends
 
         // Script Input
-        411: <ScriptInput value={values[column.column_name]} columns={props.payload.columns} method={props.payload.method} column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />,
+        411: <ScriptInput value={values[column.column_name]} columns={props.payload.columns} payload={props.payload} column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />,
         // Script Input Ends
 
         684: 'serialize',

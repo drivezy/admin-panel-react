@@ -10,9 +10,12 @@
         display: flex;
         justify-content: space-between;
         // width: 95%;
-        padding: 4px 50px;
+        padding: 4px 8px;
         background: #f1f1f1;
         border-bottom: 1px solid #d4d4d4;
+        .table-settings{
+            margin: 0px 4px;
+        }
         .search-wrapper {}
         .header-actions {
             display: flex;
@@ -25,7 +28,7 @@
         }
     }
     .card {
-        width: 95%;
+        // width: 95%;
         margin: 8px;
         .card-body {
             padding: 0px; // Table Begins
@@ -159,10 +162,10 @@
                             border: 1px solid #ececec;
                             border-left: none;
                             color: #183247;
-                            padding: 8px;
+                            padding: 15px 20px;
                             white-space: nowrap;
                             &.row-key {
-                                padding: 8px 15px;
+                                padding: 15px 10px;
                             }
                             a {
                                 color: #1e739e;

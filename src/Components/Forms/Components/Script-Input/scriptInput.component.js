@@ -15,7 +15,7 @@ export default class ScriptInput extends Component {
 
         this.state = {
             column: this.props.column,
-            method: this.props.method,
+            payload: this.props.payload,
             value: this.props.value || '',
             columns: this.props.columns
         }
@@ -35,13 +35,13 @@ export default class ScriptInput extends Component {
 
     render() {
 
-        const { method, column, columns, value } = this.state;
+        const { payload, column, columns, value } = this.state;
 
         return (
             <div className="script-input">
                 {
 
-                    ((column.column_name.indexOf('_id') == -1) && (method == 'edit'))
+                    ((column.column_name.indexOf('_id') == -1) && (payload.method == 'edit'))
                         ?
                         <AceEditor
                             mode={column.column_name}
@@ -70,11 +70,11 @@ export default class ScriptInput extends Component {
                             <div className="col">
                                 {
                                     value ?
-                                        <CodeEditor onSubmit={this.onSubmit} scriptId={value} />
+                                        <CodeEditor column={column} payload={payload} onSubmit={this.onSubmit} scriptId={value} />
                                         // <CodeEditor onSubmit={this.onSubmit} buttonComponent={() => (<button onClick={() => this.editScript(value)} className="btn btn-secondary">Edit Script</button>)} scriptId={value} />
                                         :
-                                        <CodeEditor onSubmit={this.onSubmit} scriptId={value} />
-                                       // <CodeEditor onSubmit={this.onSubmit} buttonComponent={() => (<button onClick={() => this.addScript(value)} className="btn btn-secondary">Add Script</button>)} />
+                                        <CodeEditor column={column} payload={payload} onSubmit={this.onSubmit} scriptId={value} />
+                                    // <CodeEditor onSubmit={this.onSubmit} buttonComponent={() => (<button onClick={() => this.addScript(value)} className="btn btn-secondary">Add Script</button>)} />
                                 }
                             </div>
                             <div className="col">

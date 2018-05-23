@@ -25,8 +25,6 @@ export function GetMenuDetail(menuId, callback) {
  * @returns evaluated query
  */
 export function ConvertToQuery(params) {
-    console.log(this);
-    console.log('params', params);
     const reg = /(:[$\w.]*)\w+/g;
     const tempArr = params.match(reg);
 
@@ -270,7 +268,13 @@ export function GetPreSelectedMethods() {
         //     }
         // }
     };
-
+    
+    /**
+     * Generic add method
+     * @param  {object} {action
+     * @param  {object} listingRow
+     * @param  {object} genericData}
+     */
     methods.add = ({ action, listingRow, genericData }) => {
         const payload = { action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module, dataModel: genericData.dataModel };
         ModalManager.openModal({
@@ -281,13 +285,36 @@ export function GetPreSelectedMethods() {
             // modalFooter: () => (<ModalFooter payload={payload}></ModalFooter>)
         });
     }
-
+    
+    /**
+     * Generic edit method
+     * @param  {object} {action
+     * @param  {object} listingRow
+     * @param  {object} genericData}
+     */
     methods.edit = ({ action, listingRow, genericData }) => {
         const payload = { method: 'edit', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module, dataModel: genericData.dataModel };
         ModalManager.openModal({
             payload,
             // modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),
             headerText: 'Edit modal',
+            modalBody: () => (<FormCreator payload={payload} />)
+        });
+    }
+    
+    /**
+     * Passes entire listing row object which is used to prepopulate input fields
+     * short cut for adding new record
+     * @param  {object} {action
+     * @param  {object} listingRow
+     * @param  {object} genericData}
+     */
+    methods.copy = ({ action, listingRow, genericData }) => {
+        const payload = { method: 'add', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module, dataModel: genericData.dataModel };
+        ModalManager.openModal({
+            payload,
+            // modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),
+            headerText: 'Add modal',
             modalBody: () => (<FormCreator payload={payload} />)
         });
     }

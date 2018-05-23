@@ -14,7 +14,7 @@ import { Button } from 'reactstrap';
 
 import SelectBox from './../Forms/Components/Select-Box/selectBox';
 import { SelectFromOptions } from './../../Utils/common.utils';
-import { Get } from './../../Utils/http.utils';
+import { Get, Post, Put } from './../../Utils/http.utils';
 
 import 'brace/mode/php';
 import 'brace/mode/javascript';
@@ -39,7 +39,7 @@ export default class CodeEditor extends Component {
     }
 
     onChange = (newValue) => {
-        // this.setState({ value: newValue });
+        this.setState({ value: newValue });
     }
 
     editorComponent = () => {
@@ -52,7 +52,7 @@ export default class CodeEditor extends Component {
                 width='100%'
                 height='85vh'
                 // onLoad={this.onLoad}
-                // onChange={this.onChange}
+                onChange={this.onChange}
                 fontSize={14}
                 showPrintMargin={true}
                 showGutter={true}
@@ -122,6 +122,12 @@ export default class CodeEditor extends Component {
         );
     }
 
+    loadScript = async (scriptId) => {
+        const result = await Get({ url: 'systemScript/' + scriptId });
+        if (result.success) {
+            this.setState({ scriptId: scriptId, isVisible: true, value: result.response.script || '' });
+        }
+    }
 
     // Open the editor
     openEditor = async (event) => {
@@ -134,20 +140,69 @@ export default class CodeEditor extends Component {
 
         // If there is script id , load it
         if (this.state.scriptId) {
-            const result = await Get({ url: 'systemScript/' + this.state.scriptId });
-            if (result.success) {
-                this.setState({ isVisible: true, value: result.response.script });
-            }
+            this.loadScript(this.state.scriptId);
         } else {
             // Else show plain editor
-            this.setState({ isVisible: true });
+            // Create a Dummy script
+            const { payload, column } = this.props;
+
+            // Assign the name to the
+            const name = payload.dataModel.related_model ? payload.dataModel.related_model.name : payload.dataModel.name;
+
+            var params = {
+                name: name + ' Script',
+                description: name + " Script for " + '',
+                source_type: name,
+                source_id: payload.listingRow.id,
+                source_column: column.column_name
+            }
+
+            const result = await Post({ url: 'systemScript', body: params })
+
+            if (result.success) {
+                this.loadScript(result.response.id);
+            }
         }
     }
 
 
-    onSubmit = () => {
-        console.log(this.state);
+    onSubmit = async () => {
 
+        const { payload, column } = this.props;
+
+        // const params = {
+        //     script: this.state.value,
+        //     script_type: '',
+        //     name: '',
+        //     description: ''
+        // }
+
+        // Assign the name to the
+        const name = payload.dataModel.related_model ? payload.dataModel.related_model.name : payload.dataModel.name;
+
+        var params = {
+            name: name + ' Script',
+            script: this.state.value,
+            description: name + " Script for " + '',
+            source_type: name,
+            source_id: payload.listingRow.id,
+            source_column: column.column_name
+        }
+
+        if (this.state.scriptId) {
+
+            const result = await Put({ url: 'systemScript/' + this.state.scriptId, body: params })
+            if (result.success) {
+                this.setState({ isVisible: false });
+            }
+        } else {
+
+            const result = await Post({ url: 'systemScript', body: params })
+            if (result.success) {
+                this.setState({ isVisible: false });
+
+            }
+        }
     }
 
     render() {
