@@ -240,7 +240,7 @@ export default class GenericListing extends Component {
                         <CardBody>
 
                             {/* Portlet Table */}
-                            <PortletTable rowTemplate={this.rowTemplate}
+                            <PortletTable rowTemplate={this.rowTemplate} tableType="listing"
                                 toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} />
                             {/* Portlet Table Ends */}
 
