@@ -2,15 +2,18 @@
     .listing-search-tool {
         display: flex;
         .listing-select-tool {
-            width: 250px;
+            width: 310px;
             .selectbox {
                 width: 150px;
             }
         }
         .listing-input-tool {
             width: 300px;
+            margin-left: 2px;
             .input-select {
                 height: 36px;
+                font-size: 12px;
+                background-color: #ffffd9;
                 //background-color: #ffffd9;
             }
         }

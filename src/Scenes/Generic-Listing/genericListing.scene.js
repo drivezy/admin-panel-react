@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import {
     Table, Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
+    CardTitle, CardSubtitle, Dropdown, DropdownToggle, Button, DropdownMenu, DropdownItem
 } from 'reactstrap';
 
 import { GetUrlParams } from './../../Utils/location.utils';
@@ -82,7 +82,7 @@ export default class GenericListing extends Component {
                 // this.setState({ menuDetail });
                 this.state.menuDetail = menuDetail
                 this.getListingData();
-                StoreEvent({ eventName: 'showMenuName', data: {menuName: this.state.menuDetail.pageName} });
+                StoreEvent({ eventName: 'showMenuName', data: { menuName: this.state.menuDetail.pageName } });
             }
         }
     }
@@ -130,6 +130,10 @@ export default class GenericListing extends Component {
         this.setState({ genericData });
     }
 
+    refreshPage() {
+        window.location.reload();
+    }
+
     render() {
         const { genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent, currentUser } = this.state;
         const { listing = [], finalColumns = [] } = genericData;
@@ -143,19 +147,21 @@ export default class GenericListing extends Component {
                     closeModal={() => this.setState({ isVisible: false })}
                 /> */}
                 <div className="page-bar">
+                    <div className="search-bar">
 
-                    <div className="generic-listing-search">
-                        {
-                            filterContent && filterContent.dictionary &&
-                            <ListingSearch history={history} match={match} dictionary={filterContent.dictionary} />
-                        }
-                    </div>
+                        <div className="generic-listing-search">
+                            {
+                                filterContent && filterContent.dictionary &&
+                                <ListingSearch history={history} match={match} dictionary={filterContent.dictionary} />
+                            }
+                        </div>
 
-                    <div className="search-wrapper">
-                        {
-                            filterContent && filterContent.dictionary &&
-                            <DynamicFilter toggleAdvancedFilter={this.toggleAdvancedFilter} menuUpdatedCallback={this.predefinedFiltersUpdated} selectedColumns={genericData.selectedColumns} menuId={menuDetail.menuId} currentUser={currentUser} dictionary={filterContent.dictionary} userFilters={menuDetail.userFilter} history={history} match={match} />
-                        }
+                        <div className="search-wrapper">
+                            {
+                                filterContent && filterContent.dictionary &&
+                                <DynamicFilter toggleAdvancedFilter={this.toggleAdvancedFilter} menuUpdatedCallback={this.predefinedFiltersUpdated} selectedColumns={genericData.selectedColumns} menuId={menuDetail.menuId} currentUser={currentUser} dictionary={filterContent.dictionary} userFilters={menuDetail.userFilter} history={history} match={match} />
+                            }
+                        </div>
                     </div>
 
                     <div className="header-actions">
@@ -166,11 +172,13 @@ export default class GenericListing extends Component {
                             {/* <button type="button" className="btn btn-sm btn-secondary">Left</button>
                             <button type="button" className="btn btn-sm btn-secondary">Middle</button>
 
-                            
-
+                        
                             <button type="button" className="btn btn-sm btn-secondary">Right</button> */}
 
-
+                            <Button color="primary" size="sm" onClick = { () => {this.refreshPage()} }>
+                                <i className="fa fa-refresh"></i>
+                            </Button>
+                
 
                             <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
 
