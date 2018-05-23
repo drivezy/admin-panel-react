@@ -122,7 +122,7 @@ export default class GenericDetail extends Component {
 
                 {
                     tabs && tabs.includes ?
-                        <DetailIncludes tabs={tabs} />
+                        <DetailIncludes history={history} tabs={tabs} callback={this.getDetailRecord}/>
                         : null
                 }
             </div>

@@ -15,6 +15,10 @@ body {
     display: block;
 }
 
+.relative {  
+    position: relative;
+}
+
 .flex {
     display: table;
     /* IE < 10, Opera *Presto* Desktop (Now dead) */

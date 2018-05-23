@@ -51,7 +51,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // Static Ends
 
         // Number
-        107: <Field autocomplete="off" className="form-control" type="number" name={column.column_name} placeholder={`Enter ${column.display_name}`} />,
+        107: <Field autoComplete="off" className="form-control" type="number" name={column.column_name} placeholder={`Enter ${column.display_name}`} />,
         // Number Ends
 
         // Text

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './DetailIncludes.css';
 
-
+import CustomAction from './../Custom-Action/CustomAction.component';
 import { CreateInclusions, GetColumnsForListing, CreateFinalColumns, RegisterMethod } from './../../Utils/generic.utils';
 import { GetColumnsForDetail } from './../../Utils/genericDetail.utils';
 
@@ -170,13 +170,14 @@ export default class DetailPortlet extends Component {
 
     render() {
         const { tabs, tabContent } = this.state;
+        const { history, callback} = this.props;
         const arr = [];
         // Object.keys(tabs.data).map((tab)=>(
 
         // ))
 
         return (
-            <div className="tabs-container">
+            <div className='generic-tabs-container'>
                 <Nav tabs>
                     {
                         tabContent.length ?
@@ -189,13 +190,33 @@ export default class DetailPortlet extends Component {
                                     </NavLink>
                                 </NavItem>
                             ))
-                            : null}
+                            : null
+                    }
                 </Nav>
                 <TabContent activeTab={this.state.activeTab}>
                     {
                         tabContent.length ?
                             tabContent.map((tab, key) => (
-                                <TabPane key={key} tabId={key}>
+                                <TabPane className='relative' key={key} tabId={key}>
+                                    {/* Building the table iterating through the row to display tab content */}
+                                    <div className='table-header'>
+                                        <div className='btn-group'>
+                                            <CustomAction history={history} genericData={tab} actions={tab.nextActions} placement={168} callback={callback} />
+                                        </div>
+
+                                        {/* <span className="btn-group">
+
+                                            <a className="btn btn-default btn-xs blue" ng-if="!vm.hideActions" href="#/modelAliasDetail/{{vm.modelAliasId}}">
+                                                <i className="fa fa-outdent" uib-tooltip="Redirect to Model Alias detail"></i>
+                                            </a>
+
+                                            <a className="btn btn-default btn-info btn-xs">
+                                                <settings-modal list-name="vm.listTab.listName" final-columns="vm.listTab.finalColumns" columns="vm.listTab.columns" relationship="vm.listTab.relationship"
+                                                    selected-columns="vm.preferences[vm.listTab.identifier]"></settings-modal>
+                                            </a>
+                                        </span> */}
+                                    </div>
+                                    
                                     <PortletTable
                                         finalColumns={tab.finalColumns}
                                         listing={tabs.data[tab.index]}
@@ -203,31 +224,6 @@ export default class DetailPortlet extends Component {
                                         genericData={tabContent[key]}
                                         callback={tab.refreshContent}
                                     />
-
-                                    {/* <Table striped>
-                                        <thead>
-                                            <tr>
-                                                {
-                                                    tabContent[key].finalColumns.map((column, key) => (
-                                                        <th key={key}> {column.display_name}</th>
-                                                    ))
-                                                }
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {
-                                                tabs.data[tab.index].map((listingRow, rowKey) => (
-                                                    <tr key={rowKey}>
-                                                        {tabContent[key].finalColumns.map((column, key) => (
-                                                            <td key={key}>
-                                                                {eval('listingRow.' + column.column_name)}
-                                                            </td>
-                                                        ))}
-                                                    </tr>
-                                                ))
-                                            }
-                                        </tbody>
-                                    </Table> */}
                                 </TabPane>
                             ))
                             : null}
