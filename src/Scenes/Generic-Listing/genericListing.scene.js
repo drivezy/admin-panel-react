@@ -24,7 +24,14 @@ import ModalWrap from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
 import PredefinedFilter from './../../Components/Dropdown-Filter/filter.component';
 import ListingSearch from './../../Components/Generic-Listing-Search/genericListingSearch.component';
 
+import { HotKeys } from 'react-hotkeys';
+
 import './genericListing.css';
+
+
+const map = {
+    'refresh': 'command+r'
+};
 
 export default class GenericListing extends Component {
     filterContent = {};
@@ -174,11 +181,11 @@ export default class GenericListing extends Component {
 
                         
                             <button type="button" className="btn btn-sm btn-secondary">Right</button> */}
-
-                            <Button color="primary" size="sm" onClick = { () => {this.refreshPage()} }>
-                                <i className="fa fa-refresh"></i>
-                            </Button>
-                
+                            <HotKeys keyMap={map}>
+                                <Button color="primary" size="sm" onClick={() => { this.refreshPage() }}>
+                                    <i className="fa fa-refresh"></i>
+                                </Button>
+                            </HotKeys>
 
                             <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
 
