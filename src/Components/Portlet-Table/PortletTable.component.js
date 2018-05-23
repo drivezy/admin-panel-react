@@ -42,7 +42,8 @@ export default class PortletTable extends Component {
             let id = data.listingRow.id;
             CopyToClipBoard(id);
             ToastNotifications.success("Id - " + id + " has been copied");
-        }
+        },
+        disabled: false
     }, { subMenu: null }, {
         id: 1,
         name: "Show Matching",
@@ -51,7 +52,8 @@ export default class PortletTable extends Component {
         onClick: (data) => {
             this.filterTable(data, [" LIKE ", " = "]);
             return data.selectedColumn.path.split(".").length < 3;
-        }
+        },
+        disabled: false
     }, {
         id: 2,
         name: "Filter Out",
@@ -60,7 +62,8 @@ export default class PortletTable extends Component {
         onClick: (data) => {
             this.filterTable(data, [" NOT LIKE ", " != "]);
             return data.selectedColumn.path.split(".").length < 3;
-        }
+        },
+        disabled: false
     }, {
         id: 3,
         name: "Filter More",
@@ -69,7 +72,8 @@ export default class PortletTable extends Component {
         onClick: (data) => {
             this.filterColumn(data.selectedColumn);
             return data.selectedColumn.path.split(".").length < 3;
-        }
+        },
+        disabled: false
     }, {
         id: 4,
         name: "Aggregation",
@@ -78,6 +82,8 @@ export default class PortletTable extends Component {
         onClick: (data, operator) => {
             console.log(data, operator);
             this.openAggregationResult(operator.name.toLowerCase(), operator.name + ' of ' + data.selectedColumn.display_name + ' equals : ', data)
+        }, disabled: (data) => {
+            return (data.selectedColumn.path.split('.').length != 1)
         }
     }, { subMenu: null },
     {
@@ -91,7 +97,8 @@ export default class PortletTable extends Component {
             let pageUrl = "/menuDef/" + data.menuDetail.menuId
 
             history.push(`${pageUrl}`);
-        }
+        },
+        disabled: false
     }, {
         id: 4,
         name: "Redirect Model Detail",
@@ -103,7 +110,8 @@ export default class PortletTable extends Component {
             let pageUrl = "/modelDetails/" + data.menuDetail.model.id
 
             history.push(`${pageUrl}`);
-        }
+        },
+        disabled: false
     }];
 
     openAggregationResult = async (operator, caption, data) => {
@@ -396,6 +404,7 @@ export default class PortletTable extends Component {
                 <tbody>
                     {
                         listing.map((listingRow, rowKey) => {
+
                             return (
                                 <tr className="table-row" key={rowKey}>
 
@@ -403,11 +412,25 @@ export default class PortletTable extends Component {
                                         {rowKey + 1}
                                     </td>
                                     {
-                                        finalColumns.map((selectedColumn, key) => (
-                                            <td key={key}>
-                                                <RightClick history={history} match={match} key={key} renderTag="div" rowOptions={this.rowOptions} rowTemplate={rowTemplate} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail}></RightClick>
-                                            </td>
-                                        ))
+                                        finalColumns.map((selectedColumn, key) => {
+
+                                            let displayName;
+                                            try {
+                                                displayName = eval('listingRow.' + selectedColumn.path)
+                                            } catch (e) {
+                                                displayName = ''
+                                            }
+                                            const html =
+                                                rowTemplate ?
+                                                    rowTemplate({ listingRow, selectedColumn }) :
+                                                    displayName
+
+                                            return (
+                                                <td key={key}>
+                                                    <RightClick html={html} history={history} match={match} key={key} renderTag="div" rowOptions={this.rowOptions} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail}></RightClick>
+                                                </td>
+                                            )
+                                        })
                                     }
                                     <td className="action-column">
                                         <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} placement={167} callback={callback} />

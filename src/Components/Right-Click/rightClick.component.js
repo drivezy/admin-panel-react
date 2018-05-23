@@ -14,26 +14,17 @@ export default class RightClick extends Component {
 
     render() {
 
-        const { rowTemplate, renderTag, selectedColumn, listingRow, history, match, menuDetail, rowOptions } = this.props;
-        let displayName;
-        try {
-            displayName = eval('listingRow.' + selectedColumn.path)
-        } catch (e) {
-            displayName = ''
-        }
-        return (
-            <div>
-                <ContextMenuTrigger renderTag={renderTag} id={listingRow.id + selectedColumn.path} holdToDisplay={1000}>
-                    <span>
-                        {
-                            rowTemplate ?
-                                rowTemplate({ listingRow, selectedColumn }) :
-                                displayName
-                        }
-                    </span>
-                </ContextMenuTrigger>
+        const { renderTag, rowOptions, html } = this.props;
 
-                <ContextMenu id={listingRow.id + selectedColumn.path}>
+        const identifier = "entry " + Math.random(Math.random() * 1000);
+
+        return (
+            [
+                <ContextMenuTrigger key={1} renderTag={renderTag} id={identifier} holdToDisplay={1000}>
+                    {html}
+                </ContextMenuTrigger>,
+
+                <ContextMenu key={2} id={identifier}>
                     {
                         rowOptions.map((rowOption, key) => {
                             if (rowOption.name) {
@@ -43,7 +34,7 @@ export default class RightClick extends Component {
                                             <i className={`fa ${rowOption.icon}`} />
                                             <span className="space-icon">{rowOption.name}</span>
                                         </MenuItem> :
-                                        <SubMenu disabled={selectedColumn.path.split('.').length != 1} key={key} title={[<i key={1} className={`fa ${rowOption.icon}`} />, <span key={2}> {rowOption.name}</span>]}>
+                                        <SubMenu disabled={typeof rowOption.disabled == 'function' ? rowOption.disabled(this.props) : rowOption.disabled} key={key} title={[<i key={1} className={`fa ${rowOption.icon}`} />, <span key={2}> {rowOption.name}</span>]}>
                                             {
                                                 this.aggregationOperators.map((operator, index) => {
                                                     return (
@@ -61,7 +52,7 @@ export default class RightClick extends Component {
                         })
                     }
                 </ContextMenu>
-            </div>
+            ]
         )
     }
 }

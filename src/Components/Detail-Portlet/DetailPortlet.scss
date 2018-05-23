@@ -1,3 +1,18 @@
 .detail-portlet{
     margin: 4px 0px;
+    .pull-right {
+        float: right;
+    }
+    .padding-bottom-4 {
+        padding-bottom: 4px;
+    }
+    .padding-top-4 {
+        padding-top: 4px;
+    }
+    .gray-border-bottom:nth-child(4n+1) {
+        background: #f9f9f9;
+    }
+    .gray-border-bottom:nth-child(4n) {
+        background: #f9f9f9;
+    }
 }
