@@ -99,7 +99,7 @@ export default class GenericDetail extends Component {
 
                 {
                     finalColumns.length ?
-                        <DetailPortlet data={data} finalColumns={finalColumns} />
+                        <DetailPortlet listingRow={data} finalColumns={finalColumns} />
                         : null
                 }
 

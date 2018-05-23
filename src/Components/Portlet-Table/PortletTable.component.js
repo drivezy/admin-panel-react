@@ -396,6 +396,7 @@ export default class PortletTable extends Component {
                 <tbody>
                     {
                         listing.map((listingRow, rowKey) => {
+
                             return (
                                 <tr className="table-row" key={rowKey}>
 
@@ -403,11 +404,25 @@ export default class PortletTable extends Component {
                                         {rowKey + 1}
                                     </td>
                                     {
-                                        finalColumns.map((selectedColumn, key) => (
-                                            <td key={key}>
-                                                <RightClick history={history} match={match} key={key} renderTag="div" rowOptions={this.rowOptions} rowTemplate={rowTemplate} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail}></RightClick>
-                                            </td>
-                                        ))
+                                        finalColumns.map((selectedColumn, key) => {
+
+                                            let displayName;
+                                            try {
+                                                displayName = eval('listingRow.' + selectedColumn.path)
+                                            } catch (e) {
+                                                displayName = ''
+                                            }
+                                            const html =
+                                                rowTemplate ?
+                                                    rowTemplate({ listingRow, selectedColumn }) :
+                                                    displayName
+
+                                            return (
+                                                <td key={key}>
+                                                    <RightClick html={html} history={history} match={match} key={key} renderTag="div" rowOptions={this.rowOptions} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail}></RightClick>
+                                                </td>
+                                            )
+                                        })
                                     }
                                     <td className="action-column">
                                         <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} placement={167} callback={callback} />

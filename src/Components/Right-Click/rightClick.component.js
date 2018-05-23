@@ -14,26 +14,18 @@ export default class RightClick extends Component {
 
     render() {
 
-        const { rowTemplate, renderTag, selectedColumn, listingRow, history, match, menuDetail, rowOptions } = this.props;
-        let displayName;
-        try {
-            displayName = eval('listingRow.' + selectedColumn.path)
-        } catch (e) {
-            displayName = ''
-        }
-        return (
-            <div>
-                <ContextMenuTrigger renderTag={renderTag} id={listingRow.id + selectedColumn.path} holdToDisplay={1000}>
-                    <span>
-                        {
-                            rowTemplate ?
-                                rowTemplate({ listingRow, selectedColumn }) :
-                                displayName
-                        }
-                    </span>
-                </ContextMenuTrigger>
+        const { renderTag, selectedColumn, listingRow, history, match, rowOptions, html } = this.props;
 
-                <ContextMenu id={listingRow.id + selectedColumn.path}>
+        const identifier = listingRow.id + (selectedColumn.path ? selectedColumn.path : selectedColumn.absPath);
+
+        return (
+            [
+
+                <ContextMenuTrigger key={1} renderTag={renderTag} id={identifier} holdToDisplay={1000}>
+                    {html}
+                </ContextMenuTrigger>,
+
+                <ContextMenu key={2} id={identifier}>
                     {
                         rowOptions.map((rowOption, key) => {
                             if (rowOption.name) {
@@ -61,7 +53,7 @@ export default class RightClick extends Component {
                         })
                     }
                 </ContextMenu>
-            </div>
+            ]
         )
     }
 }
