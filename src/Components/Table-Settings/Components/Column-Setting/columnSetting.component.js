@@ -67,7 +67,7 @@ export default class ColumnSetting extends Component {
         return (
             <div className={`column-setting ${activeColumn.column == column.column ? 'active' : ''}`} >
                 <div className="column-label">
-                    <div className="item-label" onClick={() => this.props.selectColumn(column, this.props.index)}>
+                    <div className="item-label" onClick={() => this.props.selectColumn(column, this.props.index)} onDoubleClick={() => this.props.removeColumn(column)} >
                         {column.columnTitle ? column.columnTitle : columns[column.column].column_name}
                     </div>
                     <div className="column-toggle" onClick={this.toggleSetting}>
@@ -93,9 +93,6 @@ export default class ColumnSetting extends Component {
                                 </div>
 
                                 <div className="row">
-                                    <div className="col">
-                                        <button type="button" onClick={() => this.props.removeColumn(column)} className="btn btn-danger">Remove</button>
-                                    </div>
                                     <div className="col">
                                         <button type="button" onClick={this.toggleSetting} className="btn btn-secondary">Close</button>
                                     </div>

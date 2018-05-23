@@ -131,9 +131,16 @@ export default class TableSettings extends Component {
                 <ModalBody>
                     <div className="left">
 
-                        <div class="card" >
-                            <div class="card-body">
-                                <h5 class="card-title">All Columns</h5>
+                        <div className="card" >
+                            <div className="card-body parent-card">
+
+                                <div className="card-top">
+                                    <h6 className="card-title">All Columns</h6>
+
+                                    <div className="input-holder">
+                                        <input type="text" className="search-box" placeholder="Search Columns" />
+                                    </div>
+                                </div>
 
                                 <ListGroup className="parent-group">
                                     {
@@ -145,12 +152,14 @@ export default class TableSettings extends Component {
                                                         {column}
                                                     </div>
                                                     <div className="icon-holder">
-                                                        <i class={`fa ${!this.state.list[column] ? 'fa-plus' : 'fa-minus'}`} aria-hidden="true"></i>
+                                                        <i className={`fa ${!this.state.list[column] ? 'fa-plus' : 'fa-minus'}`} aria-hidden="true"></i>
                                                     </div>
                                                 </div>
 
-                                                <Collapse isOpen={this.state.list[column]}>
-                                                    <ListGroup>
+                                                <Collapse isOpen={this.state.list[column]} className="columns-wrapper">
+
+
+                                                    <ListGroup className="inner-columns">
                                                         {
                                                             leftColumns[column].map((entry, key) => (
 
@@ -159,10 +168,11 @@ export default class TableSettings extends Component {
                                                                         {entry.column_name}
                                                                     </div>
                                                                     <div className="icon-holder">
-
+                                                                        <button className="add-column btn btn-sm btn-light" onClick={() => this.addColumn(entry)} >
+                                                                            <i className="fa fa-external-link-square" aria-hidden="true"></i>
+                                                                        </button>
                                                                     </div>
                                                                 </div>
-                                                                // <ListGroupItem tag="button" onDoubleClick={() => this.addColumn(entry)} key={key}>{entry.column_name}</ListGroupItem>
                                                             ))
                                                         }
                                                     </ListGroup>
@@ -190,12 +200,13 @@ export default class TableSettings extends Component {
 
                     <div className="right">
 
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Selected Columns</h5>
+                        <div className="card">
+                            <div className="card-body parent-card">
+                                <div className="card-top">
+                                    <h6 className="card-title">Selected Columns</h6>
+                                </div>
 
-                                {activeColumn.column ? activeColumn.column.column : null}
-                                <ListGroup>
+                                <ListGroup className="parent-group">
                                     {
                                         tempSelectedColumns.map((column, index) => {
                                             return ((typeof column == 'string') ?

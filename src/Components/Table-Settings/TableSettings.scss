@@ -1,24 +1,51 @@
 .table-settings {
+    .modal-header {
+        padding: 10px 20px;
+    }
     .modal-body {
         background: whitesmoke;
         display: flex;
         justify-content: space-between;
-        .card-body {
+        .card-body.parent-card {
             padding: 0px;
-            h5.card-title {
+            .card-top {
                 padding: 10px 15px;
                 background: aliceblue;
-                color: #395167;
-            }
-            .list-group.parent-group{
-                padding: 10px 15px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .input-holder {
+                    flex-basis: 50%;
+                    input.search-box {
+                        padding: 5px 10px;
+                        border: none;
+                        border-radius: 2px;
+                        border: 1px solid #c8c8c8;
+                    }
+                }
+                h6.card-title {
+                    margin-bottom: 0px;
+                    color: #395167;
+                }
+                .list-group.parent-group {
+                    padding: 10px 15px;
+                }
             }
         }
         .left {
             max-height: 70vh;
             overflow-y: scroll;
             flex-basis: 40%;
+            .columns-wrapper {
+                padding: 5px;
+                background: #ebebeb;
+                box-shadow: inset 0px 0px 2px 1px #d8d8d8;
+                .inner-columns {
+                    border: 1px solid #d6d4d4;
+                }
+            }
             .column-group {
+                background: white;
                 &:hover {
                     background: whitesmoke;
                 }
@@ -37,10 +64,12 @@
                     padding: 8px;
                 }
                 .icon-holder {
+                    color: #528dad;
                     flex-basis: 15%;
                     display: flex;
                     justify-content: center;
                     align-items: center;
+                    button.add-column {}
                 }
                 .column-handle {}
             }
@@ -56,31 +85,6 @@
                         background: #b3e5fc;
                     }
                 }
-                .column-label {
-                    cursor: pointer;
-                    align-items: center;
-                    border: 1px solid whitesmoke;
-                    height: 40px;
-                    background: white;
-                    display: flex;
-                    justify-content: space-between;
-                    .item-label {
-                        flex-basis: 90%;
-                        height: 40px;
-                        padding: 10px 15px;
-                        &:hover {
-                            background: whitesmoke;
-                        }
-                    }
-                    .column-toggle {
-                        height: 40px;
-                        flex-basis: 15%;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                    }
-                }
-                .column-handle {}
             }
         }
         .controls {
