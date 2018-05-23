@@ -1,6 +1,5 @@
 .generic-tabs-container { 
     .table-header {
-        border-bottom: 1px solid black;
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
@@ -8,7 +7,6 @@
         -ms-flex-pack: end;
         justify-content: flex-end;
         padding: 2px;
-        border-color: white;
         position: absolute;
         right: 36px;
         top: 10px;
