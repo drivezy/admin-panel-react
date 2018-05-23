@@ -327,7 +327,7 @@ export default class PortletTable extends Component {
     render() {
 
         const { genericData, finalColumns, listing } = this.state;
-        const { history, match, menuDetail, rowTemplate, callback } = this.props;
+        const { history, match, menuDetail, rowTemplate, callback, tableType } = this.props;
 
         let renderItem;
         if (listing.length) {
@@ -354,7 +354,7 @@ export default class PortletTable extends Component {
 
                                             {/* Filter Column */}
                                             {
-                                                selectedColumn.path.split('.').length < 3 &&
+                                                tableType == "listing" && selectedColumn.path.split('.').length < 3 &&
                                                 <div className="filter-column">
                                                     <a onClick={e => this.filterColumn(selectedColumn)}>
                                                         <i className="fa fa-filter"></i>
@@ -367,7 +367,7 @@ export default class PortletTable extends Component {
                                             {
                                                 (selectedColumn.path.split('.').length == 1) && (selectedColumn.column_type != 118) &&
                                                 (
-
+                                                    tableType == "listing" &&
                                                     <div className="db-level-sort">
                                                         {
                                                             <Dropdown isOpen={this.state.dropdownOpen[selectedColumn.id]} toggle={() => this.dropdownToggle(selectedColumn)}>
