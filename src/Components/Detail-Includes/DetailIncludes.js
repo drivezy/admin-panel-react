@@ -123,7 +123,9 @@ export default class DetailPortlet extends Component {
             params.relationship = data.relationship;
 
             // list of columns of all included models, used to configure view columns
-            tab.columns = GetColumnsForDetail(params);
+            const par = JSON.parse(JSON.stringify(params));
+            // const par = { ...{}, ...params };
+            tab.columns = GetColumnsForDetail(par);
             // tab.columns = GetColumnsForListing(params);
             // tab.columns = MenuService.getColumns(params);
 
@@ -133,7 +135,7 @@ export default class DetailPortlet extends Component {
             params.excludeStarter = 1;
 
             // list of columns only related to particular model, used to configure generic forms
-            tab.configure = GetColumnsForListing(params);
+            tab.configure = GetColumnsForListing({ ...params });
 
             relationship.actions.map((action) => (
                 action.callback = tab.refreshContent
@@ -209,7 +211,7 @@ export default class DetailPortlet extends Component {
     }
 
     render() {
-        const { tabs, tabContent } = this.state;
+        const { tabs, tabContent, activeTab } = this.state;
         const { history, callback } = this.props;
         const arr = [];
         // Object.keys(tabs.data).map((tab)=>(
@@ -226,7 +228,7 @@ export default class DetailPortlet extends Component {
                                     tabContent.map((tab, key) => (
                                         <NavItem key={key} >
                                             <NavLink
-                                                className={`${this.state.activeTab === key ? 'active' : ''}`}
+                                                className={`${activeTab === key ? 'active' : ''}`}
                                                 onClick={() => { this.toggle(key); }}>
                                                 {tab.relationship.display_name}
                                             </NavLink>
@@ -235,46 +237,50 @@ export default class DetailPortlet extends Component {
                                     : null
                             }
                         </Nav>
-                        <TabContent activeTab={this.state.activeTab}>
+                        <TabContent activeTab={activeTab}>
                             {
                                 tabContent.length ?
-                                    tabContent.map((tab, key) => (
-                                        <TabPane className='relative' key={key} tabId={key}>
-                                            {/* Building the table iterating through the row to display tab content */}
-                                            <div className='table-header'>
-                                                <div className='btn-group'>
-                                                    <CustomAction history={history} genericData={tab} actions={tab.nextActions} placement={168} callback={callback} />
-                                                </div>
+                                    tabContent.map((tab, key) => {
+                                        if (activeTab == key) {
+                                            return (
+                                                <TabPane className='relative' key={key} tabId={key}>
+                                                    {/* Building the table iterating through the row to display tab content */}
+                                                    <div className='table-header'>
+                                                        <div className='btn-group'>
+                                                            <CustomAction history={history} genericData={tab} actions={tab.nextActions} placement={168} callback={callback} />
+                                                        </div>
 
-                                                <span className="btn-group">
-                                                    <a className="btn btn-default btn-xs blue" href={`/modelAliasDetail/${tab.relationship.id}`}>
-                                                        <i className="fa fa-outdent" uib-tooltip="Redirect to Model Alias detail"></i>
-                                                    </a>
-                                                        {
-                                                            tab.columns && tab.finalColumns ?
-                                                                <TableSettings
-                                                                    onSubmit={this.layoutChanges}
-                                                                    listName={tab.listName}
-                                                                    selectedColumns={tab.selectedColumns}
-                                                                    columns={tab.columns}
-                                                                />
-                                                                :
-                                                                null
-                                                        }
+                                                        <span className="btn-group">
+                                                            <a className="btn btn-default btn-xs blue" href={`/modelAliasDetail/${tab.relationship.id}`}>
+                                                                <i className="fa fa-outdent" uib-tooltip="Redirect to Model Alias detail"></i>
+                                                            </a>
+                                                            {
+                                                                tab.columns && tab.finalColumns ?
+                                                                    <TableSettings
+                                                                        onSubmit={this.layoutChanges}
+                                                                        listName={tab.listName}
+                                                                        selectedColumns={tab.selectedColumns}
+                                                                        columns={tab.columns}
+                                                                    />
+                                                                    :
+                                                                    null
+                                                            }
 
-                                                </span>
-                                            </div>
+                                                        </span>
+                                                    </div>
 
-                                            <PortletTable
-                                                finalColumns={tab.finalColumns}
-                                                listing={tabs.data[tab.index]}
-                                                rowTemplate={this.rowTemplate}
-                                                genericData={tabContent[key]}
-                                                callback={tab.refreshContent}
-                                                rowOptions={this.rowOptions}
-                                            />
-                                        </TabPane>
-                                    ))
+                                                    <PortletTable
+                                                        finalColumns={tab.finalColumns}
+                                                        listing={tabs.data[tab.index]}
+                                                        rowTemplate={this.rowTemplate}
+                                                        genericData={tabContent[key]}
+                                                        callback={tab.refreshContent}
+                                                        rowOptions={this.rowOptions}
+                                                    />
+                                                </TabPane>
+                                            )
+                                        }
+                                    })
                                     : null}
                         </TabContent>
                     </div>
