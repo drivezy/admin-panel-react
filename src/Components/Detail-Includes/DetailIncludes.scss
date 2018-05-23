@@ -1,0 +1,19 @@
+.generic-tabs-container { 
+    .table-header {
+        border-bottom: 1px solid black;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: end;
+        -ms-flex-pack: end;
+        justify-content: flex-end;
+        padding: 2px;
+        border-color: white;
+        position: absolute;
+        right: 36px;
+        top: 10px;
+        .btn{
+            margin-right: 3px;
+        }
+    }
+}

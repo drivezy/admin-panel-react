@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import './DetailIncludes.css';
 
-
+import CustomAction from './../Custom-Action/CustomAction.component';
 import { CreateInclusions, GetColumnsForListing, CreateFinalColumns, RegisterMethod } from './../../Utils/generic.utils';
 import { GetColumnsForDetail } from './../../Utils/genericDetail.utils';
+import TableSettings from './../../Components/Table-Settings/TableSettings.component';
 
 import {
     Card, CardImg, CardText, CardBody,
@@ -128,6 +129,7 @@ export default class DetailPortlet extends Component {
             // preference for form of particular tab
             tab.formPreference = relationship.preferences[tab.modelName] ? JSON.parse(relationship.preferences[tab.modelName]) : null;
 
+            tab.selectedColumns = this.preferences[tab.identifier];
             // list of selected column preference
             tab.finalColumns = CreateFinalColumns(tab.columns, this.preferences[tab.identifier], params.relationship);
 
@@ -158,6 +160,13 @@ export default class DetailPortlet extends Component {
         }
     }
 
+    layoutChanges = (selectedColumns) => {
+        let { tabContent, activeTab } = this.state;
+        tabContent[activeTab].selectedColumns = selectedColumns;
+        tabContent[activeTab].finalColumns = CreateFinalColumns(tabContent[activeTab].columns, selectedColumns, tabContent[activeTab].relationship);
+        this.setState({ tabContent });
+    }
+
     rowTemplate({ listingRow, selectedColumn }) {
         let val;
         try {
@@ -170,13 +179,14 @@ export default class DetailPortlet extends Component {
 
     render() {
         const { tabs, tabContent } = this.state;
+        const { history, callback } = this.props;
         const arr = [];
         // Object.keys(tabs.data).map((tab)=>(
 
         // ))
 
         return (
-            <div className="tabs-container">
+            <div className='generic-tabs-container'>
                 <Nav tabs>
                     {
                         tabContent.length ?
@@ -189,13 +199,41 @@ export default class DetailPortlet extends Component {
                                     </NavLink>
                                 </NavItem>
                             ))
-                            : null}
+                            : null
+                    }
                 </Nav>
                 <TabContent activeTab={this.state.activeTab}>
                     {
                         tabContent.length ?
                             tabContent.map((tab, key) => (
-                                <TabPane key={key} tabId={key}>
+                                <TabPane className='relative' key={key} tabId={key}>
+                                    {/* Building the table iterating through the row to display tab content */}
+                                    <div className='table-header'>
+                                        <div className='btn-group'>
+                                            <CustomAction history={history} genericData={tab} actions={tab.nextActions} placement={168} callback={callback} />
+                                        </div>
+
+                                        <span className="btn-group">
+                                            <a className="btn btn-default btn-xs blue" href={`/modelAliasDetail/${tab.relationship.id}`}>
+                                                <i className="fa fa-outdent" uib-tooltip="Redirect to Model Alias detail"></i>
+                                            </a>
+                                            <a className="btn btn-default btn-info btn-xs">
+                                                {
+                                                    tab.columns && tab.finalColumns ?
+                                                        <TableSettings
+                                                            onSubmit={this.layoutChanges}
+                                                            listName={tab.listName}
+                                                            selectedColumns={tab.selectedColumns}
+                                                            columns={tab.columns}
+                                                        />
+                                                        :
+                                                        null
+                                                }
+
+                                            </a>
+                                        </span>
+                                    </div>
+
                                     <PortletTable
                                         finalColumns={tab.finalColumns}
                                         listing={tabs.data[tab.index]}
@@ -203,31 +241,6 @@ export default class DetailPortlet extends Component {
                                         genericData={tabContent[key]}
                                         callback={tab.refreshContent}
                                     />
-
-                                    {/* <Table striped>
-                                        <thead>
-                                            <tr>
-                                                {
-                                                    tabContent[key].finalColumns.map((column, key) => (
-                                                        <th key={key}> {column.display_name}</th>
-                                                    ))
-                                                }
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {
-                                                tabs.data[tab.index].map((listingRow, rowKey) => (
-                                                    <tr key={rowKey}>
-                                                        {tabContent[key].finalColumns.map((column, key) => (
-                                                            <td key={key}>
-                                                                {eval('listingRow.' + column.column_name)}
-                                                            </td>
-                                                        ))}
-                                                    </tr>
-                                                ))
-                                            }
-                                        </tbody>
-                                    </Table> */}
                                 </TabPane>
                             ))
                             : null}
