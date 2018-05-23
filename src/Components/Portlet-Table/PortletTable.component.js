@@ -33,6 +33,7 @@ export default class PortletTable extends Component {
         type: 'desc'
     }];
 
+    // Preparing option for right click
     rowOptions = [{
         id: 0,
         name: "Copy Row Id",
@@ -426,8 +427,8 @@ export default class PortletTable extends Component {
                                                     displayName
 
                                             return (
-                                                <td key={key}>
-                                                    <RightClick html={html} history={history} match={match} key={key} renderTag="div" rowOptions={this.rowOptions} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail}></RightClick>
+                                                <td key={key} className='no-padding-strict'>
+                                                    <RightClick html={html} history={history} match={match} key={key} renderTag="div" className='generic-table-td' rowOptions={this.rowOptions} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail}></RightClick>
                                                 </td>
                                             )
                                         })
