@@ -35,7 +35,7 @@ export default class DetailPortlet extends Component {
             ToastNotifications.success("Property of " + data.selectedColumn.absPath + " has been copied");
         }
     }, {
-        id: 0,
+        id: 1,
         name: "Copy Row Id",
         icon: 'fa-copy',
         subMenu: false,

@@ -14,13 +14,12 @@ export default class RightClick extends Component {
 
     render() {
 
-        const { renderTag, selectedColumn, listingRow, history, match, rowOptions, html } = this.props;
+        const { renderTag, rowOptions, html } = this.props;
 
-        const identifier = listingRow.id + (selectedColumn.path ? selectedColumn.path : selectedColumn.absPath);
+        const identifier = "entry " + Math.random(Math.random() * 1000);
 
         return (
             [
-
                 <ContextMenuTrigger key={1} renderTag={renderTag} id={identifier} holdToDisplay={1000}>
                     {html}
                 </ContextMenuTrigger>,
@@ -35,7 +34,7 @@ export default class RightClick extends Component {
                                             <i className={`fa ${rowOption.icon}`} />
                                             <span className="space-icon">{rowOption.name}</span>
                                         </MenuItem> :
-                                        <SubMenu disabled={selectedColumn.path.split('.').length != 1} key={key} title={[<i key={1} className={`fa ${rowOption.icon}`} />, <span key={2}> {rowOption.name}</span>]}>
+                                        <SubMenu disabled={typeof rowOption.disabled == 'function' ? rowOption.disabled(this.props) : rowOption.disabled} key={key} title={[<i key={1} className={`fa ${rowOption.icon}`} />, <span key={2}> {rowOption.name}</span>]}>
                                             {
                                                 this.aggregationOperators.map((operator, index) => {
                                                     return (

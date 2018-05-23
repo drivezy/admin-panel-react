@@ -11,6 +11,7 @@ import DetailPortlet from './../../Components/Detail-Portlet/DetailPortlet.compo
 import DetailIncludes from './../../Components/Detail-Includes/DetailIncludes';
 import TableSettings from './../../Components/Table-Settings/TableSettings.component';
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
+import RightClick from './../../Components/Right-Click/rightClick.component';
 
 import { GetUrlParams } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
@@ -30,6 +31,40 @@ export default class GenericDetail extends Component {
             tabsPreference: {}
         };
     }
+
+    rowOptions = [{
+        id: 0,
+        name: "Redirect Menu Detail",
+        icon: 'fa-deaf',
+        subMenu: false,
+        onClick: (data) => {
+            const { history, match } = this.props;
+
+            let pageUrl = "/menuDef/" + this.state.menuDetail.menuId
+
+            history.push(`${pageUrl}`);
+        }
+    }, {
+        id: 1,
+        name: "Redirect Model Detail",
+        icon: 'fa-info-circle',
+        subMenu: false,
+        onClick: (data) => {
+            const { history, match } = this.props;
+
+            let pageUrl = "/modelDetails/" + this.state.menuDetail.model.id
+
+            history.push(`${pageUrl}`);
+        }
+    },{
+        id: 0,
+        name: "Edit Menu",
+        icon: 'fa-pencil',
+        subMenu: false,
+        onClick: (data) => {
+            console.log(data);
+        }
+    }];
 
     componentDidMount() {
         this.getMenuData();
@@ -94,26 +129,30 @@ export default class GenericDetail extends Component {
             methods: portlet.methods,
             preDefinedmethods: portlet.preDefinedmethods
         };
+        const html = <div className="header">
+            <div className="left" />
+
+            <div className="right">
+                <div className="btn-group" id="generic-detail-header-dynamic-icon-group">
+                    <CustomAction history={history} genericData={genericDataForCustomColumn} actions={menuDetail.nextActions} listingRow={data} placement={167} callback={this.getDetailRecord} />
+                </div>
+
+                {
+                    portlet.portletColumns ?
+                        <TableSettings onSubmit={this.layoutChanges} listName={portlet.listName} selectedColumns={selectedColumns} columns={portlet.portletColumns} finalColumns={finalColumns} />
+                        : null
+                }
+            </div>
+        </div>;
+
 
         return (
             <div className="generic-detail-container">
 
-                <div className="header">
-                
-                    <div className="left" />
 
-                    <div className="right">
-                        <div className="btn-group" id="generic-detail-header-dynamic-icon-group">
-                            <CustomAction history={history} genericData={genericDataForCustomColumn} actions={menuDetail.nextActions} listingRow={data} placement={167} callback={this.getDetailRecord} />
-                        </div>
 
-                        {
-                            portlet.portletColumns ?
-                                <TableSettings onSubmit={this.layoutChanges} listName={portlet.listName} selectedColumns={selectedColumns} columns={portlet.portletColumns} finalColumns={finalColumns} />
-                                : null
-                        }
-                    </div>
-                </div>
+                <RightClick renderTag="div" html={html} rowOptions={this.rowOptions} ></RightClick>
+
 
                 {
                     finalColumns.length ?
