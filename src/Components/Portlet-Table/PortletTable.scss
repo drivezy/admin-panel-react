@@ -2,7 +2,26 @@
     display: flex;
     overflow-x: auto;
     .table {
-        // display: block;
+        .column-wrapper {
+            display: flex;
+            .column-title {
+                color: #6f7c87;
+                margin-right: 10px;
+                -ms-flex-preferred-size: 80%;
+                flex-grow: 1;
+                font-weight: 100;
+                font-size: 13px;
+            }
+            .db-level-sort {
+                cursor: pointer;
+                flex-basis: 5%;
+                .dropdown-link {
+                    text-decoration: none;
+                    color: #b1493ce8;
+                    opacity: 0.8;
+                }
+            }
+        } // display: block;
         // flex-basis: 1;
         border: none; // display: block; 
         // width: 90%;

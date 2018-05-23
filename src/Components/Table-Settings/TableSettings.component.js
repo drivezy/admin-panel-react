@@ -19,8 +19,8 @@ export default class TableSettings extends Component {
 
         this.state = {
             modal: false,
-            selectedColumns: this.props.selectedColumns,
-            tempSelectedColumns: this.props.selectedColumns,
+            selectedColumns: this.props.selectedColumns || [],
+            tempSelectedColumns: this.props.selectedColumns || [],
             columns: this.props.columns,
             list: {},
             activeColumn: {},

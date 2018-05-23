@@ -42,7 +42,7 @@ export default class CustomAction extends Component {
         const args = [];
         const { genericData, history, callback } = this.props;
         this.genericData = genericData;
-        if (typeof genericData.methods[action.name] == "function") {
+        if (genericData.methods && typeof genericData.methods[action.name] == "function") {
             // var callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : customMethods[action.callback]) : listing.callbackFunction.function;
 
             const callbackMethod = (action.callback && typeof genericData.methods[action.callback] == "function") ? genericData.methods[action.callback] : callback;
