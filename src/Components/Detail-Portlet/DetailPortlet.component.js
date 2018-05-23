@@ -8,6 +8,11 @@ import {
     Row, Col
 } from 'reactstrap';
 
+import RightClick from './../../Components/Right-Click/rightClick.component';
+
+import { CopyToClipBoard } from './../../Utils/common.utils';
+import ToastNotifications from './../../Utils/toast.utils';
+
 
 export default class DetailPortlet extends Component {
     constructor(props) {
@@ -19,6 +24,18 @@ export default class DetailPortlet extends Component {
         }
     }
 
+    rowOptions = [{
+        id: 0,
+        name: "Copy Row Id",
+        icon: 'fa-copy',
+        subMenu: false,
+        onClick: (data) => {
+            let id = data.listingRow.id;
+            CopyToClipBoard(id);
+            ToastNotifications.success("Id - " + id + " has been copied");
+        }
+    }];
+
     componentDidMount() {
     }
 
@@ -29,13 +46,18 @@ export default class DetailPortlet extends Component {
 
         const { finalColumns, data } = this.props;
 
+        
+
         return (
             <div className="detail-portlet">
                 <Card>
                     <CardBody>
+                    
                         <Row>
                             {finalColumns.map((selectedColumn, key) => (
+                                
                                 <Col key={key} xs={selectedColumn.split ? '6' : '12'}>
+                                <RightClick key={key} renderTag="div" rowOptions={this.rowOptions} listingRow={data} selectedColumn={selectedColumn}></RightClick>
                                     {selectedColumn.absPath ?
 
                                         <Row className="detail-entry" >

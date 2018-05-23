@@ -99,6 +99,7 @@ export default class GenericDetail extends Component {
             <div className="generic-detail-container">
 
                 <div className="header">
+                
                     <div className="left" />
 
                     <div className="right">
