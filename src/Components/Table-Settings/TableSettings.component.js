@@ -53,6 +53,14 @@ export default class TableSettings extends Component {
         this.setState({ tempSelectedColumns: selectedColumns })
     }
 
+    removeColumn = (column) => {
+        var selectedColumns = this.state.tempSelectedColumns;
+
+        selectedColumns = selectedColumns.filter((entry) => (entry.column != column.column));
+
+        this.setState({ tempSelectedColumns: selectedColumns })
+    }
+
     toggleColumn = (column) => {
         column.expanded = !column.expanded
     }
@@ -169,7 +177,7 @@ export default class TableSettings extends Component {
                                         </ListGroupItem>
                                         :
                                         // Component Manages column props
-                                        <ColumnSetting columns={columns} activeColumn={activeColumn} selectColumn={this.selectColumn} column={column} index={index} key={index} />
+                                        <ColumnSetting removeColumn={this.removeColumn} columns={columns} activeColumn={activeColumn} selectColumn={this.selectColumn} column={column} index={index} key={index} />
                                         // Column Setting Ends
                                     )
                                 })
@@ -189,7 +197,7 @@ export default class TableSettings extends Component {
     render() {
         return (
             <div className="table-settings">
-                <Button color="primary" size="sm" onClick={this.toggleModal}>
+                <Button color="secondary" size="sm" onClick={this.toggleModal}>
                     <i className="fa fa-cog"></i>
                 </Button>
 

@@ -4,11 +4,10 @@
     min-height: 45px;
     height: 45px;
     border-bottom: 1px solid #d4d4d4;
-
     .header-content {
         display: flex;
         justify-content: space-between;
-        // flex-basis: 100%;
-
-        flex-basis: 96%;    }
+        align-items: center;
+        flex-basis: 100%;
+    }
 }

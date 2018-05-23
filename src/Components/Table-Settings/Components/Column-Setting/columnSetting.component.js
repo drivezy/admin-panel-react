@@ -91,7 +91,15 @@ export default class ColumnSetting extends Component {
                                     </label>
                                     <Switch name="route" onChange={this.updateColumnHyperlink} value={route} />
                                 </div>
-                                <button type="button" onClick={this.toggleSetting} className="btn btn-secondary">Close</button>
+
+                                <div className="row">
+                                    <div className="col">
+                                        <button type="button" onClick={() => this.props.removeColumn(column)} className="btn btn-danger">Remove</button>
+                                    </div>
+                                    <div className="col">
+                                        <button type="button" onClick={this.toggleSetting} className="btn btn-secondary">Close</button>
+                                    </div>
+                                </div>
                             </form>
                         </CardBody>
                     </Card>
