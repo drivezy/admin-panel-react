@@ -20,6 +20,7 @@ import { TabContent, TabPane, Nav, NavItem, NavLink, Table } from 'reactstrap';
 
 import PortletTable from './../../Components/Portlet-Table/PortletTable.component';
 
+let shouldComponentWillReceivePropsRun = true;
 export default class DetailPortlet extends Component {
     constructor(props) {
         super(props);
@@ -47,19 +48,24 @@ export default class DetailPortlet extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({ tabs: nextProps.tabs });
-        this.buildTabData(nextProps);
+        if (shouldComponentWillReceivePropsRun) { // when setting hash to the url, prevents componentWillReceiveProps from executing again
+            // this.setState({ tabs: nextProps.tabs });
+            this.state.tabs = nextProps.tabs;
+            this.buildTabData(nextProps);
+        }
+        shouldComponentWillReceivePropsRun = true;
     }
 
     buildTabData = (props) => {
         // 
         const data = props.tabs;
+        const hash = window.location.hash;
 
         // this.resolve = [];
         const includes = data.includes.split(",");
 
         this.preferences = {};
-
+        // this.state.tabContent = [];
         for (const i in includes) {
             const tab = {};
             const inclusions = includes[i].split(".");
@@ -82,6 +88,10 @@ export default class DetailPortlet extends Component {
             tab.path = relationship.route_name;
 
             tab.index = index; // earlier index in old panel
+            if (hash.includes(index)) {
+                this.state.activeTab = parseInt(i);
+            }
+            // index == 
             tab.identifier = inclusions[0];
             tab.preference = "";
             tab.fixedParams = data.fixedParams;
@@ -167,11 +177,17 @@ export default class DetailPortlet extends Component {
      * Change tab selection
      * @param  {int} tab - tab index
      */
-    toggle = (tab) => {
-        if (this.state.activeTab !== tab) {
+    toggle = (key, tab) => {
+        console.log(tab);
+        if (this.state.activeTab !== key) {
             this.setState({
-                activeTab: tab
+                activeTab: key
             });
+        }
+
+        if (tab && tab.index) {
+            shouldComponentWillReceivePropsRun = false;
+            window.location.hash = tab.index;
         }
     }
 
