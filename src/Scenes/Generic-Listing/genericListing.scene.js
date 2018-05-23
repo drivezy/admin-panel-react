@@ -150,7 +150,7 @@ export default class GenericListing extends Component {
     }
 
     refreshPage() {
-        window.location.reload();
+        this.getListingData();
     }
 
     render() {
