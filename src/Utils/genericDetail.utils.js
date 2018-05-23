@@ -132,91 +132,92 @@ export function GetDetailRecord({ configuration: genericDetailObject, callback, 
     Get({ url, callback: PrepareObjectForDetailPage, extraParams: { callback, params, genericDetailObject } });
 }
 
-/**
- * returns segregated data for tabs
- * by iterateing over all inclusions in data 
- * and adds extra properties required for rending and actions on individual tab
- */
-export function CategorizeDataForTabs(data) {
-    // const resolve = [];
-    const includes = data.includes.split(",");
-    const tabs = [];
-    const preferences = {};
+// /**
+//  * returns segregated data for tabs
+//  * by iterateing over all inclusions in data 
+//  * and adds extra properties required for rending and actions on individual tab
+//  */
+// export function CategorizeDataForTabs(data) {
+//     // const resolve = [];
+//     const includes = data.includes.split(",");
+//     const tabs = [];
+//     const preferences = {};
 
-    for (const i in includes) {
-        const tab = {};
-        const inclusions = includes[i].split(".");
-        const index = data.starter + "." + inclusions[0];
-        const relationship = data.relationship[index];
+//     for (const i in includes) {
+//         const tab = {};
+//         const inclusions = includes[i].split(".");
+//         const index = data.starter + "." + inclusions[0];
+//         const relationship = data.relationship[index];
 
-        tab.name = relationship.alias_name;
-        tab.image = relationship.image;
-        const configure = data.dictionary[index];
-        tab.relationship = relationship;
+//         tab.name = relationship.alias_name;
+//         tab.image = relationship.image;
+//         const configure = data.dictionary[index];
+//         tab.relationship = relationship;
 
-        tab.index = index;
-        tab.path = relationship.route_name;
-        tab.identifier = inclusions[0];
-        tab.listName = data.starter + "." + inclusions[0] + ".list";
-        tab.formName = data.starter + "." + inclusions[0] + ".form";
-        tab.preference = "";
-        tab.fixedParams = data.fixedParams;
-        tab.callFunction = data.callFunction;
-        tab.scripts = [];
+//         tab.index = index;
+//         tab.path = relationship.route_name;
+//         tab.identifier = inclusions[0];
+//         tab.listName = data.starter + "." + inclusions[0] + ".list";
+//         tab.formName = data.starter + "." + inclusions[0] + ".form";
+//         tab.preference = "";
+//         tab.fixedParams = data.fixedParams;
+//         tab.callFunction = data.callFunction;
+//         tab.scripts = [];
 
-        // check if there are other includes of the same identifier
-        let finalIncludes = includes[i];
-        for (const j in includes) {
-            if (includes[i] != includes[j]) {
-                if (includes[j].split(".")[0] == inclusions[0]) {
-                    finalIncludes += "," + includes[j];
-                    delete includes[j];
-                }
-            }
-        }
+//         // check if there are other includes of the same identifier
+//         let finalIncludes = includes[i];
+//         for (const j in includes) {
+//             if (includes[i] != includes[j]) {
+//                 if (includes[j].split(".")[0] == inclusions[0]) {
+//                     finalIncludes += "," + includes[j];
+//                     delete includes[j];
+//                 }
+//             }
+//         }
 
-        var params = {
-            includes: CreateInclusions(finalIncludes), starter: data.starter, dictionary: {}
-        };
+//         var params = {
+//             includes: CreateInclusions(finalIncludes), starter: data.starter, dictionary: {}
+//         };
 
-        var dictionary = params.includes.split(",");
-        for (var k in dictionary) {
-            var dicIndex = data.starter + "." + dictionary[k];
-            params.dictionary[dicIndex] = data.dictionary[dicIndex];
-        }
-        params.relationship = data.relationship;
-        tab.columns = GetColumnsForDetail(params);
+//         var dictionary = params.includes.split(",");
+//         for (var k in dictionary) {
+//             var dicIndex = data.starter + "." + dictionary[k];
+//             params.dictionary[dicIndex] = data.dictionary[dicIndex];
+//         }
+//         params.relationship = data.relationship;
+//         tab.columns = GetColumnsForDetail(params);
 
 
-        params.includes = inclusions[0];
-        params.dictionary = {};
-        params.dictionary[index] = configure;
+//         params.includes = inclusions[0];
+//         params.dictionary = {};
+//         params.dictionary[index] = configure;
 
-        tab.configure = GetColumnsForDetail(params, 1);
+//         tab.configure = GetColumnsForDetail(params, 1);
 
-        tab.actions = relationship.actions;
+//         tab.actions = relationship.actions;
 
-        // var scripts = InjectScriptFactory.returnMatchingScripts({
-        //     preference: index, scripts: self.responseArray.scripts, searchConstraint: "startsWith"
-        // });
-        // Array.prototype.push.apply(tab.scripts, scripts);
+//         // var scripts = InjectScriptFactory.returnMatchingScripts({
+//         //     preference: index, scripts: self.responseArray.scripts, searchConstraint: "startsWith"
+//         // });
+//         // Array.prototype.push.apply(tab.scripts, scripts);
 
-        preferences[tab.identifier] = relationship.preferences[tab.listName] ? JSON.parse(relationship.preferences[tab.listName]) : null;
-        tab.formPreferences = relationship.preferences[tab.formName] ? JSON.parse(relationship.preferences[tab.formName]) : null;
+//         preferences[tab.identifier] = relationship.preferences[tab.listName] ? JSON.parse(relationship.preferences[tab.listName]) : null;
+//         tab.selectedColumns = preferences[tab.identifier];
+//         tab.formPreferences = relationship.preferences[tab.formName] ? JSON.parse(relationship.preferences[tab.formName]) : null;
 
-        tab.finalColumns = CreateFinalColumns(tab.columns, preferences[tab.identifier], params.relationship);
+//         tab.finalColumns = CreateFinalColumns(tab.columns, preferences[tab.identifier], params.relationship);
 
-        // const localResolve = {
-        //     resolve: {
-        //         modelAliasId: relationship.id
-        //     }
-        // };
+//         // const localResolve = {
+//         //     resolve: {
+//         //         modelAliasId: relationship.id
+//         //     }
+//         // };
 
-        // resolve.push(localResolve);
-        tabs.push(tab);
-    }
-    return { tabs };
-}
+//         // resolve.push(localResolve);
+//         tabs.push(tab);
+//     }
+//     return { tabs };
+// }
 
 /**
  * same as ConfigureDataForTab.getData
