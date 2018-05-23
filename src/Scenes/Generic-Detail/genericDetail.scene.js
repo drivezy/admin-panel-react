@@ -10,6 +10,7 @@ import {
 import DetailPortlet from './../../Components/Detail-Portlet/DetailPortlet.component';
 import DetailIncludes from './../../Components/Detail-Includes/DetailIncludes';
 import TableSettings from './../../Components/Table-Settings/TableSettings.component';
+import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 
 import { GetUrlParams } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
@@ -75,6 +76,7 @@ export default class GenericDetail extends Component {
     }
 
     render() {
+        const { history } = this.props;
         const { menuDetail = {}, portlet = {}, tabs = {} } = this.state;
         const { finalColumns = [], data = {} } = portlet;
         let selectedColumns = {};
@@ -82,6 +84,16 @@ export default class GenericDetail extends Component {
         if (menuDetail.preference && portlet.listPortlet) {
             selectedColumns = JSON.parse(menuDetail.preference[portlet.listPortlet])
         }
+
+        const genericDataForCustomColumn = {
+            columns: portlet.portletColumns,
+            formPreference: menuDetail.preference ? JSON.parse(menuDetail.preference[menuDetail.formPreferenceName + '.form']) : [],
+            modelName: menuDetail.formPreferenceName + '.form',
+            module: menuDetail.url ? menuDetail.url.split("/:")[0] : '',
+            dataModel: menuDetail.model,
+            methods: portlet.methods,
+            preDefinedmethods: portlet.preDefinedmethods
+        };
 
         return (
             <div className="generic-detail-container">
@@ -91,9 +103,15 @@ export default class GenericDetail extends Component {
                     <div className="left" />
 
                     <div className="right">
-                        {portlet.portletColumns ? <TableSettings onSubmit={this.layoutChanges} listName={portlet.listName} selectedColumns={selectedColumns} columns={portlet.portletColumns} finalColumns={finalColumns}>
-                        </TableSettings>
-                            : null}
+                        <div className="btn-group" id="generic-detail-header-dynamic-icon-group">
+                            <CustomAction history={history} genericData={genericDataForCustomColumn} actions={menuDetail.nextActions} listingRow={data} placement={167} callback={this.getDetailRecord} />
+                        </div>
+
+                        {
+                            portlet.portletColumns ?
+                                <TableSettings onSubmit={this.layoutChanges} listName={portlet.listName} selectedColumns={selectedColumns} columns={portlet.portletColumns} finalColumns={finalColumns} />
+                                : null
+                        }
                     </div>
                 </div>
 

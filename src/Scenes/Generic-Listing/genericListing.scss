@@ -6,6 +6,9 @@
         padding: 6px 20px;
     }
     .page-bar {
+        .search-bar {
+            display: flex;
+        }
         height: 40px;
         display: flex;
         justify-content: space-between;
@@ -25,6 +28,9 @@
         }
         .pre-defined-filter {
             margin-left: 1100px;
+        }
+        .generic-listing-search {
+            width: 225px;
         }
     }
     .card {
