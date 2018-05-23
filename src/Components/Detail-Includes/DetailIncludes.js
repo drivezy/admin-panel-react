@@ -202,66 +202,69 @@ export default class DetailPortlet extends Component {
         // ))
 
         return (
-            <div className='generic-tabs-container'>
-                <Nav tabs>
-                    {
-                        tabContent.length ?
-                            tabContent.map((tab, key) => (
-                                <NavItem key={key} >
-                                    <NavLink
-                                        className={`${this.state.activeTab === key ? 'active' : ''}`}
-                                        onClick={() => { this.toggle(key, tab); }}>
-                                        {tab.relationship.display_name}
-                                    </NavLink>
-                                </NavItem>
-                            ))
-                            : null
-                    }
-                </Nav>
-                <TabContent activeTab={this.state.activeTab}>
-                    {
-                        tabContent.length ?
-                            tabContent.map((tab, key) => (
-                                <TabPane className='relative' key={key} tabId={key}>
-                                    {/* Building the table iterating through the row to display tab content */}
-                                    <div className='table-header'>
-                                        <div className='btn-group'>
-                                            <CustomAction history={history} genericData={tab} actions={tab.nextActions} placement={168} callback={callback} />
-                                        </div>
+            <Card>
+                <CardBody>
+                    <div className='generic-tabs-container'>
+                        <Nav tabs>
+                            {
+                                tabContent.length ?
+                                    tabContent.map((tab, key) => (
+                                        <NavItem key={key} >
+                                            <NavLink
+                                                className={`${this.state.activeTab === key ? 'active' : ''}`}
+                                                onClick={() => { this.toggle(key); }}>
+                                                {tab.relationship.display_name}
+                                            </NavLink>
+                                        </NavItem>
+                                    ))
+                                    : null
+                            }
+                        </Nav>
+                        <TabContent activeTab={this.state.activeTab}>
+                            {
+                                tabContent.length ?
+                                    tabContent.map((tab, key) => (
+                                        <TabPane className='relative' key={key} tabId={key}>
+                                            {/* Building the table iterating through the row to display tab content */}
+                                            <div className='table-header'>
+                                                <div className='btn-group'>
+                                                    <CustomAction history={history} genericData={tab} actions={tab.nextActions} placement={168} callback={callback} />
+                                                </div>
 
-                                        <span className="btn-group">
-                                            <a className="btn btn-default btn-xs blue" href={`/modelAliasDetail/${tab.relationship.id}`}>
-                                                <i className="fa fa-outdent" uib-tooltip="Redirect to Model Alias detail"></i>
-                                            </a>
-                                            <a className="btn btn-default btn-info btn-xs">
-                                                {
-                                                    tab.columns && tab.finalColumns ?
-                                                        <TableSettings
-                                                            onSubmit={this.layoutChanges}
-                                                            listName={tab.listName}
-                                                            selectedColumns={tab.selectedColumns}
-                                                            columns={tab.columns}
-                                                        />
-                                                        :
-                                                        null
-                                                }
+                                                <span className="btn-group">
+                                                    <a className="btn btn-default btn-xs blue" href={`/modelAliasDetail/${tab.relationship.id}`}>
+                                                        <i className="fa fa-outdent" uib-tooltip="Redirect to Model Alias detail"></i>
+                                                    </a>
+                                                        {
+                                                            tab.columns && tab.finalColumns ?
+                                                                <TableSettings
+                                                                    onSubmit={this.layoutChanges}
+                                                                    listName={tab.listName}
+                                                                    selectedColumns={tab.selectedColumns}
+                                                                    columns={tab.columns}
+                                                                />
+                                                                :
+                                                                null
+                                                        }
 
-                                            </a>
-                                        </span>
-                                    </div>
+                                                </span>
+                                            </div>
 
-                                    <PortletTable
-                                        finalColumns={tab.finalColumns}
-                                        listing={tabs.data[tab.index]}
-                                        rowTemplate={this.rowTemplate}
-                                        genericData={tabContent[key]}
-                                        callback={tab.refreshContent}
-                                    />
-                                </TabPane>
-                            ))
-                            : null}
-                </TabContent>
-            </div>
+                                            <PortletTable
+                                                finalColumns={tab.finalColumns}
+                                                listing={tabs.data[tab.index]}
+                                                rowTemplate={this.rowTemplate}
+                                                genericData={tabContent[key]}
+                                                callback={tab.refreshContent}
+                                            />
+                                        </TabPane>
+                                    ))
+                                    : null}
+                        </TabContent>
+                    </div>
+                </CardBody>
+            </Card>
+
         )
     }
 }
