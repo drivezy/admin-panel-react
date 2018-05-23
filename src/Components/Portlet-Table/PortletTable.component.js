@@ -51,9 +51,29 @@ export default class PortletTable extends Component {
     componentDidMount() {
         setTimeout(() => {
             this.adjustWidth();
-        }, 300)
-    }
+        }, 50)
 
+        // set zoom event
+        window.onzoom = () => {
+            setTimeout(() => {
+                this.adjustWidth();
+            }, 50)
+        }
+
+        // detect resize
+        var oldresize = window.onresize;
+
+        window.onresize = (e) => {
+            // console.log(e);
+            var event = window.event || e;
+            if (typeof (oldresize) === 'function' && !oldresize.call(window, event)) {
+                return false;
+            }
+            if (typeof (window.onzoom) === 'function') {
+                return window.onzoom.call(window, event);
+            }
+        }
+    }
 
     // According to action width 
     // width of table is assigned
@@ -65,6 +85,12 @@ export default class PortletTable extends Component {
             var tableWidth = table.clientWidth;
 
             var percent = (100 - (actionColumnWidth / tableWidth) * 100);
+
+            console.log('table-width', tableWidth);
+
+            console.log('action column', actionColumnWidth);
+
+            console.log(percent);
 
             table.setAttribute('style', 'width:calc(' + percent + '% - 2px )');
         }

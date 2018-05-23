@@ -130,26 +130,52 @@ export default class TableSettings extends Component {
             </ModalHeader>
                 <ModalBody>
                     <div className="left">
-                        <ListGroup>
-                            {
-                                columnKeys.map((column, index) => (
-                                    <div key={index}>
-                                        <ListGroupItem color="info" tag="button" action key={index} onClick={() => this.toggleList(column)}>
-                                            {column}
-                                        </ListGroupItem>
-                                        <Collapse isOpen={this.state.list[column]}>
-                                            <ListGroup>
-                                                {
-                                                    leftColumns[column].map((entry, key) => (
-                                                        <ListGroupItem tag="button" onDoubleClick={() => this.addColumn(entry)} key={key}>{entry.column_name}</ListGroupItem>
-                                                    ))
-                                                }
-                                            </ListGroup>
-                                        </Collapse>
-                                    </div>
-                                ))
-                            }
-                        </ListGroup>
+
+                        <div class="card" >
+                            <div class="card-body">
+                                <h5 class="card-title">All Columns</h5>
+
+                                <ListGroup className="parent-group">
+                                    {
+                                        columnKeys.map((column, index) => (
+                                            <div key={index}>
+
+                                                <div className="column-group" onClick={() => this.toggleList(column)}>
+                                                    <div className="column-label">
+                                                        {column}
+                                                    </div>
+                                                    <div className="icon-holder">
+                                                        <i class={`fa ${!this.state.list[column] ? 'fa-plus' : 'fa-minus'}`} aria-hidden="true"></i>
+                                                    </div>
+                                                </div>
+
+                                                <Collapse isOpen={this.state.list[column]}>
+                                                    <ListGroup>
+                                                        {
+                                                            leftColumns[column].map((entry, key) => (
+
+                                                                <div key={key} className="column-group" onDoubleClick={() => this.addColumn(entry)} >
+                                                                    <div className="column-label">
+                                                                        {entry.column_name}
+                                                                    </div>
+                                                                    <div className="icon-holder">
+
+                                                                    </div>
+                                                                </div>
+                                                                // <ListGroupItem tag="button" onDoubleClick={() => this.addColumn(entry)} key={key}>{entry.column_name}</ListGroupItem>
+                                                            ))
+                                                        }
+                                                    </ListGroup>
+                                                </Collapse>
+                                            </div>
+                                        ))
+                                    }
+                                </ListGroup>
+
+                            </div>
+                        </div>
+
+
                     </div>
 
                     <div className="controls">
@@ -160,29 +186,33 @@ export default class TableSettings extends Component {
                         <Button color="primary" size="sm" onClick={this.moveSelectedDown}>
                             <i className="fa fa-arrow-down"></i>
                         </Button>
-
-                        <Button color="primary" size="sm" onClick={this.addSplit}>
-                            Add Split
-                       </Button>
                     </div>
 
                     <div className="right">
-                        {activeColumn.column ? activeColumn.column.column : null}
-                        <ListGroup>
-                            {
-                                tempSelectedColumns.map((column, index) => {
-                                    return ((typeof column == 'string') ?
-                                        <ListGroupItem tag="button" action key={index}>
-                                            ---- {column} ----
+
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Selected Columns</h5>
+
+                                {activeColumn.column ? activeColumn.column.column : null}
+                                <ListGroup>
+                                    {
+                                        tempSelectedColumns.map((column, index) => {
+                                            return ((typeof column == 'string') ?
+                                                <ListGroupItem tag="button" action key={index}>
+                                                    ---- {column} ----
                                         </ListGroupItem>
-                                        :
-                                        // Component Manages column props
-                                        <ColumnSetting removeColumn={this.removeColumn} columns={columns} activeColumn={activeColumn} selectColumn={this.selectColumn} column={column} index={index} key={index} />
-                                        // Column Setting Ends
-                                    )
-                                })
-                            }
-                        </ListGroup>
+                                                :
+                                                // Component Manages column props
+                                                <ColumnSetting removeColumn={this.removeColumn} columns={columns} activeColumn={activeColumn} selectColumn={this.selectColumn} column={column} index={index} key={index} />
+                                                // Column Setting Ends
+                                            )
+                                        })
+                                    }
+                                </ListGroup>
+
+                            </div>
+                        </div>
                     </div>
 
                 </ModalBody>
@@ -190,7 +220,7 @@ export default class TableSettings extends Component {
                     <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
                     <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
                 </ModalFooter>
-            </Modal>
+            </Modal >
         )
     }
 
