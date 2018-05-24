@@ -158,34 +158,7 @@ export default class PortletTable extends Component {
         this.dropdownToggle(column);
     };
 
-    rowTemplate = ({ listingRow, selectedColumn }) => {
-        let val;
-
-        if (selectedColumn.route) {
-            let id;
-            if (selectedColumn.path.split('.')[1]) {
-                id = this.convertIt(selectedColumn.path);
-                id = eval('listingRow.' + id).id;
-            } else {
-                id = listingRow.id;
-            }
-            val = <a href={`${selectedColumn.reference_route}${id}`} >{eval('listingRow.' + selectedColumn.path)}</a>
-        } else {
-            try {
-                val = eval('listingRow.' + selectedColumn.path);
-            } catch (e) {
-                val = null;
-            }
-        }
-        return (<span>{val}</span>);
-    }
-
-    convertIt = (str) => {
-        return str.replace(/.([^.]*)$/, "");
-    }
-
     render() {
-
         const { genericData, finalColumns, listing } = this.state;
         const { history, match, menuDetail, rowTemplate, callback, tableType, rowOptions } = this.props;
 
