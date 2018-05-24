@@ -35,8 +35,10 @@
     .card {
         // width: 95%;
         margin: 8px;
+
         .card-body {
-            overflow-x: auto;
+            overflow-x: scroll;
+
             padding: 0px; // Table Begins
         }
     }

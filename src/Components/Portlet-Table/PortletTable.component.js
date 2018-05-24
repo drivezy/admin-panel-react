@@ -261,7 +261,7 @@ export default class PortletTable extends Component {
 
                                             return (
                                                 // (tableType == "listing") ?
-                                                <td key={key} className='no-padding-strict'>
+                                                <td key={key} className=''>
                                                     <RightClick html={html} history={history} match={match} key={key} renderTag="div" className='generic-table-td' rowOptions={rowOptions} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail}></RightClick>
                                                 </td>
                                                 // :
