@@ -79,7 +79,7 @@ export default class CustomAction extends Component {
                                 <i className={`fa ${action.icon}`} ></i>
                             </button>
                             return (
-                                <CustomTooltip key={key} html={html} title={action.name}></CustomTooltip>
+                                <CustomTooltip placement="top" key={key} html={html} title={action.name}></CustomTooltip>
                             );
                         }
                     })
