@@ -305,15 +305,13 @@ export default class GenericListing extends Component {
         let val;
 
         if (selectedColumn.route) {
-
             let id;
-
             if (selectedColumn.path.split('.')[1]) {
-                id = this.convertIt(selectedColumn.path).id;
+                id = this.convertIt(selectedColumn.path);
+                id = eval('listingRow.' + id).id;
             } else {
                 id = listingRow.id;
             }
-
             val = <a href={`${selectedColumn.reference_route}${id}`} >{eval('listingRow.' + selectedColumn.path)}</a>
         } else {
             try {
@@ -443,25 +441,25 @@ export default class GenericListing extends Component {
 
                         &&
                         <Card>
-                            <CardBody>
+                            <CardBody className="table-wrapper">
 
-                            {/* Portlet Table */}
-                            <PortletTable rowTemplate={this.rowTemplate} tableType="listing" rowOptions={this.rowOptions}
-                                toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} />
-                            {/* Portlet Table Ends */}
+                                {/* Portlet Table */}
 
-                            {/* Listing Pagination */}
-                            {
-                                Array.isArray(listing) && listing.length ?
+                                {/* {
+                    (finalColumns && finalColumns.length) && */}
+                                <PortletTable rowTemplate={this.rowTemplate} tableType="listing" rowOptions={this.rowOptions}
+                                    toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} />
+                                {/* } */}
 
-                                    <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
-                                    : null}
-                            {/* Listing Pagination Ends */}
+                                {/* Portlet Table Ends */}
 
                             </CardBody>
                         </Card>
                     }
 
+                    <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
+                    : null}
+                {/* Listing Pagination Ends */}
 
                 </div>
             </HotKeys>
