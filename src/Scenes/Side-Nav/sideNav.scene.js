@@ -3,6 +3,9 @@ import './sideNav.css';
 
 import { StoreEvent } from './../../Utils/stateManager.utils'
 
+import { HotKeys } from 'react-hotkeys';
+
+
 
 export default class Sidenav extends Component {
     constructor(props) {
@@ -11,6 +14,13 @@ export default class Sidenav extends Component {
             visible: props.visible || false,
             onCollapse: props.onCollapse
         }
+    }
+
+    keyMap = {
+        moveUp: 'shift+b',
+    }
+    handlers = {
+        'moveUp': (event) => this.toggleNav(this.state.visible)
     }
 
     componentDidMount() {
@@ -64,6 +74,7 @@ export default class Sidenav extends Component {
 
     toggleNav = (visible = this.state.visible) => {
         // this.state.visible = !visible;
+        console.log(visible);
         this.setState({ visible: !visible });
         this.operation(this.state.visible);
     }
@@ -78,39 +89,42 @@ export default class Sidenav extends Component {
         const { menus } = this.props;
 
         return (
-            <div id="mySidenav" className="sidebar-wrapper">
-                <div className="sidebar-logo">
-                    <div className="logo-image">
-                        {/* <span className="logo-container">
+
+            <HotKeys keyMap={this.keyMap} handlers={this.handlers}>
+                <div id="mySidenav" className="sidebar-wrapper">
+                    <div className="sidebar-logo">
+                        <div className="logo-image">
+                            {/* <span className="logo-container">
                             <img src={require('./../../Assets/images/logo-main.png')} />
                         </span> */}
-                        <span className="toggle-icon" onClick={() => this.toggleNav()}>
-                            <i className={`fa ${visible ? 'fa-chevron-left' : 'fa-chevron-down'}`}></i>
-                        </span>
+                            <span className="toggle-icon" onClick={() => this.toggleNav()}>
+                                <i className={`fa ${visible ? 'fa-chevron-left' : 'fa-chevron-down'}`}></i>
+                            </span>
 
-                    </div>
-                    <div className="sidebar-menus">
-                        <div className="menus">
-                            {
-                                menus.map((menu, key) => (
-                                    <div className="menu-item" key={key} onClick={() => this.toggleMenu(menu)}>
-                                        <div className="menu-label">
-                                            <div className="menu-icon">
-                                                <i className={`menu-icon fa ${menu.image}`}></i>
+                        </div>
+                        <div className="sidebar-menus">
+                            <div className="menus">
+                                {
+                                    menus.map((menu, key) => (
+                                        <div className="menu-item" key={key} onClick={() => this.toggleMenu(menu)}>
+                                            <div className="menu-label">
+                                                <div className="menu-icon">
+                                                    <i className={`menu-icon fa ${menu.image}`}></i>
 
-                                            </div>
-                                            <div className="item-label `${visible ? 'menu-visible' : 'menu-hide'}`">
-                                                {menu.name}
+                                                </div>
+                                                <div className="item-label `${visible ? 'menu-visible' : 'menu-hide'}`">
+                                                    {menu.name}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))
-                            }
-                        </div>
+                                    ))
+                                }
+                            </div>
 
+                        </div>
                     </div>
                 </div>
-            </div>
+            </HotKeys>
         )
     }
 }
