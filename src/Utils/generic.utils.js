@@ -237,7 +237,8 @@ export function ConvertDependencyInjectionToArgs(dependencies) {
 
 /**
  * Register all the methods coming from db
- * @param  {} method
+ * takes string as method definition, and corresponding dependencies, register them and pass object of all methods
+ * @param  {} methodArr
  */
 export function RegisterMethod(methodArr) {
     const methods = {};
@@ -254,6 +255,10 @@ export function RegisterMethod(methodArr) {
     return methods;
 }
 
+/**
+ * Returns predefined methods used by CustomAction component 
+ * methods includes redirect, add, edit, delete, auditLog
+ */
 export function GetPreSelectedMethods() {
     const methods = {};
     methods.redirect = ({ action, listingRow, history, genericData }) => {
