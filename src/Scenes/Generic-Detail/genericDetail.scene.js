@@ -56,13 +56,16 @@ export default class GenericDetail extends Component {
 
             history.push(`${pageUrl}`);
         }
-    },{
+    }, {
         id: 0,
         name: "Edit Menu",
         icon: 'fa-pencil',
         subMenu: false,
         onClick: (data) => {
-            console.log(data);
+            const { portlet = {}, menuDetail } = this.state;
+            if (portlet.preDefinedmethods && portlet.preDefinedmethods.editMenu) {
+                portlet.preDefinedmethods.editMenu(menuDetail.menuId);
+            }
         }
     }];
 
@@ -157,7 +160,7 @@ export default class GenericDetail extends Component {
 
                 {
                     tabs && tabs.includes ?
-                        <DetailIncludes history={history} tabs={tabs} callback={this.getDetailRecord}/>
+                        <DetailIncludes history={history} tabs={tabs} callback={this.getDetailRecord} />
                         : null
                 }
             </div>
