@@ -23,15 +23,11 @@ import ModalWrap from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
 
 import PredefinedFilter from './../../Components/Dropdown-Filter/filter.component';
 import ListingSearch from './../../Components/Generic-Listing-Search/genericListingSearch.component';
-
 import { HotKeys } from 'react-hotkeys';
+
 
 import './genericListing.css';
 
-
-const map = {
-    'refresh': 'command+r'
-};
 
 export default class GenericListing extends Component {
     filterContent = {};
@@ -45,6 +41,13 @@ export default class GenericListing extends Component {
             isCollapsed: true
         };
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
+    }
+
+    keyMap = {
+        moveUp: 'shift+r',
+    }
+    handlers = {
+        'moveUp': (event) => this.getListingData()
     }
 
     componentWillReceiveProps(nextProps) {
@@ -165,106 +168,109 @@ export default class GenericListing extends Component {
         const { listing = [], finalColumns = [] } = genericData;
         const { history, match } = this.props;
         return (
-            <div className="generic-listing-container">
-                {/* <ModalWrap
+
+
+            <HotKeys keyMap={this.keyMap} handlers={this.handlers}>
+                <div className="generic-listing-container">
+                    {/* <ModalWrap
                     isVisible
                     headerText="tesfh"
                     modalBody={() => (<h1> h2</h1>)}
                     closeModal={() => this.setState({ isVisible: false })}
                 /> */}
-                <div className="page-bar">
-                    <div className="search-bar">
+                    <div className="page-bar">
+                        <div className="search-bar">
 
-                        <div className="generic-listing-search">
-                            {
-                                filterContent && filterContent.dictionary &&
-                                <ListingSearch history={history} match={match} dictionary={filterContent.dictionary} />
-                            }
+                            <div className="generic-listing-search">
+                                {
+                                    filterContent && filterContent.dictionary &&
+                                    <ListingSearch history={history} match={match} dictionary={filterContent.dictionary} />
+                                }
+                            </div>
+
+                            <div className="search-wrapper">
+                                {
+                                    filterContent && filterContent.dictionary &&
+                                    <DynamicFilter toggleAdvancedFilter={this.toggleAdvancedFilter} menuUpdatedCallback={this.predefinedFiltersUpdated} selectedColumns={genericData.selectedColumns} menuId={menuDetail.menuId} currentUser={currentUser} dictionary={filterContent.dictionary} userFilters={menuDetail.userFilter} history={history} match={match} />
+                                }
+                            </div>
                         </div>
 
-                        <div className="search-wrapper">
-                            {
-                                filterContent && filterContent.dictionary &&
-                                <DynamicFilter toggleAdvancedFilter={this.toggleAdvancedFilter} menuUpdatedCallback={this.predefinedFiltersUpdated} selectedColumns={genericData.selectedColumns} menuId={menuDetail.menuId} currentUser={currentUser} dictionary={filterContent.dictionary} userFilters={menuDetail.userFilter} history={history} match={match} />
-                            }
-                        </div>
-                    </div>
+                        <div className="header-actions">
 
-                    <div className="header-actions">
-
-                        <div className="btn-group" role="group" aria-label="Basic example">
-                            {/* <button type="button" className="btn btn-sm btn-secondary">Left</button>
+                            <div className="btn-group" role="group" aria-label="Basic example">
+                                {/* <button type="button" className="btn btn-sm btn-secondary">Left</button>
                             <button type="button" className="btn btn-sm btn-secondary">Middle</button>
 
                         
                             <button type="button" className="btn btn-sm btn-secondary">Right</button> */}
-                            <HotKeys keyMap={map}>
+
                                 <Button color="primary" size="sm" onClick={() => { this.refreshPage() }}>
                                     <i className="fa fa-refresh"></i>
                                 </Button>
-                            </HotKeys>
 
-                            <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
+                                <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
 
+                                {
+                                    genericData.columns ?
+                                        <TableSettings
+                                            onSubmit={this.layoutChanges}
+                                            listName={genericData.listName}
+                                            selectedColumns={genericData.selectedColumns}
+                                            columns={genericData.columns}
+                                        />
+                                        :
+                                        null
+                                }
+                            </div>
                             {
-                                genericData.columns ?
-                                    <TableSettings
-                                        onSubmit={this.layoutChanges}
-                                        listName={genericData.listName}
-                                        selectedColumns={genericData.selectedColumns}
-                                        columns={genericData.columns}
-                                    />
+                                menuDetail.userFilter ?
+                                    <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} userFilter={menuDetail.userFilter} history={history} match={match} />
                                     :
                                     null
                             }
                         </div>
+                    </div>
+
+                    <div>
                         {
-                            menuDetail.userFilter ?
-                                <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} userFilter={menuDetail.userFilter} history={history} match={match} />
-                                :
-                                null
+                            filterContent &&
+                            <ConfigureDynamicFilter
+                                history={history}
+                                match={match}
+                                filters={menuDetail.userFilter}
+                                content={filterContent}
+                            />
                         }
                     </div>
-                </div>
 
-                <div>
                     {
-                        filterContent &&
-                        <ConfigureDynamicFilter
-                            history={history}
-                            match={match}
-                            filters={menuDetail.userFilter}
-                            content={filterContent}
-                        />
+                        (finalColumns && finalColumns.length)
+
+                        &&
+                        <Card>
+                            <CardBody>
+
+                                {/* Portlet Table */}
+                                <PortletTable rowTemplate={this.rowTemplate}
+                                    toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} />
+                                {/* Portlet Table Ends */}
+
+                                {/* Listing Pagination */}
+                                {
+                                    Array.isArray(listing) && listing.length ?
+
+                                        <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
+                                        : null}
+                                {/* Listing Pagination Ends */}
+
+                            </CardBody>
+                        </Card>
                     }
+
+
                 </div>
-
-                {
-                    (finalColumns && finalColumns.length)
-
-                    &&
-                    <Card>
-                        <CardBody>
-
-                            {/* Portlet Table */}
-                            <PortletTable rowTemplate={this.rowTemplate}
-                                toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} />
-                            {/* Portlet Table Ends */}
-
-                            {/* Listing Pagination */}
-                        {
-                            Array.isArray(listing) && listing.length ?
-
-            <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
-:null}
-                            {/* Listing Pagination Ends */}
-
-                        </CardBody>
-                    </Card>
-                }
-
-
-            </div>
+            </HotKeys>
         );
     }
 }
