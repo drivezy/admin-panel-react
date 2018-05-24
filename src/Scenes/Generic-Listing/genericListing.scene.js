@@ -391,11 +391,6 @@ export default class GenericListing extends Component {
                         <div className="header-actions">
 
                             <div className="btn-group" role="group" aria-label="Basic example">
-                                {/* <button type="button" className="btn btn-sm btn-secondary">Left</button>
-                            <button type="button" className="btn btn-sm btn-secondary">Middle</button>
-
-                        
-                            <button type="button" className="btn btn-sm btn-secondary">Right</button> */}
 
                                 <Button color="primary" size="sm" onClick={() => { this.refreshPage() }}>
                                     <i className="fa fa-refresh"></i>
@@ -445,11 +440,11 @@ export default class GenericListing extends Component {
 
                                 {/* Portlet Table */}
 
-                                {/* {
-                    (finalColumns && finalColumns.length) && */}
-                                <PortletTable rowTemplate={this.rowTemplate} tableType="listing" rowOptions={this.rowOptions}
-                                    toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} />
-                                {/* } */}
+                                {
+                                    (finalColumns && finalColumns.length) &&
+                                    <PortletTable rowTemplate={this.rowTemplate} tableType="listing" rowOptions={this.rowOptions}
+                                        toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} />
+                                }
 
                                 {/* Portlet Table Ends */}
 
@@ -457,9 +452,13 @@ export default class GenericListing extends Component {
                         </Card>
                     }
 
-                    <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
-                    : null}
-                {/* Listing Pagination Ends */}
+                    {
+                        (finalColumns && finalColumns.length)
+
+                        &&
+                        <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
+                    }
+                    {/* Listing Pagination Ends */}
 
                 </div>
             </HotKeys>
