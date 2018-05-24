@@ -116,8 +116,8 @@ export default class GenericDetail extends Component {
         const { finalColumns = [], data = {} } = portlet;
         let selectedColumns = {};
 
-        if (menuDetail.preference && portlet.listPortlet) {
-            selectedColumns = JSON.parse(menuDetail.preference[portlet.listPortlet])
+        if (menuDetail.preference && portlet.listName) {
+            selectedColumns = JSON.parse(menuDetail.preference[portlet.listName])
         }
 
         const genericDataForCustomColumn = {
@@ -148,12 +148,7 @@ export default class GenericDetail extends Component {
 
         return (
             <div className="generic-detail-container">
-
-
-
                 <RightClick renderTag="div" html={html} rowOptions={this.rowOptions} ></RightClick>
-
-
                 {
                     finalColumns.length ?
                         <DetailPortlet listingRow={data} finalColumns={finalColumns} />

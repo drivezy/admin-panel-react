@@ -229,7 +229,7 @@ export default class DetailPortlet extends Component {
                                         <NavItem key={key} >
                                             <NavLink
                                                 className={`${activeTab === key ? 'active' : ''}`}
-                                                onClick={() => { this.toggle(key); }}>
+                                                onClick={() => { this.toggle(key, tab); }}>
                                                 {tab.relationship.display_name}
                                             </NavLink>
                                         </NavItem>
