@@ -81,13 +81,13 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
             columns[i][j].parent = i;
 
             const relationIndex = columns[i][j].parent;
-
-            if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && relationship[relationIndex].hasOwnProperty('related_model')) {
-                columns[i][j].reference_route = relationship[relationIndex].related_model.state_name;
-                columns[i][j].parentColumn = relationship[relationIndex].related_column ? relationship[relationIndex].related_column.column_name : null;
-            } else if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && relationship[relationIndex].state_name) {
-                columns[i][j].reference_route = relationship[relationIndex].state_name;
-                columns[i][j].parentColumn = relationship[relationIndex].parent_column;
+            if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex)) {
+                if (relationship[relationIndex].hasOwnProperty('related_model')) {
+                    columns[i][j].reference_route = relationship[relationIndex].related_model.state_name;
+                    columns[i][j].parentColumn = relationship[relationIndex].related_column ? relationship[relationIndex].related_column.column_name : null;
+                } else if (relationship[relationIndex].state_name) {
+                    columns[i][j].reference_route = relationship[relationIndex].state_name;
+                }
             }
             selectedColumns[`${columns[i][j].parent}.${columns[i][j].id}`] = columns[i][j];
             // selectedColumns[columns[i][j].id] = columns[i][j];
@@ -127,6 +127,13 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
                 if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && relationship[relationIndex].hasOwnProperty('related_model')) {
                     finalColumnDefinition[i].reference_route = relationship[relationIndex].related_model.state_name;
                 }
+                // if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex)) {
+                //     if (relationship[relationIndex].hasOwnProperty('related_model')) {
+                //         finalColumnDefinition[i].reference_route = relationship[relationIndex].related_model.state_name;
+                //     } else if (relationship[relationIndex].state_name) {
+                //         finalColumnDefinition[i].reference_route = relationship[relationIndex].state_name;
+                //     }
+                // }
             }
         } else {
             finalColumnDefinition[i] = {
@@ -423,6 +430,37 @@ export async function GetPreference(paramName) {
         }
     }
 
+}
+
+/**
+ * Will return value for all kind of columns
+ * @param  {object} {selectedColumn - dictionary object
+ * @param  {object} listingRow - data value
+ * @param  {string} path='path'}
+ */
+export function RowTemplate({ selectedColumn, listingRow, path = 'path' }) {
+    if (selectedColumn.column_type == 111) {
+        return eval('listingRow.' + selectedColumn.path) ? 'Yes' : 'No';
+    } else if (selectedColumn.route) {
+        let id;
+        if (selectedColumn[path].split('.')[1]) {
+            id = convertIt(selectedColumn[path]);
+            id = eval('listingRow.' + id).id;
+        } else {
+            id = listingRow.id;
+        }
+        return <a href={`${selectedColumn.reference_route}${id}`} >{eval('listingRow.' + selectedColumn[path])}</a>
+    } else {
+        try {
+            return eval('listingRow.' + selectedColumn[path]);
+        } catch (e) {
+            return '';
+        }
+    }
+}
+
+function convertIt(str) {
+    return str.replace(/.([^.]*)$/, "");
 }
 
 function createQueryUrl(url, restrictQuery, genericData) {

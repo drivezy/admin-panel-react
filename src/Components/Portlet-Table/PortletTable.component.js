@@ -9,6 +9,7 @@ import {
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 import RightClick from './../../Components/Right-Click/rightClick.component';
 
+import { RowTemplate } from './../../Utils/generic.utils';
 import { Location } from './../../Utils/location.utils';
 
 
@@ -158,130 +159,118 @@ export default class PortletTable extends Component {
     };
 
     render() {
-
         const { genericData, finalColumns, listing } = this.state;
         const { history, match, menuDetail, rowTemplate, callback, tableType, rowOptions } = this.props;
 
         let renderItem;
         if (listing.length) {
-            renderItem = <Table striped className="sortable">
-                <thead>
-                    <tr>
-                        <th>
-                        </th>
-                        {
-                            finalColumns.map((selectedColumn, key) => {
-                                let conditionForSorting = (this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.column_name))) ? (this.state.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down') : ''
-                                return (
-                                    <th className="column-header" key={key}>
-                                        {/* Column Wrapper */}
-                                        <div className="column-wrapper">
-                                            {/* Column Title */}
-                                            <div className="column-title printable">
-                                                <a onClick={e => this.onSort(e, selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName))}>
-                                                    <span>{selectedColumn.display_name}</span>
-                                                    <i className={`fa ${conditionForSorting}`} />
-                                                </a>
-                                            </div>
-                                            {/* Column Title Ends */}
-
-                                            {/* Filter Column */}
-                                            {
-                                                tableType == "listing" && selectedColumn.path.split('.').length < 3 &&
-                                                <div className="filter-column">
-                                                    <a onClick={e => this.filterColumn(selectedColumn)}>
-                                                        <i className="fa fa-filter"></i>
+            renderItem =
+                <Table striped className="sortable">
+                    <thead>
+                        <tr>
+                            <th>
+                            </th>
+                            {
+                                finalColumns.map((selectedColumn, key) => {
+                                    let conditionForSorting = (this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.column_name))) ? (this.state.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down') : ''
+                                    return (
+                                        <th className="column-header" key={key}>
+                                            {/* Column Wrapper */}
+                                            <div className="column-wrapper">
+                                                {/* Column Title */}
+                                                <div className="column-title printable">
+                                                    <a onClick={e => this.onSort(e, selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName))}>
+                                                        <span>{selectedColumn.display_name}</span>
+                                                        <i className={`fa ${conditionForSorting}`} />
                                                     </a>
                                                 </div>
-                                            }
-                                            {/* Filter Ends */}
-                                            {/* DB Level */}
+                                                {/* Column Title Ends */}
 
-                                            {
-                                                (selectedColumn.path.split('.').length == 1) && (selectedColumn.column_type != 118) &&
-                                                (
-                                                    tableType == "listing" &&
-                                                    <div className="db-level-sort">
-                                                        {
-                                                            <Dropdown isOpen={this.state.dropdownOpen[selectedColumn.id]} toggle={() => this.dropdownToggle(selectedColumn)}>
-                                                                <DropdownToggle tag="span" data-toggle="dropdown" aria-expanded={this.state.dropdownOpen}>
-                                                                    <a className="dropdown-link">
-                                                                        <i className="fa fa-sort-amount-asc"></i>
-                                                                    </a>
-                                                                </DropdownToggle>
-                                                                <DropdownMenu>
-                                                                    {
-                                                                        this.sortTypes.map((sort, key) => {
-                                                                            return (
-                                                                                <div className="dropdown-item" key={key} onClick={e => this.dropdownSortOnDB(sort, selectedColumn)}>
-                                                                                    <i className={`fa ${sort.icon}`} /> {sort.caption}
-                                                                                </div>
-                                                                            )
-                                                                        })
-                                                                    }
-                                                                </DropdownMenu>
-                                                            </Dropdown>
-                                                        }
+                                                {/* Filter Column */}
+                                                {
+                                                    tableType == "listing" && selectedColumn.path.split('.').length < 3 &&
+                                                    <div className="filter-column">
+                                                        <a onClick={e => this.filterColumn(selectedColumn)}>
+                                                            <i className="fa fa-filter"></i>
+                                                        </a>
                                                     </div>
+                                                }
+                                                {/* Filter Ends */}
+                                                {/* DB Level */}
+
+                                                {
+                                                    (selectedColumn.path.split('.').length == 1) && (selectedColumn.column_type != 118) &&
+                                                    (
+                                                        tableType == "listing" &&
+                                                        <div className="db-level-sort">
+                                                            {
+                                                                <Dropdown isOpen={this.state.dropdownOpen[selectedColumn.id]} toggle={() => this.dropdownToggle(selectedColumn)}>
+                                                                    <DropdownToggle tag="span" data-toggle="dropdown" aria-expanded={this.state.dropdownOpen}>
+                                                                        <a className="dropdown-link">
+                                                                            <i className="fa fa-sort-amount-asc"></i>
+                                                                        </a>
+                                                                    </DropdownToggle>
+                                                                    <DropdownMenu>
+                                                                        {
+                                                                            this.sortTypes.map((sort, key) => {
+                                                                                return (
+                                                                                    <div className="dropdown-item" key={key} onClick={e => this.dropdownSortOnDB(sort, selectedColumn)}>
+                                                                                        <i className={`fa ${sort.icon}`} /> {sort.caption}
+                                                                                    </div>
+                                                                                )
+                                                                            })
+                                                                        }
+                                                                    </DropdownMenu>
+                                                                </Dropdown>
+                                                            }
+                                                        </div>
+                                                    )
+                                                }
+                                            </div>
+                                        </th>
+                                    )
+                                })
+                            }
+                            <th className="action-header">
+                                <span className="fa fa-cog fa-lg"></span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            listing.map((listingRow, rowKey) => {
+
+                                return (
+                                    <tr className="table-row" key={rowKey}>
+
+                                        <td className="row-key">
+                                            {rowKey + 1}
+                                        </td>
+                                        {
+                                            finalColumns.map((selectedColumn, key) => {
+                                                const html =
+                                                    rowTemplate ?
+                                                        rowTemplate({ listingRow, selectedColumn })
+                                                        :
+                                                        RowTemplate({ listingRow, selectedColumn });
+
+                                                return (
+                                                    <td key={key} className='no-padding-strict'>
+                                                        <RightClick html={html} history={history} match={match} key={key} renderTag="div" className='generic-table-td' rowOptions={rowOptions} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail} />
+                                                    </td>
                                                 )
-                                            }
-                                        </div>
-                                    </th>
+                                            })
+                                        }
+                                        <td className="action-column">
+                                            <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} placement={167} callback={callback} />
+                                        </td>
+                                    </tr>
                                 )
                             })
                         }
-                        <th className="action-header">
-                            <span className="fa fa-cog fa-lg"></span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        listing.map((listingRow, rowKey) => {
+                    </tbody>
 
-                            return (
-                                <tr className="table-row" key={rowKey}>
-
-                                    <td className="row-key">
-                                        {rowKey + 1}
-                                    </td>
-                                    {
-                                        finalColumns.map((selectedColumn, key) => {
-
-                                            let displayName;
-                                            try {
-                                                displayName = eval('listingRow.' + selectedColumn.path)
-                                            } catch (e) {
-                                                displayName = ''
-                                            }
-                                            const html =
-                                                rowTemplate ?
-                                                    rowTemplate({ listingRow, selectedColumn }) :
-                                                    displayName
-
-                                            return (
-                                                // (tableType == "listing") ?
-                                                <td key={key} className=''>
-                                                    <RightClick html={html} history={history} match={match} key={key} renderTag="div" className='generic-table-td' rowOptions={rowOptions} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail}></RightClick>
-                                                </td>
-                                                // :
-                                                // <td key={key} className='no-padding-strict'>
-                                                //     <RightClick html={html} history={history} match={match} key={key} renderTag="div" className='generic-table-td' rowOptions={rowOptions} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail}></RightClick>
-                                                // </td>
-
-                                            )
-                                        })
-                                    }
-                                    <td className="action-column">
-                                        <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} placement={167} callback={callback} />
-                                    </td>
-                                </tr>
-                            )
-                        })
-                    }
-                </tbody>
-
-            </Table>
+                </Table>
         } else {
             renderItem = (
                 <div className='no-data-to-show'>
@@ -294,11 +283,11 @@ export default class PortletTable extends Component {
         return (
 
             // <Card>
-                // <CardBody className="table-wrapper">
-                    <div className="table-container">
-                        {renderItem}
-                    </div>
-                // </CardBody>
+            // <CardBody className="table-wrapper">
+            <div className="table-container table-wrapper">
+                {renderItem}
+            </div>
+            // </CardBody>
             // </Card>
         );
     }

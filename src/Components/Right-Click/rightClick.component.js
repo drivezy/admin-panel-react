@@ -21,7 +21,7 @@ export default class RightClick extends Component {
         return (
             [
                 <ContextMenuTrigger key={1} id={identifier} renderTag={renderTag} attributes={{ className }} holdToDisplay={1000}>
-                    {html}
+                    {html || ''}
                 </ContextMenuTrigger>,
 
                 <ContextMenu key={2} id={identifier}>
