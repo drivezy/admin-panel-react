@@ -296,37 +296,6 @@ export default class GenericListing extends Component {
         GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser });
     }
 
-
-    convertIt = (str) => {
-        return str.replace(/.([^.]*)$/, "");
-    }
-
-    rowTemplate = ({ listingRow, selectedColumn }) => {
-        let val;
-
-        if (selectedColumn.route) {
-
-            let id;
-
-            if (selectedColumn.path.split('.')[1]) {
-                id = this.convertIt(selectedColumn.path).id;
-            } else {
-                id = listingRow.id;
-            }
-
-            val = <a href={`${selectedColumn.reference_route}${id}`} >{eval('listingRow.' + selectedColumn.path)}</a>
-        } else {
-            try {
-                val = eval('listingRow.' + selectedColumn.path);
-            } catch (e) {
-                val = null;
-            }
-        }
-        return (<span>{val}</span>);
-    }
-
-
-
     dataFetched = ({ genericData, filterContent }) => {
         // const totalPages = Math.ceil((genericData.stats.records / genericData.stats.count));
 
@@ -446,7 +415,7 @@ export default class GenericListing extends Component {
                             <CardBody>
 
                             {/* Portlet Table */}
-                            <PortletTable rowTemplate={this.rowTemplate} tableType="listing" rowOptions={this.rowOptions}
+                            <PortletTable tableType="listing" rowOptions={this.rowOptions}
                                 toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} />
                             {/* Portlet Table Ends */}
 

@@ -52,12 +52,30 @@ export default class DetailPortlet extends Component {
     componentWillReceiveProps(nextProps) {
     }
 
+    convertIt = (str) => {
+        return str.replace(/.([^.]*)$/, "");
+    }
+
+    rowTemplate = ({ selectedColumn, listingRow }) => {
+        if (selectedColumn.route) {
+            let id;
+            if (selectedColumn.absPath.split('.')[1]) {
+                id = this.convertIt(selectedColumn.absPath).id;
+            } else {
+                id = listingRow.id;
+            }
+            return <a href={`${selectedColumn.reference_route}${id}`} >{eval('listingRow.' + selectedColumn.absPath)}</a>
+        } else {
+            try {
+                return eval('listingRow.' + selectedColumn.absPath);
+            } catch (e) {
+                return '';
+            }
+        }
+    }
+
     render() {
-
         const { finalColumns, listingRow } = this.props;
-
-
-
         return (
             <div className="detail-portlet">
                 <Card>
@@ -76,7 +94,8 @@ export default class DetailPortlet extends Component {
 
                                                 </Col>
                                                 <Col>
-                                                    <span className="pull-right">{listingRow[selectedColumn.column_name]}</span>
+                                                    <span className="pull-right"> {this.rowTemplate({ selectedColumn, listingRow })}</span>
+                                                    {/* <span className="pull-right">{listingRow[selectedColumn.column_name]}</span> */}
                                                 </Col>
                                             </Row>
                                             : null

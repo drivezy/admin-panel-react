@@ -81,9 +81,13 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
             columns[i][j].parent = i;
 
             const relationIndex = columns[i][j].parent;
-            if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && relationship[relationIndex].hasOwnProperty('related_model')) {
-                columns[i][j].reference_route = relationship[relationIndex].related_model.state_name;
-                columns[i][j].parentColumn = relationship[relationIndex].related_column ? relationship[relationIndex].related_column.column_name : null;
+            if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex)) {
+                if (relationship[relationIndex].hasOwnProperty('related_model')) {
+                    columns[i][j].reference_route = relationship[relationIndex].related_model.state_name;
+                    columns[i][j].parentColumn = relationship[relationIndex].related_column ? relationship[relationIndex].related_column.column_name : null;
+                } else if (relationship[relationIndex].state_name) {
+                    columns[i][j].reference_route = relationship[relationIndex].state_name;
+                }
             }
 
             selectedColumns[`${columns[i][j].parent}.${columns[i][j].id}`] = columns[i][j];
@@ -123,6 +127,13 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
                 if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && relationship[relationIndex].hasOwnProperty('related_model')) {
                     finalColumnDefinition[i].reference_route = relationship[relationIndex].related_model.state_name;
                 }
+                // if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex)) {
+                //     if (relationship[relationIndex].hasOwnProperty('related_model')) {
+                //         finalColumnDefinition[i].reference_route = relationship[relationIndex].related_model.state_name;
+                //     } else if (relationship[relationIndex].state_name) {
+                //         finalColumnDefinition[i].reference_route = relationship[relationIndex].state_name;
+                //     }
+                // }
             }
         } else {
             finalColumnDefinition[i] = {
