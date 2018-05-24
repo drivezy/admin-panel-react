@@ -12,7 +12,7 @@ import RightClick from './../../Components/Right-Click/rightClick.component';
 
 import { CopyToClipBoard } from './../../Utils/common.utils';
 import ToastNotifications from './../../Utils/toast.utils';
-
+import { RowTemplate } from './../../Utils/generic.utils';
 
 export default class DetailPortlet extends Component {
     constructor(props) {
@@ -53,11 +53,7 @@ export default class DetailPortlet extends Component {
     }
 
     render() {
-
         const { finalColumns, listingRow } = this.props;
-
-
-
         return (
             <div className="detail-portlet">
                 <Card>
@@ -76,7 +72,8 @@ export default class DetailPortlet extends Component {
 
                                                 </Col>
                                                 <Col>
-                                                    <span className="pull-right">{listingRow[selectedColumn.column_name]}</span>
+                                                    <span className="pull-right"> {RowTemplate({ selectedColumn, listingRow, path: 'absPath' })}</span>
+                                                    {/* <span className="pull-right">{listingRow[selectedColumn.column_name]}</span> */}
                                                 </Col>
                                             </Row>
                                             : null

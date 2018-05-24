@@ -82,9 +82,6 @@ export default class ListingSearch extends React.Component {
     */
     getInputRecord = async ({ input: val, select, queryFieldName } = {}) => {
 
-        console.log(activeColumn);
-
-
         if (val) {
             const { filterArr } = this.state;
             const displayName = activeColumn.referenced_model.display_column;
@@ -140,7 +137,6 @@ export default class ListingSearch extends React.Component {
     // Initialize the controller
     initialize() {
         //const { content } = this.props;
-        console.log(this.props);
 
         // filterObj is a basic data structure that is defined and used
         // across this controller
@@ -197,14 +193,9 @@ export default class ListingSearch extends React.Component {
         const { referenced_model = {} } = selectedColumn;
         const { getObj } = this.state;
 
-        console.log(selectedColumn);
-        console.log(getObj);
-
         return (
-
             <div className="listing-search-container">
                 {
-
                     <div className="listing-search-tool">
                         <div className="listing-select-tool">
                             <SelectBox onChange={(data) => {

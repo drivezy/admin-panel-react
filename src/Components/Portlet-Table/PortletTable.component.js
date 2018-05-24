@@ -9,6 +9,7 @@ import {
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 import RightClick from './../../Components/Right-Click/rightClick.component';
 
+import { RowTemplate } from './../../Utils/generic.utils';
 import { Location } from './../../Utils/location.utils';
 
 
@@ -158,7 +159,6 @@ export default class PortletTable extends Component {
     };
 
     render() {
-
         const { genericData, finalColumns, listing } = this.state;
 
         const { history, match, menuDetail, rowTemplate, callback, tableType, rowOptions } = this.props;
@@ -249,36 +249,24 @@ export default class PortletTable extends Component {
                                             <td className="row-key">
                                                 {rowKey + 1}
                                             </td>
+
                                             {
                                                 finalColumns.map((selectedColumn, key) => {
-
-                                                    let displayName;
-                                                    try {
-                                                        displayName = eval('listingRow.' + selectedColumn.path)
-                                                    } catch (e) {
-                                                        displayName = ''
-                                                    }
                                                     const html =
                                                         rowTemplate ?
-                                                            rowTemplate({ listingRow, selectedColumn }) :
-                                                            displayName
+                                                            rowTemplate({ listingRow, selectedColumn })
+                                                            :
+                                                            RowTemplate({ listingRow, selectedColumn });
 
                                                     return (
-                                                        // (tableType == "listing") ?
-                                                        <td key={key} className=''>
-                                                            <RightClick html={html} history={history} match={match} key={key} renderTag="div" className='generic-table-td' rowOptions={rowOptions} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail}></RightClick>
+                                                        <td key={key} className='no-padding-strict'>
+                                                            <RightClick html={html} history={history} match={match} key={key} renderTag="div" className='generic-table-td' rowOptions={rowOptions} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail} />
                                                         </td>
-                                                        // :
-                                                        // <td key={key} className='no-padding-strict'>
-                                                        //     <RightClick html={html} history={history} match={match} key={key} renderTag="div" className='generic-table-td' rowOptions={rowOptions} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail}></RightClick>
-                                                        // </td>
-
                                                     )
                                                 })
                                             }
-                                            {/* <td className="action-column">
-                                            <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} placement={167} callback={callback} />
-                                        </td> */}
+
+
                                         </tr>
                                     )
                                 })

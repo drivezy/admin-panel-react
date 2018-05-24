@@ -296,35 +296,6 @@ export default class GenericListing extends Component {
         GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser });
     }
 
-
-    convertIt = (str) => {
-        return str.replace(/.([^.]*)$/, "");
-    }
-
-    rowTemplate = ({ listingRow, selectedColumn }) => {
-        let val;
-
-        if (selectedColumn.route) {
-            let id;
-            if (selectedColumn.path.split('.')[1]) {
-                id = this.convertIt(selectedColumn.path);
-                id = eval('listingRow.' + id).id;
-            } else {
-                id = listingRow.id;
-            }
-            val = <a href={`${selectedColumn.reference_route}${id}`} >{eval('listingRow.' + selectedColumn.path)}</a>
-        } else {
-            try {
-                val = eval('listingRow.' + selectedColumn.path);
-            } catch (e) {
-                val = null;
-            }
-        }
-        return (<span>{val}</span>);
-    }
-
-
-
     dataFetched = ({ genericData, filterContent }) => {
         // const totalPages = Math.ceil((genericData.stats.records / genericData.stats.count));
 
@@ -334,7 +305,7 @@ export default class GenericListing extends Component {
         // } else {
         //     // this.setState({ pagesOnDisplay: totalPages });
         //     this.state.pagesOnDisplay = Math.ceil(totalPages);
-        // }
+        // }qw
         this.setState({ genericData, filterContent });
     }
 
