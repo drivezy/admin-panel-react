@@ -14,6 +14,8 @@ import ModalHeader from './../../Wrappers/Modal-Wrapper/templates/Modal-Header/m
 // import ModalHeader from './../../Wrappers/Modal-Wrapper/templates/Modal-Header/modalHeader.component';
 import ModalFooter from './../../Wrappers/Modal-Wrapper/templates/Modal-Footer/modalFooter.component';
 
+import CustomTooltip from '../Custom-Tooltip/customTooltip.component';
+
 
 let customMethods = {};
 
@@ -67,15 +69,17 @@ export default class CustomAction extends Component {
             <div className="custom-actions">
                 {
                     actions.map((action, key) => {
+
                         if (action.placement_id == placement) {
+                            const html = <button
+                                onClick={() => {
+                                    this.callFunction({ action, listingRow });
+                                }}
+                                type="button" className="btn btn-sm btn-light">
+                                <i className={`fa ${action.icon}`} ></i>
+                            </button>
                             return (
-                                <button
-                                    onClick={() => {
-                                        this.callFunction({ action, listingRow });
-                                    }}
-                                    type="button" key={key} className="btn btn-sm btn-light">
-                                    <i className={`fa ${action.icon}`} ></i>
-                                </button>
+                                <CustomTooltip key={key} html={html} title={action.name}></CustomTooltip>
                             );
                         }
                     })
