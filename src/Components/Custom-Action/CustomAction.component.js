@@ -14,6 +14,8 @@ import ModalHeader from './../../Wrappers/Modal-Wrapper/templates/Modal-Header/m
 // import ModalHeader from './../../Wrappers/Modal-Wrapper/templates/Modal-Header/modalHeader.component';
 import ModalFooter from './../../Wrappers/Modal-Wrapper/templates/Modal-Footer/modalFooter.component';
 
+import CustomTooltip from '../Custom-Tooltip/customTooltip.component';
+
 
 let customMethods = {};
 
@@ -63,19 +65,25 @@ export default class CustomAction extends Component {
 
     render() {
         const { actions = [], listingRow = [], genericData = {}, placement } = this.props;
+        const generateID = Math.random().toString(36).substr(2, 9);
+        let id = `tooltip-${generateID}`;
+        const html = "Dheeraj"
         return (
             <div className="custom-actions">
                 {
                     actions.map((action, key) => {
                         if (action.placement_id == placement) {
                             return (
-                                <button
-                                    onClick={() => {
-                                        this.callFunction({ action, listingRow });
-                                    }}
-                                    type="button" key={key} className="btn btn-sm btn-light">
-                                    <i className={`fa ${action.icon}`} ></i>
-                                </button>
+                                <div key={key}>
+                                    <button
+                                        onClick={() => {
+                                            this.callFunction({ action, listingRow });
+                                        }}
+                                        type="button" key={key} className="btn btn-sm btn-light">
+                                        <i className={`fa ${action.icon}`} ></i>
+                                    </button>
+                                    <CustomTooltip key={id} html={html} id={id}></CustomTooltip>
+                                </div>
                             );
                         }
                     })
