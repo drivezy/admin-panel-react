@@ -1,4 +1,5 @@
 .table-style {
+
     .sortable {
         .column-wrapper {
             display: flex;
@@ -76,4 +77,8 @@
             background-color: #5bc0de;
         }
     }
+}
+
+.generic-table-td { 
+    padding: 15px 20px;
 }

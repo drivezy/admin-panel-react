@@ -14,13 +14,13 @@ export default class RightClick extends Component {
 
     render() {
 
-        const { renderTag, rowOptions, html } = this.props;
+        const { renderTag, rowOptions, html, className } = this.props;
 
         const identifier = "entry " + Math.random(Math.random() * 1000);
 
         return (
             [
-                <ContextMenuTrigger key={1} renderTag={renderTag} id={identifier} holdToDisplay={1000}>
+                <ContextMenuTrigger key={1} id={identifier} renderTag={renderTag} attributes={{ className }} holdToDisplay={1000}>
                     {html}
                 </ContextMenuTrigger>,
 
