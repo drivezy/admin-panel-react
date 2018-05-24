@@ -65,25 +65,21 @@ export default class CustomAction extends Component {
 
     render() {
         const { actions = [], listingRow = [], genericData = {}, placement } = this.props;
-        const generateID = Math.random().toString(36).substr(2, 9);
-        let id = `tooltip-${generateID}`;
-        const html = "Dheeraj"
         return (
             <div className="custom-actions">
                 {
                     actions.map((action, key) => {
+
                         if (action.placement_id == placement) {
+                            const html = <button
+                                onClick={() => {
+                                    this.callFunction({ action, listingRow });
+                                }}
+                                type="button" className="btn btn-sm btn-light">
+                                <i className={`fa ${action.icon}`} ></i>
+                            </button>
                             return (
-                                <div key={key}>
-                                    <button
-                                        onClick={() => {
-                                            this.callFunction({ action, listingRow });
-                                        }}
-                                        type="button" key={key} className="btn btn-sm btn-light">
-                                        <i className={`fa ${action.icon}`} ></i>
-                                    </button>
-                                    <CustomTooltip key={id} html={html} id={id}></CustomTooltip>
-                                </div>
+                                <CustomTooltip key={key} html={html} title={action.name}></CustomTooltip>
                             );
                         }
                     })

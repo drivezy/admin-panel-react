@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Tooltip } from 'reactstrap';
+import { Button, Row, Col, Tooltip } from 'reactstrap';
 
-class CustomTooltip extends Component {
+export default class CustomTooltip extends Component {
     constructor(props) {
+        const generateID = Math.random().toString(36).substr(2, 9);
         super(props);
         this.state = {
-            tooltipOpen: false
+            tooltipOpen: false,
+            id: `tooltip-${generateID}`
         };
     }
     toggle = () => {
@@ -15,15 +17,18 @@ class CustomTooltip extends Component {
     }
 
     render() {
-        const { html, id } = this.props;
+        const { html, title } = this.props;
         return (
-            <div id={id}>
-                <Tooltip placement="auto" isOpen={this.state.tooltipOpen} target={id} toggle={this.toggle}>
-                    <span>{html}</span>
+            <span id={this.state.id}>
+                {html}
+                <Tooltip placement="top" isOpen={this.state.tooltipOpen} target={this.state.id} toggle={this.toggle}>
+                    <Row>
+                        <Col>
+                            <span>{title}</span>
+                        </Col>
+                    </Row>
                 </Tooltip>
-            </div>
+            </span>
         )
     }
 }
-
-export default CustomTooltip;
