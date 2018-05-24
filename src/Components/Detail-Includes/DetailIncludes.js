@@ -55,7 +55,11 @@ export default class DetailPortlet extends Component {
         }
         shouldComponentWillReceivePropsRun = true;
     }
-
+    
+    /**
+     * splits includes on comma and iterates through them to add extra properties to each tab
+     * @param  {object} props 
+     */
     buildTabData = (props) => {
         // 
         const data = props.tabs;
@@ -159,14 +163,6 @@ export default class DetailPortlet extends Component {
             tab.selectedColumns = this.preferences[tab.identifier];
             // list of selected column preference
             tab.finalColumns = CreateFinalColumns(tab.columns, this.preferences[tab.identifier], params.relationship);
-
-            // var resolve = {
-            //     resolve: {
-            //         modelAliasId: relationship.id
-            //     }
-            // };
-
-            // this.resolve.push(resolve);
             this.state.tabContent.push(tab);
         }
 
