@@ -143,7 +143,10 @@ export default class FormSettings extends Component {
                         <Button color="primary" size="sm" onClick={this.moveSelectedDown}>
                             <i className="fa fa-arrow-down"></i>
                         </Button>
-                   </div>
+                        <Button color="primary" size="sm" onClick={this.addSplit}>
+                            Add Split
+                       </Button>
+                    </div>
 
                     <div className="right">
 

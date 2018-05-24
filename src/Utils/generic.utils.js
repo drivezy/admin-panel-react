@@ -89,10 +89,10 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
                     columns[i][j].reference_route = relationship[relationIndex].state_name;
                 }
             }
-
             selectedColumns[`${columns[i][j].parent}.${columns[i][j].id}`] = columns[i][j];
             // selectedColumns[columns[i][j].id] = columns[i][j];
         }
+
     }
     return selectedColumns;
 }
@@ -430,6 +430,37 @@ export async function GetPreference(paramName) {
         }
     }
 
+}
+
+/**
+ * Will return value for all kind of columns
+ * @param  {object} {selectedColumn - dictionary object
+ * @param  {object} listingRow - data value
+ * @param  {string} path='path'}
+ */
+export function RowTemplate({ selectedColumn, listingRow, path = 'path' }) {
+    if (selectedColumn.column_type == 111) {
+        return eval('listingRow.' + selectedColumn.path) ? 'Yes' : 'No';
+    } else if (selectedColumn.route) {
+        let id;
+        if (selectedColumn[path].split('.')[1]) {
+            id = convertIt(selectedColumn[path]);
+            id = eval('listingRow.' + id).id;
+        } else {
+            id = listingRow.id;
+        }
+        return <a href={`${selectedColumn.reference_route}${id}`} >{eval('listingRow.' + selectedColumn[path])}</a>
+    } else {
+        try {
+            return eval('listingRow.' + selectedColumn[path]);
+        } catch (e) {
+            return '';
+        }
+    }
+}
+
+function convertIt(str) {
+    return str.replace(/.([^.]*)$/, "");
 }
 
 function createQueryUrl(url, restrictQuery, genericData) {

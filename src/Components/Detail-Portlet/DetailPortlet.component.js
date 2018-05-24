@@ -12,7 +12,7 @@ import RightClick from './../../Components/Right-Click/rightClick.component';
 
 import { CopyToClipBoard } from './../../Utils/common.utils';
 import ToastNotifications from './../../Utils/toast.utils';
-
+import { RowTemplate } from './../../Utils/generic.utils';
 
 export default class DetailPortlet extends Component {
     constructor(props) {
@@ -52,28 +52,6 @@ export default class DetailPortlet extends Component {
     componentWillReceiveProps(nextProps) {
     }
 
-    convertIt = (str) => {
-        return str.replace(/.([^.]*)$/, "");
-    }
-
-    rowTemplate = ({ selectedColumn, listingRow }) => {
-        if (selectedColumn.route) {
-            let id;
-            if (selectedColumn.absPath.split('.')[1]) {
-                id = this.convertIt(selectedColumn.absPath).id;
-            } else {
-                id = listingRow.id;
-            }
-            return <a href={`${selectedColumn.reference_route}${id}`} >{eval('listingRow.' + selectedColumn.absPath)}</a>
-        } else {
-            try {
-                return eval('listingRow.' + selectedColumn.absPath);
-            } catch (e) {
-                return '';
-            }
-        }
-    }
-
     render() {
         const { finalColumns, listingRow } = this.props;
         return (
@@ -94,7 +72,7 @@ export default class DetailPortlet extends Component {
 
                                                 </Col>
                                                 <Col>
-                                                    <span className="pull-right"> {this.rowTemplate({ selectedColumn, listingRow })}</span>
+                                                    <span className="pull-right"> {RowTemplate({ selectedColumn, listingRow, path: 'absPath' })}</span>
                                                     {/* <span className="pull-right">{listingRow[selectedColumn.column_name]}</span> */}
                                                 </Col>
                                             </Row>

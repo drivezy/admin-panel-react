@@ -9,6 +9,7 @@ import {
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 import RightClick from './../../Components/Right-Click/rightClick.component';
 
+import { RowTemplate } from './../../Utils/generic.utils';
 import { Location } from './../../Utils/location.utils';
 
 
@@ -52,9 +53,29 @@ export default class PortletTable extends Component {
     componentDidMount() {
         setTimeout(() => {
             this.adjustWidth();
-        }, 300)
-    }
+        }, 50)
 
+        // set zoom event
+        window.onzoom = () => {
+            setTimeout(() => {
+                this.adjustWidth();
+            }, 50)
+        }
+
+        // detect resize
+        var oldresize = window.onresize;
+
+        window.onresize = (e) => {
+            // console.log(e);
+            var event = window.event || e;
+            if (typeof (oldresize) === 'function' && !oldresize.call(window, event)) {
+                return false;
+            }
+            if (typeof (window.onzoom) === 'function') {
+                return window.onzoom.call(window, event);
+            }
+        }
+    }
 
     // According to action width 
     // width of table is assigned
@@ -62,10 +83,16 @@ export default class PortletTable extends Component {
         const actionColumnEle = document.getElementsByClassName('action-column')[0];
         if (actionColumnEle) {
             var actionColumnWidth = actionColumnEle.clientWidth;
-            var table = document.getElementsByClassName('table')[0];
+            var table = document.getElementsByClassName('table-wrapper')[0];
             var tableWidth = table.clientWidth;
 
             var percent = (100 - (actionColumnWidth / tableWidth) * 100);
+
+            console.log('table-width', tableWidth);
+
+            console.log('action column', actionColumnWidth);
+
+            console.log(percent);
 
             table.setAttribute('style', 'width:calc(' + percent + '% - 2px )');
         }
@@ -131,23 +158,26 @@ export default class PortletTable extends Component {
         this.dropdownToggle(column);
     };
 
-    rowTemplate = ({ selectedColumn, listingRow }) => {
+    rowTemplate = ({ listingRow, selectedColumn }) => {
+        let val;
+
         if (selectedColumn.route) {
             let id;
             if (selectedColumn.path.split('.')[1]) {
-                console.log(this.convertIt(selectedColumn.path));
-                id = this.convertIt(selectedColumn.path).id;
+                id = this.convertIt(selectedColumn.path);
+                id = eval('listingRow.' + id).id;
             } else {
                 id = listingRow.id;
             }
-            return <a href={`${selectedColumn.reference_route}${id}`} >{eval('listingRow.' + selectedColumn.path)}</a>
+            val = <a href={`${selectedColumn.reference_route}${id}`} >{eval('listingRow.' + selectedColumn.path)}</a>
         } else {
             try {
-                return eval('listingRow.' + selectedColumn.path);
+                val = eval('listingRow.' + selectedColumn.path);
             } catch (e) {
-                return '';
+                val = null;
             }
         }
+        return (<span>{val}</span>);
     }
 
     convertIt = (str) => {
@@ -249,7 +279,7 @@ export default class PortletTable extends Component {
                                                     rowTemplate ?
                                                         rowTemplate({ listingRow, selectedColumn })
                                                         :
-                                                        this.rowTemplate({ listingRow, selectedColumn });
+                                                        RowTemplate({ listingRow, selectedColumn });
 
                                                 return (
                                                     <td key={key} className='no-padding-strict'>
@@ -278,9 +308,14 @@ export default class PortletTable extends Component {
 
 
         return (
-            <div>
+
+            // <Card>
+            // <CardBody className="table-wrapper">
+            <div className="table-container table-wrapper">
                 {renderItem}
             </div>
+            // </CardBody>
+            // </Card>
         );
     }
 }

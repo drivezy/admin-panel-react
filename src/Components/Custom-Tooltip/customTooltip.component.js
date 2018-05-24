@@ -21,13 +21,13 @@ export default class CustomTooltip extends Component {
         return (
             <span id={this.state.id}>
                 {html}
-                <Tooltip placement={placement} isOpen={this.state.tooltipOpen} target={this.state.id} toggle={this.toggle}>
+                {/* <Tooltip placement={placement} isOpen={this.state.tooltipOpen} target={this.state.id} toggle={this.toggle}>
                     <Row>
                         <Col>
                             <span>{title}</span>
                         </Col>
                     </Row>
-                </Tooltip>
+                </Tooltip> */}
             </span>
         )
     }
