@@ -8,6 +8,9 @@ import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 import { GetMenuDetailEndPoint } from './../Constants/api.constants';
 
 import FormCreator from './../Components/Form-Creator/formCreator.component'
+import PortletTable from '../Components/Portlet-Table/PortletTable.component';
+import TableWrapper from './../Components/Table-Wrapper/tableWrapper.component'
+
 /**
  * Fetches Menu detail to render generic page
  * @param  {id} menuId
@@ -370,6 +373,35 @@ export function GetPreSelectedMethods() {
                 action.callback();
                 ToastNotifications.success('Records has been deleted');
             }
+        }
+    }
+
+    methods.auditLog = async ({ action, listingRow, genericData }) => {
+        const result = await Get({ url: "auditLog?" + "model=" + genericData.dataModel.id + "&id=" + listingRow.id + "&includes=created_user&dictionary=true&order=created_at,desc&limit=150" });
+        if (result.success) {
+            const auditData = result.response.response;
+            let columns = {
+                auditData: [{
+                    field: "parameter",
+                    label: "Parameter"
+                }, {
+                    field: "old_value",
+                    label: "Old Value"
+                }, {
+                    field: "new_value",
+                    label: "New Value"
+                }, {
+                    field: "created_at",
+                    label: "Creation Time"
+                }, {
+                    field: "created_user.display_name",
+                    label: "Created By"
+                }]
+            }
+            ModalManager.openModal({
+                headerText: 'Audit Log',
+                modalBody: () => (<TableWrapper listing={auditData} columns={columns.auditData}></TableWrapper>)
+            })
         }
     }
     return methods;
