@@ -1,6 +1,10 @@
 .table-container {
     // display: flex;
     // overflow-x: auto;
+
+    .custom-action-buttons { 
+        color: #0069d9 !important;
+    }
     .table {
         .column-wrapper {
             display: flex;

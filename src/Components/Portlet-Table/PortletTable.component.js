@@ -293,13 +293,13 @@ export default class PortletTable extends Component {
 
         return (
 
-            <Card>
-                <CardBody className="table-wrapper">
+            // <Card>
+                // <CardBody className="table-wrapper">
                     <div className="table-container">
                         {renderItem}
                     </div>
-                </CardBody>
-            </Card>
+                // </CardBody>
+            // </Card>
         );
     }
 }

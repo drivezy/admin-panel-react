@@ -5,7 +5,7 @@ import {
     CardTitle, CardSubtitle, Dropdown, DropdownToggle, Button, DropdownMenu, DropdownItem
 } from 'reactstrap';
 
-import { GetUrlParams } from './../../Utils/location.utils';
+import { GetUrlParams, Location } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
 import { GetListingRecord } from './../../Utils/genericListing.utils';
 import { SubscribeToEvent, UnsubscribeEvent, StoreEvent } from './../../Utils/stateManager.utils';
@@ -23,14 +23,15 @@ import ModalWrap from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
 
 import PredefinedFilter from './../../Components/Dropdown-Filter/filter.component';
 import ListingSearch from './../../Components/Generic-Listing-Search/genericListingSearch.component';
+import { HotKeys } from 'react-hotkeys';
 import { CopyToClipBoard } from './../../Utils/common.utils';
 import ToastNotifications from './../../Utils/toast.utils';
 import { Get } from './../../Utils/http.utils';
 import { BuildUrlForGetCall } from './../../Utils/common.utils';
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
-import { Location } from './../../Utils/location.utils';
 
 import './genericListing.css';
+
 
 export default class GenericListing extends Component {
     filterContent = {};
@@ -236,6 +237,13 @@ export default class GenericListing extends Component {
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
 
+    keyMap = {
+        moveUp: 'shift+r',
+    }
+    handlers = {
+        'moveUp': (event) => this.getListingData()
+    }
+
     componentWillReceiveProps(nextProps) {
         const newProps = GetUrlParams(nextProps);
         this.state.params = newProps.params;
@@ -352,100 +360,109 @@ export default class GenericListing extends Component {
         const { listing = [], finalColumns = [] } = genericData;
         const { history, match } = this.props;
         return (
-            <div className="generic-listing-container">
-                {/* <ModalWrap
+
+
+            <HotKeys keyMap={this.keyMap} handlers={this.handlers}>
+                <div className="generic-listing-container">
+                    {/* <ModalWrap
                     isVisible
                     headerText="tesfh"
                     modalBody={() => (<h1> h2</h1>)}
                     closeModal={() => this.setState({ isVisible: false })}
                 /> */}
-                <div className="page-bar">
-                    <div className="search-bar">
+                    <div className="page-bar">
+                        <div className="search-bar">
 
-                        <div className="generic-listing-search">
-                            {
-                                filterContent && filterContent.dictionary &&
-                                <ListingSearch history={history} match={match} dictionary={filterContent.dictionary} />
-                            }
+                            <div className="generic-listing-search">
+                                {
+                                    filterContent && filterContent.dictionary &&
+                                    <ListingSearch history={history} match={match} dictionary={filterContent.dictionary} />
+                                }
+                            </div>
+
+                            <div className="search-wrapper">
+                                {
+                                    filterContent && filterContent.dictionary &&
+                                    <DynamicFilter toggleAdvancedFilter={this.toggleAdvancedFilter} menuUpdatedCallback={this.predefinedFiltersUpdated} selectedColumns={genericData.selectedColumns} menuId={menuDetail.menuId} currentUser={currentUser} dictionary={filterContent.dictionary} userFilters={menuDetail.userFilter} history={history} match={match} />
+                                }
+                            </div>
                         </div>
 
-                        <div className="search-wrapper">
-                            {
-                                filterContent && filterContent.dictionary &&
-                                <DynamicFilter toggleAdvancedFilter={this.toggleAdvancedFilter} menuUpdatedCallback={this.predefinedFiltersUpdated} selectedColumns={genericData.selectedColumns} menuId={menuDetail.menuId} currentUser={currentUser} dictionary={filterContent.dictionary} userFilters={menuDetail.userFilter} history={history} match={match} />
-                            }
-                        </div>
-                    </div>
+                        <div className="header-actions">
 
-                    <div className="header-actions">
-
-                        <div className="btn-group" role="group" aria-label="Basic example">
-                            {/* <button type="button" className="btn btn-sm btn-secondary">Left</button>
+                            <div className="btn-group" role="group" aria-label="Basic example">
+                                {/* <button type="button" className="btn btn-sm btn-secondary">Left</button>
                             <button type="button" className="btn btn-sm btn-secondary">Middle</button>
 
                         
                             <button type="button" className="btn btn-sm btn-secondary">Right</button> */}
 
-                            <Button color="primary" size="sm" onClick={() => { this.refreshPage() }}>
-                                <i className="fa fa-refresh"></i>
-                            </Button>
+                                <Button color="primary" size="sm" onClick={() => { this.refreshPage() }}>
+                                    <i className="fa fa-refresh"></i>
+                                </Button>
 
+                                <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
 
-                            <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
-
+                                {
+                                    genericData.columns ?
+                                        <TableSettings
+                                            onSubmit={this.layoutChanges}
+                                            listName={genericData.listName}
+                                            selectedColumns={genericData.selectedColumns}
+                                            columns={genericData.columns}
+                                        />
+                                        :
+                                        null
+                                }
+                            </div>
                             {
-                                genericData.columns ?
-                                    <TableSettings
-                                        onSubmit={this.layoutChanges}
-                                        listName={genericData.listName}
-                                        selectedColumns={genericData.selectedColumns}
-                                        columns={genericData.columns}
-                                    />
+                                menuDetail.userFilter ?
+                                    <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} userFilter={menuDetail.userFilter} history={history} match={match} />
                                     :
                                     null
                             }
                         </div>
+                    </div>
+
+                    <div>
                         {
-                            menuDetail.userFilter ?
-                                <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} userFilter={menuDetail.userFilter} history={history} match={match} />
-                                :
-                                null
+                            filterContent &&
+                            <ConfigureDynamicFilter
+                                history={history}
+                                match={match}
+                                filters={menuDetail.userFilter}
+                                content={filterContent}
+                            />
                         }
                     </div>
-                </div>
 
-                <div>
                     {
-                        filterContent &&
-                        <ConfigureDynamicFilter
-                            history={history}
-                            match={match}
-                            filters={menuDetail.userFilter}
-                            content={filterContent}
-                        />
+                        (finalColumns && finalColumns.length)
+
+                        &&
+                        <Card>
+                            <CardBody className="table-wrapper">
+
+                                {/* Portlet Table */}
+
+                                {/* {
+                    (finalColumns && finalColumns.length) && */}
+                                <PortletTable rowTemplate={this.rowTemplate} tableType="listing" rowOptions={this.rowOptions}
+                                    toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} />
+                                {/* } */}
+
+                                {/* Portlet Table Ends */}
+
+                            </CardBody>
+                        </Card>
                     }
-                </div>
 
-
-                {/* Portlet Table */}
-
-                {
-                    (finalColumns && finalColumns.length) &&
-                    <PortletTable rowTemplate={this.rowTemplate} tableType="listing" rowOptions={this.rowOptions}
-                        toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} />
-                }
-
-                {/* Portlet Table Ends */}
-
-                {/* Listing Pagination */}
-                {
-                    Array.isArray(listing) && listing.length ?
-
-                        <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
-                        : null}
+                    <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
+                    : null}
                 {/* Listing Pagination Ends */}
 
-            </div>
+                </div>
+            </HotKeys>
         );
     }
 }

@@ -51,6 +51,9 @@ import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 
 import LoadAsync from './../Utils/loadAsyncScripts.utils';
 import { SubscribeToEvent } from './../Utils/stateManager.utils';
+
+import { HotKeys } from 'react-hotkeys';
+
 // import { GetProperties } from './../Utils/openProperty.utils';
 
 // import { LoginCheck } from './../Actions/user.action';
@@ -68,6 +71,14 @@ class MainApp extends Component {
             menuFetched: false,
         }
         // props.GetCities();
+    }
+
+
+    keyMap = {
+        moveUp: 'shift+b',
+    }
+    handlers = {
+        'moveUp': (event) => this.toggleSideNav(this.state.sideNavExpanded)
     }
 
     componentWillMount() {
@@ -107,7 +118,11 @@ class MainApp extends Component {
 
     callback = (method) => {
         // this.setState({sideNavExpanded:method});
-        // console.log(method);
+        //console.log(method)
+    }
+
+    toggleSideNav = (sideNavExpanded) => {
+        this.setState({ sideNavExpanded: !this.state.sideNavExpanded });
     }
 
     render() {
@@ -116,44 +131,45 @@ class MainApp extends Component {
         const { sideNavExpanded } = this.state;
         return (
 
+            <HotKeys keyMap={this.keyMap} handlers={this.handlers}>
+                <div className="app-container">
+                    {
+                        menus && menus.length &&
+                        <div className="page-container">
+                            <div className="landing-sidebar">
+                                <SideNav visible={sideNavExpanded} onCollapse={this.callback} menus={menus} />
+                            </div>
+                            <div className="landing-wrapper {this.state.sideNavExpanded ? 'sidenav-open' : 'sidenav-closed'}" id="main" style={{ height: '100%' }}>
+                                <Header />
+                                <Switch>
+                                    {
+                                        menus.map((menu, index) => {
+                                            return menu.menus.map((state, index) => {
 
-            <div className="app-container">
-                {
-                    menus && menus.length &&
-                    <div className="page-container">
-                        <div className="landing-sidebar">
-                            <SideNav visible={sideNavExpanded} onCollapse={this.callback} menus={menus} />
-                        </div>
-                        <div className="landing-wrapper {this.state.sideNavExpanded ? 'sidenav-open' : 'sidenav-closed'}" id="main" style={{ height: '100%' }}>
-                            <Header />
-                            <Switch>
-                                {
-                                    menus.map((menu, index) => {
-                                        return menu.menus.map((state, index) => {
-
-                                            if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericListingController.js') != -1) {
-                                                return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericListing {...props} menuId={state.id} />} />)
-                                            } else if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericDetailCtrl.js') != -1) {
-                                                return (<Route key={state.url} path={state.url} render={props => <GenericDetail {...props} menuId={state.id} />} />)
-                                                // return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericDetail {...props} menuId={state.id} />} />)
-                                            } else {
-                                                // return (<Route key={state.url} path={state.url} component={BookingDetail} />)
-                                            }
+                                                if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericListingController.js') != -1) {
+                                                    return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericListing {...props} menuId={state.id} />} />)
+                                                } else if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericDetailCtrl.js') != -1) {
+                                                    return (<Route key={state.url} path={state.url} render={props => <GenericDetail {...props} menuId={state.id} />} />)
+                                                    // return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericDetail {...props} menuId={state.id} />} />)
+                                                } else {
+                                                    // return (<Route key={state.url} path={state.url} component={BookingDetail} />)
+                                                }
+                                            })
                                         })
-                                    })
-                                }
-                                {/* <Route path={`${match.path}activeBookings`} component={GenericListing} /> */}
-                                {/* <Route path={`${match.path}list/:page`} component={GenericListing} />
+                                    }
+                                    {/* <Route path={`${match.path}activeBookings`} component={GenericListing} /> */}
+                                    {/* <Route path={`${match.path}list/:page`} component={GenericListing} />
                             <Route path={`${match.path}detail/:page/:detailId`} component={GenericDetail} /> */}
 
-                                <Route exact path='/booking/:bookingId' component={BookingDetail} />
-                                <Route exact path='/' component={HomeScene} />
-                                {this.state.sideNavExpanded}
-                            </Switch>
+                                    <Route exact path='/booking/:bookingId' component={BookingDetail} />
+                                    <Route exact path='/' component={HomeScene} />
+                                    {this.state.sideNavExpanded}
+                                </Switch>
+                            </div>
                         </div>
-                    </div>
-                }
-            </div>
+                    }
+                </div>
+            </HotKeys>
         )
     }
 }

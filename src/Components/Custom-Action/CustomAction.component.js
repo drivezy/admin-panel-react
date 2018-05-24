@@ -75,7 +75,7 @@ export default class CustomAction extends Component {
                                 onClick={() => {
                                     this.callFunction({ action, listingRow });
                                 }}
-                                type="button" className="btn btn-sm">
+                                type="button" className="btn btn-sm custom-action-buttons">
                                 <i className={`fa ${action.icon}`} ></i>
                             </button>
                             return (

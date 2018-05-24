@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Get } from './http.utils';
-import { IsUndefinedOrNull } from './common.utils';
+import { IsUndefinedOrNull, BuildUrlForGetCall } from './common.utils';
 import ToastNotifications from './../Utils/toast.utils';
 import { Delete } from './../Utils/http.utils';
 
@@ -8,6 +8,9 @@ import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 import { GetMenuDetailEndPoint } from './../Constants/api.constants';
 
 import FormCreator from './../Components/Form-Creator/formCreator.component'
+import PortletTable from '../Components/Portlet-Table/PortletTable.component';
+import TableWrapper from './../Components/Table-Wrapper/tableWrapper.component'
+
 /**
  * Fetches Menu detail to render generic page
  * @param  {id} menuId
@@ -261,6 +264,43 @@ export function RegisterMethod(methodArr) {
  */
 export function GetPreSelectedMethods() {
     const methods = {};
+    let menuDetail = null;
+    let menuDictionary = null;
+    let menuColumns = null;
+
+    /**
+     * To be used to edit menu directly from generic detail page
+     */
+    methods.editMenu = async (menuId) => {
+
+        const options = {
+            dictionary: menuDictionary ? false : true
+        };
+
+        const url = 'menu';
+        const builtUrl = BuildUrlForGetCall(url + '/' + menuId, options);
+        const res = await Get({ url: builtUrl });
+
+        menuDictionary = res.dictionary || menuDictionary;
+        menuDetail = res.response;
+
+        const params = {
+            dictionary: menuDictionary, includes: "", starter: url
+        };
+        if (!menuColumns) {
+            menuColumns = GetColumnsForListing(params);
+        }
+        // FormFactory.createFormObj(vm.tabs.callFunction, menuColumns, null, params.starter + ".form", "menu", "edit", menuDetail, null, condition, null, menuScripts, vm.genericDetailObject.model);
+
+        const genericData = {
+            columns: menuColumns,
+            modelName: url + '.form',
+            module: url
+        };
+        methods.edit({ listingRow: menuDetail, genericData });
+    };
+
+
     methods.redirect = ({ action, listingRow, history, genericData }) => {
         let url = CreateUrl({ url: action.parameter, obj: listingRow });
         // var urlParams;
@@ -302,6 +342,7 @@ export function GetPreSelectedMethods() {
      * @param  {object} genericData}
      */
     methods.edit = ({ action, listingRow, genericData }) => {
+        // const payload = { method: 'edit', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module };
         const payload = { method: 'edit', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module, dataModel: genericData.dataModel };
         ModalManager.openModal({
             payload,
@@ -339,49 +380,92 @@ export function GetPreSelectedMethods() {
         }
     }
 
-    function createQueryUrl(url, restrictQuery, genericData) {
-
-        var query = '';
-        var orderMethod;
-
-        // If query is present 
-        // we add it ,
-        // else we check if there is a filter in the url , 
-        // then append the respective filter query 
-        // if (urlParams.query) {
-        //     query += urlParams.query;
-        // } else {
-        //     if (urlParams.filter) {
-        //         var filter = this.props.genericData.userFilter.filter(function (userFilter) {
-        //             return userFilter.id == urlParams.filter;
-        //         })[0];
-        //         query += filter.filter_query;
-        //     }
-        // }
-
-        if (restrictQuery) {
-            if (query) {
-                query += restrictQuery;
-            } else {
-                query += restrictQuery.split('and ')[1];
+    methods.auditLog = async ({ action, listingRow, genericData }) => {
+        const result = await Get({ url: "auditLog?" + "model=" + genericData.dataModel.id + "&id=" + listingRow.id + "&includes=created_user&dictionary=true&order=created_at,desc&limit=150" });
+        if (result.success) {
+            const auditData = result.response.response;
+            let columns = {
+                auditData: [{
+                    field: "parameter",
+                    label: "Parameter"
+                }, {
+                    field: "old_value",
+                    label: "Old Value"
+                }, {
+                    field: "new_value",
+                    label: "New Value"
+                }, {
+                    field: "created_at",
+                    label: "Creation Time"
+                }, {
+                    field: "created_user.display_name",
+                    label: "Created By"
+                }]
             }
+            ModalManager.openModal({
+                headerText: 'Audit Log',
+                modalBody: () => (<TableWrapper listing={auditData} columns={columns.auditData}></TableWrapper>)
+            })
         }
-
-        if (query) {
-            query = '?redirectQuery=' + query;
-            orderMethod = '&';
-        } else {
-            orderMethod = '?';
-        }
-        // if (urlParams.order) {
-        //     url += query + orderMethod + "listingOrder=" + urlParams.order + ',' + (urlParams.sort || 'desc');
-        // } else if (this.props.genericData.defaultOrder) {
-        //     url += query + orderMethod + "listingOrder=" + this.props.genericData.defaultOrder;
-        // } else {
-        //     url += query;
-        // }
-
-        return url;
     }
     return methods;
+}
+
+export async function GetPreference(paramName) {
+    const res = await Get({ url: 'userPreference?parameter=' + paramName });
+    if (res.success) {
+        try {
+            return JSON.parse(res.response.value);
+        } catch (e) {
+            console.error('Something went wrong while parsing JSON');
+            console.log(res.response.value);
+            return {};
+        }
+    }
+
+}
+
+function createQueryUrl(url, restrictQuery, genericData) {
+
+    var query = '';
+    var orderMethod;
+
+    // If query is present 
+    // we add it ,
+    // else we check if there is a filter in the url , 
+    // then append the respective filter query 
+    // if (urlParams.query) {
+    //     query += urlParams.query;
+    // } else {
+    //     if (urlParams.filter) {
+    //         var filter = this.props.genericData.userFilter.filter(function (userFilter) {
+    //             return userFilter.id == urlParams.filter;
+    //         })[0];
+    //         query += filter.filter_query;
+    //     }
+    // }
+
+    if (restrictQuery) {
+        if (query) {
+            query += restrictQuery;
+        } else {
+            query += restrictQuery.split('and ')[1];
+        }
+    }
+
+    if (query) {
+        query = '?redirectQuery=' + query;
+        orderMethod = '&';
+    } else {
+        orderMethod = '?';
+    }
+    // if (urlParams.order) {
+    //     url += query + orderMethod + "listingOrder=" + urlParams.order + ',' + (urlParams.sort || 'desc');
+    // } else if (this.props.genericData.defaultOrder) {
+    //     url += query + orderMethod + "listingOrder=" + this.props.genericData.defaultOrder;
+    // } else {
+    //     url += query;
+    // }
+
+    return url;
 }
