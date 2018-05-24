@@ -426,28 +426,24 @@ export default class GenericListing extends Component {
                     }
                 </div>
 
+
+                {/* Portlet Table */}
+
                 {
                     (finalColumns && finalColumns.length) &&
-                    <Card>
-                        <CardBody>
-
-                            {/* Portlet Table */}
-                            <PortletTable rowTemplate={this.rowTemplate} tableType="listing" rowOptions={this.rowOptions}
-                                toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} />
-                            {/* Portlet Table Ends */}
-
-                            {/* Listing Pagination */}
-                            {
-                                Array.isArray(listing) && listing.length ?
-
-                                    <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
-                                    : null}
-                            {/* Listing Pagination Ends */}
-
-                        </CardBody>
-                    </Card>
+                    <PortletTable rowTemplate={this.rowTemplate} tableType="listing" rowOptions={this.rowOptions}
+                        toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} />
                 }
 
+                {/* Portlet Table Ends */}
+
+                {/* Listing Pagination */}
+                {
+                    Array.isArray(listing) && listing.length ?
+
+                        <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
+                        : null}
+                {/* Listing Pagination Ends */}
 
             </div>
         );
