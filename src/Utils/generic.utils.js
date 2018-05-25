@@ -9,7 +9,8 @@ import { GetMenuDetailEndPoint } from './../Constants/api.constants';
 
 import FormCreator from './../Components/Form-Creator/formCreator.component'
 import PortletTable from '../Components/Portlet-Table/PortletTable.component';
-import TableWrapper from './../Components/Table-Wrapper/tableWrapper.component'
+import TableWrapper from './../Components/Table-Wrapper/tableWrapper.component';
+import PreferenceSetting from './../Components/Preference-Setting/preferenceSetting.component'
 
 /**
  * Fetches Menu detail to render generic page
@@ -306,6 +307,13 @@ export function GetPreSelectedMethods() {
         };
         methods.edit({ listingRow: menuDetail, genericData });
     };
+
+    methods.PreferenceSetting = (preference, preferenceObj) => {
+        ModalManager.openModal({
+            headerText: "Edit " + preferenceObj.name + " Preference",
+            modalBody: () => (<PreferenceSetting listing={preference}></PreferenceSetting>)
+        })
+    }
 
 
     methods.redirect = ({ action, listingRow, history, genericData }) => {
