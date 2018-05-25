@@ -390,7 +390,7 @@ export default class GenericListing extends Component {
                             }
 
                             {
-                                menuDetail.userFilter ?
+                                menuDetail && menuDetail.userFilter && menuDetail.userFilter.length > 0 ?
                                     <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} userFilter={menuDetail.userFilter} history={history} match={match} />
                                     :
                                     null
@@ -430,7 +430,7 @@ export default class GenericListing extends Component {
                         (finalColumns && finalColumns.length)
 
                         &&
-                        <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
+                        <ListingPagination history={history} match={match} currentPage={genericData.currentPage} limit={genericData.limit} statsData={genericData.stats} />
                     }
                     {/* Listing Pagination Ends */}
 
