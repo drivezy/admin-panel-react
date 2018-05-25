@@ -55,7 +55,7 @@ export default class DetailPortlet extends Component {
         }
         shouldComponentWillReceivePropsRun = true;
     }
-    
+
     /**
      * splits includes on comma and iterates through them to add extra properties to each tab
      * @param  {object} props 
@@ -246,23 +246,20 @@ export default class DetailPortlet extends Component {
                                                             <CustomAction history={history} genericData={tab} actions={tab.nextActions} placement={168} callback={callback} />
                                                         </div>
 
-                                                        <span className="btn-group">
-                                                            <a className="btn btn-default btn-xs blue" href={`/modelAliasDetail/${tab.relationship.id}`}>
-                                                                <i className="fa fa-outdent" uib-tooltip="Redirect to Model Alias detail"></i>
-                                                            </a>
-                                                            {
-                                                                tab.columns && tab.finalColumns ?
-                                                                    <TableSettings
-                                                                        onSubmit={this.layoutChanges}
-                                                                        listName={tab.listName}
-                                                                        selectedColumns={tab.selectedColumns}
-                                                                        columns={tab.columns}
-                                                                    />
-                                                                    :
-                                                                    null
-                                                            }
-
-                                                        </span>
+                                                        <a className="btn btn-danger" href={`/modelAliasDetail/${tab.relationship.id}`}>
+                                                            <i className="fa fa-outdent" uib-tooltip="Redirect to Model Alias detail"></i>
+                                                        </a>
+                                                        {
+                                                            tab.columns && tab.finalColumns ?
+                                                                <TableSettings
+                                                                    onSubmit={this.layoutChanges}
+                                                                    listName={tab.listName}
+                                                                    selectedColumns={tab.selectedColumns}
+                                                                    columns={tab.columns}
+                                                                />
+                                                                :
+                                                                null
+                                                        }
                                                     </div>
 
                                                     <PortletTable

@@ -132,37 +132,41 @@ export default class GenericDetail extends Component {
             methods: portlet.methods,
             preDefinedmethods: portlet.preDefinedmethods
         };
-        const html = <div className="header">
-            <div className="left" />
+        const html =
+            <div className="header">
+                <div className="left" />
 
-            <div className="right">
-                <div className="btn-group" id="generic-detail-header-dynamic-icon-group">
-                    <CustomAction history={history} genericData={genericDataForCustomColumn} actions={menuDetail.nextActions} listingRow={data} placement={167} callback={this.getDetailRecord} />
+                <div className="right">
+                    <div className="btn-group" id="generic-detail-header-dynamic-icon-group">
+                        <CustomAction history={history} genericData={genericDataForCustomColumn} actions={menuDetail.nextActions} listingRow={data} placement={167} callback={this.getDetailRecord} />
+                    </div>
+
+                    {
+                        portlet.portletColumns ?
+                            <TableSettings onSubmit={this.layoutChanges} listName={portlet.listName} selectedColumns={selectedColumns} columns={portlet.portletColumns} finalColumns={finalColumns} />
+                            : null
+                    }
                 </div>
-
-                {
-                    portlet.portletColumns ?
-                        <TableSettings onSubmit={this.layoutChanges} listName={portlet.listName} selectedColumns={selectedColumns} columns={portlet.portletColumns} finalColumns={finalColumns} />
-                        : null
-                }
-            </div>
-        </div>;
+            </div>;
 
 
         return (
             <div className="generic-detail-container">
                 <RightClick renderTag="div" html={html} rowOptions={this.rowOptions} ></RightClick>
-                {
-                    finalColumns.length ?
-                        <DetailPortlet listingRow={data} finalColumns={finalColumns} />
-                        : null
-                }
 
-                {
-                    tabs && tabs.includes ?
-                        <DetailIncludes history={history} tabs={tabs} callback={this.getDetailRecord} />
-                        : null
-                }
+                <div className="detail-content">
+                    {
+                        finalColumns.length ?
+                            <DetailPortlet listingRow={data} finalColumns={finalColumns} />
+                            : null
+                    }
+
+                    {
+                        tabs && tabs.includes ?
+                            <DetailIncludes history={history} tabs={tabs} callback={this.getDetailRecord} />
+                            : null
+                    }
+                </div>
             </div>
         )
     }

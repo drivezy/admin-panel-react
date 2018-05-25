@@ -81,48 +81,46 @@ export default class PredefinedFilter extends React.Component {
         const { filteredUserFilter, searchText } = this.state;
         const filters = searchText ? filteredUserFilter : userFilter;
         return (
-            <div >
-                <Dropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-                    {/* <DropdownToggle data-toggle="dropdown" aria-expanded={this.state.dropdownOpen}> */}
-                    <DropdownToggle caret
-                        className='dropdown-button'
-                        color="primary"
-                        onClick={this.toggle}
-                        data-toggle="dropdown"
-                        aria-expanded={this.state.dropdownOpen}
-                    >
-                        Filter
+            <Dropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                {/* <DropdownToggle data-toggle="dropdown" aria-expanded={this.state.dropdownOpen}> */}
+                <DropdownToggle caret
+                    className='dropdown-button'
+                    color="primary"
+                    onClick={this.toggle}
+                    data-toggle="dropdown"
+                    aria-expanded={this.state.dropdownOpen}
+                >
+                    Filter
                     </DropdownToggle>
-                    <DropdownMenu className="dropdown-menu custom-click pull-right menu-operations" right>
-                        {
-                            userFilter.length > 3 ?
-                                <div>
-                                    <div className="form-group has-feedback">
-                                        <input value={searchText} onChange={this.searchFilter} type="text" className="form-control" id="search-operation" placeholder='Search Actions' />
-                                        <i onClick={() => searchText ? this.searchFilter({ value: null }) : null} className={`fa fa-${searchText ? 'times-circle cursor-pointer' : 'search'} form-control-feedback`} aria-hidden="true"></i>
-                                    </div>
+                <DropdownMenu className="dropdown-menu custom-click pull-right menu-operations" right>
+                    {
+                        userFilter.length > 3 ?
+                            <div>
+                                <div className="form-group has-feedback">
+                                    <input value={searchText} onChange={this.searchFilter} type="text" className="form-control" id="search-operation" placeholder='Search Actions' />
+                                    <i onClick={() => searchText ? this.searchFilter({ value: null }) : null} className={`fa fa-${searchText ? 'times-circle cursor-pointer' : 'search'} form-control-feedback`} aria-hidden="true"></i>
                                 </div>
-                                :
-                                null
-                        }
-                        {
-                            filters.map((filter, index) => {
-                                return (
-                                    <div className="menu-item" key={index} role="menuitem" onClick={() => this.submit(filter)}>
-                                        <a className="menu-link">
-                                            <span className="badge" onClick={(event) => this.deleteFilter(filter, event)}>
-                                                <i className="fa fa-times" aria-hidden="true"></i>
-                                            </span>
-                                            {filter.filter_name}
-                                        </a>
-                                    </div>
+                            </div>
+                            :
+                            null
+                    }
+                    {
+                        filters.map((filter, index) => {
+                            return (
+                                <div className="menu-item" key={index} role="menuitem" onClick={() => this.submit(filter)}>
+                                    <a className="menu-link">
+                                        <span className="badge" onClick={(event) => this.deleteFilter(filter, event)}>
+                                            <i className="fa fa-times" aria-hidden="true"></i>
+                                        </span>
+                                        {filter.filter_name}
+                                    </a>
+                                </div>
 
-                                )
-                            })
-                        }
-                    </DropdownMenu>
-                </Dropdown >
-            </div>
+                            )
+                        })
+                    }
+                </DropdownMenu>
+            </Dropdown>
         );
     }
 }

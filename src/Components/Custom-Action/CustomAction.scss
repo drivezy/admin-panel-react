@@ -1,15 +1,9 @@
-.custom-action {
-    float: right;
-    position: relative;
-    color: #9aa0ac !important;
-    padding: 0px!important;
-    button.btn {
-        // padding: 0px;
+.custom-actions {
+    .tooltip-element {
+        margin: 0px 4px;
     }
-}
-
-.custom-actions{
-    button.btn{
-        margin: 0px 2px;
+    button.btn {
+        background: #475a6b;
+        color: white;
     }
 }
