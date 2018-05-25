@@ -25,7 +25,7 @@ export default class ListingSearch extends React.Component {
         this.state = {
             selectedColumn: {},
             getObj: {},
-            inputValue: ''
+            query: ''
         };
     }
 
@@ -44,8 +44,17 @@ export default class ListingSearch extends React.Component {
         if (searchQuery) {
             const values = searchQuery.split(' ');
             console.log(values);
+            const regex = /["%]/g;
+            values[2] = values[2].replace(regex, '');
+            const selectedColumn = SelectFromOptions(dictionary, values[0], 'column_name');
+
+            let query;
+            if (!(selectedColumn && selectedColumn.referenced_model)) {
+                query = values[2];
+            }
+            this.setState({ selectedColumn, query });
         }
-        // SelectFromOptions()
+
     }
 
     /**
@@ -147,10 +156,11 @@ export default class ListingSearch extends React.Component {
     render() {
         const { props } = this;
         const { dictionary, history, match } = this.props;
-        const { selectedColumn = {} } = this.state;
+        const { selectedColumn = {}, query = '' } = this.state;
         const { referenced_model = {} } = selectedColumn;
         const { getObj } = this.state;
 
+        console.log(selectedColumn);
         return (
             <div className="listing-search-container">
                 {
@@ -174,6 +184,7 @@ export default class ListingSearch extends React.Component {
                                     <input type="text"
                                         className="input-select form-control"
                                         placeholder={`Search ${selectedColumn.display_name}`}
+                                        value={query}
                                         onChange={event => { this.setState({ query: event.target.value }) }}
                                         onKeyPress={this.handleKeyPress}
                                     //value={value}
