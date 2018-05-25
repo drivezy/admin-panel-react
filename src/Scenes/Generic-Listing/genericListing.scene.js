@@ -390,8 +390,10 @@ export default class GenericListing extends Component {
                             }
 
                             {
-                                menuDetail && menuDetail.userFilter && menuDetail.userFilter.length > 0 &&
-                                <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} userFilter={menuDetail.userFilter} history={history} match={match} />
+                                menuDetail && menuDetail.userFilter && menuDetail.userFilter.length > 0 ?
+                                    <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} userFilter={menuDetail.userFilter} history={history} match={match} />
+                                    :
+                                    null
                             }
                         </div>
                     </div>
