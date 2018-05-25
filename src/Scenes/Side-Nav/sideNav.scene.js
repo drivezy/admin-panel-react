@@ -91,7 +91,7 @@ export default class Sidenav extends Component {
         return (
 
             <HotKeys keyMap={this.keyMap} handlers={this.handlers}>
-                <div id="mySidenav" className="sidebar-wrapper">
+                <div id="mySidenav" className={`sidebar-wrapper ${visible ? 'expanded' : 'collapsed'}`}>
                     <div className="sidebar-logo">
                         <div className="logo-image">
                             {/* <span className="logo-container">

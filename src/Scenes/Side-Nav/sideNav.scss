@@ -5,13 +5,22 @@
     z-index: 1;
     top: 0;
     left: 0;
-    background: #303e4c;
-
-    // background-color: #111;
+    background: #303e4c; // background-color: #111;
     overflow-x: hidden;
     transition: 0.1s; // padding-top: 60px;
     display: flex;
     flex-direction: column;
+    &.collapsed {
+        .sidebar-menus {
+            .menus {
+                .menu-item {
+                    .menu-label {
+                        padding: 8px 2px;
+                    }
+                }
+            }
+        }
+    }
     .sidebar-logo {
         .logo-image {
             background: #303e4c;
@@ -52,9 +61,8 @@
             padding: 8px 10px;
             .menu-item {
                 .menu-label {
-                    display: flex;
-                    // padding: 10px 15px;
-                    padding: 8px 2px;
+                    display: flex; // padding: 10px 15px;
+                    padding: 8px 10px;
                     -webkit-font-smoothing: antialiased;
                     transition: all 50ms linear;
                     color: #A4B2B8;
@@ -75,7 +83,7 @@
                         transition: all 50ms ease-in-out;
                         display: inline-block;
                     }
-                    &:hover{
+                    &:hover {
                         background: #2c3e4e;
                     }
                 }
