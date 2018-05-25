@@ -69,7 +69,7 @@ export default class DetailPortlet extends Component {
         const includes = data.includes.split(",");
 
         this.preferences = {};
-        // this.state.tabContent = [];
+        this.state.tabContent = [];
         for (const i in includes) {
             const tab = {};
             const inclusions = includes[i].split(".");
@@ -208,7 +208,7 @@ export default class DetailPortlet extends Component {
 
     render() {
         const { tabs, tabContent, activeTab } = this.state;
-        const { history, callback } = this.props;
+        const { history = {}, callback } = this.props;
         const arr = [];
         // Object.keys(tabs.data).map((tab)=>(
 
