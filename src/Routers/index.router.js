@@ -51,7 +51,7 @@ import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 
 import LoadAsync from './../Utils/loadAsyncScripts.utils';
 import { SubscribeToEvent } from './../Utils/stateManager.utils';
-
+import { Location } from './../Utils/location.utils';
 import { HotKeys } from 'react-hotkeys';
 
 // import { GetProperties } from './../Utils/openProperty.utils';
@@ -71,6 +71,7 @@ class MainApp extends Component {
             menuFetched: false,
         }
         // props.GetCities();
+        Location.getHistoryMethod(this.getRouterProps); // pass methods, so that location utils can get history object
     }
 
 
@@ -114,6 +115,10 @@ class MainApp extends Component {
         // Load the preferences
         GetPreferences();
         LoginCheck();
+    }
+
+    getRouterProps = () => {
+        return { history: this.props.history };
     }
 
     callback = (method) => {

@@ -34,6 +34,36 @@ import './genericListing.css';
 
 
 export default class GenericListing extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            ...GetUrlParams(this.props), // params, queryString
+            menuDetail: {},
+            genericData: {},
+            filterContent: null,
+            isCollapsed: true
+        };
+        SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const newProps = GetUrlParams(nextProps);
+        this.state.params = newProps.params;
+        this.state.queryString = newProps.queryString;
+        if (this.state.menuDetail.url) {
+            this.getListingData();
+        }
+    }
+
+    componentDidMount() {
+        // this.getMenuData();
+        // ModalManager.showModal({ onClose: this.closeModal, headerText: '1st using method', modalBody: () => (<h1> hi</h1>) });
+    }
+
+    componentWillUnmount() {
+        // UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
+    }
+
     filterContent = {};
     urlParams = Location.search();
 
@@ -225,17 +255,6 @@ export default class GenericListing extends Component {
         }
     };
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            ...GetUrlParams(this.props), // params, queryString
-            menuDetail: {},
-            genericData: {},
-            filterContent: null,
-            isCollapsed: true
-        };
-        SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
-    }
 
     keyMap = {
         moveUp: 'shift+r',
@@ -244,28 +263,10 @@ export default class GenericListing extends Component {
         'moveUp': (event) => this.getListingData()
     }
 
-    componentWillReceiveProps(nextProps) {
-        const newProps = GetUrlParams(nextProps);
-        this.state.params = newProps.params;
-        this.state.queryString = newProps.queryString;
-        if (this.state.menuDetail.url) {
-            this.getListingData();
-        }
-    }
-
     toggleAdvancedFilter = (payload = {}) => {
         const { isCollapsed } = this.state;
         this.setState({ isCollapsed: !isCollapsed });
         StoreEvent({ eventName: 'ToggleAdvancedFilter', data: { isCollapsed: !isCollapsed, ...payload } });
-    }
-
-    componentDidMount() {
-        // this.getMenuData();
-        // ModalManager.showModal({ onClose: this.closeModal, headerText: '1st using method', modalBody: () => (<h1> hi</h1>) });
-    }
-
-    componentWillUnmount() {
-        // UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
 
     userDataArrived = (user) => {

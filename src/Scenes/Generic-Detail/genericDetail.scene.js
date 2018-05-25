@@ -13,7 +13,7 @@ import TableSettings from './../../Components/Table-Settings/TableSettings.compo
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 import RightClick from './../../Components/Right-Click/rightClick.component';
 
-import { GetUrlParams } from './../../Utils/location.utils';
+import { GetUrlParams, Location } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
 import { GetDetailRecord } from './../../Utils/genericDetail.utils';
 import { createFinalObject } from './../../Utils/table.utils';
@@ -32,46 +32,57 @@ export default class GenericDetail extends Component {
         };
     }
 
-    rowOptions = [{
-        id: 0,
-        name: "Redirect Menu Detail",
-        icon: 'fa-deaf',
-        subMenu: false,
-        onClick: (data) => {
-            const { history, match } = this.props;
-
-            let pageUrl = "/menuDef/" + this.state.menuDetail.menuId
-
-            history.push(`${pageUrl}`);
-        }
-    }, {
-        id: 1,
-        name: "Redirect Model Detail",
-        icon: 'fa-info-circle',
-        subMenu: false,
-        onClick: (data) => {
-            const { history, match } = this.props;
-
-            let pageUrl = "/modelDetails/" + this.state.menuDetail.model.id
-
-            history.push(`${pageUrl}`);
-        }
-    }, {
-        id: 0,
-        name: "Edit Menu",
-        icon: 'fa-pencil',
-        subMenu: false,
-        onClick: (data) => {
-            const { portlet = {}, menuDetail } = this.state;
-            if (portlet.preDefinedmethods && portlet.preDefinedmethods.editMenu) {
-                portlet.preDefinedmethods.editMenu(menuDetail.menuId);
-            }
-        }
-    }];
-
     componentDidMount() {
         this.getMenuData();
     }
+
+    componentWillReceiveProps(nextProps) {
+        const newProps = GetUrlParams(nextProps);
+        this.state.params = newProps.params;
+        this.state.queryString = newProps.queryString;
+        if (this.state.menuDetail.url) {
+            this.getDetailRecord();
+        }
+    }
+
+    rowOptions = [
+        {
+            id: 0,
+            name: "Redirect Menu Detail",
+            icon: 'fa-deaf',
+            subMenu: false,
+            onClick: (data) => {
+                const { history, match } = this.props;
+
+                let pageUrl = "/menuDef/" + this.state.menuDetail.menuId
+                Location.navigate({ url: pageUrl });
+                // history.push(`${pageUrl}`);
+            }
+        }, {
+            id: 1,
+            name: "Redirect Model Detail",
+            icon: 'fa-info-circle',
+            subMenu: false,
+            onClick: (data) => {
+                const { history, match } = this.props;
+
+                let url = "/modelDetails/" + this.state.menuDetail.model.id
+                Location.navigate({ url });
+                // history.push(`${url}`);
+            }
+        }, {
+            id: 0,
+            name: "Edit Menu",
+            icon: 'fa-pencil',
+            subMenu: false,
+            onClick: (data) => {
+                const { portlet = {}, menuDetail } = this.state;
+                if (portlet.preDefinedmethods && portlet.preDefinedmethods.editMenu) {
+                    portlet.preDefinedmethods.editMenu(menuDetail.menuId);
+                }
+            }
+        }
+    ];
 
     getMenuData = async () => {
         const { queryString } = this.state;
