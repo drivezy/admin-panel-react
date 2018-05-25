@@ -1,6 +1,6 @@
 .table-container {
     .table-body {
-        display:flex;
+        display: flex;
         .table-content {
             overflow-x: scroll;
         }
@@ -235,8 +235,7 @@
                         height: 43px;
                         position: absolute;
                         top: -42px;
-                        right: 1px;
-                        border-left: 1px solid #ebeef0;
+                        right: 1px; // border-left: 1px solid #ebeef0;
                     }
                     td.action-column {
                         // border-top: none;

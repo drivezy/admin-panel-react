@@ -51,15 +51,15 @@ export default class PortletTable extends Component {
     }
 
     componentDidMount() {
-        setTimeout(() => {
+        // setTimeout(() => {
             this.adjustWidth();
-        }, 50)
+        // }, 50)
 
         // set zoom event
         window.onzoom = () => {
-            setTimeout(() => {
+            // setTimeout(() => {
                 this.adjustWidth();
-            }, 50)
+            // }, 50)
         }
 
         // detect resize
@@ -259,7 +259,7 @@ export default class PortletTable extends Component {
                                                             RowTemplate({ listingRow, selectedColumn });
 
                                                     return (
-                                                        <td key={key} className='no-padding-strict'>
+                                                        <td key={key} className=''>
                                                             <RightClick html={html} history={history} match={match} key={key} renderTag="div" className='generic-table-td' rowOptions={rowOptions} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail} />
                                                         </td>
                                                     )

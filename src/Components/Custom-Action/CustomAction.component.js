@@ -75,12 +75,11 @@ export default class CustomAction extends Component {
                                 onClick={() => {
                                     this.callFunction({ action, listingRow });
                                 }}
-                                type="button" className="btn btn-sm custom-action-buttons">
+                                type="button" className="btn btn-sm btn-light">
                                 <i className={`fa ${action.icon}`} ></i>
                             </button>
                             return (
-                                html
-                                // <CustomTooltip placement="top" key={key} html={html} title={action.name}></CustomTooltip>
+                                <CustomTooltip placement="top" key={key} html={html} title={action.name}></CustomTooltip>
                             );
                         }
                     })
