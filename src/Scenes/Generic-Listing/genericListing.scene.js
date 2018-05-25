@@ -147,6 +147,22 @@ export default class GenericListing extends Component {
             history.push(`${pageUrl}`);
         },
         disabled: false
+    }, {
+        id: 0,
+        name: "Preferences Settings",
+        icon: 'fa-gift',
+        subMenu: false,
+        disabled: this.preferenceObj ? true : false,
+        onClick: (data) => {
+            const { genericData = {}, menuDetail } = this.state;
+            const preferenceObj = { // used for editing preferences
+                name: menuDetail.pageName, // preference name to be shown on modal
+                role: true
+            }
+            if (genericData.preDefinedmethods && genericData.preDefinedmethods.preferenceSetting) {
+                genericData.preDefinedmethods.preferenceSetting(menuDetail.preference, preferenceObj);
+            }
+        }
     }];
 
     openAggregationResult = async (operator, caption, data) => {

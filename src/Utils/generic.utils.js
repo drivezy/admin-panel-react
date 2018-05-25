@@ -308,10 +308,10 @@ export function GetPreSelectedMethods() {
         methods.edit({ listingRow: menuDetail, genericData });
     };
 
-    methods.PreferenceSetting = (preference, preferenceObj) => {
+    methods.preferenceSetting = (preference, preferenceObj) => {
         ModalManager.openModal({
             headerText: "Edit " + preferenceObj.name + " Preference",
-            modalBody: () => (<PreferenceSetting listing={preference}></PreferenceSetting>)
+            modalBody: () => (<PreferenceSetting listing={preference} preferenceObj={preferenceObj}></PreferenceSetting>)
         })
     }
 

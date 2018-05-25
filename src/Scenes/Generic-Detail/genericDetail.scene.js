@@ -93,8 +93,8 @@ export default class GenericDetail extends Component {
                     name: menuDetail.pageName, // preference name to be shown on modal
                     role: true
                 }
-                if (portlet.preDefinedmethods && portlet.preDefinedmethods.PreferenceSetting) {
-                    portlet.preDefinedmethods.PreferenceSetting(menuDetail.preference, preferenceObj);
+                if (portlet.preDefinedmethods && portlet.preDefinedmethods.preferenceSetting) {
+                    portlet.preDefinedmethods.preferenceSetting(menuDetail.preference, preferenceObj);
                 }
             }
         }];
