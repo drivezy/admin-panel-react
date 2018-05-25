@@ -5,6 +5,7 @@ import CustomAction from './../Custom-Action/CustomAction.component';
 import { CreateInclusions, GetColumnsForListing, CreateFinalColumns, RegisterMethod } from './../../Utils/generic.utils';
 import { GetColumnsForDetail } from './../../Utils/genericDetail.utils';
 import TableSettings from './../../Components/Table-Settings/TableSettings.component';
+import { Location } from './../../Utils/location.utils';
 
 import {
     Card, CardImg, CardText, CardBody,
