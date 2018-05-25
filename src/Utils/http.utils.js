@@ -4,9 +4,11 @@
  ****************************************/
 
 import GLOBAL from './../Constants/global.constants';
-import { GetFireToken } from './../Utils/user.utils';
-import { IsUndefined, CheckInternet } from './../Utils/common.utils';
+import { GetFireToken } from './user.utils';
+import { IsUndefined, CheckInternet } from './common.utils';
 import { StoreEvent, SubscribeToEvent, IsEventAvailable } from './stateManager.utils';
+import { LoaderUtils } from './loader.utils';
+import ToastUtils from './toast.utils';
 
 const defautlHeaders = {
     'Content-Type': 'application/json;charset=UTF-8',
@@ -97,6 +99,13 @@ export function Delete(obj) {
     }
 
     obj.method = 'DELETE';
+    if (IsUndefined(obj.hideMessage)) {
+        obj.hideMessage = true;
+    }
+
+    if (IsUndefined(obj.hideLoader)) {
+        obj.hideLoader = obj.hideLoader || true;
+    }
     const params = getNecessaryParams(obj);
     return ApiCall(params);
 }
@@ -220,6 +229,9 @@ function getNecessaryParams(obj) {
     const resolve = obj.hasOwnProperty('resolve') ? obj.resolve : resolve;
     const reject = obj.hasOwnProperty('reject') ? obj.reject : reject;
 
+    if (!obj.hideLoader && !obj.hasOwnProperty('resolve')) { // if hide loader is not true, start loader
+        LoaderUtils.startLoader();
+    }
     const responseObj = {
         url, method, headers, resolve, reject, hideMessage: obj.hideMessage || false, persist: obj.persist || false, callback: obj.callback, extraParams: obj.extraParams
     };
@@ -265,7 +277,7 @@ function createHeader(obj) {
  */
 function defaultResolve(response, hideMessage, hideLoader, { persist, url, body, callback, extraParams }) {
     if (!hideLoader) { // stop loader
-        // @TODO end loader
+        LoaderUtils.endLoader();
     }
     // if response contains string, show same in message bar
     if (response && response.response == 'Request not authorized') {
@@ -273,6 +285,7 @@ function defaultResolve(response, hideMessage, hideLoader, { persist, url, body,
     } else if (!hideMessage && response && typeof response == 'object' && (typeof response.response == 'string' || typeof response.reason == 'string')) {
         const type = response.success ? 'success' : 'error';
         // @TODO show message -response.response
+        ToastUtils[type](response.response || response.reason);
     }
     if (persist && !CheckInternet()) {
         StoreEvent({ eventName: url, data: response, objParams: body, isMemoryStore: true });
@@ -287,9 +300,9 @@ function defaultResolve(response, hideMessage, hideLoader, { persist, url, body,
  * default method to pass through on each failure api call
  * @param  {object} response
  */
-function defaultReject(response, hideMessage, hideLoader) {
+function defaultReject(response, hideMessage, hideLoader, { url, body }) {
     if (!hideLoader) { // stop loader
-        // @TODO end loader
+        LoaderUtils.endLoader();
     }
     let message = null;
     // if response contains string, show same in message bar
@@ -301,6 +314,17 @@ function defaultReject(response, hideMessage, hideLoader) {
         }
         if (message) {
             // @TODO show error message - message
+        }
+
+        if (response.response == 'string') {
+            message = response.message;
+        } else if (response.reason == 'string') {
+            message = response.reason;
+        } else {
+            message = 'Internal server error';
+        }
+        if (message) {
+            ToastUtils.error(message);
         }
     }
     return response;

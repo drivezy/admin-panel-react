@@ -5,6 +5,7 @@ import CustomAction from './../Custom-Action/CustomAction.component';
 import { CreateInclusions, GetColumnsForListing, CreateFinalColumns, RegisterMethod } from './../../Utils/generic.utils';
 import { GetColumnsForDetail } from './../../Utils/genericDetail.utils';
 import TableSettings from './../../Components/Table-Settings/TableSettings.component';
+import { Location } from './../../Utils/location.utils';
 
 import {
     Card, CardImg, CardText, CardBody,
@@ -69,7 +70,7 @@ export default class DetailPortlet extends Component {
         const includes = data.includes.split(",");
 
         this.preferences = {};
-        // this.state.tabContent = [];
+        this.state.tabContent = [];
         for (const i in includes) {
             const tab = {};
             const inclusions = includes[i].split(".");
@@ -208,14 +209,14 @@ export default class DetailPortlet extends Component {
 
     render() {
         const { tabs, tabContent, activeTab } = this.state;
-        const { history, callback } = this.props;
+        const { history = {}, callback } = this.props;
         const arr = [];
         // Object.keys(tabs.data).map((tab)=>(
 
         // ))
 
         return (
-            <Card>
+            <Card className="detail-includes">
                 <CardBody>
                     <div className='generic-tabs-container'>
                         <Nav tabs>
@@ -246,23 +247,20 @@ export default class DetailPortlet extends Component {
                                                             <CustomAction history={history} genericData={tab} actions={tab.nextActions} placement={168} callback={callback} />
                                                         </div>
 
-                                                        <span className="btn-group">
-                                                            <a className="btn btn-default btn-xs blue" href={`/modelAliasDetail/${tab.relationship.id}`}>
-                                                                <i className="fa fa-outdent" uib-tooltip="Redirect to Model Alias detail"></i>
-                                                            </a>
-                                                            {
-                                                                tab.columns && tab.finalColumns ?
-                                                                    <TableSettings
-                                                                        onSubmit={this.layoutChanges}
-                                                                        listName={tab.listName}
-                                                                        selectedColumns={tab.selectedColumns}
-                                                                        columns={tab.columns}
-                                                                    />
-                                                                    :
-                                                                    null
-                                                            }
-
-                                                        </span>
+                                                        <a className="btn btn-danger btn-sm" onClick={() => Location.navigate({ url: `/modelAliasDetail/${tab.relationship.id}` })}>
+                                                            <i className="fa fa-outdent" uib-tooltip="Redirect to Model Alias detail"></i>
+                                                        </a>
+                                                        {
+                                                            tab.columns && tab.finalColumns ?
+                                                                <TableSettings
+                                                                    onSubmit={this.layoutChanges}
+                                                                    listName={tab.listName}
+                                                                    selectedColumns={tab.selectedColumns}
+                                                                    columns={tab.columns}
+                                                                />
+                                                                :
+                                                                null
+                                                        }
                                                     </div>
 
                                                     <PortletTable

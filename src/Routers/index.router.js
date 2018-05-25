@@ -40,6 +40,8 @@ import { GetPreferences } from './../Utils/preference.utils';
 
 import ModalWrapper from './../Wrappers/Modal-Wrapper/modalWrapper.component';
 import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
+
+import { LoaderComponent, LoaderUtils } from './../Utils/loader.utils';
 /** Actions */
 // import { GetCities } from './../Actions/city.action';
 // import { CurrentRoute } from './../Actions/router.action';
@@ -51,7 +53,7 @@ import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 
 import LoadAsync from './../Utils/loadAsyncScripts.utils';
 import { SubscribeToEvent } from './../Utils/stateManager.utils';
-
+import { Location } from './../Utils/location.utils';
 import { HotKeys } from 'react-hotkeys';
 
 // import { GetProperties } from './../Utils/openProperty.utils';
@@ -71,6 +73,7 @@ class MainApp extends Component {
             menuFetched: false,
         }
         // props.GetCities();
+        Location.getHistoryMethod(this.getRouterProps); // pass methods, so that location utils can get history object
     }
 
 
@@ -114,6 +117,10 @@ class MainApp extends Component {
         // Load the preferences
         GetPreferences();
         LoginCheck();
+    }
+
+    getRouterProps = () => {
+        return { history: this.props.history };
     }
 
     callback = (method) => {
@@ -218,9 +225,8 @@ class StartRoute extends Component {
                     </Switch>
                 </Router>
                 <ToastContainer />
-                <ModalWrapper ref={(elem) => {
-                    ModalManager.registerModal(elem);
-                }} />
+                <ModalWrapper ref={(elem) => ModalManager.registerModal(elem)} />
+                <LoaderComponent ref={(elem) => LoaderUtils.RegisterLoader(elem)} />
             </div>
             // </Provider>
         )

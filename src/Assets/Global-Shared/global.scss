@@ -238,6 +238,17 @@ body {
     outline: none !important;
 }
 
+.global-loader { 
+    position: fixed;
+    height: 100%;
+    width: 100vw;
+    background: rgba(0,0,0,.4);
+    color: #007bff;
+    font-size: 50px;
+    text-align: center;
+    top: 0;
+    
+}
 
 
 

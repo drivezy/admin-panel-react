@@ -6,23 +6,41 @@
         padding: 6px 20px;
     }
     .page-bar {
-        .search-bar {
-            display: flex;
-        }
-        height: 40px;
+        height: 45px;
         display: flex;
         justify-content: space-between; // width: 95%;
         padding: 4px 8px;
         background: #f1f1f1;
         border-bottom: 1px solid #d4d4d4;
+        .search-bar {
+            display: flex;
+        }
         .table-settings {
-            margin: 0px 4px;
+            margin: 0px;
         }
         .search-wrapper {}
         .header-actions {
             display: flex;
+            align-items: center;
+            .btn {
+                margin: 0px 4px;
+            }
             .btn-group {
                 margin: 0px 2px;
+            }
+            .custom-actions {
+                .tooltip-element {
+                    cursor: pointer;
+                    padding: 6px 10px;
+                    border-radius: 3px;
+                    background: white;
+                    margin: 0px 1px;
+                    border: 1px solid #b7b7b7;
+                    &:hover {
+                        background: #e4e4e4;
+                        border: 1px solid #bbb9b9;
+                    }
+                }
             }
         }
         .pre-defined-filter {
@@ -35,10 +53,8 @@
     .card {
         // width: 95%;
         margin: 8px;
-
         .card-body {
             overflow-x: scroll;
-
             padding: 0px; // Table Begins
         }
     }

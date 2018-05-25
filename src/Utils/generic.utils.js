@@ -3,13 +3,15 @@ import { Get } from './http.utils';
 import { IsUndefinedOrNull, BuildUrlForGetCall } from './common.utils';
 import ToastNotifications from './../Utils/toast.utils';
 import { Delete } from './../Utils/http.utils';
+import { Location } from './../Utils/location.utils';
 
 import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 import { GetMenuDetailEndPoint } from './../Constants/api.constants';
 
 import FormCreator from './../Components/Form-Creator/formCreator.component'
 import PortletTable from '../Components/Portlet-Table/PortletTable.component';
-import TableWrapper from './../Components/Table-Wrapper/tableWrapper.component'
+import TableWrapper from './../Components/Table-Wrapper/tableWrapper.component';
+import PreferenceSetting from './../Components/Preference-Setting/preferenceSetting.component'
 
 /**
  * Fetches Menu detail to render generic page
@@ -307,6 +309,13 @@ export function GetPreSelectedMethods() {
         methods.edit({ listingRow: menuDetail, genericData });
     };
 
+    methods.preferenceSetting = (preference, preferenceObj) => {
+        ModalManager.openModal({
+            headerText: "Edit " + preferenceObj.name + " Preference",
+            modalBody: () => (<PreferenceSetting listing={preference} preferenceObj={preferenceObj}></PreferenceSetting>)
+        })
+    }
+
 
     methods.redirect = ({ action, listingRow, history, genericData }) => {
         let url = CreateUrl({ url: action.parameter, obj: listingRow });
@@ -445,17 +454,30 @@ export function RowTemplate({ selectedColumn, listingRow, path = 'path' }) {
         let id;
         if (selectedColumn[path].split('.')[1]) {
             id = convertIt(selectedColumn[path]);
-            id = eval('listingRow.' + id).id;
+            const evalValue = eval('listingRow.' + id);
+            if (evalValue) {
+                id = eval('listingRow.' + id).id;
+            } else {
+                id = null;
+            }
         } else {
             id = listingRow.id;
         }
-        return <a href={`${selectedColumn.reference_route}${id}`} >{eval('listingRow.' + selectedColumn[path])}</a>
+        return id
+            ?
+            <a className='cursor-pointer' onClick={() => Location.navigate({ url: `${selectedColumn.reference_route}${id}` })}>{eval('listingRow.' + selectedColumn[path])}</a>
+            :
+            defaultRowValue({ listingRow, selectedColumn, path });
     } else {
-        try {
-            return eval('listingRow.' + selectedColumn[path]);
-        } catch (e) {
-            return '';
-        }
+        return defaultRowValue({ listingRow, selectedColumn, path });
+    }
+}
+
+function defaultRowValue({ listingRow, selectedColumn, path }) {
+    try {
+        return eval('listingRow.' + selectedColumn[path]);
+    } catch (e) {
+        return '';
     }
 }
 
