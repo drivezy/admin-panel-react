@@ -19,7 +19,7 @@ export default class CustomTooltip extends Component {
     render() {
         const { html, title, placement } = this.props;
         return (
-            <span id={this.state.id}>
+            <span id={this.state.id} className="tooltip-element">
                 {html}
                 <Tooltip placement={placement} isOpen={this.state.tooltipOpen} target={this.state.id} toggle={this.toggle}>
                     <Row>

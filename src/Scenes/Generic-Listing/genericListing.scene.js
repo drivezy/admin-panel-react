@@ -22,7 +22,7 @@ import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import ModalWrap from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
 
 import PredefinedFilter from './../../Components/Dropdown-Filter/filter.component';
-import ListingSearch from './../../Components/Generic-Listing-Search/genericListingSearch.component';
+import ListingSearch from './../../Components/Listing-Search/listingSearch.component';
 import { HotKeys } from 'react-hotkeys';
 import { CopyToClipBoard } from './../../Utils/common.utils';
 import ToastNotifications from './../../Utils/toast.utils';
@@ -332,15 +332,8 @@ export default class GenericListing extends Component {
         const { history, match } = this.props;
         return (
 
-
             <HotKeys keyMap={this.keyMap} handlers={this.handlers}>
                 <div className="generic-listing-container">
-                    {/* <ModalWrap
-                    isVisible
-                    headerText="tesfh"
-                    modalBody={() => (<h1> h2</h1>)}
-                    closeModal={() => this.setState({ isVisible: false })}
-                /> */}
                     <div className="page-bar">
                         <div className="search-bar">
 
@@ -361,26 +354,25 @@ export default class GenericListing extends Component {
 
                         <div className="header-actions">
 
-                            <div className="btn-group" role="group" aria-label="Basic example">
 
-                                <Button color="primary" size="sm" onClick={() => { this.refreshPage() }}>
-                                    <i className="fa fa-refresh"></i>
-                                </Button>
+                            <Button color="primary" size="sm" onClick={() => { this.refreshPage() }}>
+                                <i className="fa fa-refresh"></i>
+                            </Button>
 
-                                <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
+                            <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
 
-                                {
-                                    genericData.columns ?
-                                        <TableSettings
-                                            onSubmit={this.layoutChanges}
-                                            listName={genericData.listName}
-                                            selectedColumns={genericData.selectedColumns}
-                                            columns={genericData.columns}
-                                        />
-                                        :
-                                        null
-                                }
-                            </div>
+                            {
+                                genericData.columns ?
+                                    <TableSettings
+                                        onSubmit={this.layoutChanges}
+                                        listName={genericData.listName}
+                                        selectedColumns={genericData.selectedColumns}
+                                        columns={genericData.columns}
+                                    />
+                                    :
+                                    null
+                            }
+
                             {
                                 menuDetail.userFilter ?
                                     <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} userFilter={menuDetail.userFilter} history={history} match={match} />
@@ -410,13 +402,8 @@ export default class GenericListing extends Component {
                             <CardBody className="table-wrapper">
 
                                 {/* Portlet Table */}
-
-                                {
-                                    (finalColumns && finalColumns.length) &&
-                                    <PortletTable rowTemplate={this.rowTemplate} tableType="listing" rowOptions={this.rowOptions}
-                                        toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} />
-                                }
-
+                                <PortletTable rowTemplate={this.rowTemplate} tableType="listing" rowOptions={this.rowOptions}
+                                    toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} />
                                 {/* Portlet Table Ends */}
 
                             </CardBody>
@@ -432,7 +419,7 @@ export default class GenericListing extends Component {
                     {/* Listing Pagination Ends */}
 
                 </div>
-            </HotKeys>
+            </HotKeys >
         );
     }
 }

@@ -52,13 +52,13 @@ export default class PortletTable extends Component {
 
     componentDidMount() {
         // setTimeout(() => {
-            this.adjustWidth();
+        this.adjustWidth();
         // }, 50)
 
         // set zoom event
         window.onzoom = () => {
             // setTimeout(() => {
-                this.adjustWidth();
+            this.adjustWidth();
             // }, 50)
         }
 
@@ -167,6 +167,7 @@ export default class PortletTable extends Component {
         if (listing.length) {
             renderItem = <div className="table-body">
 
+                {/* Contents Table */}
                 <div className="table-content">
                     <Table striped className="sortable">
                         <thead>
@@ -234,9 +235,6 @@ export default class PortletTable extends Component {
                                         )
                                     })
                                 }
-                                {/* <th className="action-header">
-                            <span className="fa fa-cog fa-lg"></span>
-                        </th> */}
                             </tr>
                         </thead>
                         <tbody>
@@ -274,7 +272,9 @@ export default class PortletTable extends Component {
                         </tbody>
                     </Table>
                 </div>
+                {/* Content Table Ends */}
 
+                {/* Actions Table */}
                 <div className="table-actions">
                     <Table striped className="sortable">
                         <thead>
@@ -296,8 +296,8 @@ export default class PortletTable extends Component {
                             }
                         </tbody>
                     </Table>
-
                 </div>
+                {/* Actions Table Ends */}
             </div>
         } else {
             renderItem = (
@@ -307,16 +307,10 @@ export default class PortletTable extends Component {
             )
         }
 
-
         return (
-
-            // <Card>
-            // <CardBody className="table-wrapper">
             <div className="table-container">
                 {renderItem}
             </div>
-            // </CardBody>
-            // </Card>
         );
     }
 }

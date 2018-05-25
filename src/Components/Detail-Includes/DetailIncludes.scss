@@ -1,17 +1,26 @@
-.generic-tabs-container { 
+.generic-tabs-container {
     .table-header {
-        display: -webkit-box;
-        display: -ms-flexbox;
         display: flex;
-        -webkit-box-pack: end;
-        -ms-flex-pack: end;
-        justify-content: flex-end;
+        align-items: center;
         padding: 2px;
         position: absolute;
-        right: 20px;
+        right: 0px;
         top: -40px;
-        .btn{
+        .btn {
             margin-right: 3px;
+        }
+        .custom-actions {
+            .tooltip-element {
+                cursor: pointer;
+                padding: 7px 10px;
+                border-radius: 3px;
+                background: #4f6070;
+                color: white;
+                margin: 0px 2px;
+                &:hover {
+                    background: #4a6a88;
+                }
+            }
         }
     }
 }
