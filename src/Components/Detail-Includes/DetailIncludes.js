@@ -55,7 +55,7 @@ export default class DetailPortlet extends Component {
         }
         shouldComponentWillReceivePropsRun = true;
     }
-    
+
     /**
      * splits includes on comma and iterates through them to add extra properties to each tab
      * @param  {object} props 
@@ -226,7 +226,7 @@ export default class DetailPortlet extends Component {
                                             <NavLink
                                                 className={`${activeTab === key ? 'active' : ''}`}
                                                 onClick={() => { this.toggle(key, tab); }}>
-                                                {tab.relationship.display_name}
+                                                <i className="fa fa-bars"></i>  {tab.relationship.display_name}
                                             </NavLink>
                                         </NavItem>
                                     ))

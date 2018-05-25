@@ -67,7 +67,7 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
     options.dictionary = data.dictionary ? false : true;
 
     options.page = queryString.page || options.page;
-    options.limit = queryString.size || 20;
+    options.limit = queryString.limit || 20;
 
     if (queryString.scopes) {
         options.scopes = queryString.scopes;
@@ -81,7 +81,7 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
 
     // const result = await Get({ url: configuration.url, body: options });
     const url = BuildUrlForGetCall(configuration.url, options);
-    Get({ url, callback: PrepareObjectForListing, extraParams: { callback, page: options.page, data, configuration, params }, persist: true });
+    Get({ url, callback: PrepareObjectForListing, extraParams: { callback, page: options.page, limit: options.limit, data, configuration, params }, persist: true });
 }
 
 
@@ -91,7 +91,7 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
  * @param  {object} {extraParams}
  */
 function PrepareObjectForListing(result, { extraParams }) {
-    const { callback, page, data, configuration, params } = extraParams;
+    const { callback, page, limit, data, configuration, params } = extraParams;
     if (result && result.response) {
 
         // if (columns && columns.length === 0) {
@@ -124,6 +124,7 @@ function PrepareObjectForListing(result, { extraParams }) {
             relationship: result.relationship || data.relationship, // modelName: self.configuration.formPreferenceName + '.form',
             listing: result.response,
             currentPage: page,
+            limit,
             pageName: configuration.pageName,
             starter: configuration.starter,
             includes: configuration.includes,

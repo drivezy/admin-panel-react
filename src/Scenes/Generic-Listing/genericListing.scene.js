@@ -387,10 +387,8 @@ export default class GenericListing extends Component {
                                 }
                             </div>
                             {
-                                menuDetail.userFilter ?
-                                    <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} userFilter={menuDetail.userFilter} history={history} match={match} />
-                                    :
-                                    null
+                                menuDetail && menuDetail.userFilter && menuDetail.userFilter.length > 0 &&
+                                <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} userFilter={menuDetail.userFilter} history={history} match={match} />
                             }
                         </div>
                     </div>
@@ -428,7 +426,7 @@ export default class GenericListing extends Component {
                         </Card>
                     }
 
-                    <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
+                    <ListingPagination history={history} match={match} currentPage={genericData.currentPage} limit={genericData.limit} statsData={genericData.stats} />
                     : null}
                 {/* Listing Pagination Ends */}
 
