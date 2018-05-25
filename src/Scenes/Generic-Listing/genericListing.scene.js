@@ -22,7 +22,7 @@ import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import ModalWrap from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
 
 import PredefinedFilter from './../../Components/Dropdown-Filter/filter.component';
-import ListingSearch from './../../Components/Generic-Listing-Search/genericListingSearch.component';
+import ListingSearch from './../../Components/Listing-Search/listingSearch.component';
 import { HotKeys } from 'react-hotkeys';
 import { CopyToClipBoard } from './../../Utils/common.utils';
 import ToastNotifications from './../../Utils/toast.utils';
@@ -34,6 +34,36 @@ import './genericListing.css';
 
 
 export default class GenericListing extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            ...GetUrlParams(this.props), // params, queryString
+            menuDetail: {},
+            genericData: {},
+            filterContent: null,
+            isCollapsed: true
+        };
+        SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const newProps = GetUrlParams(nextProps);
+        this.state.params = newProps.params;
+        this.state.queryString = newProps.queryString;
+        if (this.state.menuDetail.url) {
+            this.getListingData();
+        }
+    }
+
+    componentDidMount() {
+        // this.getMenuData();
+        // ModalManager.showModal({ onClose: this.closeModal, headerText: '1st using method', modalBody: () => (<h1> hi</h1>) });
+    }
+
+    componentWillUnmount() {
+        // UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
+    }
+
     filterContent = {};
     urlParams = Location.search();
 
@@ -225,17 +255,6 @@ export default class GenericListing extends Component {
         }
     };
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            ...GetUrlParams(this.props), // params, queryString
-            menuDetail: {},
-            genericData: {},
-            filterContent: null,
-            isCollapsed: true
-        };
-        SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
-    }
 
     keyMap = {
         moveUp: 'shift+r',
@@ -244,28 +263,10 @@ export default class GenericListing extends Component {
         'moveUp': (event) => this.getListingData()
     }
 
-    componentWillReceiveProps(nextProps) {
-        const newProps = GetUrlParams(nextProps);
-        this.state.params = newProps.params;
-        this.state.queryString = newProps.queryString;
-        if (this.state.menuDetail.url) {
-            this.getListingData();
-        }
-    }
-
     toggleAdvancedFilter = (payload = {}) => {
         const { isCollapsed } = this.state;
         this.setState({ isCollapsed: !isCollapsed });
         StoreEvent({ eventName: 'ToggleAdvancedFilter', data: { isCollapsed: !isCollapsed, ...payload } });
-    }
-
-    componentDidMount() {
-        // this.getMenuData();
-        // ModalManager.showModal({ onClose: this.closeModal, headerText: '1st using method', modalBody: () => (<h1> hi</h1>) });
-    }
-
-    componentWillUnmount() {
-        // UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
 
     userDataArrived = (user) => {
@@ -332,15 +333,8 @@ export default class GenericListing extends Component {
         const { history, match } = this.props;
         return (
 
-
             <HotKeys keyMap={this.keyMap} handlers={this.handlers}>
                 <div className="generic-listing-container">
-                    {/* <ModalWrap
-                    isVisible
-                    headerText="tesfh"
-                    modalBody={() => (<h1> h2</h1>)}
-                    closeModal={() => this.setState({ isVisible: false })}
-                /> */}
                     <div className="page-bar">
                         <div className="search-bar">
 
@@ -361,31 +355,25 @@ export default class GenericListing extends Component {
 
                         <div className="header-actions">
 
-                            <div className="btn-group" role="group" aria-label="Basic example">
-                                {/* <button type="button" className="btn btn-sm btn-secondary">Left</button>
-                            <button type="button" className="btn btn-sm btn-secondary">Middle</button>
 
-                        
-                            <button type="button" className="btn btn-sm btn-secondary">Right</button> */}
+                            <Button color="primary" size="sm" onClick={() => { this.refreshPage() }}>
+                                <i className="fa fa-refresh"></i>
+                            </Button>
 
-                                <Button color="primary" size="sm" onClick={() => { this.refreshPage() }}>
-                                    <i className="fa fa-refresh"></i>
-                                </Button>
+                            <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
 
-                                <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
+                            {
+                                genericData.columns ?
+                                    <TableSettings
+                                        onSubmit={this.layoutChanges}
+                                        listName={genericData.listName}
+                                        selectedColumns={genericData.selectedColumns}
+                                        columns={genericData.columns}
+                                    />
+                                    :
+                                    null
+                            }
 
-                                {
-                                    genericData.columns ?
-                                        <TableSettings
-                                            onSubmit={this.layoutChanges}
-                                            listName={genericData.listName}
-                                            selectedColumns={genericData.selectedColumns}
-                                            columns={genericData.columns}
-                                        />
-                                        :
-                                        null
-                                }
-                            </div>
                             {
                                 menuDetail.userFilter ?
                                     <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} userFilter={menuDetail.userFilter} history={history} match={match} />
@@ -415,25 +403,24 @@ export default class GenericListing extends Component {
                             <CardBody className="table-wrapper">
 
                                 {/* Portlet Table */}
-
-                                {/* {
-                    (finalColumns && finalColumns.length) && */}
                                 <PortletTable rowTemplate={this.rowTemplate} tableType="listing" rowOptions={this.rowOptions}
                                     toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} />
-                                {/* } */}
-
                                 {/* Portlet Table Ends */}
 
                             </CardBody>
                         </Card>
                     }
 
-                    <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
-                    : null}
-                {/* Listing Pagination Ends */}
+                    {
+                        (finalColumns && finalColumns.length)
+
+                        &&
+                        <ListingPagination history={history} match={match} currentPage={genericData.currentPage} statsData={genericData.stats} />
+                    }
+                    {/* Listing Pagination Ends */}
 
                 </div>
-            </HotKeys>
+            </HotKeys >
         );
     }
 }

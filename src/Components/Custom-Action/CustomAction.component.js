@@ -71,21 +71,21 @@ export default class CustomAction extends Component {
                     actions.map((action, key) => {
 
                         if (action.placement_id == placement) {
-                            const html = <button key={key}
-                                onClick={() => {
-                                    this.callFunction({ action, listingRow });
-                                }}
-                                type="button" className="btn btn-sm custom-action-buttons">
-                                <i className={`fa ${action.icon}`} ></i>
-                            </button>
+                            const html =
+                                // <button key={key}
+                                //     onClick={() => {
+                                //         this.callFunction({ action, listingRow });
+                                //     }}
+                                //     type="button" className="btn btn-sm btn-light">
+                                <i className={`fa ${action.icon}`} onClick={() => { this.callFunction({ action, listingRow }) }} ></i>
+                            // </button>
                             return (
-                                html
-                                // <CustomTooltip placement="top" key={key} html={html} title={action.name}></CustomTooltip>
+                                <CustomTooltip placement="top" key={key} html={html} title={action.name}></CustomTooltip>
                             );
                         }
                     })
                 }
-            </div>
+            </div >
         )
     }
 }

@@ -6,7 +6,7 @@ import SelectBox from './../Forms/Components/Select-Box/selectBox';
 import { SubscribeToEvent, UnsubscribeEvent } from './../../Utils/stateManager.utils';
 //import { SelectFromOptions, BuildUrlForGetCall, IsUndefinedOrNull, IsUndefined } from './../../Utils/common.utils';
 
-import './genericListingSearch.component.css'
+import './listingSearch.component.css'
 import GLOBAL from './../../Constants/global.constants';
 
 import { SelectFromOptions, IsUndefined } from './../../Utils/common.utils';
@@ -214,7 +214,7 @@ export default class ListingSearch extends React.Component {
                             ) :
                                 (
                                     <input type="text"
-                                        className="input-select"
+                                        className="input-select form-control"
                                         placeholder={`Search ${selectedColumn.display_name}`}
                                         onChange={event => { this.setState({ query: event.target.value }) }}
                                         onKeyPress={this.handleKeyPress}

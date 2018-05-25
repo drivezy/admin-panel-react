@@ -13,7 +13,7 @@ import TableSettings from './../../Components/Table-Settings/TableSettings.compo
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 import RightClick from './../../Components/Right-Click/rightClick.component';
 
-import { GetUrlParams } from './../../Utils/location.utils';
+import { GetUrlParams, Location } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
 import { GetDetailRecord } from './../../Utils/genericDetail.utils';
 import { createFinalObject } from './../../Utils/table.utils';
@@ -32,58 +32,72 @@ export default class GenericDetail extends Component {
         };
     }
 
-    rowOptions = [{
-        id: 0,
-        name: "Redirect Menu Detail",
-        icon: 'fa-deaf',
-        subMenu: false,
-        onClick: (data) => {
-            const { history, match } = this.props;
+    componentDidMount() {
+        this.getMenuData();
+    }
 
-            let pageUrl = "/menuDef/" + this.state.menuDetail.menuId
-
-            history.push(`${pageUrl}`);
+    componentWillReceiveProps(nextProps) {
+        const newProps = GetUrlParams(nextProps);
+        this.state.params = newProps.params;
+        this.state.queryString = newProps.queryString;
+        if (this.state.menuDetail.url) {
+            this.getDetailRecord();
         }
-    }, {
-        id: 1,
-        name: "Redirect Model Detail",
-        icon: 'fa-info-circle',
-        subMenu: false,
-        onClick: (data) => {
-            const { history, match } = this.props;
+    }
 
-            let pageUrl = "/modelDetails/" + this.state.menuDetail.model.id
+    rowOptions = [
+        {
+            id: 0,
+            name: "Redirect Menu Detail",
+            icon: 'fa-deaf',
+            subMenu: false,
+            onClick: (data) => {
+                const { history, match } = this.props;
 
-            history.push(`${pageUrl}`);
-        }
-    }, {
-        id: 0,
-        name: "Edit Menu",
-        icon: 'fa-pencil',
-        subMenu: false,
-        onClick: (data) => {
-            const { portlet = {}, menuDetail } = this.state;
-            if (portlet.preDefinedmethods && portlet.preDefinedmethods.editMenu) {
-                portlet.preDefinedmethods.editMenu(menuDetail.menuId);
+                let pageUrl = "/menuDef/" + this.state.menuDetail.menuId
+                Location.navigate({ url: pageUrl });
+                // history.push(`${pageUrl}`);
             }
-        }
-    }, {
-        id: 0,
-        name: "Preferences Settings",
-        icon: 'fa-gift',
-        subMenu: false,
-        disabled: this.preferenceObj ? true : false,
-        onClick: (data) => {
-            const { portlet = {}, menuDetail } = this.state;
-            const preferenceObj= { // used for editing preferences
-                name: menuDetail.pageName, // preference name to be shown on modal
-                role: true
+        }, {
+            id: 1,
+            name: "Redirect Model Detail",
+            icon: 'fa-info-circle',
+            subMenu: false,
+            onClick: (data) => {
+                const { history, match } = this.props;
+
+                let url = "/modelDetails/" + this.state.menuDetail.model.id
+                Location.navigate({ url });
+                // history.push(`${url}`);
             }
-            if (portlet.preDefinedmethods && portlet.preDefinedmethods.PreferenceSetting) {
-                portlet.preDefinedmethods.PreferenceSetting(menuDetail.preference, preferenceObj);
+        }, {
+            id: 0,
+            name: "Edit Menu",
+            icon: 'fa-pencil',
+            subMenu: false,
+            onClick: (data) => {
+                const { portlet = {}, menuDetail } = this.state;
+                if (portlet.preDefinedmethods && portlet.preDefinedmethods.editMenu) {
+                    portlet.preDefinedmethods.editMenu(menuDetail.menuId);
+                }
             }
-        }
-    }];
+        }, {
+            id: 0,
+            name: "Preferences Settings",
+            icon: 'fa-gift',
+            subMenu: false,
+            disabled: this.preferenceObj ? true : false,
+            onClick: (data) => {
+                const { portlet = {}, menuDetail } = this.state;
+                const preferenceObj = { // used for editing preferences
+                    name: menuDetail.pageName, // preference name to be shown on modal
+                    role: true
+                }
+                if (portlet.preDefinedmethods && portlet.preDefinedmethods.PreferenceSetting) {
+                    portlet.preDefinedmethods.PreferenceSetting(menuDetail.preference, preferenceObj);
+                }
+            }
+        }];
 
     componentDidMount() {
         this.getMenuData();
@@ -148,37 +162,41 @@ export default class GenericDetail extends Component {
             methods: portlet.methods,
             preDefinedmethods: portlet.preDefinedmethods
         };
-        const html = <div className="header">
-            <div className="left" />
+        const html =
+            <div className="header">
+                <div className="left" />
 
-            <div className="right">
-                <div className="btn-group" id="generic-detail-header-dynamic-icon-group">
-                    <CustomAction history={history} genericData={genericDataForCustomColumn} actions={menuDetail.nextActions} listingRow={data} placement={167} callback={this.getDetailRecord} />
+                <div className="right">
+                    <div className="btn-group" id="generic-detail-header-dynamic-icon-group">
+                        <CustomAction history={history} genericData={genericDataForCustomColumn} actions={menuDetail.nextActions} listingRow={data} placement={167} callback={this.getDetailRecord} />
+                    </div>
+
+                    {
+                        portlet.portletColumns ?
+                            <TableSettings onSubmit={this.layoutChanges} listName={portlet.listName} selectedColumns={selectedColumns} columns={portlet.portletColumns} finalColumns={finalColumns} />
+                            : null
+                    }
                 </div>
-
-                {
-                    portlet.portletColumns ?
-                        <TableSettings onSubmit={this.layoutChanges} listName={portlet.listName} selectedColumns={selectedColumns} columns={portlet.portletColumns} finalColumns={finalColumns} />
-                        : null
-                }
-            </div>
-        </div>;
+            </div>;
 
 
         return (
             <div className="generic-detail-container">
                 <RightClick renderTag="div" html={html} rowOptions={this.rowOptions} ></RightClick>
-                {
-                    finalColumns.length ?
-                        <DetailPortlet listingRow={data} finalColumns={finalColumns} />
-                        : null
-                }
 
-                {
-                    tabs && tabs.includes ?
-                        <DetailIncludes history={history} tabs={tabs} callback={this.getDetailRecord} />
-                        : null
-                }
+                <div className="detail-content">
+                    {
+                        finalColumns.length ?
+                            <DetailPortlet listingRow={data} finalColumns={finalColumns} />
+                            : null
+                    }
+
+                    {
+                        tabs && tabs.includes ?
+                            <DetailIncludes history={history} tabs={tabs} callback={this.getDetailRecord} />
+                            : null
+                    }
+                </div>
             </div>
         )
     }
