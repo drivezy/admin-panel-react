@@ -4,6 +4,8 @@ import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 import './ListingPagination.css';
 
+import SelectBox from './../Forms/Components/Select-Box/selectBox';
+
 export default class ListingPagination extends Component {
     constructor(props) {
         super(props);
@@ -22,20 +24,20 @@ export default class ListingPagination extends Component {
         })
     }
 
-    redirectToPage = (pageNumber) => {
+    redirectToPage = (pageNumber, limit = 20) => {
 
         let temPageNumber = pageNumber
-        let tempUrl = `${`?limit=20&page=${pageNumber}`}`;
-        if (pageNumber === '...') {
-            temPageNumber = this.state.currentPage - this.state.step
+        let tempUrl = `${`?limit=${pageNumber}&page=${this.state.currentPage}`}`;
+        if (this.state.currentPage === '...') {
+            temPageNumber = this.state.currentPage - this.state.showPages
             if (temPageNumber < 1) {
                 temPageNumber = 1
             }
-            tempUrl = `${`?limit=20&page=${temPageNumber}`}`;
+            tempUrl = `${`?limit=${pageNumber}&page=${temPageNumber}`}`;
         }
-        if (pageNumber === '....') {
-            temPageNumber = parseInt(this.state.currentPage) + this.state.step
-            tempUrl = `${`?limit=20&page=${temPageNumber}`}`;
+        if (this.state.currentPage === '....') {
+            temPageNumber = parseInt(this.state.currentPage) + this.state.showPages
+            tempUrl = `${`?limit=${pageNumber}&page=${temPageNumber}`}`;
         }
         this.setState({ currentPage: temPageNumber })
         const { history, match } = this.props;
@@ -96,6 +98,8 @@ export default class ListingPagination extends Component {
         let previousPage;
         let nextPage;
         let pages = [];
+        const getTotalPages = [20, 40, 75, 100];
+
 
         if (statsData && statsData.records) {
             var number_of_pages = Math.round(statsData.records / statsData.count);
@@ -130,6 +134,13 @@ export default class ListingPagination extends Component {
                         <PaginationLink next onClick={() => this.redirectToPage(nextPage)} />
                     </PaginationItem>
 
+                    <div className="page-redirect-number">
+                        <SelectBox
+                            value={getTotalPages[0]}
+                            onChange={(data) => { this.redirectToPage(data) }}
+                            options={getTotalPages}
+                        />
+                    </div>
 
                 </Pagination>
 

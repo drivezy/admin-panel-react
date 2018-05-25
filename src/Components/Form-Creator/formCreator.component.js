@@ -12,6 +12,7 @@ import { withFormik, Field, Form } from 'formik';
 import Yup from 'yup';
 
 import { Upload, Post, Put } from './../../Utils/http.utils';
+import { GetPreference } from './../../Utils/generic.utils';
 
 import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import ReferenceInput from './../Forms/Components/Reference-Input/referenceInput';
@@ -51,7 +52,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // Static Ends
 
         // Number
-        107: <Field autocomplete="off" className="form-control" type="number" name={column.column_name} placeholder={`Enter ${column.display_name}`} />,
+        107: <Field autoComplete="off" className="form-control" type="number" name={column.column_name} placeholder={`Enter ${column.display_name}`} />,
         // Number Ends
 
         // Text
@@ -140,7 +141,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // Reference Ends
 
         // Script Input
-        411: <ScriptInput value={values[column.column_name]} columns={props.payload.columns} method={props.payload.method} column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />,
+        411: <ScriptInput value={values[column.column_name]} columns={props.payload.columns} payload={props.payload} column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />,
         // Script Input Ends
 
         684: 'serialize',
@@ -361,15 +362,31 @@ export default class FormCreator extends Component {
         }
     }
 
+    async componentDidMount() {
+        const { payload = {} } = this.props;
+        const { formPreference, module } = payload;
+        if (!formPreference && module) {
+            const res = await GetPreference(payload.modelName);
+            console.log(res);
+            if (res) {
+                payload.formPreference = res;
+                this.setState({ payload });
+            }
+        }
+
+    }
+
     closeModal = () => {
         ModalManager.closeModal();
     }
-    
+
     /**
      * On submit press
      */
     formSubmitted = () => {
-        this.props.payload.action.callback(); // callback to refresh content
+        if (this.props.payload.action && typeof this.props.payload.action.callback == 'function') {
+            this.props.payload.action.callback(); // callback to refresh content
+        }
         ModalManager.closeModal();
     }
 
@@ -424,9 +441,7 @@ export default class FormCreator extends Component {
     }
 
     render() {
-
         const { payload, fileUploads } = this.state;
-
         return (
             <div className="form-creator">
                 {
@@ -436,9 +451,14 @@ export default class FormCreator extends Component {
                         null
                 }
                 <Card>
-                    <CardBody>
-                        <FormContents fileUploads={fileUploads} removeImage={this.removeImage} onFileUpload={this.pushFiles} onFileRemove={this.removeFile} onSubmit={this.formSubmitted} payload={payload} />
-                    </CardBody>
+                    {
+                        payload.formPreference ?
+                            <CardBody>
+                                <FormContents fileUploads={fileUploads} removeImage={this.removeImage} onFileUpload={this.pushFiles} onFileRemove={this.removeFile} onSubmit={this.formSubmitted} payload={payload} />
+                            </CardBody>
+                            :
+                            null
+                    }
                 </Card>
             </div>
         )

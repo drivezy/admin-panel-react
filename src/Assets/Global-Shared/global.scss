@@ -15,6 +15,10 @@ body {
     display: block;
 }
 
+.relative {  
+    position: relative;
+}
+
 .flex {
     display: table;
     /* IE < 10, Opera *Presto* Desktop (Now dead) */
@@ -156,6 +160,10 @@ body {
     margin-top: 10%;
 }
 
+.no-padding-strict { 
+    padding: 0 !important;
+}
+
 .padding-10 {
     padding: 10px;
 }
@@ -230,6 +238,17 @@ body {
     outline: none !important;
 }
 
+.global-loader { 
+    position: fixed;
+    height: 100%;
+    width: 100vw;
+    background: rgba(0,0,0,.4);
+    color: #007bff;
+    font-size: 50px;
+    text-align: center;
+    top: 0;
+    
+}
 
 
 

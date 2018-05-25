@@ -9,6 +9,7 @@ body {
     font-family: adminFont;
     font-size: 13px;
     overflow-x: hidden;
+    background: #ebeef0 !important;
 }
 
 body {
@@ -18,8 +19,11 @@ body {
         .page-container {
             display: flex;
             height: 100vh;
+            // flex-direction: column;
             .landing-sidebar {}
             .landing-wrapper {
+                flex-grow: 1;
+                width: calc(100% - 235px);
                 background: #ebeef0;
             }
         }

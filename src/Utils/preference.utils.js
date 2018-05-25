@@ -14,6 +14,12 @@ export function SetPreference(key, value, override_all) {
     return Post({ url: 'userPreference', body: { parameter: key, value: JSON.stringify(value) } });
 }
 
+export function DeletePreference(key, value, forAll) {
+    preferences[key] = value;
+
+    return Post({ url: 'deleteUserPreference', body: { parameter: key, value: forAll } });
+}
+
 function setValues(values) {
     preferences = values.response;
 }

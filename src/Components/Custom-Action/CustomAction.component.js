@@ -14,6 +14,8 @@ import ModalHeader from './../../Wrappers/Modal-Wrapper/templates/Modal-Header/m
 // import ModalHeader from './../../Wrappers/Modal-Wrapper/templates/Modal-Header/modalHeader.component';
 import ModalFooter from './../../Wrappers/Modal-Wrapper/templates/Modal-Footer/modalFooter.component';
 
+import CustomTooltip from '../Custom-Tooltip/customTooltip.component';
+
 
 let customMethods = {};
 
@@ -42,7 +44,7 @@ export default class CustomAction extends Component {
         const args = [];
         const { genericData, history, callback } = this.props;
         this.genericData = genericData;
-        if (typeof genericData.methods[action.name] == "function") {
+        if (genericData.methods && typeof genericData.methods[action.name] == "function") {
             // var callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : customMethods[action.callback]) : listing.callbackFunction.function;
 
             const callbackMethod = (action.callback && typeof genericData.methods[action.callback] == "function") ? genericData.methods[action.callback] : callback;
@@ -64,23 +66,26 @@ export default class CustomAction extends Component {
     render() {
         const { actions = [], listingRow = [], genericData = {}, placement } = this.props;
         return (
-            <div>
+            <div className="custom-actions">
                 {
                     actions.map((action, key) => {
+
                         if (action.placement_id == placement) {
+                            const html =
+                                // <button key={key}
+                                //     onClick={() => {
+                                //         this.callFunction({ action, listingRow });
+                                //     }}
+                                //     type="button" className="btn btn-sm btn-light">
+                                <i className={`fa ${action.icon}`} onClick={() => { this.callFunction({ action, listingRow }) }} ></i>
+                            // </button>
                             return (
-                                <button
-                                    onClick={() => {
-                                        this.callFunction({ action, listingRow });
-                                    }}
-                                    type="button" key={key} className="btn btn-sm btn-light">
-                                    <i className={`fa ${action.icon}`} ></i>
-                                </button>
+                                <CustomTooltip placement="top" key={key} html={html} title={action.name}></CustomTooltip>
                             );
                         }
                     })
                 }
-            </div>
+            </div >
         )
     }
 }
