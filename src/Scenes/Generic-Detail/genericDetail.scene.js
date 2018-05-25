@@ -81,8 +81,27 @@ export default class GenericDetail extends Component {
                     portlet.preDefinedmethods.editMenu(menuDetail.menuId);
                 }
             }
-        }
-    ];
+        }, {
+            id: 0,
+            name: "Preferences Settings",
+            icon: 'fa-gift',
+            subMenu: false,
+            disabled: this.preferenceObj ? true : false,
+            onClick: (data) => {
+                const { portlet = {}, menuDetail } = this.state;
+                const preferenceObj = { // used for editing preferences
+                    name: menuDetail.pageName, // preference name to be shown on modal
+                    role: true
+                }
+                if (portlet.preDefinedmethods && portlet.preDefinedmethods.preferenceSetting) {
+                    portlet.preDefinedmethods.preferenceSetting(menuDetail.preference, preferenceObj);
+                }
+            }
+        }];
+
+    componentDidMount() {
+        this.getMenuData();
+    }
 
     getMenuData = async () => {
         const { queryString } = this.state;
