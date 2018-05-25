@@ -5,17 +5,18 @@
     z-index: 1;
     top: 0;
     left: 0;
-    background: #303e4c; // background-color: #111;
+    background: #35485a;
     overflow-x: hidden;
-    transition: 0.1s; // padding-top: 60px;
+    transition: 0.1s;
     display: flex;
     flex-direction: column;
     &.collapsed {
         .sidebar-menus {
             .menus {
+                padding: 0px;
                 .menu-item {
                     .menu-label {
-                        padding: 8px 2px;
+                        padding: 8px 12px;
                     }
                 }
             }
@@ -61,7 +62,7 @@
             padding: 8px 10px;
             .menu-item {
                 .menu-label {
-                    display: flex; // padding: 10px 15px;
+                    display: flex;
                     padding: 8px 10px;
                     -webkit-font-smoothing: antialiased;
                     transition: all 50ms linear;
