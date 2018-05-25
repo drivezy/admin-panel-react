@@ -31,13 +31,14 @@
             .custom-actions {
                 .tooltip-element {
                     cursor: pointer;
-                    padding: 7px 10px;
+                    padding: 6px 10px;
                     border-radius: 3px;
-                    background: #4f6070;
-                    color: white;
-                    margin: 0px;
+                    background: white;
+                    margin: 0px 1px;
+                    border: 1px solid #b7b7b7;
                     &:hover {
-                        background: #4a6a88;
+                        background: #e4e4e4;
+                        border: 1px solid #bbb9b9;
                     }
                 }
             }

@@ -80,22 +80,37 @@ export default class PortletTable extends Component {
     // According to action width 
     // width of table is assigned
     adjustWidth = () => {
-        const actionColumnEle = document.getElementsByClassName('table-actions')[0];
-        if (actionColumnEle) {
-            var actionColumnWidth = actionColumnEle.clientWidth;
-            var table = document.getElementsByClassName('table-content')[0];
-            var tableWidth = table.clientWidth;
 
-            var percent = (100 - (actionColumnWidth / tableWidth) * 100);
+        const tableBody = document.getElementsByClassName('table-body')[0];
 
-            console.log('table-width', tableWidth);
+        if (tableBody) {
+            var bodyWidth = tableBody.clientWidth;
+            var action = document.getElementsByClassName('table-actions')[0];
+            var actionWidth = action.clientWidth;
+            var percent = bodyWidth - actionWidth;
 
-            console.log('action column', actionColumnWidth);
+            var tableContent = document.getElementsByClassName('table-content')[0];
+            tableContent.setAttribute('style', 'width:' + percent + 'px');
 
-            console.log(percent);
 
-            table.setAttribute('style', 'width:calc(' + percent + '% - 2px )');
         }
+
+        // const actionColumnEle = document.getElementsByClassName('table-actions')[0];
+        // if (actionColumnEle) {
+        //     var actionColumnWidth = actionColumnEle.clientWidth;
+        //     var table = document.getElementsByClassName('table-content')[0];
+        //     var tableWidth = table.clientWidth;
+
+        //     var percent = (100 - (actionColumnWidth / tableWidth) * 100) + .7;
+
+        //     console.log('table-width', tableWidth);
+
+        //     console.log('action column', actionColumnWidth);
+
+        //     console.log(percent);
+
+        //     table.setAttribute('style', 'width:calc(' + percent + '% - 2px )');
+        // }
     }
 
     dropdownToggle = (column) => {
