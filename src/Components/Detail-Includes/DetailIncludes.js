@@ -69,7 +69,7 @@ export default class DetailPortlet extends Component {
         const includes = data.includes.split(",");
 
         this.preferences = {};
-        // this.state.tabContent = [];
+        this.state.tabContent = [];
         for (const i in includes) {
             const tab = {};
             const inclusions = includes[i].split(".");
@@ -208,14 +208,14 @@ export default class DetailPortlet extends Component {
 
     render() {
         const { tabs, tabContent, activeTab } = this.state;
-        const { history, callback } = this.props;
+        const { history = {}, callback } = this.props;
         const arr = [];
         // Object.keys(tabs.data).map((tab)=>(
 
         // ))
 
         return (
-            <Card>
+            <Card className="detail-includes">
                 <CardBody>
                     <div className='generic-tabs-container'>
                         <Nav tabs>
@@ -246,7 +246,7 @@ export default class DetailPortlet extends Component {
                                                             <CustomAction history={history} genericData={tab} actions={tab.nextActions} placement={168} callback={callback} />
                                                         </div>
 
-                                                        <a className="btn btn-danger" href={`/modelAliasDetail/${tab.relationship.id}`}>
+                                                        <a className="btn btn-danger btn-sm" href={`/modelAliasDetail/${tab.relationship.id}`}>
                                                             <i className="fa fa-outdent" uib-tooltip="Redirect to Model Alias detail"></i>
                                                         </a>
                                                         {

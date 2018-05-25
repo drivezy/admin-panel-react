@@ -29,7 +29,6 @@ import ToastNotifications from './../../Utils/toast.utils';
 import { Get } from './../../Utils/http.utils';
 import { BuildUrlForGetCall } from './../../Utils/common.utils';
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
-
 import './genericListing.css';
 
 
