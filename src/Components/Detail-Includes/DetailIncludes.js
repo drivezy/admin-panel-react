@@ -246,7 +246,7 @@ export default class DetailPortlet extends Component {
                                                             <CustomAction history={history} genericData={tab} actions={tab.nextActions} placement={168} callback={callback} />
                                                         </div>
 
-                                                        <a className="btn btn-danger btn-sm" href={`/modelAliasDetail/${tab.relationship.id}`}>
+                                                        <a className="btn btn-danger btn-sm" onClick={() => Location.navigate({ url: `/modelAliasDetail/${tab.relationship.id}` })}>
                                                             <i className="fa fa-outdent" uib-tooltip="Redirect to Model Alias detail"></i>
                                                         </a>
                                                         {

@@ -7,6 +7,8 @@ import {
     Row, Col, TabContent, TabPane, Nav, NavItem, NavLink, Table
 } from 'reactstrap';
 
+import { StoreEvent } from './../../Utils/stateManager.utils';
+
 import DetailPortlet from './../../Components/Detail-Portlet/DetailPortlet.component';
 import DetailIncludes from './../../Components/Detail-Includes/DetailIncludes';
 import TableSettings from './../../Components/Table-Settings/TableSettings.component';
@@ -115,6 +117,7 @@ export default class GenericDetail extends Component {
                 menuDetail.listName = menuDetail.stateName.toLowerCase();
                 this.setState({ menuDetail });
                 this.getDetailRecord();
+                StoreEvent({ eventName: 'showMenuName', data: { menuName: this.state.menuDetail.pageName } });
             }
         }
     }
