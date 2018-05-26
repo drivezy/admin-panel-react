@@ -31,8 +31,10 @@ import { BuildUrlForGetCall } from './../../Utils/common.utils';
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
 import './genericListing.css';
 
-
 export default class GenericListing extends Component {
+    filterContent = {};
+    urlParams = Location.search();
+
     constructor(props) {
         super(props);
         this.state = {
@@ -63,8 +65,6 @@ export default class GenericListing extends Component {
         // UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
 
-    filterContent = {};
-    urlParams = Location.search();
 
     // Preparing option for right click
     rowOptions = [{
@@ -356,7 +356,7 @@ export default class GenericListing extends Component {
                             <div className="generic-listing-search">
                                 {
                                     filterContent && filterContent.dictionary &&
-                                    <ListingSearch history={history} match={match} dictionary={filterContent.dictionary} />
+                                    <ListingSearch searchQuery={this.urlParams.search} dictionary={filterContent.dictionary} />
                                 }
                             </div>
 

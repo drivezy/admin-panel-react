@@ -20,6 +20,9 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
     options.includes = params.includes;
     options.order = params.order + "," + params.sort;
 
+    if (queryString.search) {
+        options.query += ' and ' + queryString.search;
+    }
     // @TODO search functionality
     // Add the input field on the generic listing page to query
     // if (self.searchObj && self.searchObj.hasOwnProperty("id")) {
@@ -60,7 +63,7 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
     }
 
     options.stats = (data.stats && IsUndefinedOrNull(queryString.query) && tempQuery) ? false : true;
-    tempQuery = IsUndefinedOrNull(queryString.query);
+    tempQuery = IsUndefinedOrNull(queryString.query) || IsUndefinedOrNull(queryString.search);
     // To be used to fetch stats when user selects some query and then deselects it
 
     // @TODO dont fetch dictionary if already available
