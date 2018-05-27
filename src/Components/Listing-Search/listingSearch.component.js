@@ -24,7 +24,7 @@ export default class ListingSearch extends React.Component {
         super(props);
         this.state = {
             selectedColumn: {},
-            getObj: {},
+            referenceColumnValue: {},
             query: ''
         };
     }
@@ -34,35 +34,41 @@ export default class ListingSearch extends React.Component {
     }
 
     componentWillReceiveProps() {
-        this.initialize();
+        this.initialize(); // on props update
     }
-
-    // Initialize the controller
-    initialize() {
+    
+    /**
+     * extracts query from string and assing value
+     */
+    initialize = async () => {
         const { dictionary, searchQuery } = this.props;
-
         if (searchQuery) {
             const values = searchQuery.split(' ');
-            console.log(values);
             const regex = /["%]/g;
             values[2] = values[2].replace(regex, '');
             const selectedColumn = SelectFromOptions(dictionary, values[0], 'column_name');
-
-            let query;
+            activeColumn = selectedColumn;
+            let query, obj;
             if (!(selectedColumn && selectedColumn.referenced_model)) {
                 query = values[2];
-            }
-            this.setState({ selectedColumn, query });
-        }
+                // obj = { referenceColumnValue: query };
+                this.state.query = query;
+            } else {
+                query = await this.getInputRecord({
+                    input: values[2],
+                    queryField: 'id'
+                });
 
+                if (Array.isArray(query) && query.length) {
+                    this.state.referenceColumnValue = { data: query[0] };
+                }
+            }
+            this.setState({ selectedColumn, });
+        }
     }
 
     /**
      * Invoked when Filter is selected
-     * @param  {string} filter
-     * @param  {} {parentIndex
-     * @param  {} index
-     * @param  {} dontPropagateFocus}
      */
     filterChange(select) {
         let valueColumnType = "input";
@@ -76,43 +82,39 @@ export default class ListingSearch extends React.Component {
     /**
     * Fetches async data from server and used to select reference type data
     * @param  {string} val
-    * @param  {} index
-    * @param  {} queryField
+    * @param  {string} queryField
     */
-    getInputRecord = async ({ input: val, select, queryFieldName } = {}) => {
-
+    getInputRecord = async ({ input: val, queryField: queryFieldName } = {}) => {
         if (val) {
             const { filterArr } = this.state;
             const displayName = activeColumn.referenced_model.display_column;
             const queryField = queryFieldName ? queryFieldName : displayName;
             let url = activeColumn.referenced_model.route_name;
-            const options = {
-                query: queryField + ' like "%' + val + '%"'
-                // query: queryField + ' like %22%25' + val + '%25%22'
-            };
-
-            if (activeColumn.sorting_type) {
-                options.query += " and " + activeColumn.column.sorting_type;
+            let options;
+            if (queryFieldName) {
+                options = {
+                    query: queryField + '=' + val // when used for fetching already selected id
+                };
+            } else {
+                options = {
+                    query: queryField + ' like "%' + val + '%"'
+                    // query: queryField + ' like %22%25' + val + '%25%22'
+                };
             }
 
             url = BuildUrlForGetCall(url, options);
             const result = await Get({ url, urlPrefix: GLOBAL.ROUTE_URL });
-
-
             if (queryFieldName) {
                 return result.response;
             }
-            const response = result.response.map((option) => {
-                return { ...option, ...{ label: option[displayName], value: option['id'] } }
-            });
-            return { options: response };
+            return { options: result.response };
         }
     }
 
     convertToInputField = (data) => {
         let query = '';
         this.setState({
-            getObj: data
+            referenceColumnValue: data
         })
 
         switch (activeColumn.column_type) {
@@ -143,7 +145,11 @@ export default class ListingSearch extends React.Component {
         Location.search(urlParams, { props: paramProps });
 
     }
-
+    
+    /**
+     * on press enter, 
+     * @param  {} e
+     */
     handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             this.callFunction();
@@ -158,9 +164,8 @@ export default class ListingSearch extends React.Component {
         const { dictionary, history, match } = this.props;
         const { selectedColumn = {}, query = '' } = this.state;
         const { referenced_model = {} } = selectedColumn;
-        const { getObj } = this.state;
+        const { referenceColumnValue } = this.state;
 
-        console.log(selectedColumn);
         return (
             <div className="listing-search-container">
                 {
@@ -175,9 +180,9 @@ export default class ListingSearch extends React.Component {
                             {referenced_model ? (
                                 <SelectBox
                                     onChange={(data) => this.convertToInputField({ data })}
-                                    value={getObj.data}
+                                    value={referenceColumnValue.data}
                                     field={referenced_model.display_column}
-                                    place-holder="Search"
+                                    placeholder="Search"
                                     getOptions={(input) => this.getInputRecord({ input })} />
                             ) :
                                 (
@@ -187,11 +192,6 @@ export default class ListingSearch extends React.Component {
                                         value={query}
                                         onChange={event => { this.setState({ query: event.target.value }) }}
                                         onKeyPress={this.handleKeyPress}
-                                    //value={value}
-                                    // { data: data.target.value, event: event }
-                                    //onChange={(data) => this.convertToInputField({ data: data.target.value })}
-                                    //onKeyPress={(data) => this.convertToInputField({ data: data.target.value })}
-                                    //value={}
                                     />
                                 )
                             }
