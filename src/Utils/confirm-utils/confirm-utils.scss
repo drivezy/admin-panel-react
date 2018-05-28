@@ -1,0 +1,18 @@
+.confirm-modal {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    .modal-body {
+
+    }
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        flex-direction: row;
+        .action-button {
+            .btn {
+                margin: 0px 3px;
+            }
+        }
+    }  
+}

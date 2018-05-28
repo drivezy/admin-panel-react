@@ -44,6 +44,8 @@ import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 import { LoaderComponent, LoaderUtils } from './../Utils/loader.utils';
 import { PreserveState } from './../Utils/preserveUrl.utils';
 
+import { ConfirmModalComponent, ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
+
 /** Actions */
 // import { GetCities } from './../Actions/city.action';
 // import { CurrentRoute } from './../Actions/router.action';
@@ -231,6 +233,7 @@ class StartRoute extends Component {
                 <ToastContainer />
                 <ModalWrapper ref={(elem) => ModalManager.registerModal(elem)} />
                 <LoaderComponent ref={(elem) => LoaderUtils.RegisterLoader(elem)} />
+                <ConfirmModalComponent ref={(elem) => ConfirmUtils.RegisterConfirm(elem)} />
             </div>
             // </Provider>
         )
