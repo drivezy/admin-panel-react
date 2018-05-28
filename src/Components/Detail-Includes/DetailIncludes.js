@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import './DetailIncludes.css';
 
-
-import { CreateInclusions, GetColumnsForListing, CreateFinalColumns } from './../../Utils/generic.utils';
+import CustomAction from './../Custom-Action/CustomAction.component';
+import { CreateInclusions, GetColumnsForListing, CreateFinalColumns, RegisterMethod } from './../../Utils/generic.utils';
 import { GetColumnsForDetail } from './../../Utils/genericDetail.utils';
+import TableSettings from './../../Components/Table-Settings/TableSettings.component';
+import { Location } from './../../Utils/location.utils';
 
 import {
     Card, CardImg, CardText, CardBody,
@@ -12,10 +14,14 @@ import {
     Row, Col
 } from 'reactstrap';
 
+import { CopyToClipBoard } from './../../Utils/common.utils';
+import ToastNotifications from './../../Utils/toast.utils';
+
 import { TabContent, TabPane, Nav, NavItem, NavLink, Table } from 'reactstrap';
 
 import PortletTable from './../../Components/Portlet-Table/PortletTable.component';
 
+let shouldComponentWillReceivePropsRun = true;
 export default class DetailPortlet extends Component {
     constructor(props) {
         super(props);
@@ -26,24 +32,45 @@ export default class DetailPortlet extends Component {
         }
     }
 
+    rowOptions = [{
+        id: 0,
+        name: "Copy Row Id",
+        icon: 'fa-copy',
+        subMenu: false,
+        onClick: (data) => {
+            let id = data.listingRow.id;
+            CopyToClipBoard(id);
+            ToastNotifications.success("Id - " + id + " has been copied");
+        }
+    }];
+
     componentDidMount() {
         this.buildTabData(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({ tabs: nextProps.tabs });
-        this.buildTabData(nextProps);
+        if (shouldComponentWillReceivePropsRun) { // when setting hash to the url, prevents componentWillReceiveProps from executing again
+            // this.setState({ tabs: nextProps.tabs });
+            this.state.tabs = nextProps.tabs;
+            this.buildTabData(nextProps);
+        }
+        shouldComponentWillReceivePropsRun = true;
     }
 
+    /**
+     * splits includes on comma and iterates through them to add extra properties to each tab
+     * @param  {object} props 
+     */
     buildTabData = (props) => {
         // 
         const data = props.tabs;
+        const hash = window.location.hash;
 
         // this.resolve = [];
         const includes = data.includes.split(",");
 
         this.preferences = {};
-
+        this.state.tabContent = [];
         for (const i in includes) {
             const tab = {};
             const inclusions = includes[i].split(".");
@@ -66,11 +93,16 @@ export default class DetailPortlet extends Component {
             tab.path = relationship.route_name;
 
             tab.index = index; // earlier index in old panel
+            if (hash.includes(index)) {
+                this.state.activeTab = parseInt(i);
+            }
+            // index == 
             tab.identifier = inclusions[0];
             tab.preference = "";
             tab.fixedParams = data.fixedParams;
             tab.refreshContent = data.refreshContent; //  function to refresh whole detail content
             tab.scripts = [];
+
             // this.formPreferences = []; // @TODO seems useless, remove line after sometime, 
 
             // check if there are other includes of the same identifier
@@ -96,7 +128,9 @@ export default class DetailPortlet extends Component {
             params.relationship = data.relationship;
 
             // list of columns of all included models, used to configure view columns
-            tab.columns = GetColumnsForDetail(params);
+            const par = JSON.parse(JSON.stringify(params));
+            // const par = { ...{}, ...params };
+            tab.columns = GetColumnsForDetail(par);
             // tab.columns = GetColumnsForListing(params);
             // tab.columns = MenuService.getColumns(params);
 
@@ -106,14 +140,15 @@ export default class DetailPortlet extends Component {
             params.excludeStarter = 1;
 
             // list of columns only related to particular model, used to configure generic forms
-            tab.configure = GetColumnsForListing(params);
+            tab.configure = GetColumnsForListing({ ...params });
 
             relationship.actions.map((action) => (
                 action.callback = tab.refreshContent
             ));
 
             tab.nextActions = relationship.actions; // generic actions (can be predefined or custom ones)
-
+            tab.preDefinedmethods = data.preDefinedmethods;
+            tab.methods = RegisterMethod(tab.nextActions);
 
             // @TODO script incjection is disabled as of now
             // var scripts = InjectScriptFactory.returnMatchingScripts({
@@ -126,16 +161,9 @@ export default class DetailPortlet extends Component {
             // preference for form of particular tab
             tab.formPreference = relationship.preferences[tab.modelName] ? JSON.parse(relationship.preferences[tab.modelName]) : null;
 
+            tab.selectedColumns = this.preferences[tab.identifier];
             // list of selected column preference
             tab.finalColumns = CreateFinalColumns(tab.columns, this.preferences[tab.identifier], params.relationship);
-
-            // var resolve = {
-            //     resolve: {
-            //         modelAliasId: relationship.id
-            //     }
-            // };
-
-            // this.resolve.push(resolve);
             this.state.tabContent.push(tab);
         }
 
@@ -148,83 +176,111 @@ export default class DetailPortlet extends Component {
      * Change tab selection
      * @param  {int} tab - tab index
      */
-    toggle = (tab) => {
-        if (this.state.activeTab !== tab) {
+    toggle = (key, tab) => {
+        console.log(tab);
+        if (this.state.activeTab !== key) {
             this.setState({
-                activeTab: tab
+                activeTab: key
             });
+        }
+
+        if (tab && tab.index) {
+            shouldComponentWillReceivePropsRun = false;
+            window.location.hash = tab.index;
         }
     }
 
+    layoutChanges = (selectedColumns) => {
+        let { tabContent, activeTab } = this.state;
+        tabContent[activeTab].selectedColumns = selectedColumns;
+        tabContent[activeTab].finalColumns = CreateFinalColumns(tabContent[activeTab].columns, selectedColumns, tabContent[activeTab].relationship);
+        this.setState({ tabContent });
+    }
+
     rowTemplate({ listingRow, selectedColumn }) {
-        return (<span>{eval('listingRow.' + selectedColumn.path)} </span>);
+        let val;
+        try {
+            val = eval('listingRow.' + selectedColumn.path);
+        } catch (e) {
+            val = '';
+        }
+        return (<span>{val}</span>);
     }
 
     render() {
-        const { tabs, tabContent } = this.state;
+        const { tabs, tabContent, activeTab } = this.state;
+        const { history = {}, callback } = this.props;
         const arr = [];
         // Object.keys(tabs.data).map((tab)=>(
 
         // ))
 
         return (
-            <div className="tabs-container">
-                <Nav tabs>
-                    {
-                        tabContent.length ?
-                            tabContent.map((tab, key) => (
-                                <NavItem key={key} >
-                                    <NavLink
-                                        className={`${this.state.activeTab === key ? 'active' : ''}`}
-                                        onClick={() => { this.toggle(key); }}>
-                                        {tab.relationship.display_name}
-                                    </NavLink>
-                                </NavItem>
-                            ))
-                            : null}
-                </Nav>
-                <TabContent activeTab={this.state.activeTab}>
-                    {
-                        tabContent.length ?
-                            tabContent.map((tab, key) => (
-                                <TabPane key={key} tabId={key}>
-                                    <PortletTable
-                                        finalColumns={tab.finalColumns}
-                                        listing={tabs.data[tab.index]}
-                                        rowTemplate={this.rowTemplate}
-                                        genericData={tabContent[key]}
-                                        callback={tab.refreshContent}
-                                    />
+            <Card className="detail-includes">
+                <CardBody>
+                    <div className='generic-tabs-container'>
+                        <Nav tabs>
+                            {
+                                tabContent.length ?
+                                    tabContent.map((tab, key) => (
+                                        <NavItem key={key} >
+                                            <NavLink
+                                                className={`${activeTab === key ? 'active' : ''}`}
+                                                onClick={() => { this.toggle(key, tab); }}>
+                                                <i className="fa fa-bars"></i>  {tab.relationship.display_name}
+                                            </NavLink>
+                                        </NavItem>
+                                    ))
+                                    : null
+                            }
+                        </Nav>
+                        <TabContent activeTab={activeTab}>
+                            {
+                                tabContent.length ?
+                                    tabContent.map((tab, key) => {
+                                        if (activeTab == key) {
+                                            return (
+                                                <TabPane className='relative' key={key} tabId={key}>
+                                                    {/* Building the table iterating through the row to display tab content */}
+                                                    <div className='table-header'>
+                                                        <div className='btn-group'>
+                                                            <CustomAction history={history} genericData={tab} actions={tab.nextActions} placement={168} callback={callback} />
+                                                        </div>
 
-                                    {/* <Table striped>
-                                        <thead>
-                                            <tr>
-                                                {
-                                                    tabContent[key].finalColumns.map((column, key) => (
-                                                        <th key={key}> {column.display_name}</th>
-                                                    ))
-                                                }
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {
-                                                tabs.data[tab.index].map((listingRow, rowKey) => (
-                                                    <tr key={rowKey}>
-                                                        {tabContent[key].finalColumns.map((column, key) => (
-                                                            <td key={key}>
-                                                                {eval('listingRow.' + column.column_name)}
-                                                            </td>
-                                                        ))}
-                                                    </tr>
-                                                ))
-                                            }
-                                        </tbody>
-                                    </Table> */}
-                                </TabPane>
-                            ))
-                            : null}
-                </TabContent>
-            </div>
+                                                        <a className="btn btn-danger btn-sm" onClick={() => Location.navigate({ url: `/modelAliasDetail/${tab.relationship.id}` })}>
+                                                            <i className="fa fa-outdent" uib-tooltip="Redirect to Model Alias detail"></i>
+                                                        </a>
+                                                        {
+                                                            tab.columns && tab.finalColumns ?
+                                                                <TableSettings
+                                                                    onSubmit={this.layoutChanges}
+                                                                    listName={tab.listName}
+                                                                    selectedColumns={tab.selectedColumns}
+                                                                    columns={tab.columns}
+                                                                />
+                                                                :
+                                                                null
+                                                        }
+                                                    </div>
+
+                                                    <PortletTable
+                                                        finalColumns={tab.finalColumns}
+                                                        listing={tabs.data[tab.index]}
+                                                        rowTemplate={this.rowTemplate}
+                                                        genericData={tabContent[key]}
+                                                        callback={tab.refreshContent}
+                                                        rowOptions={this.rowOptions}
+                                                    />
+                                                </TabPane>
+                                            )
+                                        }
+                                    })
+                                    : null}
+                        </TabContent>
+                    </div>
+                </CardBody>
+            </Card>
+
         )
     }
 }

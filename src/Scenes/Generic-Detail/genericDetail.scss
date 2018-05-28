@@ -1,18 +1,44 @@
 .generic-detail-container {
-    margin: 8px;
     .header {
         display: flex;
         justify-content: space-between;
+        background: #dcdcdc7a;
+        height: 40px;
+        padding: 0px 4px;
+        border-bottom: 1px solid #ccc9c9;
         .left {}
         .right {
             display: flex;
-            align-items: flex-end;
+            align-items: center;
+            .custom-actions {
+                .tooltip-element {
+                    cursor: pointer;
+                    padding: 6px 10px;
+                    border-radius: 3px;
+                    background: white;
+                    margin: 0px 1px;
+                    border: 1px solid #b7b7b7;
+                    &:hover {
+                        background: #e4e4e4;
+                        border: 1px solid #bbb9b9;
+                    }
+                }
+            }
+            .table-settings {
+                .btn {
+                    padding: 5px 9px;
+                    margin: 0px 5px;
+                }
+            }
         }
+    }
+    .detail-content {
+        margin: 8px;
     }
     .detail-entry {
         padding: 4px 0px;
     }
-    .tabs-container {
-        padding: 4px 0px;
+    .nav-item {
+        cursor: pointer;
     }
 }

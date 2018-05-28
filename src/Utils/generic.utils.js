@@ -1,7 +1,18 @@
+import React, { Component } from 'react';
 import { Get } from './http.utils';
-import { IsUndefinedOrNull } from './common.utils';
+import { IsUndefinedOrNull, BuildUrlForGetCall } from './common.utils';
+import ToastNotifications from './../Utils/toast.utils';
+import { Delete } from './../Utils/http.utils';
+import { Location } from './../Utils/location.utils';
 
+import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 import { GetMenuDetailEndPoint } from './../Constants/api.constants';
+
+import FormCreator from './../Components/Form-Creator/formCreator.component'
+import PortletTable from '../Components/Portlet-Table/PortletTable.component';
+import TableWrapper from './../Components/Table-Wrapper/tableWrapper.component';
+import PreferenceSetting from './../Components/Preference-Setting/preferenceSetting.component';
+import { ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
 
 /**
  * Fetches Menu detail to render generic page
@@ -25,7 +36,7 @@ export function ConvertToQuery(params) {
 
     for (const i in tempArr) {
         if (tempArr[i] && typeof tempArr[i] == 'string') {
-            const a = eval(tempArr[i].split(':')[1]);
+            const a = eval('this.' + tempArr[i].split(':')[1]);
             const b = tempArr[i];
             params = params.replace(b, a);
         }
@@ -73,14 +84,18 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
             columns[i][j].parent = i;
 
             const relationIndex = columns[i][j].parent;
-            if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && relationship[relationIndex].hasOwnProperty('related_model')) {
-                columns[i][j].reference_route = relationship[relationIndex].related_model.state_name;
-                columns[i][j].parentColumn = relationship[relationIndex].related_column ? relationship[relationIndex].related_column.column_name : null;
+            if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex)) {
+                if (relationship[relationIndex].hasOwnProperty('related_model')) {
+                    columns[i][j].reference_route = relationship[relationIndex].related_model.state_name;
+                    columns[i][j].parentColumn = relationship[relationIndex].related_column ? relationship[relationIndex].related_column.column_name : null;
+                } else if (relationship[relationIndex].state_name) {
+                    columns[i][j].reference_route = relationship[relationIndex].state_name;
+                }
             }
-
             selectedColumns[`${columns[i][j].parent}.${columns[i][j].id}`] = columns[i][j];
             // selectedColumns[columns[i][j].id] = columns[i][j];
         }
+
     }
     return selectedColumns;
 }
@@ -115,6 +130,13 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
                 if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && relationship[relationIndex].hasOwnProperty('related_model')) {
                     finalColumnDefinition[i].reference_route = relationship[relationIndex].related_model.state_name;
                 }
+                // if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex)) {
+                //     if (relationship[relationIndex].hasOwnProperty('related_model')) {
+                //         finalColumnDefinition[i].reference_route = relationship[relationIndex].related_model.state_name;
+                //     } else if (relationship[relationIndex].state_name) {
+                //         finalColumnDefinition[i].reference_route = relationship[relationIndex].state_name;
+                //     }
+                // }
             }
         } else {
             finalColumnDefinition[i] = {
@@ -165,9 +187,9 @@ export function ConvertMenuDetailForGenericPage(menuDetail) {
         image: menuDetail.image,
         stateName: menuDetail.state_name,
         module: menuDetail.base_url,
+        search: menuDetail.search,
         // actions: menuDetail.actions,
         // method: menuDetail.method,
-        // search: menuDetail.search,
         // scripts: menuDetail.scripts,
     };
 }
@@ -191,6 +213,7 @@ export function CreateInclusions(includes) {
     return arr.join(",");
 }
 
+
 /**
  * parse url string to actual one
  * this method seek for ':', whenever it encounters one, replace with actual data
@@ -208,5 +231,313 @@ export function CreateUrl({ url = '', obj }) {
         const attr = params[i].substr(1);
         url = url.replace(params[i], obj[attr]);
     }
+    return url;
+}
+
+export function ConvertDependencyInjectionToArgs(dependencies) {
+    if (!dependencies) {
+        return [];
+    }
+
+    var args = [];
+    var dependency = dependencies.split(",");
+    for (var i in dependency) {
+        args.push('this.' + eval(dependency[i]));
+    }
+
+    return args;
+}
+
+/**
+ * Register all the methods coming from db
+ * takes string as method definition, and corresponding dependencies, register them and pass object of all methods
+ * @param  {} methodArr
+ */
+export function RegisterMethod(methodArr) {
+    const methods = {};
+    for (var i in methodArr) {
+        const methodObj = methodArr[i];
+        if (methodObj.definition && typeof methodObj.definition == 'object' && methodObj.definition.script) {
+            if (methodObj.dependency) {
+                methods[methodObj.name] = new Function("callback", methodObj.dependency, methodObj.definition.script);
+            } else {
+                methods[methodObj.name] = new Function("callback", methodObj.definition.script);
+            }
+        }
+    }
+    return methods;
+}
+
+/**
+ * Returns predefined methods used by CustomAction component 
+ * methods includes redirect, add, edit, delete, auditLog
+ */
+export function GetPreSelectedMethods() {
+    const methods = {};
+    let menuDetail = null;
+    let menuDictionary = null;
+    let menuColumns = null;
+
+    /**
+     * To be used to edit menu directly from generic detail page
+     */
+    methods.editMenu = async (menuId) => {
+
+        const options = {
+            dictionary: menuDictionary ? false : true
+        };
+
+        const url = 'menu';
+        const builtUrl = BuildUrlForGetCall(url + '/' + menuId, options);
+        const res = await Get({ url: builtUrl });
+
+        menuDictionary = res.dictionary || menuDictionary;
+        menuDetail = res.response;
+
+        const params = {
+            dictionary: menuDictionary, includes: "", starter: url
+        };
+        if (!menuColumns) {
+            menuColumns = GetColumnsForListing(params);
+        }
+        // FormFactory.createFormObj(vm.tabs.callFunction, menuColumns, null, params.starter + ".form", "menu", "edit", menuDetail, null, condition, null, menuScripts, vm.genericDetailObject.model);
+
+        const genericData = {
+            columns: menuColumns,
+            modelName: url + '.form',
+            module: url
+        };
+        methods.edit({ listingRow: menuDetail, genericData });
+    };
+
+    methods.preferenceSetting = (preference, preferenceObj) => {
+        ModalManager.openModal({
+            headerText: "Edit " + preferenceObj.name + " Preference",
+            modalBody: () => (<PreferenceSetting listing={preference} preferenceObj={preferenceObj}></PreferenceSetting>)
+        })
+    }
+
+
+    methods.redirect = ({ action, listingRow, history, genericData }) => {
+        let url = CreateUrl({ url: action.parameter, obj: listingRow });
+        // var urlParams;
+        // var userQuery = 0;
+
+        url = createQueryUrl(url, genericData.restrictQuery, genericData);
+        history.push(url);
+        // if (angular.isDefined(event)) {
+        //     if (event.metaKey || event.ctrlKey) {
+        //         window.open("#/" + url, "_blank");
+        //     } else {
+        // $location.url(url);
+        // location.hash = "#/" + url;
+        //     }
+        // }
+    };
+
+    /**
+     * Generic add method
+     * @param  {object} {action
+     * @param  {object} listingRow
+     * @param  {object} genericData}
+     */
+    methods.add = ({ action, listingRow, genericData }) => {
+        const payload = { action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module, dataModel: genericData.dataModel };
+        ModalManager.openModal({
+            payload,
+            headerText: 'Add modal',
+            // modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),
+            modalBody: () => (<FormCreator payload={payload} />),
+            // modalFooter: () => (<ModalFooter payload={payload}></ModalFooter>)
+        });
+    }
+
+    /**
+     * Generic edit method
+     * @param  {object} {action
+     * @param  {object} listingRow
+     * @param  {object} genericData}
+     */
+    methods.edit = ({ action, listingRow, genericData }) => {
+        // const payload = { method: 'edit', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module };
+        const payload = { method: 'edit', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module, dataModel: genericData.dataModel };
+        ModalManager.openModal({
+            payload,
+            // modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),
+            headerText: 'Edit modal',
+            modalBody: () => (<FormCreator payload={payload} />)
+        });
+    }
+
+    /**
+     * Passes entire listing row object which is used to prepopulate input fields
+     * short cut for adding new record
+     * @param  {object} {action
+     * @param  {object} listingRow
+     * @param  {object} genericData}
+     */
+    methods.copy = ({ action, listingRow, genericData }) => {
+        const payload = { method: 'add', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module, dataModel: genericData.dataModel };
+        ModalManager.openModal({
+            payload,
+            // modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),
+            headerText: 'Add modal',
+            modalBody: () => (<FormCreator payload={payload} />)
+        });
+    }
+
+    methods.delete = async ({ action, listingRow, genericData }) => {
+        const deletekey = IsUndefinedOrNull(action.redirectValueName) ? listingRow.id : listingRow[action.redirectValueName];
+
+        const method = async() => {
+            const result = await Delete({ url: `${genericData.module}/${deletekey}` });
+            if (result.success) {
+                action.callback();
+                ToastNotifications.success('Records has been deleted');
+            }
+        }
+
+        ConfirmUtils.confirmModal({ message: "Are you sure you want to delete this record?", callback: method });
+
+        // if (window.confirm('Are you sure you want to delete this record?')) {
+        //     const result = await Delete({ url: `${genericData.module}/${deletekey}` });
+        //     if (result.success) {
+        //         action.callback();
+        //         ToastNotifications.success('Records has been deleted');
+        //     }
+        // }
+    }
+
+    methods.auditLog = async ({ action, listingRow, genericData }) => {
+        const result = await Get({ url: "auditLog?" + "model=" + genericData.dataModel.id + "&id=" + listingRow.id + "&includes=created_user&dictionary=true&order=created_at,desc&limit=150" });
+        if (result.success) {
+            const auditData = result.response.response;
+            let columns = {
+                auditData: [{
+                    field: "parameter",
+                    label: "Parameter"
+                }, {
+                    field: "old_value",
+                    label: "Old Value"
+                }, {
+                    field: "new_value",
+                    label: "New Value"
+                }, {
+                    field: "created_at",
+                    label: "Creation Time"
+                }, {
+                    field: "created_user.display_name",
+                    label: "Created By"
+                }]
+            }
+            ModalManager.openModal({
+                headerText: 'Audit Log',
+                modalBody: () => (<TableWrapper listing={auditData} columns={columns.auditData}></TableWrapper>)
+            })
+        }
+    }
+    return methods;
+}
+
+export async function GetPreference(paramName) {
+    const res = await Get({ url: 'userPreference?parameter=' + paramName });
+    if (res.success) {
+        try {
+            return JSON.parse(res.response.value);
+        } catch (e) {
+            console.error('Something went wrong while parsing JSON');
+            console.log(res.response.value);
+            return {};
+        }
+    }
+
+}
+
+/**
+ * Will return value for all kind of columns
+ * @param  {object} {selectedColumn - dictionary object
+ * @param  {object} listingRow - data value
+ * @param  {string} path='path'}
+ */
+export function RowTemplate({ selectedColumn, listingRow, path = 'path' }) {
+    if (selectedColumn.column_type == 111) {
+        return eval('listingRow.' + selectedColumn.path) ? 'Yes' : 'No';
+    } else if (selectedColumn.route) {
+        let id;
+        if (selectedColumn[path].split('.')[1]) {
+            id = convertIt(selectedColumn[path]);
+            const evalValue = eval('listingRow.' + id);
+            if (evalValue) {
+                id = eval('listingRow.' + id).id;
+            } else {
+                id = null;
+            }
+        } else {
+            id = listingRow.id;
+        }
+        return id
+            ?
+            <a className='cursor-pointer' onClick={() => Location.navigate({ url: `${selectedColumn.reference_route}${id}` })}>{eval('listingRow.' + selectedColumn[path])}</a>
+            :
+            defaultRowValue({ listingRow, selectedColumn, path });
+    } else {
+        return defaultRowValue({ listingRow, selectedColumn, path });
+    }
+}
+
+function defaultRowValue({ listingRow, selectedColumn, path }) {
+    try {
+        return eval('listingRow.' + selectedColumn[path]);
+    } catch (e) {
+        return '';
+    }
+}
+
+function convertIt(str) {
+    return str.replace(/.([^.]*)$/, "");
+}
+
+function createQueryUrl(url, restrictQuery, genericData) {
+
+    var query = '';
+    var orderMethod;
+
+    // If query is present 
+    // we add it ,
+    // else we check if there is a filter in the url , 
+    // then append the respective filter query 
+    // if (urlParams.query) {
+    //     query += urlParams.query;
+    // } else {
+    //     if (urlParams.filter) {
+    //         var filter = this.props.genericData.userFilter.filter(function (userFilter) {
+    //             return userFilter.id == urlParams.filter;
+    //         })[0];
+    //         query += filter.filter_query;
+    //     }
+    // }
+
+    if (restrictQuery) {
+        if (query) {
+            query += restrictQuery;
+        } else {
+            query += restrictQuery.split('and ')[1];
+        }
+    }
+
+    if (query) {
+        query = '?redirectQuery=' + query;
+        orderMethod = '&';
+    } else {
+        orderMethod = '?';
+    }
+    // if (urlParams.order) {
+    //     url += query + orderMethod + "listingOrder=" + urlParams.order + ',' + (urlParams.sort || 'desc');
+    // } else if (this.props.genericData.defaultOrder) {
+    //     url += query + orderMethod + "listingOrder=" + this.props.genericData.defaultOrder;
+    // } else {
+    //     url += query;
+    // }
+
     return url;
 }

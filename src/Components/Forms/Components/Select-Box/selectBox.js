@@ -11,116 +11,106 @@ import { Get } from './../../../../Utils/http.utils';
 import { callbackify } from 'util';
 
 export default class SelectBox extends Component {
-
     constructor(props) {
         super(props);
-
         this.state = {
-            // options: [],
-            // value: this.props.value || '',
-            ...this.setOptions(props),
-            field: this.props.field || 'name',
-            key: this.props.key || 'id'
-            // key: this.props.key
-        };
-
+            ...this.returnStateObj(props)
+        }
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({ ...this.setOptions(nextProps) });
+    componentWillReceiveProps(props) {
+        this.setState({ ...this.returnStateObj(props) });
     }
 
-    setOptions = props => {
-        let options = [];
-        let value = '';
-        if (props.options && props.options.length) {
-            options = props.options.map((option) => {
-                return { ...option, ...{ label: option[this.props.field || 'name'], value: option[this.props.key || 'id'] } }
+    /**
+     * extracts options, value, and field
+     * expects array of object as options but even if string of array is passed as options,
+     * converts array of object internally and passes forward (since this library doesnt support array of strings)
+     * @param  {object} props - expected to have options, value, field(optional when array of strings), queryField(for async calls), key
+     */
+    returnStateObj(props) {
+        let options = [], value = {};
+        if (Array.isArray(props.options) && typeof props.options[0] != 'object') {
+            props.options.forEach(option => {
+                options.push({ label: typeof option == 'number' ? option.toString() : option });
             });
-            // this.setState({ options });
+
+            if (props.value) {
+                // if (props.value && Object.keys(props.value).length) {
+                value = { label: typeof props.value == 'number' ? props.value.toString() : props.value };
+            }
+        } else {
+            options = props.options;
+            value = props.value || {};
         }
 
-        if (props.value) {
-            value = props.value;
-            // this.setState({ value });
+        return {
+            options,
+            value,
+            field: props.field || 'label',
+            queryField: props.queryField
         }
-        return { value, options };
     }
 
     handleChange = (value) => {
-        // this.setState({ value: value[this.state.key] });
+        const { onChange, async, name, field } = this.props;
+        const { field: stateField } = this.state;
         if (!value) {
             return;
         }
-        if (this.props.async) {
-            // this.setState({ value: this.props.key ? value[this.state.key] : value });
-            this.setState({ value: value[this.state.key] });
-        } else {
-            this.setState({ value });
+        this.setState({ value });
+
+        if (typeof onChange == 'function') {
+            const finalValue = !field ? value[stateField] : value;
+            onChange(finalValue, name);
         }
-
-
-        if (this.props.onChange) {
-            this.props.onChange(this.props.name, this.props.key ? value[this.state.key] : value);
-        }
-    }
-
-    removeSelected = (value) => {
-        // this.setState({ value });
     }
 
     getOptions = async (input, callback) => {
-        const { async } = this.props;
+        const { async, queryField, value, index } = this.props;
 
         // For first time match the id with provided value to preselect the field 
         if (input) {
-
-            const url = async + '?query=' + this.state.field + ' LIKE \'%' + input + '%\'';
-
-            const result = await Get({ url: url });
-
+            const url = async + '?query=' + queryField + ' LIKE \'%' + input + '%\'';
+            const result = await Get({ url });
             if (result.success) {
-
-                const options = result.response.map((option) => (
-                    { ...option, ...{ label: option[this.state.field], value: option[this.state.key] } }
-                ));
-
                 callback(null, {
-                    options: options
+                    options: result.response
                 });
             }
+        } else if (value) {
+            console.log(value);
+            let preloadUrl = async + '?query=' + index + '=' + value
+            const result = await Get({ url: preloadUrl });
 
-        } else {
-            if (this.props.value) {
-                let preloadUrl = async + '?query=' + this.state.key + '=' + this.props.value
+            if (result.success) {
+                console.log(result);
 
-                const result = await Get({ url: preloadUrl });
+                callback(null, {
+                    options: result.response,
+                    // value: result.response[0]
+                });
 
-                if (result.success) {
-                    const options = result.response.map((option) => (
-                        { ...option, ...{ label: option[this.state.field], value: option[this.state.key] } }
-                    ));
-
-                    callback(null, {
-                        options: options
-                    });
-                }
+                this.props.onChange(result.response[0]);
+                // this.setState({ value: result.response[0] });
             }
         }
     }
 
     render() {
-        const { async, getOptions } = this.props;
-        const { value, options } = this.state;
-        let elem;
+        const { async, getOptions, multi, placeholder } = this.props;
+        const { value, options, field } = this.state;
 
+        let elem;
         if (async) {
             elem = <Async
                 name="form-field-name"
                 value={value}
                 loadOptions={this.getOptions}
                 onChange={this.handleChange}
-                multi={this.props.multi}
+                labelKey={field}
+                placeholder={placeholder}
+                multi={multi}
             />
         } else if (getOptions) {
             elem = <Async
@@ -128,7 +118,9 @@ export default class SelectBox extends Component {
                 value={value}
                 loadOptions={getOptions}
                 onChange={this.handleChange}
-                multi={this.props.multi}
+                labelKey={field}
+                placeholder={placeholder}
+                multi={multi}
             />
         } else {
             elem = <Select
@@ -136,7 +128,11 @@ export default class SelectBox extends Component {
                 value={value}
                 onChange={this.handleChange}
                 options={options}
-                multi={this.props.multi}
+                labelKey={field}
+                autoFocus
+                clearable
+                placeholder={placeholder}
+                multi={multi}
             />
         }
 

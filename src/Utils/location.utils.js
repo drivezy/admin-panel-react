@@ -1,6 +1,8 @@
 /**************************************************
  * Implements Location service same as angular have
  *************************************************/
+// import History from './history.utils';
+import createBrowserHistory from 'history/createBrowserHistory';
 
 /**
  * takes search string and converts to corresponding object
@@ -46,19 +48,57 @@ export function GetUrlParams(props) {
 }
 
 export class Location {
-    static search(obj, { props = {}, reset = false } = {}) {
-        if (!props.location) {
-            props.location = window.location;
-        }
-        let urlParams = GenerateObjectFromUrlParams(decodeURIComponent(props.location.search))
-        if (!(obj && Object.keys(obj).length)) {
+    historyFetchMethod;
+
+    static getHistoryMethod(method) {
+        this.historyFetchMethod = method;
+    }
+    
+    /**
+     * used to get and set query strings
+     * if obj is empty, works as getter, else as setter
+     * @param  {object} obj - object params to be set as query param
+     * @param  {boolean} reset=false}={} - if true, overrides existing query else extend previous query
+     */
+    static search(obj, {  reset = false } = {}) {
+        const location = window.location;
+        let urlParams = GenerateObjectFromUrlParams(decodeURIComponent(location.search))
+
+        if (!obj) {
             return urlParams;
         }
 
-        urlParams = reset ? { ...{}, obj } : { ...urlParams, ...obj };
-        if (props.history) {
-            const queryUrl = SerializeObj(urlParams);
-            props.history.push(props.match.url + queryUrl);
+        const { history: History } = this.historyFetchMethod();
+        const finalObj = {};
+
+        Object.keys(obj).forEach((key) => {
+            if (obj[key] == null && urlParams[key]) { // if any attribute is null, will remove from existing query
+                delete urlParams[key];
+            } else {
+                finalObj[key] = obj[key];
+            }
+        });
+
+        urlParams = reset ? { ...{}, finalObj } : { ...urlParams, ...finalObj };
+
+        if (!Object.keys(urlParams).length || (!Object.keys(finalObj).length)) {
+            History.push(location.pathname);
+            // History.push(props.match.url);
+            return;
         }
+        if (History) {
+            const queryUrl = SerializeObj(urlParams);
+            History.push(queryUrl);
+        }
+    }
+
+    /**
+     * used for navigating to different routes
+     * @param  {string} {url}
+     * @param  {string} {method} - used to select method for navigation, can be push, pop, replace
+     */
+    static navigate({ url, method = 'push' }) {
+        const { history: History } = this.historyFetchMethod();
+        History[method](url);
     }
 }

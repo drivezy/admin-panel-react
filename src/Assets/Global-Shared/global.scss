@@ -2,6 +2,7 @@
 
 body {
     width: 100%;
+    // font-size: 14px;
 }
 
 .drivezy-page-container {
@@ -12,6 +13,10 @@ body {
 
 .block {
     display: block;
+}
+
+.relative {  
+    position: relative;
 }
 
 .flex {
@@ -155,6 +160,10 @@ body {
     margin-top: 10%;
 }
 
+.no-padding-strict { 
+    padding: 0 !important;
+}
+
 .padding-10 {
     padding: 10px;
 }
@@ -165,6 +174,10 @@ body {
 
 .padding-top-5 { 
     padding-top: 5%;
+}
+
+.padding-left-10 { 
+    padding-left: 10px;
 }
 
 .or-divider {
@@ -225,6 +238,17 @@ body {
     outline: none !important;
 }
 
+.global-loader { 
+    position: fixed;
+    height: 100%;
+    width: 100vw;
+    background: rgba(0,0,0,.4);
+    color: #007bff;
+    font-size: 50px;
+    text-align: center;
+    top: 0;
+    
+}
 
 
 
@@ -246,4 +270,46 @@ Non critical css goes here
 
 .margin-top-8 {
     margin-top: 8px;
+}
+
+.dropdown-button { 
+    border: 1px solid #dadfe3 !important;
+    color: #35485a ;
+    background-color: #fff;
+    cursor: pointer;
+    vertical-align: middle;
+    -webkit-font-smoothing: antialiased;
+    transition: .1s ease-in;
+    color: #183247;
+    padding: 5px 10px;
+    text-align: center;
+    box-shadow: none !important;
+
+    &:hover {
+        background: #dadfe3;
+        border: 1px solid #dadfe3;
+        color: #35485a;
+    }
+}
+
+.modal-xl { 
+    width: 92%;
+    max-width: 92%;
+}
+
+.Select-menu-outer {  // for select box to appear on top
+    z-index: 1066;
+} 
+
+.btn-xs { 
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+
+.no-data-to-show { 
+    text-align: center; 
+    padding: 30px;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
 }

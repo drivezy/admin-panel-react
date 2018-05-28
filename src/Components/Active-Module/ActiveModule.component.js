@@ -7,17 +7,20 @@ import { SubscribeToEvent } from './../../Utils/stateManager.utils'
 
 
 export default class ActiveModule extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
             collapsed: props.collapsed || true,
-            menus: []
+            menus: [],
+            menuName: ''
         }
 
         this.toggledMenu = this.toggledMenu.bind(this);
     }
 
     componentDidMount() {
+        SubscribeToEvent({ eventName: 'showMenuName', callback: this.listenMenuChange });
         // const main = document.getElementById("main");
 
         // if (main) {
@@ -30,6 +33,12 @@ export default class ActiveModule extends Component {
         // this.closeNav();
 
         SubscribeToEvent({ eventName: 'toggledMenu', callback: this.toggledMenu })
+    }
+
+    listenMenuChange = (data) => {
+        this.setState({
+            menuName: data.menuName
+        })
     }
 
     toggledMenu = (module) => {
@@ -85,11 +94,18 @@ export default class ActiveModule extends Component {
         // console.log(menu);
     }
 
+    clickedValue = (menu) => {
+        this.setState({
+            collapsed: true,
+            menuName: menu.name
+        })
+    }
+
     render() {
         // const { visible } = this.state;
         // this.operation(visible);
         // const { menus } = this.props;
-        // const { menus } = this.state;
+        const { menuName } = this.state;
 
         return (
             <div className="active-module">
@@ -114,7 +130,7 @@ export default class ActiveModule extends Component {
                             <div className="panel-body">
                                 {
                                     this.state.menus.map((menu, key) => {
-                                        return (menu.active == 1) && (menu.visibility == 1) && (<Link to={menu.url} className="menu-list" key={key}>
+                                        return (menu.active == 1) && (menu.visibility == 1) && (<Link onClick={() => this.clickedValue(menu)} to={menu.url} className="menu-list" key={key}>
                                             {menu.name}
                                         </Link>)
                                     })
@@ -125,7 +141,7 @@ export default class ActiveModule extends Component {
                 </div>
                 <div className="search-button">
                     <button className="btn btn-default" onClick={() => this.toggleMenus()}>
-                        <i className="fa fa-bars" aria-hidden="true"></i>
+                        <i className="fa fa-bars" aria-hidden="true"></i> {menuName}
                     </button>
                 </div>
             </div >

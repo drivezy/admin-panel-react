@@ -1,6 +1,6 @@
 .vehicle-detail {
-    .card {
-        width: 400px;
+    .detail-card {
+        width: 30%;
         background-color:#f1f1f1;
         padding-left: 15px;
         .card-img {
@@ -12,5 +12,10 @@
         .gray-border-bottom {
             border-bottom: 1px solid #f0f4f7;
         }
+    }
+    .tabs-card {
+        width: 70%; 
+        background-color:#f1f1f1;
+        padding-left: 15px;
     }
 }

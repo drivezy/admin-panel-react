@@ -1,22 +1,28 @@
+
 import { IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall } from './common.utils';
-import { GetColumnsForListing, ConvertToQuery, CreateFinalColumns } from './generic.utils';
+import { GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods } from './generic.utils';
 import { Get } from './http.utils';
+
+let tempQuery; // used to decide if stats is to be fetched from server
 
 /**
 * prepare query, pagination, and everything required according to
 * url and menu detail, fetch data and passes them further to the components
 * to show listing data
 */
-export async function GetListingRecord({ configuration, queryString = {}, callback, data, currentUser = {} }) {
+export const GetListingRecord = async ({ configuration, queryString = {}, callback, data, currentUser = {} }) => {
     const params = Initialization(configuration, queryString);
-
-    let tempQuery;
+    // const this = {};
+    this.currentUser = currentUser;
     const options = GetDefaultOptions();
 
     params.page = queryString.page ? parseInt(queryString.page) : data.currentPage;
     options.includes = params.includes;
     options.order = params.order + "," + params.sort;
 
+    if (queryString.search) {
+        options.query += ' and ' + queryString.search;
+    }
     // @TODO search functionality
     // Add the input field on the generic listing page to query
     // if (self.searchObj && self.searchObj.hasOwnProperty("id")) {
@@ -36,34 +42,35 @@ export async function GetListingRecord({ configuration, queryString = {}, callba
     // if there is a query in url , add it to the options.query
     options.query += IsUndefinedOrNull(queryString.query) ? '' : " and " + queryString.query;
 
-    options.query += IsUndefinedOrNull(configuration.restricted_query) ? '' : ' and ' + configuration.restricted_query;
+    options.query += IsUndefinedOrNull(configuration.restricted_query) ? '' : ' and ' + ConvertToQuery.call(this, configuration.restricted_query);
 
     // If a filter is applied , add the query to options.query
     if (queryString.filter && Object.keys(queryString.filter).length && Array.isArray(configuration.userFilter)) {
         const activeFilter = configuration.userFilter.filter(function (filter) {
-            return filter.id == queryString.filter.id;
+            return filter.id == queryString.filter;
         })[0];
-        if (!queryString.query) {
+        if (!queryString.query && activeFilter) {
             options.query += " and " + activeFilter.filter_query;
         }
     }
 
     // @TODO add query
-    // options.query += IsUndefinedOrNull(configuration.query) ? "" : convertToQuery(configuration.query);
+    // options.query += IsUndefinedOrNull(configuration.query) ? "" : ConvertToQuery.bind(this)(configuration.query);
 
     // If currentUser is specified in the query replace it with the currentUsers id
     if (options.query.includes("'currentUser'") && currentUser.id) {
         options.query = options.query.replace("'currentUser'", currentUser.id);
     }
 
-    options.stats = (data.stats && IsUndefinedOrNull(queryString.query)) ? false : true;
+    options.stats = (data.stats && IsUndefinedOrNull(queryString.query) && tempQuery) ? false : true;
+    tempQuery = IsUndefinedOrNull(queryString.query) || IsUndefinedOrNull(queryString.search);
     // To be used to fetch stats when user selects some query and then deselects it
 
     // @TODO dont fetch dictionary if already available
     options.dictionary = data.dictionary ? false : true;
 
     options.page = queryString.page || options.page;
-    options.limit = queryString.size || 20;
+    options.limit = queryString.limit || 20;
 
     if (queryString.scopes) {
         options.scopes = queryString.scopes;
@@ -77,7 +84,7 @@ export async function GetListingRecord({ configuration, queryString = {}, callba
 
     // const result = await Get({ url: configuration.url, body: options });
     const url = BuildUrlForGetCall(configuration.url, options);
-    Get({ url, callback: PrepareObjectForListing, extraParams: { callback, page: options.page, data, configuration, params }, persist: true });
+    Get({ url, callback: PrepareObjectForListing, extraParams: { callback, page: options.page, limit: options.limit, data, configuration, params }, persist: true });
 }
 
 
@@ -87,7 +94,7 @@ export async function GetListingRecord({ configuration, queryString = {}, callba
  * @param  {object} {extraParams}
  */
 function PrepareObjectForListing(result, { extraParams }) {
-    const { callback, page, data, configuration, params } = extraParams;
+    const { callback, page, limit, data, configuration, params } = extraParams;
     if (result && result.response) {
 
         // if (columns && columns.length === 0) {
@@ -120,6 +127,7 @@ function PrepareObjectForListing(result, { extraParams }) {
             relationship: result.relationship || data.relationship, // modelName: self.configuration.formPreferenceName + '.form',
             listing: result.response,
             currentPage: page,
+            limit,
             pageName: configuration.pageName,
             starter: configuration.starter,
             includes: configuration.includes,
@@ -160,6 +168,8 @@ function PrepareObjectForListing(result, { extraParams }) {
 
         // Build the final columns that is required for the portlet table
         genericListingObj.finalColumns = CreateFinalColumns(genericListingObj.columns, genericListingObj.selectedColumns, genericListingObj.relationship);
+        genericListingObj.preDefinedmethods = GetPreSelectedMethods(genericListingObj.nextActions);
+        genericListingObj.methods = RegisterMethod(genericListingObj.nextActions);
         if (typeof callback == 'function') {
             callback({ genericData: genericListingObj, filterContent });
         }

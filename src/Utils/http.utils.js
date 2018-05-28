@@ -4,13 +4,16 @@
  ****************************************/
 
 import GLOBAL from './../Constants/global.constants';
-import { GetFireToken } from './../Utils/user.utils';
-import { IsUndefined, CheckInternet } from './../Utils/common.utils';
+import { GetFireToken } from './user.utils';
+import { IsUndefined, CheckInternet } from './common.utils';
 import { StoreEvent, SubscribeToEvent, IsEventAvailable } from './stateManager.utils';
+import { LoaderUtils } from './loader.utils';
+import ToastUtils from './toast.utils';
 
 const defautlHeaders = {
     'Content-Type': 'application/json;charset=UTF-8',
     'App-Type': '313',
+
 };
 
 /**
@@ -96,9 +99,90 @@ export function Delete(obj) {
     }
 
     obj.method = 'DELETE';
+    if (IsUndefined(obj.hideMessage)) {
+        obj.hideMessage = true;
+    }
+
+    if (IsUndefined(obj.hideLoader)) {
+        obj.hideLoader = obj.hideLoader || true;
+    }
     const params = getNecessaryParams(obj);
     return ApiCall(params);
 }
+
+/**
+* Upload file implementation
+* All upload calls are made through this method
+* @param  {object} obj - contains url, params(optional){proccessed and attached to url}, 
+* headers(optional)
+*/
+export function Upload(url, file) {
+
+    var formData = new FormData();
+    formData.append('file', file.image);
+    formData.append('column', file.column);
+
+    return fetch(GLOBAL.API_HOST + url, { // Your POST endpoint
+        method: 'POST',
+        headers: {
+            // 'Content-Type': 'multipart/form-data',
+            // 'admin-url': https://uatadmin.justride.in/#/modelDetails/42,
+            'App-Type': 313,
+            'App-Version': '1.0.1',
+            // 'Cookie': '_ga=GA1.2.34209538.1525951213; remember_web_59ba36addc2b2f9401580f014c7f58ea4e30989d=eyJpdiI6InJsOThMZk9vRmpSdHh2WWRHcGJDN2c9PSIsInZhbHVlIjoiVTZoVFBTQTQxbXdETTgxSklibjc3cWVcL1wvakQxdVYrXC90czNyRHAyYnVJQzJRazhGem5RYXVJWGxUQnNmRmVvQm4yVHl5cDR4TWVwUG1mQ2hGcHAwTGNHVUZ4eDVzUkhTRjFNbUVqU3pyOEp4d05raHdYVU9wem13STRuWStoK1loUXRQMlVcLzJLQ1VcL0pocDREaE5tR0xZUHdURVwvRW5QQWNHejV4YUg0MkpKNlJJa1hSS01cL1hka2NIWDdrNjhBMSIsIm1hYyI6ImZjY2E1MzZjOTM4ODkyNjMxOTljNTQ1Yzk2MWE4NjhmZDY3N2YwZGY4MmU2MGNhZDI2YzgwOGEzOGY3YTE3NzYifQ%3D%3D; _gid=GA1.2.1947820716.1526845821; jtride_session=eyJpdiI6IjQ4clRhTDZjU2NGdGg4Rk9XU1crSFE9PSIsInZhbHVlIjoiR2ZxNHVcL0M5XC9US0k1NHZmcFpYSEgxV1NhVFJCU0xTWW5iTGkwWFwvd2hUVUFoQmwzZkY2QU5ORGIzK2x3Y1JkS3pFTzN6VHJSQm9qV29EN3RxNVlta0E9PSIsIm1hYyI6ImFiNDg5NTA1MmZjZGEyZWNkMzQ3Y2U0ZWY0OTFkOTA5MGY1Yzk0ZDljYzA3MzZhMWQwMTUzMjdjY2VhMjhmYjUifQ%3D%3D'
+        },
+        credentials: 'include',
+        body: formData
+    }).then((result) => {
+
+        return result.json();
+
+    }, (error) => {
+        console.log(error);
+        return error;
+    }, (progress) => {
+        console.log(progress);
+        return progress;
+    })
+}
+
+
+function StoreImageToAws(data, bookingId, type, nextIndex) {
+    const { imagesArray, booking } = this.state;
+    var photo = {
+        uri: data,
+        type: 'image/jpeg',
+        name: 'file1' + nextIndex + '.jpg',
+    };
+
+    var formData = new FormData();
+    formData.append('file', photo);
+
+    return fetch(GLOBAL.BASE_URL + 'api/multipleUpload', {
+        method: 'POST',
+        headers: {
+            'App-Type': GLOBAL.APP_ID,
+            'Content-Type': 'multipart/form-data',
+            'Firebase-Id': GLOBAL.FIRE_TOKEN
+        },
+        credentials: 'same-origin',
+        body: formData
+    })
+        .then((response) => response.text())
+        .then((responseText) => {
+            var response = JSON.parse(responseText).response
+            if (nextIndex < imagesArray.length) {
+                this.StoreImageToAws(imagesArray[nextIndex], bookingId, type, nextIndex + 1)
+            }
+            return response[0].document_link
+        })
+        .catch((error) => {
+            return ''
+        });
+}
+
+
+
 
 /**
  * final level method to make api call
@@ -145,6 +229,9 @@ function getNecessaryParams(obj) {
     const resolve = obj.hasOwnProperty('resolve') ? obj.resolve : resolve;
     const reject = obj.hasOwnProperty('reject') ? obj.reject : reject;
 
+    if (!obj.hideLoader && !obj.hasOwnProperty('resolve')) { // if hide loader is not true, start loader
+        LoaderUtils.startLoader();
+    }
     const responseObj = {
         url, method, headers, resolve, reject, hideMessage: obj.hideMessage || false, persist: obj.persist || false, callback: obj.callback, extraParams: obj.extraParams
     };
@@ -190,7 +277,7 @@ function createHeader(obj) {
  */
 function defaultResolve(response, hideMessage, hideLoader, { persist, url, body, callback, extraParams }) {
     if (!hideLoader) { // stop loader
-        // @TODO end loader
+        LoaderUtils.endLoader();
     }
     // if response contains string, show same in message bar
     if (response && response.response == 'Request not authorized') {
@@ -198,6 +285,7 @@ function defaultResolve(response, hideMessage, hideLoader, { persist, url, body,
     } else if (!hideMessage && response && typeof response == 'object' && (typeof response.response == 'string' || typeof response.reason == 'string')) {
         const type = response.success ? 'success' : 'error';
         // @TODO show message -response.response
+        ToastUtils[type](response.response || response.reason);
     }
     if (persist && !CheckInternet()) {
         StoreEvent({ eventName: url, data: response, objParams: body, isMemoryStore: true });
@@ -212,9 +300,9 @@ function defaultResolve(response, hideMessage, hideLoader, { persist, url, body,
  * default method to pass through on each failure api call
  * @param  {object} response
  */
-function defaultReject(response, hideMessage, hideLoader) {
+function defaultReject(response, hideMessage, hideLoader, { url, body }) {
     if (!hideLoader) { // stop loader
-        // @TODO end loader
+        LoaderUtils.endLoader();
     }
     let message = null;
     // if response contains string, show same in message bar
@@ -226,6 +314,17 @@ function defaultReject(response, hideMessage, hideLoader) {
         }
         if (message) {
             // @TODO show error message - message
+        }
+
+        if (response.response == 'string') {
+            message = response.message;
+        } else if (response.reason == 'string') {
+            message = response.reason;
+        } else {
+            message = 'Internal server error';
+        }
+        if (message) {
+            ToastUtils.error(message);
         }
     }
     return response;

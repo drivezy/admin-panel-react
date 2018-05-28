@@ -45,7 +45,8 @@ export function IsUndefinedOrNull(value) {
 }
 
 export function IsUndefined(value) {
-    return value === '';
+    return typeof value == 'undefined';
+    // return value === '';
 }
 
 export function isMobile() {

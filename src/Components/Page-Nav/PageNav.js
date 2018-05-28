@@ -79,21 +79,22 @@ export default class PageNav extends Component {
 
                         <div className="user-profile">
                             <div className="profile-image">
-                                <img src={`${this.state.currentUser.photograph}`} />
+                                {this.state.currentUser.photograph ? <img src={`${this.state.currentUser.photograph}`} /> : <i className="fa fa-user-o" aria-hidden="true"></i>}
+
                             </div>
                         </div>
 
                     </DropdownToggle>
 
-                    <DropdownMenu>
-                        <DropdownItem>
+                    <DropdownMenu right>
+                        <DropdownItem className="user-wrapper">
                             <a className="user-details">
                                 <div className="display-name">
                                     {this.state.currentUser.display_name}
                                 </div>
                                 <div className="email">
                                     {this.state.currentUser.email}
-                                    <i className="fas fa-cog" aria-hidden="true"></i>
+                                    <i className="fa fa-cog" aria-hidden="true"></i>
                                 </div>
                             </a>
                         </DropdownItem>

@@ -16,6 +16,8 @@
 import React, { Component } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
+import './modalWrapper.component.css';
+
 export default class ModalWrapper extends Component {
     constructor(props) {
         super(props);
@@ -44,11 +46,11 @@ export default class ModalWrapper extends Component {
     }
 
     render() {
-        const { headerText, modalHeader, modalBody, modalFooter } = this.state;
+        const { headerText, modalHeader, modalBody, modalFooter, size = 'lg' } = this.state;
         const { isVisible } = this.state;
 
         return (
-            <Modal size="lg" isOpen={isVisible} toggle={this.closeModal} className={this.props.className} backdrop={this.state.backdrop}>
+            <Modal size={size} isOpen={isVisible} toggle={this.closeModal} className={this.props.className} backdrop={this.state.backdrop}>
                 {
                     modalHeader ?
                         <ModalHeader toggle={this.closeModal}>{modalHeader()}</ModalHeader>

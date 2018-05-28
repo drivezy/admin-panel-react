@@ -44,57 +44,62 @@ export default class VehicleDetail extends Component {
             <div className="vehicle-detail">
                 {
                     vehicleDetail.id &&
-                    <Card>
-                        <CardHeader>
-                            <span>All Vehicle Detail | {vehicleDetail.car.name} | {vehicleDetail.registration_number}</span>
-                        </CardHeader>
-                        <CardImg className="gray-border-bottom" width="100%" src={`${vehicleDetail.car.image}`}></CardImg>
-                        <CardBody>
-                            <CardTitle>Vehicle Detail</CardTitle>
-                            <div className="gray-border-bottom">
-                            </div>
-                            <Row className="gray-border-bottom">
-                                <Col sm="6">
-                                    <p>Caution Amount</p>
-                                </Col>
-                                <Col sm="6">
-                                    <p>{vehicleDetail.car.caution_amount}</p>
-                                </Col>
-                            </Row>
-                            <Row className="gray-border-bottom">
-                                <Col sm="6">
-                                    <p>Min Booking Duration</p>
-                                </Col>
-                                <Col sm="6">
-                                    <p>{vehicleDetail.car.min_period / 60}</p>
-                                </Col>
-                            </Row>
-                            <Row className="gray-border-bottom">
-                                <Col sm="6">
-                                    <p>Fuel Eficiency</p>
-                                </Col>
-                                <Col sm="6">
-                                    <p>{vehicleDetail.car.fuel_efficiency}</p>
-                                </Col>
-                            </Row>
-                            <Row className="gray-border-bottom">
-                                <Col sm="6">
-                                    <p>Extra Km Charges</p>
-                                </Col>
-                                <Col sm="6">
-                                    <p>{vehicleDetail.car.extra_km_charges}</p>
-                                </Col>
-                            </Row>
-                            <Row className="gray-border-bottom">
-                                <Col sm="6">
-                                    <p>Free Km Per Hour</p>
-                                </Col>
-                                <Col sm="6">
-                                    <p>{vehicleDetail.car.distance}</p>
-                                </Col>
-                            </Row>
-                        </CardBody>
-                    </Card>
+                    <div>
+                        <Card className="detail-card">
+                            <CardHeader>
+                                <span>All Vehicle Detail | {vehicleDetail.car.name} | {vehicleDetail.registration_number}</span>
+                            </CardHeader>
+                            <CardImg className="gray-border-bottom" width="100%" src={`${vehicleDetail.car.image}`}></CardImg>
+                            <CardBody>
+                                <CardTitle>Vehicle Detail</CardTitle>
+                                <div className="gray-border-bottom">
+                                </div>
+                                <Row className="gray-border-bottom">
+                                    <Col sm="6">
+                                        <p>Caution Amount</p>
+                                    </Col>
+                                    <Col sm="6">
+                                        <p>{vehicleDetail.car.caution_amount}</p>
+                                    </Col>
+                                </Row>
+                                <Row className="gray-border-bottom">
+                                    <Col sm="6">
+                                        <p>Min Booking Duration</p>
+                                    </Col>
+                                    <Col sm="6">
+                                        <p>{vehicleDetail.car.min_period / 60}</p>
+                                    </Col>
+                                </Row>
+                                <Row className="gray-border-bottom">
+                                    <Col sm="6">
+                                        <p>Fuel Eficiency</p>
+                                    </Col>
+                                    <Col sm="6">
+                                        <p>{vehicleDetail.car.fuel_efficiency}</p>
+                                    </Col>
+                                </Row>
+                                <Row className="gray-border-bottom">
+                                    <Col sm="6">
+                                        <p>Extra Km Charges</p>
+                                    </Col>
+                                    <Col sm="6">
+                                        <p>{vehicleDetail.car.extra_km_charges}</p>
+                                    </Col>
+                                </Row>
+                                <Row className="gray-border-bottom">
+                                    <Col sm="6">
+                                        <p>Free Km Per Hour</p>
+                                    </Col>
+                                    <Col sm="6">
+                                        <p>{vehicleDetail.car.distance}</p>
+                                    </Col>
+                                </Row>
+                            </CardBody>
+                        </Card>
+                        <div className="tabs-card">
+                            
+                        </div>
+                    </div>
                 }
             </div>
         )

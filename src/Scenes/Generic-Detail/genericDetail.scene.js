@@ -7,11 +7,15 @@ import {
     Row, Col, TabContent, TabPane, Nav, NavItem, NavLink, Table
 } from 'reactstrap';
 
+import { StoreEvent } from './../../Utils/stateManager.utils';
+
 import DetailPortlet from './../../Components/Detail-Portlet/DetailPortlet.component';
 import DetailIncludes from './../../Components/Detail-Includes/DetailIncludes';
 import TableSettings from './../../Components/Table-Settings/TableSettings.component';
+import CustomAction from './../../Components/Custom-Action/CustomAction.component';
+import RightClick from './../../Components/Right-Click/rightClick.component';
 
-import { GetUrlParams } from './../../Utils/location.utils';
+import { GetUrlParams, Location } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
 import { GetDetailRecord } from './../../Utils/genericDetail.utils';
 import { createFinalObject } from './../../Utils/table.utils';
@@ -34,6 +38,73 @@ export default class GenericDetail extends Component {
         this.getMenuData();
     }
 
+    componentWillReceiveProps(nextProps) {
+        const newProps = GetUrlParams(nextProps);
+        this.state.params = newProps.params;
+        this.state.queryString = newProps.queryString;
+        if (this.state.menuDetail.url) {
+            this.getDetailRecord();
+        }
+    }
+
+    rowOptions = [
+        {
+            id: 0,
+            name: "Redirect Menu Detail",
+            icon: 'fa-deaf',
+            subMenu: false,
+            onClick: (data) => {
+                const { history, match } = this.props;
+
+                let pageUrl = "/menuDef/" + this.state.menuDetail.menuId
+                Location.navigate({ url: pageUrl });
+                // history.push(`${pageUrl}`);
+            }
+        }, {
+            id: 1,
+            name: "Redirect Model Detail",
+            icon: 'fa-info-circle',
+            subMenu: false,
+            onClick: (data) => {
+                const { history, match } = this.props;
+
+                let url = "/modelDetails/" + this.state.menuDetail.model.id
+                Location.navigate({ url });
+                // history.push(`${url}`);
+            }
+        }, {
+            id: 0,
+            name: "Edit Menu",
+            icon: 'fa-pencil',
+            subMenu: false,
+            onClick: (data) => {
+                const { portlet = {}, menuDetail } = this.state;
+                if (portlet.preDefinedmethods && portlet.preDefinedmethods.editMenu) {
+                    portlet.preDefinedmethods.editMenu(menuDetail.menuId);
+                }
+            }
+        }, {
+            id: 0,
+            name: "Preferences Settings",
+            icon: 'fa-gift',
+            subMenu: false,
+            disabled: this.preferenceObj ? true : false,
+            onClick: (data) => {
+                const { portlet = {}, menuDetail } = this.state;
+                const preferenceObj = { // used for editing preferences
+                    name: menuDetail.pageName, // preference name to be shown on modal
+                    role: true
+                }
+                if (portlet.preDefinedmethods && portlet.preDefinedmethods.preferenceSetting) {
+                    portlet.preDefinedmethods.preferenceSetting(menuDetail.preference, preferenceObj);
+                }
+            }
+        }];
+
+    componentDidMount() {
+        this.getMenuData();
+    }
+
     getMenuData = async () => {
         const { queryString } = this.state;
         // const { menuId } = queryString;
@@ -46,6 +117,7 @@ export default class GenericDetail extends Component {
                 menuDetail.listName = menuDetail.stateName.toLowerCase();
                 this.setState({ menuDetail });
                 this.getDetailRecord();
+                StoreEvent({ eventName: 'showMenuName', data: { menuName: this.state.menuDetail.pageName } });
             }
         }
     }
@@ -75,38 +147,59 @@ export default class GenericDetail extends Component {
     }
 
     render() {
+        const { history } = this.props;
         const { menuDetail = {}, portlet = {}, tabs = {} } = this.state;
         const { finalColumns = [], data = {} } = portlet;
         let selectedColumns = {};
 
-        if (menuDetail.preference && portlet.listPortlet) {
-            selectedColumns = JSON.parse(menuDetail.preference[portlet.listPortlet])
+        if (menuDetail.preference && portlet.listName) {
+            selectedColumns = JSON.parse(menuDetail.preference[portlet.listName])
         }
+
+        const genericDataForCustomColumn = {
+            columns: portlet.portletColumns,
+            formPreference: menuDetail.preference && menuDetail.preference[menuDetail.formPreferenceName + '.form'] ? JSON.parse(menuDetail.preference[menuDetail.formPreferenceName + '.form']) : [],
+            modelName: menuDetail.formPreferenceName + '.form',
+            module: menuDetail.url ? menuDetail.url.split("/:")[0] : '',
+            dataModel: menuDetail.model,
+            methods: portlet.methods,
+            preDefinedmethods: portlet.preDefinedmethods
+        };
+        const html =
+            <div className="header">
+                <div className="left" />
+
+                <div className="right">
+                    <div className="btn-group" id="generic-detail-header-dynamic-icon-group">
+                        <CustomAction history={history} genericData={genericDataForCustomColumn} actions={menuDetail.nextActions} listingRow={data} placement={167} callback={this.getDetailRecord} />
+                    </div>
+
+                    {
+                        portlet.portletColumns ?
+                            <TableSettings onSubmit={this.layoutChanges} listName={portlet.listName} selectedColumns={selectedColumns} columns={portlet.portletColumns} finalColumns={finalColumns} />
+                            : null
+                    }
+                </div>
+            </div>;
+
 
         return (
             <div className="generic-detail-container">
+                <RightClick renderTag="div" html={html} rowOptions={this.rowOptions} ></RightClick>
 
-                <div className="header">
-                    <div className="left" />
+                <div className="detail-content">
+                    {
+                        finalColumns.length ?
+                            <DetailPortlet listingRow={data} finalColumns={finalColumns} />
+                            : null
+                    }
 
-                    <div className="right">
-                        {portlet.portletColumns ? <TableSettings onSubmit={this.layoutChanges} listName={portlet.listName} selectedColumns={selectedColumns} columns={portlet.portletColumns} finalColumns={finalColumns}>
-                        </TableSettings>
-                            : null}
-                    </div>
+                    {
+                        tabs && tabs.includes ?
+                            <DetailIncludes tabs={tabs} callback={this.getDetailRecord} />
+                            : null
+                    }
                 </div>
-
-                {
-                    finalColumns.length ?
-                        <DetailPortlet data={data} finalColumns={finalColumns} />
-                        : null
-                }
-
-                {
-                    tabs && tabs.includes ?
-                        <DetailIncludes tabs={tabs} />
-                        : null
-                }
             </div>
         )
     }
