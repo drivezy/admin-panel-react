@@ -40,6 +40,7 @@ export default class GenericListing extends Component {
         this.state = {
             ...GetUrlParams(this.props), // params, queryString
             menuDetail: {},
+            localSearch: {},
             genericData: {},
             filterContent: null,
             isCollapsed: true
@@ -343,9 +344,28 @@ export default class GenericListing extends Component {
         this.getListingData();
     }
 
+    filterLocally = (column, value) => {
+        this.setState({ localSearch: { field: column.column_name, value: value } });
+        // let { genericData } = this.state;
+        // let { listing = [] } = genericData;
+        // listing = listing.filter((rowData) => {
+        //     return rowData[column.column_name].toLowerCase().indexOf(value) != -1;
+        // });
+        // genericData.listing = listing;
+        // this.setState({ genericData });
+    }
+
     render() {
-        const { genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent, currentUser } = this.state;
+        const { localSearch, genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent, currentUser } = this.state;
         const { listing = [], finalColumns = [] } = genericData;
+
+        let filteredResults = [];
+
+        if (localSearch.value) {
+            filteredResults = listing.filter(entry => entry[localSearch.field].toString().toLowerCase().indexOf(localSearch.value) != -1);
+        }
+
+        // const listingData = 
         const { history, match } = this.props;
         return (
             <HotKeys keyMap={this.keyMap} handlers={this.handlers}>
@@ -355,7 +375,7 @@ export default class GenericListing extends Component {
                             <div className="generic-listing-search">
                                 {
                                     filterContent && filterContent.dictionary &&
-                                    <ListingSearch searchDetail={menuDetail.search} searchQuery={this.urlParams.search} dictionary={filterContent.dictionary} />
+                                    <ListingSearch onEdit={this.filterLocally} searchDetail={menuDetail.search} searchQuery={this.urlParams.search} dictionary={filterContent.dictionary} />
                                 }
                             </div>
 
@@ -418,7 +438,7 @@ export default class GenericListing extends Component {
 
                                 {/* Portlet Table */}
                                 <PortletTable rowTemplate={this.rowTemplate} tableType="listing" rowOptions={this.rowOptions}
-                                    toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} />
+                                    toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={localSearch.value ? filteredResults : listing} callback={this.getListingData} menuDetail={menuDetail} />
                                 {/* Portlet Table Ends */}
 
                             </CardBody>
