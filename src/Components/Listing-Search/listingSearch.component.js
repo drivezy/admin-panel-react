@@ -36,17 +36,18 @@ export default class ListingSearch extends React.Component {
     componentWillReceiveProps() {
         this.initialize(); // on props update
     }
-    
+
     /**
      * extracts query from string and assing value
      */
     initialize = async () => {
-        const { dictionary, searchQuery } = this.props;
+        const { dictionary, searchQuery, searchDetail } = this.props;
+        let selectedColumn;
         if (searchQuery) {
             const values = searchQuery.split(' ');
-            const regex = /["%]/g;
+            const regex = /["%25]/g;
             values[2] = values[2].replace(regex, '');
-            const selectedColumn = SelectFromOptions(dictionary, values[0], 'column_name');
+            selectedColumn = SelectFromOptions(dictionary, values[0], 'column_name');
             activeColumn = selectedColumn;
             let query, obj;
             if (!(selectedColumn && selectedColumn.referenced_model)) {
@@ -63,8 +64,12 @@ export default class ListingSearch extends React.Component {
                     this.state.referenceColumnValue = { data: query[0] };
                 }
             }
-            this.setState({ selectedColumn, });
+        } else if (searchDetail && searchDetail.column_name) {
+            selectedColumn = SelectFromOptions(dictionary, searchDetail.column_name, 'column_name');
+            activeColumn = selectedColumn;
         }
+
+        this.setState({ selectedColumn, });
     }
 
     /**
@@ -73,7 +78,9 @@ export default class ListingSearch extends React.Component {
     filterChange(select) {
         let valueColumnType = "input";
         this.setState({
-            selectedColumn: select
+            selectedColumn: select,
+            query: '',
+            referenceColumnValue: {}
         })
 
         activeColumn = select;
@@ -97,7 +104,7 @@ export default class ListingSearch extends React.Component {
                 };
             } else {
                 options = {
-                    query: queryField + ' like "%' + val + '%"'
+                    query: queryField + ' like "%25' + val + '%25'
                     // query: queryField + ' like %22%25' + val + '%25%22'
                 };
             }
@@ -140,12 +147,12 @@ export default class ListingSearch extends React.Component {
             history: this.props.history, match: this.props.match
         };
 
-        query += activeColumn.column_name + ' like "%' + this.state.inputValue + '%"';
+        query += activeColumn.column_name + ' like "%25' + this.state.inputValue + '%25"';
         urlParams.search = query;
         Location.search(urlParams, { props: paramProps });
 
     }
-    
+
     /**
      * on press enter, 
      * @param  {} e
@@ -155,7 +162,7 @@ export default class ListingSearch extends React.Component {
             this.callFunction();
             return;
         }
-        this.setState({ inputValue: this.state.inputValue + e.key })
+        this.setState({ inputValue: this.state.query + e.key })
     }
 
 

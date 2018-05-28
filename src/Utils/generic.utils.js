@@ -186,9 +186,9 @@ export function ConvertMenuDetailForGenericPage(menuDetail) {
         image: menuDetail.image,
         stateName: menuDetail.state_name,
         module: menuDetail.base_url,
+        search: menuDetail.search,
         // actions: menuDetail.actions,
         // method: menuDetail.method,
-        // search: menuDetail.search,
         // scripts: menuDetail.scripts,
     };
 }
