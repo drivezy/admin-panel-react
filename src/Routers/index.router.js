@@ -42,6 +42,8 @@ import ModalWrapper from './../Wrappers/Modal-Wrapper/modalWrapper.component';
 import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 
 import { LoaderComponent, LoaderUtils } from './../Utils/loader.utils';
+import { PreserveState } from './../Utils/preserveUrl.utils';
+
 /** Actions */
 // import { GetCities } from './../Actions/city.action';
 // import { CurrentRoute } from './../Actions/router.action';
@@ -90,6 +92,7 @@ class MainApp extends Component {
         // });
     }
     componentWillReceiveProps(nextProps) {
+        PreserveState();
         // will be true
         // this.props.CurrentRoute(nextProps.location.pathname);
         // const locationChanged = nextProps.location !== this.props.location;
@@ -207,6 +210,7 @@ class StartRoute extends Component {
 
     componentDidMount() {
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
+
     }
 
     userDataFetched = (data) => {
