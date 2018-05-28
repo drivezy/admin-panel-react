@@ -13,7 +13,8 @@ export default class ListingPagination extends Component {
         this.state = {
             currentPage: props.currentPage ? props.currentPage : 1,
             showPages: 5,
-            statsData: props.statsData ? props.statsData : {}
+            statsData: props.statsData ? props.statsData : {},
+            limit: props.limit || 20
         }
     }
 
@@ -24,10 +25,11 @@ export default class ListingPagination extends Component {
         })
     }
 
-    redirectToPage = (pageNumber, limit = 20) => {
+    redirectToPage = (pageNumber = this.state.currentPage, limit = 20) => {
 
-        let temPageNumber = pageNumber
-        let tempUrl = `${`?limit=${pageNumber}&page=${this.state.currentPage}`}`;
+        let temPageNumber = pageNumber;
+        let tempUrl = `${`?limit=${limit}&page=${pageNumber}`}`;
+        // let tempUrl = `${`?limit=${limit}&page=${this.state.currentPage}`}`;
         if (this.state.currentPage === '...') {
             temPageNumber = this.state.currentPage - this.state.showPages
             if (temPageNumber < 1) {
@@ -39,7 +41,7 @@ export default class ListingPagination extends Component {
             temPageNumber = parseInt(this.state.currentPage) + this.state.showPages
             tempUrl = `${`?limit=${pageNumber}&page=${temPageNumber}`}`;
         }
-        this.setState({ currentPage: temPageNumber })
+        this.setState({ currentPage: temPageNumber, limit })
         const { history, match } = this.props;
         history.push(tempUrl);
     }
@@ -102,7 +104,7 @@ export default class ListingPagination extends Component {
         let nextPage;
         let pages = [];
         const getTotalPages = [20, 40, 75, 100];
-
+        const { limit } = this.state;
 
         if (statsData && statsData.records) {
             var number_of_pages = Math.round(statsData.records / statsData.count);
@@ -139,8 +141,8 @@ export default class ListingPagination extends Component {
 
                     <div className="page-redirect-number">
                         <SelectBox
-                            value={getTotalPages[0]}
-                            onChange={(data) => { this.redirectToPage(data) }}
+                            value={limit}
+                            onChange={(data) => { this.redirectToPage(undefined, data) }}
                             options={getTotalPages}
                         />
                     </div>
