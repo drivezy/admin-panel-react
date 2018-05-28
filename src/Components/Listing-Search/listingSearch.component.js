@@ -165,6 +165,13 @@ export default class ListingSearch extends React.Component {
         this.setState({ inputValue: this.state.query + e.key })
     }
 
+    searchLocally = (event) => {
+        this.setState({ query: event.target.value });
+
+        // this.
+        this.props.onEdit(this.state.selectedColumn, event.target.value);
+    }
+
 
     render() {
         const { props } = this;
@@ -197,7 +204,7 @@ export default class ListingSearch extends React.Component {
                                         className="input-select form-control"
                                         placeholder={`Search ${selectedColumn.display_name}`}
                                         value={query}
-                                        onChange={event => { this.setState({ query: event.target.value }) }}
+                                        onChange={event => this.searchLocally(event)}
                                         onKeyPress={this.handleKeyPress}
                                     />
                                 )
