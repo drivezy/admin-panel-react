@@ -62,7 +62,8 @@ export default class GenericListing extends Component {
     }
 
     componentWillUnmount() {
-        // UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
+        this.state.isCollapsed = false;
+        UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
 
 
