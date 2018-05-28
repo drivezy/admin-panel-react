@@ -8,7 +8,7 @@ export function PreserveState() {
 
 
     if (currentState.pathname != location.pathname) {
-        currentState = location;
+        currentState =  { ...window.location };
         const search = GetItem(location.pathname);
         SetItem(currentState.pathname, currentState.search);
         if (search) {
