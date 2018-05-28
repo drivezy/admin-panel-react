@@ -347,16 +347,14 @@ export default class GenericListing extends Component {
         const { listing = [], finalColumns = [] } = genericData;
         const { history, match } = this.props;
         return (
-
             <HotKeys keyMap={this.keyMap} handlers={this.handlers}>
                 <div className="generic-listing-container">
                     <div className="page-bar">
                         <div className="search-bar">
-
                             <div className="generic-listing-search">
                                 {
                                     filterContent && filterContent.dictionary &&
-                                    <ListingSearch searchQuery={this.urlParams.search} dictionary={filterContent.dictionary} />
+                                    <ListingSearch searchDetail={menuDetail.search} searchQuery={this.urlParams.search} dictionary={filterContent.dictionary} />
                                 }
                             </div>
 
