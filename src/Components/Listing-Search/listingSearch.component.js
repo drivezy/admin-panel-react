@@ -104,7 +104,7 @@ export default class ListingSearch extends React.Component {
                 };
             } else {
                 options = {
-                    query: queryField + ' like "%25' + val + '%25'
+                    query: queryField + ' like "%25' + val + '%25"'
                     // query: queryField + ' like %22%25' + val + '%25%22'
                 };
             }
