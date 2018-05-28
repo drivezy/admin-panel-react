@@ -32,10 +32,12 @@ export default class SelectBox extends Component {
         let options = [], value = {};
         if (Array.isArray(props.options) && typeof props.options[0] != 'object') {
             props.options.forEach(option => {
-                options.push({ label: option });
+                options.push({ label: typeof option == 'number' ? option.toString() : option });
             });
-            if (props.value && Object.keys(props.value).length) {
-                value = { label: props.value };
+
+            if (props.value) {
+                // if (props.value && Object.keys(props.value).length) {
+                value = { label: typeof props.value == 'number' ? props.value.toString() : props.value };
             }
         } else {
             options = props.options;
