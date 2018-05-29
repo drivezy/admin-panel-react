@@ -227,7 +227,7 @@ export default class DetailPortlet extends Component {
                                             <NavLink
                                                 className={`${activeTab === key ? 'active' : ''}`}
                                                 onClick={() => { this.toggle(key, tab); }}>
-                                                <i className="fa fa-bars"></i>  {tab.relationship.display_name}
+                                                <i className="fa fa-bars"></i>{tab.relationship.display_name}
                                             </NavLink>
                                         </NavItem>
                                     ))
@@ -243,11 +243,11 @@ export default class DetailPortlet extends Component {
                                                 <TabPane className='relative' key={key} tabId={key}>
                                                     {/* Building the table iterating through the row to display tab content */}
                                                     <div className='table-header'>
-                                                        <div className='btn-group'>
+                                                        <div className='btn-group header-actions'>
                                                             <CustomAction history={history} genericData={tab} actions={tab.nextActions} placement={168} callback={callback} />
                                                         </div>
 
-                                                        <a className="btn btn-danger btn-sm" onClick={() => Location.navigate({ url: `/modelAliasDetail/${tab.relationship.id}` })}>
+                                                        <a className="btn btn-secondary btn-sm" onClick={() => Location.navigate({ url: `/modelAliasDetail/${tab.relationship.id}` })}>
                                                             <i className="fa fa-outdent" uib-tooltip="Redirect to Model Alias detail"></i>
                                                         </a>
                                                         {

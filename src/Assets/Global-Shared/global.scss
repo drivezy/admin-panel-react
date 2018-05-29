@@ -317,3 +317,43 @@ Non critical css goes here
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
 }
+
+
+.drivezy-light-theme { 
+    .btn-primary { 
+        background: $primaryThemeLight  !important;
+        color: $onPrimaryThemeLight;
+        &:hover { 
+            background: $primaryDarkThemeLight;
+            color: $onSecondaryThemeLight;
+        }
+    }
+
+    .btn-secondary { 
+        background: $secondaryThemeLight;
+        color: $onSecondaryThemeLight !important;
+        &:hover { 
+            background: $secondaryDarkThemeLight;
+            color: $onSecondaryThemeLight;
+        }
+    }
+}
+
+.drivezy-dark-theme { 
+    .btn-primary { 
+        background: $primaryThemeDark;
+        color: $onPrimaryThemeDark;
+        &:hover { 
+            background: $primaryDarkThemeDark;
+            color: $onSecondaryThemeLight;
+        }
+    }
+    .btn-secondary { 
+        background: $secondaryThemeDark;
+        color: $onSecondaryThemeDark !important;
+        &:hover { 
+            background: $secondaryDarkThemeDark;
+            color: $onSecondaryThemeLight !important;
+        }
+    }
+}
