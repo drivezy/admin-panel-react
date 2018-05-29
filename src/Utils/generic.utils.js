@@ -11,7 +11,8 @@ import { GetMenuDetailEndPoint } from './../Constants/api.constants';
 import FormCreator from './../Components/Form-Creator/formCreator.component'
 import PortletTable from '../Components/Portlet-Table/PortletTable.component';
 import TableWrapper from './../Components/Table-Wrapper/tableWrapper.component';
-import PreferenceSetting from './../Components/Preference-Setting/preferenceSetting.component'
+import PreferenceSetting from './../Components/Preference-Setting/preferenceSetting.component';
+import { ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
 
 /**
  * Fetches Menu detail to render generic page
@@ -387,13 +388,24 @@ export function GetPreSelectedMethods() {
 
     methods.delete = async ({ action, listingRow, genericData }) => {
         const deletekey = IsUndefinedOrNull(action.redirectValueName) ? listingRow.id : listingRow[action.redirectValueName];
-        if (window.confirm('Are you sure you want to delete this record?')) {
+
+        const method = async() => {
             const result = await Delete({ url: `${genericData.module}/${deletekey}` });
             if (result.success) {
                 action.callback();
                 ToastNotifications.success('Records has been deleted');
             }
         }
+
+        ConfirmUtils.confirmModal({ message: "Are you sure you want to delete this record?", callback: method });
+
+        // if (window.confirm('Are you sure you want to delete this record?')) {
+        //     const result = await Delete({ url: `${genericData.module}/${deletekey}` });
+        //     if (result.success) {
+        //         action.callback();
+        //         ToastNotifications.success('Records has been deleted');
+        //     }
+        // }
     }
 
     methods.auditLog = async ({ action, listingRow, genericData }) => {
