@@ -1,31 +1,35 @@
 import React, { Component } from 'react';
 import './PageNav.css';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Redirect } from 'react-router-dom';
 
 import GLOBAL from './../../Constants/global.constants';
 
 import { SubscribeToEvent } from './../../Utils/stateManager.utils';
-
 import { Get } from './../../Utils/http.utils';
+import { SetItem, GetItem } from './../../Utils/localStorage.utils';
 
-import {
-    Redirect
-} from 'react-router-dom';
+import CustomTooltip from '../Custom-Tooltip/customTooltip.component';
+
 
 export default class PageNav extends Component {
-
     constructor(props) {
         super(props);
 
         this.toggle = this.toggle.bind(this);
         this.state = {
             dropdownOpen: false,
-            currentUser: {}
+            currentUser: {},
+            selectedTheme: undefined
         };
     }
 
+    themes = [{ theme: 'drivezy-light-theme', name: 'Light theme', class: 'light-theme' }, { theme: 'drivezy-dark-theme', name: 'Dark theme', class: 'dark-theme' }];
+
     componentDidMount() {
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
+        const theme = GetItem('CURRENT_THEME') || this.themes[1];
+        this.changeTheme(theme);
     }
 
     userDataFetched = (data) => {
@@ -53,11 +57,23 @@ export default class PageNav extends Component {
         }
     }
 
+    changeTheme = (theme) => {
+        SetItem('CURRENT_THEME', theme);
+        const div = document.getElementById('parent-admin-element');
+        this.themes.forEach((themeDetail, key) => {
+            if (themeDetail.theme != theme.theme) {
+                div.classList.remove(themeDetail.theme);
+                return;
+            }
+
+            div.classList.add(theme.theme);
+        });
+        this.setState({ selectedTheme: theme });
+    }
 
 
     render() {
-
-        const { currentUser } = this.state;
+        const { currentUser, selectedTheme = {} } = this.state;
         const { from } = (this.props.location ? this.props.location.state : null) || { from: { pathname: '/login' } };
         const { redirectToReferrer } = this.state
         // this.props.setCurrentRoute(from)
@@ -72,8 +88,24 @@ export default class PageNav extends Component {
         // return (
         //     <Redirect to={from} />
         // )
+        console.log(selectedTheme);
         return (
-            <div className="page-nav">
+            <div className="page-nav flex">
+                <div className='theme-selection-container flex'>
+                    {
+                        this.themes.map((theme, key) => {
+                            const html = <div className={`cursor-pointer theme-box ${theme.class} ${selectedTheme.theme == theme.theme ? 'current-theme' : null}`} onClick={() => this.changeTheme(theme)} />
+
+                            return (
+                                <CustomTooltip placement="top" key={key} html={html} title={theme.name}></CustomTooltip>
+                            )
+                            // <div className='theme-box light-theme' onClick={() => this.changeTheme('drivezy-light-theme')} />
+                        })
+                    }
+
+                    {/* <div className='theme-box dark-theme' onClick={() => this.changeTheme('drivezy-dark-theme')} /> */}
+                </div>
+
                 <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                     <DropdownToggle>
 
@@ -107,6 +139,7 @@ export default class PageNav extends Component {
                     </DropdownMenu>
 
                 </ButtonDropdown>
+
             </div>
         );
     }

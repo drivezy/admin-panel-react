@@ -1,3 +1,4 @@
+
 .generic-listing-container {
     // font-size: 12px;
     // padding: 15px;
@@ -28,20 +29,7 @@
             .btn-group {
                 margin: 0px 2px;
             }
-            .custom-actions {
-                .tooltip-element {
-                    cursor: pointer;
-                    padding: 6px 10px;
-                    border-radius: 3px;
-                    background: white;
-                    margin: 0px 1px;
-                    border: 1px solid #b7b7b7;
-                    &:hover {
-                        background: #e4e4e4;
-                        border: 1px solid #bbb9b9;
-                    }
-                }
-            }
+            
         }
         .pre-defined-filter {
             margin-left: 1100px;
