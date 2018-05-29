@@ -1,17 +1,37 @@
+@import 'Assets/Global-Shared/theme.scss';
 .listing-pagination {
     padding:10px;
     display: flex;
     justify-content:space-between;
-    .highlighted-page { 
-        a { 
-            background: #2f4d69 !important;
-            color: white;
-        }
-    }
+    // .highlighted-page { 
+    //     a { 
+    //         background: #2f4d69 !important;
+    //         color: white;
+    //     }
+    // }
     .pagination-record {
         margin-top: 10px;
     }
     .page-redirect-number {
         margin-left: 25px;
+    }
+}
+
+/** Theme specific css */
+.drivezy-light-theme { 
+    .listing-pagination {
+        .highlighted-page > a  { 
+            background: $primaryThemeLight !important;
+            color: $onPrimaryThemeLight;
+        }
+    }
+}
+
+.drivezy-dark-theme { 
+    .listing-pagination {
+        .highlighted-page > a { 
+            background: $primaryThemeDark !important;
+            color: $onPrimaryThemeDark;
+        }
     }
 }

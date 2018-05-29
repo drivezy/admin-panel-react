@@ -243,11 +243,15 @@ body {
     height: 100%;
     width: 100vw;
     background: rgba(0,0,0,.4);
-    color: #007bff;
+    color: #fea658;
     font-size: 50px;
     text-align: center;
     top: 0;
-    
+    // @extend .flex-column;
+
+    .drivezy-loader-gif { 
+        width: 250px;
+    }
 }
 
 

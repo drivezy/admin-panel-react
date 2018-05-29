@@ -1,9 +1,23 @@
+// @import 'Assets/Global-Shared/theme.scss';
+
+// .drivezy-light-theme { 
+//     .custom-actions > button.btn {
+//         background: $primaryHoverColorLight;
+//     }
+// }
+
+// .drivezy-dark-theme { 
+//     .custom-actions > button.btn {
+//         background: $primaryHoverColorDark;
+//     }
+// }
+
 .custom-actions {
     .tooltip-element {
         margin: 0px 4px;
     }
     button.btn {
-        background: #475a6b;
+        // background: #475a6b;
         color: white;
     }
 }

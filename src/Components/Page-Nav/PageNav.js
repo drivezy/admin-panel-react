@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import './PageNav.css';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Redirect } from 'react-router-dom';
 
 import GLOBAL from './../../Constants/global.constants';
 
 import { SubscribeToEvent } from './../../Utils/stateManager.utils';
-
 import { Get } from './../../Utils/http.utils';
 
-import {
-    Redirect
-} from 'react-router-dom';
+import CustomTooltip from '../Custom-Tooltip/customTooltip.component';
+
 
 export default class PageNav extends Component {
 
@@ -23,6 +22,8 @@ export default class PageNav extends Component {
             currentUser: {}
         };
     }
+
+    themes = [{ theme: 'drivezy-light-theme', name: 'Light theme', class: 'light-theme' }, { theme: 'drivezy-dark-theme', name: 'Dark theme', class: 'dark-theme' }];
 
     componentDidMount() {
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
@@ -53,6 +54,17 @@ export default class PageNav extends Component {
         }
     }
 
+    changeTheme(theme) {
+        const div = document.getElementById('parent-admin-element');
+        this.themes.forEach((themeDetail, key) => {
+            if (themeDetail.theme != theme) {
+                div.classList.remove(themeDetail.theme);
+                return;
+            }
+
+            div.classList.add(theme);
+        })
+    }
 
 
     render() {
@@ -73,7 +85,22 @@ export default class PageNav extends Component {
         //     <Redirect to={from} />
         // )
         return (
-            <div className="page-nav">
+            <div className="page-nav flex">
+                <div className='theme-selection-container flex'>
+                    {
+                        this.themes.map((theme, key) => {
+                            const html =  <div className={`cursor-pointer theme-box ${theme.class}`} onClick={() => this.changeTheme(theme.theme)} />
+
+                            return (
+                                <CustomTooltip placement="top" key={key} html={html} title={theme.name}></CustomTooltip>
+                            )
+                            // <div className='theme-box light-theme' onClick={() => this.changeTheme('drivezy-light-theme')} />
+                        })
+                    }
+
+                    {/* <div className='theme-box dark-theme' onClick={() => this.changeTheme('drivezy-dark-theme')} /> */}
+                </div>
+
                 <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                     <DropdownToggle>
 
@@ -107,6 +134,7 @@ export default class PageNav extends Component {
                     </DropdownMenu>
 
                 </ButtonDropdown>
+
             </div>
         );
     }
