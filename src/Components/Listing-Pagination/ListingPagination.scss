@@ -1,9 +1,9 @@
 .listing-pagination {
-    padding:10px;
+    padding: 10px;
     display: flex;
-    justify-content:space-between;
-    .highlighted-page { 
-        a { 
+    justify-content: space-between;
+    .highlighted-page {
+        a {
             background: #2f4d69 !important;
             color: white;
         }
@@ -12,6 +12,7 @@
         margin-top: 10px;
     }
     .page-redirect-number {
+        width: 80px;
         margin-left: 25px;
     }
 }
