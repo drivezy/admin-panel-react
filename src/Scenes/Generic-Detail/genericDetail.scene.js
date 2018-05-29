@@ -170,7 +170,7 @@ export default class GenericDetail extends Component {
                 <div className="left" />
 
                 <div className="right">
-                    <div className="btn-group" id="generic-detail-header-dynamic-icon-group">
+                    <div className="btn-group header-actions" id="generic-detail-header-dynamic-icon-group">
                         <CustomAction history={history} genericData={genericDataForCustomColumn} actions={menuDetail.nextActions} listingRow={data} placement={167} callback={this.getDetailRecord} />
                     </div>
 
