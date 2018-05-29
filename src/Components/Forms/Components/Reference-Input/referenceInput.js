@@ -5,8 +5,8 @@ import React, { Component } from 'react';
 
 import GLOBAL from './../../../../Constants/global.constants';
 
-// import SelectBox from './../../Components/Select-Box/selectBox';
-import SelectBox from './../Select-Box/selectBoxForGenericForm.component';
+import SelectBox from './../../Components/Select-Box/selectBox';
+// import SelectBox from './../Select-Box/selectBoxForGenericForm.component';
 import './referenceInput.css';
 
 import { Get } from './../../../../Utils/http.utils';
@@ -40,6 +40,10 @@ export default class ReferenceInput extends Component {
         this.setState({ url });
     }
 
+    getOptions = async () => {
+
+    }
+
     componentWillReceiveProps(nextProps) {
         if (nextProps.column) {
             this.loadInitialContent(nextProps.column);
@@ -60,6 +64,7 @@ export default class ReferenceInput extends Component {
                     index="id"
                     field={column.referenced_model.display_column || column.display_column}
                     sortingType={column.sorting_type}
+                    // getOptions={this.getOptions}
                     async={url}
                     value={value}
                 />

@@ -87,6 +87,13 @@ export default class SelectBox extends Component {
             if (result.success) {
                 console.log(result);
 
+                let options = result.response.map((entry) => {
+                    let option = entry;
+                    option.value = option.id;
+                    option.label = option.display_name;
+                    return option
+                });
+
                 callback(null, {
                     options: result.response,
                 });
