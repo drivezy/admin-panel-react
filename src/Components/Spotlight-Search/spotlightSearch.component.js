@@ -5,8 +5,10 @@ import './spotlightSearch.component.css';
 
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
+
 import { GetMenus } from './../../Utils/menu.utils';
 import { Location } from './../../Utils/location.utils';
+import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 
 export class Spotlight extends Component {
 
@@ -91,17 +93,3 @@ export class Spotlight extends Component {
 }
 
 
-
-export class SpotlightUtil {
-    _currentGlobalLoader = null;
-
-    static registerModal(ref) {
-        this._currentGlobalLoader = ref;
-    }
-
-    static openModal() {
-        if (this._currentGlobalLoader && this._currentGlobalLoader.openModal) {
-            this._currentGlobalLoader.openModal();
-        }
-    }
-}

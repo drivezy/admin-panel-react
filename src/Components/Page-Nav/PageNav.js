@@ -8,6 +8,8 @@ import GLOBAL from './../../Constants/global.constants';
 import { SubscribeToEvent } from './../../Utils/stateManager.utils';
 import { Get } from './../../Utils/http.utils';
 import { SetItem, GetItem } from './../../Utils/localStorage.utils';
+// /import { SpotlightUtil } from './../Spotlight-Search/spotlightSearch.component';
+import SettingsUtil from './../../Utils/settings.utils';
 
 import CustomTooltip from '../Custom-Tooltip/customTooltip.component';
 
@@ -25,7 +27,7 @@ export default class PageNav extends Component {
     }
 
     themes = [
-        { theme: 'drivezy-light-theme', name: 'Light theme', class: 'light-theme' }, 
+        { theme: 'drivezy-light-theme', name: 'Light theme', class: 'light-theme' },
         { theme: 'drivezy-dark-theme', name: 'Dark theme', class: 'dark-theme' },
         { theme: 'drivezy-drivezy-theme', name: 'Drivezy theme', class: 'drivezy-theme' }
     ];
@@ -44,6 +46,10 @@ export default class PageNav extends Component {
         this.setState({
             dropdownOpen: !this.state.dropdownOpen
         });
+    }
+
+    configureSettings = () => {
+        SettingsUtil.configureModal();
     }
 
     logout = async () => {
@@ -136,7 +142,7 @@ export default class PageNav extends Component {
                         <DropdownItem>Clear Storage</DropdownItem>
                         <DropdownItem>Set Homepage</DropdownItem>
                         <DropdownItem>Change Password</DropdownItem>
-                        <DropdownItem>Configure Search</DropdownItem>
+                        <DropdownItem onClick={this.configureSettings}>Settings</DropdownItem>
                         <DropdownItem>Impersonate User</DropdownItem>
                         <DropdownItem onClick={(event) => { event.preventDefault(); this.logout() }}>Sign Out</DropdownItem>
                     </DropdownMenu>
