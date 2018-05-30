@@ -60,6 +60,7 @@ import { SubscribeToEvent } from './../Utils/stateManager.utils';
 import { Location } from './../Utils/location.utils';
 import { HotKeys } from 'react-hotkeys';
 
+import RosterTimeline from './../Scenes/Roster-Timeline/rosterTimeline.scene';
 // import { GetProperties } from './../Utils/openProperty.utils';
 
 // import { LoginCheck } from './../Actions/user.action';
@@ -191,6 +192,7 @@ class MainApp extends Component {
                             <Route path={`${match.path}detail/:page/:detailId`} component={GenericDetail} /> */}
 
                                     <Route exact path='/booking/:bookingId' component={BookingDetail} />
+                                    <Route exact path='/rosterTimeline' component={RosterTimeline} />
                                     <Route exact path='/' component={HomeScene} />
                                     {this.state.sideNavExpanded}
                                 </Switch>
