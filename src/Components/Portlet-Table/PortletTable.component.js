@@ -179,7 +179,7 @@ export default class PortletTable extends Component {
                                                     {/* Column Title */}
                                                     <div className="column-title printable">
                                                         <a onClick={e => this.onSort(e, selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName))}>
-                                                            <span>{selectedColumn.display_name}</span>
+                                                            <span>{selectedColumn.display_name}</span> &nbsp;
                                                             <i className={`fa ${conditionForSorting}`} />
                                                         </a>
                                                     </div>

@@ -10,20 +10,7 @@
         .right {
             display: flex;
             align-items: center;
-            .custom-actions {
-                .tooltip-element {
-                    cursor: pointer;
-                    padding: 6px 10px;
-                    border-radius: 3px;
-                    background: white;
-                    margin: 0px 1px;
-                    border: 1px solid #b7b7b7;
-                    &:hover {
-                        background: #e4e4e4;
-                        border: 1px solid #bbb9b9;
-                    }
-                }
-            }
+          
             .table-settings {
                 .btn {
                     padding: 5px 9px;

@@ -6,7 +6,6 @@ import {
 // import { Provider, connect } from 'react-redux';
 
 // import GLOBAL from './../Constants/global.constants';
-
 import { ToastContainer } from 'react-toastify';
 
 // import { connect } from 'react-redux';
@@ -70,6 +69,7 @@ import { HotKeys } from 'react-hotkeys';
  * contains routes without city specific url
  * also invokes router change action with updated router path
  */
+
 class MainApp extends Component {
     constructor(props) {
         super(props);
@@ -203,18 +203,6 @@ class MainApp extends Component {
     }
 }
 
-// function mapStateToProps(state) {
-//     // return  {
-//     //     cities: state.Cities
-//     // }
-//     return state;
-// }
-// const mainApp = connect(mapStateToProps, { GetCities, CurrentRoute, LoginCheck })(MainApp);
-
-// store.subscribe(() => ('store', console.log('store dispatch', store.getState())));
-
-function requireAuth() {
-}
 
 
 
@@ -239,11 +227,10 @@ class StartRoute extends Component {
     render() {
         const { loggedUser } = this.state;
         return (
-            // <Provider store={store}>
-            <div>
+            <div id='parent-admin-element' className='drivezy-dark-theme'>
                 <Router>
                     <Switch>
-                        <Route path="/login" component={LoginScene} onEnter={requireAuth()} />
+                        <Route path="/login" component={LoginScene} />
                         <PrivateRoute path="/" loggedUser={loggedUser} component={MainApp} />
                     </Switch>
                 </Router>
@@ -253,7 +240,6 @@ class StartRoute extends Component {
                 <ConfirmModalComponent ref={(elem) => ConfirmUtils.RegisterConfirm(elem)} />
                 <Spotlight ref={(elem) => SpotlightUtil.registerModal(elem)} />
             </div>
-            // </Provider>
         )
     }
 }
