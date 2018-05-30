@@ -24,7 +24,11 @@ export default class PageNav extends Component {
         };
     }
 
-    themes = [{ theme: 'drivezy-light-theme', name: 'Light theme', class: 'light-theme' }, { theme: 'drivezy-dark-theme', name: 'Dark theme', class: 'dark-theme' }];
+    themes = [
+        { theme: 'drivezy-light-theme', name: 'Light theme', class: 'light-theme' }, 
+        { theme: 'drivezy-dark-theme', name: 'Dark theme', class: 'dark-theme' },
+        { theme: 'drivezy-drivezy-theme', name: 'Drivezy theme', class: 'drivezy-theme' }
+    ];
 
     componentDidMount() {
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
@@ -88,7 +92,6 @@ export default class PageNav extends Component {
         // return (
         //     <Redirect to={from} />
         // )
-        console.log(selectedTheme);
         return (
             <div className="page-nav flex">
                 <div className='theme-selection-container flex'>

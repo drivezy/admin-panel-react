@@ -357,3 +357,22 @@ Non critical css goes here
         }
     }
 }
+
+.drivezy-drivezy-theme { 
+    .btn-primary { 
+        background: $primaryThemeDrivezy;
+        color: $onPrimaryThemeDrivezy;
+        &:hover { 
+            background: $primaryDarkThemeDrivezy;
+            color: $onSecondaryThemeLight;
+        }
+    }
+    .btn-secondary { 
+        background: $secondaryThemeDrivezy;
+        color: $onSecondaryThemeDark !important;
+        &:hover { 
+            background: $secondaryDarkThemeDrivezy;
+            color: $onSecondaryThemeLight !important;
+        }
+    }
+}

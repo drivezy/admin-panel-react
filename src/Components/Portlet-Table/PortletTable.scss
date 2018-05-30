@@ -246,6 +246,9 @@
                 &:nth-child(even) {
                     background: $primaryBackgroundThemeLight;
                 }
+                &:nth-child(odd) {
+                    background: $surfaceThemeLight;
+                }
                 &:hover {
                     background-color: $primaryBackgroundHoverThemeLight;
                 }
@@ -291,6 +294,9 @@
                 &:nth-child(even) {
                     background: $primaryBackgroundThemeDark;
                 }
+                &:nth-child(odd) {
+                    background: $surfaceThemeDark;
+                }
                 &:hover {
                     background-color: $primaryBackgroundHoverThemeDark;
                 }
@@ -301,6 +307,54 @@
     .table-actions { 
         i.fa {
             color: $secondaryThemeDark;
+        }
+    }
+}
+
+.drivezy-drivezy-theme { 
+    .table-container { 
+        .table-body { 
+            thead {
+                background-color: $backgroundThemeDrivezy;
+                th{ 
+                    color: $primaryThemeDrivezy !important;
+                    .column-wrapper {
+                        .column-title {
+                            color: $primaryThemeDrivezy !important;
+                        }
+                        &:hover {
+                            .filter-column>a, .column-title {
+                                color: $primaryDarkThemeDrivezy !important;
+                            }
+                        }
+                    }
+                }
+            }
+            tr.table-row {
+                td {
+                    a {
+                        color: $secondaryThemeDrivezy;
+                        &:hover {
+                            color: $secondaryDarkThemeDrivezy;
+                        }
+                    }
+                }
+                &:nth-child(even) {
+                    background: $primaryBackgroundThemeDrivezy;
+                }
+                &:nth-child(odd) {
+                    background: $surfaceThemeDrivezy;
+                }
+                &:hover {
+                    background-color: $primaryBackgroundHoverThemeDrivezy;
+                }
+            }
+        }
+    }
+
+    .table-actions { 
+        i.fa {
+            color: $secondaryThemeDrivezy;
         }
     }
 }

@@ -35,3 +35,12 @@
         }
     }
 }
+
+.drivezy-drivezy-theme { 
+    .listing-pagination {
+        .highlighted-page > a { 
+            background: $primaryThemeDrivezy !important;
+            color: $onPrimaryThemeDrivezy;
+        }
+    }
+}

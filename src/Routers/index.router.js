@@ -6,8 +6,6 @@ import {
 // import { Provider, connect } from 'react-redux';
 
 // import GLOBAL from './../Constants/global.constants';
-import { ThemeProvider, themr } from 'react-css-themr';
-
 import { ToastContainer } from 'react-toastify';
 
 // import { connect } from 'react-redux';
@@ -208,12 +206,6 @@ class StartRoute extends Component {
     userDataFetched = (data) => {
         this.setState({ loggedUser: data });
     }
-
-    contextTheme = {
-        // RTButton: require('react-toolbox/lib/button/style.scss'),
-        GeneralTheme: require('./../Assets/Global-Shared/global.scss')
-    };
-
 
     render() {
         const { loggedUser } = this.state;

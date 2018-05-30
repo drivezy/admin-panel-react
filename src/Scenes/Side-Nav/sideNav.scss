@@ -249,3 +249,41 @@
         }
     }
 }
+
+.drivezy-drivezy-theme { 
+    .sidebar-menus > .menus, .sidebar-wrapper {
+        background: $primaryThemeDrivezy;
+    }
+    .sidebar-menus > .menus {
+        background: $primaryThemeDrivezy;
+        .menu-item { 
+            &:hover{
+                background: $primaryLightThemeDrivezy;
+            }
+        }
+    }
+
+    .sidebar-logo > .logo-image {
+        background: $primaryDarkThemeDrivezy;
+        span.toggle-icon {
+            &:hover {
+                i.fa {
+                    color: $secondaryThemeDrivezy;
+                }
+            }
+            i.fa {
+                color: $secondaryLightThemeDrivezy;
+            }
+        }
+    }
+
+    .sidebar-menus { 
+        .menus { 
+            .menu-item {
+                .menu-label {
+                    color: $onPrimaryThemeDrivezy;
+                }
+            }
+        }
+    }
+}
