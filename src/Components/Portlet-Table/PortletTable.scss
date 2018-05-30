@@ -1,3 +1,5 @@
+@import 'Assets/Global-Shared/theme.scss';
+
 .table-container {
     .table-body {
         display: flex;
@@ -7,7 +9,7 @@
                 thead {
                     border-top: none;
                     border-bottom: 1px solid #2c3e55 !important;
-                    background-color: #f8f9fa !important;
+                    // background-color: #f8f9fa !important;
                     @supports (-webkit-appearance: none) {
                         tr {
                             position: relative;
@@ -18,7 +20,7 @@
                         /** Style for Column Header **/
                         th {
                             border-bottom: 1px solid #ebeef0; // border-bottom: 1px solid #ddd;
-                            color: #6f7c87;
+                            // color: #6f7c87;
                             display: table-cell;
                             padding: 12px;
                             border: 1px solid #ececec;
@@ -46,7 +48,7 @@
                                     align-items: center;
                                     display: flex;
                                     .column-title {
-                                        color: #6f7c87;
+                                        // color: #6f7c87;
                                         margin-right: 10px;
                                         -ms-flex-preferred-size: 80%;
                                         flex-grow: 1;
@@ -73,12 +75,12 @@
                                     }
                                 }
                                 &:hover {
-                                    .column-title {
-                                        color: #66a5cc;
-                                    }
+                                    // .column-title {
+                                    //     color: #66a5cc;
+                                    // }
                                     .filter-column {
                                         a {
-                                            color: #66a5cc;
+                                            // color: #66a5cc;
                                             opacity: 1;
                                         }
                                     }
@@ -128,13 +130,13 @@
                                 padding: 15px 10px;
                             }
                             a {
-                                color: #1e739e;
+                                // color: #1e739e;
                                 font-size: 13px;
                                 text-decoration: none;
                                 transition: all 200ms linear;
-                                &:hover {
-                                    color: #2ea3de;
-                                }
+                                // &:hover {
+                                //     color: #2ea3de;
+                                // }
                             }
                             &.table-index {
                                 padding-left: 12px;
@@ -163,12 +165,12 @@
                                 }
                             }
                         }
-                        &:nth-child(even) {
-                            background: #f1f1f16b;
-                        }
-                        &:hover {
-                            background-color: #f3f5f7;
-                        }
+                        // &:nth-child(even) {
+                        //     background: #f1f1f16b;
+                        // }
+                        // &:hover {
+                        //     background-color: #f3f5f7;
+                        // }
                     }
                 }
             }
@@ -183,7 +185,6 @@
                             &.action-header {
                                 background: white;
                                 text-align: right;
-                                background: white;
                                 border-left: 1px solid #ebeef0;
                                 color: #35485a;
                             }
@@ -204,10 +205,102 @@
                         margin: 0px 4px;
                         // font-size: 20px;
                         cursor: pointer;
-                        color: #4f6273;
+                        // color: #4f6273;
                     }
                 }
             }
         }
     } // Table Ends
+}
+
+
+/** Theme specific css */
+.drivezy-light-theme { 
+    .table-container { 
+        .table-body { 
+            thead {
+                background-color: $backgroundThemeLight;
+                th{ 
+                    color: $primaryThemeLight !important;
+                    .column-wrapper {
+                        .column-title {
+                            color: $primaryThemeLight !important;
+                        }
+                        &:hover {
+                            .filter-column>a, .column-title {
+                                color: $primaryDarkThemeLight !important;
+                            }
+                        }
+                    }
+                }
+            }
+            tr.table-row {
+                td {
+                    a {
+                        color: $secondaryThemeLight;
+                        &:hover {
+                            color: $secondaryDarkThemeLight;
+                        }
+                    }
+                }
+                &:nth-child(even) {
+                    background: $primaryBackgroundThemeLight;
+                }
+                &:hover {
+                    background-color: $primaryBackgroundHoverThemeLight;
+                }
+            }
+        }
+    }
+
+    .table-actions { 
+        i.fa {
+            color: $secondaryThemeLight;
+        }
+    }
+}
+
+.drivezy-dark-theme { 
+    .table-container { 
+        .table-body { 
+            thead {
+                background-color: $backgroundThemeDark !important;
+                th{ 
+                    color: $primaryThemeDark;
+                    .column-wrapper {
+                        .column-title {
+                            color: $primaryThemeDark !important;
+                        }
+                        &:hover {
+                            .filter-column>a, .column-title {
+                                color: $primaryLightThemeDark !important;
+                            }
+                        }
+                    }
+                }
+            }
+            tr.table-row {
+                td {
+                    a {
+                        color: $secondaryThemeDark;
+                        &:hover {
+                            color: $secondaryDarkThemeDark;
+                        }
+                    }
+                }
+                &:nth-child(even) {
+                    background: $primaryBackgroundThemeDark;
+                }
+                &:hover {
+                    background-color: $primaryBackgroundHoverThemeDark;
+                }
+            }
+        }
+    }
+
+    .table-actions { 
+        i.fa {
+            color: $secondaryThemeDark;
+        }
+    }
 }

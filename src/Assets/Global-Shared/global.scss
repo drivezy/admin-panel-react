@@ -243,11 +243,15 @@ body {
     height: 100%;
     width: 100vw;
     background: rgba(0,0,0,.4);
-    color: #007bff;
+    color: #fea658;
     font-size: 50px;
     text-align: center;
     top: 0;
-    
+    // @extend .flex-column;
+
+    .drivezy-loader-gif { 
+        width: 250px;
+    }
 }
 
 
@@ -312,4 +316,44 @@ Non critical css goes here
     padding: 30px;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
+}
+
+
+.drivezy-light-theme { 
+    .btn-primary { 
+        background: $primaryThemeLight  !important;
+        color: $onPrimaryThemeLight;
+        &:hover { 
+            background: $primaryDarkThemeLight;
+            color: $onSecondaryThemeLight;
+        }
+    }
+
+    .btn-secondary { 
+        background: $secondaryThemeLight;
+        color: $onSecondaryThemeLight !important;
+        &:hover { 
+            background: $secondaryDarkThemeLight;
+            color: $onSecondaryThemeLight;
+        }
+    }
+}
+
+.drivezy-dark-theme { 
+    .btn-primary { 
+        background: $primaryThemeDark;
+        color: $onPrimaryThemeDark;
+        &:hover { 
+            background: $primaryDarkThemeDark;
+            color: $onSecondaryThemeLight;
+        }
+    }
+    .btn-secondary { 
+        background: $secondaryThemeDark;
+        color: $onSecondaryThemeDark !important;
+        &:hover { 
+            background: $secondaryDarkThemeDark;
+            color: $onSecondaryThemeLight !important;
+        }
+    }
 }
