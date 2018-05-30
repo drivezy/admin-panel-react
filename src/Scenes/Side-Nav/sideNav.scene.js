@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import './sideNav.css';
 
-import { StoreEvent } from './../../Utils/stateManager.utils'
+import { StoreEvent } from './../../Utils/stateManager.utils';
+import SearchSidebar from './../../Components/Search-Sidebar/searchSidebar.component';
 
 import { HotKeys } from 'react-hotkeys';
-
-
 
 export default class Sidenav extends Component {
     constructor(props) {
@@ -102,7 +101,9 @@ export default class Sidenav extends Component {
                             </span>
 
                         </div>
+
                         <div className="sidebar-menus">
+                            <SearchSidebar />
                             <div className="menus">
                                 {
                                     menus.map((menu, key) => (
