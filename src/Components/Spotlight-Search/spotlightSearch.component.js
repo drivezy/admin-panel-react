@@ -29,7 +29,8 @@ export class Spotlight extends Component {
     }
 
     redirectTo = (state) => {
-        Location.navigate(state.url);
+        this.setState({ isOpen: !this.state.isOpen });
+        Location.navigate({ url: state.url });
     }
 
     render() {
@@ -53,7 +54,7 @@ export class Spotlight extends Component {
         }
 
         return (
-            <Modal size="lg" isOpen={isOpen} toggle={this.openModal} fade={false} className="spotlight-search-modal">
+            <Modal autoFocus={true} size="lg" isOpen={isOpen} toggle={this.openModal} fade={false} className="spotlight-search-modal">
                 <ModalBody>
                     <div className="input-group">
                         <div className="input-group-prepend">
