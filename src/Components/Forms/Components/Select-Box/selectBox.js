@@ -131,14 +131,13 @@ export default class SelectBox extends Component {
                 multi={multi}
             />
         } else {
-            elem = <Select
+            elem = <Select autoFocus={false}
                 name="form-field-name"
                 value={value}
                 onChange={this.handleChange}
                 options={options}
                 labelKey={field}
                 valueKey={valueKey}
-                autoFocus
                 clearable
                 placeholder={placeholder}
                 multi={multi}
