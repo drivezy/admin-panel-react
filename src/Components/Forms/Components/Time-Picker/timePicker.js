@@ -6,6 +6,8 @@ import React, { Component } from 'react';
 import moment from 'moment';
 
 import TimePicker from 'rc-time-picker';
+import 'rc-time-picker/assets/index.css';
+
 
 import './timePicker.css';
 

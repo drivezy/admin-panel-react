@@ -32,6 +32,12 @@ export default class GenericDetail extends Component {
             tabs: {},
             tabsPreference: {}
         };
+
+        this.currentUrl = this.getHref();
+    }
+
+    getHref() {
+        return window.location.href.split('#')[0];
     }
 
     componentDidMount() {
@@ -42,7 +48,10 @@ export default class GenericDetail extends Component {
         const newProps = GetUrlParams(nextProps);
         this.state.params = newProps.params;
         this.state.queryString = newProps.queryString;
-        if (this.state.menuDetail.url) {
+
+        // if menuDetail object has fetched url and current url is different than previous one, fetch data
+        if (this.state.menuDetail.url && this.currentUrl != this.getHref()) { 
+            this.currentUrl = this.getHref();
             this.getDetailRecord();
         }
     }
@@ -170,7 +179,7 @@ export default class GenericDetail extends Component {
                 <div className="left" />
 
                 <div className="right">
-                    <div className="btn-group" id="generic-detail-header-dynamic-icon-group">
+                    <div className="btn-group header-actions" id="generic-detail-header-dynamic-icon-group">
                         <CustomAction history={history} genericData={genericDataForCustomColumn} actions={menuDetail.nextActions} listingRow={data} placement={167} callback={this.getDetailRecord} />
                     </div>
 

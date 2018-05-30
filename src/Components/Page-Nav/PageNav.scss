@@ -1,3 +1,5 @@
+@import 'Assets/Global-Shared/theme.scss';
+
 .page-nav {
     position: relative;
     margin-top: 5px;
@@ -138,6 +140,33 @@
                     }
                 }
             }
+        }
+    }
+
+    .theme-selection-container {
+        padding: 3px 15px;
+
+        .theme-box  { 
+            height: 30px;
+            width: 30px;
+            border-radius: 10px;
+            border: 1px solid rgba(0,0,0,.4);
+            margin: 0 5px;
+        }
+        .current-theme { 
+            // border: 2px solid rgba(0,0,0,.8);
+            opacity: .8;
+        }
+        .light-theme { 
+            background: $primaryThemeLight;
+        }
+
+        .dark-theme { 
+            background: $primaryThemeDark;
+        }
+
+        .drivezy-theme { 
+            background: $primaryThemeDrivezy;
         }
     }
 }
