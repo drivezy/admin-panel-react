@@ -4,6 +4,7 @@ import './searchSidebar.css';
 import { SubscribeToEvent } from './../../Utils/stateManager.utils';
 import SearchBox from './../../Components/Search-Box/searchBox.component'
 import { IsUndefined } from '../../Utils/common.utils';
+import { SearchUtils } from './../../Utils/search.utils'
 
 export default class SearchSidebar extends Component {
 
@@ -29,8 +30,9 @@ export default class SearchSidebar extends Component {
     }
 
     search = ({ target = {}, value } = {}) => {
-        const { searchOptions = [], searchText } = this.state;
-        // this.setState({ searchText: IsUndefined(value) ? target.value : '', searchOptions: SearchFactory.searchKeyword(searchText) });
+        const searchText = IsUndefined(value) ? target.value : '';
+        this.setState({ searchText });
+        const searchOptions = SearchUtils.searchKeyword(searchText)
     }
 
     render() {

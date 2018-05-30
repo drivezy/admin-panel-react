@@ -87,3 +87,13 @@
         }
     }
 }
+
+.sidebar-wrapper{
+    &.collapsed{
+        .search-box{
+            &.expanded{
+                left:40px;
+            }
+        }
+    }
+}
