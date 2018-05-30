@@ -214,10 +214,12 @@
 
 .drivezy-dark-theme { 
     .sidebar-menus > .menus, .sidebar-wrapper {
-        background: $primaryThemeDark;
+        // background: $primaryThemeDark;
+        background: linear-gradient($primaryThemeDark, $primaryLightThemeDark, $primaryThemeDark, $primaryDarkThemeDark );
+        // background: linear-gradient($primaryThemeDark,  $primaryDarkThemeDark, $primaryThemeDark );
     }
     .sidebar-menus > .menus {
-        background: $primaryThemeDark;
+        background: transparent;
         .menu-item { 
             &:hover{
                 background: $primaryLightThemeDark;
@@ -252,10 +254,12 @@
 
 .drivezy-drivezy-theme { 
     .sidebar-menus > .menus, .sidebar-wrapper {
-        background: $primaryThemeDrivezy;
+        // background: blue;
+        background: linear-gradient($primaryThemeDrivezy, $primaryThemeDrivezy, $primaryDarkThemeDrivezy);
     }
     .sidebar-menus > .menus {
-        background: $primaryThemeDrivezy;
+        background: transparent;
+        
         .menu-item { 
             &:hover{
                 background: $primaryLightThemeDrivezy;
