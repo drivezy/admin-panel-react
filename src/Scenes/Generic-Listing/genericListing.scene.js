@@ -362,7 +362,7 @@ export default class GenericListing extends Component {
         let filteredResults = [];
 
         if (localSearch.value) {
-            filteredResults = listing.filter(entry => entry[localSearch.field].toString().toLowerCase().indexOf(localSearch.value) != -1);
+            filteredResults = listing.filter(entry => entry[localSearch.field] && (entry[localSearch.field].toString().toLowerCase().indexOf(localSearch.value) != -1));
         }
 
         // const listingData = 

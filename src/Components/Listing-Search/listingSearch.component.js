@@ -185,7 +185,7 @@ export default class ListingSearch extends React.Component {
                 {
                     <div className="listing-search-tool">
                         <div className="listing-select-tool">
-                            <SelectBox onChange={(data) => {
+                            <SelectBox valueKey="id" onChange={(data) => {
                                 this.filterChange(data)
                             }}
                                 value={selectedColumn} field='display_name' options={dictionary} placeholder='Column' />

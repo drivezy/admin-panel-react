@@ -1,6 +1,6 @@
 @import 'Assets/Global-Shared/theme.scss';
 .listing-pagination {
-    padding:10px;
+    padding: 10px;
     display: flex;
     justify-content:space-between;
     // .highlighted-page { 
@@ -13,6 +13,7 @@
         margin-top: 10px;
     }
     .page-redirect-number {
+        width: 80px;
         margin-left: 25px;
     }
 }
