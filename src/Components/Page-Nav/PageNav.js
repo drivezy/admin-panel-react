@@ -88,7 +88,6 @@ export default class PageNav extends Component {
         // return (
         //     <Redirect to={from} />
         // )
-        console.log(selectedTheme);
         return (
             <div className="page-nav flex">
                 <div className='theme-selection-container flex'>
