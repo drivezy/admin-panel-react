@@ -219,7 +219,7 @@
     .table-container { 
         .table-body { 
             thead {
-                background-color: $backgroundThemeLight;
+                background-color: $backgroundThemeDark;
                 th{ 
                     color: $primaryThemeLight !important;
                     .column-wrapper {
@@ -245,6 +245,9 @@
                 }
                 &:nth-child(even) {
                     background: $primaryBackgroundThemeLight;
+                }
+                &:nth-child(odd) {
+                    background: $surfaceThemeLight;
                 }
                 &:hover {
                     background-color: $primaryBackgroundHoverThemeLight;
@@ -290,6 +293,9 @@
                 }
                 &:nth-child(even) {
                     background: $primaryBackgroundThemeDark;
+                }
+                &:nth-child(odd) {
+                    background: $surfaceThemeDark;
                 }
                 &:hover {
                     background-color: $primaryBackgroundHoverThemeDark;
