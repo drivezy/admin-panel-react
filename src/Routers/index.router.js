@@ -32,16 +32,17 @@ import { LoginCheck } from './../Utils/user.utils';
 // import EditProfileScene from './../Scenes/Edit-Profile-Scene/editProfile.scene';
 /** Components ends*/
 
-import { GetMenusEndPoint } from './../Constants/api.constants';
 import { Get } from './../Utils/http.utils';
 
 import { GetPreferences } from './../Utils/preference.utils';
 
 import ModalWrapper from './../Wrappers/Modal-Wrapper/modalWrapper.component';
 import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
+import { Spotlight, SpotlightUtil } from './../Components/Spotlight-Search/spotlightSearch.component';
 
 import { LoaderComponent, LoaderUtils } from './../Utils/loader.utils';
 import { PreserveState } from './../Utils/preserveUrl.utils';
+import { GetMenusFromApi } from './../Utils/menu.utils';
 
 import { ConfirmModalComponent, ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
 
@@ -85,8 +86,10 @@ class MainApp extends Component {
     keyMap = {
         moveUp: 'shift+b',
     }
+
     handlers = {
-        'moveUp': (event) => this.toggleSideNav(this.state.sideNavExpanded)
+        'moveUp': (event) => this.toggleSideNav(this.state.sideNavExpanded),
+        'spotlight': (event) => SpotlightUtil.openModal()
     }
 
     componentWillMount() {
@@ -114,15 +117,29 @@ class MainApp extends Component {
             }
         });
 
-        const result = await Get({ url: GetMenusEndPoint });
+        const result = await GetMenusFromApi();
         if (result.success) {
             this.menus = result.response;
             this.setState({ menuFetched: true });
         }
 
-        // Load the preferences
-        GetPreferences();
         LoginCheck();
+
+        // Load the preferences
+        const preference = await GetPreferences();
+
+        if (preference.success) {
+            this.assignSpotlight(preference.response);
+        }
+    }
+
+    assignSpotlight = (preference) => {
+        let spotlight = preference.filter(entry => entry.parameter == "spotlightkeys").pop();
+
+        if (spotlight) {
+            let keys = JSON.parse(spotlight.value).map(key => key.key).join('+');
+            this.keyMap['spotlight'] = keys;
+        }
     }
 
     getRouterProps = () => {
@@ -144,7 +161,7 @@ class MainApp extends Component {
         const { sideNavExpanded } = this.state;
         return (
 
-            <HotKeys keyMap={this.keyMap} handlers={this.handlers}>
+            <HotKeys focused={true} attach={window} keyMap={this.keyMap} handlers={this.handlers}>
                 <div className="app-container">
                     {
                         menus && menus.length &&
@@ -152,8 +169,8 @@ class MainApp extends Component {
                             <div className="landing-sidebar">
                                 <SideNav visible={sideNavExpanded} onCollapse={this.callback} menus={menus} />
                             </div>
-                            <div className="landing-wrapper {this.state.sideNavExpanded ? 'sidenav-open' : 'sidenav-closed'}" id="main" style={{ height: '100%' }}>
-                                <Header />
+                            <div className={`landing-wrapper ${sideNavExpanded ? 'sidenav-open' : 'sidenav-closed'}`} id="main" style={{ height: '100%' }}>
+                                <Header className={`${sideNavExpanded ? 'expanded' : 'collapsed'}`} />
                                 <Switch>
                                     {
                                         menus.map((menu, index) => {
@@ -223,6 +240,7 @@ class StartRoute extends Component {
                 <LoaderComponent ref={(elem) => LoaderUtils.RegisterLoader(elem)} />
                 <ConfirmModalComponent ref={(elem) => ConfirmUtils.RegisterConfirm(elem)} />
                 <SearchKeywordComponent ref={(elem) => SearchUtils.RegisterSearch(elem)} />
+                <Spotlight ref={(elem) => SpotlightUtil.registerModal(elem)} />
             </div>
         )
     }

@@ -51,16 +51,10 @@ export default class PortletTable extends Component {
     }
 
     componentDidMount() {
-        // setTimeout(() => {
-        this.adjustWidth();
-        // }, 50)
 
         // set zoom event
-        window.onzoom = () => {
-            // setTimeout(() => {
-            this.adjustWidth();
-            // }, 50)
-        }
+        window.onzoom = () => this.adjustWidth();
+
 
         // detect resize
         var oldresize = window.onresize;
@@ -91,26 +85,8 @@ export default class PortletTable extends Component {
 
             var tableContent = document.getElementsByClassName('table-content')[0];
             tableContent.setAttribute('style', 'width:' + percent + 'px');
-
-
         }
 
-        // const actionColumnEle = document.getElementsByClassName('table-actions')[0];
-        // if (actionColumnEle) {
-        //     var actionColumnWidth = actionColumnEle.clientWidth;
-        //     var table = document.getElementsByClassName('table-content')[0];
-        //     var tableWidth = table.clientWidth;
-
-        //     var percent = (100 - (actionColumnWidth / tableWidth) * 100) + .7;
-
-        //     console.log('table-width', tableWidth);
-
-        //     console.log('action column', actionColumnWidth);
-
-        //     console.log(percent);
-
-        //     table.setAttribute('style', 'width:calc(' + percent + '% - 2px )');
-        // }
     }
 
     dropdownToggle = (column) => {
@@ -178,7 +154,11 @@ export default class PortletTable extends Component {
 
         const { history, match, menuDetail, rowTemplate, callback, tableType, rowOptions } = this.props;
 
+        // As soon as rendering is done adjust the width according to action columns
+        setTimeout(() => this.adjustWidth());
+
         let renderItem;
+
         if (listing.length) {
             renderItem = <div className="table-body">
 
