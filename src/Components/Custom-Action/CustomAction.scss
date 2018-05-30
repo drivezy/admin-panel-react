@@ -1,17 +1,5 @@
 @import 'Assets/Global-Shared/theme.scss';
 
-.drivezy-light-theme { 
-    .custom-actions {
-        color: $primaryThemeLight;
-    }
-}
-
-.drivezy-dark-theme { 
-    .custom-actions {
-        color: $primaryThemeDark;
-    }
-}
-
 .header-actions { 
     .custom-actions {
         .tooltip-element {
@@ -35,5 +23,23 @@
     button.btn {
         // background: #475a6b;
         color: white;
+    }
+}
+
+.drivezy-light-theme { 
+    .custom-actions {
+        color: $primaryThemeLight;
+    }
+}
+
+.drivezy-dark-theme { 
+    .custom-actions {
+        color: $primaryThemeDark;
+    }
+}
+
+.drivezy-drivezy-theme { 
+    .custom-actions {
+        color: $primaryThemeDrivezy;
     }
 }

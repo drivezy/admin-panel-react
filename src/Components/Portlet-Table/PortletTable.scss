@@ -219,7 +219,7 @@
     .table-container { 
         .table-body { 
             thead {
-                background-color: $backgroundThemeDark;
+                background-color: $backgroundThemeLight;
                 th{ 
                     color: $primaryThemeLight !important;
                     .column-wrapper {
@@ -307,6 +307,54 @@
     .table-actions { 
         i.fa {
             color: $secondaryThemeDark;
+        }
+    }
+}
+
+.drivezy-drivezy-theme { 
+    .table-container { 
+        .table-body { 
+            thead {
+                background-color: $backgroundThemeDrivezy;
+                th{ 
+                    color: $primaryThemeDrivezy !important;
+                    .column-wrapper {
+                        .column-title {
+                            color: $primaryThemeDrivezy !important;
+                        }
+                        &:hover {
+                            .filter-column>a, .column-title {
+                                color: $primaryDarkThemeDrivezy !important;
+                            }
+                        }
+                    }
+                }
+            }
+            tr.table-row {
+                td {
+                    a {
+                        color: $secondaryThemeDrivezy;
+                        &:hover {
+                            color: $secondaryDarkThemeDrivezy;
+                        }
+                    }
+                }
+                &:nth-child(even) {
+                    background: $primaryBackgroundThemeDrivezy;
+                }
+                &:nth-child(odd) {
+                    background: $surfaceThemeDrivezy;
+                }
+                &:hover {
+                    background-color: $primaryBackgroundHoverThemeDrivezy;
+                }
+            }
+        }
+    }
+
+    .table-actions { 
+        i.fa {
+            color: $secondaryThemeDrivezy;
         }
     }
 }
