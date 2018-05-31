@@ -10,6 +10,8 @@ import { GetMenus } from './../../Utils/menu.utils';
 import { Location } from './../../Utils/location.utils';
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 
+import { HotKeys } from 'react-hotkeys';
+
 export class Spotlight extends Component {
 
     constructor(props) {
@@ -22,12 +24,35 @@ export class Spotlight extends Component {
         }
     }
 
+    keyboardControlMap = {
+        moveUp: 'up',
+        moveDown: 'down'
+    }
+
+    keyboardHandlers = {
+        'moveUp': (event) => { this.focusMenu(-1) },
+        'moveDown': (event) => { this.focusMenu(1) },
+    }
+
+    focusMenu = (index) => {
+        console.log(index);
+    }
+
     openSpotlightModal = () => {
         this.setState({ isOpen: !this.state.isOpen, menus: GetMenus() });
     }
 
-    searchMenus = (text) => {
+    searchMenus = (event, text) => {
+        console.log(event);
         this.setState({ searchText: text });
+    }
+
+    keyboardPress = (event) => {
+        if (event.which == 40 || event.which == 38) {
+            console.log(event);
+            var menus = document.getElementsByClassName('spotlight-menu-list');
+            console.log(menus);
+        }
     }
 
     redirectTo = (state) => {
@@ -56,38 +81,42 @@ export class Spotlight extends Component {
         }
 
         return (
-            <Modal autoFocus={true} size="lg" isOpen={isOpen} toggle={this.openModal} fade={false} className="spotlight-search-modal">
-                <ModalBody>
-                    <div className="input-group">
-                        <div className="input-group-prepend">
-                            <span className="input-group-text" id="basic-addon1">
-                                <i className="fa fa-search"></i></span>
-                        </div>
-                        <input id="spotlight-input" type="text" className="form-control" onChange={(event) => this.searchMenus(event.target.value)} placeholder="Type to Search" aria-label="Username" aria-describedby="basic-addon1" />
-                    </div>
-                </ModalBody>
+            <HotKeys focused={true} attach={window} keyMap={this.keyboardControlMap} handlers={this.keyboardHandlers}>
 
-                {/* Menus matching Text */}
-
-                {
-                    searchText
-                    &&
-                    <div className="card">
-                        {
-                            (matches.length == 0)
-                            &&
-                            <div className="card-header">
-                                No matching records
+                <Modal autoFocus={true} size="lg" isOpen={isOpen} toggle={this.openSpotlightModal} fade={false} className="spotlight-search-modal">
+                    <ModalBody>
+                        <div className="input-group">
+                            <div className="input-group-prepend">
+                                <span className="input-group-text" id="basic-addon1">
+                                    <i className="fa fa-search"></i></span>
                             </div>
-                        }
-                        <ul className="list-group list-group-flush">
-                            {matches.slice(0, 5).map((match, key) => (<li onClick={() => this.redirectTo(match)} key={key} className="list-group-item">{match.name}</li>))}
-                        </ul>
-                    </div>
-                }
 
-                {/* Menus Ends */}
-            </Modal>
+                            <input id="spotlight-input" type="text" className="form-control" onKeyDown={this.keyboardPress} onChange={(event) => this.searchMenus(event, event.target.value)} placeholder="Type to Search" aria-label="Username" aria-describedby="basic-addon1" />
+                        </div>
+                    </ModalBody>
+
+                    {/* Menus matching Text */}
+
+                    {
+                        searchText
+                        &&
+                        <div className="card spotlight-menu-list">
+                            {
+                                (matches.length == 0)
+                                &&
+                                <div className="card-header">
+                                    No matching records
+                            </div>
+                            }
+                            <ul className="list-group list-group-flush">
+                                {matches.slice(0, 5).map((match, key) => (<li onClick={() => this.redirectTo(match)} key={key} className="list-group-item">{match.name}</li>))}
+                            </ul>
+                        </div>
+                    }
+
+                    {/* Menus Ends */}
+                </Modal>
+            </HotKeys>
         )
     }
 }

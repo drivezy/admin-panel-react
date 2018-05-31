@@ -5,8 +5,6 @@ import { StoreEvent } from './../../Utils/stateManager.utils'
 
 import { HotKeys } from 'react-hotkeys';
 
-
-
 export default class Sidenav extends Component {
     constructor(props) {
         super(props);
@@ -36,11 +34,16 @@ export default class Sidenav extends Component {
         this.closeNav();
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.visible != this.props.visible) {
-            this.setState({ visible: nextProps.visible });
+    componentDidUpdate(prevProps) {
+        if (prevProps.visible != this.props.visible) {
+            this.setState({ visible: this.props.visible });
         }
     }
+    // componentWillReceiveProps(nextProps) {
+    //     if (nextProps.visible != this.props.visible) {
+    //         this.setState({ visible: nextProps.visible });
+    //     }
+    // }
 
     openNav = () => {
         const sideNav = document.getElementById("mySidenav");
@@ -63,7 +66,7 @@ export default class Sidenav extends Component {
     }
 
     operation(visible) {
-        this.state.onCollapse(visible);
+        // this.state.onCollapse(visible);
         if (!visible) {
             this.closeNav();
         } else {

@@ -44,7 +44,6 @@ export class ConfirmModalComponent extends Component {
 
     render() {
         const { isVisible, message, callback } = this.state;
-        console.log(message);
         return (
             <div>
                 <ModalWrapper

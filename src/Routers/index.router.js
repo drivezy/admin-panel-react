@@ -8,21 +8,12 @@ import {
 // import GLOBAL from './../Constants/global.constants';
 import { ToastContainer } from 'react-toastify';
 
-// import { connect } from 'react-redux';
-// import { browserHistory } from 'react-router';
+import Landing from './../Components/Landing/landing.component';
 
 /** Router */
 import PrivateRoute from './privateRoute.router';
 /** Router ends */
 
-/** Components */
-import LoginScene from './../Scenes/Login-Scene/Login.scene';
-import HomeScene from './../Scenes/Home-Scene/home.scene';
-import GenericListing from './../Scenes/Generic-Listing/genericListing.scene';
-import GenericDetail from './../Scenes/Generic-Detail/genericDetail.scene';
-import SideNav from './../Scenes/Side-Nav/sideNav.scene';
-import Header from './../Scenes/Header/header.scene';
-import BookingDetail from './../Scenes/Booking-Detail/bookingDetail.scene';
 
 import { LoginCheck } from './../Utils/user.utils';
 
@@ -36,12 +27,8 @@ import { Get } from './../Utils/http.utils';
 
 import { GetPreferences } from './../Utils/preference.utils';
 
-import ModalWrapper from './../Wrappers/Modal-Wrapper/modalWrapper.component';
-import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
-import { Spotlight } from './../Components/Spotlight-Search/spotlightSearch.component';
 import SettingsUtil from './../Utils/settings.utils';
 
-import { LoaderComponent, LoaderUtils } from './../Utils/loader.utils';
 import { PreserveState } from './../Utils/preserveUrl.utils';
 import { GetMenusFromApi } from './../Utils/menu.utils';
 
@@ -157,47 +144,15 @@ class MainApp extends Component {
     render() {
         const { match } = this.props; // match.path = '/'
         const menus = this.menus || [];
-        const { sideNavExpanded } = this.state;
+
         return (
 
             <HotKeys focused={true} attach={window} keyMap={this.keyMap} handlers={this.handlers}>
                 <div className="app-container">
                     {
                         menus && menus.length &&
-                        <div className="page-container">
-                            <div className="landing-sidebar">
-                                <SideNav visible={sideNavExpanded} onCollapse={this.callback} menus={menus} />
-                            </div>
-                            <div className={`landing-wrapper ${sideNavExpanded ? 'sidenav-open' : 'sidenav-closed'}`} id="main" style={{ height: '100%' }}>
-                                <Header className={`${sideNavExpanded ? 'expanded' : 'collapsed'}`} />
-                                <Switch>
-                                    {
-                                        menus.map((menu, index) => {
-                                            if (Array.isArray(menu.menus)) {
-                                                return menu.menus.map((state, index) => {
+                        <Landing match={match} menus={menus} />
 
-                                                    if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericListingController.js') != -1) {
-                                                        return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericListing {...props} menuId={state.id} />} />)
-                                                    } else if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericDetailCtrl.js') != -1) {
-                                                        return (<Route key={state.url} path={state.url} render={props => <GenericDetail {...props} menuId={state.id} />} />)
-                                                        // return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericDetail {...props} menuId={state.id} />} />)
-                                                    } else {
-                                                        // return (<Route key={state.url} path={state.url} component={BookingDetail} />)
-                                                    }
-                                                })
-                                            }
-                                        })
-                                    }
-                                    {/* <Route path={`${match.path}activeBookings`} component={GenericListing} /> */}
-                                    {/* <Route path={`${match.path}list/:page`} component={GenericListing} />
-                            <Route path={`${match.path}detail/:page/:detailId`} component={GenericDetail} /> */}
-
-                                    <Route exact path='/booking/:bookingId' component={BookingDetail} />
-                                    <Route exact path='/' component={HomeScene} />
-                                    {this.state.sideNavExpanded}
-                                </Switch>
-                            </div>
-                        </div>
                     }
                 </div>
             </HotKeys>
@@ -208,43 +163,6 @@ class MainApp extends Component {
 
 
 
-/**
- * Routes under this config will not have header and footer
- * Starting Route is the parent level routing definition, 
- */
-class StartRoute extends Component {
-    state = {
-        loggedUser: {}
-    };
 
-    componentDidMount() {
-        SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
-
-    }
-
-    userDataFetched = (data) => {
-        this.setState({ loggedUser: data });
-    }
-
-    render() {
-        const { loggedUser } = this.state;
-        return (
-            <div id='parent-admin-element' className='drivezy-dark-theme'>
-                <Router>
-                    <Switch>
-                        <Route path="/login" component={LoginScene} />
-                        <PrivateRoute path="/" loggedUser={loggedUser} component={MainApp} />
-                    </Switch>
-                </Router>
-                <ToastContainer />
-                <ModalWrapper ref={(elem) => ModalManager.registerModal(elem)} />
-                <LoaderComponent ref={(elem) => LoaderUtils.RegisterLoader(elem)} />
-                <ConfirmModalComponent ref={(elem) => ConfirmUtils.RegisterConfirm(elem)} />
-                <Spotlight ref={(elem) => SettingsUtil.registerModal(elem)} />
-            </div>
-        )
-    }
-}
-
-export default StartRoute;
+export default MainApp;
 
