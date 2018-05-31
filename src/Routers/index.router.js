@@ -60,6 +60,8 @@ import { SubscribeToEvent } from './../Utils/stateManager.utils';
 import { Location } from './../Utils/location.utils';
 import { HotKeys } from 'react-hotkeys';
 
+import ExpenseVoucherDetail from './../Scenes/Expense-Voucher/expenseVoucherDetail.scene'
+
 // import { GetProperties } from './../Utils/openProperty.utils';
 
 // import { LoginCheck } from './../Actions/user.action';
@@ -191,6 +193,7 @@ class MainApp extends Component {
                             <Route path={`${match.path}detail/:page/:detailId`} component={GenericDetail} /> */}
 
                                     <Route exact path='/booking/:bookingId' component={BookingDetail} />
+                                    <Route exact path='/voucherDef/:voucherId' component={ExpenseVoucherDetail} />
                                     <Route exact path='/' component={HomeScene} />
                                     {this.state.sideNavExpanded}
                                 </Switch>
