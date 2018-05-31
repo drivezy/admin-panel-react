@@ -12,7 +12,7 @@ export default class TypeaheadComponent extends Component {
         }
     }
 
-    componentWillReceiveProps(props) {
+    UNSAFE_componentWillReceiveProps(props) {
         this.setState({ ...this.returnStateObj(props) });
     }
 
@@ -48,20 +48,21 @@ export default class TypeaheadComponent extends Component {
     }
 
     render() {
-        const { field, options, isLoading = false } = this.state;
-        const { searchLabel, placeholder, value, onType } = this.props;
-
-
+        let { field, options, isLoading = false, value } = this.state;
+        const { searchLabel, placeholder, onType } = this.props;
+        value = typeof value == 'number' ? value.toString() : value;
+        if (field)
+            options = options.filter(option => option[field]);
         return (
-            <div className="home-scene">
+            <div className="typeahead-container">
                 <Typeahead
                     onInputChange={onType}
-                    selected={[value]}
+                    selected={value ? [value] : []}
                     emptyLabel={searchLabel ? searchLabel : ''}
                     labelKey={field}
                     options={options}
                     placeholder={placeholder}
-                    selectHintOnEnter
+                    // selectHintOnEnter
                     onChange={this.handleChange}
                 />
 
