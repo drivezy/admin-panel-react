@@ -4,41 +4,43 @@ import {
     Route, Switch, Redirect
 } from 'react-router-dom';
 
+
+import { ToastContainer } from 'react-toastify';
+
 /** Router */
 import PrivateRoute from './privateRoute.router';
+import IndexRouter from './index.router';
 /** Router ends */
 
-import SettingsUtil from './../Utils/settings.utils';
+/** Scenes */
+import LoginScene from './../Scenes/Login-Scene/Login.scene';
+/** Scenes End*/
 
-
+/** Components */
 import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
-
-// import GLOBAL from './../Constants/global.constants';
-import { ToastContainer } from 'react-toastify';
 import ModalWrapper from './../Wrappers/Modal-Wrapper/modalWrapper.component';
+import { Spotlight } from './../Components/Spotlight-Search/spotlightSearch.component';
+/** Component Ends */
+
+/** Util */
+import SettingsUtil from './../Utils/settings.utils';
+import { SubscribeToEvent } from './../Utils/stateManager.utils';
 import { LoaderComponent, LoaderUtils } from './../Utils/loader.utils';
 import { ConfirmModalComponent, ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
-import { Spotlight } from './../Components/Spotlight-Search/spotlightSearch.component';
+/** Util Ends*/
 
-import LoginScene from './../Scenes/Login-Scene/Login.scene';
-
-import { SubscribeToEvent } from './../Utils/stateManager.utils';
-
-
-import MainApp from './index.router';
 
 /**
  * Routes under this config will not have header and footer
  * Starting Route is the parent level routing definition, 
  */
-class BasicRoute extends Component {
+export default class BasicRoute extends Component {
     state = {
         loggedUser: {}
     };
 
     componentDidMount() {
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
-
     }
 
     userDataFetched = (data) => {
@@ -52,7 +54,7 @@ class BasicRoute extends Component {
                 <Router>
                     <Switch>
                         <Route path="/login" component={LoginScene} />
-                        <PrivateRoute path="/" loggedUser={loggedUser} component={MainApp} />
+                        <PrivateRoute path="/" loggedUser={loggedUser} component={IndexRouter} />
                     </Switch>
                 </Router>
                 <ToastContainer />
@@ -64,5 +66,3 @@ class BasicRoute extends Component {
         )
     }
 }
-
-export default BasicRoute;

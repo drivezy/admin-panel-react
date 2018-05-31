@@ -3,54 +3,26 @@ import {
     BrowserRouter as Router,
     Route, Switch, Redirect
 } from 'react-router-dom';
-// import { Provider, connect } from 'react-redux';
 
-// import GLOBAL from './../Constants/global.constants';
 import { ToastContainer } from 'react-toastify';
-
-import Landing from './../Components/Landing/landing.component';
-
-/** Router */
-import PrivateRoute from './privateRoute.router';
-/** Router ends */
-
-
-import { LoginCheck } from './../Utils/user.utils';
-
-// import ContactScene from './../Scenes/Contact-Us-Scene/contact.scene';
-// import LoginScene from './../Scenes/Login-Scene/login.scene';
-// import ProfileScene from './../Scenes/Profile-Scene/profile.scene';
-// import EditProfileScene from './../Scenes/Edit-Profile-Scene/editProfile.scene';
-/** Components ends*/
-
-import { Get } from './../Utils/http.utils';
-
-import { GetPreferences } from './../Utils/preference.utils';
-
-import SettingsUtil from './../Utils/settings.utils';
-
-import { PreserveState } from './../Utils/preserveUrl.utils';
-import { GetMenusFromApi } from './../Utils/menu.utils';
-
-import { ConfirmModalComponent, ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
-
-/** Actions */
-// import { GetCities } from './../Actions/city.action';
-// import { CurrentRoute } from './../Actions/router.action';
-/** Actions ends */
-
-/** Store */
-// import store from './../index.store';
-/** Store ends*/
-
-import LoadAsync from './../Utils/loadAsyncScripts.utils';
-import { SubscribeToEvent } from './../Utils/stateManager.utils';
-import { Location } from './../Utils/location.utils';
 import { HotKeys } from 'react-hotkeys';
 
-// import { GetProperties } from './../Utils/openProperty.utils';
 
-// import { LoginCheck } from './../Actions/user.action';
+/** Component */
+import Landing from './../Components/Landing/landing.component';
+/** Component Ends */
+
+/** Utils */
+import { LoginCheck } from './../Utils/user.utils';
+import { GetPreferences } from './../Utils/preference.utils';
+import SettingsUtil from './../Utils/settings.utils';
+import { PreserveState } from './../Utils/preserveUrl.utils';
+import { GetMenusFromApi } from './../Utils/menu.utils';
+import { ConfirmModalComponent, ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
+import LoadAsync from './../Utils/loadAsyncScripts.utils';
+import { Location } from './../Utils/location.utils';
+/** Utils Ends */
+
 
 /** 
  * 2nd level router, mainly includes booking router
@@ -58,7 +30,7 @@ import { HotKeys } from 'react-hotkeys';
  * also invokes router change action with updated router path
  */
 
-class MainApp extends Component {
+export default class IndexRouter extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -152,17 +124,9 @@ class MainApp extends Component {
                     {
                         menus && menus.length &&
                         <Landing match={match} menus={menus} />
-
                     }
                 </div>
             </HotKeys>
         )
     }
 }
-
-
-
-
-
-export default MainApp;
-
