@@ -430,31 +430,29 @@ export default class GenericListing extends Component {
                     </div>
 
                     {
-                        (finalColumns && finalColumns.length)
+                        (finalColumns && finalColumns.length) ?
 
-                        &&
-                        <Card>
-                            <CardBody className="table-wrapper">
 
-                                {/* Portlet Table */}
-                                <PortletTable rowTemplate={this.rowTemplate} tableType="listing" rowOptions={this.rowOptions}
-                                    toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={localSearch.value ? filteredResults : listing} callback={this.getListingData} menuDetail={menuDetail} />
-                                {/* Portlet Table Ends */}
+                            <Card>
+                                <CardBody className="table-wrapper">
 
-                            </CardBody>
-                        </Card>
+                                    {/* Portlet Table */}
+                                    <PortletTable rowTemplate={this.rowTemplate} tableType="listing" rowOptions={this.rowOptions}
+                                        toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={localSearch.value ? filteredResults : listing} callback={this.getListingData} menuDetail={menuDetail} />
+                                    {/* Portlet Table Ends */}
+
+                                </CardBody>
+                            </Card> : null
                     }
 
                     {
-                        (finalColumns && finalColumns.length)
-
-                        &&
-                        <ListingPagination history={history} match={match} currentPage={genericData.currentPage} limit={genericData.limit} statsData={genericData.stats} />
+                        (listing && listing.length) ?
+                            <ListingPagination history={history} match={match} currentPage={genericData.currentPage} limit={genericData.limit} statsData={genericData.stats} /> : null
                     }
                     {/* Listing Pagination Ends */}
 
                 </div>
-            </HotKeys >
+            </HotKeys>
         );
     }
 }

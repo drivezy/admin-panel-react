@@ -22,7 +22,7 @@ export class Spotlight extends Component {
         }
     }
 
-    openModal = () => {
+    openSpotlightModal = () => {
         this.setState({ isOpen: !this.state.isOpen, menus: GetMenus() });
     }
 

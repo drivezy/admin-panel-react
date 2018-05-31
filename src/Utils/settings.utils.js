@@ -13,17 +13,15 @@ export default class SettingsUtil {
     }
 
     static openSpotlightModal() {
-        if (this._currentGlobalLoader && this._currentGlobalLoader.openModal) {
+        if (this._currentGlobalLoader && this._currentGlobalLoader.openSpotlightModal) {
             this._currentGlobalLoader.openSpotlightModal();
         }
     }
 
     static configureModal() {
-        const ConfigureSettings1 = new ConfigureSettings();
         ModalManager.openModal({
             headerText: "Settings",
             modalBody: () => (<ConfigureSettings />),
-            modalFooter: ConfigureSettings1.footer
         })
     }
 }

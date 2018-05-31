@@ -89,7 +89,10 @@ class MainApp extends Component {
 
     handlers = {
         'moveUp': (event) => this.toggleSideNav(this.state.sideNavExpanded),
-        'spotlight': (event) => SettingsUtil.openSpotlightModal()
+        'spotlight': (event) => {
+            console.log(event);
+            SettingsUtil.openSpotlightModal();
+        }
     }
 
     componentWillMount() {

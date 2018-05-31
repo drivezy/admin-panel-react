@@ -3,13 +3,13 @@ import './configureSettings.component.css';
 
 import {
     Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Button, ModalFooter,
+    CardTitle, CardSubtitle, Button, ModalBody, ModalFooter,
     TabContent, TabPane, Nav, NavItem, NavLink, Row, Col
 } from 'reactstrap';
 
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import { SetItem } from './../../Utils/localStorage.utils';
-
+import ThemeUtil from './../../Utils/theme.utils';
 
 export default class ConfugreSettings extends Component {
 
@@ -18,34 +18,21 @@ export default class ConfugreSettings extends Component {
 
         this.state = {
             activeTab: '1',
-            selectedTheme: {}
+            selectedTheme: ThemeUtil.getCurrentTheme()
         }
     }
 
-    themes = [
-        { theme: 'drivezy-light-theme', name: 'Light', class: 'light-theme' },
-        { theme: 'drivezy-dark-theme', name: 'Dark', class: 'dark-theme' },
-        { theme: 'drivezy-drivezy-theme', name: 'Drivezy', class: 'drivezy-theme' }
-    ];
+    themes = ThemeUtil.getThemes();
 
     applyChanges = () => {
         const { selectedTheme } = this.state;
-        SetItem('CURRENT_THEME', selectedTheme);
-        const div = document.getElementById('parent-admin-element');
-        this.themes.forEach((themeDetail, key) => {
-            if (themeDetail.theme != selectedTheme.theme) {
-                div.classList.remove(themeDetail.theme);
-                return;
-            }
 
-        });
-        div.classList.add(selectedTheme.theme);
+        ThemeUtil.setTheme(selectedTheme);
 
         ModalManager.closeModal();
     }
 
     selectTheme = (theme) => {
-        this.selectTheme = theme;
         this.setState({ selectedTheme: theme });
     }
 
@@ -57,23 +44,11 @@ export default class ConfugreSettings extends Component {
         }
     }
 
-    footer = () => {
-        // const self = new ConfugreSettings();
-        return (
-            <div>
-                <Button color="secondary" onClick={this.toggle}>Cancel</Button>
-                <Button color="primary" onClick={() => this.applyChanges()}>Apply Changes</Button>
-            </div>
-        )
-    }
-
     render() {
-
         const { activeTab, selectedTheme } = this.state;
-
         return (
             <div className="configure-settings">
-                <div>
+                <ModalBody>
                     <Nav tabs>
                         <NavItem>
                             <NavLink className={`${activeTab == 1 ? 'active' : ''}`} onClick={() => { this.toggle('1'); }}>
@@ -119,24 +94,27 @@ export default class ConfugreSettings extends Component {
                         </TabPane>
                         <TabPane tabId="2">
                             <Row>
-                                <Col sm="6">
-                                    <Card body>
-                                        <CardTitle>Special Title Treatment</CardTitle>
-                                        <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
-                                        <Button>Go somewhere</Button>
+                                <Col sm="12">
+                                    <Card body className="tab-card">
+                                        <CardTitle>Configure Keys</CardTitle>
+                                        <CardText>
+                                            Spotlight helps you quickly access different menus in Panel . You can also search cars, vehicles, booking
+                                            , cities and quickly navigate to the page by pressing enter
+                                        </CardText>
                                     </Card>
-                                </Col>
-                                <Col sm="6">
-                                    <Card body>
-                                        <CardTitle>Special Title Treatment</CardTitle>
-                                        <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
-                                        <Button>Go somewhere</Button>
-                                    </Card>
+
                                 </Col>
                             </Row>
                         </TabPane>
                     </TabContent>
-                </div>
+
+                </ModalBody>
+                <ModalFooter>
+                    <div>
+                        <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+                        <Button color="primary" onClick={() => this.applyChanges()}>Apply Changes</Button>
+                    </div>
+                </ModalFooter>
             </div>
         )
     }

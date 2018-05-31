@@ -10,6 +10,7 @@ import { Get } from './../../Utils/http.utils';
 import { SetItem, GetItem } from './../../Utils/localStorage.utils';
 // /import { SpotlightUtil } from './../Spotlight-Search/spotlightSearch.component';
 import SettingsUtil from './../../Utils/settings.utils';
+import ThemeUtil from './../../Utils/theme.utils';
 
 import CustomTooltip from '../Custom-Tooltip/customTooltip.component';
 
@@ -26,15 +27,11 @@ export default class PageNav extends Component {
         };
     }
 
-    themes = [
-        { theme: 'drivezy-light-theme', name: 'Light theme', class: 'light-theme' },
-        { theme: 'drivezy-dark-theme', name: 'Dark theme', class: 'dark-theme' },
-        { theme: 'drivezy-drivezy-theme', name: 'Drivezy theme', class: 'drivezy-theme' }
-    ];
+    themes = ThemeUtil.getThemes();
 
     componentDidMount() {
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
-        const theme = GetItem('CURRENT_THEME') || this.themes[1];
+        const theme = ThemeUtil.getCurrentTheme();
         this.changeTheme(theme);
     }
 
@@ -68,16 +65,7 @@ export default class PageNav extends Component {
     }
 
     changeTheme = (theme) => {
-        SetItem('CURRENT_THEME', theme);
-        const div = document.getElementById('parent-admin-element');
-        this.themes.forEach((themeDetail, key) => {
-            if (themeDetail.theme != theme.theme) {
-                div.classList.remove(themeDetail.theme);
-                return;
-            }
-
-            div.classList.add(theme.theme);
-        });
+        ThemeUtil.setTheme(theme);
         this.setState({ selectedTheme: theme });
     }
 
