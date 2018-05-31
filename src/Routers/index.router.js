@@ -38,7 +38,8 @@ import { GetPreferences } from './../Utils/preference.utils';
 
 import ModalWrapper from './../Wrappers/Modal-Wrapper/modalWrapper.component';
 import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
-import { Spotlight, SpotlightUtil } from './../Components/Spotlight-Search/spotlightSearch.component';
+import { Spotlight } from './../Components/Spotlight-Search/spotlightSearch.component';
+import SettingsUtil from './../Utils/settings.utils';
 
 import { LoaderComponent, LoaderUtils } from './../Utils/loader.utils';
 import { PreserveState } from './../Utils/preserveUrl.utils';
@@ -88,7 +89,10 @@ class MainApp extends Component {
 
     handlers = {
         'moveUp': (event) => this.toggleSideNav(this.state.sideNavExpanded),
-        'spotlight': (event) => SpotlightUtil.openModal()
+        'spotlight': (event) => {
+            console.log(event);
+            SettingsUtil.openSpotlightModal();
+        }
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -146,6 +150,7 @@ class MainApp extends Component {
     }
 
     toggleSideNav = (sideNavExpanded) => {
+        console.log(sideNavExpanded);
         this.setState({ sideNavExpanded: !this.state.sideNavExpanded });
     }
 
@@ -235,7 +240,7 @@ class StartRoute extends Component {
                 <ModalWrapper ref={(elem) => ModalManager.registerModal(elem)} />
                 <LoaderComponent ref={(elem) => LoaderUtils.RegisterLoader(elem)} />
                 <ConfirmModalComponent ref={(elem) => ConfirmUtils.RegisterConfirm(elem)} />
-                <Spotlight ref={(elem) => SpotlightUtil.registerModal(elem)} />
+                <Spotlight ref={(elem) => SettingsUtil.registerModal(elem)} />
             </div>
         )
     }

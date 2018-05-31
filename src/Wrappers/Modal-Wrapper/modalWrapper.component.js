@@ -62,9 +62,9 @@ export default class ModalWrapper extends Component {
 
                 {
                     modalBody &&
-                    <ModalBody>
-                        {modalBody()}
-                    </ModalBody>
+                    // <ModalBody>
+                        modalBody()
+                    // </ModalBody>
                 }
 
                 {
