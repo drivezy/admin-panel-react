@@ -95,12 +95,7 @@ class MainApp extends Component {
         }
     }
 
-    componentWillMount() {
-        // this.props.LoginCheck();
-        // this.unlisten = this.props.history.listen((location, action) => {
-        // });
-    }
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         PreserveState();
         // will be true
         // this.props.CurrentRoute(nextProps.location.pathname);
@@ -178,17 +173,19 @@ class MainApp extends Component {
                                 <Switch>
                                     {
                                         menus.map((menu, index) => {
-                                            return menu.menus.map((state, index) => {
+                                            if (Array.isArray(menu.menus)) {
+                                                return menu.menus.map((state, index) => {
 
-                                                if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericListingController.js') != -1) {
-                                                    return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericListing {...props} menuId={state.id} />} />)
-                                                } else if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericDetailCtrl.js') != -1) {
-                                                    return (<Route key={state.url} path={state.url} render={props => <GenericDetail {...props} menuId={state.id} />} />)
-                                                    // return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericDetail {...props} menuId={state.id} />} />)
-                                                } else {
-                                                    // return (<Route key={state.url} path={state.url} component={BookingDetail} />)
-                                                }
-                                            })
+                                                    if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericListingController.js') != -1) {
+                                                        return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericListing {...props} menuId={state.id} />} />)
+                                                    } else if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericDetailCtrl.js') != -1) {
+                                                        return (<Route key={state.url} path={state.url} render={props => <GenericDetail {...props} menuId={state.id} />} />)
+                                                        // return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericDetail {...props} menuId={state.id} />} />)
+                                                    } else {
+                                                        // return (<Route key={state.url} path={state.url} component={BookingDetail} />)
+                                                    }
+                                                })
+                                            }
                                         })
                                     }
                                     {/* <Route path={`${match.path}activeBookings`} component={GenericListing} /> */}
