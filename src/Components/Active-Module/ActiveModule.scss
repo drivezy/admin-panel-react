@@ -1,3 +1,5 @@
+@import 'Assets/Global-Shared/theme.scss';
+
 .active-module {
     position: relative;
     .search-box {
@@ -113,7 +115,7 @@
         button.btn {
             outline: none;
             padding: 6px 10px;
-            color: #183247;
+            // color: #183247;
             border: none;
             &:hover {
                 background-color: #ebedf0;
@@ -139,5 +141,23 @@
                 }
             }
         }
+    }
+}
+
+.drivezy-light-theme { 
+    .search-button > button.btn {
+        color: $primaryThemeLight;
+    }
+}
+
+.drivezy-dark-theme { 
+    .search-button > button.btn {
+        color: $primaryThemeDark;
+    }
+}
+
+.drivezy-drivezy-theme { 
+    .search-button > button.btn {
+        color: $primaryThemeDrivezy;
     }
 }

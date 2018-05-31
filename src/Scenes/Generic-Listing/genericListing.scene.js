@@ -48,7 +48,7 @@ export default class GenericListing extends Component {
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         const newProps = GetUrlParams(nextProps);
         this.state.params = newProps.params;
         this.state.queryString = newProps.queryString;
@@ -56,6 +56,11 @@ export default class GenericListing extends Component {
             this.getListingData();
         }
     }
+
+    // componentDidUpdate(prevState, nextState) { 
+    //     console.log('i am updated');
+    //     console.log(prevState, nex)
+    // }
 
     componentDidMount() {
         // this.getMenuData();
@@ -362,7 +367,7 @@ export default class GenericListing extends Component {
         let filteredResults = [];
 
         if (localSearch.value) {
-            filteredResults = listing.filter(entry => entry[localSearch.field].toString().toLowerCase().indexOf(localSearch.value) != -1);
+            filteredResults = listing.filter(entry => entry[localSearch.field] && (entry[localSearch.field].toString().toLowerCase().indexOf(localSearch.value) != -1));
         }
 
         // const listingData = 

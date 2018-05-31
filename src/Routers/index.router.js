@@ -6,7 +6,6 @@ import {
 // import { Provider, connect } from 'react-redux';
 
 // import GLOBAL from './../Constants/global.constants';
-
 import { ToastContainer } from 'react-toastify';
 
 // import { connect } from 'react-redux';
@@ -33,16 +32,19 @@ import { LoginCheck } from './../Utils/user.utils';
 // import EditProfileScene from './../Scenes/Edit-Profile-Scene/editProfile.scene';
 /** Components ends*/
 
-import { GetMenusEndPoint } from './../Constants/api.constants';
 import { Get } from './../Utils/http.utils';
 
 import { GetPreferences } from './../Utils/preference.utils';
 
 import ModalWrapper from './../Wrappers/Modal-Wrapper/modalWrapper.component';
 import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
+import { Spotlight, SpotlightUtil } from './../Components/Spotlight-Search/spotlightSearch.component';
 
 import { LoaderComponent, LoaderUtils } from './../Utils/loader.utils';
 import { PreserveState } from './../Utils/preserveUrl.utils';
+import { GetMenusFromApi } from './../Utils/menu.utils';
+
+import { ConfirmModalComponent, ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
 
 /** Actions */
 // import { GetCities } from './../Actions/city.action';
@@ -67,6 +69,7 @@ import { HotKeys } from 'react-hotkeys';
  * contains routes without city specific url
  * also invokes router change action with updated router path
  */
+
 class MainApp extends Component {
     constructor(props) {
         super(props);
@@ -82,16 +85,13 @@ class MainApp extends Component {
     keyMap = {
         moveUp: 'shift+b',
     }
+
     handlers = {
-        'moveUp': (event) => this.toggleSideNav(this.state.sideNavExpanded)
+        'moveUp': (event) => this.toggleSideNav(this.state.sideNavExpanded),
+        'spotlight': (event) => SpotlightUtil.openModal()
     }
 
-    componentWillMount() {
-        // this.props.LoginCheck();
-        // this.unlisten = this.props.history.listen((location, action) => {
-        // });
-    }
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         PreserveState();
         // will be true
         // this.props.CurrentRoute(nextProps.location.pathname);
@@ -111,15 +111,29 @@ class MainApp extends Component {
             }
         });
 
-        const result = await Get({ url: GetMenusEndPoint });
+        const result = await GetMenusFromApi();
         if (result.success) {
             this.menus = result.response;
             this.setState({ menuFetched: true });
         }
 
-        // Load the preferences
-        GetPreferences();
         LoginCheck();
+
+        // Load the preferences
+        const preference = await GetPreferences();
+
+        if (preference.success) {
+            this.assignSpotlight(preference.response);
+        }
+    }
+
+    assignSpotlight = (preference) => {
+        let spotlight = preference.filter(entry => entry.parameter == "spotlightkeys").pop();
+
+        if (spotlight) {
+            let keys = JSON.parse(spotlight.value).map(key => key.key).join('+');
+            this.keyMap['spotlight'] = keys;
+        }
     }
 
     getRouterProps = () => {
@@ -141,7 +155,7 @@ class MainApp extends Component {
         const { sideNavExpanded } = this.state;
         return (
 
-            <HotKeys keyMap={this.keyMap} handlers={this.handlers}>
+            <HotKeys focused={true} attach={window} keyMap={this.keyMap} handlers={this.handlers}>
                 <div className="app-container">
                     {
                         menus && menus.length &&
@@ -149,22 +163,24 @@ class MainApp extends Component {
                             <div className="landing-sidebar">
                                 <SideNav visible={sideNavExpanded} onCollapse={this.callback} menus={menus} />
                             </div>
-                            <div className="landing-wrapper {this.state.sideNavExpanded ? 'sidenav-open' : 'sidenav-closed'}" id="main" style={{ height: '100%' }}>
-                                <Header />
+                            <div className={`landing-wrapper ${sideNavExpanded ? 'sidenav-open' : 'sidenav-closed'}`} id="main" style={{ height: '100%' }}>
+                                <Header className={`${sideNavExpanded ? 'expanded' : 'collapsed'}`} />
                                 <Switch>
                                     {
                                         menus.map((menu, index) => {
-                                            return menu.menus.map((state, index) => {
+                                            if (Array.isArray(menu.menus)) {
+                                                return menu.menus.map((state, index) => {
 
-                                                if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericListingController.js') != -1) {
-                                                    return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericListing {...props} menuId={state.id} />} />)
-                                                } else if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericDetailCtrl.js') != -1) {
-                                                    return (<Route key={state.url} path={state.url} render={props => <GenericDetail {...props} menuId={state.id} />} />)
-                                                    // return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericDetail {...props} menuId={state.id} />} />)
-                                                } else {
-                                                    // return (<Route key={state.url} path={state.url} component={BookingDetail} />)
-                                                }
-                                            })
+                                                    if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericListingController.js') != -1) {
+                                                        return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericListing {...props} menuId={state.id} />} />)
+                                                    } else if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericDetailCtrl.js') != -1) {
+                                                        return (<Route key={state.url} path={state.url} render={props => <GenericDetail {...props} menuId={state.id} />} />)
+                                                        // return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericDetail {...props} menuId={state.id} />} />)
+                                                    } else {
+                                                        // return (<Route key={state.url} path={state.url} component={BookingDetail} />)
+                                                    }
+                                                })
+                                            }
                                         })
                                     }
                                     {/* <Route path={`${match.path}activeBookings`} component={GenericListing} /> */}
@@ -184,18 +200,6 @@ class MainApp extends Component {
     }
 }
 
-// function mapStateToProps(state) {
-//     // return  {
-//     //     cities: state.Cities
-//     // }
-//     return state;
-// }
-// const mainApp = connect(mapStateToProps, { GetCities, CurrentRoute, LoginCheck })(MainApp);
-
-// store.subscribe(() => ('store', console.log('store dispatch', store.getState())));
-
-function requireAuth() {
-}
 
 
 
@@ -220,19 +224,19 @@ class StartRoute extends Component {
     render() {
         const { loggedUser } = this.state;
         return (
-            // <Provider store={store}>
-            <div>
+            <div id='parent-admin-element' className='drivezy-dark-theme'>
                 <Router>
                     <Switch>
-                        <Route path="/login" component={LoginScene} onEnter={requireAuth()} />
+                        <Route path="/login" component={LoginScene} />
                         <PrivateRoute path="/" loggedUser={loggedUser} component={MainApp} />
                     </Switch>
                 </Router>
                 <ToastContainer />
                 <ModalWrapper ref={(elem) => ModalManager.registerModal(elem)} />
                 <LoaderComponent ref={(elem) => LoaderUtils.RegisterLoader(elem)} />
+                <ConfirmModalComponent ref={(elem) => ConfirmUtils.RegisterConfirm(elem)} />
+                <Spotlight ref={(elem) => SpotlightUtil.registerModal(elem)} />
             </div>
-            // </Provider>
         )
     }
 }

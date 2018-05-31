@@ -30,14 +30,15 @@ export default class SelectBox extends Component {
      */
     returnStateObj(props) {
         let options = [], value = {};
+
         if (Array.isArray(props.options) && typeof props.options[0] != 'object') {
             props.options.forEach(option => {
-                options.push({ label: typeof option == 'number' ? option.toString() : option });
+                options.push({ label: typeof option == 'number' ? option.toString() : option, value: typeof option == 'number' ? option.toString() : option });
             });
 
             if (props.value) {
-                // if (props.value && Object.keys(props.value).length) {
-                value = { label: typeof props.value == 'number' ? props.value.toString() : props.value };
+                // ,value: typeof props.value == 'number' ? props.value.toString() : props.value 
+                value = typeof props.value == 'object' ? {} : { label: typeof props.value == 'number' ? props.value.toString() : props.value };
             }
         } else {
             options = props.options;
@@ -48,6 +49,7 @@ export default class SelectBox extends Component {
             options,
             value,
             field: props.field || 'label',
+            valueKey: props.valueKey || 'value',
             queryField: props.queryField
         }
     }
@@ -79,27 +81,31 @@ export default class SelectBox extends Component {
                 });
             }
         } else if (value) {
-            console.log(value);
             let preloadUrl = async + '?query=' + index + '=' + value
             const result = await Get({ url: preloadUrl });
 
             if (result.success) {
                 console.log(result);
 
+                let options = result.response.map((entry) => {
+                    let option = entry;
+                    option.value = option.id;
+                    option.label = option.display_name;
+                    return option
+                });
+
                 callback(null, {
                     options: result.response,
-                    // value: result.response[0]
                 });
 
                 this.props.onChange(result.response[0]);
-                // this.setState({ value: result.response[0] });
             }
         }
     }
 
     render() {
         const { async, getOptions, multi, placeholder } = this.props;
-        const { value, options, field } = this.state;
+        const { value, options, field, valueKey } = this.state;
 
         let elem;
         if (async) {
@@ -109,6 +115,7 @@ export default class SelectBox extends Component {
                 loadOptions={this.getOptions}
                 onChange={this.handleChange}
                 labelKey={field}
+                valueKey={valueKey}
                 placeholder={placeholder}
                 multi={multi}
             />
@@ -119,17 +126,18 @@ export default class SelectBox extends Component {
                 loadOptions={getOptions}
                 onChange={this.handleChange}
                 labelKey={field}
+                valueKey={valueKey}
                 placeholder={placeholder}
                 multi={multi}
             />
         } else {
-            elem = <Select
+            elem = <Select autoFocus={false}
                 name="form-field-name"
                 value={value}
                 onChange={this.handleChange}
                 options={options}
                 labelKey={field}
-                autoFocus
+                valueKey={valueKey}
                 clearable
                 placeholder={placeholder}
                 multi={multi}

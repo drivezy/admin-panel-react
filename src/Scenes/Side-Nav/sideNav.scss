@@ -1,3 +1,6 @@
+@import 'Assets/Global-Shared/theme.scss';
+
+
 .sidebar-wrapper {
     height: 100%;
     width: 50px;
@@ -5,7 +8,7 @@
     z-index: 1;
     top: 0;
     left: 0;
-    background: #35485a;
+    // background: #35485a;
     overflow-x: hidden;
     transition: 0.1s;
     display: flex;
@@ -24,7 +27,7 @@
     }
     .sidebar-logo {
         .logo-image {
-            background: #303e4c;
+            // background: #303e4c;
             height: 45px;
             display: flex;
             overflow: hidden;
@@ -40,15 +43,10 @@
             span.toggle-icon {
                 cursor: pointer;
                 padding: 2px;
-                &:hover {
-                    i.fa {
-                        color: green;
-                    }
-                }
                 i.fa {
                     font-size: 16px;
                     padding: 10px;
-                    color: #5c7084;
+                    // color: #5c7084;
                 }
             }
         }
@@ -58,7 +56,7 @@
         display: flex;
         flex-direction: column;
         .menus {
-            background: #35485b;
+            // background: #35485b;
             padding: 8px 10px;
             .menu-item {
                 .menu-label {
@@ -66,7 +64,7 @@
                     padding: 8px 10px;
                     -webkit-font-smoothing: antialiased;
                     transition: all 50ms linear;
-                    color: #A4B2B8;
+                    // color: #A4B2B8;
                     cursor: pointer;
                     flex-grow: 1;
                     font-size: 14px;
@@ -84,9 +82,9 @@
                         transition: all 50ms ease-in-out;
                         display: inline-block;
                     }
-                    &:hover {
-                        background: #2c3e4e;
-                    }
+                    // &:hover {
+                    //     background: #2c3e4e;
+                    // }
                 }
             }
         }
@@ -108,7 +106,8 @@
 }
 
 .sidenav a:hover {
-    color: #f1f1f1;
+    color: red !important;
+    // color: #f1f1f1;
 }
 
 .menu-name {
@@ -171,4 +170,124 @@
 
 #main {
     transition: margin-left .1s; // padding: 16px;
+}
+
+
+/** Theme specific css */
+.drivezy-light-theme { 
+    .sidebar-menus > .menus, .sidebar-wrapper {
+        background: $primaryThemeLight;
+    }
+    .sidebar-menus > .menus {
+        background: $primaryThemeLight;
+        .menu-item { 
+            &:hover{
+                background: $primaryDarkThemeLight;
+            }
+        }
+    }
+
+    .sidebar-logo > .logo-image {
+        background: $primaryDarkThemeLight;
+        span.toggle-icon {
+            &:hover {
+                i.fa {
+                    color: $secondaryDarkThemeLight;
+                }
+            }
+            i.fa {
+                color: $secondaryLightThemeLight;
+            }
+        }
+    }
+
+    .sidebar-menus { 
+        .menus { 
+            .menu-item {
+                .menu-label {
+                    color: $onPrimaryThemeLight;
+                }
+            }
+        }
+    }
+}
+
+.drivezy-dark-theme { 
+    .sidebar-menus > .menus, .sidebar-wrapper {
+        // background: $primaryThemeDark;
+        background: linear-gradient($primaryThemeDark, $primaryLightThemeDark, $primaryThemeDark, $primaryDarkThemeDark );
+        // background: linear-gradient($primaryThemeDark,  $primaryDarkThemeDark, $primaryThemeDark );
+    }
+    .sidebar-menus > .menus {
+        background: transparent;
+        .menu-item { 
+            &:hover{
+                background: $primaryLightThemeDark;
+            }
+        }
+    }
+
+    .sidebar-logo > .logo-image {
+        background: $primaryDarkThemeDark;
+        span.toggle-icon {
+            &:hover {
+                i.fa {
+                    color: $secondaryThemeDark;
+                }
+            }
+            i.fa {
+                color: $secondaryLightThemeDark;
+            }
+        }
+    }
+
+    .sidebar-menus { 
+        .menus { 
+            .menu-item {
+                .menu-label {
+                    color: $onPrimaryThemeDark;
+                }
+            }
+        }
+    }
+}
+
+.drivezy-drivezy-theme { 
+    .sidebar-menus > .menus, .sidebar-wrapper {
+        // background: blue;
+        background: linear-gradient($primaryThemeDrivezy, $primaryThemeDrivezy, $primaryDarkThemeDrivezy);
+    }
+    .sidebar-menus > .menus {
+        background: transparent;
+        
+        .menu-item { 
+            &:hover{
+                background: $primaryLightThemeDrivezy;
+            }
+        }
+    }
+
+    .sidebar-logo > .logo-image {
+        background: $primaryDarkThemeDrivezy;
+        span.toggle-icon {
+            &:hover {
+                i.fa {
+                    color: $secondaryThemeDrivezy;
+                }
+            }
+            i.fa {
+                color: $secondaryLightThemeDrivezy;
+            }
+        }
+    }
+
+    .sidebar-menus { 
+        .menus { 
+            .menu-item {
+                .menu-label {
+                    color: $onPrimaryThemeDrivezy;
+                }
+            }
+        }
+    }
 }
