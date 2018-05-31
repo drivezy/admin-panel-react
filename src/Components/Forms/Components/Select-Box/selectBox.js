@@ -38,7 +38,7 @@ export default class SelectBox extends Component {
 
             if (props.value) {
                 // ,value: typeof props.value == 'number' ? props.value.toString() : props.value 
-                value = { label: typeof props.value == 'number' ? props.value.toString() : props.value };
+                value = typeof props.value == 'object' ? {} : { label: typeof props.value == 'number' ? props.value.toString() : props.value };
             }
         } else {
             options = props.options;
