@@ -8,6 +8,7 @@ import SelectBox from './../../Components/Forms/Components/Select-Box/selectBox'
 import WeekSelector from './../../Components/Week-Selector/weekSelector.component'
 
 import { FetchCities } from './../../Constants/api.constants';
+import ToastNotifications from '../../Utils/toast.utils';
 
 export default class RosterTimeline extends Component {
 
@@ -20,20 +21,23 @@ export default class RosterTimeline extends Component {
             venues: [],
             venue: {},
             weeks: [],
-            week: {},
             minLimit: 5,
-            maxLimit: 5
+            maxLimit: 5,
+            week: {}
         };
     }
 
     componentDidMount() {
-        this.getRosterDetail();
         this.getCities();
     }
 
     onCityChange = (newValue) => {
         this.setState({ city: newValue });
         this.getVenues(newValue.id);
+    }
+
+    onWeekChange = (newValue) => {
+        this.setState({ week: newValue });
     }
 
     getCities = async () => {
@@ -53,15 +57,26 @@ export default class RosterTimeline extends Component {
     }
 
     getRosterDetail = async () => {
-        const result = await Post({ url: 'getRosterData', body: { venue: 1, start_date: '2018-05-14', end_date: '2018-05-20' } });
+        const { venue, week } = this.state
+        const result = await Post({ url: 'getRosterData', body: { venue: venue.id, start_date: week.shiftStartDate, end_date: week.shiftEndDate } });
         if (result.original.success) {
             const rosterData = result.original.response;
             this.setState({ rosterData })
         }
     }
 
+    createAssignments = async () => {
+        const { venue, week } = this.state
+        console.log(venue, week);
+        const result = await Post({ url: 'createFleetAssignmentRecords', body: { venue_id: venue.id, shift_date: week.shiftDate } });
+        if (result.success) {
+            ToastNotifications.success('Loaded Weekly roster!');
+            this.getRosterDetail();
+        }
+    }
+
     render() {
-        const { rosterData = {}, cities = [], city, venues = [], venue, weeks = [], week, minLimit, maxLimit } = this.state;
+        const { rosterData = {}, cities = [], city, venues = [], venue, weeks = [], minLimit, maxLimit, week } = this.state;
         return (
             <div className="roster-timeline">
                 <div className="roster-header">
@@ -71,33 +86,35 @@ export default class RosterTimeline extends Component {
                             <div className="box-width">
 
                                 {
-                                    cities.length &&
-                                    <SelectBox
-                                        onChange={this.onCityChange}
-                                        options={cities}
-                                        placeholder="City"
-                                        field='name'
-                                        value={city}
-                                    />
+                                    cities.length ?
+                                        <SelectBox
+                                            onChange={this.onCityChange}
+                                            options={cities}
+                                            placeholder="City"
+                                            field='name'
+                                            value={city}
+                                        />
+                                        : null
                                 }
                             </div>
                             <div className="box-width">
                                 {
-                                    venues.length &&
-                                    <SelectBox
-                                        onChange={(data) => this.setState({ venue: data })}
-                                        options={venues}
-                                        placeholder="Venue"
-                                        field='name'
-                                        value={venue}
-                                    />
+                                    venues.length ?
+                                        <SelectBox
+                                            onChange={(data) => this.setState({ venue: data })}
+                                            options={venues}
+                                            placeholder="Venue"
+                                            field='name'
+                                            value={venue}
+                                        />
+                                        : null
                                 }
                             </div>
                             <div className="week-selector">
-                                <WeekSelector weeks={weeks} week={week} minLimit={minLimit} maxLimit={maxLimit} />
+                                <WeekSelector weeks={weeks} week={week} onChange={this.onWeekChange} minLimit={minLimit} maxLimit={maxLimit} />
                             </div>
                             <div className="create-roster">
-                                <button className="btn btn-primary" >Get Roster</button>
+                                <button className="btn btn-primary" onClick={() => this.createAssignments()}>Get Roster</button>
                             </div>
                         </div>
                     </div>

@@ -9,15 +9,19 @@ export default class WeekSelector extends Component {
         super(props);
         this.state = {
             weeks: props.weeks,
-            week: props.week,
             minLimit: props.minLimit,
             maxLimit: props.maxLimit,
-            timeSlot: {}
+            week: props.week
         }
     }
 
+    selectWeek = (data) => {
+        this.setState({ week: data });
+        this.props.onChange(data);
+    }
+
     render() {
-        const { weeks = [], minLimit, maxLimit, timeSlot } = this.state;
+        const { weeks = [], minLimit, maxLimit, week } = this.state;
         let limit;
         for (limit = -(minLimit); limit <= (maxLimit); limit++) {
             let start = moment().add(limit, 'week').startOf('week').add(1, 'day').format('ddd DD MMM YY');
@@ -33,11 +37,11 @@ export default class WeekSelector extends Component {
                 {
                     weeks.length &&
                     <SelectBox
-                        onChange={(data) => this.setState({ timeSlot: data })}
+                        onChange={(data) => this.selectWeek(data)}
                         options={weeks}
                         placeholder="Week"
                         field='timeSlot'
-                        value={timeSlot}
+                        value={week}
                     />
                 }
             </div>
