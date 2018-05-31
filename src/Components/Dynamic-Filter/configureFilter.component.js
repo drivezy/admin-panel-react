@@ -658,6 +658,17 @@ export default class ConfigureDynamicFilter extends Component {
         this.setState({ isCollapsed: true });
     }
 
+    getQuery({ column, filter, value, joinMethod }) {
+        let columnString = '';
+        if (column.path.split('.').length > 2) {
+            columnString = `\`${column.parent}\`.${column.referenced_column ? column.referenced_column : column.name}`;
+        } else {
+            columnString = column.name;
+        }
+
+        return columnString + filter + "'" + value + "'" + joinMethod;
+    }
+
     submit = () => {
         const { filterArr, currentUser, activeFilter, sort, order, scopes } = this.state;
         const paramProps = {
@@ -684,37 +695,44 @@ export default class ConfigureDynamicFilter extends Component {
 
                                 // If the reference model is User add
                                 if (value.column.referenced_model.name == 'User' && value.selectValue.id == currentUser.id) {
-                                    query += `${value.column.name}${value.filter}'currentUser'${joinMethod}`;
-                                    // query += value.column.name + value.filter + "'" + "currentUser" + "'" + joinMethod;
+                                    // query += `${value.column.name}${value.filter}'currentUser'${joinMethod}`;
+                                    query += this.getQuery({ column: value.column, filter: value.filter, value: 'currentUser', joinMethod });
                                 } else {
                                     if (value.column.hasOwnProperty('referenced_column')) {
-                                        query += (value.column.referenced_column ? value.column.referenced_column : value.column.name) + value.filter + "'" + (value.column.referenced_column ? value.selectValue.id : value.selectValue[value.column.referenced_model.display_column]) + "'" + joinMethod;
+                                        // query += (value.column.referenced_column ? value.column.referenced_column : value.column.name) + value.filter + "'" + (value.column.referenced_column ? value.selectValue.id : value.selectValue[value.column.referenced_model.display_column]) + "'" + joinMethod;
+                                        query += this.getQuery({ column: value.column, filter: value.filter, value: (value.column.referenced_column ? value.selectValue.id : value.selectValue[value.column.referenced_model.display_column]), joinMethod });
                                     } else {
-                                        query += value.column.name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
+                                        // query += value.column.name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
+                                        query += this.getQuery({ column: value.column, filter: value.filter, value: value.selectValue.id, joinMethod });
                                     }
                                 }
                                 break;
 
                             case 118:
-                                query += value.column.name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
+                                // query += value.column.name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
+                                query += this.getQuery({ column: value.column, filter: value.filter, value: value.selectValue.id, joinMethod });
                                 break;
 
                             case 6:
                                 // case 116:
                                 if (value.column.hasOwnProperty('referenced_column')) {
-                                    query += (value.column.referenced_column ? value.column.referenced_column : value.column.name) + value.filter + "'" + (value.column.referenced_column ? value.selectValue.id : value.selectValue[value.column.referenced_model.display_column]) + "'" + joinMethod;
+                                    // query += (value.column.referenced_column ? value.column.referenced_column : value.column.name) + value.filter + "'" + (value.column.referenced_column ? value.selectValue.id : value.selectValue[value.column.referenced_model.display_column]) + "'" + joinMethod;
+                                    query += this.getQuery({ column: value.column, filter: value.filter, value: (value.column.referenced_column ? value.selectValue.id : value.selectValue[value.column.referenced_model.display_column]), joinMethod });
                                 } else {
-                                    query += value.column.name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
+                                    // query += value.column.name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
+                                    query += this.getQuery({ column: value.column, filter: value.filter, value: value.selectValue.id, joinMethod });
                                 }
                                 break;
 
                             case 5:
                                 // case 111: case 119:
-                                query += value.column.name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
+                                // query += value.column.name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
+                                query += this.getQuery({ column: value.column, filter: value.filter, value: value.selectValue.id, joinMethod });
                                 break;
 
                             default:
-                                query += value.column.name + value.filter + "'" + value.inputField + "'" + joinMethod;
+                                // query += value.column.name + value.filter + "'" + value.inputField + "'" + joinMethod;
+                                query += this.getQuery({ column: value.column, filter: value.filter, value: value.inputField, joinMethod });
                                 break;
                         }
                     }

@@ -66,7 +66,7 @@ export async function GetInputRecord({ input: val, currentUser = null, column, q
  * @param  {function} finalSql
  * @param  {object} currentUser}
  */
-export async function CreateQuery({ rawQuery, dictionary = [], finalSql: FinalSql, currentUser }) {
+export async function CreateQuery({ rawQuery, dictionary = {}, finalSql: FinalSql, currentUser }) {
     // const {sqlArray} = this.state;
     // arr = [];
     const parentQueries = rawQuery.split(' AND ');
@@ -78,9 +78,21 @@ export async function CreateQuery({ rawQuery, dictionary = [], finalSql: FinalSq
         queries.forEach(async (value, key) => {
             let showSql = '';
             const queryObj = RawStringQueryToObject(value);
-            const column = SelectFromOptions(dictionary, queryObj.selectedColumn, 'name');
 
-            showSql += column.display_name + queryObj.selectedFilter;
+            const regexForPickingAfterLastDot = /[^\.]+$/;
+            const regexForStringWithinTilde = /(?<=\`).*(?=\`)/g;
+
+            const columnName = queryObj.selectedColumn.match(regexForPickingAfterLastDot)[0];
+            const parentName = queryObj.selectedColumn.match(regexForStringWithinTilde)[0];
+
+
+            dictionary = Object.values(dictionary);
+            const column = dictionary.filter(dictionaryObj => dictionaryObj.parent == parentName && dictionaryObj.name == columnName)[0] || {};
+            // const column = SelectFromOptions(dictionary, columnName, 'name');
+
+            // const column = SelectFromOptions(dictionary, queryObj.selectedColumn, 'name');
+
+            showSql += column.path + queryObj.selectedFilter;
 
             if (!queryObj.selectedFilter.includes('IS NULL') && !queryObj.selectedFilter.includes('IS NOT NULL')) {
                 switch (column.column_type) {

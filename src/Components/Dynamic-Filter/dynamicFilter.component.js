@@ -21,7 +21,7 @@ export default class DynamicFilter extends Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         const urlParams = Location.search();
         const { filters } = this.state;
 
