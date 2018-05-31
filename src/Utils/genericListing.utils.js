@@ -1,5 +1,5 @@
 
-import { IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall } from './common.utils';
+import { IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall, TrimQueryString } from './common.utils';
 import { GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods } from './generic.utils';
 import { Get } from './http.utils';
 
@@ -14,7 +14,7 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
     const params = Initialization(configuration, queryString);
     // const this = {};
     this.currentUser = currentUser;
-    const options = GetDefaultOptions();
+    let options = GetDefaultOptions();
 
     params.page = queryString.page ? parseInt(queryString.page) : data.currentPage;
     options.includes = params.includes;
@@ -27,10 +27,10 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
     // Add the input field on the generic listing page to query
     // if (self.searchObj && self.searchObj.hasOwnProperty("id")) {
     //     // @todo Should improve this , too much of manual
-    //     globalSearchField = self.activeSelectField.selected.column_name;
+    //     globalSearchField = self.activeSelectField.selected.name;
     //     options.query += " and " + globalSearchField + "=" + self.searchObj.id;
     // } else if (!IsUndefinedOrNull(self.searchText) && self.activeSelectField.selected) {
-    //     globalSearchField = self.activeSelectField.selected.column_name;
+    //     globalSearchField = self.activeSelectField.selected.name;
     //     if (self.activeSelectField.selected && (self.activeSelectField.selected.column_type == 107 || self.activeSelectField.selected.column_type == 117)) {
     //         options.query += " and " + globalSearchField + "=" + self.searchText;
     //     } else {
@@ -82,6 +82,8 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
      */
     // self.listingOptions = options;
 
+    options = TrimQueryString(options);
+
     // const result = await Get({ url: configuration.url, body: options });
     const url = BuildUrlForGetCall(configuration.url, options);
     Get({ url, callback: PrepareObjectForListing, extraParams: { callback, page: options.page, limit: options.limit, data, configuration, params }, persist: true });
@@ -95,8 +97,9 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
  */
 function PrepareObjectForListing(result, { extraParams }) {
     const { callback, page, limit, data, configuration, params } = extraParams;
-    if (result && result.response) {
+    if (result.success && result.response) {
 
+        const { data: apiData, dictionary, relationship, stats } = result.response;
         // if (columns && columns.length === 0) {
         //     self.orderColumns = params.dictionary[params.starter];
         // }
@@ -110,22 +113,22 @@ function PrepareObjectForListing(result, { extraParams }) {
         //     }
         // }
 
-        params.dictionary = result.dictionary || data.dictionary;
+        params.dictionary = dictionary || data.dictionary;
 
-        if (result.hasOwnProperty("relationship")) {
-            params.relationship = result.relationship;
+        if (result.response.hasOwnProperty("relationship")) {
+            params.relationship = relationship;
         }
 
-        // relationship = result.relationship ? result.relationship : null;
+        // relationship = relationship ? relationship : null;
         // gatherObject(result.daDeta);
         const modelName = configuration.model.name.toLowerCase();
 
         // Preparing the generic listing object
         const genericListingObj = {
-            stats: result.stats || data.stats,
-            dictionary: result.dictionary || data.dictionary,
-            relationship: result.relationship || data.relationship, // modelName: self.configuration.formPreferenceName + '.form',
-            listing: result.response,
+            stats: stats || data.stats,
+            dictionary: dictionary || data.dictionary,
+            relationship: relationship || data.relationship, // modelName: self.configuration.formPreferenceName + '.form',
+            listing: apiData,
             currentPage: page,
             limit,
             pageName: configuration.pageName,
@@ -135,8 +138,10 @@ function PrepareObjectForListing(result, { extraParams }) {
             listName: configuration.listName + ".list",
             defaultOrder: configuration.order + ',' + configuration.sort,
             finalColumns: [],
-            columns: GetColumnsForListing(params),
-            selectedColumns: configuration.preference[configuration.listName + ".list"] ? JSON.parse(configuration.preference[configuration.listName + ".list"]) : null, // formPreference: configuration.preference[configuration.listName + '.form'] ? JSON.parse(configuration.preference[configuration.listName + '.form']) : null,
+            columns: GetColumnsForListing({ ...params, ...{ isArray: false } }),
+            // @TODO uncomment this line to get selectedColumn
+            selectedColumns: [],
+            // selectedColumns: configuration.preference[configuration.listName + ".list"] ? JSON.parse(configuration.preference[configuration.listName + ".list"]) : null, // formPreference: configuration.preference[configuration.listName + '.form'] ? JSON.parse(configuration.preference[configuration.listName + '.form']) : null,
             nextActions: configuration.nextActions,
             formPreference: configuration.preference[modelName + ".form"] ? JSON.parse(configuration.preference[modelName + ".form"]) : null,
             modelName: configuration.model.name.toLowerCase() + ".form",
@@ -160,7 +165,8 @@ function PrepareObjectForListing(result, { extraParams }) {
         };
         // Prepairing object for configure-filter directive
         const filterContent = {
-            dictionary: genericListingObj.dictionary[params.starter],
+            dictionary: genericListingObj.columns,
+            // dictionary: genericListingObj.dictionary[params.starter],
             selectedColumns: genericListingObj.selectedColumns,
             restrictColumns: configuration.restrictColumnFilter,
             scopes: data.scopes
@@ -183,11 +189,14 @@ export function GetDefaultOptions() {
     return {
         includes: '',
         order: 'id,asc',
-        query: 'id=id',
+        // query: 'id=id',
+        query: '',
         limit: 20,
         page: 1,
+        list: true,
         stats: false,
-        dictionary: false
+        dictionary: false,
+        layout_id: 1
     };
 }
 

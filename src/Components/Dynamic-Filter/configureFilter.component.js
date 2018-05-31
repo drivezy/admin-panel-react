@@ -48,7 +48,7 @@ export default class ConfigureDynamicFilter extends Component {
         };
     }
 
-    componentWillReceiveProps() {
+    UNSAFE_componentWillReceiveProps() {
         this.urlParams = Location.search();
     }
 
@@ -117,7 +117,7 @@ export default class ConfigureDynamicFilter extends Component {
             // this is a fallback if there is query that is to be prepopulated
             filterArr[arrayIndex] = [[...this.filterObj]];
             // to the last element in the array , push the column
-            filterArr[arrayIndex][0].column = SelectFromOptions(content.dictionary, single, 'column_name');
+            filterArr[arrayIndex][0].column = SelectFromOptions(content.dictionary, single, 'name');
             // once the column is selected , columnChange should be called to load necessary data for the column
             this.columnChange(filterArr[arrayIndex][0].column, {
                 parentIndex: filterArr.length - 1,
@@ -183,7 +183,8 @@ export default class ConfigureDynamicFilter extends Component {
         let selectedFieldToBeReturned;
         switch (column.column_type) {
             // if column type is number or string
-            case 107: case 108: case 708:
+            case 1: case 2:
+                // case 107: case 108: case 708:
                 // for a column of type string , stringFilterArr is to be assiged to second filter
                 filterArr[parentIndex][childIndex].filterField = column.column_type == 107 ? this.numericFilterArr : this.stringFilterArr;
                 filterArr[parentIndex][childIndex].inputField = column.column_type == 107 ? 0 : '';
@@ -191,7 +192,8 @@ export default class ConfigureDynamicFilter extends Component {
                 return filterArr[parentIndex][childIndex].inputField;
 
             // if column type is date
-            case 109:
+            case 3:
+                // case 109:
                 this.dateFormat = "YYYY-MM-DD";
                 filterArr[parentIndex][childIndex].filterField = this.dateFilterArr;
                 filterArr[parentIndex][childIndex].inputField = GetTime(this.dateFormat);
@@ -199,14 +201,16 @@ export default class ConfigureDynamicFilter extends Component {
                 return filterArr[parentIndex][childIndex].inputField;
 
             // if column type is datetime
-            case 110:
+            case 4:
+                // case 110:
                 filterArr[parentIndex][childIndex].filterField = this.dateFilterArr;
                 filterArr[parentIndex][childIndex].inputField = GetTime('YYYY-MM-DD HH:mm:ss');
                 this.callFilterChangeAfterColumnChange(filterArr, { parentIndex, childIndex });
                 return filterArr[parentIndex][childIndex].inputField;
 
             // if column type is boolean
-            case 119: case 111:
+            case 5:
+                // case 119: case 111:
                 filterArr[parentIndex][childIndex].filterField = this.booleanFilterArr;
                 filterArr[parentIndex][childIndex].selectValue = this.booleanObj[0];
                 this.callFilterChangeAfterColumnChange(filterArr, { parentIndex, childIndex });
@@ -214,7 +218,8 @@ export default class ConfigureDynamicFilter extends Component {
             // defer.resolve(filterArr[parentIndex][childIndex].inputField);
 
             // if Column is referenced type: dropdown
-            case 116:
+            case 6:
+                // case 116:
                 filterArr[parentIndex][childIndex].filterField = this.booleanFilterArr;
                 if (column.referenced_model_id) {
                     var url = column.referenced_model.route_name;
@@ -230,7 +235,8 @@ export default class ConfigureDynamicFilter extends Component {
                 }
 
             // if Column is referenced type
-            case 117:
+            case 7:
+                // case 117:
                 filterArr[parentIndex][childIndex].filterField = this.booleanFilterArr;
 
                 filterArr[parentIndex][childIndex].inputField = null;
@@ -298,38 +304,27 @@ export default class ConfigureDynamicFilter extends Component {
             //     filterArr[parentIndex][childIndex].html = <input type='text' className='form-control' onChange={(data) => this.convertToInputField({ data: data.target.value, parentIndex, childIndex })} value={child.inputField} placeholder='Input Value' />;
             //     break;
 
-            case 107: case 108: // column type string
-                const setStateMethod = (data) => this.convertToInputField({ data, parentIndex, childIndex });
-                filterArr[parentIndex][childIndex].html = () =>
-                    <Typeahead
-                        options={child.selectField}
-                        onType={setStateMethod}
-                        onChange={setStateMethod}
-                        value={child.inputField}
-                        field={'display_name'}
-                        placeholder='Input Value'
-                    />;
-
-                // filterArr[parentIndex][childIndex].html = () => <input type='text' className='form-control' onChange={(data) => this.convertToInputField({ data: data.target.value, parentIndex, childIndex })} value={child.inputField} placeholder='Input Value' />;
-                break;
-
-            case 109: // if a date picker is required
+            // case 109: // if a date picker is required
+            case 3: // if a date picker is required
                 filterArr = this.dateInput({ filterArr, filter, parentIndex, childIndex }, this.dateFormat);
                 break;
 
-            case 110: // Datetime
+            case 4: // Datetime
+                // case 110: // Datetime
                 this.dateFormat = 'YYYY-MM-DD HH:mm:00';
-                // filterArr[parentIndex][childIndex].html = (<DatePicker single={true} timePicker={true} name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />)
+                // filterArr[parentIndex][childIndex].html = (<DatePicker single={true} timePicker={true} name={column.name} onChange={props.setFieldValue} value={values[column.name]} />)
                 filterArr = this.dateInput({ filterArr, filter, parentIndex, childIndex });
                 break;
 
-            case 119: case 111:
+            // case 119: case 111:
+            case 5: // boolean
                 filterArr[parentIndex][childIndex].html = () => (<SelectBox onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'selectValue' })} value={child.selectValue} options={this.booleanObj} field='name' placeholder="Select Value" />);
                 // filterArr[parentIndex][childIndex].html = (<custom-select-field ng-model="b.selectValue" extra-params="{parentIndex: $parent.$childIndex, childIndex: $childIndex}" call-it="configureFilter.convertToInputField" place-holder="Select Value" iterate-item="name" obj="configureFilter.booleanObj" />);
                 valueColumnType = "select";
                 break;
 
-            case 116: // for reference data , prefilled
+            case 6: // for reference data , prefilled
+                // case 116: // for reference data , prefilled
                 filterArr[parentIndex][childIndex].inputField = null;
                 filterArr[parentIndex][childIndex].html = () => (
                     <SelectBox
@@ -344,7 +339,8 @@ export default class ConfigureDynamicFilter extends Component {
                 valueColumnType = "select";
                 break;
 
-            case 117: // for reference : async
+            case 7: // for reference : async
+                // case 117: // for reference : async
                 filterArr[parentIndex][childIndex].inputField = null;
 
                 if (filterArr[parentIndex][childIndex].column.referenced_model.name == "User" && !filterArr[parentIndex][childIndex].asyncResults) {
@@ -372,12 +368,27 @@ export default class ConfigureDynamicFilter extends Component {
                 // filterArr[parentIndex][childIndex].html = (<custom-select-field required="true" ng-model="b.selectValue" call-it="configureFilter.convertToInputField" extra-params="{parentIndex: $parent.$childIndex, childIndex: $childIndex}" place-holder="Type to load data" iterate-item="{{b.column.referenced_model.display_column}}" async="configureFilter.getInputRecord(search,{parentIndex: $parent.$childIndex, childIndex: $childIndex})" obj="b.asyncResults" />);
                 break;
 
-            default:
-                filterArr[parentIndex][childIndex].inputField = "";
-                if (filter != " IS NULL " && filter != " IS NOT NULL ") {
-                    filterArr[parentIndex][childIndex].html = () => (<input type="text" className="form-control" onChange={(data) => this.convertToInputField({ data: data.target.value, parentIndex, childIndex })} value={child.inputField} placeholder='Input Value' />);
-                }
+            case 1: case 2: default: // column type string
+                const setStateMethod = (data) => this.convertToInputField({ data, parentIndex, childIndex });
+                filterArr[parentIndex][childIndex].html = () =>
+                    <Typeahead
+                        options={child.selectField}
+                        onType={setStateMethod}
+                        onChange={setStateMethod}
+                        value={child.inputField}
+                        field={'path'}
+                        placeholder='Input Value'
+                    />;
+
+                // filterArr[parentIndex][childIndex].html = () => <input type='text' className='form-control' onChange={(data) => this.convertToInputField({ data: data.target.value, parentIndex, childIndex })} value={child.inputField} placeholder='Input Value' />;
                 break;
+
+            // default:
+            //     filterArr[parentIndex][childIndex].inputField = "";
+            //     if (filter != " IS NULL " && filter != " IS NOT NULL ") {
+            //         filterArr[parentIndex][childIndex].html = () => (<input type="text" className="form-control" onChange={(data) => this.convertToInputField({ data: data.target.value, parentIndex, childIndex })} value={child.inputField} placeholder='Input Value' />);
+            //     }
+            //     break;
         }
 
         this.setState({ filterArr });
@@ -517,7 +528,7 @@ export default class ConfigureDynamicFilter extends Component {
                 // assign the value of second params, used in daterange picker
                 filterArr[parentIndex][key].slot.endDate = queryObj.secondInputField;
 
-                filterArr[parentIndex][key].column = SelectFromOptions(this.filterObj.selectField, queryObj.selectedColumn, "column_name");
+                filterArr[parentIndex][key].column = SelectFromOptions(this.filterObj.selectField, queryObj.selectedColumn, "name");
 
                 if (filterArr[parentIndex][key].column.column_type == 116) {
                     const res = await this.columnChange(filterArr[parentIndex][key].column, {
@@ -607,7 +618,7 @@ export default class ConfigureDynamicFilter extends Component {
 
         // If order is specified , assign it to object considering the dictionary
         if (this.urlParams.order) {
-            this.state.order = SelectFromOptions(content.dictionary, this.urlParams.order, "column_name");
+            this.state.order = SelectFromOptions(content.dictionary, this.urlParams.order, "name");
         }
 
         // var active_filter = Location.search().filter;
@@ -660,47 +671,50 @@ export default class ConfigureDynamicFilter extends Component {
                 if (!IsUndefinedOrNull(value.column) && Object.keys(value.column).length) {
                     const joinMethod = value.joinMethod;
                     if (value.filter.includes('IS NULL') || value.filter.includes('IS NOT NULL')) {
-                        query += value.column.column_name + value.filter + ' AND ';
+                        query += value.column.name + value.filter + ' AND ';
                     } else if (value.filter == ' BETWEEN ' || value.filter == ' NOT BETWEEN ') {
-                        // query += value.column.column_name + value.filter + ''' + value.slot.startDate + "' and '" + value.slot.endDate + "'" + joinMethod;
-                        // query += `${value.column.column_name}${value.filter} '${value.slot.startDate}' and '${value.slot.endDate}'${joinMethod}`;
-                        query += `${value.column.column_name}${value.filter} '${value.inputField}' and '${value.secondInputField}'${joinMethod}`;
+                        // query += value.column.name + value.filter + ''' + value.slot.startDate + "' and '" + value.slot.endDate + "'" + joinMethod;
+                        // query += `${value.column.name}${value.filter} '${value.slot.startDate}' and '${value.slot.endDate}'${joinMethod}`;
+                        query += `${value.column.name}${value.filter} '${value.inputField}' and '${value.secondInputField}'${joinMethod}`;
                     } else if (!IsUndefined(value.inputField)) {
                         switch (value.column.column_type) {
-                            case 117:
+                            case 7:
+                                // case 117:
                                 // if its a reference column ,
 
                                 // If the reference model is User add
                                 if (value.column.referenced_model.name == 'User' && value.selectValue.id == currentUser.id) {
-                                    query += `${value.column.column_name}${value.filter}'currentUser'${joinMethod}`;
-                                    // query += value.column.column_name + value.filter + "'" + "currentUser" + "'" + joinMethod;
+                                    query += `${value.column.name}${value.filter}'currentUser'${joinMethod}`;
+                                    // query += value.column.name + value.filter + "'" + "currentUser" + "'" + joinMethod;
                                 } else {
                                     if (value.column.hasOwnProperty('referenced_column')) {
-                                        query += (value.column.referenced_column ? value.column.referenced_column : value.column.column_name) + value.filter + "'" + (value.column.referenced_column ? value.selectValue.id : value.selectValue[value.column.referenced_model.display_column]) + "'" + joinMethod;
+                                        query += (value.column.referenced_column ? value.column.referenced_column : value.column.name) + value.filter + "'" + (value.column.referenced_column ? value.selectValue.id : value.selectValue[value.column.referenced_model.display_column]) + "'" + joinMethod;
                                     } else {
-                                        query += value.column.column_name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
+                                        query += value.column.name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
                                     }
                                 }
                                 break;
 
                             case 118:
-                                query += value.column.column_name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
+                                query += value.column.name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
                                 break;
 
-                            case 116:
+                            case 6:
+                                // case 116:
                                 if (value.column.hasOwnProperty('referenced_column')) {
-                                    query += (value.column.referenced_column ? value.column.referenced_column : value.column.column_name) + value.filter + "'" + (value.column.referenced_column ? value.selectValue.id : value.selectValue[value.column.referenced_model.display_column]) + "'" + joinMethod;
+                                    query += (value.column.referenced_column ? value.column.referenced_column : value.column.name) + value.filter + "'" + (value.column.referenced_column ? value.selectValue.id : value.selectValue[value.column.referenced_model.display_column]) + "'" + joinMethod;
                                 } else {
-                                    query += value.column.column_name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
+                                    query += value.column.name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
                                 }
                                 break;
 
-                            case 111: case 119:
-                                query += value.column.column_name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
+                            case 5:
+                                // case 111: case 119:
+                                query += value.column.name + value.filter + "'" + value.selectValue.id + "'" + joinMethod;
                                 break;
 
                             default:
-                                query += value.column.column_name + value.filter + "'" + value.inputField + "'" + joinMethod;
+                                query += value.column.name + value.filter + "'" + value.inputField + "'" + joinMethod;
                                 break;
                         }
                     }
@@ -737,8 +751,8 @@ export default class ConfigureDynamicFilter extends Component {
         }
 
         if (order) {
-            // Location.search("order", order.column_name);
-            Location.search({ order: order.column_name }, { props: paramProps });
+            // Location.search("order", order.name);
+            Location.search({ order: order.name }, { props: paramProps });
         }
 
         if (scopes && scopes.length) {
@@ -802,7 +816,7 @@ export default class ConfigureDynamicFilter extends Component {
                                                                         <SelectBox onChange={(data) => {
                                                                             this.columnChange(data, { parentIndex, childIndex, setValue: true })
                                                                         }}
-                                                                            value={child.column} field='display_name' options={child.selectField} placeholder='Column' />
+                                                                            value={child.column} field='path' options={child.selectField} placeholder='Column' />
                                                                     </div>
                                                                     <div className="method-select">
                                                                         {/* <custom-select-field ng-model="child.filter" allow-clear="false" extra-params="{index:childIndex,parentIndex:parentIndex}" call-it="this.filterChange"
@@ -858,13 +872,13 @@ export default class ConfigureDynamicFilter extends Component {
                         </form>
                         <div className="row footer-content nomargin">
                             <div className="col-sm-3 col-xs-3 border-select-filter margin-top-8">
-                                {/* <custom-select-field ng-model="configureFilter.order" place-holder="Order" obj="configureFilter.dictionary" iterate-item="column_name">
+                                {/* <custom-select-field ng-model="configureFilter.order" place-holder="Order" obj="configureFilter.dictionary" iterate-item="name">
                                     </custom-select-field> */}
                                 <SelectBox
                                     onChange={(data) => {
                                         this.setState({ order: data });
                                     }}
-                                    value={order} field='column_name' options={content.dictionary} placeholder='Order'
+                                    value={order} field='name' options={content.dictionary} placeholder='Order'
                                 />
                             </div>
                             <div className="col-sm-3 col-xs-3 border-select-filter margin-top-8">

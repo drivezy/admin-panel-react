@@ -46,10 +46,7 @@ export default class DetailPortlet extends Component {
         }
     }];
 
-    componentDidMount() {
-    }
-
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
     }
 
     render() {
@@ -73,7 +70,7 @@ export default class DetailPortlet extends Component {
                                                 </Col>
                                                 <Col>
                                                     <span className="pull-right"> {RowTemplate({ selectedColumn, listingRow, path: 'absPath' })}</span>
-                                                    {/* <span className="pull-right">{listingRow[selectedColumn.column_name]}</span> */}
+                                                    {/* <span className="pull-right">{listingRow[selectedColumn.name]}</span> */}
                                                 </Col>
                                             </Row>
                                             : null

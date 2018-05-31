@@ -42,7 +42,7 @@ export default class PortletTable extends Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.setState({
             finalColumns: nextProps.finalColumns,
             listing: nextProps.listing,
@@ -171,7 +171,7 @@ export default class PortletTable extends Component {
                                 </th>
                                 {
                                     finalColumns.map((selectedColumn, key) => {
-                                        let conditionForSorting = (this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.column_name))) ? (this.state.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down') : ''
+                                        let conditionForSorting = (this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.name))) ? (this.state.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down') : ''
                                         return (
                                             <th className="column-header" key={key}>
                                                 {/* Column Wrapper */}

@@ -154,7 +154,7 @@ export default class CodeEditor extends Component {
                 description: name + " Script for " + '',
                 source_type: name,
                 source_id: payload.listingRow.id,
-                source_column: column.column_name
+                source_column: column.name
             }
 
             const result = await Post({ url: 'systemScript', body: params })
@@ -186,7 +186,7 @@ export default class CodeEditor extends Component {
             description: name + " Script for " + '',
             source_type: name,
             source_id: payload.listingRow.id,
-            source_column: column.column_name
+            source_column: column.name
         }
 
         if (this.state.scriptId) {

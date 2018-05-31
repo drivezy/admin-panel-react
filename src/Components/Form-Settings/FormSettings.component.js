@@ -23,12 +23,6 @@ export default class FormSettings extends Component {
         }
     }
 
-    componentDidMount() {
-    }
-
-    componentWillReceiveProps(nextProps) {
-    }
-
     toggleModal = () => {
         this.setState({ modal: !this.state.modal, activeColumn: {}, tempSelectedColumns: this.props.selectedColumns })
     }
@@ -125,7 +119,7 @@ export default class FormSettings extends Component {
                                             <ListGroup>
                                                 {
                                                     leftColumns[column].map((entry, key) => (
-                                                        <ListGroupItem tag="button" onDoubleClick={() => this.addColumn(entry)} key={key}>{entry.column_name}</ListGroupItem>
+                                                        <ListGroupItem tag="button" onDoubleClick={() => this.addColumn(entry)} key={key}>{entry.name}</ListGroupItem>
                                                     ))
                                                 }
                                             </ListGroup>
@@ -160,7 +154,7 @@ export default class FormSettings extends Component {
                                                 ---- {column} ----
                                         </ListGroupItem>
                                             : <ListGroupItem tag="button" action onClick={() => this.selectColumn(column, index)} className={`${activeColumn.column == column.column ? 'active' : ''}`}>
-                                                {column.columnTitle ? column.columnTitle : columns[column.column].column_name}
+                                                {column.columnTitle ? column.columnTitle : columns[column.column].name}
                                             </ListGroupItem>
                                         }
                                     </div>

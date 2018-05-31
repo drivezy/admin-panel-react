@@ -78,7 +78,7 @@ export async function CreateQuery({ rawQuery, dictionary = [], finalSql: FinalSq
         queries.forEach(async (value, key) => {
             let showSql = '';
             const queryObj = RawStringQueryToObject(value);
-            const column = SelectFromOptions(dictionary, queryObj.selectedColumn, 'column_name');
+            const column = SelectFromOptions(dictionary, queryObj.selectedColumn, 'name');
 
             showSql += column.display_name + queryObj.selectedFilter;
 

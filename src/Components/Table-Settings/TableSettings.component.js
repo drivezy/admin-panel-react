@@ -27,12 +27,6 @@ export default class TableSettings extends Component {
         }
     }
 
-    componentDidMount() {
-    }
-
-    componentWillReceiveProps(nextProps) {
-    }
-
     toggleModal = () => {
         this.setState({ modal: !this.state.modal, activeColumn: {}, tempSelectedColumns: this.props.selectedColumns })
     }
@@ -46,8 +40,11 @@ export default class TableSettings extends Component {
     addColumn = (column) => {
         var selectedColumns = this.state.tempSelectedColumns;
 
+        const regexForPickingAfterLastDot = /[^\.]+$/;
         selectedColumns.unshift({
-            column: column.parent + "." + column.id, headingCollapsed: true, heading: ""
+            headingCollapsed: true, heading: "", object: column.parent, column: column.name
+            // headingCollapsed: true, heading: "", object: column.parent.match(regexForPickingAfterLastDot)[0], column: column.name, columnObj: column
+            // column: column.parent + "." + column.id, headingCollapsed: true, heading: ""
         });
 
         this.setState({ tempSelectedColumns: selectedColumns })
@@ -98,7 +95,13 @@ export default class TableSettings extends Component {
     }
 
     applyChanges = async () => {
-        const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
+        const { userId, menuId, listName } = this.props;
+        const { tempSelectedColumns } = this.state;
+
+        console.log(this.state.tempSelectedColumns);
+        const result = await SetPreference({ userId, menuId, name: listName, selectedColumns: this.state.tempSelectedColumns });
+
+        // const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
         result.success ? this.setState({ modal: !this.state.modal }) : null;
         this.props.onSubmit(this.state.tempSelectedColumns);
     }
@@ -165,7 +168,7 @@ export default class TableSettings extends Component {
 
                                                                 <div key={key} className="column-group" onDoubleClick={() => this.addColumn(entry)} >
                                                                     <div className="column-label">
-                                                                        {entry.column_name}
+                                                                        {entry.name}
                                                                     </div>
                                                                     <div className="icon-holder">
                                                                         <button className="add-column btn btn-sm btn-light" onClick={() => this.addColumn(entry)} >

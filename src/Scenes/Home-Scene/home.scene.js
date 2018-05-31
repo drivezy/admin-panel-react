@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
 
+// import { Typeahead } from 'react-bootstrap-typeahead';
+// import 'react-bootstrap-typeahead/css/Typeahead.css';
+
+import Typeahead from './../../Components/Forms/Components/Typeahead/typeahead.component';
+
 import CodeEditor from './../../Components/Code-Editor/codeEditor.component';
 import './home.scene.css';
 
@@ -26,5 +31,39 @@ export default class Home extends Component {
                 <TimePicker />
             </div>
         )
+    }
+
+    radios = [
+        { label: 'Justify (default)' },
+        { label: 'Align left' },
+        { label: 'Align right' },
+    ];
+
+    state = {
+        align: 'shubham'
+    };
+
+    exp = (data) => {
+        this.setState({ align: data });
+        // console.log(data);
+    }
+
+    render() {
+        const { align } = this.state;
+
+
+        return (
+            <div className="home-scene">
+                <Typeahead
+                    searchLabel={''}
+                    field="label"
+                    options={this.radios}
+                    placeholder="Choose a state..."
+                    onChange={this.exp}
+                    onType={(data) => console.log(data)}
+                />
+
+            </div>
+        );
     }
 }

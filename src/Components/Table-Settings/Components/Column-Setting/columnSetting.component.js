@@ -53,7 +53,7 @@ export default class ColumnSetting extends Component {
     componentDidMount() {
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.column) {
             this.setState({ column: nextProps.column });
         }
@@ -68,7 +68,7 @@ export default class ColumnSetting extends Component {
             <div className={`column-setting ${activeColumn.column == column.column ? 'active' : ''}`} >
                 <div className="column-label">
                     <div className="item-label" onClick={() => this.props.selectColumn(column, this.props.index)} onDoubleClick={() => this.props.removeColumn(column)} >
-                        {column.columnTitle ? column.columnTitle : columns[column.column].column_name}
+                        {column.columnTitle ? column.columnTitle : columns[column.column].name}
                     </div>
                     <div className="column-toggle" onClick={this.toggleSetting}>
                         <i className={`fa ${column.expanded ? ' fa-chevron-down' : ' fa-chevron-right'}`}></i>

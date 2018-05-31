@@ -33,7 +33,7 @@ export default class ListingSearch extends React.Component {
         this.initialize();
     }
 
-    componentWillReceiveProps() {
+    UNSAFE_componentWillReceiveProps() {
         this.initialize(); // on props update
     }
 
@@ -47,7 +47,7 @@ export default class ListingSearch extends React.Component {
             const values = searchQuery.split(' ');
             const regex = /["%25]/g;
             values[2] = values[2].replace(regex, '');
-            selectedColumn = SelectFromOptions(dictionary, values[0], 'column_name');
+            selectedColumn = SelectFromOptions(dictionary, values[0], 'name');
             activeColumn = selectedColumn;
             let query, obj;
             if (!(selectedColumn && selectedColumn.referenced_model)) {
@@ -64,8 +64,8 @@ export default class ListingSearch extends React.Component {
                     this.state.referenceColumnValue = { data: query[0] };
                 }
             }
-        } else if (searchDetail && searchDetail.column_name) {
-            selectedColumn = SelectFromOptions(dictionary, searchDetail.column_name, 'column_name');
+        } else if (searchDetail && searchDetail.name) {
+            selectedColumn = SelectFromOptions(dictionary, searchDetail.name, 'name');
             activeColumn = selectedColumn;
         }
 
@@ -126,11 +126,11 @@ export default class ListingSearch extends React.Component {
 
         switch (activeColumn.column_type) {
             case 116: case 117:
-                query += activeColumn.column_name + ' = ' + data.data.id;
+                query += activeColumn.name + ' = ' + data.data.id;
                 break;
 
             default:
-                query += activeColumn.column_name + ' = ' + data.data;
+                query += activeColumn.name + ' = ' + data.data;
                 break;
         }
 
@@ -147,7 +147,7 @@ export default class ListingSearch extends React.Component {
             history: this.props.history, match: this.props.match
         };
 
-        query += activeColumn.column_name + ' like "%25' + this.state.inputValue + '%25"';
+        query += activeColumn.name + ' like "%25' + this.state.inputValue + '%25"';
         urlParams.search = query;
         Location.search(urlParams, { props: paramProps });
 

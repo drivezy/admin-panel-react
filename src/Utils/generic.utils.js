@@ -76,27 +76,40 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
     for (const i in columns) {
         // const data = columns[i];
         for (const j in columns[i]) {
-            const element = `${i}.${columns[i][j].column_name}`;
+            console.log(columns[i][j]);
 
-            columns[i][j].path = element.replace(/\.?([A-Z]+)/g, (x, y) => {
-                return `_${y.toLowerCase()}`;
-            }).replace(/^_/, '').replace(starter, '').replace('.', '');
-            columns[i][j].parent = i;
+            const selectedColumn = {};
+
+            const element = `${i}.${columns[i][j].name}`;
+
+            // columns[i][j].path = element.replace(/\.?([A-Z]+)/g, (x, y) => {
+            //     return `_${y.toLowerCase()}`;
+            // }).replace(/^_/, '').replace(starter, '').replace('.', '');
+            selectedColumn.parent = i;
+
+            selectedColumn.path = element;
+            selectedColumn.column_type_id = columns[i][j].column_type_id;
+            selectedColumn.model_id = columns[i][j].model_id
+            selectedColumn.name = columns[i][j].name;
+            selectedColumn.visibility = columns[i][j].visibility;
+            selectedColumn.reference_model = columns[i][j].reference_model;
+            selectedColumn.display_name = columns[i][j].display_name;
 
             const relationIndex = columns[i][j].parent;
             if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex)) {
                 if (relationship[relationIndex].hasOwnProperty('related_model')) {
-                    columns[i][j].reference_route = relationship[relationIndex].related_model.state_name;
-                    columns[i][j].parentColumn = relationship[relationIndex].related_column ? relationship[relationIndex].related_column.column_name : null;
+                    selectedColumn.reference_route = relationship[relationIndex].related_model.state_name;
+                    selectedColumn.parentColumn = relationship[relationIndex].related_column ? relationship[relationIndex].related_column.name : null;
                 } else if (relationship[relationIndex].state_name) {
-                    columns[i][j].reference_route = relationship[relationIndex].state_name;
+                    selectedColumn.reference_route = relationship[relationIndex].state_name;
                 }
             }
-            selectedColumns[`${columns[i][j].parent}.${columns[i][j].id}`] = columns[i][j];
-            // selectedColumns[columns[i][j].id] = columns[i][j];
+            selectedColumns[selectedColumn.name] = selectedColumn;
+            // selectedColumns[`${columns[i][j].parent}.${columns[i][j].id}`] = columns[i][j];
         }
 
     }
+    console.log(selectedColumns);
     return selectedColumns;
 }
 
@@ -140,13 +153,13 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
             }
         } else {
             finalColumnDefinition[i] = {
-                column_name: selected, column_type: null
+                name: selected, column_type: null
             };
             splitEnabled = !splitEnabled;
         }
 
         // if it is a seperator
-        if (selected.column_name == "seperator") {
+        if (selected.name == "seperator") {
             finalColumnDefinition[i] = selected;
         }
     }
@@ -389,7 +402,7 @@ export function GetPreSelectedMethods() {
     methods.delete = async ({ action, listingRow, genericData }) => {
         const deletekey = IsUndefinedOrNull(action.redirectValueName) ? listingRow.id : listingRow[action.redirectValueName];
 
-        const method = async() => {
+        const method = async () => {
             const result = await Delete({ url: `${genericData.module}/${deletekey}` });
             if (result.success) {
                 action.callback();
@@ -461,7 +474,8 @@ export async function GetPreference(paramName) {
  */
 export function RowTemplate({ selectedColumn, listingRow, path = 'path' }) {
     if (selectedColumn.column_type == 111) {
-        return eval('listingRow.' + selectedColumn.path) ? 'Yes' : 'No';
+        // return eval('listingRow.' + selectedColumn.path) ? 'Yes' : 'No';
+        return listingRow[selectedColumn.path] ? 'Yes' : 'No';
     } else if (selectedColumn.route) {
         let id;
         if (selectedColumn[path].split('.')[1]) {
@@ -487,7 +501,8 @@ export function RowTemplate({ selectedColumn, listingRow, path = 'path' }) {
 
 function defaultRowValue({ listingRow, selectedColumn, path }) {
     try {
-        return eval('listingRow.' + selectedColumn[path]);
+        return listingRow[selectedColumn.path];
+        // return eval('listingRow.' + selectedColumn[path]);
     } catch (e) {
         return '';
     }

@@ -87,7 +87,7 @@ export function GetColumnsForDetail(params, excludeStarter) {
     for (var i in columns) {
         var data = columns[i];
         for (var j in columns[i]) {
-            var element = i + "." + columns[i][j].column_name;
+            var element = i + "." + columns[i][j].name;
 
             columns[i][j]["absPath"] = element.replace(/\.?([A-Z]+)/g, function (x, y) {
                 return "_" + y.toLowerCase();
@@ -98,7 +98,7 @@ export function GetColumnsForDetail(params, excludeStarter) {
             var relationIndex = columns[i][j]["parent"];
             if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && relationship[relationIndex].hasOwnProperty('related_model')) {
                 columns[i][j].reference_route = relationship[relationIndex].related_model.state_name;
-                columns[i][j].parentColumn = relationship[relationIndex].related_column ? relationship[relationIndex].related_column.column_name : null;
+                columns[i][j].parentColumn = relationship[relationIndex].related_column ? relationship[relationIndex].related_column.name : null;
             }
 
             selectedColumns[columns[i][j].parent + "." + columns[i][j].id] = columns[i][j];
