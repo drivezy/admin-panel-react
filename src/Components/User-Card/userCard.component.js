@@ -11,12 +11,13 @@ export default class UserCard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userData: props.userData
+            userData: props.userData,
+            getBooking: props.getBooking
         };
     }
 
     render() {
-        const { userData = {} } = this.props;
+        const { userData = {}, getBooking = {} } = this.props;
         return (
             <div className="user-card">
                 {/* <Row>
@@ -30,12 +31,15 @@ export default class UserCard extends Component {
                                 </div>
                                 <div className="user-body">
                                     <div className="user-list">
-                                        <p><i className="fa fa-user" aria-hidden="true"></i> {userData.display_name}</p>
+                                        <p><h4 className="name-colour">{userData.display_name}</h4></p>
                                         <p>
-                                            <i className="fa fa-phone" aria-hidden="true"></i> {userData.mobile} <i className="fa fa-check-circle text-green" aria-hidden="true"></i>
+                                            <small><i className="fa fa-phone" aria-hidden="true"></i> {userData.mobile} <i className="fa fa-check-circle text-green" aria-hidden="true"></i></small>
                                         </p>
                                         <p>
-                                            <i className="fa fa-user" aria-hidden="true"></i> <span className="capitalize-text">{userData.gender}</span>
+                                            <small><i className="fa fa-birthday-cake" aria-hidden="true"></i> {userData.dob}</small>
+                                        </p>
+                                        <p>
+                                            <small><i className="fa fa-user" aria-hidden="true"></i> <span className="capitalize-text">{userData.gender}</span></small>
                                         </p>
                                     </div>
                                 </div>
@@ -45,13 +49,49 @@ export default class UserCard extends Component {
                             <div className="user-info">
                                 <div className="user-body">
                                     <div className="user-list">
-                                        <p><i className="fa fa-birthday-cake" aria-hidden="true"></i> {userData.dob}</p>
-                                        <p><i className="fa fa-envelope" aria-hidden="true"></i> {userData.email}</p>
-                                        <p><i className="fa fa-check-circle text-green" aria-hidden="true"></i> {userData.license_number}</p>
+                                        <p><small><i className="fa fa-envelope" aria-hidden="true"></i> {userData.email}</small></p>
+                                        <p><small><i className="fa fa-id-card text-green" aria-hidden="true"></i> {userData.license_number}</small></p>
+                                        <p><small><i className="fa fa-money" aria-hidden="true"></i> {userData.license_number}</small></p>
+                                        <p><small><i className="fa fa-money" aria-hidden="true"></i> {userData.license_number}</small></p>
+
                                     </div>
                                 </div>
                             </div>
                         </Col>
+                        {/* <Col sm="3">
+                            {
+                                getBooking && getBooking.feedback ?
+                                    <div className="user-info">
+                                        <div className="user-body">
+                                            <div className="user-feedback">
+                                                <p> User Feedback </p>
+                                                <p><span className="ratings-colour"><i class="fa fa-star" aria-hidden="true"></i></span></p>
+                                                <p>{getBooking.feedback[0].created_at}</p>
+                                                <p>{getBooking.feedback[0].comments}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    :
+                                    null
+                            }
+                        </Col>
+                        <Col sm="3">
+                            {
+                                getBooking && getBooking.feedback ?
+                                    <div className="user-info">
+                                        <div className="user-body">
+                                            <div className="user-feedback">
+                                                <p> Fleet Feedback </p>
+                                                <p><span className="ratings-colour"><i class="fa fa-star" aria-hidden="true"></i></span></p>
+                                                <p>{getBooking.feedback[0].created_at}</p>
+                                                <p>{getBooking.feedback[0].comments}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    :
+                                    null
+                            }
+                        </Col> */}
                     </Row>
                 </Card>
             </div>

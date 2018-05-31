@@ -1,5 +1,8 @@
 .booking-user {
     margin: 5px;
+    .user-card {
+        height: 150px;
+    }
     .booking-panels{
         display: flex;
         // margin: 4px;
@@ -77,6 +80,36 @@
                     margin-bottom: 0px;
                     min-height: 40px;
                 }
+                .trip-gray-border-bottom {
+                    border-bottom: 1px solid #f0f4f7;
+                }
+                .total-odo {
+                    margin-top: 1px;
+                }
+                .handover-user {
+                    margin-top: 10px;
+                }
+                .unvarified-trip-panel {
+                    margin-top: 110px;
+                    text-align: center;
+                    color: grey;
+                }
+                .total-odo-info {
+                    margin-top: 25px;
+                }
+                .ride-end-detail {
+                    text-align: right;
+                }
+                .trip-detail-info {
+                    margin-bottom: 0.5rem;
+                }
+                .fuel-progress-bar {
+                    margin-top: 5px;
+                    .progress {
+                        height: 30px;
+                        width: 200px;
+                    }
+                }
                 .start-end {
                     p {
                         margin: 0px;
@@ -87,7 +120,18 @@
                     margin-top: 10px;
                     margin-bottom: -10px;
                 }
+                .ride-return-text {
+                    text-align: center;
+                    margin-top: 0px;
+                    .button {
+                        padding: -0.625rem .75rem;
+                    } 
+                }
+                
             }
+        }
+        .tab-content {
+            width: 100%;
         }
     }
 }
