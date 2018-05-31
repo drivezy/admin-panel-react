@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import './expenseVoucherDetail.scene.css';
 
 import {
-    Card, CardHeader, CardText, CardBody, Row, Col, Progress
+    Card, CardHeader, CardBody, Row, Col
 } from 'reactstrap';
 
-import { Get, Post, Put } from './../../Utils/http.utils';
 import TableWrapper from './../../Components/Table-Wrapper/tableWrapper.component';
+
+import { Get, Post, Put } from './../../Utils/http.utils';
 import ToastNotifications from './../../Utils/toast.utils';
 import { ConfirmUtils } from './../../Utils/confirm-utils/confirm.utils';
 
@@ -54,6 +55,39 @@ export default class ExpenseVoucherDetail extends Component {
             }
         }
         ConfirmUtils.confirmModal({ message: "Are you sure you want to approve this expense?", callback: method });
+    }
+
+    rejectExpense = (voucher) => {
+        const method = async () => {
+            const result = await Put({ url: "expenseVoucher/" + voucher.id, body: { state: 312 } });
+            if (result.success) {
+                this.getVoucherDetail();
+                ToastNotifications.success('Expense Rejected');
+            }
+        }
+        ConfirmUtils.confirmModal({ message: "Are you sure you want to reject expense?", callback: method });
+    }
+
+    rejectInvoice = (voucher) => {
+        const method = async () => {
+            const result = await Put({ url: "expenseVoucher/" + voucher.id, body: { state: 279 } });
+            if (result.success) {
+                this.getVoucherDetail();
+                ToastNotifications.success('Invoice Rejected');
+            }
+        }
+        ConfirmUtils.confirmModal({ message: "Are you sure you want to reject this invoice?", callback: method });
+    }
+
+    onHold = (voucher) => {
+        const method = async () => {
+            const result = await Put({ url: "expenseVoucher/" + voucher.id, body: { state: 1070 } });
+            if (result.success) {
+                this.getVoucherDetail();
+                ToastNotifications.success('Expense On Hold');
+            }
+        }
+        ConfirmUtils.confirmModal({ message: "Are you sure you want to on hold this expense?", callback: method });
     }
 
     authorizeExpense = (voucher) => {
@@ -291,7 +325,7 @@ export default class ExpenseVoucherDetail extends Component {
                                 </Card>
                             }
                             {
-                                voucherDetail.status.id == 276 &&
+                                voucherDetail.status.id === 276 &&
                                 <div className="padding-top-10">
                                     <button type="button" className="btn btn-primary btn-block" onClick={() => { this.requestApproval(voucherDetail) }}>
                                         Request Approval
@@ -299,15 +333,39 @@ export default class ExpenseVoucherDetail extends Component {
                                 </div>
                             }
                             {
-                                voucherDetail.status.id == 277 &&
+                                voucherDetail.status.id === 277 &&
                                 <div className="padding-top-10">
-                                    <button type="button" className="btn btn-primary btn-block" onClick={() => { this.approveExpense(voucherDetail) }}>
+                                    <button type="button" className="btn btn-success btn-block" onClick={() => { this.approveExpense(voucherDetail) }}>
                                         Approve Expense
                                     </button>
                                 </div>
                             }
                             {
-                                !voucherDetail.financial_authorized_by && voucherDetail.status.id != 279 &&
+                                (voucherDetail.cash.length === 0 && voucherDetail.imps.length === 0 && voucherDetail.cheque.length === 0 && voucherDetail.status.id !== 312 && voucherDetail.status.id !== 279) &&
+                                <div className="padding-top-10">
+                                    <button type="button" className="btn btn-danger btn-block" onClick={() => { this.rejectExpense(voucherDetail) }}>
+                                        Reject Expense
+                                    </button>
+                                </div>
+                            }
+                            {
+                                (voucherDetail.cash.length === 0 && voucherDetail.imps.length === 0 && voucherDetail.cheque.length === 0 && voucherDetail.status.id !== 312 && voucherDetail.status.id !== 279) &&
+                                <div className="padding-top-10">
+                                    <button type="button" className="btn btn-warning btn-block" onClick={() => { this.rejectInvoice(voucherDetail) }}>
+                                        Reject Invoice
+                                    </button>
+                                </div>
+                            }
+                            {
+                                (voucherDetail.cash.length === 0 && voucherDetail.imps.length === 0 && voucherDetail.cheque.length === 0 && voucherDetail.status.id !== 312 && voucherDetail.status.id !== 279 && voucherDetail.status.id !== 1070) &&
+                                <div className="padding-top-10">
+                                    <button type="button" className="btn btn-info btn-block" onClick={() => { this.onHold(voucherDetail) }}>
+                                        On Hold
+                                    </button>
+                                </div>
+                            }
+                            {
+                                !voucherDetail.financial_authorized_by && voucherDetail.status.id !== 279 &&
                                 <div className="padding-top-10">
                                     <button type="button" className="btn btn-primary btn-block" onClick={() => { this.authorizeExpense(voucherDetail) }}>
                                         Authorize Expense
@@ -315,7 +373,7 @@ export default class ExpenseVoucherDetail extends Component {
                                 </div>
                             }
                             {
-                                !voucherDetail.unauthorized_by && voucherDetail.status.id != 279 &&
+                                !voucherDetail.unauthorized_by && voucherDetail.status.id !== 279 &&
                                 <div className="padding-top-10">
                                     <button type="button" className="btn btn-primary btn-block" onClick={() => { this.unauthorizeExpense(voucherDetail) }}>
                                         Unauthorize Expense
