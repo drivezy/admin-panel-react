@@ -12,7 +12,7 @@ export default class TypeaheadComponent extends Component {
         }
     }
 
-    componentWillReceiveProps(props) {
+    UNSAFE_componentWillReceiveProps(props) {
         this.setState({ ...this.returnStateObj(props) });
     }
 
