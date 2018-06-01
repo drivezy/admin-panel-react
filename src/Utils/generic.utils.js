@@ -53,22 +53,26 @@ export function ConvertToQuery(params) {
  * @param  {object} dictionary
  * @param  {boolean} excludeStarter}
  */
-export function GetColumnsForListing({ includes, relationship, starter, dictionary, excludeStarter }) {
+export function GetColumnsForListing({ includes, relationship, starter, dictionary, excludeStarter, includesList = [] }) {
     const columns = [];
-    const selectedColumns = {};
-    const includesList = [];
-    const includesArr = includes.split(',');
+    const dictionaryColumns = {};
+    // const includesList = [];
 
-    for (const i in includesArr) {
-        const tempIncludes = includesArr[i].split('.');
-        let newStarter = starter;
-        for (const j in tempIncludes) {
-            newStarter += `.${tempIncludes[j]}`;
-            includesList.push(newStarter);
+    if (!(Array.isArray(includesList) && includesList.length)) {
+        const includesArr = includes.split(',');
+        includesList = [];
+        for (const i in includesArr) {
+            const tempIncludes = includesArr[i].split('.');
+            let newStarter = starter;
+            for (const j in tempIncludes) {
+                newStarter += `.${tempIncludes[j]}`;
+                includesList.push(newStarter);
+            }
         }
+        !excludeStarter ? includesList.unshift(starter) : null;
     }
 
-    !excludeStarter ? includesList.unshift(starter) : null;
+
     for (const i in includesList) {
         columns[includesList[i]] = dictionary[(includesList[i])];
     }
@@ -102,12 +106,12 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
                     selectedColumn.reference_route = relationship[relationIndex].state_name;
                 }
             }
-            selectedColumns[selectedColumn.name] = selectedColumn;
-            // selectedColumns[`${columns[i][j].parent}.${columns[i][j].id}`] = columns[i][j];
+            dictionaryColumns[selectedColumn.parent + '.' + selectedColumn.name] = selectedColumn;
+            // dictionaryColumns[`${columns[i][j].parent}.${columns[i][j].id}`] = columns[i][j];
         }
 
     }
-    return selectedColumns;
+    return dictionaryColumns;
 }
 
 /**
@@ -125,7 +129,7 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
     for (const i in selectedColumns) {
         const selected = selectedColumns[i];
         if (typeof (selected) == "object") {
-            const dict = columns[selected.column];
+            const dict = columns[selected.index];
             if (dict) {
                 finalColumnDefinition[i] = dict;
                 finalColumnDefinition[i].route = selected.route ? selected.route : false;
@@ -189,7 +193,8 @@ export function ConvertMenuDetailForGenericPage(menuDetail) {
         sort: menuDetail.default_order ? splits[1].trim() : "desc",
         menuId: menuDetail.id,
         model: menuDetail.data_model,
-        preference: menuDetail.preference,
+        preference: {}, // @TODO uncomment next line and remove this line
+        // preference: menuDetail.preference,
         listName: menuDetail.state_name.toLowerCase(),
         nextActions: menuDetail.actions,
         userFilter: menuDetail.user_filter,

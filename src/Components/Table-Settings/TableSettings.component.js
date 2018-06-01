@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
-import './TableSettings.css';
+import { Collapse, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import _ from 'lodash';
 
 import { SetPreference } from './../../Utils/preference.utils';
-
 import { changeArrayPosition } from './../../Utils/js.utils';
 
-import { Collapse, Card, CardBody, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-
-import Switch from './../../Components/Forms/Components/Switch/switch';
-// import ColumnSetting from './Components/ColumnSetting/columnSetting.component';
 import ColumnSetting from './Components/Column-Setting/columnSetting.component';
+
+import './TableSettings.css';
 
 export default class TableSettings extends Component {
 
@@ -42,10 +39,13 @@ export default class TableSettings extends Component {
 
         // const regexForPickingAfterLastDot = /[^\.]+$/;
         selectedColumns.unshift({
-            headingCollapsed: true, heading: "", object: column.parent, column: column.name
+            headingCollapsed: true, heading: "", object: column.parent, column: column.name, index: column.parent + '.' + column.name
+            // headingCollapsed: true, heading: "", object: column.parent, column: column.name, index: column.parent + '.' + column.name
             // headingCollapsed: true, heading: "", object: column.parent.match(regexForPickingAfterLastDot)[0], column: column.name, columnObj: column
             // column: column.parent + "." + column.id, headingCollapsed: true, heading: ""
         });
+
+        console.log(selectedColumns);
 
         this.setState({ tempSelectedColumns: selectedColumns })
     }

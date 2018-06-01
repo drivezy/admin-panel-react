@@ -48,7 +48,7 @@ export default class DetailPortlet extends Component {
         this.buildTabData(this.props);
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (shouldComponentWillReceivePropsRun) { // when setting hash to the url, prevents componentWillReceiveProps from executing again
             // this.setState({ tabs: nextProps.tabs });
             this.state.tabs = nextProps.tabs;
