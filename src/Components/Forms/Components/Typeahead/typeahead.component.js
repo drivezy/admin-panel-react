@@ -28,7 +28,7 @@ export default class TypeaheadComponent extends Component {
         return {
             options: props.options,
             value: props.value,
-            field: props.field || undefined,
+            field: props.field || 'name',
         }
     }
 

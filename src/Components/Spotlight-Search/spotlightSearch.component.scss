@@ -29,6 +29,12 @@
                     &:hover {
                         background: whitesmoke;
                     }
+                    &:focus {
+                        background: whitesmoke;
+                    }
+                    &.hovered {
+                        background: whitesmoke;
+                    }
                 }
             }
         }
