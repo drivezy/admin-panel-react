@@ -33,6 +33,12 @@
                 .booking-status {
                     float: right;
                 }
+                .vehicle-number {
+                    color: #337ab7;
+                }
+                .booking-detail-date {
+                    margin-top: 12px;
+                }
                 .gray-border-bottom {
                     border-bottom: 1px solid #f0f4f7;
                 }
@@ -122,10 +128,26 @@
                 }
                 .ride-return-text {
                     text-align: center;
-                    margin-top: 0px;
+                    margin-top: -5px;
+                    //border-top: 1px solid #f0f4f7;
                     .button {
                         padding: -0.625rem .75rem;
+                    }
+                    .amount-info-text {
+                        margin-top: 5px;
                     } 
+                }
+                .cancellation-details {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-around;
+                    .cancelled-type {
+
+                    }
+                }
+                .confirm-trip-info {
+                    padding: 101px 0px 35px 210px;
+                    color: gray;
                 }
                 
             }

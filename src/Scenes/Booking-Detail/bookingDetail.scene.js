@@ -72,15 +72,25 @@ export default class BookingDetail extends Component {
                     this.setState({ totalDuration })
                 }
 
+                let amountDue = 0;
+                bookingDetail.refund.forEach(function (remaining_amount) {
+                    if (remaining_amount.processed == 0) {
+                        amountDue += parseFloat(remaining_amount.amount);
+                    }
+                });
+
                 let totalOdo = bookingDetail.ride_return.end_odo_reading - bookingDetail.ride_return.start_odo_reading;
                 let rideStartDate = moment(result.response.ride_return.actual_start_time).format("dddd, MMMMDo YYYY");
                 let rideStartTime = moment(result.response.ride_return.actual_start_time).format("h:mm A");
                 let rideEndDate = moment(result.response.ride_return.actual_end_time).format("dddd, MMMMDo YYYY");
                 let rideEndTime = moment(result.response.ride_return.actual_end_time).format("h:mm A");
 
+                let getStartingFuelPercentage = bookingDetail.ride_return.start_fuel_percentage;
+                let getEndingFuelPercentage = bookingDetail.ride_return.end_fuel_percentage;
 
 
-                this.setState({ totalOdo, rideStartDate, rideEndDate, rideStartTime, rideEndTime });
+
+                this.setState({ totalOdo, rideStartDate, rideEndDate, rideStartTime, rideEndTime, amountDue, getStartingFuelPercentage, getEndingFuelPercentage });
             }
 
 
@@ -339,7 +349,7 @@ export default class BookingDetail extends Component {
 
 
 
-        const { bookingDetail = {}, activeTab, tabContent = [], paidAmount, fairAmount, tentativeAmount } = this.state;
+        const { bookingDetail = {}, activeTab, tabContent = [], paidAmount, fairAmount, tentativeAmount, amountDue, getStartingFuelPercentage, getEndingFuelPercentage } = this.state;
         console.log(this.state.totalDuration);
 
 
@@ -351,7 +361,10 @@ export default class BookingDetail extends Component {
 
                 <div>
 
-                    <UserCard userData={bookingDetail.user} getBooking={bookingDetail} />
+                    {
+                        bookingDetail.user&&bookingDetail.user.id ? <UserCard userData={bookingDetail.user} /> : null
+                    }
+
 
                     {
                         bookingDetail.id &&
@@ -381,10 +394,11 @@ export default class BookingDetail extends Component {
                                                 <Col sm="10">
                                                     <Row>
                                                         <Col sm="4">
-                                                            <img className="media-object width-100" src={`${bookingDetail.vehicle.car.image}`} alt="Car Image" />
+                                                            <img className="media-object width-100" src={`${bookingDetail.vehicle.car.image}`} alt="" />
                                                         </Col>
                                                         <Col sm="8">
-                                                            <span>{bookingDetail.vehicle.registration_number} ({bookingDetail.vehicle.car.name})</span>
+                                                            <span className="vehicle-number"><h6>{bookingDetail.vehicle.registration_number}</h6></span> 
+                                                            <span>({bookingDetail.vehicle.car.name})</span>
                                                             <p>
                                                                 {bookingDetail.type.value}
                                                                 <span>({bookingDetail.fuel_package == null ? bookingDetail.with_fuel ? 'withfuel' : 'fuelless' : bookingDetail.fuel_package + ' Kms fuel package'})</span>
@@ -402,7 +416,7 @@ export default class BookingDetail extends Component {
                                                 </div> */}
                                                 </Col>
                                             </Row>
-                                            <Row className="gray-border-bottom">
+                                            <Row className="booking-detail-date">
                                                 <Col sm="5">
                                                     <div className="jr-start-time">
                                                         <div className="no-padding text-black font-12">
@@ -465,95 +479,147 @@ export default class BookingDetail extends Component {
                                                 null
                                         }
                                         {
-                                            (bookingDetail && bookingDetail.ride_return) ?
-                                                <CardBody>
-                                                    <Row className="trip-gray-border-bottom">
-                                                        <Col sm="4">
-                                                            <p className="trip-detail-info">{this.state.rideStartDate}</p>
-                                                            <p className="trip-detail-info">{this.state.rideStartTime}</p>
-                                                            <p className="trip-detail-info">{bookingDetail.ride_return.start_odo_reading}</p>
-                                                        </Col>
-                                                        {
-                                                            bookingDetail && bookingDetail.status.id == 7 &&
+                                            <CardBody>
+                                                {
+                                                    (bookingDetail && bookingDetail.ride_return) ?
+                                                        <Row className="trip-gray-border-bottom">
                                                             <Col sm="4">
-                                                                <div className="jr-time-icon">
-                                                                    <div className="no-padding margin-top-12 " align="center">
-                                                                        <i className="fa fa-clock-o" aria-hidden="true"></i>
-                                                                    </div>
-                                                                    <div className="no-padding light-red  font-11" align="center">
-                                                                        {this.state.totalDuration}
-                                                                    </div>
-                                                                    <div className="total-odo-info" align="center">
-                                                                        <i className="fa fa-car" aria-hidden="true"></i>
-                                                                    </div>
-                                                                    <div className="total-odo" align="center">
-                                                                        {this.state.totalOdo} Kms
+                                                                <p className="trip-detail-info">{this.state.rideStartDate}</p>
+                                                                <p className="trip-detail-info">{this.state.rideStartTime}</p>
+                                                                <p className="trip-detail-info">{bookingDetail.ride_return.start_odo_reading}</p>
+                                                            </Col>
+
+                                                            {
+                                                                bookingDetail && bookingDetail.status.id == 7 &&
+                                                                <Col sm="4">
+                                                                    <div className="jr-time-icon">
+                                                                        <div className="no-padding margin-top-12 " align="center">
+                                                                            <i className="fa fa-clock-o" aria-hidden="true"></i>
+                                                                        </div>
+                                                                        <div className="no-padding light-red  font-11" align="center">
+                                                                            {this.state.totalDuration}
+                                                                        </div>
+                                                                        <div className="total-odo-info" align="center">
+                                                                            <i className="fa fa-car" aria-hidden="true"></i>
+                                                                        </div>
+                                                                        <div className="total-odo" align="center">
+                                                                            {this.state.totalOdo} Kms
                                                                 </div>
+                                                                    </div>
+                                                                </Col>
+                                                            }
+                                                            {
+                                                                bookingDetail && bookingDetail.status.id == 6 &&
+                                                                <Col sm="4">
+                                                                    <div className="jr-time-icon">
+                                                                        <div className="no-padding margin-top-12 " align="center">
+                                                                            <i className="fa fa-clock-o" aria-hidden="true"></i>
+                                                                        </div>
+                                                                        <div className="no-padding light-red  font-11" align="center">
+                                                                            {this.state.totalDuration}
+                                                                        </div>
+                                                                        <div className="total-odo-info" align="center">
+                                                                            <i className="fa fa-car" aria-hidden="true"></i>
+                                                                        </div>
+                                                                        <div className="total-odo" align="center">
+                                                                            _ _ Kms
+                                                                   </div>
+                                                                    </div>
+                                                                </Col>
+                                                            }
+
+                                                            {
+                                                                bookingDetail && bookingDetail.status.id == 7 &&
+                                                                <Col sm="4" className="ride-end-detail">
+                                                                    <p className="trip-detail-info">{this.state.rideEndDate}</p>
+                                                                    <p className="trip-detail-info">{this.state.rideEndTime}</p>
+                                                                    <p className="trip-detail-info">{bookingDetail.ride_return.end_odo_reading}</p>
+                                                                </Col>
+                                                            }
+                                                            {
+                                                                bookingDetail && bookingDetail.status.id == 6 &&
+                                                                <Col sm="4" className="ride-end-detail">
+                                                                    <p>In Transit</p>
+                                                                </Col>
+                                                            }
+                                                        </Row>
+                                                        :
+                                                        <div>
+                                                            {
+                                                                (bookingDetail.status && bookingDetail.status.id === 8 && bookingDetail.cancellation && bookingDetail.cancellation.type) &&
+                                                                <div>
+                                                                    <Row>
+                                                                        <Col sm="6">
+                                                                            <span>Type : </span>
+                                                                            <span>{bookingDetail.cancellation.type.name}</span>
+                                                                        </Col>
+                                                                        <Col sm="6">
+                                                                            <span>Time : </span>
+                                                                            <span>{bookingDetail.cancellation.updated_at}</span>
+                                                                        </Col>
+                                                                    </Row>
+                                                                    <Row>
+                                                                        <Col sm="12">
+                                                                            <span>Cancelled By :</span>
+                                                                            <span>{bookingDetail.cancellation.created_user.display_name}</span>
+                                                                        </Col>
+                                                                    </Row>
+                                                                    <Row>
+                                                                        <Col sm="12">
+                                                                            <span>Note :</span>
+                                                                            <span>{bookingDetail.cancellation.cancellation_note}</span>
+                                                                        </Col>
+                                                                    </Row>
                                                                 </div>
+                                                            }
+                                                            {
+                                                                (bookingDetail && bookingDetail.status && bookingDetail.status.id === 5) &&
+                                                                <div className="confirm-trip-info">
+                                                                    <Row>
+                                                                        <h4>  Trip not yet started </h4>
+                                                                    </Row>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                }
+                                                <div className="fuel-progress-bar">
+                                                    <Row className="gray-border-bottom">
+                                                        {
+                                                            bookingDetail && bookingDetail.status && (bookingDetail.status.id == 6 || bookingDetail.status.id == 7) &&
+                                                            <Col sm="6">
+                                                                <Progress value="getStartingFuelPercentage">{getStartingFuelPercentage}%</Progress>
                                                             </Col>
                                                         }
                                                         {
-                                                            bookingDetail && bookingDetail.status.id == 6 &&
-                                                            <Col sm="4">
-                                                                <div className="jr-time-icon">
-                                                                    <div className="no-padding margin-top-12 " align="center">
-                                                                        <i className="fa fa-clock-o" aria-hidden="true"></i>
-                                                                    </div>
-                                                                    <div className="no-padding light-red  font-11" align="center">
-                                                                        {this.state.totalDuration}
-                                                                    </div>
-                                                                    <div className="total-odo-info" align="center">
-                                                                        <i className="fa fa-car" aria-hidden="true"></i>
-                                                                    </div>
-                                                                    <div className="total-odo" align="center">
-                                                                        _ _ Kms
-                                                                   </div>
-                                                                </div>
+                                                            bookingDetail && bookingDetail.status && (bookingDetail.status.id == 6 || bookingDetail.status.id == 7) &&
+                                                            <Col sm="6">
+                                                                <Progress value="getEndingFuelPercentage">{getEndingFuelPercentage}%</Progress>
                                                             </Col>
                                                         }
 
-                                                        {
-                                                            bookingDetail && bookingDetail.status.id == 7 &&
-                                                            <Col sm="4" className="ride-end-detail">
-                                                                <p className="trip-detail-info">{this.state.rideEndDate}</p>
-                                                                <p className="trip-detail-info">{this.state.rideEndTime}</p>
-                                                                <p className="trip-detail-info">{bookingDetail.ride_return.end_odo_reading}</p>
-                                                            </Col>
-                                                        }
-                                                        {
-                                                            bookingDetail && bookingDetail.status.id == 6 &&
-                                                            <Col sm="4" className="ride-end-detail">
-                                                                <p>In Transit</p>
-                                                            </Col>
-                                                        }
                                                     </Row>
-                                                    <div className="fuel-progress-bar">
-                                                        <Row className="gray-border-bottom">
-                                                            <Col sm="6">
-                                                                <Progress value="bookingDetail.ride_return.start_fuel_percentage">{bookingDetail.ride_return.start_fuel_percentage}%</Progress>
-                                                            </Col>
-                                                            <Col sm="6">
-                                                                <Progress value="bookingDetail.ride_return.end_fuel_percentage">{bookingDetail.ride_return.end_fuel_percentage}%</Progress>
-                                                            </Col>
-                                                        </Row>
-                                                        <Row className="handover-user">
+                                                    <Row className="handover-user">
+                                                        {
+                                                            bookingDetail && bookingDetail.status && (bookingDetail.status.id == 6 || bookingDetail.status.id == 7) &&
                                                             <Col sm="6">
                                                                 <div className="jr-start-time">
                                                                     <i className="fa fa-key" aria-hidden="true"></i>
                                                                     {bookingDetail.ride_return.handover_user.display_name}
                                                                 </div>
                                                             </Col>
+                                                        }
+                                                        {
+                                                            bookingDetail && bookingDetail.status && bookingDetail.ride_return && bookingDetail.ride_return.picker_user && (bookingDetail.status.id == 6 || bookingDetail.status.id == 7) &&
                                                             <Col sm="6">
-                                                                {/* <div className="jr-time-icon">
+                                                                <div className="jr-time-icon">
                                                                     <i className="fa fa-key" aria-hidden="true"></i>
                                                                     {bookingDetail.ride_return.picker_user.display_name}
-                                                                </div> */}
+                                                                </div>
                                                             </Col>
-                                                        </Row>
-                                                    </div>
-                                                </CardBody>
-                                                :
-                                                null
+                                                        }
+                                                    </Row>
+                                                </div>
+                                            </CardBody>
                                         }
                                         <Row className="ride-return-text">
                                             {
@@ -601,22 +667,30 @@ export default class BookingDetail extends Component {
                                             <Row className="ride-return-text">
                                                 <Col sm="4">
                                                     <p><h5>Amount Paid</h5></p>
-                                                    <p><h4>Rs. {paidAmount}</h4></p>
+                                                    <p><h5>Rs. {paidAmount}</h5></p>
                                                 </Col>
                                                 {
                                                     (bookingDetail && bookingDetail.status && (bookingDetail.status.id == 7 || bookingDetail.status.id == 8)) ?
                                                         <Col sm="4">
                                                             <p><h5>Total Fare</h5></p>
-                                                            <p><h4>Rs. {fairAmount}</h4></p>
+                                                            <p><h5>Rs. {fairAmount}</h5></p>
                                                         </Col>
                                                         :
                                                         <Col sm="4">
                                                             <p><h5>Tentative Amount</h5></p>
-                                                            <p><h4>Rs. {tentativeAmount}</h4></p>
+                                                            <p><h5>Rs. {tentativeAmount}</h5></p>
                                                         </Col>
                                                 }
                                                 <Col sm="4">
-                                                    <p><h5>Refund</h5></p>
+                                                    {
+                                                        (bookingDetail && amountDue > 0) ?
+                                                            <div>
+                                                                <p><h5>Refund</h5></p>
+                                                                <p><h5>Rs. {amountDue}</h5></p>
+                                                            </div>
+                                                            :
+                                                            null
+                                                    }
                                                 </Col>
                                             </Row>
                                         </CardBody>
