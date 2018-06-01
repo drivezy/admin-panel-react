@@ -165,7 +165,7 @@ function PrepareObjectForListing(result, { extraParams }) {
         };
         // Prepairing object for configure-filter directive
         const filterContent = {
-            dictionary: genericListingObj.columns,
+            dictionary: Object.values(genericListingObj.columns),
             // dictionary: genericListingObj.dictionary[params.starter],
             selectedColumns: genericListingObj.selectedColumns,
             restrictColumns: configuration.restrictColumnFilter,

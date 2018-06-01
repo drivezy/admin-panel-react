@@ -40,7 +40,7 @@ export default class TableSettings extends Component {
     addColumn = (column) => {
         var selectedColumns = this.state.tempSelectedColumns;
 
-        const regexForPickingAfterLastDot = /[^\.]+$/;
+        // const regexForPickingAfterLastDot = /[^\.]+$/;
         selectedColumns.unshift({
             headingCollapsed: true, heading: "", object: column.parent, column: column.name
             // headingCollapsed: true, heading: "", object: column.parent.match(regexForPickingAfterLastDot)[0], column: column.name, columnObj: column

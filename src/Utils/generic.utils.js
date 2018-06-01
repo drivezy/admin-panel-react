@@ -76,8 +76,6 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
     for (const i in columns) {
         // const data = columns[i];
         for (const j in columns[i]) {
-            console.log(columns[i][j]);
-
             const selectedColumn = {};
 
             const element = `${i}.${columns[i][j].name}`;
@@ -109,7 +107,6 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
         }
 
     }
-    console.log(selectedColumns);
     return selectedColumns;
 }
 
