@@ -15,6 +15,7 @@ export default class RosterTimeline extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            ready: false,
             rosterData: {},
             cities: [],
             city: {},
@@ -23,7 +24,8 @@ export default class RosterTimeline extends Component {
             weeks: [],
             minLimit: 5,
             maxLimit: 5,
-            week: {}
+            week: {},
+            origin: 'weeklyView'
         };
     }
 
@@ -61,7 +63,7 @@ export default class RosterTimeline extends Component {
         const result = await Post({ url: 'getRosterData', body: { venue: venue.id, start_date: week.shiftStartDate, end_date: week.shiftEndDate } });
         if (result.original.success) {
             const rosterData = result.original.response;
-            this.setState({ rosterData })
+            this.setState({ ready: true, rosterData: rosterData })
         }
     }
 
@@ -76,7 +78,7 @@ export default class RosterTimeline extends Component {
     }
 
     render() {
-        const { rosterData = {}, cities = [], city, venues = [], venue, weeks = [], minLimit, maxLimit, week } = this.state;
+        const { ready, rosterData, cities = [], city, venues = [], venue, weeks = [], minLimit, maxLimit, week, origin } = this.state;
         return (
             <div className="roster-timeline">
                 <div className="roster-header">
@@ -119,7 +121,13 @@ export default class RosterTimeline extends Component {
                         </div>
                     </div>
                 </div>
-                <RosterContent rosterData={rosterData} />
+
+                {
+                    ready ?
+                        <RosterContent rosterData={rosterData} origin={origin}/>
+                        : null
+                }
+
             </div>
         )
     }
