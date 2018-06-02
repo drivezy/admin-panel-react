@@ -1,7 +1,9 @@
 
 import { IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall, TrimQueryString } from './common.utils';
-import { GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods } from './generic.utils';
+import { GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, GetSelectedColumnDefinition } from './generic.utils';
 import { Get } from './http.utils';
+
+import { ROUTE_URL } from './../Constants/global.constants';
 
 let tempQuery; // used to decide if stats is to be fetched from server
 
@@ -45,14 +47,24 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
     options.query += IsUndefinedOrNull(configuration.restricted_query) ? '' : ' and ' + ConvertToQuery.call(this, configuration.restricted_query);
 
     // If a filter is applied , add the query to options.query
-    if (queryString.filter && Object.keys(queryString.filter).length && Array.isArray(configuration.userFilter)) {
-        const activeFilter = configuration.userFilter.filter(function (filter) {
-            return filter.id == queryString.filter;
-        })[0];
-        if (!queryString.query && activeFilter) {
-            options.query += " and " + activeFilter.filter_query;
-        }
+
+    /****************************************************
+     * @TODO based on layout id of urlparam, select query
+     ***************************************************/
+    if (data.layout && data.layout.id) {
+        options.layout_id = data.layout.id;
+    } else if (configuration.layout && configuration.layout.id) {
+        options.layout_id = configuration.layout.id;
     }
+    options.layout_id = 9;
+    // if (queryString.filter && Object.keys(queryString.filter).length && Array.isArray(configuration.userFilter)) {
+    //     const activeFilter = configuration.userFilter.filter(function (filter) {
+    //         return filter.id == queryString.filter;
+    //     })[0];
+    //     if (!queryString.query && activeFilter) {
+    //         options.query += " and " + activeFilter.filter_query;
+    //     }
+    // }
 
     // @TODO add query
     // options.query += IsUndefinedOrNull(configuration.query) ? "" : ConvertToQuery.bind(this)(configuration.query);
@@ -86,7 +98,7 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
 
     // const result = await Get({ url: configuration.url, body: options });
     const url = BuildUrlForGetCall(configuration.url, options);
-    Get({ url, callback: PrepareObjectForListing, extraParams: { callback, page: options.page, limit: options.limit, data, configuration, params }, persist: true });
+    Get({ url, callback: PrepareObjectForListing, extraParams: { callback, page: options.page, limit: options.limit, data, configuration, params }, persist: true, urlPrefix: ROUTE_URL });
 }
 
 
@@ -99,7 +111,7 @@ function PrepareObjectForListing(result, { extraParams }) {
     const { callback, page, limit, data, configuration, params } = extraParams;
     if (result.success && result.response) {
 
-        const { data: apiData, dictionary, relationship, stats } = result.response;
+        const { data: apiData, dictionary, relationship, stats, base } = result.response;
         // if (columns && columns.length === 0) {
         //     self.orderColumns = params.dictionary[params.starter];
         // }
@@ -115,13 +127,14 @@ function PrepareObjectForListing(result, { extraParams }) {
 
         params.dictionary = dictionary || data.dictionary;
 
-        if (result.response.hasOwnProperty("relationship")) {
+        if (relationship && typeof Object.keys(relationship).length) {
             params.relationship = relationship;
         }
 
-        // relationship = relationship ? relationship : null;
-        // gatherObject(result.daDeta);
-        const modelName = configuration.model.name.toLowerCase();
+        params.includesList = Object.keys(params.dictionary);
+
+        const model = params.relationship[base];
+        const modelName = model.name.toLowerCase();
 
         // Preparing the generic listing object
         const genericListingObj = {
@@ -132,24 +145,26 @@ function PrepareObjectForListing(result, { extraParams }) {
             currentPage: page,
             limit,
             pageName: configuration.pageName,
-            starter: configuration.starter,
+            starter: base,
+            // state_name: configuration.listName,
+            // listName: configuration.listName + ".list",
             includes: configuration.includes,
-            state_name: configuration.listName,
-            listName: configuration.listName + ".list",
             defaultOrder: configuration.order + ',' + configuration.sort,
             finalColumns: [],
             columns: GetColumnsForListing({ ...params, ...{ isArray: false } }),
             // @TODO uncomment this line to get selectedColumn
-            selectedColumns: [],
-            // selectedColumns: configuration.preference[configuration.listName + ".list"] ? JSON.parse(configuration.preference[configuration.listName + ".list"]) : null, // formPreference: configuration.preference[configuration.listName + '.form'] ? JSON.parse(configuration.preference[configuration.listName + '.form']) : null,
-            nextActions: configuration.nextActions,
-            formPreference: configuration.preference[modelName + ".form"] ? JSON.parse(configuration.preference[modelName + ".form"]) : null,
-            modelName: configuration.model.name.toLowerCase() + ".form",
-            module: configuration.module,
-            dataModel: configuration.model,
+            layout: configuration.layout || {},
+            // layout: configuration.preference[configuration.listName + ".list"] ? JSON.parse(configuration.preference[configuration.listName + ".list"]) : null, // formPreference: configuration.preference[configuration.listName + '.form'] ? JSON.parse(configuration.preference[configuration.listName + '.form']) : null,
+            // nextActions: configuration.nextActions,
+            formPreference: model.form_layouts[0],
+            // formPreference: configuration.preference[modelName + ".form"] ? JSON.parse(configuration.preference[modelName + ".form"]) : null,
+            // modelName: configuration.model.name.toLowerCase() + ".form",
+            // module: configuration.module,
+            dataModel: modelName,
+            userFilter: configuration.layouts,
+            // userFilter: configuration.userFilter,
             // scopes: data.scopes,
             // restrictColumn: configuration.restrictColumnFilter,
-            // userFilter: configuration.userFilter,
             // modelId: configuration.model.id,
             // callbackFunction: callFunction,
             // icon: configuration.image,
@@ -167,13 +182,13 @@ function PrepareObjectForListing(result, { extraParams }) {
         const filterContent = {
             dictionary: Object.values(genericListingObj.columns),
             // dictionary: genericListingObj.dictionary[params.starter],
-            selectedColumns: genericListingObj.selectedColumns,
+            layout: genericListingObj.layout,
             restrictColumns: configuration.restrictColumnFilter,
             scopes: data.scopes
         };
 
         // Build the final columns that is required for the portlet table
-        genericListingObj.finalColumns = CreateFinalColumns(genericListingObj.columns, genericListingObj.selectedColumns, genericListingObj.relationship);
+        genericListingObj.finalColumns = CreateFinalColumns(genericListingObj.columns, genericListingObj.layout.column_definition, genericListingObj.relationship);
         genericListingObj.preDefinedmethods = GetPreSelectedMethods(genericListingObj.nextActions);
         genericListingObj.methods = RegisterMethod(genericListingObj.nextActions);
         if (typeof callback == 'function') {
@@ -196,7 +211,7 @@ export function GetDefaultOptions() {
         list: true,
         stats: false,
         dictionary: false,
-        layout_id: 1
+        // layout_id: 1
     };
 }
 
@@ -209,7 +224,7 @@ function Initialization(configuration, urlParameter = {}) {
     return {
         includes: configuration.includes,
         dictionary: null,
-        starter: configuration.starter,
+        // starter: configuration.starter,
         order: IsUndefinedOrNull(urlParameter.order) ? configuration.order : urlParameter.order,
         sort: SelectFromOptions(sorts, urlParameter.sort || configuration.sort)
     };

@@ -14,10 +14,11 @@ export default class TableSettings extends Component {
     constructor(props) {
         super(props);
 
+        const layout = this.props.layout || {};
         this.state = {
             modal: false,
-            selectedColumns: this.props.selectedColumns || [],
-            tempSelectedColumns: this.props.selectedColumns || [],
+            selectedColumns: layout.column_definition || [],
+            tempSelectedColumns: layout.column_definition || [],
             columns: this.props.columns,
             list: {},
             activeColumn: {},
@@ -25,7 +26,7 @@ export default class TableSettings extends Component {
     }
 
     toggleModal = () => {
-        this.setState({ modal: !this.state.modal, activeColumn: {}, tempSelectedColumns: this.props.selectedColumns })
+        this.setState({ modal: !this.state.modal, activeColumn: {}, tempSelectedColumns: this.props.layout.column_definition })
     }
 
     toggleList = (index) => {
@@ -94,16 +95,19 @@ export default class TableSettings extends Component {
         this.setState({ selectedColumns });
     }
 
+
     applyChanges = async () => {
-        const { userId, menuId, listName } = this.props;
+        const { userId, menuId, listName, source, layout } = this.props;
         const { tempSelectedColumns } = this.state;
 
         console.log(this.state.tempSelectedColumns);
-        const result = await SetPreference({ userId, menuId, name: listName, selectedColumns: this.state.tempSelectedColumns });
+        const result = await SetPreference({ userId, source, menuId, name: listName, selectedColumns: this.state.tempSelectedColumns });
 
         // const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
         result.success ? this.setState({ modal: !this.state.modal }) : null;
-        this.props.onSubmit(this.state.tempSelectedColumns);
+
+        layout.column_definition = tempSelectedColumns;
+        this.props.onSubmit(layout);
     }
 
     modalWrapper() {

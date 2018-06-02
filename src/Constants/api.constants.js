@@ -13,7 +13,7 @@ export const SignupEndPoint = 'user'; // signup and
 
 /** Private routes goes here */
 export const GetMenusEndPoint = 'getMenus';
-export const GetMenuDetailEndPoint = 'getMenuDetails/';
+export const GetMenuDetailEndPoint = 'menuDetails/';
 
 export const MenuFilterEndPoint = 'menuFilter';
 /** Private routes ends here */

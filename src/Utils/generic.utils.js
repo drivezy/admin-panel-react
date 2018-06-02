@@ -4,15 +4,17 @@ import { IsUndefinedOrNull, BuildUrlForGetCall } from './common.utils';
 import ToastNotifications from './../Utils/toast.utils';
 import { Delete } from './../Utils/http.utils';
 import { Location } from './../Utils/location.utils';
+import { ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
 
 import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 import { GetMenuDetailEndPoint } from './../Constants/api.constants';
+import { RECORD_URL } from './../Constants/global.constants';
 
 import FormCreator from './../Components/Form-Creator/formCreator.component'
 import PortletTable from '../Components/Portlet-Table/PortletTable.component';
 import TableWrapper from './../Components/Table-Wrapper/tableWrapper.component';
 import PreferenceSetting from './../Components/Preference-Setting/preferenceSetting.component';
-import { ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
+
 
 /**
  * Fetches Menu detail to render generic page
@@ -21,7 +23,7 @@ import { ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
  */
 export function GetMenuDetail(menuId, callback) {
     const url = GetMenuDetailEndPoint + menuId;
-    return Get({ url, callback, persist: callback ? true : false });
+    return Get({ url, callback, persist: callback ? true : false, urlPrefix: RECORD_URL });
 }
 
 /**
@@ -125,6 +127,8 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
 export function CreateFinalColumns(columns, selectedColumns, relationship) {
     const finalColumnDefinition = [];
     let splitEnabled = false;
+    // const selectedColumns = GetSelectedColumnDefinition(layout);
+
 
     for (const i in selectedColumns) {
         const selected = selectedColumns[i];
@@ -178,31 +182,50 @@ export function ConvertMenuDetailForGenericPage(menuDetail) {
         var splits = menuDetail.default_order.split(",");
     }
 
+    menuDetail.layouts.map(layout => {
+        try {
+            layout.column_definition = JSON.parse(layout.column_definition);
+        } catch (e) {
+            layout.column_definition = {};
+        }
+        return layout;
+    })
+
+    const layout = menuDetail.layouts.length ? menuDetail.layouts[1] : null; // @TODO for now taking 0th element as default layout, change later 
+
+    if (layout) {
+        layout.column_definition = layout.column_definition;
+    }
+
     /**
      * Preparing obj to build template
      */
     return {
         includes: menuDetail.includes,
-        url: menuDetail.base_url,
-        starter: menuDetail.starter,
+        // url: menuDetail.base_url,
+        url: menuDetail.route,
         restricted_query: menuDetail.restricted_query,
         restrictColumnFilter: menuDetail.restricted_column,
-        userMethod: menuDetail.method,
-        formPreferenceName: menuDetail.state_name.toLowerCase(),
         order: menuDetail.default_order ? splits[0].trim() : "id",
         sort: menuDetail.default_order ? splits[1].trim() : "desc",
         menuId: menuDetail.id,
-        model: menuDetail.data_model,
-        preference: {}, // @TODO uncomment next line and remove this line
-        // preference: menuDetail.preference,
-        listName: menuDetail.state_name.toLowerCase(),
-        nextActions: menuDetail.actions,
-        userFilter: menuDetail.user_filter,
+        layouts: menuDetail.layouts,
+        layout,
         pageName: menuDetail.name,
         image: menuDetail.image,
-        stateName: menuDetail.state_name,
-        module: menuDetail.base_url,
-        search: menuDetail.search,
+
+        // starter: menuDetail.starter,
+        // userMethod: menuDetail.method,
+        // formPreferenceName: menuDetail.state_name.toLowerCase(),
+        // model: menuDetail.data_model,
+        // preference: menuDetail.preference,
+        // listName: menuDetail.state_name.toLowerCase(),
+        // nextActions: menuDetail.actions,
+        // userFilter: menuDetail.user_filter,
+
+        // stateName: menuDetail.state_name,
+        // module: menuDetail.base_url,
+        // search: menuDetail.search,
         // actions: menuDetail.actions,
         // method: menuDetail.method,
         // scripts: menuDetail.scripts,
@@ -557,4 +580,12 @@ function createQueryUrl(url, restrictQuery, genericData) {
     // }
 
     return url;
+}
+
+export function GetSelectedColumnDefinition(layout) {
+    const selectedColumnsDefinition = (layout && typeof layout == 'object') ? layout.column_definition : null;
+
+    if (typeof selectedColumnsDefinition == 'string') {
+        return JSON.parse(selectedColumnsDefinition);
+    }
 }
