@@ -4,6 +4,7 @@ import { IsEqualObject, SelectFromOptions, IsUndefinedOrNull } from './../../Uti
 import { CreateQuery } from './../../Utils/dynamicFilter.utils';
 import { Put, Post } from './../../Utils/http.utils';
 import ToastNotifications from './../../Utils/toast.utils';
+import { SetPreference } from './../../Utils/preference.utils';
 
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import { MenuFilterEndPoint } from './../../Constants/api.constants';
@@ -15,18 +16,18 @@ export default class DynamicFilter extends Component {
         super(props);
         this.state = {
             urlParams: Location.search(),
-            activeFilter: {},
-            filters: props.userFilters,
+            activeLayout: {},
+            layouts: props.layouts,
             sqlArray: []
         };
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         const urlParams = Location.search();
-        const { filters } = this.state;
+        const { layouts } = this.state;
 
         this.state.urlParams = urlParams;
-        this.state.filters = nextProps.userFilters;
+        this.state.layouts = nextProps.layouts;
         this.setActiveFilter();
         this.fetchSql(urlParams);
 
@@ -35,7 +36,7 @@ export default class DynamicFilter extends Component {
         //     this.state.urlParams = urlParams;
         //     this.fetchSql(urlParams);
         // } else {
-        //     this.state.filters = nextProps.userFilters;
+        //     this.state.layouts = nextProps.layouts;
         //     this.setActiveFilter();
         // }
     }
@@ -95,19 +96,19 @@ export default class DynamicFilter extends Component {
     }
 
     /**
-     * Iterates over predefined filters and match the id of provided filter
+     * Iterates over predefined layouts and match the id of provided filter
      * @param  {int} selectedFilterId
      */
     setActiveFilter() {
-        const { filter: selectedFilterId } = this.state.urlParams;
-        if (!selectedFilterId) {
-            this.setState({ activeFilter: {} });
+        const { layout: selectedLayoutId } = this.state.urlParams;
+        if (!selectedLayoutId) {
+            this.setState({ activeLayout: {} });
             return;
         }
-        const { filters = [] } = this.state;
-        filters.forEach(filter => {
-            if (selectedFilterId == filter.id) {
-                this.setState({ activeFilter: filter });
+        const { layouts = [] } = this.state;
+        layouts.forEach(filter => {
+            if (selectedLayoutId == filter.id) {
+                this.setState({ activeLayout: filter });
             }
         });
     }
@@ -125,22 +126,22 @@ export default class DynamicFilter extends Component {
     removeActiveFilter = () => {
         const { urlParams } = this.state;
         const { match, history } = this.props;
-        urlParams.filter = null;
+        urlParams.layout = null;
         Location.search(urlParams, { props: { match, history } });
-        this.setState({ activeFilter: {} });
+        this.setState({ activeLayout: {} });
     }
 
     /**
      * Updates the filter with the new filter
-     * @param  {} activeFilter
+     * @param  {} activeLayout
      */
-    updateLocalFetchedFilters = (activeFilter) => {
-        let { filters } = this.state;
+    updateLocalFetchedFilters = (activeLayout) => {
+        let { layouts } = this.state;
         const { menuUpdatedCallback } = this.props;
-        filters.push(activeFilter);
-        this.state.activeFilter = activeFilter;
-        this.state.filters = filters;
-        menuUpdatedCallback(filters);
+        layouts.push(activeLayout);
+        this.state.activeLayout = activeLayout;
+        this.state.layouts = layouts;
+        menuUpdatedCallback(layouts);
     }
 
     /**
@@ -148,12 +149,13 @@ export default class DynamicFilter extends Component {
      */
     updateFilter = async () => {
         const { currentUser, selectedColumns = {}, match, history } = this.props;
-        const { activeFilter = {}, urlParams } = this.state;
+        const { activeLayout = {}, urlParams } = this.state;
         if (currentUser.isSuperAdmin) {
+            // @TODO complete update process
             const result = await Put({
-                url: MenuFilterEndPoint + '/' + activeFilter.id,
+                url: MenuFilterEndPoint + '/' + activeLayout.id,
                 body: {
-                    filter_query: urlParams.query,
+                    query: urlParams.query,
                     column_definition: JSON.stringify(selectedColumns)
                 }
             });
@@ -170,15 +172,15 @@ export default class DynamicFilter extends Component {
      * @param  {object} result
      */
     validateResult = (result) => {
-        const { urlParams, activeFilter } = this.state;
+        const { urlParams, activeLayout } = this.state;
         const { match, history } = this.props;
         if (result.success) {
             this.closeModal();
             // delete urlParams.query;
-            // Assign the new filter to activeFilter
+            // Assign the new filter to activeLayout
             this.updateLocalFetchedFilters(result.response);
 
-            urlParams.filter = result.response.id;
+            urlParams.layout = result.response.id;
             urlParams.query = null;
             Location.search(urlParams, { props: { match, history } });
             ToastNotifications.success("Filter updated");
@@ -207,25 +209,33 @@ export default class DynamicFilter extends Component {
      * @param  {boolean} override=false
      */
     saveFilter = async (override = false) => {
-        const { menuId, selectedColumns } = this.props;
-        const { filterName, urlParams, activeFilter, filters } = this.state;
+        const { menuId, selectedColumns, currentUser } = this.props;
+        const { filterName, urlParams, activeLayout, layouts } = this.state;
         // Get the filter name 
 
         if (IsUndefinedOrNull(filterName)) {
             ToastNotifications.error('Please input filter name');
             return;
         }
-        const result = await Post({
-            url: MenuFilterEndPoint,
-            body: {
-                source_id: menuId,
-                source_type: 'menu',
-                filter_name: filterName,
-                filter_query: urlParams.query,
-                column_definition: JSON.stringify(selectedColumns),
-                override_all: override
-            }
-        });
+        const result = await SetPreference({
+            menuId,
+            source: 'menu',
+            name: filterName,
+            query: urlParams.query,
+            selectedColumns,
+            user: override ? null : currentUser.id
+        })
+        // const result = await Post({
+        //     url: MenuFilterEndPoint,
+        //     body: {
+        //         source_id: menuId,
+        //         source_type: 'menu',
+        //         name: filterName,
+        //         filter_query: urlParams.query,
+        //         column_definition: JSON.stringify(selectedColumns),
+        //         user: override ? null : currentUser.id
+        //     }
+        // });
 
         this.validateResult(result);
     };
@@ -267,7 +277,7 @@ export default class DynamicFilter extends Component {
     }
 
     render() {
-        const { activeFilter, sqlArray = [] } = this.state;
+        const { activeLayout, sqlArray = [] } = this.state;
         const { currentUser = {}, toggleAdvancedFilter } = this.props;
         return (
             <div className="current-filter-view flex">
@@ -282,13 +292,13 @@ export default class DynamicFilter extends Component {
                     <ul className="form-groups">
                         {/* Blocks shows the active filter  */}
                         {
-                            activeFilter && activeFilter.id ?
+                            activeLayout && activeLayout.id ?
                                 <li className="saved-filter form-badge list-group-item">
                                     <span className="delete-icon" onClick={this.removeActiveFilter}>
                                         <i className="fa fa-times" aria-hidden="true"></i>
                                     </span>
                                     <p className="filter-name item-label">
-                                        {activeFilter.filter_name}
+                                        {activeLayout.name}
                                     </p>
                                 </li>
                                 :
@@ -296,7 +306,7 @@ export default class DynamicFilter extends Component {
                         }
                         {/* Active Filter Ends  */}
 
-                        {/* List of applied filters  */}
+                        {/* List of applied layouts  */}
                         {
                             sqlArray.map((filter, key) => {
                                 return (
@@ -314,7 +324,7 @@ export default class DynamicFilter extends Component {
 
                         {
                             sqlArray.length ?
-                                (!activeFilter.id ?
+                                (!activeLayout.id ?
                                     <li className="clear-link">
                                         <button className="btn btn-xs btn-success" onClick={this.openSaveFilterModal}>
                                             <i className="fa fa-floppy-o" aria-hidden="true"></i> &nbsp;
@@ -334,7 +344,7 @@ export default class DynamicFilter extends Component {
                         }
 
                         {
-                            (sqlArray.length || activeFilter.id) ?
+                            (sqlArray.length || activeLayout.id) ?
                                 <li className="clear-link">
                                     <a onClick={this.clearQuery}>
                                         Clear

@@ -35,17 +35,18 @@ export default class PredefinedFilter extends React.Component {
         Location.search(urlParams, { props: { history, match } });
     }
 
-    deleteFilter = async (filter, event) => {
-        let { userFilter, onFilterUpdate } = this.props;
+    // @TODO delete preference from preference utils method
+    deleteFilter = async (layout, event) => {
+        let { layouts, onFilterUpdate } = this.props;
         event.stopPropagation();
         if (window.confirm('Are you sure you want to delete the filter?')) {
-            const result = await Delete({ url: `${MenuFilterEndPoint}/${filter.id}` });
+            const result = await Delete({ url: `${MenuFilterEndPoint}/${layout.id}` });
             if (result.success) {
-                userFilter = userFilter.filter(filterObj => filterObj.id != filter.id);
-                onFilterUpdate(userFilter);
+                layouts = layouts.filter(filterObj => filterObj.id != layout.id);
+                onFilterUpdate(layouts);
                 const urlParams = Location.search();
-                if (urlParams.filter && filter.id == urlParams.filter) {
-                    urlParams.filter = null;
+                if (urlParams.layout && layout.id == urlParams.layout) {
+                    urlParams.layout = null;
                     this.setUrlProps(urlParams);
                 }
                 ToastNotifications.success('Records has been deleted');
@@ -59,15 +60,15 @@ export default class PredefinedFilter extends React.Component {
      */
     searchFilter = ({ target = {}, value } = {}) => {
         const searchText = IsUndefined(value) ? target.value : '';
-        const { userFilter } = this.props;
+        const { layouts } = this.props;
 
-        const filteredUserFilter = userFilter.filter(filter => filter.filter_name.toLowerCase().includes(searchText.toLowerCase()));
+        const filteredUserFilter = layouts.filter(layout => layout.name.toLowerCase().includes(searchText.toLowerCase()));
         this.setState({ searchText, filteredUserFilter });
     }
 
-    submit = (filter) => {
+    submit = (layout) => {
         const urlParams = Location.search();
-        urlParams.filter = filter.id;
+        urlParams.layout = layout.id;
         this.setUrlProps(urlParams);
 
         let dropdownOpen = this.state.dropdownOpen;
@@ -77,7 +78,7 @@ export default class PredefinedFilter extends React.Component {
     }
 
     render() {
-        const { userFilter, history, match } = this.props;
+        const { layouts, history, match } = this.props;
         const { filteredUserFilter, searchText } = this.state;
         const filters = searchText ? filteredUserFilter : userFilter;
         return (
@@ -94,7 +95,7 @@ export default class PredefinedFilter extends React.Component {
                     </DropdownToggle>
                 <DropdownMenu className="dropdown-menu custom-click pull-right menu-operations" right>
                     {
-                        userFilter.length > 3 ?
+                        layouts.length > 3 ?
                             <div>
                                 <div className="form-group has-feedback">
                                     <input value={searchText} onChange={this.searchFilter} type="text" className="form-control" id="search-operation" placeholder='Search Actions' />
@@ -106,17 +107,19 @@ export default class PredefinedFilter extends React.Component {
                     }
                     {
                         filters.map((filter, index) => {
-                            return (
-                                <div className="menu-item" key={index} role="menuitem" onClick={() => this.submit(filter)}>
-                                    <a className="menu-link">
-                                        <span className="badge" onClick={(event) => this.deleteFilter(filter, event)}>
-                                            <i className="fa fa-times" aria-hidden="true"></i>
-                                        </span>
-                                        {filter.filter_name}
-                                    </a>
-                                </div>
+                            if (filter.name && filter.query) {
+                                return (
+                                    <div className="menu-item" key={index} role="menuitem" onClick={() => this.submit(filter)}>
+                                        <a className="menu-link">
+                                            <span className="badge" onClick={(event) => this.deleteFilter(filter, event)}>
+                                                <i className="fa fa-times" aria-hidden="true"></i>
+                                            </span>
+                                            {filter.name}
+                                        </a>
+                                    </div>
 
-                            )
+                                )
+                            }
                         })
                     }
                 </DropdownMenu>

@@ -663,11 +663,11 @@ export default class ConfigureDynamicFilter extends Component {
 
     getQuery({ column, filter, value, joinMethod }) {
         let columnString = '';
-        if (column.path.split('.').length > 2) {
-            columnString = `\`${column.parent}\`.${column.referenced_column ? column.referenced_column : column.name}`;
-        } else {
-            columnString = column.name;
-        }
+        // if (column.path.split('.').length > 2) {
+        columnString = `\`${column.parent}\`.${column.referenced_column ? column.referenced_column : column.name}`;
+        // } else {
+        //     columnString = column.name;
+        // }
 
         return columnString + filter + "'" + value + "'" + joinMethod;
     }

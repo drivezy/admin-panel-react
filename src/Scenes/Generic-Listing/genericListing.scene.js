@@ -225,9 +225,9 @@ export default class GenericListing extends Component {
     }
 
     predefinedFiltersUpdated = (filters) => {
-        const { menuDetail } = this.state;
-        menuDetail.userFilter = filters;
-        this.setState({ menuDetail });
+        const { genericData } = this.state;
+        genericData.userFilter = filters;
+        this.setState({ genericData });
     }
 
     layoutChanges = (layout) => {
@@ -284,11 +284,11 @@ export default class GenericListing extends Component {
                                     <DynamicFilter
                                         toggleAdvancedFilter={this.toggleAdvancedFilter}
                                         menuUpdatedCallback={this.predefinedFiltersUpdated}
-                                        selectedColumns={genericData.layout}
+                                        selectedColumns={genericData.layout ? genericData.layout.column_definition : null}
                                         menuId={menuDetail.menuId}
                                         currentUser={currentUser}
                                         dictionary={filterContent.dictionary}
-                                        userFilters={genericData.userFilter}
+                                        layouts={menuDetail.layouts}
                                         history={history}
                                         match={match}
                                     />
@@ -321,8 +321,8 @@ export default class GenericListing extends Component {
                             }
 
                             {
-                                menuDetail && menuDetail.userFilter && menuDetail.userFilter.length > 0 ?
-                                    <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} userFilter={menuDetail.userFilter} history={history} match={match} />
+                                menuDetail && genericData.userFilter && genericData.userFilter.length > 0 ?
+                                    <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} userFilter={genericData.userFilter} history={history} match={match} />
                                     :
                                     null
                             }
@@ -335,7 +335,7 @@ export default class GenericListing extends Component {
                             <ConfigureDynamicFilter
                                 history={history}
                                 match={match}
-                                filters={menuDetail.userFilter}
+                                filters={genericData.userFilter}
                                 content={filterContent}
                             />
                         }

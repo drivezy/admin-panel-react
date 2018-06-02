@@ -51,20 +51,24 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
     /****************************************************
      * @TODO based on layout id of urlparam, select query
      ***************************************************/
-    if (data.layout && data.layout.id) {
+    // let layout;
+    if (queryString.layout) {
+        options.layout_id = queryString.layout
+    } else if (data.layout && data.layout.id) {
         options.layout_id = data.layout.id;
     } else if (configuration.layout && configuration.layout.id) {
         options.layout_id = configuration.layout.id;
     }
     options.layout_id = 9;
-    // if (queryString.filter && Object.keys(queryString.filter).length && Array.isArray(configuration.userFilter)) {
-    //     const activeFilter = configuration.userFilter.filter(function (filter) {
-    //         return filter.id == queryString.filter;
-    //     })[0];
-    //     if (!queryString.query && activeFilter) {
-    //         options.query += " and " + activeFilter.filter_query;
-    //     }
-    // }
+    if (queryString.layout && Object.keys(queryString.layout).length && Array.isArray(configuration.layouts)) {
+        const activeLayout = configuration.layouts.filter(function (layout) {
+            return layout.id == queryString.layout;
+        })[0];
+        if (!queryString.query && activeLayout && activeLayout.query) {
+            options.query += " and " + activeLayout.query;
+            configuration.layout = activeLayout;
+        }
+    }
 
     // @TODO add query
     // options.query += IsUndefinedOrNull(configuration.query) ? "" : ConvertToQuery.bind(this)(configuration.query);
