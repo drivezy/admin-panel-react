@@ -88,7 +88,7 @@ export default class PageNav extends Component {
         // )
         return (
             <div className="page-nav flex">
-                <div className='theme-selection-container flex'>
+                {/* <div className='theme-selection-container flex'>
                     {
                         this.themes.map((theme, key) => {
                             const html = <div className={`cursor-pointer theme-box ${theme.class} ${selectedTheme.theme == theme.theme ? 'current-theme' : null}`} onClick={() => this.changeTheme(theme)} />
@@ -99,9 +99,7 @@ export default class PageNav extends Component {
                             // <div className='theme-box light-theme' onClick={() => this.changeTheme('drivezy-light-theme')} />
                         })
                     }
-
-                    {/* <div className='theme-box dark-theme' onClick={() => this.changeTheme('drivezy-dark-theme')} /> */}
-                </div>
+                </div> */}
 
                 <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                     <DropdownToggle>

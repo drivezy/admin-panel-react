@@ -1,21 +1,30 @@
 @import 'Assets/Global-Shared/theme.scss';
-
-.header-actions { 
+.header-actions {
     .custom-actions {
+        .button-element {
+            text-transform: capitalize;
+            .action-label {
+                padding-left: 10px;
+            }
+        }
         .tooltip-element {
             cursor: pointer;
             padding: 6px 10px;
             border-radius: 3px;
-            background: white;
+            // background: white;
             margin: 0px 1px;
-            border: 1px solid #b7b7b7;
+            // border: 1px solid #e0e0e0;
+            // border: 1px solid #b7b7b7;
             &:hover {
-                background: #e4e4e4;
-                border: 1px solid #bbb9b9;
+                // background: #e4e4e4;
+                // border: 1px solid #bbb9b9;
+                border-bottom: 1px solid #bbb9b9;
+
             }
         }
     }
 }
+
 .custom-actions {
     .tooltip-element {
         margin: 0px 4px;
@@ -26,19 +35,19 @@
     }
 }
 
-.drivezy-light-theme { 
+.drivezy-light-theme {
     .custom-actions {
         color: $primaryThemeLight;
     }
 }
 
-.drivezy-dark-theme { 
+.drivezy-dark-theme {
     .custom-actions {
         color: $primaryThemeDark;
     }
 }
 
-.drivezy-drivezy-theme { 
+.drivezy-drivezy-theme {
     .custom-actions {
         color: $primaryThemeDrivezy;
     }
