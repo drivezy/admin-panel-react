@@ -80,7 +80,7 @@ export default class PredefinedFilter extends React.Component {
     render() {
         const { layouts, history, match } = this.props;
         const { filteredUserFilter, searchText } = this.state;
-        const filters = searchText ? filteredUserFilter : userFilter;
+        const filters = searchText ? filteredUserFilter : layouts;
         return (
             <Dropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                 {/* <DropdownToggle data-toggle="dropdown" aria-expanded={this.state.dropdownOpen}> */}

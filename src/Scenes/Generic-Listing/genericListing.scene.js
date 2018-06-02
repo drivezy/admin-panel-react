@@ -322,7 +322,7 @@ export default class GenericListing extends Component {
 
                             {
                                 menuDetail && genericData.userFilter && genericData.userFilter.length > 0 ?
-                                    <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} userFilter={genericData.userFilter} history={history} match={match} />
+                                    <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} layouts={menuDetail.layouts} history={history} match={match} />
                                     :
                                     null
                             }
