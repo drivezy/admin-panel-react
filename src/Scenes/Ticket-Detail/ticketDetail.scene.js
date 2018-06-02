@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import {
-    Card
+    Card, CardBody, CardHeader
 } from 'reactstrap';
 
 
@@ -132,7 +132,7 @@ export default class TicketDetail extends Component {
                             </div>
                             <div className="ticket-section">
                                 <div className="panel section-wrapper">
-                                    {/* <div className="panel-body detail-section">
+                                    <div className="panel-body detail-section">
                                         {
                                             (!ticketDetail.category.id === 630 || !ticketDetail.category.id === 650 || !ticketDetail.category.id === 646 || !ticketDetail.category.id === 645) &&
                                             <div className="ticket-content">
@@ -162,7 +162,7 @@ export default class TicketDetail extends Component {
                                                                 </span>
                                                             </td>
                                                         </tr>
-                                                        <tr>
+                                                        {/* <tr>
                                                             <td className="smooth-text">
                                                                 <div className="margin-top-5">Priority</div>
                                                             </td>
@@ -183,7 +183,7 @@ export default class TicketDetail extends Component {
                                                                     </div>
                                                                 </div>
                                                             </td>
-                                                        </tr>
+                                                        </tr> */}
                                                         <tr>
                                                             <td className="smooth-text">
                                                                 Assigned
@@ -211,7 +211,7 @@ export default class TicketDetail extends Component {
                                                         <tr>
                                                             <td className="smooth-text">
                                                                 Category
-                                                        </td>
+                                                            </td>
                                                             <td>
                                                                 <span>
                                                                     <p>
@@ -225,7 +225,7 @@ export default class TicketDetail extends Component {
                                             </div>
                                         }
 
-                                        <div className="ticket-content" ng-if="ticketDetail.category.id == 630">
+                                        {/* <div className="ticket-content" ng-if="ticketDetail.category.id == 630">
 
                                             <a className="ticket-label lead-label clickable">
                                                 <p>
@@ -306,130 +306,171 @@ export default class TicketDetail extends Component {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> */}
 
-                                        <div className="ticket-content" ng-if="ticketDetail.category.id == 650 || ticketDetail.category.id == 646 || ticketDetail.category.id == 645">
-                                            <div className="ticket-label">
-                                                <p>
-                                                    <i className="fa fa-ticket" aria-hidden="true"></i> {ticketDetail.ticket_number}
-                                                </p>
-                                            </div>
+                                        {
+                                            (ticketDetail.category.id == 650 || ticketDetail.category.id == 646 || ticketDetail.category.id == 645) &&
+                                            <div className="ticket-content">
+                                                <div className="ticket-label">
+                                                    <p>
+                                                        <i className="fa fa-ticket" aria-hidden="true"></i> {ticketDetail.ticket_number}
+                                                    </p>
+                                                </div>
 
-                                            <a ng-if="ticketPreviewController.record.deal_number" className="ticket-label lead-label clickable" href="/#/deals/{{ticketPreviewController.record.lead_id}}">
+                                                {/* <a ng-if="ticketPreviewController.record.deal_number" className="ticket-label lead-label clickable" href="/#/deals/{{ticketPreviewController.record.lead_id}}">
                                                 <p>
                                                     <i className="fa fa-handshake-o" aria-hidden="true"></i> Deal : {ticketPreviewController.record.deal_number}
                                                 </p>
-                                            </a>
-                                            <table className="table borderless ticket-detail-table">
-                                                <tbody>
-                                                    <tr ng-if="ticketDetail.to_email">
-                                                        <td className="smooth-text">
-                                                            Email
-                                                        </td>
-                                                        <td className="text-right">
-                                                            <span>
-                                                                <p>
-                                                                    {ticketDetail.to_email}
-                                                                </p>
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr ng-if="ticketDetail.from_email">
-                                                        <td className="smooth-text">
-                                                            From Email
-                                                        </td>
-                                                        <td className="text-right">
-                                                            <span>
-                                                                <p>
-                                                                    {ticketDetail.from_email}
-                                                                </p>
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className="smooth-text">
-                                                            Assignee
-                                                        </td>
-                                                        <td className="text-right">
-                                                            <span>
-                                                                <p>
-                                                                    {ticketDetail.assigned_to.display_name}
-                                                                </p>
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                    </div> */}
-
-                                    
-                                    {/* <div className="panel-heading" ng-if="ticketPreviewController.associations.length">Associations
-                                    </div>
-                                    <div className="panel-body">
-                                        <div className="customer-content">
-                                            <table className="table borderless ticket-detail-table">
-                                                <tbody>
-                                                    <tr ng-repeat="association in ticketPreviewController.associations">
-                                                        <td>
-                                                            {association.source_type}
-                                                        </td>
-                                                        <td className="DateRangeSelector">
-                                                            <span className="cursor-pointer" ng-click="ticketPreviewController.deleteAssociation(association)">
-                                                                <i className="fa fa-times"></i>
-                                                            </span>&nbsp;&nbsp;
-                                                            <span source-redirect icon="fa fa-info-circle" row-data="association"></span>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-
-                                    <div className="panel-heading">Subscriber
-                                        <button ng-click="ticketPreviewController.addSubscriber()" type="button" className="btn btn-xs btn-info  pull-right">
-                                            <i className="fa fa-plus"></i>
-                                        </button>
-                                    </div>
-                                    <div className="panel-body">
-                                        <div className="customer-content">
-                                            <table className="table borderless ticket-detail-table">
-                                                <tbody>
-                                                    <tr ng-repeat="subscriber in ticketPreviewController.subscribers">
-                                                        <td>
-                                                            {subscriber.email_id}
-                                                        </td>
-                                                        <td>
-                                                            <span className="cursor-pointer" ng-click="ticketPreviewController.changeSubscriber(subscriber)" ng-if="subscriber.subscriber==1">
-                                                                <i className="fa fa-check"></i>
-                                                            </span>
-                                                            <span className="cursor-pointer" ng-click="ticketPreviewController.changeSubscriber(subscriber)" ng-if="subscriber.subscriber==0">
-                                                                <i className="fa fa-times"></i>
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-
-                                    <div className="panel-heading">Tags
-                                        <button ng-click="ticketPreviewController.addTag()" type="button" className="btn btn-xs btn-info  pull-right">
-                                            <i className="fa fa-plus"></i>
-                                        </button>
-                                    </div>
-                                    <div className="panel-body">
-                                        <div className="tag-content">
-                                            <div ng-repeat="tag in ticketPreviewController.tags">
-                                                <span ng-click="ticketPreviewController.deleteTag(tag)" className="label cursor-pointer" ng-className="{'label-danger':tag.tag.tag}">
-                                                    {tag.tag.tag}
-                                                </span>
+                                            </a> */}
+                                                <table className="table borderless ticket-detail-table">
+                                                    <tbody>
+                                                        {
+                                                            ticketDetail.to_email &&
+                                                            <tr>
+                                                                <td className="smooth-text">
+                                                                    Email
+                                                            </td>
+                                                                <td className="text-right">
+                                                                    <span>
+                                                                        <p>
+                                                                            {ticketDetail.to_email}
+                                                                        </p>
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                        {
+                                                            ticketDetail.from_email &&
+                                                            <tr>
+                                                                <td className="smooth-text">
+                                                                    From Email
+                                                            </td>
+                                                                <td className="text-right">
+                                                                    <span>
+                                                                        <p>
+                                                                            {ticketDetail.from_email}
+                                                                        </p>
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                        {
+                                                            ticketDetail.assigned_to &&
+                                                            <tr>
+                                                                <td className="smooth-text">
+                                                                    Assignee
+                                                            </td>
+                                                                <td className="text-right">
+                                                                    <span>
+                                                                        <p>
+                                                                            {ticketDetail.assigned_to.display_name}
+                                                                        </p>
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
                                             </div>
-                                        </div>
+                                        }
+
                                     </div>
 
-                                    <uib-accordion close-others="true" ng-if="ticketDetail.category.id == 630">
+
+                                    {
+                                        ticketDetail.associations.length &&
+                                        <Card>
+                                            <CardHeader>Associations</CardHeader>
+                                            <CardBody>
+                                                <div className="customer-content">
+                                                    <table className="table borderless ticket-detail-table">
+                                                        <tbody>
+                                                            {
+                                                                ticketDetail.associations.map((association, key) => {
+                                                                    return (
+                                                                        <tr key={key}>
+                                                                            <td>
+                                                                                {association.source_type}
+                                                                            </td>
+                                                                            <td className="DateRangeSelector">
+                                                                                <span className="cursor-pointer" ng-click="ticketPreviewController.deleteAssociation(association)">
+                                                                                    <i className="fa fa-times"></i>
+                                                                                </span>&nbsp;&nbsp;
+                                                                            </td>
+                                                                        </tr>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </CardBody>
+                                        </Card>
+                                    }
+
+                                    {
+                                        ticketDetail.subscribers.length &&
+                                        <Card>
+                                            <CardHeader>Subscriber</CardHeader>
+                                            <CardBody>
+                                                <div className="customer-content">
+                                                    <table className="table borderless ticket-detail-table">
+                                                        <tbody>
+                                                            {
+                                                                ticketDetail.subscribers.map((subscriber, key) => {
+                                                                    return (
+                                                                        <tr key={key}>
+                                                                            <td>
+                                                                                {subscriber.email_id}
+                                                                            </td>
+                                                                            <td className="DateRangeSelector">
+                                                                                {
+                                                                                    subscriber.subscriber == 1 &&
+                                                                                    <span className="cursor-pointer" ng-click="ticketPreviewController.changeSubscriber(subscriber)">
+                                                                                        <i className="fa fa-check"></i>
+                                                                                    </span>
+                                                                                }
+                                                                                {
+                                                                                    subscriber.subscriber == 0 &&
+                                                                                    <span className="cursor-pointer" ng-click="ticketPreviewController.changeSubscriber(subscriber)">
+                                                                                        <i className="fa fa-times"></i>
+                                                                                    </span>
+                                                                                }
+                                                                            </td>
+                                                                        </tr>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </CardBody>
+                                        </Card>
+                                    }
+
+                                    {
+                                        ticketDetail.tags.length &&
+                                        <Card>
+                                            <CardHeader>Tag</CardHeader>
+                                            <CardBody>
+                                                <div className="tag-content">
+                                                    {
+                                                        ticketDetail.tags.map((tag, key) => {
+                                                            return (
+                                                                <div key={key}>
+                                                                    <span ng-click="ticketPreviewController.deleteTag(tag)" className="label cursor-pointer">
+                                                                        {tag.tag.tag}
+                                                                    </span>
+                                                                </div>
+                                                            )
+                                                        })
+                                                    }
+                                                </div>
+                                            </CardBody>
+                                        </Card>
+                                    }
+
+                                    {/* <uib-accordion close-others="true" ng-if="ticketDetail.category.id == 630">
                                         <div uib-accordion-group className="panel-default" heading="List of scheduled meetings ({{ticketPreviewController.calendarEvents.length}})">
                                             <uib-accordion-heading>
                                                 List of scheduled meetings ({ticketPreviewController.calendarEvents.length})
