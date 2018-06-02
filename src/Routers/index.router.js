@@ -23,6 +23,7 @@ import GenericDetail from './../Scenes/Generic-Detail/genericDetail.scene';
 import SideNav from './../Scenes/Side-Nav/sideNav.scene';
 import Header from './../Scenes/Header/header.scene';
 import BookingDetail from './../Scenes/Booking-Detail/bookingDetail.scene';
+import TicketDetail from './../Scenes/Ticket-Detail/ticketDetail.scene';
 
 import { LoginCheck } from './../Utils/user.utils';
 
@@ -193,6 +194,7 @@ class MainApp extends Component {
                             <Route path={`${match.path}detail/:page/:detailId`} component={GenericDetail} /> */}
 
                                     <Route exact path='/booking/:bookingId' component={BookingDetail} />
+                                    <Route exact path='/ticket/:ticketId' component={TicketDetail} />
                                     <Route exact path='/' component={HomeScene} />
                                     {this.state.sideNavExpanded}
                                 </Switch>
