@@ -7,7 +7,7 @@ import {
     Row, Col, TabContent, TabPane, Nav, NavItem, NavLink, Table
 } from 'reactstrap';
 
-import { StoreEvent } from './../../Utils/stateManager.utils';
+import { StoreEvent, SubscribeToEvent, UnsubscribeEvent } from './../../Utils/stateManager.utils';
 
 import DetailPortlet from './../../Components/Detail-Portlet/DetailPortlet.component';
 import DetailIncludes from './../../Components/Detail-Includes/DetailIncludes';
@@ -34,10 +34,11 @@ export default class GenericDetail extends Component {
         };
 
         this.currentUrl = this.getHref();
+        SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
 
-    getHref() {
-        return window.location.href.split('#')[0];
+    componentWillUnmount() {
+        UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
 
     componentDidMount() {
@@ -56,6 +57,17 @@ export default class GenericDetail extends Component {
         }
     }
 
+    userDataArrived = (user) => {
+        this.state.currentUser = user;
+        this.getMenuData();
+        // this.setState({ currentUser: data });
+    }
+
+    getHref() {
+        return window.location.href.split('#')[0];
+    }
+
+
     getMenuData = async () => {
         const { queryString } = this.state;
         // const { menuId } = queryString;
@@ -64,12 +76,12 @@ export default class GenericDetail extends Component {
         if (result.success) {
             const { response = {} } = result;
             const menuDetail = ConvertMenuDetailForGenericPage(response || {});
-            if (typeof response.controller_path == 'string' && response.controller_path.includes('genericListingController.js') != -1) {
-                menuDetail.listName = menuDetail.stateName.toLowerCase();
-                this.setState({ menuDetail });
-                this.getDetailRecord();
-                StoreEvent({ eventName: 'showMenuName', data: { menuName: this.state.menuDetail.pageName } });
-            }
+            // if (typeof response.controller_path == 'string' && response.controller_path.includes('genericListingController.js') != -1) {
+            // menuDetail.listName = menuDetail.stateName.toLowerCase();
+            this.setState({ menuDetail });
+            this.getDetailRecord();
+            StoreEvent({ eventName: 'showMenuName', data: { menuName: this.state.menuDetail.pageName } });
+            // }
         }
     }
 
@@ -88,26 +100,22 @@ export default class GenericDetail extends Component {
         // return preference.column
     }
 
-    layoutChanges = (changes) => {
+    layoutChanges = (layout) => {
         let { portlet, menuDetail } = this.state;
-        // portlet.finalColumns = changes;
-        // menuDetail.preference['menudef.detail.list'] = JSON.stringify(changes);
-        menuDetail.preference[portlet.listName] = JSON.stringify(changes);
-        portlet.finalColumns = CreateFinalColumns(portlet.portletColumns, changes);
-        this.setState({ portlet, menuDetail });
+        // portlet.finalColumns = layout;
+        // menuDetail.preference['menudef.detail.list'] = JSON.stringify(layout);
+        menuDetail.layout = layout;
+
+        if (layout && layout.column_definition) {
+            portlet.finalColumns = CreateFinalColumns(portlet.portletColumns, layout.column_definition, portlet.relationship);
+            this.setState({ portlet, menuDetail });
+        }
     }
 
     render() {
         const { history } = this.props;
-        const { menuDetail = {}, portlet = {}, tabs = {} } = this.state;
+        const { menuDetail = {}, portlet = {}, tabs = {}, currentUser = {} } = this.state;
         const { finalColumns = [], data = {} } = portlet;
-        let selectedColumns = {};
-
-        if (menuDetail.preference && portlet.listName) {
-            // @TODO pickup preference from menuDetail
-            // selectedColumns = []
-            selectedColumns = menuDetail.preference[portlet.listName] ? JSON.parse(menuDetail.preference[portlet.listName]) : [];
-        }
 
         const genericDataForCustomColumn = {
             columns: portlet.portletColumns,
@@ -118,6 +126,7 @@ export default class GenericDetail extends Component {
             methods: portlet.methods,
             preDefinedmethods: portlet.preDefinedmethods
         };
+        
         const html =
             <div className="header">
                 <div className="left" />
@@ -129,7 +138,16 @@ export default class GenericDetail extends Component {
 
                     {
                         portlet.portletColumns ?
-                            <TableSettings onSubmit={this.layoutChanges} listName={portlet.listName} selectedColumns={selectedColumns} columns={portlet.portletColumns} finalColumns={finalColumns} />
+                            <TableSettings
+                                source='menu'
+                                onSubmit={this.layoutChanges}
+                                listName={portlet.listName}
+                                layout={menuDetail.layout}
+                                columns={portlet.portletColumns}
+                                menuId={menuDetail.menuId}
+                                userId={currentUser.id}
+                            // finalColumns={finalColumns}
+                            />
                             : null
                     }
                 </div>

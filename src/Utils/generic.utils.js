@@ -191,7 +191,7 @@ export function ConvertMenuDetailForGenericPage(menuDetail) {
         return layout;
     })
 
-    const layout = menuDetail.layouts.length ? menuDetail.layouts[1] : null; // @TODO for now taking 0th element as default layout, change later 
+    const layout = menuDetail.layouts.length ? menuDetail.layouts[0] : null; // @TODO for now taking 0th element as default layout, change later 
 
     if (layout) {
         layout.column_definition = layout.column_definition;
