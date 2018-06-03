@@ -223,7 +223,9 @@
         background: transparent;
         .menu-item { 
             &:hover{
-                background: $primaryLightThemeDark;
+                background: #032134;
+                // background: #607387;
+                // $primaryLightThemeDark;
             }
         }
     }

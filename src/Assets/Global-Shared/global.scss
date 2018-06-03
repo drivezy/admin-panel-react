@@ -240,8 +240,7 @@ body {
     position: fixed;
     height: 100%;
     width: 100vw;
-    background: rgba(0, 0, 0, .4);
-    // color: #fea658;
+    background: rgba(0, 0, 0, .4); // color: #fea658;
     font-size: 50px;
     text-align: center;
     top: 0; // @extend .flex-column;
@@ -313,6 +312,19 @@ Non critical css goes here
     -webkit-font-smoothing: antialiased;
 }
 
+// Nav Styling
+.nav-tabs {
+    .nav-link {
+        border: none;
+        background: none;
+        cursor: pointer;
+        &.active {
+            background: none;
+            border-bottom: 1px solid red;
+        }
+    }
+}
+
 .drivezy-light-theme {
     .btn-primary {
         background: $primaryThemeLight !important;
@@ -335,8 +347,7 @@ Non critical css goes here
 .drivezy-dark-theme {
     .btn-primary {
         background: $primaryThemeDark;
-        color: $onPrimaryThemeDark;
-        // border-color: $primaryThemeDark;
+        color: $onPrimaryThemeDark; // border-color: $primaryThemeDark;
         &:hover {
             // border-color: $primaryThemeDark;
             background: $primaryDarkThemeDark;
@@ -349,6 +360,14 @@ Non critical css goes here
         &:hover {
             background: $secondaryDarkThemeDark;
             color: $onSecondaryThemeLight !important;
+        }
+    }
+    .nav-tabs {
+        .nav-link {
+            color: $primaryDarkThemeDark;
+            &.active {
+                border-color: $primaryDarkThemeDark;
+            }
         }
     }
 }

@@ -3,6 +3,22 @@
         .tab-card {
             &.card-body {
                 margin-top: 4px;
+                .spacing {
+                    display: flex;
+                    .theme-container {
+                        padding: 2px 0px;
+                        cursor: pointer;
+                        height: 25px;
+                        width: 100px;
+                        border: 1px solid #4a7fab;
+                        border-radius: 4px;
+                        margin: 0px 4px;
+                        text-align: center;
+                        &.active{
+                            background: #aed9ff;
+                        }
+                    }
+                }
                 .themes {
                     display: flex;
                     flex-wrap: wrap;

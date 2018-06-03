@@ -396,7 +396,7 @@ export default class GenericListing extends Component {
 
 
 
-                            <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
+                            <CustomAction position="header" history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
 
                             {
                                 genericData.columns ?

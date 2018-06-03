@@ -32,6 +32,8 @@ export default class PageNav extends Component {
     componentDidMount() {
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
         const theme = ThemeUtil.getCurrentTheme();
+        const spacing = ThemeUtil.getCurrentSpacing();
+        this.changeSpacing(spacing);
         this.changeTheme(theme);
     }
 
@@ -62,6 +64,11 @@ export default class PageNav extends Component {
 
             this.setState({ redirectToReferrer: true });
         }
+    }
+
+
+    changeSpacing = (spacing) => {
+        ThemeUtil.setSpacing(spacing);
     }
 
     changeTheme = (theme) => {
@@ -102,7 +109,7 @@ export default class PageNav extends Component {
                 </div> */}
 
                 <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-                    <DropdownToggle>
+                    <DropdownToggle color="primary">
 
                         <div className="user-profile">
                             <div className="profile-image">

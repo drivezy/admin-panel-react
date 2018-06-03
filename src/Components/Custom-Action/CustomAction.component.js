@@ -67,7 +67,7 @@ export default class CustomAction extends Component {
     }
 
     render() {
-        const { actions = [], listingRow = [], genericData = {}, placement } = this.props;
+        const { actions = [], listingRow = [], genericData = {}, placement, position } = this.props;
         return (
             <div className="custom-actions">
                 {
@@ -81,12 +81,12 @@ export default class CustomAction extends Component {
                                 //         this.callFunction({ action, listingRow });
                                 //     }}
                                 //     type="button" className="btn btn-sm btn-light">
-                                <span className="button-element">
-                                    <i className={`fa ${action.icon}`} onClick={() => { this.callFunction({ action, listingRow }) }} ></i>
+                                <span className="button-element" onClick={() => { this.callFunction({ action, listingRow }) }}>
+                                    <i className={`fa ${action.icon}`}></i>
 
                                     {/* Temporaririly fix to hide the name for row actions */}
                                     {
-                                        action.placement_id == 168 && <span className="action-label">
+                                        ((action.placement_id == 168) || (position == 'header')) && <span className="action-label">
                                             {action.name}
                                         </span>
                                     }

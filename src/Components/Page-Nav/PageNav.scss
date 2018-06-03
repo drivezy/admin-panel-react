@@ -12,6 +12,10 @@
             border: none;
             box-shadow: none;
             background: transparent;
+            &:hover{
+                border: 1px solid whitesmoke;
+                background: none;
+            }
         }
     }
     .user-profile {
