@@ -3,6 +3,8 @@
 // Higher Order Component
 import React, { Component } from 'react';
 import { withFormik } from 'formik';
+import { Put } from './../../Utils/http.utils';
+import SelectBox from './../Forms/Components/Select-Box/selectBox';
 
 // Our inner form component which receives our form's state and updater methods as props
 const InnerForm = ({
@@ -17,37 +19,29 @@ const InnerForm = ({
         <form onSubmit={handleSubmit}>
             <div className="form-group">
                 <label className="">First Name<span className="text-red">*</span></label>
-                <input type="text" name="First Name" className="form-control" value={values.first_name} onChange={handleChange}
-                    onBlur={handleBlur} />
+                <input type="text" name="first_name" className="form-control" value={values.first_name} onChange={handleChange} />
             </div>
             <div className="form-group">
                 <label className="">Last Name</label>
-                <input type="text" name="Last Name" className="form-control" value={values.last_name} onChange={handleChange}
-                    onBlur={handleBlur} />
+                <input type="text" name="last_name" className="form-control" value={values.last_name} onChange={handleChange} />
             </div>
             <div className="form-group">
                 <label className="">Date Of Birth<span className="text-red">*</span></label>
-                <input type="text" name="Date Of Birth" className="form-control" value={values.dob} onChange={handleChange}
-                    onBlur={handleBlur} />
+                <input type="text" name="dob" className="form-control" value={values.dob} onChange={handleChange} />
             </div>
+
             <div className="form-group">
-                <label className="control-label">Gender</label><span className="text-red">*</span>
-                <select value={values.gender} className="form-control form-box" onChange={handleChange}
-                    onBlur={handleBlur}>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="others">Others</option>
-                </select>
+                <label className="control-label">Gender</label>
+                <SelectBox value={values.gender} onChange={handleChange} options={[{ value: "male", label: "Male" }, { value: "female", label: "Female" }, { value: "others", label: "Others" }]} />
             </div>
+
             <div className="form-group">
                 <label className="">Email</label>
-                <input type="text" name="Email" className="form-control" value={values.email} onChange={handleChange}
-                    onBlur={handleBlur} />
+                <input type="text" name="email" className="form-control" value={values.email} onChange={handleChange} />
             </div>
             <div className="form-group">
                 <label className="">Mobile</label>
-                <input type="text" name="Mobile" className="form-control" value={values.mobile} onChange={handleChange}
-                    onBlur={handleBlur} />
+                <input type="text" name="mobile" className="form-control" value={values.mobile} onChange={handleChange} />
             </div>
             <div className="form-group">
                 <div className="margin-top-5" id="buttonWidth">
@@ -75,39 +69,61 @@ const LicenseForm = withFormik({
 
     },
     // Add a custom validation function (this can be async too!)
-    validate: (values, props) => {
-        const errors = {};
-        if (!values.email) {
-            errors.email = 'Required';
-        } else if (
-            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-        ) {
-            errors.email = 'Invalid email address';
-        }
-        return errors;
+    validationSchema: (props, values) => {
+
+        // let da = {
+        //     'first_name': Yup.string().required()
+        // }
+
+        // let fields = Object.keys(props.payload.columns);
+
+        // const { columns } = props.payload;
+
+        // fields.forEach((column) => {
+        //     if (columns[column].mandatory) {
+        //         da[columns[column].column_name] = Yup.string().required(columns[column].display_name + ' is required.');
+        //     }
+        // });
+
+        // return Yup.object().shape(da);
+
+        // return Yup.object().shape({
+        //     friends: Yup.array()
+        //         .of(
+        //             Yup.object().shape({
+        //                 name: Yup.string()
+        //                     .min(4, 'too short')
+        //                     .required('Required'), // these constraints take precedence
+        //                 salary: Yup.string()
+        //                     .min(3, 'cmon')
+        //                     .required('Required'), // these constraints take precedence
+        //             })
+        //         )
+        //         .required('Must have friends') // these constraints are shown if and only if inner constraints are satisfied
+        //         .min(3, 'Minimum of 3 friends'),
+        // })
     },
     // Submission handler
-    // handleSubmit: (
-    //     values,
-    //     {
-    //         props,
-    //         setSubmitting,
-    //         setErrors /* setValues, setStatus, and other goodies */,
-    //     }
-    // ) => {
-    //     LoginToMyApp(values).then(
-    //         user => {
-    //             setSubmitting(false);
-    //             // do whatevs...
-    //             // props.updateUser(user)
-    //         },
-    //         errors => {
-    //             setSubmitting(false);
-    //             // Maybe even transform your API's errors into the same shape as Formik's!
-    //             setErrors(transformMyApiErrors(errors));
-    //         }
-    //     );
-    // },
+    handleSubmit: async (
+        values,
+        {
+            props,
+            setSubmitting,
+            setErrors /* setValues, setStatus, and other goodies */,
+        }
+    ) => {
+        const result = await Put({
+            url: 'user/' + props.userContent.id,
+            body: {
+                first_name: props.userContent.first_name,
+                last_name: props.userContent.last_name,
+                dob: props.userContent.dob,
+                email: props.userContent.email,
+                mobile: props.userContent.mobile,
+                gender: props.userContent.gender
+            }
+        });
+    },
 })(InnerForm);
 
 
@@ -122,7 +138,6 @@ export default class UserLicenseForm extends Component {
 
     render() {
         const { userContent } = this.state;
-        console.log(userContent);
         return (
             <div>
                 <LicenseForm userContent={userContent} />
@@ -130,12 +145,3 @@ export default class UserLicenseForm extends Component {
         )
     }
 }
-
-// Use <MyForm /> anywhere
-// const Basic = () => (
-//     <div>
-//         <h1>My Form</h1>
-//         <p>This can be anywhere in your application</p>
-//         <MyForm />
-//     </div>
-// );

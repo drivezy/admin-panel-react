@@ -41,7 +41,6 @@ export default class UserLicense extends Component {
 
         if (result.success) {
             const userObj = result.response;
-            console.log(userObj);
             this.setState({ userObj });
         }
     }
@@ -80,39 +79,6 @@ export default class UserLicense extends Component {
                                 userObj.id &&
                                 <UserLicenseForm userObj={userObj} />
                             }
-                            {/* <form name="userLicenceForm">
-                                <div className="form-group">
-                                    <label className="">First Name<span className="text-red">*</span></label>
-                                    <input type="text" placeholder="First Name" className="form-control" value={userObj.first_name} />
-                                </div>
-                                <div className="form-group">
-                                    <label className="">Last Name</label>
-                                    <input type="text" placeholder="Last Name" className="form-control" value={userObj.last_name} />
-                                </div>
-                                <div className="form-group">
-                                    <label className="control-label">Gender</label><span className="text-red">*</span>
-                                    <select required ng-model="userLicense.formContent.gender" className="form-control form-box">
-                                        <option value="male">Male</option>
-                                        <option value="female">Female</option>
-                                        <option value="others">Others</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label className="">Email</label>
-                                    <input type="text" placeholder="Email" className="form-control" value={userObj.email} />
-                                </div>
-                                <div className="form-group">
-                                    <label className="">Mobile</label>
-                                    <input type="text" placeholder="Mobile" name="Mobile" className="form-control" value={userObj.mobile} />
-                                </div>
-                                <div className="form-group">
-                                    <div className="margin-top-5" id="buttonWidth">
-                                        <button ng-click="userLicense.saveDetails()" className="btn btn-primary pull-right button-blue">
-                                            Save Changes
-                                        </button>
-                                    </div>
-                                </div>
-                            </form> */}
                         </CardBody>
                     </Card>
                 </div>
