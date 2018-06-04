@@ -42,7 +42,7 @@ export default class PortletTable extends Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
+    unsafe_componentwillreceiveprops(nextProps) {
         this.setState({
             finalColumns: nextProps.finalColumns,
             listing: nextProps.listing,
