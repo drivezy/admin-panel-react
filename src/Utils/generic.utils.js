@@ -182,7 +182,7 @@ export function ConvertMenuDetailForGenericPage(menuDetail) {
         var splits = menuDetail.default_order.split(",");
     }
 
-    menuDetail.layouts.map(layout => {
+    menuDetail.list_layouts.map(layout => {
         try {
             layout.column_definition = JSON.parse(layout.column_definition);
         } catch (e) {
@@ -191,7 +191,7 @@ export function ConvertMenuDetailForGenericPage(menuDetail) {
         return layout;
     })
 
-    const layout = menuDetail.layouts.length ? menuDetail.layouts[0] : null; // @TODO for now taking 0th element as default layout, change later 
+    const layout = menuDetail.list_layouts.length ? menuDetail.list_layouts[0] : null; // @TODO for now taking 0th element as default layout, change later 
 
     if (layout) {
         layout.column_definition = layout.column_definition;

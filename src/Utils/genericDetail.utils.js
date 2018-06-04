@@ -1,5 +1,5 @@
 import { IsUndefinedOrNull, BuildUrlForGetCall } from './common.utils';
-import { CreateFinalColumns, GetPreSelectedMethods, RegisterMethod, GetColumnsForListing } from './generic.utils';
+import { CreateFinalColumns, GetPreSelectedMethods, RegisterMethod, GetColumnsForListing, ConvertMenuDetailForGenericPage } from './generic.utils';
 import { Get } from './http.utils';
 
 import { ROUTE_URL } from './../Constants/global.constants';
@@ -47,8 +47,11 @@ function PrepareObjectForDetailPage(result, { extraParams }) {
     const portletDetail = data.record;
 
     const portlet = GetDataForPortlet({ portletDetail, genericDetailObject });
-
-
+    const tabs = GetDataForTabs({ tabs: data.tabs });
+    const tabDetail = {
+        tabs
+    }
+    console.log(tabDetail);
 
     // flag to check promise
     // params.dictionary = data.dictionary || params.dictionary;
@@ -66,7 +69,7 @@ function PrepareObjectForDetailPage(result, { extraParams }) {
     // portlet.listName = listPortlet;
     // const selectedColumns = genericDetailObject.preference[listPortlet] ? JSON.parse(genericDetailObject.preference[listPortlet]) : null;
 
-    // const tabs = GetDataForTabs({ data, genericDetailObject });
+
     // tabs.parentData = data.response;
     // tabs.fixedParams = EvalQuery.eval(genericDetailObject.query, data.response);
 
@@ -85,7 +88,7 @@ function PrepareObjectForDetailPage(result, { extraParams }) {
     if (typeof callback == 'function') {
         callback({
             portlet,
-            tabs: {}
+            tabDetail
         });
     }
 }
@@ -159,60 +162,77 @@ export function GetDataForPortlet({ portletDetail, genericDetailObject }) {
     return obj;
 }
 
-/**
- * same as ConfigureDataForTab.getData
- * @param  {Object} {data - actual data object
- * @param  {Object} genericDetailObject} - meta data about menu
- */
-function GetDataForTabs({ data, genericDetailObject }) {
-    if (IsUndefinedOrNull(data)) {
-        alert("No Data Returned for this menu");
-        // swl.info("No Data Returned for this menu");
-        return false;
+export function GetDataForTabs({ tabs }) {
+    // const { route, restricted_column, query, includes, display_name, id } = tab;
+
+    // const options = {
+    //     includes: includes.join(','),
+    //     query
+    // }
+    for (let i in tabs) {
+        tabs[i] = ConvertMenuDetailForGenericPage(tabs[i]);
     }
+    console.log(tabs);
+    return tabs;
+}
 
-    const obj = {};
-    obj.data = {};
-    obj.relationship = {};
-    obj.dictionary = {};
-    obj.includes = {};
-    obj.scripts = [];
+// /**
+//  * same as ConfigureDataForTab.getData
+//  * @param  {Object} {data - actual data object
+//  * @param  {Object} genericDetailObject} - meta data about menu
+//  */
+// function GetDataForTabs({ data, genericDetailObject }) {
+//     if (IsUndefinedOrNull(data)) {
+//         alert("No Data Returned for this menu");
+//         // swl.info("No Data Returned for this menu");
+//         return false;
+//     }
 
-    if (!genericDetailObject.includes) {
-        return obj;
-    }
+//     const obj = {};
 
-    var includes = genericDetailObject.includes.split(",");
-    var inclusions = [];
-    includes.forEach(item => {
-        const toCheckColumn = item.split(".");
-        const index = genericDetailObject.starter + "." + toCheckColumn[0];
+//     obj.includes =
 
-        // const scripts = InjectScriptFactory.returnMatchingScripts({
-        //     preference: index, scripts: genericDetailObject.scripts, searchConstraint: "startsWith"
-        // });
-        // if (scripts.length) {
-        //     Array.prototype.push.apply(obj.scripts, scripts);
-        // }
+//     // obj.data = {};
+//     // obj.relationship = {};
+//     // obj.dictionary = {};
+//     // obj.includes = {};
+//     // obj.scripts = [];
 
-        if (data.relationship[index] && data.relationship[index].alias_type == 163) {
-            inclusions.push(item);
-            let name = genericDetailObject.starter;
-            for (var i in toCheckColumn) {
-                name += "." + toCheckColumn[i];
-                obj.relationship[name] = data.relationship[name];
-                obj.dictionary[name] = data.dictionary[name];
-            }
-            obj.data[index] = data.response[toCheckColumn[0]];
-        }
-    });
-    obj.includes = inclusions.join(",");
-    obj.starter = genericDetailObject.starter;
+//     // if (!genericDetailObject.includes) {
+//     //     return obj;
+//     // }
 
-    // obj.scripts =
+//     // var includes = genericDetailObject.includes.split(",");
+//     // var inclusions = [];
+//     // includes.forEach(item => {
+//     //     const toCheckColumn = item.split(".");
+//     //     const index = genericDetailObject.starter + "." + toCheckColumn[0];
 
-    return obj;
-};
+//     //     // const scripts = InjectScriptFactory.returnMatchingScripts({
+//     //     //     preference: index, scripts: genericDetailObject.scripts, searchConstraint: "startsWith"
+//     //     // });
+//     //     // if (scripts.length) {
+//     //     //     Array.prototype.push.apply(obj.scripts, scripts);
+//     //     // }
+
+//     //     if (data.relationship[index] && data.relationship[index].alias_type == 163) {
+//     //         inclusions.push(item);
+//     //         let name = genericDetailObject.starter;
+//     //         for (var i in toCheckColumn) {
+//     //             name += "." + toCheckColumn[i];
+//     //             obj.relationship[name] = data.relationship[name];
+//     //             obj.dictionary[name] = data.dictionary[name];
+//     //         }
+//     //         obj.data[index] = data.response[toCheckColumn[0]];
+//     //     }
+//     // });
+//     // obj.includes = inclusions.join(",");
+//     // obj.starter = genericDetailObject.starter;
+
+//     // obj.scripts =
+
+//     return obj;
+// };
 
 
 //@TODO remove this method
@@ -312,4 +332,5 @@ function CreateInclusions(includesString) {
         }
     }
     return arr.join(",");
-};
+}
+

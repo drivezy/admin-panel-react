@@ -1,6 +1,7 @@
 
 import { IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall, TrimQueryString } from './common.utils';
 import { GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, GetSelectedColumnDefinition } from './generic.utils';
+
 import { Get } from './http.utils';
 
 import { ROUTE_URL } from './../Constants/global.constants';
@@ -12,7 +13,7 @@ let tempQuery; // used to decide if stats is to be fetched from server
 * url and menu detail, fetch data and passes them further to the components
 * to show listing data
 */
-export const GetListingRecord = async ({ configuration, queryString = {}, callback, data, currentUser = {} }) => {
+export const GetListingRecord = async ({ configuration, queryString = {}, callback, data, currentUser = {}, index }) => {
     const params = Initialization(configuration, queryString);
     // const this = {};
     this.currentUser = currentUser;
@@ -44,7 +45,8 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
     // if there is a query in url , add it to the options.query
     options.query += IsUndefinedOrNull(queryString.query) ? '' : " and " + queryString.query;
 
-    options.query += IsUndefinedOrNull(configuration.restricted_query) ? '' : ' and ' + ConvertToQuery.call(this, configuration.restricted_query);
+    const restricted_query = configuration.restricted_query || configuration.query;
+    options.query += IsUndefinedOrNull(restricted_query) ? '' : ' and ' + ConvertToQuery.call(this, restricted_query);
 
     // If a filter is applied , add the query to options.query
 
@@ -59,7 +61,7 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
     } else if (configuration.layout && configuration.layout.id) {
         options.layout_id = configuration.layout.id;
     }
-    options.layout_id = 9;
+    // options.layout_id = 9;
     if (queryString.layout && Object.keys(queryString.layout).length && Array.isArray(configuration.layouts)) {
         const activeLayout = configuration.layouts.filter(function (layout) {
             return layout.id == queryString.layout;
@@ -102,7 +104,7 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
 
     // const result = await Get({ url: configuration.url, body: options });
     const url = BuildUrlForGetCall(configuration.url, options);
-    Get({ url, callback: PrepareObjectForListing, extraParams: { callback, page: options.page, limit: options.limit, data, configuration, params }, persist: true, urlPrefix: ROUTE_URL });
+    return Get({ url, callback: PrepareObjectForListing, extraParams: { callback, page: options.page, limit: options.limit, data, configuration, params, index }, persist: true, urlPrefix: ROUTE_URL });
 }
 
 
@@ -112,7 +114,7 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
  * @param  {object} {extraParams}
  */
 function PrepareObjectForListing(result, { extraParams }) {
-    const { callback, page, limit, data, configuration, params } = extraParams;
+    const { callback, page, limit, data, configuration, params, index } = extraParams;
     if (result.success && result.response) {
 
         const { data: apiData, dictionary, relationship, stats, base } = result.response;
@@ -196,7 +198,7 @@ function PrepareObjectForListing(result, { extraParams }) {
         genericListingObj.preDefinedmethods = GetPreSelectedMethods(genericListingObj.nextActions);
         genericListingObj.methods = RegisterMethod(genericListingObj.nextActions);
         if (typeof callback == 'function') {
-            callback({ genericData: genericListingObj, filterContent });
+            callback({ genericData: genericListingObj, filterContent, index });
         }
     }
 }
@@ -226,7 +228,7 @@ export function GetDefaultOptions() {
 function Initialization(configuration, urlParameter = {}) {
     const sorts = ["desc", "asc"];
     return {
-        includes: configuration.includes,
+        includes: Array.isArray(configuration.includes) ? configuration.includes.join(',') : configuration.includes,
         dictionary: null,
         // starter: configuration.starter,
         order: IsUndefinedOrNull(urlParameter.order) ? configuration.order : urlParameter.order,

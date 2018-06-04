@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 import { SetPreference } from './../../Utils/preference.utils';
 import { changeArrayPosition } from './../../Utils/js.utils';
+import { IsObjectHaveKeys } from './../../Utils/common.utils';
 
 import ColumnSetting from './Components/Column-Setting/columnSetting.component';
 
@@ -26,7 +27,7 @@ export default class TableSettings extends Component {
     }
 
     toggleModal = () => {
-        this.setState({ modal: !this.state.modal, activeColumn: {}, tempSelectedColumns: this.props.layout ? this.props.layout.column_definition : [] })
+        this.setState({ modal: !this.state.modal, activeColumn: {}, tempSelectedColumns: IsObjectHaveKeys(this.props.layout) ? this.props.layout.column_definition : [] })
     }
 
     toggleList = (index) => {
@@ -102,13 +103,13 @@ export default class TableSettings extends Component {
         const { tempSelectedColumns } = this.state;
 
         console.log(this.state.tempSelectedColumns);
-        const result = await SetPreference({ userId, source, menuId, name: listName, selectedColumns: this.state.tempSelectedColumns });
+        const result = await SetPreference({ userId, source, menuId, name: listName, selectedColumns: this.state.tempSelectedColumns, layout });
 
         // const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
 
         if (result.success) {
             this.setState({ modal: !this.state.modal });
-            if (layout) {
+            if (IsObjectHaveKeys(layout)) {
                 layout.column_definition = tempSelectedColumns;
             } else {
                 const { response } = result;

@@ -349,8 +349,15 @@ export default class GenericListing extends Component {
                                 <CardBody className="table-wrapper">
 
                                     {/* Portlet Table */}
-                                    <PortletTable rowTemplate={this.rowTemplate} tableType="listing" rowOptions={this.rowOptions}
-                                        toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={localSearch.value ? filteredResults : listing} callback={this.getListingData} menuDetail={menuDetail} />
+                                    <PortletTable tableType="listing"
+                                        rowOptions={this.rowOptions}
+                                        // toggleAdvancedFilter={this.toggleAdvancedFilter} 
+                                        history={history} match={match}
+                                        genericData={genericData}
+                                        finalColumns={finalColumns}
+                                        listing={localSearch.value ? filteredResults : listing}
+                                        callback={this.getListingData} menuDetail={menuDetail}
+                                    />
                                     {/* Portlet Table Ends */}
 
                                 </CardBody>

@@ -1,6 +1,9 @@
 
 
-import { Get, Post } from './http.utils';
+import { Get, Post, Put } from './http.utils';
+import { IsObjectHaveKeys } from './common.utils';
+
+import { ListPreference } from './../Constants/api.constants';
 import { RECORD_URL } from './../Constants/global.constants';
 
 let preferences = [];
@@ -15,15 +18,34 @@ export const GetPreferences = () => {
  * @param  {} value
  * @param  {} override_all
  */
-export function SetPreference({ userId, menuId, name = 'default', selectedColumns, override_all, source, query = null }) {
+export function SetPreference({ userId, menuId, name = 'default', selectedColumns, override_all, source, query = null, layout }) {
     const source_type = GetSourceMorphMap(source);
+
+    const methods = { Post, Put };
+    let method = 'Post';
+    let url = ListPreference;
+
+    const body = {
+        query,
+        name,
+        column_definition: JSON.stringify(selectedColumns),
+        source_type
+    };
+
     if (!source_type) {
         alert('Please provide valid source for setting preference'); // @TODO replace with ToastUtils
     }
 
+    if (IsObjectHaveKeys(layout)) {
+        url += '/' + layout.id;
+        method = 'Put';
+    } else {
+        body.source_id = menuId;
+    }
+
     // @TODO add userid when saving for particular user (not for all)
 
-    return Post({ url: 'listPreference', body: { source_type, query, source_id: menuId, name, column_definition: JSON.stringify(selectedColumns) }, urlPrefix: RECORD_URL });
+    return methods[method]({ url, body, urlPrefix: RECORD_URL });
     // return Post({ url: 'userPreference', body: { parameter: key, value: JSON.stringify(value) }, urlPrefix: RECORD_URL });
 }
 

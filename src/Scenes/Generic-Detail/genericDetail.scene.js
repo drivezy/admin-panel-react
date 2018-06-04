@@ -59,7 +59,7 @@ export default class GenericDetail extends Component {
 
     userDataArrived = (user) => {
         this.state.currentUser = user;
-        this.getMenuData();
+        // this.getMenuData();
         // this.setState({ currentUser: data });
     }
 
@@ -78,7 +78,7 @@ export default class GenericDetail extends Component {
             const menuDetail = ConvertMenuDetailForGenericPage(response || {});
             // if (typeof response.controller_path == 'string' && response.controller_path.includes('genericListingController.js') != -1) {
             // menuDetail.listName = menuDetail.stateName.toLowerCase();
-            this.setState({ menuDetail });
+            this.state.menuDetail = menuDetail;
             this.getDetailRecord();
             StoreEvent({ eventName: 'showMenuName', data: { menuName: this.state.menuDetail.pageName } });
             // }
@@ -91,9 +91,9 @@ export default class GenericDetail extends Component {
         GetDetailRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, urlParameter: params });
     }
 
-    dataFetched = ({ tabs, portlet }) => {
-        tabs.refreshContent = this.getDetailRecord;
-        this.setState({ portlet, tabs });
+    dataFetched = ({ tabDetail, portlet }) => {
+        tabDetail.refreshContent = this.getDetailRecord;
+        this.setState({ portlet, tabDetail });
     }
 
     getColumn = (preference, dictionary) => {
@@ -114,7 +114,7 @@ export default class GenericDetail extends Component {
 
     render() {
         const { history } = this.props;
-        const { menuDetail = {}, portlet = {}, tabs = {}, currentUser = {} } = this.state;
+        const { menuDetail = {}, portlet = {}, tabDetail = {}, currentUser = {} } = this.state;
         const { finalColumns = [], data = {} } = portlet;
 
         const genericDataForCustomColumn = {
@@ -126,7 +126,7 @@ export default class GenericDetail extends Component {
             methods: portlet.methods,
             preDefinedmethods: portlet.preDefinedmethods
         };
-        
+
         const html =
             <div className="header">
                 <div className="left" />
@@ -153,7 +153,6 @@ export default class GenericDetail extends Component {
                 </div>
             </div>;
 
-
         return (
             <div className="generic-detail-container">
                 <RightClick renderTag="div" html={html} rowOptions={this.rowOptions} ></RightClick>
@@ -166,8 +165,8 @@ export default class GenericDetail extends Component {
                     }
 
                     {
-                        tabs && tabs.includes ?
-                            <DetailIncludes tabs={tabs} callback={this.getDetailRecord} />
+                        tabDetail && tabDetail.tabs ?
+                            <DetailIncludes tabs={tabDetail.tabs} callback={this.getDetailRecord} currentUser={currentUser} />
                             : null
                     }
                 </div>

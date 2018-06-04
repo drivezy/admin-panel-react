@@ -102,7 +102,7 @@ export function IsEqualObject(object, otherObject) {
 export function TrimQueryString(options) {
     if (options.query && typeof options.query == 'string') {
         options.query = options.query.replace(/^ and /, '');
-    } else { 
+    } else {
         delete options.query;
     }
     return options;
@@ -120,4 +120,13 @@ export function BuildUrlForGetCall(url, params) {
         newUrl += i + "=" + value + "&";
     };
     return newUrl.slice(0, -1);
+}
+
+/**
+ * Returns true if object is having keys
+ * false if object is empty 
+ * @param  {Object} obj
+ */
+export function IsObjectHaveKeys(obj) {
+    return obj && typeof obj == 'object' && Object.keys(obj).length;
 }

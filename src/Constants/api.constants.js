@@ -16,4 +16,6 @@ export const GetMenusEndPoint = 'getMenus';
 export const GetMenuDetailEndPoint = 'menuDetails/';
 
 export const MenuFilterEndPoint = 'menuFilter';
+
+export const ListPreference = 'listPreference';
 /** Private routes ends here */
