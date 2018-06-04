@@ -5,15 +5,18 @@ import Viewer from 'react-viewer';
 import 'react-viewer/dist/index.css';
 
 import {
-    Row, Col, Card, CardHeader, CardBody, Button
+    Row, Col, Card, CardHeader, CardBody
 } from 'reactstrap';
 
 import classNames from 'classnames';
 
-import { Get } from './../../Utils/http.utils';
+import { Get, Put } from './../../Utils/http.utils';
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
+import ToastNotifications from './../../Utils/toast.utils';
+import { ConfirmUtils } from './../../Utils/confirm-utils/confirm.utils';
 
 import UserLicenseForm from './../../Components/User-License-Form/userLicenseForm.component';
+
 
 
 export default class UserLicense extends Component {
@@ -25,7 +28,7 @@ export default class UserLicense extends Component {
             images: [],
             visible: false,
             activeIndex: 0,
-            mode: 'modal',
+            currentIndex: 0
         };
     }
 
@@ -58,8 +61,19 @@ export default class UserLicense extends Component {
         }
     }
 
+    acceptL = () => {
+        const { images = [], currentIndex } = this.state;
+        const method = async () => {
+            const result = await Put({ url: "userLicense/" + images[currentIndex].id, body: { approved: 1 } });
+            if (result.success) {
+                ToastNotifications.success('License is Accepted');
+            }
+        }
+        ConfirmUtils.confirmModal({ message: "Are you sure you want to accept license?", callback: method });
+    }
+
     render() {
-        const { images = [], userObj = {} } = this.state;
+        const { images = [], userObj = {}, currentIndex } = this.state;
 
         const licenses = images.map((image) => {
             image.src = image.license;
@@ -84,7 +98,9 @@ export default class UserLicense extends Component {
                 </div>
                 <div className="container">
                     <Card>
-                        <CardHeader>User Details</CardHeader>
+                        <CardHeader>
+                            User Licenses <small>{currentIndex + 1} of {images.length}</small>
+                        </CardHeader>
                         <CardBody>
                             <div className={imgListClass}>
                                 {
@@ -103,6 +119,18 @@ export default class UserLicense extends Component {
                                 }
                             </div>
                         </CardBody>
+                        <Row>
+                            <Col sm="6">
+                                <button className="btn btn-primary pull-right width-100 button-red" onClick={() => { this.acceptL() }}>
+                                    Accept License
+                            </button>
+                            </Col>
+                            <Col sm="6">
+                                <button className="btn btn-primary pull-right width-100 button-green" onClick={() => { this.rejectL() }}>
+                                    Reject License
+                            </button>
+                            </Col>
+                        </Row>
                     </Card>
                     <Viewer
                         visible={this.state.visible}

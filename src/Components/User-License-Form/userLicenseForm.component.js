@@ -1,8 +1,6 @@
-
-
 // Higher Order Component
 import React, { Component } from 'react';
-import { withFormik } from 'formik';
+import { withFormik, Field } from 'formik';
 import { Put } from './../../Utils/http.utils';
 import SelectBox from './../Forms/Components/Select-Box/selectBox';
 
@@ -15,6 +13,7 @@ const InnerForm = ({
     handleBlur,
     handleSubmit,
     isSubmitting,
+    setFieldValue
 }) => (
         <form onSubmit={handleSubmit}>
             <div className="form-group">
@@ -32,7 +31,12 @@ const InnerForm = ({
 
             <div className="form-group">
                 <label className="control-label">Gender</label>
-                <SelectBox value={values.gender} onChange={handleChange} options={[{ value: "male", label: "Male" }, { value: "female", label: "Female" }, { value: "others", label: "Others" }]} />
+                <Field
+                    name='gender'
+                    render={({ field /* _form */ }) => (
+                        <SelectBox valueKey="value" field="label" name='gender' onChange={(selected) => { setFieldValue('gender', selected.value) }} value={values.gender} options={[{ value: "male", label: "Male" }, { value: "female", label: "Female" }, { value: "others", label: "Others" }]} />
+                    )}
+                />
             </div>
 
             <div className="form-group">
@@ -64,45 +68,47 @@ const LicenseForm = withFormik({
             first_name: userContent.first_name || '',
             last_name: userContent.last_name || '',
             email: userContent.email || '',
-            mobile: userContent.mobile || ''
+            mobile: userContent.mobile || '',
+            gender: userContent.gender || '',
+            dob: userContent.dob || ''
         }
 
     },
     // Add a custom validation function (this can be async too!)
-    validationSchema: (props, values) => {
+    // validationSchema: (props, values) => {
 
-        // let da = {
-        //     'first_name': Yup.string().required()
-        // }
+    // let da = {
+    //     'first_name': Yup.string().required()
+    // }
 
-        // let fields = Object.keys(props.payload.columns);
+    // let fields = Object.keys(props.payload.columns);
 
-        // const { columns } = props.payload;
+    // const { columns } = props.payload;
 
-        // fields.forEach((column) => {
-        //     if (columns[column].mandatory) {
-        //         da[columns[column].column_name] = Yup.string().required(columns[column].display_name + ' is required.');
-        //     }
-        // });
+    // fields.forEach((column) => {
+    //     if (columns[column].mandatory) {
+    //         da[columns[column].column_name] = Yup.string().required(columns[column].display_name + ' is required.');
+    //     }
+    // });
 
-        // return Yup.object().shape(da);
+    // return Yup.object().shape(da);
 
-        // return Yup.object().shape({
-        //     friends: Yup.array()
-        //         .of(
-        //             Yup.object().shape({
-        //                 name: Yup.string()
-        //                     .min(4, 'too short')
-        //                     .required('Required'), // these constraints take precedence
-        //                 salary: Yup.string()
-        //                     .min(3, 'cmon')
-        //                     .required('Required'), // these constraints take precedence
-        //             })
-        //         )
-        //         .required('Must have friends') // these constraints are shown if and only if inner constraints are satisfied
-        //         .min(3, 'Minimum of 3 friends'),
-        // })
-    },
+    // return Yup.object().shape({
+    //     friends: Yup.array()
+    //         .of(
+    //             Yup.object().shape({
+    //                 name: Yup.string()
+    //                     .min(4, 'too short')
+    //                     .required('Required'), // these constraints take precedence
+    //                 salary: Yup.string()
+    //                     .min(3, 'cmon')
+    //                     .required('Required'), // these constraints take precedence
+    //             })
+    //         )
+    //         .required('Must have friends') // these constraints are shown if and only if inner constraints are satisfied
+    //         .min(3, 'Minimum of 3 friends'),
+    // })
+    // },
     // Submission handler
     handleSubmit: async (
         values,
@@ -115,12 +121,12 @@ const LicenseForm = withFormik({
         const result = await Put({
             url: 'user/' + props.userContent.id,
             body: {
-                first_name: props.userContent.first_name,
-                last_name: props.userContent.last_name,
-                dob: props.userContent.dob,
-                email: props.userContent.email,
-                mobile: props.userContent.mobile,
-                gender: props.userContent.gender
+                first_name: values.first_name,
+                last_name: values.last_name,
+                dob: values.dob,
+                email: values.email,
+                mobile: values.mobile,
+                gender: values.gender
             }
         });
     },

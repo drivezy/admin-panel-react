@@ -18,7 +18,7 @@ export default class SelectBox extends Component {
         }
     }
 
-    componentWillReceiveProps(props) {
+    unsafe_componentwillreceiveprops(props) {
         this.setState({ ...this.returnStateObj(props) });
     }
 

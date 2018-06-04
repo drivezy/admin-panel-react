@@ -47,7 +47,8 @@ export default class ModalWrapper extends Component {
 
     render() {
         const { headerText, modalHeader, modalBody, modalFooter, size = 'lg' } = this.state;
-        const { isVisible } = this.state;
+
+        const  isVisible  = this.state.isVisible || this.props.isVisible;
 
         return (
             <Modal size={size} isOpen={isVisible} toggle={this.closeModal} className={this.props.className} backdrop={this.state.backdrop}>

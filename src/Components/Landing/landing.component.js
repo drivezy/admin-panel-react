@@ -13,6 +13,8 @@ import Header from './../../Scenes/Header/header.scene';
 import BookingDetail from './../../Scenes/Booking-Detail/bookingDetail.scene';
 import UserLicense from './../../Scenes/User-License/userLicense.scene';
 
+// import { Spotlight } from './../Components/Spotlight-Search/spotlightSearch.component';
+
 import './landing.component.css';
 
 export default class LandingApp extends Component {
@@ -64,7 +66,7 @@ export default class LandingApp extends Component {
 
                         <Route exact path='/booking/:bookingId' component={BookingDetail} />
                         <Route exact path='/userLicense/:userId' component={UserLicense} />
-
+                        {/* <Spotlight ref={(elem) => SettingsUtil.registerModal(elem)} /> */}
                         <Route exact path='/' component={HomeScene} />
                     </Switch>
                 </div>
