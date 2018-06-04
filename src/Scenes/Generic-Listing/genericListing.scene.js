@@ -85,21 +85,11 @@ export default class GenericListing extends Component {
     }
 
     dataFetched = ({ genericData, filterContent }) => {
-        // const totalPages = Math.ceil((genericData.stats.records / genericData.stats.count));
-
-        // if (totalPages > 7) {
-        //     // this.setState({ pagesOnDisplay: 7 });
-        //     this.state.pagesOnDisplay = 7;
-        // } else {
-        //     // this.setState({ pagesOnDisplay: totalPages });
-        //     this.state.pagesOnDisplay = Math.ceil(totalPages);
-        // }qw
         this.setState({ genericData, filterContent });
     }
 
 
     openAggregationResult = async (operator, caption, data) => {
-
         let options = GetDefaultOptions();
         options.aggregation_column = data.selectedColumn.name;
         options.aggregation_operator = operator;
@@ -114,12 +104,10 @@ export default class GenericListing extends Component {
     }
 
     filterTable = (data, method) => {
-
         const paramProps = {
             history: data.history, match: data.match
         };
 
-        console.log(data, method);
         let query = '';
         if (data.selectedColumn.path.split(".").length == 1) { // for columns which is child of table itself
             if (this.urlParams.query) { // if previous query present then it will executed

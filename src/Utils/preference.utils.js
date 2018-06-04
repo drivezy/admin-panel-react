@@ -1,6 +1,6 @@
 
 
-import { Get, Post, Put } from './http.utils';
+import { Get, Post, Put, Delete } from './http.utils';
 import { IsObjectHaveKeys } from './common.utils';
 
 import { ListPreference } from './../Constants/api.constants';
@@ -49,11 +49,15 @@ export function SetPreference({ userId, menuId, name = 'default', selectedColumn
     // return Post({ url: 'userPreference', body: { parameter: key, value: JSON.stringify(value) }, urlPrefix: RECORD_URL });
 }
 
-export function DeletePreference(key, value, forAll) {
-    preferences[key] = value;
-
-    return Post({ url: 'deleteUserPreference', body: { parameter: key, value: forAll } });
+export function DeletePreference({ layout }) {
+    const url = ListPreference + '/' + layout.id;
+    return Delete({ url });
 }
+// export function DeletePreference(key, value, forAll) {
+//     preferences[key] = value;
+
+//     return Post({ url: 'deleteUserPreference', body: { parameter: key, value: forAll } });
+// }
 
 function setValues(values) {
     preferences = values.response;
