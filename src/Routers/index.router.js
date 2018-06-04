@@ -110,7 +110,7 @@ export default class IndexRouter extends Component {
 
     toggleSideNav = (sideNavExpanded) => {
         console.log(sideNavExpanded);
-        this.setState({ sideNavExpanded: !this.state.sideNavExpanded });
+        // this.setState({ sideNavExpanded: !this.state.sideNavExpanded });
     }
 
     render() {

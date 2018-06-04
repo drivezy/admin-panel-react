@@ -13,14 +13,20 @@ import Header from './../../Scenes/Header/header.scene';
 import BookingDetail from './../../Scenes/Booking-Detail/bookingDetail.scene';
 import UserLicense from './../../Scenes/User-License/userLicense.scene';
 
+import './landing.component.css';
 
 export default class LandingApp extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            menus: this.props.menus
+            menus: this.props.menus,
+            sideNavExpanded: false
         }
+    }
+
+    onCollapse = (sideNavExpanded) => {
+        this.setState({ sideNavExpanded: !sideNavExpanded });
     }
 
     render() {
@@ -30,7 +36,7 @@ export default class LandingApp extends Component {
         return (
             <div className="page-container">
                 <div className="landing-sidebar">
-                    <SideNav visible={sideNavExpanded} onCollapse={this.callback} menus={menus} />
+                    <SideNav visible={sideNavExpanded} onCollapse={this.onCollapse.bind(this)} menus={menus} />
                 </div>
                 <div className={`landing-wrapper ${sideNavExpanded ? 'sidenav-open' : 'sidenav-closed'}`} id="main" style={{ height: '100%' }}>
                     <Header className={`${sideNavExpanded ? 'expanded' : 'collapsed'}`} />
@@ -60,7 +66,6 @@ export default class LandingApp extends Component {
                         <Route exact path='/userLicense/:userId' component={UserLicense} />
 
                         <Route exact path='/' component={HomeScene} />
-                        {this.state.sideNavExpanded}
                     </Switch>
                 </div>
             </div>

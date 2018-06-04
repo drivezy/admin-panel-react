@@ -1,0 +1,11 @@
+.page-container {
+    .landing-sidebar {}
+    .landing-wrapper {
+        &.sidenav-open {
+            margin-left: 180px;
+        }
+        &.sidenav-closed{
+            margin-left: 40px;
+        }
+    }
+}
