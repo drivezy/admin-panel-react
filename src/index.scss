@@ -55,19 +55,7 @@ body {
     }
 }
 
-// Nav Styling
-.nav-tabs {
-    .nav-link {
-        border: none;
-        background: none;
-        cursor: pointer;
-        &.active {
-            background: none;
 
-            border-bottom: 1px solid red !important;
-        }
-    }
-}
 
 .modal-content {
     border: none;

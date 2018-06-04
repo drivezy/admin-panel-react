@@ -26,7 +26,7 @@ export default class FormSettings extends Component {
     componentDidMount() {
     }
 
-    componentWillReceiveProps(nextProps) {
+    unsafe_componentwillreceiveprops(nextProps) {
     }
 
     toggleModal = () => {
@@ -108,7 +108,7 @@ export default class FormSettings extends Component {
             ));
         }
         return (
-            <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="form-settings">
+            <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="form-settings-modal">
                 <ModalHeader toggle={this.toggleModal}>
                     Configure
             </ModalHeader>
@@ -180,7 +180,7 @@ export default class FormSettings extends Component {
 
     render() {
         return (
-            <div className="table-settings">
+            <div className="form-settings">
                 <Button color="primary" size="sm" onClick={this.toggleModal}>
                     <i className="fa fa-cog"></i>
                 </Button>
