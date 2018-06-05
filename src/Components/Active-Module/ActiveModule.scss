@@ -1,5 +1,15 @@
 @import 'Assets/Global-Shared/theme.scss';
-
+.landing-wrapper{
+    &.sidenav-open{
+        .active-module{
+            .search-box{
+                &.expanded{
+                    left: 180px;
+                }
+            }
+        }
+    }
+}
 .active-module {
     position: relative;
     .search-box {
