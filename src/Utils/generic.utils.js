@@ -194,7 +194,7 @@ export function ConvertMenuDetailForGenericPage(menuDetail) {
     const layout = menuDetail.list_layouts.length ? menuDetail.list_layouts[0] : null; // @TODO for now taking 0th element as default layout, change later 
 
     delete menuDetail.list_layouts;
-    
+
     if (layout) {
         layout.column_definition = layout.column_definition;
     }
@@ -318,6 +318,31 @@ export function GetPreSelectedMethods() {
     let menuDictionary = null;
     let menuColumns = null;
 
+    methods.preferenceSetting = (preference, preferenceObj) => {
+        ModalManager.openModal({
+            headerText: "Edit " + preferenceObj.name + " Preference",
+            modalBody: () => (<PreferenceSetting listing={preference} preferenceObj={preferenceObj}></PreferenceSetting>)
+        })
+    }
+
+
+    methods.redirect = ({ action, listingRow, history, genericData }) => {
+        let url = CreateUrl({ url: action.parameter, obj: listingRow });
+        // var urlParams;
+        // var userQuery = 0;
+
+        url = createQueryUrl(url, genericData.restrictQuery, genericData);
+        history.push(url);
+        // if (angular.isDefined(event)) {
+        //     if (event.metaKey || event.ctrlKey) {
+        //         window.open("#/" + url, "_blank");
+        //     } else {
+        // $location.url(url);
+        // location.hash = "#/" + url;
+        //     }
+        // }
+    };
+
     /**
      * To be used to edit menu directly from generic detail page
      */
@@ -350,39 +375,25 @@ export function GetPreSelectedMethods() {
         methods.edit({ listingRow: menuDetail, genericData });
     };
 
-    methods.preferenceSetting = (preference, preferenceObj) => {
-        ModalManager.openModal({
-            headerText: "Edit " + preferenceObj.name + " Preference",
-            modalBody: () => (<PreferenceSetting listing={preference} preferenceObj={preferenceObj}></PreferenceSetting>)
-        })
-    }
-
-
-    methods.redirect = ({ action, listingRow, history, genericData }) => {
-        let url = CreateUrl({ url: action.parameter, obj: listingRow });
-        // var urlParams;
-        // var userQuery = 0;
-
-        url = createQueryUrl(url, genericData.restrictQuery, genericData);
-        history.push(url);
-        // if (angular.isDefined(event)) {
-        //     if (event.metaKey || event.ctrlKey) {
-        //         window.open("#/" + url, "_blank");
-        //     } else {
-        // $location.url(url);
-        // location.hash = "#/" + url;
-        //     }
-        // }
-    };
-
     /**
      * Generic add method
      * @param  {object} {action
      * @param  {object} listingRow
      * @param  {object} genericData}
      */
-    methods.add = ({ action, listingRow, genericData }) => {
-        const payload = { action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module, dataModel: genericData.dataModel };
+    methods.add = ({ action, listingRow, genericData, source }) => {
+        const payload = {
+            action,
+            listingRow,
+            columns: genericData.columns,
+            formPreference: genericData.formPreference,
+            modelName: genericData.modelName,
+            module: genericData.module,
+            dataModel: genericData.dataModel,
+            source,
+            userId: genericData.userId,
+            modelId: genericData.modelId,
+        };
         ModalManager.openModal({
             payload,
             headerText: 'Add modal',
@@ -392,15 +403,28 @@ export function GetPreSelectedMethods() {
         });
     }
 
+
     /**
      * Generic edit method
      * @param  {object} {action
      * @param  {object} listingRow
      * @param  {object} genericData}
      */
-    methods.edit = ({ action, listingRow, genericData }) => {
+    methods.edit = ({ action, listingRow, genericData, source = 'module' }) => {
         // const payload = { method: 'edit', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module };
-        const payload = { method: 'edit', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module, dataModel: genericData.dataModel };
+        const payload = {
+            method: 'edit',
+            action,
+            listingRow,
+            columns: genericData.columns,
+            formPreference: genericData.formPreference,
+            modelName: genericData.modelName,
+            module: genericData.module,
+            dataModel: genericData.dataModel,
+            source,
+            userId: genericData.userId,
+            modelId: genericData.modelId,
+        };
         ModalManager.openModal({
             payload,
             // modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),
@@ -416,8 +440,20 @@ export function GetPreSelectedMethods() {
      * @param  {object} listingRow
      * @param  {object} genericData}
      */
-    methods.copy = ({ action, listingRow, genericData }) => {
-        const payload = { method: 'add', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module, dataModel: genericData.dataModel };
+    methods.copy = ({ action, listingRow, genericData, source }) => {
+        const payload = {
+            method: 'add',
+            action,
+            listingRow,
+            columns: genericData.columns,
+            formPreference: genericData.formPreference,
+            modelName: genericData.modelName,
+            module: genericData.module,
+            dataModel: genericData.dataModel,
+            source,
+            userId: genericData.userId,
+            modelId: genericData.modelId,
+        };
         ModalManager.openModal({
             payload,
             // modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),

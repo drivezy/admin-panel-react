@@ -138,6 +138,7 @@ export default class DynamicFilter extends Component {
     updateLocalFetchedFilters = (activeLayout) => {
         let { layouts } = this.state;
         const { menuUpdatedCallback } = this.props;
+        activeLayout.column_definition = JSON.parse(activeLayout.column_definition);
         layouts.push(activeLayout);
         this.state.activeLayout = activeLayout;
         this.state.layouts = layouts;

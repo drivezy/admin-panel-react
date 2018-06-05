@@ -13,6 +13,7 @@ import Yup from 'yup';
 
 import { Upload, Post, Put } from './../../Utils/http.utils';
 import { GetPreference } from './../../Utils/generic.utils';
+import { IsObjectHaveKeys } from './../../Utils/common.utils';
 
 import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import ReferenceInput from './../Forms/Components/Reference-Input/referenceInput';
@@ -48,115 +49,115 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
     const elements = {
 
         // Static Display 
-        768: <h5>{values[column.column_name]}</h5>,
+        768: <h5>{values[column.path]}</h5>,
         // Static Ends
 
         // Number
-        107: <Field autoComplete="off" className="form-control" type="number" name={column.column_name} placeholder={`Enter ${column.display_name}`} />,
+        107: <Field autoComplete="off" className="form-control" type="number" name={column.path} placeholder={`Enter ${column.display_name}`} />,
         // Number Ends
 
         // Text
-        108: <Field className={`form-control ${props.errors[column.column_name] && props.touched[column.column_name] ? 'is-invalid' : ''}`} type="text" name={column.column_name} placeholder={`Enter ${column.display_name}`} />,
+        108: <Field id={column.path} value={values[column.path]} className={`form-control ${props.errors[column.index] && props.touched[column.index] ? 'is-invalid' : ''}`} type="text" placeholder={`Enter ${column.name}`} />,
         // Text Ends
 
         // TextArea Begins
         160: <Field
-            name={column.column_name}
+            name={column.index}
             render={({ field /* _form */ }) => (
-                <textarea name={column.column_name} className="form-control" rows="3" onChange={props.handleChange} value={values[column.column_name]}></textarea>
+                <textarea name={column.index} className="form-control" rows="3" onChange={props.handleChange} value={values[column.path]}></textarea>
             )}
         />,
         // TextArea Ends
 
         // Switch Begins
         119: <Field
-            name={column.column_name}
+            name={column.name}
             render={({ field /* _form */ }) => (
-                <Switch name={column.column_name} rows="3" onChange={props.setFieldValue} value={values[column.column_name]} />
+                <Switch name={column.name} rows="3" onChange={props.setFieldValue} value={values[column.path]} />
             )}
         />,
         // Switch Ends
 
         // Boolean Select
         111: <Field
-            name={column.column_name}
+            name={column.name}
             render={({ field /* _form */ }) => (
-                <SelectBox name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                <SelectBox name={column.name} onChange={props.setFieldValue} value={values[column.path]} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
             )}
         />,
         // Boolean Ends
 
         // List Select with options from api
         116: <Field
-            name={column.column_name}
+            name={column.name}
             render={({ field /* _form */ }) => (
-                <ListSelect column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />
+                <ListSelect column={column} name={column.name} onChange={props.setFieldValue} model={values[column.path]} />
             )}
         />,
         // List Select Ends
 
         // List Multi Select
         465: <Field
-            name={column.column_name}
+            name={column.name}
             render={({ field /* _form */ }) => (
-                <ListSelect multi={true} column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />
+                <ListSelect multi={true} column={column} name={column.name} onChange={props.setFieldValue} model={values[column.path]} />
             )}
         />,
         // List Ends
 
         // DatePicker
         109: <Field
-            name={column.column_name}
+            name={column.name}
             render={({ field /* _form */ }) => (
-                <DatePicker single={true} name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />
+                <DatePicker single={true} name={column.name} onChange={props.setFieldValue} value={values[column.path]} />
             )}
         />,
         // DatePicker Ends
 
         // Single DatePicker with Timepicker 
         110: <Field
-            name={column.column_name}
+            name={column.name}
             render={({ field /* _form */ }) => (
-                <DatePicker single={true} timePicker={true} name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />
+                <DatePicker single={true} timePicker={true} name={column.name} onChange={props.setFieldValue} value={values[column.path]} />
             )}
         />,
         // Single Datepicker Ends
 
         // Time Picker
         746: <Field
-            name={column.column_name}
+            name={column.name}
             render={({ field /* _form */ }) => (
-                <TimePicker name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />
+                <TimePicker name={column.name} onChange={props.setFieldValue} value={values[column.path]} />
             )}
         />,
         // Time Picker Ends
 
         // Reference Begins
         117: <Field
-            name={column.column_name}
+            name={column.name}
             render={({ field /* _form */ }) => (
-                <ReferenceInput column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />
+                <ReferenceInput column={column} name={column.name} onChange={props.setFieldValue} model={values[column.path]} />
             )}
         />,
         // Reference Ends
 
         // Script Input
-        411: <ScriptInput value={values[column.column_name]} columns={props.payload.columns} payload={props.payload} column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />,
+        411: <ScriptInput value={values[column.path]} columns={props.payload.columns} payload={props.payload} column={column} name={column.name} onChange={props.setFieldValue} model={values[column.index]} />,
         // Script Input Ends
 
         684: 'serialize',
 
         // Image Upload
         708: <Field
-            name={column.column_name}
+            name={column.name}
             render={({ field /* _form */ }) => (
-                <ImageUpload name={column.column_name} onRemove={props.onFileRemove} onSelect={props.onFileUpload} />
+                <ImageUpload name={column.name} onRemove={props.onFileRemove} onSelect={props.onFileUpload} />
             )}
         />,
         // Image Upload Ends
     }
 
-    return elements[column.column_type];
+    return elements[column.column_type_id] || elements[108];
 }
 
 const formElements = props => {
@@ -180,16 +181,17 @@ const formElements = props => {
     //     console.log(image);
     // }
 
+    const column_definition = IsObjectHaveKeys(payload.formPreference) ? payload.formPreference.column_definition : [];
     return (
         <Form>
             <div className="form-row">
                 {
-                    payload.formPreference.map((preference, key) => {
+                    column_definition.map((preference, key) => {
 
                         let elem, column;
 
                         if (typeof preference != 'string') {
-                            column = payload.columns[preference.column];
+                            column = payload.columns[preference.index];
 
                             elem = inputElement({ props, values, column, shouldColumnSplited, key });
 
@@ -244,16 +246,19 @@ const formElements = props => {
 
 
 const FormContents = withFormik({
+    enableReinitialize: true,
     mapPropsToValues: props => {
 
         const { payload } = props;
 
         let response = {}
 
-        payload.formPreference.forEach((preference) => {
+        const column_definition = IsObjectHaveKeys(payload.formPreference) ? payload.formPreference.column_definition : [];
+
+        column_definition.forEach((preference) => {
             if (typeof preference != 'string') {
-                let column = payload.columns[preference.column];
-                response[column.column_name] = payload.listingRow[column.column_name] || '';
+                let column = payload.columns[preference.index];
+                response[column.path] = payload.listingRow[column.path] || '';
             }
         });
 
@@ -365,14 +370,14 @@ export default class FormCreator extends Component {
     async componentDidMount() {
         const { payload = {} } = this.props;
         const { formPreference, module } = payload;
-        if (!formPreference && module) {
-            const res = await GetPreference(payload.modelName);
-            console.log(res);
-            if (res) {
-                payload.formPreference = res;
-                this.setState({ payload });
-            }
-        }
+        // if (!formPreference && module) {
+        //     const res = await GetPreference(payload.modelName);
+        //     console.log(res);
+        //     if (res) {
+        //         payload.formPreference = res;
+        //         this.setState({ payload });
+        //     }
+        // }
 
     }
 
@@ -392,7 +397,7 @@ export default class FormCreator extends Component {
 
     layoutChanged = (selectedColumns) => {
         let { payload } = this.state;
-        payload.formPreference = selectedColumns
+        payload.formPreference = selectedColumns;
         this.setState({ payload });
     }
 
@@ -442,11 +447,12 @@ export default class FormCreator extends Component {
 
     render() {
         const { payload, fileUploads } = this.state;
+        const { source, modelId } = payload;
         return (
             <div className="form-creator">
                 {
                     payload.columns ?
-                        <FormSettings onSubmit={this.layoutChanged} listName={payload.modelName} selectedColumns={payload.formPreference} columns={payload.columns} />
+                        <FormSettings source={source} modelId={modelId} onSubmit={this.layoutChanged} listName={payload.modelName} formLayout={payload.formPreference} columns={payload.columns} />
                         :
                         null
                 }

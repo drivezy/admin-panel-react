@@ -20,7 +20,9 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
     let options = GetDefaultOptions();
 
     params.page = queryString.page ? parseInt(queryString.page) : data.currentPage;
-    options.includes = params.includes;
+    if(params.includes) { 
+        options.includes = params.includes;
+    }
     options.order = params.order + "," + params.sort;
 
     if (queryString.search) {
@@ -104,7 +106,7 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
 
     // const result = await Get({ url: configuration.url, body: options });
     const url = BuildUrlForGetCall(configuration.url, options);
-    return Get({ url, callback: PrepareObjectForListing, extraParams: { callback, page: options.page, limit: options.limit, data, configuration, params, index }, persist: true, urlPrefix: ROUTE_URL });
+    return Get({ url, callback: PrepareObjectForListing, extraParams: { callback, page: options.page, limit: options.limit, data, configuration, params, index, currentUser }, persist: true, urlPrefix: ROUTE_URL });
 }
 
 
@@ -114,7 +116,7 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
  * @param  {object} {extraParams}
  */
 function PrepareObjectForListing(result, { extraParams }) {
-    const { callback, page, limit, data, configuration, params, index } = extraParams;
+    const { callback, page, limit, data, configuration, params, index, currentUser } = extraParams;
     if (result.success && result.response) {
 
         const { data: apiData, dictionary, relationship, stats, base } = result.response;
@@ -161,17 +163,19 @@ function PrepareObjectForListing(result, { extraParams }) {
             // @TODO uncomment this line to get selectedColumn
             layout: configuration.layout || {},
             // layout: configuration.preference[configuration.listName + ".list"] ? JSON.parse(configuration.preference[configuration.listName + ".list"]) : null, // formPreference: configuration.preference[configuration.listName + '.form'] ? JSON.parse(configuration.preference[configuration.listName + '.form']) : null,
-            // nextActions: configuration.nextActions,
-            formPreference: model.form_layouts[0],
+            nextActions: model.actions,
+            formPreference: model.form_layouts[0] || [],
             // formPreference: configuration.preference[modelName + ".form"] ? JSON.parse(configuration.preference[modelName + ".form"]) : null,
             // modelName: configuration.model.name.toLowerCase() + ".form",
             // module: configuration.module,
             dataModel: modelName,
             userFilter: configuration.layouts,
+            userId: currentUser ? currentUser.id : null,
+            menuId: configuration.menuId,
+            modelId: model.id,
             // userFilter: configuration.userFilter,
             // scopes: data.scopes,
             // restrictColumn: configuration.restrictColumnFilter,
-            // modelId: configuration.model.id,
             // callbackFunction: callFunction,
             // icon: configuration.image,
             // show: configuration.show,

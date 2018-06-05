@@ -3,7 +3,7 @@ import './FormSettings.css';
 import _ from 'lodash';
 
 import { SetPreference } from './../../Utils/preference.utils';
-
+import { IsObjectHaveKeys } from './../../Utils/common.utils';
 import { changeArrayPosition } from './../../Utils/js.utils';
 
 import { Collapse, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
@@ -13,10 +13,12 @@ export default class FormSettings extends Component {
     constructor(props) {
         super(props);
 
+        const formLayout = this.props.formLayout || {};
+
         this.state = {
             modal: false,
-            selectedColumns: this.props.selectedColumns,
-            tempSelectedColumns: this.props.selectedColumns,
+            selectedColumns: formLayout.column_definition || [],
+            tempSelectedColumns: formLayout.column_definition || [],
             columns: this.props.columns,
             list: {},
             activeColumn: {},
@@ -24,7 +26,7 @@ export default class FormSettings extends Component {
     }
 
     toggleModal = () => {
-        this.setState({ modal: !this.state.modal, activeColumn: {}, tempSelectedColumns: this.props.selectedColumns })
+        this.setState({ modal: !this.state.modal, activeColumn: {}, tempSelectedColumns: IsObjectHaveKeys(this.props.formLayout) ? this.props.formLayout.column_definition : [] })
     }
 
     toggleList = (index) => {
@@ -37,7 +39,8 @@ export default class FormSettings extends Component {
         var selectedColumns = this.state.tempSelectedColumns;
 
         selectedColumns.unshift({
-            column: column.parent + "." + column.id, headingCollapsed: true, heading: ""
+            object: column.parent, column: column.name, headingCollapsed: true, heading: "", index: column.parent + '.' + column.name
+            // column: column.parent + "." + column.id, headingCollapsed: true, heading: ""
         });
 
         this.setState({ tempSelectedColumns: selectedColumns })
@@ -76,9 +79,25 @@ export default class FormSettings extends Component {
     }
 
     applyChanges = async () => {
-        const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
-        result.success ? this.setState({ modal: !this.state.modal }) : null;
-        this.props.onSubmit(this.state.tempSelectedColumns);
+        const { userId, modelId, listName, source } = this.props;
+        let { formLayout } = this.props;
+        const { tempSelectedColumns } = this.state;
+        const result = await SetPreference({ userId, source, menuId: modelId, name: listName, selectedColumns: tempSelectedColumns, layout: formLayout });
+        // const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
+
+        // result.success ? this.setState({ modal: !this.state.modal }) : null;
+        // this.props.onSubmit(this.state.tempSelectedColumns);
+        if (result.success) {
+            this.setState({ modal: !this.state.modal });
+            if (IsObjectHaveKeys(formLayout)) {
+                formLayout.column_definition = tempSelectedColumns;
+            } else {
+                const { response } = result;
+                response.column_definition = JSON.parse(response.column_definition);
+                formLayout = response;
+            }
+            this.props.onSubmit(formLayout);
+        }
     }
 
     modalWrapper() {
@@ -154,7 +173,7 @@ export default class FormSettings extends Component {
                                                 ---- {column} ----
                                         </ListGroupItem>
                                             : <ListGroupItem tag="button" action onClick={() => this.selectColumn(column, index)} className={`${activeColumn.column == column.column ? 'active' : ''}`}>
-                                                {column.columnTitle ? column.columnTitle : columns[column.column].name}
+                                                {column.columnTitle ? column.columnTitle : columns[column.index].name}
                                             </ListGroupItem>
                                         }
                                     </div>

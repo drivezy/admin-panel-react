@@ -47,8 +47,6 @@ export default class TableSettings extends Component {
             // column: column.parent + "." + column.id, headingCollapsed: true, heading: ""
         });
 
-        console.log(selectedColumns);
-
         this.setState({ tempSelectedColumns: selectedColumns })
     }
 
