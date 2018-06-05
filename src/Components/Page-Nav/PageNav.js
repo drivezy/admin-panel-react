@@ -88,25 +88,10 @@ export default class PageNav extends Component {
                 <Redirect to={from} />
             )
         }
-        // const from = { pathname: '/' };
-        // // this.logout();
-        // return (
-        //     <Redirect to={from} />
-        // )
+
         return (
             <div className="page-nav flex">
-                {/* <div className='theme-selection-container flex'>
-                    {
-                        this.themes.map((theme, key) => {
-                            const html = <div className={`cursor-pointer theme-box ${theme.class} ${selectedTheme.theme == theme.theme ? 'current-theme' : null}`} onClick={() => this.changeTheme(theme)} />
 
-                            return (
-                                <CustomTooltip placement="top" key={key} html={html} title={theme.name}></CustomTooltip>
-                            )
-                            // <div className='theme-box light-theme' onClick={() => this.changeTheme('drivezy-light-theme')} />
-                        })
-                    }
-                </div> */}
 
                 <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                     <DropdownToggle color="primary">

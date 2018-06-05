@@ -1,10 +1,16 @@
+@import 'Assets/Global-Shared/theme.scss';
 .page-container {
     .landing-sidebar {}
     .landing-wrapper {
+        flex-grow: 1;
+        width: calc(100% - 235px);
+        @include themify($themes) {
+            background-color: themed('bodyBackground');
+        }
         &.sidenav-open {
             margin-left: 180px;
         }
-        &.sidenav-closed{
+        &.sidenav-closed {
             margin-left: 40px;
         }
     }
