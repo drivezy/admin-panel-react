@@ -1,5 +1,5 @@
 
-import { IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall, TrimQueryString } from './common.utils';
+import { IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall, TrimQueryString, IsObjectHaveKeys } from './common.utils';
 import { GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, GetSelectedColumnDefinition } from './generic.utils';
 
 import { Get } from './http.utils';
@@ -20,7 +20,7 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
     let options = GetDefaultOptions();
 
     params.page = queryString.page ? parseInt(queryString.page) : data.currentPage;
-    if(params.includes) { 
+    if (params.includes) {
         options.includes = params.includes;
     }
     options.order = params.order + "," + params.sort;
@@ -144,6 +144,11 @@ function PrepareObjectForListing(result, { extraParams }) {
         const model = params.relationship[base];
         const modelName = model.name.toLowerCase();
 
+        const formPreference = model.form_layouts[0] || {};
+        if (IsObjectHaveKeys(formPreference)) {
+            formPreference.column_definition = JSON.parse(formPreference.column_definition);
+        }
+
         // Preparing the generic listing object
         const genericListingObj = {
             stats: stats || data.stats,
@@ -164,7 +169,7 @@ function PrepareObjectForListing(result, { extraParams }) {
             layout: configuration.layout || {},
             // layout: configuration.preference[configuration.listName + ".list"] ? JSON.parse(configuration.preference[configuration.listName + ".list"]) : null, // formPreference: configuration.preference[configuration.listName + '.form'] ? JSON.parse(configuration.preference[configuration.listName + '.form']) : null,
             nextActions: model.actions,
-            formPreference: model.form_layouts[0] || [],
+            formPreference,
             // formPreference: configuration.preference[modelName + ".form"] ? JSON.parse(configuration.preference[modelName + ".form"]) : null,
             // modelName: configuration.model.name.toLowerCase() + ".form",
             // module: configuration.module,

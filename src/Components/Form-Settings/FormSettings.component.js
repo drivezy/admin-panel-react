@@ -6,6 +6,8 @@ import { SetPreference } from './../../Utils/preference.utils';
 import { IsObjectHaveKeys } from './../../Utils/common.utils';
 import { changeArrayPosition } from './../../Utils/js.utils';
 
+import { FormPreferenceEndPoint } from './../../Constants/api.constants';
+
 import { Collapse, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 export default class FormSettings extends Component {
@@ -82,7 +84,7 @@ export default class FormSettings extends Component {
         const { userId, modelId, listName, source } = this.props;
         let { formLayout } = this.props;
         const { tempSelectedColumns } = this.state;
-        const result = await SetPreference({ userId, source, menuId: modelId, name: listName, selectedColumns: tempSelectedColumns, layout: formLayout });
+        const result = await SetPreference({ userId, source, menuId: modelId, name: listName, selectedColumns: tempSelectedColumns, layout: formLayout, url: FormPreferenceEndPoint });
         // const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
 
         // result.success ? this.setState({ modal: !this.state.modal }) : null;

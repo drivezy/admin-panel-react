@@ -18,19 +18,22 @@ export const GetPreferences = () => {
  * @param  {} value
  * @param  {} override_all
  */
-export function SetPreference({ userId, menuId, name = 'default', selectedColumns, override_all, source, query = null, layout }) {
+export function SetPreference({ userId, menuId, name = 'default', selectedColumns, override_all, source, query = null, layout, url = ListPreference }) {
     const source_type = GetSourceMorphMap(source);
 
     const methods = { Post, Put };
     let method = 'Post';
-    let url = ListPreference;
 
     const body = {
-        query,
+        // query,
         name,
         column_definition: JSON.stringify(selectedColumns),
         source_type
     };
+
+    if (query) {
+        body.query = query;
+    }
 
     if (!source_type) {
         alert('Please provide valid source for setting preference'); // @TODO replace with ToastUtils
