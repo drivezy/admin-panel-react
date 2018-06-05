@@ -5,14 +5,12 @@ import { StoreEvent } from './../../Utils/stateManager.utils'
 
 import { HotKeys } from 'react-hotkeys';
 
-
-
 export default class Sidenav extends Component {
     constructor(props) {
         super(props);
         this.state = {
             visible: props.visible || false,
-            onCollapse: props.onCollapse
+            // onCollapse: props.onCollapse
         }
     }
 
@@ -33,50 +31,22 @@ export default class Sidenav extends Component {
                 }
             })
         }
-        this.closeNav();
+        // this.closeNav();
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.visible != this.props.visible) {
-            this.setState({ visible: nextProps.visible });
+    componentDidUpdate(prevProps) {
+        if (prevProps.visible != this.props.visible) {
+            this.setState({ visible: this.props.visible });
         }
     }
-
-    openNav = () => {
-        const sideNav = document.getElementById("mySidenav");
-        const main = document.getElementById("main");
-        if (sideNav && main) {
-            sideNav.style.width = "180px";
-            main.style.marginLeft = "180px";
-            document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
-        }
-    }
-
-    closeNav = () => {
-        const sideNav = document.getElementById("mySidenav");
-        const main = document.getElementById("main");
-        if (sideNav && main) {
-            sideNav.style.width = "40px";
-            main.style.marginLeft = "40px";
-            document.body.style.backgroundColor = "white";
-        }
-    }
-
-    operation(visible) {
-        this.state.onCollapse(visible);
-        if (!visible) {
-            this.closeNav();
-        } else {
-            this.openNav();
-        }
-    }
-
+    // componentWillReceiveProps(nextProps) {
+    //     if (nextProps.visible != this.props.visible) {
+    //         this.setState({ visible: nextProps.visible });
+    //     }
+    // }
 
     toggleNav = (visible = this.state.visible) => {
-        // this.state.visible = !visible;
-        console.log(visible);
-        this.setState({ visible: !visible });
-        this.operation(this.state.visible);
+        this.props.onCollapse(visible);
     }
 
     toggleMenu = (menu) => {
@@ -85,7 +55,6 @@ export default class Sidenav extends Component {
 
     render() {
         const { visible } = this.state;
-        this.operation(visible);
         const { menus } = this.props;
 
         return (
@@ -95,8 +64,8 @@ export default class Sidenav extends Component {
                     <div className="sidebar-logo">
                         <div className="logo-image">
                             {/* <span className="logo-container">
-                            <img src={require('./../../Assets/images/logo-main.png')} />
-                        </span> */}
+                                <img src={require('./../../Assets/images/logo-main.png')} />
+                            </span> */}
                             <span className="toggle-icon" onClick={() => this.toggleNav()}>
                                 <i className={`fa ${visible ? 'fa-chevron-left' : 'fa-chevron-down'}`}></i>
                             </span>

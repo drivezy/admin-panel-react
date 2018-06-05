@@ -18,8 +18,7 @@ body {
         height: 100%;
         .page-container {
             display: flex;
-            height: 100vh;
-            // flex-direction: column;
+            height: 100vh; // flex-direction: column;
             .landing-sidebar {}
             .landing-wrapper {
                 flex-grow: 1;
@@ -30,11 +29,36 @@ body {
     }
 }
 
-.form-control{
-    &:focus{
-        box-shadow: none;
-        // border: none;
+.form-control {
+    &:focus {
+        box-shadow: none; // border: none;
     }
+}
+
+// Modal Styling
+.modal {
+    .modal-dialog {
+        .modal-content {
+            .modal-header {
+                padding: 8px 20px;
+            }
+            .modal-body {
+                padding-top: 5px;
+                background: whitesmoke;
+            }
+            .modal-footer{
+                .btn{
+                    margin: 0px 4px;
+                }
+            }
+        }
+    }
+}
+
+
+
+.modal-content {
+    border: none;
 }
 
 button:focus {

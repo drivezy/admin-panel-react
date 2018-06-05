@@ -15,11 +15,15 @@
 }
 
 .form-creator {
-    // background: black;
+    .form-settings {
+        position: absolute;
+        right: 45px;
+        top: 5px;
+    } // background: black;
     .card {
         border: none;
         .card-body {
-            padding: 0px 15px;
+            // padding: 0px 15px;
         }
     }
     .form-group {

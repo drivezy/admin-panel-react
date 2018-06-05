@@ -14,6 +14,8 @@
     display: flex;
     flex-direction: column;
     &.collapsed {
+        width: 40px;
+
         .sidebar-menus {
             .menus {
                 padding: 0px;
@@ -24,6 +26,10 @@
                 }
             }
         }
+    }
+    &.expanded{
+        width: 180px;
+
     }
     .sidebar-logo {
         .logo-image {
@@ -215,14 +221,17 @@
 .drivezy-dark-theme { 
     .sidebar-menus > .menus, .sidebar-wrapper {
         // background: $primaryThemeDark;
-        background: linear-gradient($primaryThemeDark, $primaryLightThemeDark, $primaryThemeDark, $primaryDarkThemeDark );
+        background: linear-gradient(#0b2232, #123146, #092742, #0b2131);
+        // background: linear-gradient($primaryThemeDark, $primaryLightThemeDark, $primaryThemeDark, $primaryDarkThemeDark );
         // background: linear-gradient($primaryThemeDark,  $primaryDarkThemeDark, $primaryThemeDark );
     }
     .sidebar-menus > .menus {
         background: transparent;
         .menu-item { 
             &:hover{
-                background: $primaryLightThemeDark;
+                background: #032134;
+                // background: #607387;
+                // $primaryLightThemeDark;
             }
         }
     }
