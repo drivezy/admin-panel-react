@@ -22,15 +22,15 @@ export default class Sidenav extends Component {
     }
 
     componentDidMount() {
-        const main = document.getElementById("main");
+        // const main = document.getElementById("main");
 
-        if (main) {
-            main.addEventListener('click', () => {
-                if (this.state.visible) {
-                    this.toggleNav();
-                }
-            })
-        }
+        // if (main) {
+        //     main.addEventListener('click', () => {
+        //         if (this.state.visible) {
+        //             this.toggleNav();
+        //         }
+        //     })
+        // }
         // this.closeNav();
     }
 
