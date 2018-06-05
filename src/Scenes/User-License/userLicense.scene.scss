@@ -8,6 +8,15 @@
             margin-top: 50px;
         }
     }
+    .licence-viewer{
+        flex-grow: 1;
+        .card{
+            flex-grow: 1;
+            .inline-container{
+                height: 70vh;
+            }
+        }
+    }
     .container {
         margin: 5px;
         min-height: 500px;

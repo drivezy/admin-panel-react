@@ -5,12 +5,12 @@ import Viewer from 'react-viewer';
 import 'react-viewer/dist/index.css';
 
 import {
-    Row, Col, Card, CardHeader, CardBody
+    Card, CardHeader, CardBody
 } from 'reactstrap';
 
 import classNames from 'classnames';
 
-import { Get, Put } from './../../Utils/http.utils';
+import { Get, Put, Delete } from './../../Utils/http.utils';
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
 import ToastNotifications from './../../Utils/toast.utils';
 import { ConfirmUtils } from './../../Utils/confirm-utils/confirm.utils';
@@ -21,14 +21,15 @@ import RejectLicenseForm from './../../Components/Reject-License-Form/rejectLice
 
 
 
-export default class UserLicense extends Component {
 
+export default class UserLicense extends Component {
+    container: HTMLDivElement;
     constructor(props) {
         super(props);
         this.state = {
             userObj: {},
             images: [],
-            visible: false,
+            visible: true,
             activeIndex: 0,
             currentIndex: 0,
             detectedDob: [],
@@ -136,25 +137,19 @@ export default class UserLicense extends Component {
             onClose: (...args) => console.log(args)
         })
         images[currentIndex].reviewed = true;
-
-        // const { isVisible, images, currentIndex } = this.state;
-
-        // const rejectdData = {
-        //     approved: 0,
-        //     licenseIndex: images[currentIndex].id
-        // }
-
-        // this.setState({ isVisible: true });
-
-        // return (
-        //     // this.setState({ isVisible: true }),
-        //     <ModalWrapper
-        //         isVisible={isVisible}
-        //         modalBody={(<RejectLicenseForm rejectdData={rejectdData}></RejectLicenseForm>)}
-        //         headerText="Reject License"
-        //     />
-        // );
     };
+
+    deleteL = () => {
+        const { images = [], currentIndex } = this.state;
+        const method = async () => {
+            const result = await Delete({ url: "userLicense/" + images[currentIndex].id });
+            if (result.success) {
+                ToastNotifications.success('License is Deleted!');
+                this.getLicense();
+            }
+        }
+        ConfirmUtils.confirmModal({ message: "Are you sure you want to delete license?", callback: method });
+    }
 
     render() {
         const { images = [], userObj = {}, currentIndex, detectedDob, detectedLicense, detectedText, detectedExpiryDate } = this.state;
@@ -164,9 +159,12 @@ export default class UserLicense extends Component {
             return image;
         })
 
-        let imgListClass = classNames('img-list', {
-            hide: this.state.visible,
+        let inline = this.state.mode === 'inline';
+
+        let inlineContainerClass = classNames('inline-container', {
+            show: this.state.visible && inline,
         });
+
         return (
             <div className="user-license">
                 <div className="user-license-form">
@@ -180,48 +178,52 @@ export default class UserLicense extends Component {
                         </CardBody>
                     </Card>
                 </div>
-                <div className="container">
+                <div className="container licence-viewer">
                     <Card>
                         <CardHeader>
-                            User Licenses <small>{currentIndex + 1} of {images.length}</small>
+                            User Licenses {currentIndex + 1} of {images.length}
                         </CardHeader>
                         <CardBody>
-                            <div className={imgListClass}>
-                                {
-                                    images.map((item, key) => {
-                                        return (
-                                            <div key={key} className="img-item">
-                                                <img src={item.license} onClick={() => {
-                                                    this.setState({
-                                                        visible: true,
-                                                        activeIndex: key,
-                                                    });
-                                                }} alt="" />
-                                            </div>
-                                        );
-                                    })
-                                }
-                            </div>
+                            <div className={inlineContainerClass} ref={ref => { this.container = ref; }}></div>
+                            <Viewer
+                                container={this.container}
+                                visible={this.state.visible}
+                                onClose={() => { this.setState({ visible: false }); }}
+                                images={licenses}
+                                activeIndex={this.state.activeIndex}
+                                customToolbar={(toolbars) => {
+                                    const customToolbar = [{
+                                        key: 'test',
+                                        render: <span className="custom-action" onClick={() => { this.acceptL() }}>Accept License</span>,
+                                        onClick: (activeImage) => {
+                                            console.log(activeImage);
+                                        },
+                                    }]
+
+                                    const tools = customToolbar.concat(toolbars);
+                                    return tools.concat([
+                                        {
+                                            key: 'test1',
+                                            render: <span onClick={(e) => this.rejectL()} className="custom-action">Reject License</span>,
+
+                                            onClick: (activeImage) => {
+                                                console.log(activeImage);
+                                            },
+                                        },
+                                        {
+                                            key: 'test2',
+                                            render: <span onClick={(e) => this.deleteL()} className="custom-action">Delete License</span>,
+
+                                            onClick: (activeImage) => {
+                                                console.log(activeImage);
+                                            },
+                                        }
+                                    ]);
+                                }}
+                            />
                         </CardBody>
-                        <Row>
-                            <Col sm="6">
-                                <button className="btn btn-primary pull-right width-100 button-red" onClick={() => { this.acceptL() }}>
-                                    Accept License
-                            </button>
-                            </Col>
-                            <Col sm="6">
-                                <button className="btn btn-primary pull-right width-100 button-green" onClick={(e) => this.rejectL()}>
-                                    Reject License
-                            </button>
-                            </Col>
-                        </Row>
                     </Card>
-                    <Viewer
-                        visible={this.state.visible}
-                        onClose={() => { this.setState({ visible: false }); }}
-                        images={licenses}
-                        activeIndex={this.state.activeIndex}
-                    />
+
                 </div>
             </div>
         )
