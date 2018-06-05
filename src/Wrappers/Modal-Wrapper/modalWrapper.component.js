@@ -37,18 +37,18 @@ export default class ModalWrapper extends Component {
         this.setState({ isVisible: true, ...args });
     }
 
-    closeModal = () => {
+    closeModal = ({ ...args }) => {
         const { onClose } = this.state;
         this.setState({ isVisible: false });
         if (typeof onClose == 'function') {
-            onClose();
+            onClose({ ...args });
         }
     }
 
     render() {
         const { headerText, modalHeader, modalBody, modalFooter, size = 'lg' } = this.state;
 
-        const  isVisible  = this.state.isVisible || this.props.isVisible;
+        const isVisible = this.state.isVisible || this.props.isVisible;
 
         return (
             <Modal size={size} isOpen={isVisible} toggle={this.closeModal} className={this.props.className} backdrop={this.state.backdrop}>
@@ -64,7 +64,7 @@ export default class ModalWrapper extends Component {
                 {
                     modalBody &&
                     // <ModalBody>
-                        modalBody()
+                    modalBody()
                     // </ModalBody>
                 }
 
