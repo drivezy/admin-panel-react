@@ -10,6 +10,7 @@ import GLOBAL from './../../Constants/global.constants';
 import { Get } from './../../Utils/http.utils';
 
 import UserCard from './../../Components/User-Card/userCard.component';
+import BookingFeedback from './../../Components/Booking-Feedback/bookingFeedback.component';
 
 
 import './bookingDetail.scene.css';
@@ -33,6 +34,10 @@ export default class BookingDetail extends Component {
             rideEndDate: '',
             rideStartTime: '',
             rideEndTime: '',
+            bookingPickupDate: '',
+            bookingPickupTime: '',
+            bookingDropDate: '',
+            bookingDropTime: '',
             paidAmount: 0,
             fairAmount: 0
         };
@@ -58,6 +63,13 @@ export default class BookingDetail extends Component {
             let comments = result.response.comments;
             let partnerAccount = result.response.partner_account;
             let collection = result.response.collection;
+
+            let bookingPickupDate = moment(bookingDetail.pickup_time).format("dddd, MMMMDo YYYY");
+            let bookingPickupTime = moment(bookingDetail.pickup_time).format("h:mm A");
+            let bookingDropDate = moment(bookingDetail.drop_time).format("dddd, MMMMDo YYYY");
+            let bookingDropTime = moment(bookingDetail.drop_time).format("h:mm A");
+            this.setState({ bookingPickupDate, bookingPickupTime, bookingDropDate, bookingDropTime })
+
 
             if (bookingDetail && bookingDetail.ride_return) {
                 if (bookingDetail.status.id == 6) {
@@ -349,7 +361,7 @@ export default class BookingDetail extends Component {
 
 
 
-        const { bookingDetail = {}, activeTab, tabContent = [], paidAmount, fairAmount, tentativeAmount, amountDue, getStartingFuelPercentage, getEndingFuelPercentage } = this.state;
+        const { bookingDetail = {}, activeTab, tabContent = [], paidAmount, fairAmount, tentativeAmount, amountDue, getStartingFuelPercentage, getEndingFuelPercentage, bookingPickupTime, bookingPickupDate, bookingDropDate, bookingDropTime } = this.state;
         console.log(this.state.totalDuration);
 
 
@@ -360,10 +372,18 @@ export default class BookingDetail extends Component {
             <div className="booking-user">
 
                 <div>
-
-                    {
-                        bookingDetail.user&&bookingDetail.user.id ? <UserCard userData={bookingDetail.user} /> : null
-                    }
+                    <div className="booking-detail">
+                        <div className="booking-user-detail">
+                            {
+                                bookingDetail.user && bookingDetail.user.id ? <UserCard userData={bookingDetail.user} /> : null
+                            }
+                        </div>
+                        <div className="booking-feedback-detail">
+                            {
+                                bookingDetail.id ? <BookingFeedback bookingFeedback={bookingDetail} /> : null
+                            }
+                        </div>
+                    </div>
 
 
                     {
@@ -397,7 +417,7 @@ export default class BookingDetail extends Component {
                                                             <img className="media-object width-100" src={`${bookingDetail.vehicle.car.image}`} alt="" />
                                                         </Col>
                                                         <Col sm="8">
-                                                            <span className="vehicle-number"><h6>{bookingDetail.vehicle.registration_number}</h6></span> 
+                                                            <span className="vehicle-number"><h6>{bookingDetail.vehicle.registration_number}</h6></span>
                                                             <span>({bookingDetail.vehicle.car.name})</span>
                                                             <p>
                                                                 {bookingDetail.type.value}
@@ -420,9 +440,12 @@ export default class BookingDetail extends Component {
                                                 <Col sm="5">
                                                     <div className="jr-start-time">
                                                         <div className="no-padding text-black font-12">
-                                                            {bookingDetail.pickup_time}
+                                                            {bookingPickupDate}
                                                         </div>
-                                                        <div className="no-padding margin-top-12 text-black font-12">
+                                                        <div className="no-padding text-black font-12">
+                                                            {bookingPickupTime}
+                                                        </div>
+                                                        <div className="booking-detail-drop-venue">
                                                             {bookingDetail.venue_pick.name}
                                                         </div>
                                                         <div className="no-padding text-black font-12">
@@ -443,9 +466,12 @@ export default class BookingDetail extends Component {
                                                 <Col sm="5">
                                                     <div className="jr-drop-time">
                                                         <div className="no-padding text-black font-12" align="right">
-                                                            {bookingDetail.drop_time}
+                                                            {bookingDropDate}
                                                         </div>
                                                         <div className="no-padding margin-top-12 text-black font-12" align="right">
+                                                            {bookingDropTime}
+                                                        </div>
+                                                        <div className="booking-detail-drop-venue" align="right">
                                                             {bookingDetail.venue_drop.name}
                                                         </div>
                                                         <div className="no-padding text-black font-12" align="right">

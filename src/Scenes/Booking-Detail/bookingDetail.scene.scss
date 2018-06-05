@@ -1,5 +1,12 @@
 .booking-user {
     margin: 5px;
+    .booking-detail {
+        display: flex;
+        flex-direction: row;
+        .booking-user-detail, .booking-feedback-detail {
+            width: 50%;
+        }
+    }
     .user-card {
         height: 150px;
     }
@@ -38,6 +45,12 @@
                 }
                 .booking-detail-date {
                     margin-top: 12px;
+                    border-bottom: 1px solid #f0f4f7;
+                    .booking-detail-drop-venue {
+                        margin-top: 10px;
+                        color: #337ab7;
+                    }
+
                 }
                 .gray-border-bottom {
                     border-bottom: 1px solid #f0f4f7;

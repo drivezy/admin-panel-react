@@ -12,78 +12,49 @@ export default class UserCard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userData: props.userData,
-            wallet: 0,
-            promoWallet: 0,
-            cashWallet: 0
+            userData: props.userData
         };
     }
 
-    componentDidMount() {
-        this.walletAmount();
-    }
-
-    walletAmount = async () => {
-        const { userData } = this.state;
-        const url = 'wallet?user=' + userData.id
-        const result = await Get({ url });
-        if (result.success) {
-            const promoWallet = result.response.nonRewardAmount;
-            const cashWallet = result.response.rewardAmount;
-            this.setState({ promoWallet, cashWallet })
-        }
-    }
-
-
-
-
     render() {
-        const { userData = {}, promoWallet, cashWallet } = this.state;
-        return (
-            <Row>
-                <Col sm="6">
-                    <div className="user-card">
-                        <Card>
-                            <Row>
-                                <Col sm="6">
-                                    <div className="user-info">
-                                        <div className="user-image">
-                                            <CardImg className="user-object" src="{userData.photograph}" src={`${userData.photograph}`} alt="User image" />
-                                        </div>
-                                        <div className="user-body">
-                                            <div className="user-list">
-                                                <p><h6 className="name-colour">{userData.display_name}</h6></p>
-                                                <p>
-                                                    <small><i className="fa fa-phone" aria-hidden="true"></i> {userData.mobile} <i className="fa fa-check-circle text-green" aria-hidden="true"></i></small>
-                                                </p>
-                                                <p>
-                                                    <small><i className="fa fa-birthday-cake" aria-hidden="true"></i> {userData.dob}</small>
-                                                </p>
-                                                <p>
-                                                    <small><i className="fa fa-user" aria-hidden="true"></i> <span className="capitalize-text">{userData.gender}</span></small>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Col>
-                                <Col sm="6">
-                                    <div className="user-info">
-                                        <div className="user-body">
-                                            <div className="user-list">
-                                                <p><small><i className="fa fa-envelope" aria-hidden="true"></i> {userData.email}</small></p>
-                                                <p><small><i className="fa fa-id-card text-green" aria-hidden="true"></i> {userData.license_number}</small></p>
-                                                <p><small><i className="fa fa-paypal" aria-hidden="true"></i>Rs {promoWallet} </small></p>
-                                                <p><small><i className="fa fa-inr" aria-hidden="true"></i>Rs {cashWallet} </small></p>
+        const { userData = {} } = this.state;
+        const userLicenseImage = [];
 
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Col>
-                            </Row>
-                        </Card>
+        userData.licenses.forEach(function (checkApprovedLicense) {
+            if (checkApprovedLicense.approved == 1) {
+                return userLicenseImage.push(checkApprovedLicense.license);
+            }
+        });
+
+        return (
+            <div className="user-card">
+                <Card>
+                    <div className="user-info">
+                        <div className="user-info-detail">
+                            <p className="name-colour">{userData.display_name}</p>
+                            <p><i className="fa fa-phone" aria-hidden="true"></i> {userData.mobile} <i className="fa fa-check-circle text-green" aria-hidden="true"></i></p>
+                            <p><i className="fa fa-birthday-cake" aria-hidden="true"></i> {userData.dob}</p>
+                            {
+                                (userData.gender) ?
+                                    <p><i className="fa fa-user" aria-hidden="true"></i> <span className="capitalize-text">{userData.gender}</span></p>
+                                    :
+                                    null
+                            }
+                        </div>
+                        <div className="user-content">
+                            <p className="user-info-dob"><i className="fa fa-birthday-cake" aria-hidden="true"></i> {userData.dob}</p>
+                            <p className="user-info-license"><i className="fa fa-id-card text-green" aria-hidden="true"></i> {userData.license_number}</p>
+                        </div>
+                        <div className="user-license">
+                            {
+                                userLicenseImage.length > 0 ?
+                                    <img src={userLicenseImage[0]} alt="" />
+                                    : <img className='dummy-license' src={require('./../../Assets/images/Dummy-License.jpg')} alt="" />
+                            }
+                        </div>
                     </div>
-                </Col>
-            </Row>
+                </Card>
+            </div>
         )
     }
 }
