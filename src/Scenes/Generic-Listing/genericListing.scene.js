@@ -212,9 +212,9 @@ export default class GenericListing extends Component {
         // this.setState({ currentUser: data });
     }
 
-    predefinedFiltersUpdated = (filters) => {
+    predefinedFiltersUpdated = (latyouts) => {
         const { genericData } = this.state;
-        genericData.userFilter = filters;
+        genericData.layouts = latyouts;
         this.setState({ genericData });
     }
 

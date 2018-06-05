@@ -114,7 +114,12 @@ export function GetDataForPortlet({ portletDetail, genericDetailObject }) {
     }
 
     obj.portletColumns = GetColumnsForListing(params);
-    obj.finalColumns = CreateFinalColumns(obj.portletColumns, genericDetailObject.layout.column_definition, relationship);
+    if (genericDetailObject.layout && genericDetailObject.layout.column_definition) {
+        obj.finalColumns = CreateFinalColumns(obj.portletColumns, genericDetailObject.layout.column_definition, relationship);
+    } else {
+        obj.finalColumns = [];
+    }
+
     obj.starter = genericDetailObject.base;
     obj.relationship = relationship;
     // obj.dictionary = {};

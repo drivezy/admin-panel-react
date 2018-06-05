@@ -669,6 +669,7 @@ export default class ConfigureDynamicFilter extends Component {
         //     columnString = column.name;
         // }
 
+        value = filter.includes('LIKE') ? '\%' + value + '\%' : value;
         return columnString + filter + "'" + value + "'" + joinMethod;
     }
 

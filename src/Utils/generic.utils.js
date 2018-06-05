@@ -182,7 +182,7 @@ export function ConvertMenuDetailForGenericPage(menuDetail) {
         var splits = menuDetail.default_order.split(",");
     }
 
-    menuDetail.list_layouts.map(layout => {
+    menuDetail.layouts = menuDetail.list_layouts.map(layout => {
         try {
             layout.column_definition = JSON.parse(layout.column_definition);
         } catch (e) {
@@ -193,6 +193,8 @@ export function ConvertMenuDetailForGenericPage(menuDetail) {
 
     const layout = menuDetail.list_layouts.length ? menuDetail.list_layouts[0] : null; // @TODO for now taking 0th element as default layout, change later 
 
+    delete menuDetail.list_layouts;
+    
     if (layout) {
         layout.column_definition = layout.column_definition;
     }
