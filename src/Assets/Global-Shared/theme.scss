@@ -1,5 +1,110 @@
 // Themes
-$themes: ( light: ( backgroundColor: #fff, textColor: #408bbd, buttonTextColor: #408bbd, buttonTextTransform: none, buttonTextHoverColor: #61b0e7, buttonColor: #fff, buttonBorder: 2px solid #fff, ), dark: ( backgroundColor: #222, textColor: #ddd, buttonTextColor: #aaa, buttonTextTransform: uppercase, buttonTextHoverColor: #ddd, buttonColor: #333, buttonBorder: 1px solid #aaa, ), );
+$themes: ( 
+    light: (
+        // Body
+        bodyBackground:#ebeef0,
+        // Body Ends
+        // Sidbar Styling
+        sideBackground:#ffffff,
+        sidebarBorder:#bfbfbf,
+        logoBackground:#f9f6f6,
+        logoBottomBorder:#e9e7e7,
+        menuHover:#f2f2f2,
+        // Sidebar Styling Ends 
+        // Header Styling
+        headerBackground:#e7e7e7,
+        headerBorder:#c1c1c1,
+        // Header Ends
+        // Sub Header
+        subHeader:#f1f0f0,
+        subHeaderBorder:#d4d4d4,
+        // Sub Header Ends
+
+        // Table Styling
+        tableHeader:#efefef,
+        tableHeaderBorder:#ececec,
+        columnTitle:#3b6877,
+        dropdownLink:#b1493ce8,
+        // Table Styling Ends
+        backgroundColor: #fff,
+        textColor: #408bbd,
+        buttonTextColor: #408bbd,
+        buttonTextTransform: none,
+        buttonTextHoverColor: #61b0e7,
+        buttonColor: #fff,
+        buttonBorder: 2px solid #fff,
+        ),
+        dark: (
+            // Body
+            bodyBackground:#ebeef0,
+            // Body Ends
+            // Sidbar Styling
+            sideBackground:#ffffff,
+            sidebarBorder:#bfbfbf,
+            logoBackground:#f9f6f6,
+            logoBottomBorder:#e9e7e7,
+            menuHover:#f2f2f2,
+            // Sidebar Styling Ends 
+            // Header Styling
+            headerBackground:#e7e7e7,
+            headerBorder:#c1c1c1,
+            // Header Ends
+            // Sub Header
+            subHeader:#f1f0f0,
+            subHeaderBorder:#d4d4d4,
+            // Sub Header Ends
+    
+            // Table Styling
+            tableHeader:#efefef,
+            tableHeaderBorder:#ececec,
+            columnTitle:#3b6877,
+            dropdownLink:#b1493ce8,
+            // Table Styling Ends
+            backgroundColor: #fff,
+            textColor: #408bbd,
+            buttonTextColor: #408bbd,
+            buttonTextTransform: none,
+            buttonTextHoverColor: #61b0e7,
+            buttonColor: #fff,
+            buttonBorder: 2px solid #fff,
+            ),
+            drivezy: (
+                // Body
+                bodyBackground:#ebeef0,
+                // Body Ends
+                // Sidbar Styling
+                sideBackground:#35485b,
+                sidebarBorder:#bfbfbf,
+                logoBackground:#303e4c,
+                logoBottomBorder:#e9e7e7,
+                menuIcon:#a4b2b8,
+                menuIconHover:white,
+                menuHover:#2c3e4e,
+                // Sidebar Styling Ends 
+                // Header Styling
+                headerBackground:white,
+                headerBorder:#c1c1c1,
+                // Header Ends
+                // Sub Header
+                subHeader:#f1f0f0,
+                subHeaderBorder:#d4d4d4,
+                // Sub Header Ends
+        
+                // Table Styling
+                tableHeader:#f8f9fa,
+                tableHeaderBorder:#ececec,
+                columnTitle:#3b6877,
+                dropdownLink:#b1493ce8,
+                // Table Styling Ends
+                backgroundColor: #fff,
+                textColor: #408bbd,
+                buttonTextColor: #408bbd,
+                buttonTextTransform: none,
+                buttonTextHoverColor: #61b0e7,
+                buttonColor: #fff,
+                buttonBorder: 2px solid #fff,
+                ),
+);
 // Themes Ends
 // Themify Begins
 @mixin themify($themes: $themes) {

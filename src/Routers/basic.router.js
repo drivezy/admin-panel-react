@@ -50,7 +50,7 @@ export default class BasicRoute extends Component {
     render() {
         const { loggedUser } = this.state;
         return (
-            <div id='parent-admin-element' className='drivezy-dark-theme'>
+            <div id='parent-admin-element'>
                 <Router>
                     <Switch>
                         <Route path="/login" component={LoginScene} />

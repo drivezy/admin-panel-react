@@ -8,7 +8,6 @@
             .table {
                 thead {
                     border-top: none;
-                    border-bottom: 1px solid #2c3e55 !important; // background-color: #f8f9fa !important;
                     @supports (-webkit-appearance: none) {
                         tr {
                             position: relative;
@@ -18,12 +17,15 @@
                         // position: relative;
                         /** Style for Column Header **/
                         th {
-                            border-bottom: 1px solid #ebeef0; // border-bottom: 1px solid #ddd;
                             // color: #6f7c87;
                             display: table-cell;
                             padding: 12px;
-                            border: 1px solid #ececec;
+                            border: 1px solid;
                             border-left: none;
+                            @include themify($themes) {
+                                border-color: themed('tableHeaderBorder');
+                                background: themed('tableHeader');
+                            }
                             &.header-index {
                                 .select-box {
                                     display: none;
@@ -53,6 +55,9 @@
                                         flex-grow: 1;
                                         font-weight: 100;
                                         font-size: 13px;
+                                        @include themify($themes) {
+                                            color: themed('columnTitle');
+                                        }
                                     }
                                     .db-level-sort {
                                         cursor: pointer;
@@ -60,8 +65,10 @@
                                         .dropdown {}
                                         a.dropdown-link {
                                             text-decoration: none;
-                                            color: #b1493ce8;
                                             opacity: 0.8;
+                                            @include themify($themes) {
+                                                color: themed('dropdownLink');
+                                            }
                                         }
                                     }
                                     .filter-column {
@@ -204,152 +211,6 @@
             }
         }
     } // Table Ends
-}
-
-/** Theme specific css */
-
-.drivezy-light-theme {
-    .table-container {
-        .table-body {
-            thead {
-                background-color: $backgroundThemeLight;
-                th {
-                    color: $primaryThemeLight !important;
-                    .column-wrapper {
-                        .column-title {
-                            color: $primaryThemeLight !important;
-                        }
-                        &:hover {
-                            .filter-column>a,
-                            .column-title {
-                                color: $primaryDarkThemeLight !important;
-                            }
-                        }
-                    }
-                }
-            }
-            tr.table-row {
-                td {
-                    a {
-                        color: $secondaryThemeLight;
-                        &:hover {
-                            color: $secondaryDarkThemeLight;
-                        }
-                    }
-                }
-                &:nth-child(even) {
-                    background: $primaryBackgroundThemeLight;
-                }
-                &:nth-child(odd) {
-                    background: $surfaceThemeLight;
-                }
-                &:hover {
-                    background-color: $primaryBackgroundHoverThemeLight;
-                }
-            }
-        }
-    }
-    .table-actions {
-        i.fa {
-            // color: $secondaryThemeLight;
-        }
-    }
-}
-
-.drivezy-dark-theme {
-    .table-container {
-        .table-body {
-            thead {
-                background-color: $backgroundThemeDark !important;
-                th {
-                    color: $primaryThemeDark;
-                    .column-wrapper {
-                        .column-title {
-                            color: $primaryThemeDark !important;
-                        }
-                        &:hover {
-                            .filter-column>a,
-                            .column-title {
-                                color: $primaryLightThemeDark !important;
-                            }
-                        }
-                    }
-                }
-            }
-            tr.table-row {
-                td {
-                    a {
-                        color: $secondaryThemeDark;
-                        &:hover {
-                            color: $secondaryDarkThemeDark;
-                        }
-                    }
-                }
-                &:nth-child(even) {
-                    background: $primaryBackgroundThemeDark;
-                }
-                &:nth-child(odd) {
-                    background: $surfaceThemeDark;
-                }
-                &:hover {
-                    background-color: $primaryBackgroundHoverThemeDark;
-                }
-            }
-        }
-    }
-    .table-actions {
-        i.fa {
-            // color: $secondaryThemeDark;
-        }
-    }
-}
-
-.drivezy-drivezy-theme {
-    .table-container {
-        .table-body {
-            thead {
-                background-color: $backgroundThemeDrivezy;
-                th {
-                    color: $primaryThemeDrivezy !important;
-                    .column-wrapper {
-                        .column-title {
-                            color: $primaryThemeDrivezy !important;
-                        }
-                        &:hover {
-                            .filter-column>a,
-                            .column-title {
-                                color: $primaryDarkThemeDrivezy !important;
-                            }
-                        }
-                    }
-                }
-            }
-            tr.table-row {
-                td {
-                    a {
-                        color: $secondaryThemeDrivezy;
-                        &:hover {
-                            color: $secondaryDarkThemeDrivezy;
-                        }
-                    }
-                }
-                &:nth-child(even) {
-                    background: $primaryBackgroundThemeDrivezy;
-                }
-                &:nth-child(odd) {
-                    background: $surfaceThemeDrivezy;
-                }
-                &:hover {
-                    background-color: $primaryBackgroundHoverThemeDrivezy;
-                }
-            }
-        }
-    }
-    .table-actions {
-        i.fa {
-            // color: $secondaryThemeDrivezy;
-        }
-    }
 }
 
 .compact {
