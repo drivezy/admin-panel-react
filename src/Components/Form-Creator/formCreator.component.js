@@ -58,12 +58,20 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // Number Ends
 
         // Text
-        108: <Field id={column.path} value={values[column.path]} className={`form-control ${props.errors[column.index] && props.touched[column.index] ? 'is-invalid' : ''}`} type="text" placeholder={`Enter ${column.name}`} />,
+        108: <Field
+            name={column.path}
+            render={({ field /* _form */ }) => (
+                // onChange={(event) => { console.log(event.target); props.handleChange() }}
+                <input name={column.path} className="form-control" onChange={props.handleChange} value={values[column.path]}></input>
+            )}
+        />,
+
+        // 108: <Field id={column.path} name={column.path} value={values[column.path]} className={`form-control ${props.errors[column.index] && props.touched[column.index] ? 'is-invalid' : ''}`} type="text" placeholder={`Enter ${column.name}`} />,
         // Text Ends
 
         // TextArea Begins
         160: <Field
-            name={column.index}
+            name={column.path}
             render={({ field /* _form */ }) => (
                 <textarea name={column.index} className="form-control" rows="3" onChange={props.handleChange} value={values[column.path]}></textarea>
             )}
