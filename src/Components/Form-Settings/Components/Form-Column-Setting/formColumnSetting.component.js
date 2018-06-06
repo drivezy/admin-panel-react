@@ -1,39 +1,22 @@
 import React, { Component } from 'react';
-import './columnSetting.component.css';
 import _ from 'lodash';
 
-// import { SetPreference } from './../../Utils/preference.utils';
-
-// import { changeArrayPosition } from './../../Utils/js.utils';
-
-import { Collapse, Card, CardBody, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Collapse, Card, CardBody } from 'reactstrap';
 
 import Switch from './../../../Forms/Components/Switch/switch';
 
-export default class ColumnSetting extends Component {
+export default class FormColumnSetting extends Component {
 
     constructor(props) {
         super(props);
-
         this.state = {
-            column: this.props.column,
-            // tempColumn: this.props.column
-            // formContent: {}
+            column: this.props.column
         }
     }
 
     toggleSetting = () => {
         let column = this.state.column;
         column.expanded = !column.expanded;
-        this.setState({ column });
-    }
-
-    updateColumnHyperlink = (field, value) => {
-
-        let { column } = this.state;
-
-        column.route = value ? true : false;
-
         this.setState({ column });
     }
 
@@ -47,7 +30,6 @@ export default class ColumnSetting extends Component {
 
     columnUpdate = (event) => {
         event.preventDefault();
-        // console.log()
     }
 
     componentDidMount() {
@@ -83,13 +65,6 @@ export default class ColumnSetting extends Component {
                                 <div className="form-group">
                                     <label htmlFor="exampleInputEmail1">Column Header</label>
                                     <input value={columnTitle} onChange={this.columnNameChange} type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Column Name" />
-                                </div>
-
-                                <div className="form-group">
-                                    <label htmlFor="exampleInputEmail1">
-                                        Hyperlink
-                                    </label>
-                                    <Switch name="route" onChange={this.updateColumnHyperlink} value={route} />
                                 </div>
 
                                 <div className="row">

@@ -1,15 +1,91 @@
 .form-settings-modal {
+    .modal-header {
+        padding: 10px 20px;
+    }
     .modal-body {
-        // background: yellow;
+        background: whitesmoke;
         display: flex;
         justify-content: space-between;
+        .card-body.parent-card {
+            padding: 0px;
+            .card-top {
+                padding: 10px 15px;
+                background: aliceblue;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .input-holder {
+                    flex-basis: 50%;
+                    input.search-box {
+                        padding: 5px 10px;
+                        border: none;
+                        border-radius: 2px;
+                        border: 1px solid #c8c8c8;
+                    }
+                }
+                h6.card-title {
+                    margin-bottom: 0px;
+                    color: #395167;
+                }
+                .list-group.parent-group {
+                    padding: 10px 15px;
+                }
+            }
+        }
         .left {
-            flex-basis: 30%;
+            max-height: 70vh;
+            overflow-y: scroll;
+            flex-basis: 40%;
+            .columns-wrapper {
+                padding: 5px;
+                background: #ebebeb;
+                box-shadow: inset 0px 0px 2px 1px #d8d8d8;
+                .inner-columns {
+                    border: 1px solid #d6d4d4;
+                }
+            }
+            .column-group {
+                background: white;
+                &:hover {
+                    background: whitesmoke;
+                }
+                &.active {
+                    .column-label {
+                        background: #b3e5fc;
+                    }
+                }
+                display: flex;
+                justify-content: space-between;
+                border-bottom: 1px solid #c4c4c4;
+                .column-label {
+                    cursor: pointer;
+                    align-items: center;
+                    flex-basis: 85%;
+                    padding: 8px;
+                }
+                .icon-holder {
+                    color: #528dad;
+                    flex-basis: 15%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    button.add-column {}
+                }
+                .column-handle {}
+            }
         }
         .right {
             max-height: 70vh;
             overflow-y: scroll;
-            flex-basis: 30%;
+            flex-basis: 40%;
+            .column-section {
+                // display: flex;
+                &.active {
+                    .column-label {
+                        background: #b3e5fc;
+                    }
+                }
+            }
         }
         .controls {
             display: flex;
@@ -19,4 +95,24 @@
             }
         }
     }
+    // .modal-body {
+    //     // background: yellow;
+    //     display: flex;
+    //     justify-content: space-between;
+    //     .left {
+    //         flex-basis: 30%;
+    //     }
+    //     .right {
+    //         max-height: 70vh;
+    //         overflow-y: scroll;
+    //         flex-basis: 30%;
+    //     }
+    //     .controls {
+    //         display: flex;
+    //         flex-direction: column;
+    //         button {
+    //             margin: 4px;
+    //         }
+    //     }
+    // }
 }
