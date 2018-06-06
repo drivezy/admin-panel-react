@@ -70,6 +70,10 @@ export default class ConfugreSettings extends Component {
         this.setState({ selectedSpacing: theme });
     }
 
+    closeModal = () => {
+        ModalManager.closeModal();
+    }
+
 
     toggle = (tab) => {
         if (tab == 2) {
@@ -114,7 +118,7 @@ export default class ConfugreSettings extends Component {
                                         <div className="themes">
                                             {
                                                 this.themes.map((theme, key) =>
-                                                    <div onClick={() => this.selectSpacing(theme)} key={key} className={`${selectedTheme.class == theme.class ? 'active' : null}  ${theme.class} theme-container`}>
+                                                    <div onClick={() => this.selectTheme(theme)} key={key} className={`${selectedTheme.class == theme.class ? 'active' : null}  ${theme.class} theme-container`}>
                                                         <div className="theme-color">
                                                         </div>
                                                         <div className="theme-name">

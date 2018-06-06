@@ -1,9 +1,9 @@
 import { SetItem, GetItem } from './localStorage.utils';
 
 let themes = [
-    { theme: 'drivezy-light-theme', name: 'Light', class: 'light-theme' },
-    { theme: 'drivezy-dark-theme', name: 'Dark', class: 'dark-theme' },
-    { theme: 'drivezy-drivezy-theme', name: 'Drivezy', class: 'drivezy-theme' }
+    { theme: 'light', name: 'Light', class: 'light' },
+    { theme: 'dark', name: 'Dark', class: 'dark' },
+    { theme: 'drivezy', name: 'Drivezy', class: 'drivezy' }
 ];
 
 let spacings = [
@@ -29,11 +29,11 @@ export default class ThemeUtil {
 
         themes.forEach((themeDetail, key) => {
             if (themeDetail.theme != theme.theme) {
-                div.classList.remove(themeDetail.theme);
+                div.classList.remove('theme-' + themeDetail.theme);
                 return;
             }
 
-            div.classList.add(theme.theme);
+            div.classList.add('theme-' + theme.theme);
         });
     }
 

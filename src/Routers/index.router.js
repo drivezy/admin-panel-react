@@ -99,19 +99,7 @@ export default class IndexRouter extends Component {
         }
     }
 
-    getRouterProps = () => {
-        return { history: this.props.history };
-    }
-
-    callback = (method) => {
-        // this.setState({sideNavExpanded:method});
-        //console.log(method)
-    }
-
-    toggleSideNav = (sideNavExpanded) => {
-        console.log(sideNavExpanded);
-        // this.setState({ sideNavExpanded: !this.state.sideNavExpanded });
-    }
+    getRouterProps = () => ({ history: this.props.history });
 
     render() {
         const { match } = this.props; // match.path = '/'
