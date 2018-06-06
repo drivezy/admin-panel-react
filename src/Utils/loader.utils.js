@@ -25,7 +25,8 @@ export class LoaderComponent extends Component {
                     isVisible ?
                         <div className='global-loader center-flex vertical-center'>
                             {/* Loading ... */}
-                            <img className='drivezy-loader-gif' src={require('./../Assets/images/loader.gif')} />
+                            <i className="fa fa-circle-o-notch fa-spin" aria-hidden="true"></i>
+                            {/* <img className='drivezy-loader-gif' src={require('./../Assets/images/loader.gif')} /> */}
                         </div>
                         :
                         null

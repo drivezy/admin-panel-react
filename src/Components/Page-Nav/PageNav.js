@@ -8,6 +8,9 @@ import GLOBAL from './../../Constants/global.constants';
 import { SubscribeToEvent } from './../../Utils/stateManager.utils';
 import { Get } from './../../Utils/http.utils';
 import { SetItem, GetItem } from './../../Utils/localStorage.utils';
+// /import { SpotlightUtil } from './../Spotlight-Search/spotlightSearch.component';
+import SettingsUtil from './../../Utils/settings.utils';
+import ThemeUtil from './../../Utils/theme.utils';
 
 import CustomTooltip from '../Custom-Tooltip/customTooltip.component';
 
@@ -24,15 +27,13 @@ export default class PageNav extends Component {
         };
     }
 
-    themes = [
-        { theme: 'drivezy-light-theme', name: 'Light theme', class: 'light-theme' }, 
-        { theme: 'drivezy-dark-theme', name: 'Dark theme', class: 'dark-theme' },
-        { theme: 'drivezy-drivezy-theme', name: 'Drivezy theme', class: 'drivezy-theme' }
-    ];
+    themes = ThemeUtil.getThemes();
 
     componentDidMount() {
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
-        const theme = GetItem('CURRENT_THEME') || this.themes[1];
+        const theme = ThemeUtil.getCurrentTheme();
+        const spacing = ThemeUtil.getCurrentSpacing();
+        this.changeSpacing(spacing);
         this.changeTheme(theme);
     }
 
@@ -44,6 +45,10 @@ export default class PageNav extends Component {
         this.setState({
             dropdownOpen: !this.state.dropdownOpen
         });
+    }
+
+    configureSettings = () => {
+        SettingsUtil.configureModal();
     }
 
     logout = async () => {
@@ -61,17 +66,13 @@ export default class PageNav extends Component {
         }
     }
 
-    changeTheme = (theme) => {
-        SetItem('CURRENT_THEME', theme);
-        const div = document.getElementById('parent-admin-element');
-        this.themes.forEach((themeDetail, key) => {
-            if (themeDetail.theme != theme.theme) {
-                div.classList.remove(themeDetail.theme);
-                return;
-            }
 
-            div.classList.add(theme.theme);
-        });
+    changeSpacing = (spacing) => {
+        ThemeUtil.setSpacing(spacing);
+    }
+
+    changeTheme = (theme) => {
+        ThemeUtil.setTheme(theme);
         this.setState({ selectedTheme: theme });
     }
 
@@ -87,30 +88,13 @@ export default class PageNav extends Component {
                 <Redirect to={from} />
             )
         }
-        // const from = { pathname: '/' };
-        // // this.logout();
-        // return (
-        //     <Redirect to={from} />
-        // )
+
         return (
             <div className="page-nav flex">
-                <div className='theme-selection-container flex'>
-                    {
-                        this.themes.map((theme, key) => {
-                            const html = <div className={`cursor-pointer theme-box ${theme.class} ${selectedTheme.theme == theme.theme ? 'current-theme' : null}`} onClick={() => this.changeTheme(theme)} />
 
-                            return (
-                                <CustomTooltip placement="top" key={key} html={html} title={theme.name}></CustomTooltip>
-                            )
-                            // <div className='theme-box light-theme' onClick={() => this.changeTheme('drivezy-light-theme')} />
-                        })
-                    }
-
-                    {/* <div className='theme-box dark-theme' onClick={() => this.changeTheme('drivezy-dark-theme')} /> */}
-                </div>
 
                 <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-                    <DropdownToggle>
+                    <DropdownToggle color="primary">
 
                         <div className="user-profile">
                             <div className="profile-image">
@@ -136,7 +120,7 @@ export default class PageNav extends Component {
                         <DropdownItem>Clear Storage</DropdownItem>
                         <DropdownItem>Set Homepage</DropdownItem>
                         <DropdownItem>Change Password</DropdownItem>
-                        <DropdownItem>Configure Search</DropdownItem>
+                        <DropdownItem onClick={this.configureSettings}>Settings</DropdownItem>
                         <DropdownItem>Impersonate User</DropdownItem>
                         <DropdownItem onClick={(event) => { event.preventDefault(); this.logout() }}>Sign Out</DropdownItem>
                     </DropdownMenu>

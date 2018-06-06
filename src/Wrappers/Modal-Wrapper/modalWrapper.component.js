@@ -26,7 +26,7 @@ export default class ModalWrapper extends Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    unsafe_componentwillreceiveprops(nextProps) {
         if (this.state.isVisible != nextProps.isVisible) {
             this.setState({ isVisible: nextProps.isVisible });
         }
@@ -62,9 +62,9 @@ export default class ModalWrapper extends Component {
 
                 {
                     modalBody &&
-                    <ModalBody>
-                        {modalBody()}
-                    </ModalBody>
+                    // <ModalBody>
+                        modalBody()
+                    // </ModalBody>
                 }
 
                 {
