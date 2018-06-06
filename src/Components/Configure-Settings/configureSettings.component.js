@@ -6,28 +6,58 @@ import {
     CardTitle, CardSubtitle, Button, ModalBody, ModalFooter,
     TabContent, TabPane, Nav, NavItem, NavLink, Row, Col
 } from 'reactstrap';
+import { HotKeys } from 'react-hotkeys';
+
+import { Mousetrap } from 'react-hotkeys';
 
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import { SetItem } from './../../Utils/localStorage.utils';
 import ThemeUtil from './../../Utils/theme.utils';
 
+
+
+const SpotlightTab = () =>
+    <Row ref={this.spotlightCompRef}>
+        <Col sm="12">
+            <Card body className="tab-card">
+                <CardTitle>Configure Keys</CardTitle>
+                <CardText>
+                    Spotlight helps you quickly access different menus in Panel . You can also search cars, vehicles, booking
+                    , cities and quickly navigate to the page by pressing enter
+                                        </CardText>
+            </Card>
+
+        </Col>
+    </Row>
+
+
 export default class ConfugreSettings extends Component {
 
     constructor(props) {
         super(props);
+        this.spotlightCompRef = React.createRef();
 
         this.state = {
             activeTab: '1',
+            selectedSpacing: ThemeUtil.getCurrentSpacing(),
             selectedTheme: ThemeUtil.getCurrentTheme()
         }
     }
 
     themes = ThemeUtil.getThemes();
 
+    spacing = ThemeUtil.getSpacings();
+
+    keyMap = {}
+
+    handlers = {}
+
     applyChanges = () => {
-        const { selectedTheme } = this.state;
+        const { selectedTheme, selectedSpacing } = this.state;
 
         ThemeUtil.setTheme(selectedTheme);
+
+        ThemeUtil.setSpacing(selectedSpacing);
 
         ModalManager.closeModal();
     }
@@ -36,7 +66,19 @@ export default class ConfugreSettings extends Component {
         this.setState({ selectedTheme: theme });
     }
 
+    selectSpacing = (theme) => {
+        this.setState({ selectedSpacing: theme });
+    }
+
+    closeModal = () => {
+        ModalManager.closeModal();
+    }
+
+
     toggle = (tab) => {
+        if (tab == 2) {
+            // this.spotlightCompRef.current.focus()
+        }
         if (this.state.activeTab !== tab) {
             this.setState({
                 activeTab: tab
@@ -45,10 +87,10 @@ export default class ConfugreSettings extends Component {
     }
 
     render() {
-        const { activeTab, selectedTheme } = this.state;
+        const { activeTab, selectedTheme, selectedSpacing } = this.state;
         return (
             <div className="configure-settings">
-                <ModalBody>
+                <ModalBody >
                     <Nav tabs>
                         <NavItem>
                             <NavLink className={`${activeTab == 1 ? 'active' : ''}`} onClick={() => { this.toggle('1'); }}>
@@ -61,10 +103,10 @@ export default class ConfugreSettings extends Component {
                             </NavLink>
                         </NavItem>
                     </Nav>
-                    <TabContent activeTab={this.state.activeTab}>
-                        <TabPane tabId="1">
-                            <Row>
-                                <Col sm="12">
+                    <TabContent activeTab={this.state.activeTab} onKeyPress={() => { console.log('pressed') }}>
+                        <TabPane tabId="1" >
+                            <Row >
+                                <Col sm="6">
                                     <Card body className="tab-card">
                                         <CardTitle>Choose Theme</CardTitle>
                                         <CardText>
@@ -75,36 +117,51 @@ export default class ConfugreSettings extends Component {
 
                                         <div className="themes">
                                             {
-                                                this.themes.map((theme, key) => {
-                                                    return (
-                                                        <div onClick={() => this.selectTheme(theme)} key={key} className={`${selectedTheme.class == theme.class ? 'active' : null}  ${theme.class} theme-container`}>
-                                                            <div className="theme-color">
-                                                            </div>
-                                                            <div className="theme-name">
-                                                                {theme.name}
-                                                            </div>
+                                                this.themes.map((theme, key) =>
+                                                    <div onClick={() => this.selectTheme(theme)} key={key} className={`${selectedTheme.class == theme.class ? 'active' : null}  ${theme.class} theme-container`}>
+                                                        <div className="theme-color">
                                                         </div>
-                                                    )
-                                                })
+                                                        <div className="theme-name">
+                                                            {theme.name}
+                                                        </div>
+                                                    </div>
+                                                )
                                             }
                                         </div>
                                     </Card>
                                 </Col>
+
+                                <Col sm="6">
+                                    <Card body className="tab-card">
+                                        <CardTitle>Spacing</CardTitle>
+                                        <CardText>
+                                            Choose the spacing of elements for the panel.
+                                        </CardText>
+
+                                        <div className="spacing">
+                                            {
+                                                this.spacing.map((spacing, key) =>
+                                                    <div onClick={() => this.selectSpacing(spacing)} key={key} className={`${selectedSpacing.class == spacing.class ? 'active' : null}  ${selectedSpacing.class} theme-container`}>
+                                                        <div className="spacing-name">
+                                                            {spacing.name}
+                                                        </div>
+                                                    </div>
+                                                )
+                                            }
+                                        </div>
+
+                                        {/* Spacing Section */}
+                                        <h3>
+                                        </h3>
+                                        {/* Spacing Ends */}
+
+                                    </Card>
+                                </Col>
+
                             </Row>
                         </TabPane>
-                        <TabPane tabId="2">
-                            <Row>
-                                <Col sm="12">
-                                    <Card body className="tab-card">
-                                        <CardTitle>Configure Keys</CardTitle>
-                                        <CardText>
-                                            Spotlight helps you quickly access different menus in Panel . You can also search cars, vehicles, booking
-                                            , cities and quickly navigate to the page by pressing enter
-                                        </CardText>
-                                    </Card>
-
-                                </Col>
-                            </Row>
+                        <TabPane tabId="2" >
+                            <SpotlightTab />
                         </TabPane>
                     </TabContent>
 
@@ -115,7 +172,7 @@ export default class ConfugreSettings extends Component {
                         <Button color="primary" onClick={() => this.applyChanges()}>Apply Changes</Button>
                     </div>
                 </ModalFooter>
-            </div>
+            </div >
         )
     }
 }

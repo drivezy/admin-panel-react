@@ -395,11 +395,8 @@ export default class GenericListing extends Component {
                         <div className="header-actions">
 
 
-                            <Button color="primary" size="sm" onClick={() => { this.refreshPage() }}>
-                                <i className="fa fa-refresh"></i>
-                            </Button>
 
-                            <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
+                            <CustomAction position="header" history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
 
                             {
                                 genericData.columns ?
@@ -412,6 +409,11 @@ export default class GenericListing extends Component {
                                     :
                                     null
                             }
+
+
+                            <Button color="primary" size="sm" onClick={() => { this.refreshPage() }}>
+                                <i className="fa fa-refresh"></i>
+                            </Button>
 
                             {
                                 menuDetail && menuDetail.userFilter && menuDetail.userFilter.length > 0 ?
