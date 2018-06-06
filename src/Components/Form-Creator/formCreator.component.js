@@ -192,7 +192,7 @@ const formElements = props => {
 
     const column_definition = IsObjectHaveKeys(payload.formPreference) ? payload.formPreference.column_definition : [];
     return (
-        <Form>
+        <Form role="form" name="genericForm" >
             <div className="form-row">
                 {
                     column_definition.map((preference, key) => {
