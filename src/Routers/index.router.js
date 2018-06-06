@@ -21,7 +21,6 @@ import { GetMenusFromApi } from './../Utils/menu.utils';
 import { ConfirmModalComponent, ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
 import LoadAsync from './../Utils/loadAsyncScripts.utils';
 import { Location } from './../Utils/location.utils';
-import { HotKeys } from 'react-hotkeys';
 
 
 // import { GetProperties } from './../Utils/openProperty.utils';
