@@ -212,6 +212,7 @@ export function ConvertMenuDetailForGenericPage(menuDetail) {
         sort: menuDetail.default_order ? splits[1].trim() : "desc",
         menuId: menuDetail.id,
         layouts: menuDetail.layouts,
+        form_layouts: menuDetail.form_layouts,
         layout,
         pageName: menuDetail.name,
         image: menuDetail.image,
@@ -381,16 +382,17 @@ export function GetPreSelectedMethods() {
      * @param  {object} listingRow
      * @param  {object} genericData}
      */
-    methods.add = ({ action, listingRow, genericData, source }) => {
+    methods.add = ({ action, listingRow, genericData, source = 'module' }) => {
         const payload = {
             action,
+            source,
             listingRow,
+            starter: genericData.starter,
             columns: genericData.columns,
             formPreference: genericData.formPreference,
             modelName: genericData.modelName,
             module: genericData.module,
             dataModel: genericData.dataModel,
-            source,
             userId: genericData.userId,
             modelId: genericData.modelId,
         };
@@ -415,13 +417,14 @@ export function GetPreSelectedMethods() {
         const payload = {
             method: 'edit',
             action,
+            source,
             listingRow,
+            starter: genericData.starter,
             columns: genericData.columns,
             formPreference: genericData.formPreference,
             modelName: genericData.modelName,
             module: genericData.module,
             dataModel: genericData.dataModel,
-            source,
             userId: genericData.userId,
             modelId: genericData.modelId,
         };
@@ -440,17 +443,18 @@ export function GetPreSelectedMethods() {
      * @param  {object} listingRow
      * @param  {object} genericData}
      */
-    methods.copy = ({ action, listingRow, genericData, source }) => {
+    methods.copy = ({ action, listingRow, genericData, source = 'module' }) => {
         const payload = {
             method: 'add',
             action,
             listingRow,
+            source,
+            starter: genericData.starter,
             columns: genericData.columns,
             formPreference: genericData.formPreference,
             modelName: genericData.modelName,
             module: genericData.module,
             dataModel: genericData.dataModel,
-            source,
             userId: genericData.userId,
             modelId: genericData.modelId,
         };

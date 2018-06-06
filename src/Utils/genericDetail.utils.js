@@ -1,4 +1,4 @@
-import { IsUndefinedOrNull, BuildUrlForGetCall } from './common.utils';
+import { IsUndefinedOrNull, BuildUrlForGetCall, IsObjectHaveKeys } from './common.utils';
 import { CreateFinalColumns, GetPreSelectedMethods, RegisterMethod, GetColumnsForListing, ConvertMenuDetailForGenericPage } from './generic.utils';
 import { Get } from './http.utils';
 
@@ -104,6 +104,7 @@ function PrepareObjectForDetailPage(result, { extraParams }) {
 export function GetDataForPortlet({ portletDetail, genericDetailObject }) {
     var obj = {};
     obj.data = portletDetail.data;
+    // obj.base = portletDetail.base;
 
     const { relationship, dictionary } = portletDetail;
     // obj.listName = genericDetailObject.listName + ".detail.list";
@@ -120,8 +121,18 @@ export function GetDataForPortlet({ portletDetail, genericDetailObject }) {
         obj.finalColumns = [];
     }
 
-    obj.starter = genericDetailObject.base;
+    obj.starter = portletDetail.base;
     obj.relationship = relationship;
+    const model = obj.model = relationship[obj.starter];
+    obj.nextActions = obj.model.actions;
+
+    const formPreference = model.form_layouts[0] || {};
+    if (IsObjectHaveKeys(formPreference)) {
+        formPreference.column_definition = JSON.parse(formPreference.column_definition);
+    }
+
+    obj.formPreference = formPreference;
+
     // obj.dictionary = {};
     // obj.relationship = {};
 

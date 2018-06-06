@@ -115,11 +115,12 @@ export default class GenericDetail extends Component {
     render() {
         const { history } = this.props;
         const { menuDetail = {}, portlet = {}, tabDetail = {}, currentUser = {} } = this.state;
-        const { finalColumns = [], data = {} } = portlet;
+        const { finalColumns = [], data = {}, formPreference = {}, starter } = portlet;
 
         const genericDataForCustomColumn = {
+            formPreference,
+            starter,
             columns: portlet.portletColumns,
-            formPreference: menuDetail.preference && menuDetail.preference[menuDetail.formPreferenceName + '.form'] ? JSON.parse(menuDetail.preference[menuDetail.formPreferenceName + '.form']) : [],
             modelName: menuDetail.formPreferenceName + '.form',
             module: menuDetail.url ? menuDetail.url.split("/:")[0] : '',
             dataModel: menuDetail.model,
@@ -133,7 +134,7 @@ export default class GenericDetail extends Component {
 
                 <div className="right">
                     <div className="btn-group header-actions" id="generic-detail-header-dynamic-icon-group">
-                        <CustomAction history={history} genericData={genericDataForCustomColumn} actions={menuDetail.nextActions} listingRow={data} placement={167} callback={this.getDetailRecord} />
+                        <CustomAction history={history} genericData={genericDataForCustomColumn} actions={portlet.nextActions} listingRow={data} placement={167} callback={this.getDetailRecord} />
                     </div>
 
                     {

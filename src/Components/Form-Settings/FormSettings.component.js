@@ -131,22 +131,27 @@ export default class FormSettings extends Component {
                     <div className="left">
                         <ListGroup>
                             {
-                                columnKeys.map((column, index) => (
-                                    <div key={index}>
-                                        <ListGroupItem color="info" tag="button" action key={index} onClick={() => this.toggleList(column)}>
-                                            {column}
-                                        </ListGroupItem>
-                                        <Collapse isOpen={this.state.list[column]}>
-                                            <ListGroup>
-                                                {
-                                                    leftColumns[column].map((entry, key) => (
-                                                        <ListGroupItem tag="button" onDoubleClick={() => this.addColumn(entry)} key={key}>{entry.name}</ListGroupItem>
-                                                    ))
-                                                }
-                                            </ListGroup>
-                                        </Collapse>
-                                    </div>
-                                ))
+                                columnKeys.map((column, index) => {
+                                    // show only parent columns
+                                    if (column && column.split('.').length == 1) {
+                                        return (
+                                            <div key={index}>
+                                                <ListGroupItem color="info" tag="button" action key={index} onClick={() => this.toggleList(column)}>
+                                                    {column}
+                                                </ListGroupItem>
+                                                <Collapse isOpen={this.state.list[column]}>
+                                                    <ListGroup>
+                                                        {
+                                                            leftColumns[column].map((entry, key) => (
+                                                                <ListGroupItem tag="button" onDoubleClick={() => this.addColumn(entry)} key={key}>{entry.name}</ListGroupItem>
+                                                            ))
+                                                        }
+                                                    </ListGroup>
+                                                </Collapse>
+                                            </div>
+                                        )
+                                    }
+                                })
                             }
                         </ListGroup>
                     </div>

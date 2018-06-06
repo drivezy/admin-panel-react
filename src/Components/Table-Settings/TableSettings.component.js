@@ -120,7 +120,7 @@ export default class TableSettings extends Component {
 
     modalWrapper() {
         const { columns, tempSelectedColumns, activeColumn } = this.state;
-
+        const { source = 'module' } = this.props;
         const selectedIds = [];
 
         for (var value of tempSelectedColumns) {
@@ -230,7 +230,16 @@ export default class TableSettings extends Component {
                                         </ListGroupItem>
                                                 :
                                                 // Component Manages column props
-                                                <ColumnSetting removeColumn={this.removeColumn} columns={columns} activeColumn={activeColumn} selectColumn={this.selectColumn} column={column} index={index} key={index} />
+                                                <ColumnSetting
+                                                    source={source}
+                                                    removeColumn={this.removeColumn}
+                                                    columns={columns}
+                                                    activeColumn={activeColumn}
+                                                    selectColumn={this.selectColumn}
+                                                    column={column}
+                                                    index={index}
+                                                    key={index}
+                                                />
                                                 // Column Setting Ends
                                             )
                                         })

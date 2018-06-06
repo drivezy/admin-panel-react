@@ -144,7 +144,12 @@ function PrepareObjectForListing(result, { extraParams }) {
         const model = params.relationship[base];
         const modelName = model.name.toLowerCase();
 
-        const formPreference = model.form_layouts[0] || {};
+        let formPreference = {};
+        if (configuration.form_layouts) {
+            formPreference = configuration.form_layouts[0] || {};
+        } else {
+            formPreference = model.form_layouts[0] || {};
+        }
         if (IsObjectHaveKeys(formPreference)) {
             formPreference.column_definition = JSON.parse(formPreference.column_definition);
         }

@@ -28,6 +28,7 @@ import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from 'constants';
 import FormSettings from './../Form-Settings/FormSettings.component';
 import ScriptInput from './../Forms/Components/Script-Input/scriptInput.component';
 
+import { ROUTE_URL } from './../../Constants/global.constants';
 
 const DisplayFormikState = props => (
     <div style={{ margin: '1rem 0' }}>
@@ -321,7 +322,7 @@ const FormContents = withFormik({
 
         async function submitGenericForm() {
             if (payload.method == 'edit') {
-                const result = await Put({ url: payload.module + '/' + payload.listingRow.id, body: values });
+                const result = await Put({ url: payload.module + '/' + payload.listingRow[payload.starter + '.id'], body: values, urlPrefix: ROUTE_URL });
                 if (result.response) {
                     props.onSubmit();
                 }

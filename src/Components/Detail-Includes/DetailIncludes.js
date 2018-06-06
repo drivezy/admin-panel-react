@@ -85,6 +85,7 @@ export default class DetailPortlet extends Component {
     updateTabContent = ({ genericData: tabDetail, index }) => {
         const { tabContent, tabs } = this.state;
         const tabsIndices = Object.keys(tabs);
+        tabDetail.modelId = tabDetail.menuId;
         tabContent[index] = tabDetail;
         tabContent[index].index = tabsIndices[index];
         this.setState({ tabContent });
@@ -156,7 +157,7 @@ export default class DetailPortlet extends Component {
                                                     {/* Building the table iterating through the row to display tab content */}
                                                     <div className='table-header'>
                                                         <div className='btn-group header-actions'>
-                                                            <CustomAction history={history} genericData={tab} actions={tab.nextActions} placement={168} callback={callback} />
+                                                            <CustomAction history={history} source='modelAlias' genericData={tab} actions={tab.nextActions} placement={168} callback={callback} />
                                                         </div>
 
                                                         <a className="btn btn-secondary btn-sm" onClick={() => Location.navigate({ url: `/modelAliasDetail/${tab.relationship.id}` })}>
@@ -172,6 +173,7 @@ export default class DetailPortlet extends Component {
                                                                     columns={tab.columns}
                                                                     menuId={tabsArr[key].menuId}
                                                                     userId={currentUser.id}
+                                                                    source='modelAlias'
                                                                 />
                                                                 :
                                                                 null
@@ -181,8 +183,7 @@ export default class DetailPortlet extends Component {
                                                     <PortletTable
                                                         finalColumns={tab.finalColumns}
                                                         listing={tab.listing}
-                                                        // genericData={tabContent[key]}
-                                                        genericData={{}}
+                                                        genericData={tab}
                                                         callback={tab.refreshContent}
                                                         rowOptions={this.rowOptions}
                                                     />
