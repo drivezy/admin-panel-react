@@ -1,31 +1,38 @@
-.spotlight-search-modal{
+.spotlight-search-modal {
     margin-top: 15%;
-    .modal-content{
+    .modal-content {
         background: transparent;
-        .modal-body{
+        .modal-body {
+            border-radius: 4px;
             padding: 0px;
+            padding-top: 0px !important;
             background: transparent;
-            .input-group{
+            .input-group {
                 height: 50px;
-                .input-group-prepend{
-                    .input-group-text{
+                .input-group-prepend {
+                    .input-group-text {
                         border: none;
                         background: white;
                     }
                 }
-                input.form-control{
+                input.form-control {
                     border: none;
                     border-left: none;
                 }
             }
         }
-        .card{
+        .card {
             margin-top: 4px;
-            .list-group{
-                .list-group-item{
+            .list-group {
+                .list-group-item {
                     cursor: pointer;
-
-                    &:hover{
+                    &:hover {
+                        background: whitesmoke;
+                    }
+                    &:focus {
+                        background: whitesmoke;
+                    }
+                    &.hovered {
                         background: whitesmoke;
                     }
                 }

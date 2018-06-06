@@ -44,13 +44,13 @@ export default class GenericDetail extends Component {
         this.getMenuData();
     }
 
-    componentWillReceiveProps(nextProps) {
+    unsafe_componentwillreceiveprops(nextProps) {
         const newProps = GetUrlParams(nextProps);
         this.state.params = newProps.params;
         this.state.queryString = newProps.queryString;
 
         // if menuDetail object has fetched url and current url is different than previous one, fetch data
-        if (this.state.menuDetail.url && this.currentUrl != this.getHref()) { 
+        if (this.state.menuDetail.url && this.currentUrl != this.getHref()) {
             this.currentUrl = this.getHref();
             this.getDetailRecord();
         }
@@ -109,10 +109,6 @@ export default class GenericDetail extends Component {
                 }
             }
         }];
-
-    componentDidMount() {
-        this.getMenuData();
-    }
 
     getMenuData = async () => {
         const { queryString } = this.state;
@@ -180,7 +176,7 @@ export default class GenericDetail extends Component {
 
                 <div className="right">
                     <div className="btn-group header-actions" id="generic-detail-header-dynamic-icon-group">
-                        <CustomAction history={history} genericData={genericDataForCustomColumn} actions={menuDetail.nextActions} listingRow={data} placement={167} callback={this.getDetailRecord} />
+                        <CustomAction position="header" history={history} genericData={genericDataForCustomColumn} actions={menuDetail.nextActions} listingRow={data} placement={167} callback={this.getDetailRecord} />
                     </div>
 
                     {

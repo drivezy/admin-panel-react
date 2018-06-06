@@ -12,12 +12,6 @@ export default class Header extends Component {
         }
     }
 
-    componentDidMount() {
-    }
-
-    componentWillReceiveProps(nextProps) {
-    }
-
     render() {
 
         return (

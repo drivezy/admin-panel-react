@@ -1,18 +1,144 @@
+// Themes
+$themes: ( 
+    light: (
+        // Body
+        bodyBackground:#ebeef0,
+        // Body Ends
+        // Sidbar Styling
+        sideBackground:#ffffff,
+        sidebarBorder:#bfbfbf,
+        logoBackground:#f9f6f6,
+        logoBottomBorder:#e9e7e7,
+        menuHover:#f2f2f2,
+        // Sidebar Styling Ends 
+        // Header Styling
+        headerBackground:#e7e7e7,
+        headerBorder:#c1c1c1,
+        // Header Ends
+        // Sub Header
+        subHeader:#f1f0f0,
+        subHeaderBorder:#d4d4d4,
+        // Sub Header Ends
+
+        // Table Styling
+        tableHeader:#efefef,
+        tableHeaderBorder:#ececec,
+        columnTitle:#3b6877,
+        dropdownLink:#b1493ce8,
+        // Table Styling Ends
+        backgroundColor: #fff,
+        textColor: #408bbd,
+        buttonTextColor: #408bbd,
+        buttonTextTransform: none,
+        buttonTextHoverColor: #61b0e7,
+        buttonColor: #fff,
+        buttonBorder: 2px solid #fff,
+        ),
+        dark: (
+            // Body
+            bodyBackground:#ebeef0,
+            // Body Ends
+            // Sidbar Styling
+            sideBackground:#ffffff,
+            sidebarBorder:#bfbfbf,
+            logoBackground:#f9f6f6,
+            logoBottomBorder:#e9e7e7,
+            menuHover:#f2f2f2,
+            // Sidebar Styling Ends 
+            // Header Styling
+            headerBackground:#e7e7e7,
+            headerBorder:#c1c1c1,
+            // Header Ends
+            // Sub Header
+            subHeader:#f1f0f0,
+            subHeaderBorder:#d4d4d4,
+            // Sub Header Ends
+    
+            // Table Styling
+            tableHeader:#efefef,
+            tableHeaderBorder:#ececec,
+            columnTitle:#3b6877,
+            dropdownLink:#b1493ce8,
+            // Table Styling Ends
+            backgroundColor: #fff,
+            textColor: #408bbd,
+            buttonTextColor: #408bbd,
+            buttonTextTransform: none,
+            buttonTextHoverColor: #61b0e7,
+            buttonColor: #fff,
+            buttonBorder: 2px solid #fff,
+            ),
+            drivezy: (
+                // Body
+                bodyBackground:#ebeef0,
+                // Body Ends
+                // Sidbar Styling
+                sideBackground:#35485b,
+                sidebarBorder:#bfbfbf,
+                logoBackground:#303e4c,
+                logoBottomBorder:#e9e7e7,
+                menuIcon:#a4b2b8,
+                menuIconHover:white,
+                menuHover:#2c3e4e,
+                // Sidebar Styling Ends 
+                // Header Styling
+                headerBackground:white,
+                headerBorder:#c1c1c1,
+                // Header Ends
+                // Sub Header
+                subHeader:#f1f0f0,
+                subHeaderBorder:#d4d4d4,
+                // Sub Header Ends
+        
+                // Table Styling
+                tableHeader:#f8f9fa,
+                tableHeaderBorder:#ececec,
+                columnTitle:#3b6877,
+                dropdownLink:#b1493ce8,
+                // Table Styling Ends
+                backgroundColor: #fff,
+                textColor: #408bbd,
+                buttonTextColor: #408bbd,
+                buttonTextTransform: none,
+                buttonTextHoverColor: #61b0e7,
+                buttonColor: #fff,
+                buttonBorder: 2px solid #fff,
+                ),
+);
+// Themes Ends
+// Themify Begins
+@mixin themify($themes: $themes) {
+    @each $theme,
+    $map in $themes {
+        .theme-#{$theme} & {
+            $theme-map: () !global;
+            @each $key,
+            $submap in $map {
+                $value: map-get(map-get($themes, $theme), '#{$key}');
+                $theme-map: map-merge($theme-map, ($key: $value)) !global;
+            }
+            @content;
+            $theme-map: null !global;
+        }
+    }
+}
+
+// Themify Ends
+// Themed Function
+@function themed($key) {
+    @return map-get($theme-map, $key);
+}
+
+// Themed Ends
 $font-family: 'Montserrat',
 'Roboto',
 sans-serif;
 // $theme-red: rgba(250, 65, 65, 1);
 $theme-red: #FF5A5F;
 $theme-gray: rgb(223, 184, 184);
-
 $background-lightgray: #eff3f5;
-
 $font-lightgray: #737c93;
-
-
-
-
-$primaryThemeLight: #0277bd;  
+$primaryThemeLight: #0277bd;
 $primaryLightThemeLight: #58a5f0;
 $primaryBackgroundThemeLight: #c4d0db;
 $primaryBackgroundHoverThemeLight: #dae2e9;
@@ -23,21 +149,16 @@ $secondaryDarkThemeLight: #001970;
 $backgroundThemeLight: #eeeeee;
 $surfaceThemeLight: #ffffff;
 $errorThemeLight: #e53935;
-
 $onSurfaceThemeLight: #000000;
 $onBackgroundThemeLight: #000000;
 $onPrimaryLightThemeLight: #000000;
 $onSecondaryLightThemeLight: #000000;
 $onSecondayDarkThemeLight: #000000;
-
 $onSecondaryThemeLight: #ffffff;
 $onPrimaryThemeLight: #ffffff;
 $onPrimaryDarkThemeLight: #ffffff;
 $onErrorThemeLight: #ffffff;
-
-
-
-$primaryThemeDrivezy: #f25d61;  
+$primaryThemeDrivezy: #f25d61;
 $primaryLightThemeDrivezy: #ff8f8e;
 $primaryDarkThemeDrivezy: #ba2737;
 $primaryBackgroundThemeDrivezy: rgb(212, 219, 226);
@@ -48,40 +169,43 @@ $secondaryDarkThemeDrivezy: #008677;
 $backgroundThemeDrivezy: #eeeeee;
 $surfaceThemeDrivezy: #ffffff;
 $errorThemeDrivezy: #e53935;
-
 $onSurfaceThemeDrivezy: #000000;
 $onBackgroundThemeDrivezy: #000000;
 $onPrimaryLightThemeDrivezy: #000000;
 $onSecondaryLightThemeDrivezy: #000000;
 $onSecondayDarkThemeDrivezy: #000000;
-
 $onSecondaryThemeDrivezy: #ffffff;
 $onPrimaryThemeDrivezy: #ffffff;
 $onPrimaryDarkThemeDrivezy: #ffffff;
 $onErrorThemeDrivezy: #ffffff;
-
-
-
-
-$primaryThemeDark: #35485a;  
+$primaryThemeDark:#646667;
+// $primaryThemeDark:#727070;
+// $primaryThemeDark: #669351;  
 $primaryLightThemeDark: #607387;
+$onPrimaryLightThemeDark:#0a1f2d;
 $primaryBackgroundThemeDark: rgb(212, 219, 226);
 $primaryBackgroundHoverThemeDark: #e2e7ee;
 $primaryDarkThemeDark: #0b2131;
-$secondaryThemeDark: #303f9f;
+// $secondaryThemeDark: #5ac924;
+$secondaryThemeDark:#711818;
 $secondaryLightThemeDark: #666ad1;
-$secondaryDarkThemeDark: #001970;
+// $secondaryDarkThemeDark: #001970;
+$secondaryDarkThemeDark:#646667;
 $backgroundThemeDark: #eeeeee;
 $surfaceThemeDark: #ffffff;
 $errorThemeDark: #e53935;
-
 $onSurfaceThemeDark: #000000;
 $onBackgroundThemeDark: #000000;
 $onPrimaryLightThemeDark: #000000;
 $onSecondaryLightThemeDark: #000000;
 $onSecondayDarkThemeDark: #000000;
-
 $onSecondaryThemeDark: #ffffff;
 $onPrimaryThemeDark: #ffffff;
 $onPrimaryDarkThemeDark: #ffffff;
 $onErrorThemeDark: #ffffff;
+// 
+// 
+// 
+// Drivezy Dark Theme Colours
+$primaryDark:#032134;
+// Drivezy Dark Theme Ends

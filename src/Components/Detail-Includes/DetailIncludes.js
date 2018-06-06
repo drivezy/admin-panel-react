@@ -48,7 +48,7 @@ export default class DetailPortlet extends Component {
         this.buildTabData(this.props);
     }
 
-    componentWillReceiveProps(nextProps) {
+    unsafe_componentwillreceiveprops(nextProps) {
         if (shouldComponentWillReceivePropsRun) { // when setting hash to the url, prevents componentWillReceiveProps from executing again
             // this.setState({ tabs: nextProps.tabs });
             this.state.tabs = nextProps.tabs;
@@ -177,7 +177,6 @@ export default class DetailPortlet extends Component {
      * @param  {int} tab - tab index
      */
     toggle = (key, tab) => {
-        console.log(tab);
         if (this.state.activeTab !== key) {
             this.setState({
                 activeTab: key
