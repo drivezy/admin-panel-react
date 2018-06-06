@@ -188,9 +188,9 @@ export default class UserLicense extends Component {
                             <Viewer
                                 container={this.container}
                                 visible={this.state.visible}
-                                onClose={() => { this.setState({ visible: false }); }}
                                 images={licenses}
                                 activeIndex={this.state.activeIndex}
+                                noClose={true}
                                 customToolbar={(toolbars) => {
                                     const customToolbar = [{
                                         key: 'test',
