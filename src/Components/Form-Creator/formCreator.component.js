@@ -54,7 +54,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // Static Ends
 
         // Number
-        107: <Field autoComplete="off" className="form-control" type="number" name={column.path} placeholder={`Enter ${column.display_name}`} />,
+        107: <Field autoComplete="off" className="form-control" type="number" name={column.name} placeholder={`Enter ${column.display_name}`} />,
         // Number Ends
 
         // Text
@@ -325,7 +325,8 @@ const FormContents = withFormik({
         let newValues = {};
         let keys = Object.keys(values);
         keys.forEach((key) => {
-            newValues[payload.dataModel + '.' + key] = values[key];
+            newValues[key] = values[key];
+            // newValues[payload.dataModel + '.' + key] = values[key];
         })
 
 
@@ -341,13 +342,13 @@ const FormContents = withFormik({
         async function submitGenericForm() {
             if (payload.method == 'edit') {
                 // Shubham , Changing module ==> dataModel as module is null
-                const result = await Put({ url: payload.dataModel + '/' + payload.listingRow[payload.starter + '.id'], body: newValues, urlPrefix: ROUTE_URL });
+                const result = await Put({ url: payload.url + '/' + payload.listingRow[payload.starter + '.id'], body: newValues, urlPrefix: ROUTE_URL });
                 if (result.response) {
                     props.onSubmit();
                 }
 
             } else {
-                const result = await Post({ url: payload.dataModel, body: newValues });
+                const result = await Post({ url: payload.url, body: newValues });
                 if (result.success) {
                     props.onSubmit();
                 }

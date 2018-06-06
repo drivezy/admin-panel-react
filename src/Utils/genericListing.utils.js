@@ -175,6 +175,7 @@ function PrepareObjectForListing(result, { extraParams }) {
             // layout: configuration.preference[configuration.listName + ".list"] ? JSON.parse(configuration.preference[configuration.listName + ".list"]) : null, // formPreference: configuration.preference[configuration.listName + '.form'] ? JSON.parse(configuration.preference[configuration.listName + '.form']) : null,
             nextActions: model.actions,
             formPreference,
+            url: configuration.url,
             // formPreference: configuration.preference[modelName + ".form"] ? JSON.parse(configuration.preference[modelName + ".form"]) : null,
             // modelName: configuration.model.name.toLowerCase() + ".form",
             // module: configuration.module,

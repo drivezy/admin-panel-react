@@ -395,6 +395,7 @@ export function GetPreSelectedMethods() {
             dataModel: genericData.dataModel,
             userId: genericData.userId,
             modelId: genericData.modelId,
+            url: genericData.url
         };
         ModalManager.openModal({
             payload,
@@ -427,6 +428,7 @@ export function GetPreSelectedMethods() {
             dataModel: genericData.dataModel,
             userId: genericData.userId,
             modelId: genericData.modelId,
+            url: genericData.url
         };
         ModalManager.openModal({
             payload,
@@ -457,6 +459,7 @@ export function GetPreSelectedMethods() {
             dataModel: genericData.dataModel,
             userId: genericData.userId,
             modelId: genericData.modelId,
+            url: genericData.url
         };
         ModalManager.openModal({
             payload,
