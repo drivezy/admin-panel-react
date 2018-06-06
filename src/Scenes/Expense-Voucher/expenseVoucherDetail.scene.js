@@ -35,6 +35,10 @@ export default class ExpenseVoucherDetail extends Component {
         }
     }
 
+    refresh = () => {
+        this.getVoucherDetail();
+    }
+
     requestApproval = (voucher) => {
         const method = async () => {
             const result = await Put({ url: "expenseVoucher/" + voucher.id, body: { state: 277 } });
@@ -123,6 +127,9 @@ export default class ExpenseVoucherDetail extends Component {
                         <div className="expense-voucher-header">
                             <div className="header-content">
                                 <h6>Expense Voucher Detail</h6>
+                                <button type="button" className="btn btn-sm btn-primary" uib-tooltip="Refresh Content" onClick={() => { this.refresh() }} >
+                                    <i className="fa fa-refresh"></i>
+                                </button>
                             </div>
                         </div>
                         <div className="expense-cards">
