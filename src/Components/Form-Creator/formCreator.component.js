@@ -58,15 +58,15 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // Number Ends
 
         // Text
-        108: <Field
-            name={column.path}
-            render={({ field /* _form */ }) => (
-                // onChange={(event) => { console.log(event.target); props.handleChange() }}
-                <input name={column.path} className="form-control" onChange={props.handleChange} value={values[column.path]}></input>
-            )}
-        />,
+        // 108: <Field
+        //     name={column.path}
+        //     render={({ field /* _form */ }) => (
+        //         // onChange={(event) => { console.log(event.target); props.handleChange() }}
+        //         <input name={column.path} className="form-control" onChange={props.handleChange} value={values[column.path]}></input>
+        //     )}
+        // />,
 
-        // 108: <Field id={column.path} name={column.path} value={values[column.path]} className={`form-control ${props.errors[column.index] && props.touched[column.index] ? 'is-invalid' : ''}`} type="text" placeholder={`Enter ${column.name}`} />,
+        108: <Field id={column.name} name={column.name} className={`form-control ${props.errors[column.index] && props.touched[column.index] ? 'is-invalid' : ''}`} type="text" placeholder={`Enter ${column.name}`} />,
         // Text Ends
 
         // TextArea Begins
@@ -267,7 +267,7 @@ const FormContents = withFormik({
         column_definition.forEach((preference) => {
             if (typeof preference != 'string') {
                 let column = payload.columns[preference.index];
-                response[column.path] = payload.listingRow[column.path] || '';
+                response[column.name] = payload.listingRow[column.path] || '';
             }
         });
 
@@ -319,6 +319,16 @@ const FormContents = withFormik({
 
         const { payload } = props;
 
+        // Check this code shubham , 
+        // Modifying the data according to backend requiremend 
+
+        let newValues = {};
+        let keys = Object.keys(values);
+        keys.forEach((key) => {
+            newValues[payload.dataModel + '.' + key] = values[key];
+        })
+
+
         if (props.fileUploads.length) {
             uploadImages(props).then((result) => {
                 console.log(result)
@@ -330,13 +340,14 @@ const FormContents = withFormik({
 
         async function submitGenericForm() {
             if (payload.method == 'edit') {
-                const result = await Put({ url: payload.module + '/' + payload.listingRow[payload.starter + '.id'], body: values, urlPrefix: ROUTE_URL });
+                // Shubham , Changing module ==> dataModel as module is null
+                const result = await Put({ url: payload.dataModel + '/' + payload.listingRow[payload.starter + '.id'], body: newValues, urlPrefix: ROUTE_URL });
                 if (result.response) {
                     props.onSubmit();
                 }
 
             } else {
-                const result = await Post({ url: payload.module, body: values });
+                const result = await Post({ url: payload.dataModel, body: newValues });
                 if (result.success) {
                     props.onSubmit();
                 }
