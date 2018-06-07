@@ -30,7 +30,7 @@ export default class TableSettings extends Component {
     componentDidMount() {
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
     }
 
     toggleModal = () => {

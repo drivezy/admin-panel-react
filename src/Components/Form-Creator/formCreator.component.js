@@ -241,8 +241,8 @@ const formElements = props => {
 
                 <ModalFooter>
                     <div className="modal-actions row justify-content-end">
-                        <Button color="secondary" onClick={handleReset}>
-                            Clear
+                        <Button color="secondary" onClick={props.onClose}>
+                            Cancel
                         </Button>
                         <button className="btn btn-primary" type="submit">
                             Submit
@@ -459,14 +459,14 @@ export default class FormCreator extends Component {
 
                 {
                     payload.columns ?
-                        <FormSettings onSubmit={this.layoutChanged} listName={payload.modelName} selectedColumns={payload.formPreference} columns={payload.columns} />
+                        <FormSettings onSubmit={this.layoutChanged} module={payload.module} listName={payload.modelName} selectedColumns={payload.formPreference} columns={payload.columns} />
                         :
                         null
                 }
 
                 {
                     payload.formPreference ?
-                        <FormContents fileUploads={fileUploads} removeImage={this.removeImage} onFileUpload={this.pushFiles} onFileRemove={this.removeFile} onSubmit={this.formSubmitted} payload={payload} />
+                        <FormContents onClose={this.closeModal} fileUploads={fileUploads} removeImage={this.removeImage} onFileUpload={this.pushFiles} onFileRemove={this.removeFile} onSubmit={this.formSubmitted} payload={payload} />
                         : null
                 }
             </div >
