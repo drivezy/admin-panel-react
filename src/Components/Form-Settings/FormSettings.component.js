@@ -22,6 +22,7 @@ export default class FormSettings extends Component {
             columns: this.props.columns,
             list: {},
             activeColumn: {},
+            module: props.module
         }
     }
 
@@ -112,7 +113,7 @@ export default class FormSettings extends Component {
     }
 
     modalWrapper() {
-        const { columns, tempSelectedColumns, activeColumn } = this.state;
+        const { columns, tempSelectedColumns, activeColumn, module } = this.state;
 
         const selectedIds = [];
 
@@ -124,13 +125,14 @@ export default class FormSettings extends Component {
 
         const leftColumns = _.groupBy(columns, 'parent');
 
-        const columnKeys = Object.keys(leftColumns);
+        const columnKeys = [module];
 
         for (var key of columnKeys) {
             leftColumns[key] = leftColumns[key].filter((column) => (
                 selectedIds.indexOf(column.id) == -1
             ));
         }
+
         return (
             <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="form-settings-modal">
                 <ModalHeader toggle={this.toggleModal}>
