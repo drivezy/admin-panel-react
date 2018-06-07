@@ -161,7 +161,7 @@ class MainApp extends Component {
         return (
 
             <HotKeys focused={true} attach={window} keyMap={this.keyMap} handlers={this.handlers}>
-                <div className="app-container">
+                <div className="app-container" id='app-container'>
                     {
                         menus && menus.length &&
                         <div className="page-container">

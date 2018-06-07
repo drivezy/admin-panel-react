@@ -5,6 +5,7 @@ import { Location } from './../../Utils/location.utils';
 import ToastNotifications from './../../Utils/toast.utils';
 import { Delete } from './../../Utils/http.utils';
 import { IsUndefined } from '../../Utils/common.utils';
+import { DeletePreference } from './../../Utils/preference.utils';
 
 import { MenuFilterEndPoint } from './../../Constants/api.constants';
 
@@ -40,7 +41,8 @@ export default class PredefinedFilter extends React.Component {
         let { layouts, onFilterUpdate } = this.props;
         event.stopPropagation();
         if (window.confirm('Are you sure you want to delete the filter?')) {
-            const result = await Delete({ url: `${MenuFilterEndPoint}/${layout.id}` });
+            const result = await DeletePreference({ layout });
+            // const result = await Delete({ url: `${MenuFilterEndPoint}/${layout.id}` });
             if (result.success) {
                 layouts = layouts.filter(filterObj => filterObj.id != layout.id);
                 onFilterUpdate(layouts);

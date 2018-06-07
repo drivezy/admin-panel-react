@@ -26,6 +26,7 @@
         "no-restricted-syntax": "off",
         "no-continue": "off",
         "guard-for-in": "off",
-        "no-fallthrough": "off"
+        "no-fallthrough": "off",
+        "no-loop-func": "off"
     }
 }

@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import { Get } from './http.utils';
 import { IsUndefinedOrNull, BuildUrlForGetCall } from './common.utils';
-import ToastNotifications from './../Utils/toast.utils';
-import { Delete } from './../Utils/http.utils';
-import { Location } from './../Utils/location.utils';
-import { ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
+import ToastNotifications from './toast.utils';
+import { Delete } from './http.utils';
+import { Location } from './location.utils';
+import { ConfirmUtils } from './confirm-utils/confirm.utils';
+import { ProcessForm } from './formMiddleware.utils';
 
 import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 import { GetMenuDetailEndPoint } from './../Constants/api.constants';
 import { RECORD_URL } from './../Constants/global.constants';
 
-import FormCreator from './../Components/Form-Creator/formCreator.component'
+// import FormCreator from './../Components/Form-Creator/formCreator.component'
 import PortletTable from '../Components/Portlet-Table/PortletTable.component';
 import TableWrapper from './../Components/Table-Wrapper/tableWrapper.component';
 import PreferenceSetting from './../Components/Preference-Setting/preferenceSetting.component';
@@ -383,27 +384,27 @@ export function GetPreSelectedMethods() {
      * @param  {object} genericData}
      */
     methods.add = ({ action, listingRow, genericData, source = 'module' }) => {
-        const payload = {
-            action,
+        const form = {
             source,
-            listingRow,
+            data: listingRow,
+            callback: action.callback,
             starter: genericData.starter,
-            columns: genericData.columns,
-            formPreference: genericData.formPreference,
-            modelName: genericData.modelName,
-            module: genericData.module,
-            dataModel: genericData.dataModel,
+            dictionary: genericData.columns,
+            layout: genericData.formPreference,
             userId: genericData.userId,
             modelId: genericData.modelId,
-            url: genericData.url
+            route: genericData.url,
+            name: 'Add' + genericData.starter
         };
-        ModalManager.openModal({
-            payload,
-            headerText: 'Add modal',
-            // modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),
-            modalBody: () => (<FormCreator payload={payload} />),
-            // modalFooter: () => (<ModalFooter payload={payload}></ModalFooter>)
-        });
+
+        ProcessForm({ form });
+        // ModalManager.openModal({
+        //     payload,
+        //     headerText: 'Add modal',
+        //     // modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),
+        //     modalBody: () => (<FormCreator payload={payload} />),
+        //     // modalFooter: () => (<ModalFooter payload={payload}></ModalFooter>)
+        // });
     }
 
 
@@ -415,27 +416,27 @@ export function GetPreSelectedMethods() {
      */
     methods.edit = ({ action, listingRow, genericData, source = 'module' }) => {
         // const payload = { method: 'edit', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module };
-        const payload = {
-            method: 'edit',
-            action,
+        const form = {
             source,
-            listingRow,
+            method: 'edit',
+            callback: action.callback,
+            data: listingRow,
             starter: genericData.starter,
-            columns: genericData.columns,
-            formPreference: genericData.formPreference,
-            modelName: genericData.modelName,
-            module: genericData.module,
-            dataModel: genericData.dataModel,
+            dictionary: genericData.columns,
+            layout: genericData.formPreference,
             userId: genericData.userId,
             modelId: genericData.modelId,
-            url: genericData.url
+            route: genericData.url,
+            name: 'Edit' + genericData.starter
+            // columns: genericData.columns,
+            // formPreference: genericData.formPreference,
+            // modelName: genericData.modelName,
+            // module: genericData.module,
+            // dataModel: genericData.dataModel,
+            // action,
+            // url: genericData.url
         };
-        ModalManager.openModal({
-            payload,
-            // modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),
-            headerText: 'Edit modal',
-            modalBody: () => (<FormCreator payload={payload} />)
-        });
+        ProcessForm({ form });
     }
 
     /**
@@ -446,27 +447,26 @@ export function GetPreSelectedMethods() {
      * @param  {object} genericData}
      */
     methods.copy = ({ action, listingRow, genericData, source = 'module' }) => {
-        const payload = {
+        const form = {
             method: 'add',
-            action,
-            listingRow,
+            callback: action.callback,
+            data: listingRow,
             source,
             starter: genericData.starter,
-            columns: genericData.columns,
-            formPreference: genericData.formPreference,
-            modelName: genericData.modelName,
-            module: genericData.module,
-            dataModel: genericData.dataModel,
+            dictionary: genericData.columns,
+            layout: genericData.formPreference,
             userId: genericData.userId,
             modelId: genericData.modelId,
-            url: genericData.url
+            route: genericData.url,
+            name: 'Add' + genericData.starter
         };
-        ModalManager.openModal({
-            payload,
-            // modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),
-            headerText: 'Add modal',
-            modalBody: () => (<FormCreator payload={payload} />)
-        });
+        ProcessForm({ form });
+        // ModalManager.openModal({
+        //     payload,
+        //     // modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),
+        //     headerText: 'Add modal',
+        //     modalBody: () => (<FormCreator payload={payload} />)
+        // });
     }
 
     methods.delete = async ({ action, listingRow, genericData }) => {

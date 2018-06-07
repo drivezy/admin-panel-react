@@ -13,7 +13,7 @@ import Yup from 'yup';
 
 import { Upload, Post, Put } from './../../Utils/http.utils';
 import { GetPreference } from './../../Utils/generic.utils';
-import { IsObjectHaveKeys } from './../../Utils/common.utils';
+import { IsObjectHaveKeys, IsUndefined } from './../../Utils/common.utils';
 
 import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import ReferenceInput from './../Forms/Components/Reference-Input/referenceInput';
@@ -66,14 +66,14 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         //     )}
         // />,
 
-        108: <Field id={column.name} name={column.name} className={`form-control ${props.errors[column.index] && props.touched[column.index] ? 'is-invalid' : ''}`} type="text" placeholder={`Enter ${column.name}`} />,
+        108: <Field disabled={column.disabled} id={column.name} name={column.name} className={`form-control ${props.errors[column.index] && props.touched[column.index] ? 'is-invalid' : ''}`} type="text" placeholder={`Enter ${column.name}`} />,
         // Text Ends
 
         // TextArea Begins
         160: <Field
             name={column.path}
             render={({ field /* _form */ }) => (
-                <textarea name={column.index} className="form-control" rows="3" onChange={props.handleChange} value={values[column.path]}></textarea>
+                <textarea name={column.index} className="form-control" rows="3" onChange={({ ...args }) => { props.handleChange(args); }} value={values[column.path]}></textarea>
             )}
         />,
         // TextArea Ends
@@ -151,7 +151,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // Reference Ends
 
         // Script Input
-        411: <ScriptInput value={values[column.path]} columns={props.payload.columns} payload={props.payload} column={column} name={column.name} onChange={props.setFieldValue} model={values[column.index]} />,
+        411: <ScriptInput value={values[column.path]} columns={props.payload.dictionary} payload={props.payload} column={column} name={column.name} onChange={props.setFieldValue} model={values[column.index]} />,
         // Script Input Ends
 
         684: 'serialize',
@@ -190,7 +190,7 @@ const formElements = props => {
     //     console.log(image);
     // }
 
-    const column_definition = IsObjectHaveKeys(payload.formPreference) ? payload.formPreference.column_definition : [];
+    const column_definition = IsObjectHaveKeys(payload.layout) ? payload.layout.column_definition : [];
     return (
         <Form role="form" name="genericForm" >
             <div className="form-row">
@@ -200,7 +200,7 @@ const formElements = props => {
                         let elem, column;
 
                         if (typeof preference != 'string') {
-                            column = payload.columns[preference.index];
+                            column = payload.dictionary[preference.index];
 
                             elem = inputElement({ props, values, column, shouldColumnSplited, key });
 
@@ -208,10 +208,10 @@ const formElements = props => {
                             shouldColumnSplited = preference.includes('s-split-') ? true : preference.includes('e-split-') ? false : shouldColumnSplited;
                         }
 
-                        if (column) {
+                        if (column && (IsUndefined(column.visible) || column.visible)) {
                             return (
                                 <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
-                                    <label htmlFor="exampleInputEmail1">{column.display_name}</label>
+                                    <label htmlFor="exampleInputEmail1">{column.label || column.display_name}</label>
                                     {elem}
 
                                     {/* Showing Errors when there are errors */}
@@ -220,7 +220,9 @@ const formElements = props => {
                                             <small id="emailHelp" className="form-text text-danger">
                                                 {errors[column.column_name]}
                                             </small>
-                                            : null}
+                                            :
+                                            null
+                                    }
 
                                     {/* Errors Ends */}
                                 </div>
@@ -262,12 +264,12 @@ const FormContents = withFormik({
 
         let response = {}
 
-        const column_definition = IsObjectHaveKeys(payload.formPreference) ? payload.formPreference.column_definition : [];
+        const column_definition = IsObjectHaveKeys(payload.layout) ? payload.layout.column_definition : [];
 
         column_definition.forEach((preference) => {
             if (typeof preference != 'string') {
-                let column = payload.columns[preference.index];
-                response[column.name] = payload.listingRow[column.path] || '';
+                let column = payload.dictionary[preference.index];
+                response[column.name] = payload.data[column.path] || '';
             }
         });
 
@@ -283,13 +285,13 @@ const FormContents = withFormik({
 
         let da = {}
 
-        let fields = Object.keys(props.payload.columns);
+        let fields = Object.keys(props.payload.dictionary);
 
-        const { columns } = props.payload;
+        const { dictionary } = props.payload;
 
         fields.forEach((column) => {
-            if (columns[column].mandatory) {
-                da[columns[column].column_name] = Yup.string().required(columns[column].display_name + ' is required.');
+            if (dictionary[column].mandatory) {
+                da[dictionary[column].column_name] = Yup.string().required(dictionary[column].display_name + ' is required.');
             }
         });
 
@@ -342,13 +344,13 @@ const FormContents = withFormik({
         async function submitGenericForm() {
             if (payload.method == 'edit') {
                 // Shubham , Changing module ==> dataModel as module is null
-                const result = await Put({ url: payload.url + '/' + payload.listingRow[payload.starter + '.id'], body: newValues, urlPrefix: ROUTE_URL });
+                const result = await Put({ url: payload.route + '/' + payload.data[payload.starter + '.id'], body: newValues, urlPrefix: ROUTE_URL });
                 if (result.response) {
                     props.onSubmit();
                 }
 
             } else {
-                const result = await Post({ url: payload.url, body: newValues });
+                const result = await Post({ url: payload.route, body: newValues, urlPrefix: ROUTE_URL });
                 if (result.success) {
                     props.onSubmit();
                 }
@@ -390,12 +392,12 @@ export default class FormCreator extends Component {
 
     async componentDidMount() {
         const { payload = {} } = this.props;
-        const { formPreference, module } = payload;
-        // if (!formPreference && module) {
+        const { layout, module } = payload;
+        // if (!layout && module) {
         //     const res = await GetPreference(payload.modelName);
         //     console.log(res);
         //     if (res) {
-        //         payload.formPreference = res;
+        //         payload.layout = res;
         //         this.setState({ payload });
         //     }
         // }
@@ -410,15 +412,15 @@ export default class FormCreator extends Component {
      * On submit press
      */
     formSubmitted = () => {
-        if (this.props.payload.action && typeof this.props.payload.action.callback == 'function') {
-            this.props.payload.action.callback(); // callback to refresh content
+        if (typeof this.props.payload.callback == 'function') {
+            this.props.payload.callback(); // callback to refresh content
         }
         ModalManager.closeModal();
     }
 
     layoutChanged = (selectedColumns) => {
         let { payload } = this.state;
-        payload.formPreference = selectedColumns;
+        payload.layout = selectedColumns;
         this.setState({ payload });
     }
 
@@ -472,16 +474,16 @@ export default class FormCreator extends Component {
         return (
             <div className="form-creator">
                 {
-                    payload.columns ?
-                        <FormSettings source={source} modelId={modelId} onSubmit={this.layoutChanged} listName={payload.modelName} formLayout={payload.formPreference} columns={payload.columns} />
+                    payload.dictionary ?
+                        <FormSettings source={source} modelId={modelId} onSubmit={this.layoutChanged} listName={payload.modelName} formLayout={payload.layout} columns={payload.dictionary} />
                         :
                         null
                 }
                 <Card>
                     {
-                        payload.formPreference ?
+                        payload.layout ?
                             <CardBody>
-                                <FormContents fileUploads={fileUploads} removeImage={this.removeImage} onFileUpload={this.pushFiles} onFileRemove={this.removeFile} onSubmit={this.formSubmitted} payload={payload} />
+                                <FormContents fileUploads={fileUploads} removeImage={this.removeImage} onFileUpload={this.pushFiles} onFileRemove={this.removeFile} onSubmit={this.formSubmitted.bind(this)} payload={payload} />
                             </CardBody>
                             :
                             null

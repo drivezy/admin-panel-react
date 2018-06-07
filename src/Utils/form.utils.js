@@ -14,21 +14,25 @@ export default class FormUtil {
         return document.getElementById(column);
     };
 
+    static PageName(name, form) {
+        form.name = name;
+    }
     /**
      * set element to visible or invisible depending on visibility
      * @param  {string} column
      * @param  {boolean} visibility
      */
     static SetVisible(column, visibility) {
-        const formUtil = new FormUtil();
-        var element = formUtil.GetElement(column);
-        if (typeof element == "object") {
-            if (visibility) {
-                element.style.display = "block";
-            } else {
-                element.style.display = "none";
-            }
-        }
+        // const formUtil = new FormUtil();
+        // var element = formUtil.GetElement(column);
+        // if (typeof element == "object") {
+        //     if (visibility) {
+        //         element.style.display = "block";
+        //     } else {
+        //         element.style.display = "none";
+        //     }
+        // }
+        self.form.dictionary[column] = visibility;
     };
 
     /**
@@ -208,7 +212,7 @@ export default class FormUtil {
      */
     static Submit() {
         const formUtil = new FormUtil();
-        const formELement = formUtil.GetElement();
+        // const formElement = formUtil.GetElement();
         // angular.element(formELement).scope().$parent.modalObj.submitForm(false);
     };
 
@@ -216,10 +220,19 @@ export default class FormUtil {
      * every time new script is to be run, this method is invoked to update form object value
      * @param  {object} form
      */
-    static TakeFormValue(form) {
+    static SetFormValue(form) {
         self.form = form;
     };
 
+    /**
+     * Once script is executed, returns modified form obj
+     * @param  {boolean} clearFormValue
+     */
+    static GetFormValue(clearFormValue) {
+        const form = self.form;
+        self.form = {};
+        return form;
+    }
     /**
      * returns form object(all ngModel value)
      * @param  {object} data
