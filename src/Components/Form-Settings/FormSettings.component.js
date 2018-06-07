@@ -83,13 +83,27 @@ export default class FormSettings extends Component {
     }
 
     addSplit = () => {
+        const { tempSelectedColumns } = this.state;
         var ext = Math.floor(Math.random() * 1000);
-        var selectedColumns = this.state.tempSelectedColumns;
-        selectedColumns.unshift("e-split-" + ext);
+        tempSelectedColumns.unshift("e-split-" + ext);
 
-        selectedColumns.unshift("s-split-" + ext);
-        this.setState({ selectedColumns });
+        tempSelectedColumns.unshift("s-split-" + ext);
+        this.setState({ tempSelectedColumns });
     }
+
+    removeSplit = (index, item) => {
+        const { tempSelectedColumns } = this.state;
+        tempSelectedColumns.splice(index, 1);
+        var end;
+        if (item.split("-")[0] == "e") {
+            end = item.replace("e", "s");
+        } else if (item.split("-")[0] == "s") {
+            end = item.replace("s", "e");
+        }
+        var endIndex = tempSelectedColumns.indexOf(end);
+        tempSelectedColumns.splice(endIndex, 1);
+        this.setState({ tempSelectedColumns });
+    };
 
     applyChanges = async () => {
         const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
@@ -184,7 +198,7 @@ export default class FormSettings extends Component {
                         </Button>
                         <Button color="primary" size="sm" onClick={this.addSplit}>
                             Add Split
-                                </Button>
+                        </Button>
                     </div>
 
                     <div className="right">
@@ -193,11 +207,15 @@ export default class FormSettings extends Component {
                                 {activeColumn.column ? activeColumn.column.column : null}
                                 <ListGroup className="parent-group">
                                     {
+                                        tempSelectedColumns.length > 0 &&
                                         tempSelectedColumns.map((column, index) => {
                                             return ((typeof column == 'string') ?
                                                 <ListGroupItem tag="button" action key={index}>
-                                                    ---- {column} ----
-                                        </ListGroupItem>
+                                                    <span>---- {column} ----</span>
+                                                    <span className="close margin-top-4" data-dismiss="alert" aria-label="Close" onClick={() => this.removeSplit(index, column)}>
+                                                        <i className="fa fa-times"></i>
+                                                    </span>
+                                                </ListGroupItem>
                                                 :
                                                 // Component Manages column props
                                                 <FormColumnSetting removeColumn={this.removeColumn} columns={columns} activeColumn={activeColumn} selectColumn={this.selectColumn} column={column} index={index} key={index} />
