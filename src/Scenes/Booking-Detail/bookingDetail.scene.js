@@ -1,24 +1,17 @@
 import React, { Component } from 'react';
-import {
-    Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Button, ButtonToolbar, Row, Col, Progress
-} from 'reactstrap';
-import { TabContent, TabPane, Nav, NavItem, NavLink, Table } from 'reactstrap';
-import classnames from 'classnames';
-
-import GLOBAL from './../../Constants/global.constants';
-import { Get } from './../../Utils/http.utils';
-
-import UserCard from './../../Components/User-Card/userCard.component';
-import BookingFeedback from './../../Components/Booking-Feedback/bookingFeedback.component';
-
 
 import './bookingDetail.scene.css';
 
+import UserCard from './../../Components/User-Card/userCard.component';
+import BookingFeedback from './../../Components/Booking-Feedback/bookingFeedback.component';
+import TableWrapper from './../../Components/Table-Wrapper/tableWrapper.component';
+
+import { Booking, BookingPickupDate, BookingPickupTime, BookingDropDate, BookingDropTime } from './../../Utils/booking.utils';
+import { Card, CardBody, CardTitle, Button, ButtonToolbar, Row, Col, Progress, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import classnames from 'classnames';
 import moment from 'moment';
 
-import TableWrapper from './../../Components/Table-Wrapper/tableWrapper.component';
-import { isMoment } from 'moment';
+
 
 export default class BookingDetail extends Component {
 
@@ -49,8 +42,7 @@ export default class BookingDetail extends Component {
 
     getBookingDetail = async () => {
         const { bookingId } = this.props.match.params;
-        const url = 'booking/' + bookingId + '?includes=overspeeding,vehicle.car,user.licenses,status,createdUser,booking_payment.created_user,feedback.feedback_categories.category,rideReturn.pickerUser,rideReturn.handoverUser,splitPayment.user,collection.accounthead,extension.createdUser,payment.response,payment.created_user,payment.acknowledgeUser,refund.authorizer,refund.response,venuePick.city,venueDrop.city,vehicleMovement,vehicleMovement.sourceVenue,vehicleMovement.destinationVenue,vehicleMovement.mover,addon.addon,addon.chargeType,cancellation.createdUser,cancellation.type,city,comments.createdUser,comments.comment_type,source,package.package,resetInvoice.createdUser,internalBooking.driver,images.type,images.created_user,events,accident.damage_severity,vehicleChange.oldVehicle,vehicleChange.newVehicle,vehicleChange.createdUser,vehicleChange.reasonType,type,coupon.campaign,offers,vendorDriver.type,vendorDriver.vendor.vendor,trips,alerts.type,booking_summary,overspeeding,partner_collections.account_head,partner_account,pending_actions.assigned_user,pending_actions.completed_user,permits.state,application,billing_car,invoices.created_user,refund.imps_request,booking_steps.checklist_step,user'
-        const result = await Get({ url });
+        const result = await Booking(bookingId);
 
         if (result.success) {
             let bookingDetail = result.response;
@@ -64,10 +56,11 @@ export default class BookingDetail extends Component {
             let partnerAccount = result.response.partner_account;
             let collection = result.response.collection;
 
-            let bookingPickupDate = moment(bookingDetail.pickup_time).format("dddd, MMMMDo YYYY");
-            let bookingPickupTime = moment(bookingDetail.pickup_time).format("h:mm A");
-            let bookingDropDate = moment(bookingDetail.drop_time).format("dddd, MMMMDo YYYY");
-            let bookingDropTime = moment(bookingDetail.drop_time).format("h:mm A");
+
+            let bookingPickupDate = BookingPickupDate(bookingDetail.pickup_time);
+            let bookingPickupTime = BookingPickupTime(bookingDetail.pickup_time);
+            let bookingDropDate = BookingDropDate(bookingDetail.drop_time);
+            let bookingDropTime = BookingDropTime(bookingDetail.drop_time);
             this.setState({ bookingPickupDate, bookingPickupTime, bookingDropDate, bookingDropTime })
 
 
@@ -362,7 +355,6 @@ export default class BookingDetail extends Component {
 
 
         const { bookingDetail = {}, activeTab, tabContent = [], paidAmount, fairAmount, tentativeAmount, amountDue, getStartingFuelPercentage, getEndingFuelPercentage, bookingPickupTime, bookingPickupDate, bookingDropDate, bookingDropTime } = this.state;
-        console.log(this.state.totalDuration);
 
 
 
@@ -471,12 +463,17 @@ export default class BookingDetail extends Component {
                                                         <div className="no-padding margin-top-12 text-black font-12" align="right">
                                                             {bookingDropTime}
                                                         </div>
-                                                        <div className="booking-detail-drop-venue" align="right">
-                                                            {bookingDetail.venue_drop.name}
-                                                        </div>
-                                                        <div className="no-padding text-black font-12" align="right">
-                                                            {bookingDetail.venue_drop.city.name}
-                                                        </div>
+                                                        {
+                                                            bookingDetail.venue_drop &&
+                                                            [
+                                                                <div className="booking-detail-drop-venue" align="right">
+                                                                    {bookingDetail.venue_drop.name}
+                                                                </div>,
+                                                                <div className="no-padding text-black font-12" align="right">
+                                                                    {bookingDetail.venue_drop.city.name}
+                                                                </div>
+                                                            ]
+                                                        }
                                                     </div>
                                                 </Col>
                                             </Row>
@@ -692,27 +689,27 @@ export default class BookingDetail extends Component {
                                         <CardBody>
                                             <Row className="ride-return-text">
                                                 <Col sm="4">
-                                                    <p><h5>Amount Paid</h5></p>
-                                                    <p><h5>Rs. {paidAmount}</h5></p>
+                                                    <p>Amount Paid</p>
+                                                    <p>Rs. {paidAmount}</p>
                                                 </Col>
                                                 {
                                                     (bookingDetail && bookingDetail.status && (bookingDetail.status.id == 7 || bookingDetail.status.id == 8)) ?
                                                         <Col sm="4">
-                                                            <p><h5>Total Fare</h5></p>
-                                                            <p><h5>Rs. {fairAmount}</h5></p>
+                                                            <p>Total Fare</p>
+                                                            <p>Rs. {fairAmount}</p>
                                                         </Col>
                                                         :
                                                         <Col sm="4">
-                                                            <p><h5>Tentative Amount</h5></p>
-                                                            <p><h5>Rs. {tentativeAmount}</h5></p>
+                                                            <p>Tentative Amount</p>
+                                                            <p>Rs. {tentativeAmount}</p>
                                                         </Col>
                                                 }
                                                 <Col sm="4">
                                                     {
                                                         (bookingDetail && amountDue > 0) ?
                                                             <div>
-                                                                <p><h5>Refund</h5></p>
-                                                                <p><h5>Rs. {amountDue}</h5></p>
+                                                                <p>Refund</p>
+                                                                <p>Rs. {amountDue}</p>
                                                             </div>
                                                             :
                                                             null

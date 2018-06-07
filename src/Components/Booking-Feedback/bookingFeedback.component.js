@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    Card, CardImg, Row, Col
+    Card, Row, Col
 } from 'reactstrap';
 
 import './bookingFeedback.component.css';
@@ -25,13 +25,13 @@ export default class BookingFeedbackCard extends Component {
         bookingFeedback.feedback.forEach(function (getUserFeedback, index) {
             if ((getUserFeedback.user_id == getUserFeedback.updated_by) && (getUserFeedback.customer_happy == null)) {
                 userFeedback.push(Object.assign(getUserFeedback, { userRatingStars: [] }));
-                for (var i = 0; i < parseInt(getUserFeedback.rating); i++) {
-                    userFeedback[userFeedback.length - 1].userRatingStars.push(<i class="fa fa-star" aria-hidden="true"></i>)
+                for (let i = 0; i < getUserFeedback.rating; i++) {
+                    userFeedback[userFeedback.length - 1].userRatingStars.push(<i key={i} className="fa fa-star" aria-hidden="true"></i>)
                 }
             } else {
                 fleetFeedback.push(Object.assign(getUserFeedback, { fleetRatingStars: [] }));
-                for (var i = 0; i < parseInt(getUserFeedback.rating); i++) {
-                    fleetFeedback[fleetFeedback.length - 1].fleetRatingStars.push(<i class="fa fa-star" aria-hidden="true"></i>)
+                for (let i = 0; i < getUserFeedback.rating; i++) {
+                    fleetFeedback[fleetFeedback.length - 1].fleetRatingStars.push(<i key={i} className="fa fa-star" aria-hidden="true"></i>)
                 }
             }
         });
@@ -47,7 +47,7 @@ export default class BookingFeedbackCard extends Component {
                                 {
                                     userFeedback.length > 0 ?
                                         userFeedback.map((feedback) =>
-                                            <div className="user-feedback">
+                                            <div key={1} className="user-feedback">
                                                 <div className="user-stars">
                                                     <h6>{feedback.userRatingStars}</h6>
                                                 </div>
