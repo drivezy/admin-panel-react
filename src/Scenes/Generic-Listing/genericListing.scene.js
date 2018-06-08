@@ -40,6 +40,7 @@ export default class GenericListing extends Component {
         this.state = {
             ...GetUrlParams(this.props), // params, queryString
             menuDetail: {},
+            localSearch: {},
             genericData: {},
             filterContent: null,
             isCollapsed: true
@@ -47,7 +48,7 @@ export default class GenericListing extends Component {
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         const newProps = GetUrlParams(nextProps);
         this.state.params = newProps.params;
         this.state.queryString = newProps.queryString;
@@ -56,13 +57,19 @@ export default class GenericListing extends Component {
         }
     }
 
+    // componentDidUpdate(prevState, nextState) { 
+    //     console.log('i am updated');
+    //     console.log(prevState, nex)
+    // }
+
     componentDidMount() {
         // this.getMenuData();
         // ModalManager.showModal({ onClose: this.closeModal, headerText: '1st using method', modalBody: () => (<h1> hi</h1>) });
     }
 
     componentWillUnmount() {
-        // UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
+        this.state.isCollapsed = false;
+        UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
 
 
@@ -342,21 +349,38 @@ export default class GenericListing extends Component {
         this.getListingData();
     }
 
+    filterLocally = (column, value) => {
+        this.setState({ localSearch: { field: column.column_name, value: value } });
+        // let { genericData } = this.state;
+        // let { listing = [] } = genericData;
+        // listing = listing.filter((rowData) => {
+        //     return rowData[column.column_name].toLowerCase().indexOf(value) != -1;
+        // });
+        // genericData.listing = listing;
+        // this.setState({ genericData });
+    }
+
     render() {
-        const { genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent, currentUser } = this.state;
+        const { localSearch, genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent, currentUser } = this.state;
         const { listing = [], finalColumns = [] } = genericData;
+
+        let filteredResults = [];
+
+        if (localSearch.value) {
+            filteredResults = listing.filter(entry => entry[localSearch.field] && (entry[localSearch.field].toString().toLowerCase().indexOf(localSearch.value) != -1));
+        }
+
+        // const listingData = 
         const { history, match } = this.props;
         return (
-
             <HotKeys keyMap={this.keyMap} handlers={this.handlers}>
                 <div className="generic-listing-container">
                     <div className="page-bar">
                         <div className="search-bar">
-
                             <div className="generic-listing-search">
                                 {
                                     filterContent && filterContent.dictionary &&
-                                    <ListingSearch searchQuery={this.urlParams.search} dictionary={filterContent.dictionary} />
+                                    <ListingSearch onEdit={this.filterLocally} searchDetail={menuDetail.search} searchQuery={this.urlParams.search} dictionary={filterContent.dictionary} />
                                 }
                             </div>
 
@@ -371,11 +395,8 @@ export default class GenericListing extends Component {
                         <div className="header-actions">
 
 
-                            <Button color="primary" size="sm" onClick={() => { this.refreshPage() }}>
-                                <i className="fa fa-refresh"></i>
-                            </Button>
 
-                            <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
+                            <CustomAction position="header" history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
 
                             {
                                 genericData.columns ?
@@ -388,6 +409,11 @@ export default class GenericListing extends Component {
                                     :
                                     null
                             }
+
+
+                            <Button color="primary" size="sm" onClick={() => { this.refreshPage() }}>
+                                <i className="fa fa-refresh"></i>
+                            </Button>
 
                             {
                                 menuDetail && menuDetail.userFilter && menuDetail.userFilter.length > 0 ?
@@ -411,31 +437,29 @@ export default class GenericListing extends Component {
                     </div>
 
                     {
-                        (finalColumns && finalColumns.length)
+                        (finalColumns && finalColumns.length) ?
 
-                        &&
-                        <Card>
-                            <CardBody className="table-wrapper">
 
-                                {/* Portlet Table */}
-                                <PortletTable rowTemplate={this.rowTemplate} tableType="listing" rowOptions={this.rowOptions}
-                                    toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={listing} callback={this.getListingData} menuDetail={menuDetail} />
-                                {/* Portlet Table Ends */}
+                            <Card>
+                                <CardBody className="table-wrapper">
 
-                            </CardBody>
-                        </Card>
+                                    {/* Portlet Table */}
+                                    <PortletTable rowTemplate={this.rowTemplate} tableType="listing" rowOptions={this.rowOptions}
+                                        toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={localSearch.value ? filteredResults : listing} callback={this.getListingData} menuDetail={menuDetail} />
+                                    {/* Portlet Table Ends */}
+
+                                </CardBody>
+                            </Card> : null
                     }
 
                     {
-                        (finalColumns && finalColumns.length)
-
-                        &&
-                        <ListingPagination history={history} match={match} currentPage={genericData.currentPage} limit={genericData.limit} statsData={genericData.stats} />
+                        (listing && listing.length) ?
+                            <ListingPagination history={history} match={match} currentPage={genericData.currentPage} limit={genericData.limit} statsData={genericData.stats} /> : null
                     }
                     {/* Listing Pagination Ends */}
 
                 </div>
-            </HotKeys >
+            </HotKeys>
         );
     }
 }

@@ -5,7 +5,9 @@ import {
     Card, CardImg, CardText, CardBody,
     CardTitle, CardSubtitle, Button,
     Container,
-    Row, Col
+    Row, Col,
+    ModalBody,
+    ModalFooter
 } from 'reactstrap';
 
 import { withFormik, Field, Form } from 'formik';
@@ -181,64 +183,74 @@ const formElements = props => {
     // }
 
     return (
-        <Form>
-            <div className="form-row">
-                {
-                    payload.formPreference.map((preference, key) => {
 
-                        let elem, column;
+        <div>
+            <Form>
+                <ModalBody>
+                    <Card>
+                        <CardBody>
+                            <div className="form-row">
+                                {
+                                    payload.formPreference.map((preference, key) => {
 
-                        if (typeof preference != 'string') {
-                            column = payload.columns[preference.column];
+                                        let elem, column;
 
-                            elem = inputElement({ props, values, column, shouldColumnSplited, key });
+                                        if (typeof preference != 'string') {
+                                            column = payload.columns[preference.column];
 
-                        } else if (typeof preference == 'string') {
-                            shouldColumnSplited = preference.includes('s-split-') ? true : preference.includes('e-split-') ? false : shouldColumnSplited;
-                        }
+                                            elem = inputElement({ props, values, column, shouldColumnSplited, key });
 
-                        if (column) {
-                            return (
-                                <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
-                                    <label htmlFor="exampleInputEmail1">{column.display_name}</label>
-                                    {elem}
+                                        } else if (typeof preference == 'string') {
+                                            shouldColumnSplited = preference.includes('s-split-') ? true : preference.includes('e-split-') ? false : shouldColumnSplited;
+                                        }
 
-                                    {/* Showing Errors when there are errors */}
-                                    {
-                                        errors[column.column_name] && touched[column.column_name] ?
-                                            <small id="emailHelp" className="form-text text-danger">
-                                                {errors[column.column_name]}
-                                            </small>
-                                            : null}
+                                        if (column) {
+                                            return (
+                                                <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
+                                                    <label htmlFor="exampleInputEmail1">{column.display_name}</label>
+                                                    {elem}
 
-                                    {/* Errors Ends */}
-                                </div>
-                            )
-                        }
-                    })
-                }
-            </div>
+                                                    {/* Showing Errors when there are errors */}
+                                                    {
+                                                        errors[column.column_name] && touched[column.column_name] ?
+                                                            <small id="emailHelp" className="form-text text-danger">
+                                                                {errors[column.column_name]}
+                                                            </small>
+                                                            : null}
 
-            {/* Uploaded file thumbnails */}
-            {/* <div className="file-uploads">
+                                                    {/* Errors Ends */}
+                                                </div>
+                                            )
+                                        }
+                                    })
+                                }
+                            </div>
+                        </CardBody>
+                    </Card>
+
+                    {/* Uploaded file thumbnails */}
+                    {/* <div className="file-uploads">
                 {
                     props.fileUploads.map((file, index) => (
                         <ImageThumbnail file={file} key={index} index={index} removeImage={props.removeImage} />
                     ))
                 }
             </div> */}
-            {/* Uploaded file thumbnails Ends*/}
+                    {/* Uploaded file thumbnails Ends*/}
+                </ModalBody>
 
-            <div className="modal-actions row justify-content-end">
-                <Button color="secondary" onClick={handleReset}>
-                    Clear
-                </Button>
-
-                <button className="btn btn-primary" type="submit">
-                    Submit
-                </button>
-            </div>
-        </Form>
+                <ModalFooter>
+                    <div className="modal-actions row justify-content-end">
+                        <Button color="secondary" onClick={props.onClose}>
+                            Cancel
+                        </Button>
+                        <button className="btn btn-primary" type="submit">
+                            Submit
+                        </button>
+                    </div>
+                </ModalFooter>
+            </Form>
+        </div>
     );
 }
 
@@ -444,23 +456,20 @@ export default class FormCreator extends Component {
         const { payload, fileUploads } = this.state;
         return (
             <div className="form-creator">
+
                 {
                     payload.columns ?
-                        <FormSettings onSubmit={this.layoutChanged} listName={payload.modelName} selectedColumns={payload.formPreference} columns={payload.columns} />
+                        <FormSettings onSubmit={this.layoutChanged} module={payload.module} listName={payload.modelName} selectedColumns={payload.formPreference} columns={payload.columns} />
                         :
                         null
                 }
-                <Card>
-                    {
-                        payload.formPreference ?
-                            <CardBody>
-                                <FormContents fileUploads={fileUploads} removeImage={this.removeImage} onFileUpload={this.pushFiles} onFileRemove={this.removeFile} onSubmit={this.formSubmitted} payload={payload} />
-                            </CardBody>
-                            :
-                            null
-                    }
-                </Card>
-            </div>
+
+                {
+                    payload.formPreference ?
+                        <FormContents onClose={this.closeModal} fileUploads={fileUploads} removeImage={this.removeImage} onFileUpload={this.pushFiles} onFileRemove={this.removeFile} onSubmit={this.formSubmitted} payload={payload} />
+                        : null
+                }
+            </div >
         )
     }
 }

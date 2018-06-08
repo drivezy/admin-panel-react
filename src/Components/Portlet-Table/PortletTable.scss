@@ -1,13 +1,13 @@
+@import 'Assets/Global-Shared/theme.scss';
 .table-container {
     .table-body {
         display: flex;
         .table-content {
+            // transition: all 1s ease-in;
             overflow-x: scroll;
             .table {
                 thead {
                     border-top: none;
-                    border-bottom: 1px solid #2c3e55 !important;
-                    background-color: #f8f9fa !important;
                     @supports (-webkit-appearance: none) {
                         tr {
                             position: relative;
@@ -17,12 +17,15 @@
                         // position: relative;
                         /** Style for Column Header **/
                         th {
-                            border-bottom: 1px solid #ebeef0; // border-bottom: 1px solid #ddd;
-                            color: #6f7c87;
+                            // color: #6f7c87;
                             display: table-cell;
                             padding: 12px;
-                            border: 1px solid #ececec;
+                            border: 1px solid;
                             border-left: none;
+                            @include themify($themes) {
+                                border-color: themed('tableHeaderBorder');
+                                background: themed('tableHeader');
+                            }
                             &.header-index {
                                 .select-box {
                                     display: none;
@@ -46,12 +49,15 @@
                                     align-items: center;
                                     display: flex;
                                     .column-title {
-                                        color: #6f7c87;
+                                        // color: #6f7c87;
                                         margin-right: 10px;
                                         -ms-flex-preferred-size: 80%;
                                         flex-grow: 1;
                                         font-weight: 100;
                                         font-size: 13px;
+                                        @include themify($themes) {
+                                            color: themed('columnTitle');
+                                        }
                                     }
                                     .db-level-sort {
                                         cursor: pointer;
@@ -59,8 +65,10 @@
                                         .dropdown {}
                                         a.dropdown-link {
                                             text-decoration: none;
-                                            color: #b1493ce8;
                                             opacity: 0.8;
+                                            @include themify($themes) {
+                                                color: themed('dropdownLink');
+                                            }
                                         }
                                     }
                                     .filter-column {
@@ -73,12 +81,12 @@
                                     }
                                 }
                                 &:hover {
-                                    .column-title {
-                                        color: #66a5cc;
-                                    }
+                                    // .column-title {
+                                    //     color: #66a5cc;
+                                    // }
                                     .filter-column {
                                         a {
-                                            color: #66a5cc;
+                                            // color: #66a5cc;
                                             opacity: 1;
                                         }
                                     }
@@ -121,20 +129,18 @@
                             border-bottom: 1px solid #ebeef0;
                             border: 1px solid #ececec;
                             border-left: none;
-                            color: #183247;
-                            padding: 15px 20px;
+                            color: #183247; // padding: 15px 20px;
                             white-space: nowrap;
                             &.row-key {
-                                padding: 15px 10px;
+                                // padding: 15px 10px;
                             }
                             a {
-                                color: #1e739e;
+                                // color: #1e739e;
                                 font-size: 13px;
                                 text-decoration: none;
-                                transition: all 200ms linear;
-                                &:hover {
-                                    color: #2ea3de;
-                                }
+                                transition: all 200ms linear; // &:hover {
+                                //     color: #2ea3de;
+                                // }
                             }
                             &.table-index {
                                 padding-left: 12px;
@@ -162,13 +168,12 @@
                                     visibility: visible;
                                 }
                             }
-                        }
-                        &:nth-child(even) {
-                            background: #f1f1f16b;
-                        }
-                        &:hover {
-                            background-color: #f3f5f7;
-                        }
+                        } // &:nth-child(even) {
+                        //     background: #f1f1f16b;
+                        // }
+                        // &:hover {
+                        //     background-color: #f3f5f7;
+                        // }
                     }
                 }
             }
@@ -183,7 +188,6 @@
                             &.action-header {
                                 background: white;
                                 text-align: right;
-                                background: white;
                                 border-left: 1px solid #ebeef0;
                                 color: #35485a;
                             }
@@ -196,16 +200,120 @@
                     border-top: 1px solid #ebeef073;
                     border-left: 1px solid #ebeef0;
                     background: white; // right: 0px;
-                    padding: 14px;
+                    // padding: 14px;
+                    padding: 15px 20px;
                     border-bottom: 1px solid #ececec;
                     i.fa {
-                        margin: 0px 4px;
-                        font-size: 20px;
-                        cursor: pointer;
-                        color: #4f6273;
+                        margin: 0px 4px; // font-size: 20px;
+                        cursor: pointer; // color: #4f6273;
                     }
                 }
             }
         }
     } // Table Ends
+}
+
+.compact {
+    .table-container {
+        .table-content {
+            .table {
+                thead {
+                    tr {
+                        th {
+                            padding: 6px 10px;
+                        }
+                    }
+                }
+                tr.table-row {
+                    td {
+                        padding: 6px 10px;
+                    }
+                }
+            }
+        }
+        .table-actions {
+            thead {
+                tr {
+                    th.action-header {
+                        padding: 6px 10px;
+                    }
+                }
+            }
+            tr.table-row {
+                td.action-column {
+                    padding: 6px 10px;
+                }
+            }
+        }
+    }
+}
+
+.medium {
+    .table-container {
+        .table-content {
+            .table {
+                thead {
+                    tr {
+                        th {
+                            padding: 8px;
+                        }
+                    }
+                }
+                tr.table-row {
+                    td {
+                        padding: 10px 8px;
+                    }
+                }
+            }
+        }
+        .table-actions {
+            thead {
+                tr {
+                    th.action-header {
+                        padding: 8px;
+                    }
+                }
+            }
+            tr.table-row {
+                td.action-column {
+                    padding: 10px 8px;
+                }
+            }
+        }
+    }
+}
+
+.large {
+    .table-container {
+        .table-content {
+            .table {
+                thead {
+                    tr {
+                        th {
+                            padding: 12px;
+                        }
+                    }
+                }
+                tr.table-row {
+                    td {
+                        padding: 15px 20px;
+                    }
+                }
+            }
+        }
+        .table-actions {
+            thead {
+                tr {
+                    th.action-header {
+                        padding: 12px;
+                    }
+                }
+            }
+            tr.table-row {
+                td.action-column {
+                    padding: 15px 20px;
+                }
+            }
+        }
+    }
 }

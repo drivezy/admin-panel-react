@@ -1,18 +1,25 @@
+@import 'Assets/Global-Shared/theme.scss';
 .sidebar-wrapper {
     height: 100%;
     width: 50px;
     position: fixed;
     z-index: 1;
     top: 0;
-    left: 0;
-    background: #35485a;
+    left: 0; // background: #35485a;
     overflow-x: hidden;
     transition: 0.1s;
     display: flex;
     flex-direction: column;
+    border-right: 1px solid;
+    @include themify($themes) {
+        background: themed('sideBackground');
+        border-color: themed('sidebarBorder');
+    }
     &.collapsed {
+        width: 40px;
         .sidebar-menus {
             .menus {
+                margin-top: 8px;
                 padding: 0px;
                 .menu-item {
                     .menu-label {
@@ -22,13 +29,20 @@
             }
         }
     }
+    &.expanded {
+        width: 180px;
+    }
     .sidebar-logo {
         .logo-image {
-            background: #303e4c;
             height: 45px;
             display: flex;
             overflow: hidden;
             justify-content: space-between;
+            border-bottom: 1px solid;
+            @include themify($themes) {
+                background: themed('logoBackground');
+                border-color: themed('logoBackground');
+            }
             span.logo-container {
                 padding: 5px 20px;
                 cursor: pointer;
@@ -40,15 +54,9 @@
             span.toggle-icon {
                 cursor: pointer;
                 padding: 2px;
-                &:hover {
-                    i.fa {
-                        color: green;
-                    }
-                }
                 i.fa {
                     font-size: 16px;
-                    padding: 10px;
-                    color: #5c7084;
+                    padding: 10px; // color: #5c7084;
                 }
             }
         }
@@ -58,20 +66,22 @@
         display: flex;
         flex-direction: column;
         .menus {
-            background: #35485b;
+            // background: #35485b;
             padding: 8px 10px;
             .menu-item {
                 .menu-label {
                     display: flex;
                     padding: 8px 10px;
                     -webkit-font-smoothing: antialiased;
-                    transition: all 50ms linear;
-                    color: #A4B2B8;
+                    transition: all 50ms linear; // color: #A4B2B8;
                     cursor: pointer;
                     flex-grow: 1;
                     font-size: 14px;
                     height: 40px;
                     border-radius: 2px;
+                    @include themify($themes) {
+                        color: themed('menuIcon');
+                    }
                     .menu-icon {
                         width: 30px;
                         display: inline-block;
@@ -85,7 +95,10 @@
                         display: inline-block;
                     }
                     &:hover {
-                        background: #2c3e4e;
+                        @include themify($themes) {
+                            background: themed('menuHover');
+                            color: themed('menuIconHover');
+                        }
                     }
                 }
             }
@@ -108,7 +121,7 @@
 }
 
 .sidenav a:hover {
-    color: #f1f1f1;
+    color: red !important; // color: #f1f1f1;
 }
 
 .menu-name {
@@ -172,3 +185,4 @@
 #main {
     transition: margin-left .1s; // padding: 16px;
 }
+

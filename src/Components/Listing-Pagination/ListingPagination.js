@@ -12,22 +12,24 @@ export default class ListingPagination extends Component {
 
         this.state = {
             currentPage: props.currentPage ? props.currentPage : 1,
-            step: 5,
-            statsData: props.statsData ? props.statsData : {}
+            showPages: 5,
+            statsData: props.statsData ? props.statsData : {},
+            limit: props.limit || 20
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.setState({
             currentPage: nextProps.currentPage ? nextProps.currentPage : 1,
             statsData: nextProps.statsData ? nextProps.statsData : {}
         })
     }
 
-    redirectToPage = (pageNumber, limit = 20) => {
+    redirectToPage = (pageNumber = this.state.currentPage, limit = 20) => {
 
-        let temPageNumber = pageNumber
-        let tempUrl = `${`?limit=${pageNumber}&page=${this.state.currentPage}`}`;
+        let temPageNumber = pageNumber;
+        let tempUrl = `${`?limit=${limit}&page=${pageNumber}`}`;
+        // let tempUrl = `${`?limit=${limit}&page=${this.state.currentPage}`}`;
         if (this.state.currentPage === '...') {
             temPageNumber = this.state.currentPage - this.state.showPages
             if (temPageNumber < 1) {
@@ -39,71 +41,74 @@ export default class ListingPagination extends Component {
             temPageNumber = parseInt(this.state.currentPage) + this.state.showPages
             tempUrl = `${`?limit=${pageNumber}&page=${temPageNumber}`}`;
         }
-        this.setState({ currentPage: temPageNumber })
+        this.setState({ currentPage: temPageNumber, limit })
         const { history, match } = this.props;
         history.push(tempUrl);
     }
 
-    createPaginationNumber = (currentPage, step) => {
+    // startPage --> current page
+    // totalPages -- pages which you want to show current is 5
+    createPaginationNumber = (startPage, totalPages) => {
 
         const { statsData } = this.state
-        var number_of_pages = Math.ceil(statsData.records / statsData.count);
+        var number_of_pages = Math.round(statsData.records / statsData.count);
 
         const pages = [];
 
-        currentPage = parseInt(currentPage);
-
-        if (number_of_pages <= step) {
+        if (number_of_pages <= totalPages) {
             for (let i = 1; i <= number_of_pages; i++) {
                 pages.push({ page: i });
             }
             return pages;
         }
 
-        for (let i = 1; i <= number_of_pages; i++) {
-            if (i == 1) {
-                pages.push({ page: 1 })
-                if (currentPage >= 3) {
-                    pages.push({ page: '...' })
-                }
-            }
+        startPage = parseInt(startPage);
 
-            let startIndex = currentPage;
-            let endIndex = currentPage + step
-
-            if (endIndex > number_of_pages && i > 2) {
-                startIndex = startIndex - step;
-                endIndex = number_of_pages
-            }
-
-            if (i >= startIndex && i <= endIndex && i < number_of_pages && i != 1) {
-                pages.push({ page: i })
-            }
-
-            if (i == number_of_pages) {
-                if (endIndex < number_of_pages) {
-                    pages.push({ page: '....' })
-                }
-
-                pages.push({ page: i })
+        if (startPage >= 2) {
+            pages.push({ page: 1 });
+            if (startPage > 2) {
+                pages.push({ page: '...' })
             }
         }
 
+        let endPage = startPage + totalPages;
+
+        if (endPage <= number_of_pages) {
+            for (let i = startPage; i < endPage; i++) {
+                pages.push({ page: i });
+            }
+            if (endPage < number_of_pages) {
+                pages.push({ page: '....' })
+            }
+        } else {
+            let startIndex = startPage - totalPages;
+            let endIndex = endPage - totalPages;
+            if (startIndex <= 0) {
+                startIndex = 1;
+                endIndex = number_of_pages - 1;
+            }
+            for (let i = startIndex; i <= endIndex; i++) {
+                pages.push({ page: i });
+            }
+        }
+        if (startPage != number_of_pages) {
+            pages.push({ page: number_of_pages })
+        }
         return pages;
     }
 
 
     render() {
-        const { currentPage, step, statsData } = this.state
+        const { currentPage, showPages, statsData } = this.state
         let previousPage;
         let nextPage;
         let pages = [];
         const getTotalPages = [20, 40, 75, 100];
-
+        const { limit } = this.state;
 
         if (statsData && statsData.records) {
             var number_of_pages = Math.round(statsData.records / statsData.count);
-            pages = this.createPaginationNumber(currentPage, step);
+            pages = this.createPaginationNumber(currentPage, showPages);
         }
 
         if (currentPage) {
@@ -136,8 +141,8 @@ export default class ListingPagination extends Component {
 
                     <div className="page-redirect-number">
                         <SelectBox
-                            value={getTotalPages[0]}
-                            onChange={(data) => { this.redirectToPage(data) }}
+                            value={limit}
+                            onChange={(data) => { this.redirectToPage(undefined, data) }}
                             options={getTotalPages}
                         />
                     </div>

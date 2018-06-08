@@ -1,0 +1,42 @@
+.spotlight-search-modal {
+    margin-top: 15%;
+    .modal-content {
+        background: transparent;
+        .modal-body {
+            border-radius: 4px;
+            padding: 0px;
+            padding-top: 0px !important;
+            background: transparent;
+            .input-group {
+                height: 50px;
+                .input-group-prepend {
+                    .input-group-text {
+                        border: none;
+                        background: white;
+                    }
+                }
+                input.form-control {
+                    border: none;
+                    border-left: none;
+                }
+            }
+        }
+        .card {
+            margin-top: 4px;
+            .list-group {
+                .list-group-item {
+                    cursor: pointer;
+                    &:hover {
+                        background: whitesmoke;
+                    }
+                    &:focus {
+                        background: whitesmoke;
+                    }
+                    &.hovered {
+                        background: whitesmoke;
+                    }
+                }
+            }
+        }
+    }
+}

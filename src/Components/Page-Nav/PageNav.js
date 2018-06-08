@@ -1,31 +1,40 @@
 import React, { Component } from 'react';
 import './PageNav.css';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Redirect } from 'react-router-dom';
 
 import GLOBAL from './../../Constants/global.constants';
 
 import { SubscribeToEvent } from './../../Utils/stateManager.utils';
-
 import { Get } from './../../Utils/http.utils';
+import { SetItem, GetItem } from './../../Utils/localStorage.utils';
+// /import { SpotlightUtil } from './../Spotlight-Search/spotlightSearch.component';
+import SettingsUtil from './../../Utils/settings.utils';
+import ThemeUtil from './../../Utils/theme.utils';
 
-import {
-    Redirect
-} from 'react-router-dom';
+import CustomTooltip from '../Custom-Tooltip/customTooltip.component';
+
 
 export default class PageNav extends Component {
-
     constructor(props) {
         super(props);
 
         this.toggle = this.toggle.bind(this);
         this.state = {
             dropdownOpen: false,
-            currentUser: {}
+            currentUser: {},
+            selectedTheme: undefined
         };
     }
 
+    themes = ThemeUtil.getThemes();
+
     componentDidMount() {
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
+        const theme = ThemeUtil.getCurrentTheme();
+        const spacing = ThemeUtil.getCurrentSpacing();
+        this.changeSpacing(spacing);
+        this.changeTheme(theme);
     }
 
     userDataFetched = (data) => {
@@ -36,6 +45,10 @@ export default class PageNav extends Component {
         this.setState({
             dropdownOpen: !this.state.dropdownOpen
         });
+    }
+
+    configureSettings = () => {
+        SettingsUtil.configureModal();
     }
 
     logout = async () => {
@@ -54,10 +67,18 @@ export default class PageNav extends Component {
     }
 
 
+    changeSpacing = (spacing) => {
+        ThemeUtil.setSpacing(spacing);
+    }
+
+    changeTheme = (theme) => {
+        ThemeUtil.setTheme(theme);
+        this.setState({ selectedTheme: theme });
+    }
+
 
     render() {
-
-        const { currentUser } = this.state;
+        const { currentUser, selectedTheme = {} } = this.state;
         const { from } = (this.props.location ? this.props.location.state : null) || { from: { pathname: '/login' } };
         const { redirectToReferrer } = this.state
         // this.props.setCurrentRoute(from)
@@ -67,15 +88,13 @@ export default class PageNav extends Component {
                 <Redirect to={from} />
             )
         }
-        // const from = { pathname: '/' };
-        // // this.logout();
-        // return (
-        //     <Redirect to={from} />
-        // )
+
         return (
-            <div className="page-nav">
+            <div className="page-nav flex">
+
+
                 <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-                    <DropdownToggle>
+                    <DropdownToggle color="primary">
 
                         <div className="user-profile">
                             <div className="profile-image">
@@ -101,12 +120,13 @@ export default class PageNav extends Component {
                         <DropdownItem>Clear Storage</DropdownItem>
                         <DropdownItem>Set Homepage</DropdownItem>
                         <DropdownItem>Change Password</DropdownItem>
-                        <DropdownItem>Configure Search</DropdownItem>
+                        <DropdownItem onClick={this.configureSettings}>Settings</DropdownItem>
                         <DropdownItem>Impersonate User</DropdownItem>
                         <DropdownItem onClick={(event) => { event.preventDefault(); this.logout() }}>Sign Out</DropdownItem>
                     </DropdownMenu>
 
                 </ButtonDropdown>
+
             </div>
         );
     }

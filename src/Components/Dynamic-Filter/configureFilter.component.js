@@ -7,6 +7,7 @@ import { RawStringQueryToObject, RemoveLastWord } from './../../Utils/dynamicFil
 import { Get } from './../../Utils/http.utils';
 import { GetTime, TimeOperation } from './../../Utils/time.utils';
 
+import Typeahead from './../Forms/Components/Typeahead/typeahead.component';
 import SelectBox from './../Forms/Components/Select-Box/selectBox';
 import DatePicker from './../Forms/Components/Date-Picker/datePicker';
 
@@ -105,7 +106,6 @@ export default class ConfigureDynamicFilter extends Component {
         // If the dynamic filter is only for the column the select field should be preselected
         const { filterArr } = this.state;
         const { content } = this.props;
-        console.log(single);
         if (single) {
             let arrayIndex;
             if (IsUndefinedOrNull(filterArr[filterArr.length - 1][0].html)) {
@@ -260,6 +260,13 @@ export default class ConfigureDynamicFilter extends Component {
         // });
     }
 
+    radios = [
+        { label: 'Justify (default)' },
+        'Align left',
+        { label: 'Align right' },
+    ];
+
+
     /**
      * Invoked when Filter is selected
      * @param  {string} filter
@@ -292,7 +299,18 @@ export default class ConfigureDynamicFilter extends Component {
             //     break;
 
             case 107: case 108: // column type string
-                filterArr[parentIndex][childIndex].html = () => <input type='text' className='form-control' onChange={(data) => this.convertToInputField({ data: data.target.value, parentIndex, childIndex })} value={child.inputField} placeholder='Input Value' />;
+                const setStateMethod = (data) => this.convertToInputField({ data, parentIndex, childIndex });
+                filterArr[parentIndex][childIndex].html = () =>
+                    <Typeahead
+                        options={child.selectField}
+                        onType={setStateMethod}
+                        onChange={setStateMethod}
+                        value={child.inputField}
+                        field={'display_name'}
+                        placeholder='Input Value'
+                    />;
+
+                // filterArr[parentIndex][childIndex].html = () => <input type='text' className='form-control' onChange={(data) => this.convertToInputField({ data: data.target.value, parentIndex, childIndex })} value={child.inputField} placeholder='Input Value' />;
                 break;
 
             case 109: // if a date picker is required
@@ -418,7 +436,6 @@ export default class ConfigureDynamicFilter extends Component {
      * @param  {} queryField
      */
     getInputRecord = async ({ input: val, parentIndex, childIndex, queryField: queryFieldName } = {}) => {
-        console.log(val);
         if (val) {
             const { filterArr } = this.state;
             const displayName = filterArr[parentIndex][childIndex].column.referenced_model.display_column;
@@ -857,7 +874,7 @@ export default class ConfigureDynamicFilter extends Component {
                                     onChange={(data) => {
                                         this.setState({ sort: data });
                                     }}
-                                    value={sort} options={this.sorts} placeholder='Sort' 
+                                    value={sort} options={this.sorts} placeholder='Sort'
                                 />
                             </div>
                             <div className="col-sm-3 col-xs-3 border-select-filter margin-top-8" ng-if="configureFilter.scopeGroup.length">

@@ -78,6 +78,12 @@ export default class LoginScene extends Component {
             <div className="login-form">
                 <Card>
                     <CardBody>
+                        <div className="Logo">
+                            <img src={GLOBAL.ORGANIZATION.logo} />
+                        </div>
+                        <div className="Name">
+                            <p className="text-center">{GLOBAL.ORGANIZATION.name} Dashboard</p>
+                        </div>
                         <Form>
                             <FormGroup>
                                 <Label>Email</Label>
@@ -88,11 +94,20 @@ export default class LoginScene extends Component {
                                 <input autoComplete="off" onChange={(e) => this.setState({ password: e.target.value })} className="form-control" type={this.state.showPassword ? 'text' : 'password'} id="exampleInputPassword1" placeholder="Password" />
                             </FormGroup>
                             <FormGroup className="button">
-                                <Button onClick={(event) => { event.preventDefault(); this.validateCredentials({ username: this.state.username, password: this.state.password }) }} className="btn btn-default">Login</Button>
+                                <Button onClick={(event) => { event.preventDefault(); this.validateCredentials({ username: this.state.username, password: this.state.password }) }} className="btn btn-success btn-block">Login</Button>
                             </FormGroup>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    {/* <a href="#" >Forget Password?</a> */}
+                                </div>
+                                <div className="col-sm-6  text-right">
+                                    {/* <a href="" >Create an account</a> */}
+                                </div>
+                            </div>
                         </Form>
+                        <div className="copyright"> Panel 2017-18 © Powered by Drivezy </div>
                     </CardBody>
-                    <div className="copyright"> Panel 2017-18 © Powered by Drivezy </div>
+                    
                 </Card>
             </div>
         )
