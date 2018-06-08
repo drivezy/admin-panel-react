@@ -6,7 +6,7 @@ export function Booking(bookingId) {
 }
 
 export function BookingPickupDate(pickupTime) {
-    return moment(pickupTime).format("dddd, MMMMDo YYYY");
+    return moment(pickupTime).format("dddd, MMMM Do YYYY");
 }
 
 export function BookingPickupTime(pickupTime) {
@@ -14,7 +14,7 @@ export function BookingPickupTime(pickupTime) {
 }
 
 export function BookingDropDate(dropTime) {
-    return moment(dropTime).format("dddd, MMMMDo YYYY");
+    return moment(dropTime).format("dddd, MMMM Do YYYY");
 }
 
 export function BookingDropTime(dropTime) {

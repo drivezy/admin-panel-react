@@ -3,7 +3,7 @@ import {
     Card, CardTitle, CardBody, Row, Col, ButtonToolbar, Button, Progress
 } from 'reactstrap';
 
-import { TotalDuration } from './../../../../Utils/booking.utils';
+import { BookingPickupDate, BookingPickupTime, BookingDropDate, BookingDropTime, TotalDuration } from './../../../../Utils/booking.utils';
 
 import './bookingRideReturn.css';
 
@@ -21,6 +21,11 @@ export default class BookingRideReturn extends Component {
         let totalDuration;
         let totalOdo;
         let kmDifference;
+
+        let bookingStartDate = BookingPickupDate(bookingRideReturnData.actual_start_time);
+        let bookingStartTime = BookingPickupTime(bookingRideReturnData.actual_start_time);
+        let bookingEndDate = BookingDropDate(bookingRideReturnData.actual_end_time);
+        let bookingEndTime = BookingDropTime(bookingRideReturnData.actual_end_time);
 
         let paidAmount = 0;
         bookingRideReturnData.payment.forEach(function (data) {
@@ -98,8 +103,8 @@ export default class BookingRideReturn extends Component {
                                 (bookingRideReturnData && bookingRideReturnData.ride_return) ?
                                     <Row className="trip-gray-border-bottom">
                                         <Col sm="4">
-                                            <p className="trip-detail-info">{this.state.rideStartDate}</p>
-                                            <p className="trip-detail-info">{this.state.rideStartTime}</p>
+                                            <p className="trip-detail-info">{bookingStartDate}</p>
+                                            <p className="trip-detail-info">{bookingStartTime}</p>
                                             <p className="trip-detail-info">{bookingRideReturnData.ride_return.start_odo_reading}</p>
                                         </Col>
 
@@ -118,7 +123,7 @@ export default class BookingRideReturn extends Component {
                                                     </div>
                                                     <div className="total-odo" align="center">
                                                         {totalOdo} Kms
-                                                                </div>
+                                                    </div>
                                                 </div>
                                             </Col>
                                         }
@@ -145,8 +150,8 @@ export default class BookingRideReturn extends Component {
                                         {
                                             bookingRideReturnData && bookingRideReturnData.status.id == 7 &&
                                             <Col sm="4" className="ride-end-detail">
-                                                <p className="trip-detail-info">{this.state.rideEndDate}</p>
-                                                <p className="trip-detail-info">{this.state.rideEndTime}</p>
+                                                <p className="trip-detail-info">{bookingEndDate}</p>
+                                                <p className="trip-detail-info">{bookingEndTime}</p>
                                                 <p className="trip-detail-info">{bookingRideReturnData.ride_return.end_odo_reading}</p>
                                             </Col>
                                         }
