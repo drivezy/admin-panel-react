@@ -11,7 +11,14 @@ import { ExecuteScript } from './injectScript.utils';
 
 export function ProcessForm({ form, scripts }) {
 
-    scripts = [{ id: 1, script: 'console.log(\'form\', form); FormUtils.PageName(\'Custom Name hello\', form)' }];
+    scripts = [{
+        id: 1,
+        script: `
+        console.log('form', form);
+        FormUtils.onChange({ column: 'menu.name', callback: (event, column)=> console.log(column) })
+        FormUtils.PageName('Custom Name hello')
+        `
+    }];
 
     if (Array.isArray(scripts)) {
         form = ExecuteScript({ form, scripts });

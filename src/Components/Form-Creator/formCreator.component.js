@@ -28,6 +28,8 @@ import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from 'constants';
 import FormSettings from './../Form-Settings/FormSettings.component';
 import ScriptInput from './../Forms/Components/Script-Input/scriptInput.component';
 
+import FormUtils from './../../Utils/form.utils';
+
 import { ROUTE_URL } from './../../Constants/global.constants';
 
 const DisplayFormikState = props => (
@@ -57,23 +59,27 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         107: <Field autoComplete="off" className="form-control" type="number" name={column.name} placeholder={`Enter ${column.display_name}`} />,
         // Number Ends
 
-        // Text
-        // 108: <Field
-        //     name={column.path}
-        //     render={({ field /* _form */ }) => (
-        //         // onChange={(event) => { console.log(event.target); props.handleChange() }}
-        //         <input name={column.path} className="form-control" onChange={props.handleChange} value={values[column.path]}></input>
-        //     )}
-        // />,
+        // 108: <Field disabled={column.disabled} id={column.name} onChange={({ ...args }) => FormUtils.OnChangeListener(args)} name={column.name} className={`form-control ${props.errors[column.index] && props.touched[column.index] ? 'is-invalid' : ''}`} type="text" placeholder={`Enter ${column.name}`} />,
 
-        108: <Field disabled={column.disabled} id={column.name} name={column.name} className={`form-control ${props.errors[column.index] && props.touched[column.index] ? 'is-invalid' : ''}`} type="text" placeholder={`Enter ${column.name}`} />,
+        108: <Field
+            name={column.path}
+            render={({ field /* _form */ }) => (
+                <input name={column.name} className="form-control" rows="3"
+                    onChange={(event, ...args) => {
+                        FormUtils.OnChangeListener({ column, ...event });
+                        props.handleChange(event, args);
+                    }}
+                    value={values[column.name]}
+                />
+            )}
+        />,
         // Text Ends
 
         // TextArea Begins
         160: <Field
             name={column.path}
             render={({ field /* _form */ }) => (
-                <textarea name={column.index} className="form-control" rows="3" onChange={({ ...args }) => { props.handleChange(args); }} value={values[column.path]}></textarea>
+                <textarea name={column.name} className="form-control" rows="3" onChange={({ ...args }) => { FormUtils.OnChangeListener(args); props.handleChange(args); }} value={values[column.path]}></textarea>
             )}
         />,
         // TextArea Ends

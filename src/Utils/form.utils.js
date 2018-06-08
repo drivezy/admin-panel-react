@@ -1,7 +1,32 @@
 import { IsObjectHaveKeys } from './common.utils';
 let self = {};
+let onChangeListeners = {};
 
 export default class FormUtil {
+
+    /**
+     * Keeps registering all the events and maintains them in an array
+     * @param  {string} {column - column path
+     * @param  {function } callback} - callback on event trigger
+     */
+    static onChange({ column, callback }) {
+        onChangeListeners[column] = callback;
+    }
+
+    /**
+     * This method is being used by form creator to keep notifying
+     * on event change
+     * 
+     * checks if there is any listener on the field, invoke it
+     * @param  {object} {column - columns object
+     * @param  {object} ...event}
+     */
+    static OnChangeListener({ column, ...event }) {
+        const callback = onChangeListeners[column.path];
+        if (typeof callback == 'function') {
+            callback(event, column);
+        }
+    }
 
     /**
      * if id is provided return particular element else returns form element
@@ -13,9 +38,14 @@ export default class FormUtil {
         }
         return document.getElementById(column);
     };
-
+    
+    /**
+     * Used to change page name
+     * @param  {string} name
+     * @param  {object} form
+     */
     static PageName(name, form) {
-        form.name = name;
+        self.form.name = name;
     }
     /**
      * set element to visible or invisible depending on visibility
@@ -23,16 +53,7 @@ export default class FormUtil {
      * @param  {boolean} visibility
      */
     static SetVisible(column, visibility) {
-        // const formUtil = new FormUtil();
-        // var element = formUtil.GetElement(column);
-        // if (typeof element == "object") {
-        //     if (visibility) {
-        //         element.style.display = "block";
-        //     } else {
-        //         element.style.display = "none";
-        //     }
-        // }
-        self.form.dictionary[column] = visibility;
+        self.form.dictionary[column].visibility = visibility;
     };
 
     /**
@@ -40,12 +61,12 @@ export default class FormUtil {
      * @param  {object} form - form object
      * @param  {string} column - column type
      */
-    static GetValue(column) {
+    static GetColumnValue(column) {
         if (typeof self.form == "object" && self.form.data[column]) {
             return self.form.data[column];
         }
 
-        return false;
+        return null;
     };
 
     /**
@@ -61,57 +82,25 @@ export default class FormUtil {
         }
 
         return false;
-        // @todo remove this code after sometime
-        // var element = self.getElement(column);
-        // var input = angular.element(element.querySelector('select-field'));
-        // if (JSUtil.returnTotalKeys(input)) { // if ui-select field
-        //     // @TODO find a way to set value for ui-select
-        // } // if input field or textarea
-        // else if (input = (angular.element(element.querySelector('input')) ||
-        // angular.element(element.querySelector('input')))) { angular.element(input).val(value).change(); // this
-        // way angular model is updated }
     };
 
     /**
      * disables particular form element
      * @param  {string} column - column type
-     * @param  {boolean} boolean -true if disabled, false if enabled
+     * @param  {boolean} value -true if disabled, false if enabled
      */
-    static SetDisabled(column, boolean) {
-        const keyVal = [{
-            key: "disable-flag", value: boolean // for input field or textarea
-        }, {
-            key: "ng-disabled", value: boolean // for ui-select field
-        }];
-        this.manupulateUI(column, keyVal);
-    };
-
-    /**
-     * makes particular form element read only
-     * @param  {string} column - column type
-     */
-    static SetReadOnly(column) {
-        const keyVal = [{
-            key: "ng-disabled", value: true // for ui-select field
-        }, {
-            key: "readonly", value: "readonly" // for input field or textarea
-        }];
-        this.manupulateUI(column, keyVal);
-    };
+    static SetDisabled(column, value) {
+        self.form.dictionary[column].disabled = value;
+    }
 
     /**
      * adds extra attribute to element and make field required
      * @param  {string} column
-     * @param  {boolean} boolean -true if disabled, false if enabled
+     * @param  {boolean} value -true if disabled, false if enabled
      */
-    static SetMandatory(column, boolean) {
-        const keyVal = [{
-            key: "required", value: boolean
-        }, {
-            key: "validate", value: boolean ? "required" : null // for ui-select field
-        }];
-        this.manupulateUI(column, keyVal);
-    };
+    static SetMandatory(column, value) {
+        self.form.dictionary[column].required = value;
+    }
 
     /**
      * registers method against given form element, triggers callback on change of form elemenets
@@ -139,7 +128,7 @@ export default class FormUtil {
      * manually triggers change event for ui-slect field
      * @param  {object} detail - object is attached to send along with event object
      */
-    static getSelectOnChangeUpdate(detail) {
+    static GetSelectOnChangeUpdate(detail) {
         const formUtil = new FormUtil();
         const formElement = formUtil.GetElement();
         if ("createEvent" in document) {
@@ -152,50 +141,6 @@ export default class FormUtil {
             formElement.fireEvent("onchange");
         }
     };
-
-    // /**
-    //  * takes formElement and event to send scope's latest form object value for each ngModel or particular column
-    //  * @param  {object} event
-    //  * @param  {object} formElement
-    //  * @param  {string} column
-    //  */
-    // static GetScopeValue(event, formElement, column) {
-    //     if (!formElement) {
-    //         return null;
-    //     }
-    //     formElement = angular.element(formElement);
-    //     // formElement = angular.element(formElement);
-    //     let data = formElement.serializeArray();
-    //     if (event.detail) {
-    //         const eventDetail = JSUtil.convertSerialArrayToJson([event.detail]);
-    //     }
-
-    //     data = JSUtil.convertSerialArrayToJson(data);
-    //     if (event.detail) {
-    //         data = Object.assign(data, eventDetail);
-    //     }
-    //     return getSelectedColumn(data, column);
-    // };
-
-    /**
-     * returns form object value
-     * @param  {string} column {optional} - comma seperated column value
-     */
-    // static GetFormValue(column) {
-    //     const formUtil = new FormUtil();
-    //     const formElement = formUtil.GetElement();
-    //     if (!formElement) {
-    //         return false;
-    //     }
-
-    //     let formObj = angular.element(formElement).scope().$parent.modalObj;
-
-    //     if (typeof formObj == "object" && typeof formObj.formMetaObj == "object" && formObj.formMetaObj.hasOwnProperty("data")) {
-    //         formObj = formObj.formMetaObj.data;
-
-    //         return getSelectedColumn(formObj, column);
-    //     }
-    // };
 
     /**
      * saves form without closing modal
@@ -231,27 +176,8 @@ export default class FormUtil {
     static GetFormValue(clearFormValue) {
         const form = self.form;
         self.form = {};
+        self.onChangeListeners = {};
         return form;
-    }
-    /**
-     * returns form object(all ngModel value)
-     * @param  {object} data
-     * @param  {string} column {optional}
-     */
-    getSelectedColumn(data, column) {
-        if (column) {
-            const resultArr = {};
-            const columnList = column.split(",");
-            for (let j in columnList) {
-                for (let i in data) {
-                    if (i == columnList[j]) {
-                        resultArr[i] = data[i];
-                    }
-                }
-            }
-            return resultArr;
-        }
-        return data;
     }
 
     /**

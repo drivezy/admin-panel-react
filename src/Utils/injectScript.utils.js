@@ -29,6 +29,7 @@ export function ExecuteScript({ form, scripts }) {
                 //     eval(scripts[i].script);
                 // }
                 eval(scripts[i].script);
+                form = FormUtils.GetFormValue(true);
                 RemoveError(scripts[i]);
             } catch (err) {
                 InjectError(scripts[i], err);
