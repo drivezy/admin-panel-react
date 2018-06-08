@@ -18,7 +18,7 @@ export default class ListingPagination extends Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.setState({
             currentPage: nextProps.currentPage ? nextProps.currentPage : 1,
             statsData: nextProps.statsData ? nextProps.statsData : {}
