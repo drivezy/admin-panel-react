@@ -22,9 +22,6 @@ export default class BookingRideReturn extends Component {
         let totalOdo;
         let kmDifference;
 
-        let getStartingFuelPercentage = bookingRideReturnData.ride_return.start_fuel_percentage;
-        let getEndingFuelPercentage = bookingRideReturnData.ride_return.end_fuel_percentage;
-
         let paidAmount = 0;
         bookingRideReturnData.payment.forEach(function (data) {
             paidAmount += parseFloat(data.amount);
@@ -36,13 +33,14 @@ export default class BookingRideReturn extends Component {
         });
 
         let approvedExtensionCost = 0;
-        let tentativeAmount = 0;
         bookingRideReturnData.extension.forEach(function (data) {
             if (data.approved == 1 && !data.deleted_at) {
                 approvedExtensionCost += parseFloat(data.cost);
             }
         });
-        tentativeAmount = approvedExtensionCost + bookingRideReturnData.tentative_amount;
+        if (approvedExtensionCost > 0) {
+            bookingRideReturnData.tentative_amount += approvedExtensionCost
+        }
 
         let amountDue = 0;
         bookingRideReturnData.refund.forEach(function (remaining_amount) {
@@ -51,10 +49,12 @@ export default class BookingRideReturn extends Component {
             }
         });
 
-        if (bookingRideReturnData.status.id == 6) {
-            totalDuration = TotalDuration(bookingRideReturnData.ride_return.updated_at, bookingRideReturnData.ride_return.actual_start_time);
-        } else {
-            totalDuration = TotalDuration(bookingRideReturnData.ride_return.actual_end_time, bookingRideReturnData.ride_return.actual_start_time);
+        if (bookingRideReturnData.ride_return) {
+            if (bookingRideReturnData.status.id == 6) {
+                totalDuration = TotalDuration(bookingRideReturnData.ride_return.updated_at, bookingRideReturnData.ride_return.actual_start_time);
+            } else {
+                totalDuration = TotalDuration(bookingRideReturnData.ride_return.actual_end_time, bookingRideReturnData.ride_return.actual_start_time);
+            }
         }
 
         if (bookingRideReturnData.ride_return) {
@@ -200,15 +200,20 @@ export default class BookingRideReturn extends Component {
                                 <Row className="gray-border-bottom">
                                     {
                                         bookingRideReturnData && bookingRideReturnData.status && (bookingRideReturnData.status.id == 6 || bookingRideReturnData.status.id == 7) &&
-                                        <Col sm="6">
-                                            <Progress value="getStartingFuelPercentage">{getStartingFuelPercentage}%</Progress>
-                                        </Col>
-                                    }
-                                    {
-                                        bookingRideReturnData && bookingRideReturnData.status && (bookingRideReturnData.status.id == 6 || bookingRideReturnData.status.id == 7) &&
-                                        <Col sm="6">
-                                            <Progress value="getEndingFuelPercentage">{getEndingFuelPercentage}%</Progress>
-                                        </Col>
+                                        [
+                                            <Col key={1} sm="6">
+                                                {
+                                                    bookingRideReturnData.ride_return &&
+                                                    <Progress value="bookingRideReturnData.ride_return.start_fuel_percentage">{bookingRideReturnData.ride_return.start_fuel_percentage}%</Progress>
+                                                }
+                                            </Col>,
+                                            <Col key={2} sm="6">
+                                                {
+                                                    bookingRideReturnData.ride_return &&
+                                                    <Progress value="bookingRideReturnData.ride_return.end_fuel_percentage">{bookingRideReturnData.ride_return.end_fuel_percentage}%</Progress>
+                                                }
+                                            </Col>
+                                        ]
                                     }
 
                                 </Row>
@@ -284,16 +289,20 @@ export default class BookingRideReturn extends Component {
                                 <p>Rs. {paidAmount}</p>
                             </Col>
                             {
-                                (bookingRideReturnData && bookingRideReturnData.status && (bookingRideReturnData.status.id == 7 || bookingRideReturnData.status.id == 8)) ?
+                                (!bookingRideReturnData.status || bookingRideReturnData.status.id == 5 || bookingRideReturnData.status.id == 6) ?
                                     <Col sm="4">
                                         <p>Total Fare</p>
                                         <p>Rs. {fairAmount}</p>
                                     </Col>
-                                    :
+                                    : null
+                            }
+                            {
+                                (bookingRideReturnData.collection.length || (bookingRideReturnData.status && bookingRideReturnData.status.id == 8)) ?
                                     <Col sm="4">
                                         <p>Tentative Amount</p>
-                                        <p>Rs. {tentativeAmount}</p>
+                                        <p>Rs. {bookingRideReturnData.tentative_amount}</p>
                                     </Col>
+                                    : null
                             }
                             <Col sm="4">
                                 {
