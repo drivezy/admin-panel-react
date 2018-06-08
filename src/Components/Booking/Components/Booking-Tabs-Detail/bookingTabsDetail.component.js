@@ -94,7 +94,7 @@ export default class BookingTabsDetail extends Component {
                 }]
             }, {
                 name: 'Change Vehicle',
-                data: bookingTabsData.changeVehicle,
+                data: bookingTabsData.vehicle_change,
                 columns: [{
                     field: "old_vehicle.registration_number",
                     label: "Previous Vehicle"
@@ -165,7 +165,7 @@ export default class BookingTabsDetail extends Component {
                 }]
             }, {
                 name: 'Vehicle Movement',
-                data: bookingTabsData.vehicleMovement,
+                data: bookingTabsData.vehicle_movement,
                 columns: [{
                     field: "start_time",
                     label: "Start Time"
@@ -184,7 +184,7 @@ export default class BookingTabsDetail extends Component {
                 }]
             }, {
                 name: 'Pending Actions',
-                data: bookingTabsData.pendingActions,
+                data: bookingTabsData.pending_actions,
                 columns: [{
                     field: "type",
                     label: "Type"
@@ -225,7 +225,7 @@ export default class BookingTabsDetail extends Component {
                 }]
             }, {
                 name: 'Partner Account',
-                data: bookingTabsData.partnerAccount,
+                data: bookingTabsData.partner_account,
                 columns: [{
                     field: "comments",
                     label: "Details"

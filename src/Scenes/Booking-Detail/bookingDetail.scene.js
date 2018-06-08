@@ -10,8 +10,6 @@ import BookingTabsDetail from './../../Components/Booking/Components/Booking-Tab
 
 import { Booking } from './../../Utils/booking.utils';
 
-
-
 export default class BookingDetail extends Component {
 
     constructor(props) {
@@ -33,8 +31,6 @@ export default class BookingDetail extends Component {
             this.setState({ bookingDetail })
         }
     }
-
-
 
     render() {
         const { bookingDetail = {} } = this.state;
