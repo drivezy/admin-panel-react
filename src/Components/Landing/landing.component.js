@@ -12,6 +12,7 @@ import SideNav from './../../Scenes/Side-Nav/sideNav.scene';
 import Header from './../../Scenes/Header/header.scene';
 import BookingDetail from './../../Scenes/Booking-Detail/bookingDetail.scene';
 import UserDetail from './../../Scenes/User-Detail/userDetail.scene';
+import ExpenseVoucherDetail from './../../Scenes/Expense-Voucher/expenseVoucherDetail.scene';
 
 import './landing.component.css';
 
@@ -63,6 +64,7 @@ export default class LandingApp extends Component {
                             <Route path={`${match.path}detail/:page/:detailId`} component={GenericDetail} /> */}
 
                         <Route exact path='/booking/:bookingId' component={BookingDetail} />
+                        <Route exact path='/voucherDef/:voucherId' component={ExpenseVoucherDetail} />
                         <Route exact path='/' component={HomeScene} />
                         <Route exact path='/user/:userId' component={UserDetail} />
 
