@@ -16,6 +16,7 @@ import ExpenseVoucherDetail from './../../Scenes/Expense-Voucher/expenseVoucherD
 import UserLicense from './../../Scenes/User-License/userLicense.scene';
 
 // import { Spotlight } from './../Components/Spotlight-Search/spotlightSearch.component';
+import TicketDetail from './../../Scenes/Ticket-Detail/ticketDetail.scene';
 
 import './landing.component.css';
 
@@ -70,6 +71,7 @@ export default class LandingApp extends Component {
                         <Route exact path='/voucherDef/:voucherId' component={ExpenseVoucherDetail} />
                         <Route exact path='/userLicense/:userId' component={UserLicense} />
                         {/* <Spotlight ref={(elem) => SettingsUtil.registerModal(elem)} /> */}
+                        <Route exact path='/ticket/:ticketId' component={TicketDetail} />
                         <Route exact path='/' component={HomeScene} />
                         <Route exact path='/user/:userId' component={UserDetail} />
 
