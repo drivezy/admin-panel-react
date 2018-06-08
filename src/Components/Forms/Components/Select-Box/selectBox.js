@@ -2,6 +2,7 @@
 // Refer https://github.com/JedWatson/react-select
 
 import React, { Component } from 'react';
+import './selectBox.css';
 
 import Select, { Async } from 'react-select';
 import 'react-select/dist/react-select.css';
@@ -147,7 +148,7 @@ export default class SelectBox extends Component {
         }
 
         return (
-            <div>
+            <div className="select-box">
                 {elem}
             </div>
         );

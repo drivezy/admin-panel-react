@@ -19,12 +19,9 @@ import { PreserveState } from './../Utils/preserveUrl.utils';
 import { GetMenusFromApi } from './../Utils/menu.utils';
 import LoadAsync from './../Utils/loadAsyncScripts.utils';
 import { Location } from './../Utils/location.utils';
-import { ToastContainer } from 'react-toastify';
-import { ConfirmModalComponent, ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
-import ModalWrapper from './../Wrappers/Modal-Wrapper/modalWrapper.component';
-import { LoaderComponent, LoaderUtils } from './../Utils/loader.utils';
-import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
-/** Utils Ends */
+
+
+// import { GetProperties } from './../Utils/openProperty.utils';
 
 
 /** 
@@ -118,10 +115,6 @@ export default class IndexRouter extends Component {
                         }
                     </div>
                 </HotKeys>
-                <ToastContainer />
-                <ModalWrapper ref={(elem) => ModalManager.registerModal(elem)} />
-                <LoaderComponent ref={(elem) => LoaderUtils.RegisterLoader(elem)} />
-                <ConfirmModalComponent ref={(elem) => ConfirmUtils.RegisterConfirm(elem)} />
             </div>
 
         )
