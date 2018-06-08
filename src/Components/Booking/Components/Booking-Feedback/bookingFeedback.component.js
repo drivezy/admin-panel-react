@@ -5,7 +5,7 @@ import {
 
 import './bookingFeedback.component.css';
 
-export default class BookingFeedbackCard extends Component {
+export default class BookingFeedback extends Component {
 
     constructor(props) {
         super(props);
@@ -58,7 +58,7 @@ export default class BookingFeedbackCard extends Component {
                                                     <p>{feedback.comments}</p>
                                                 </div>
                                             </div>
-                                        ) : <img className="feedback-stars" src={require("./../../Assets/images/stars.png")} alt="" />
+                                        ) : <img className="feedback-stars" src={require("./../../../../Assets/images/stars.png")} alt="" />
                                 }
                             </div>
                         </Col>
@@ -80,7 +80,7 @@ export default class BookingFeedbackCard extends Component {
                                                     <p>{feedback.comments}</p>
                                                 </div>
                                             </div>
-                                        ) : <img className="feedback-stars" src={require("./../../Assets/images/stars.png")} alt="" />
+                                        ) : <img className="feedback-stars" src={require("./../../../../Assets/images/stars.png")} alt="" />
                                 }
                             </div>
                         </Col>

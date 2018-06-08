@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import {
-    Card, CardImg, Row, Col
+    Card
 } from 'reactstrap';
 
-
-import { Get } from './../../Utils/http.utils';
 import './userCard.component.css';
 
 export default class UserCard extends Component {
