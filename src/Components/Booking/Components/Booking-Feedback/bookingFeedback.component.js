@@ -68,8 +68,8 @@ export default class BookingFeedback extends Component {
 
                                 {
                                     fleetFeedback.length > 0 ?
-                                        fleetFeedback.map((feedback) =>
-                                            <div className="fleet-feedback">
+                                        fleetFeedback.map((feedback, key) =>
+                                            <div className="fleet-feedback" key={key}>
                                                 <div className="fleet-stars">
                                                     <h6>{feedback.fleetRatingStars}</h6>
                                                 </div>

@@ -209,13 +209,13 @@ export default class BookingRideReturn extends Component {
                                             <Col key={1} sm="6">
                                                 {
                                                     bookingRideReturnData.ride_return &&
-                                                    <Progress value="bookingRideReturnData.ride_return.start_fuel_percentage">{bookingRideReturnData.ride_return.start_fuel_percentage}%</Progress>
+                                                    <Progress itemRef={bookingRideReturnData.ride_return.start_fuel_percentage} barClassName="file-field-list-item__progress-bar" value={bookingRideReturnData.ride_return.start_fuel_percentage}>{bookingRideReturnData.ride_return.start_fuel_percentage}%</Progress>
                                                 }
                                             </Col>,
                                             <Col key={2} sm="6">
                                                 {
                                                     bookingRideReturnData.ride_return &&
-                                                    <Progress value="bookingRideReturnData.ride_return.end_fuel_percentage">{bookingRideReturnData.ride_return.end_fuel_percentage}%</Progress>
+                                                    <Progress itemRef={bookingRideReturnData.ride_return.end_fuel_percentage} barClassName="file-field-list-item__progress-bar" value={bookingRideReturnData.ride_return.end_fuel_percentage}>{bookingRideReturnData.ride_return.end_fuel_percentage}%</Progress>
                                                 }
                                             </Col>
                                         ]
