@@ -20,3 +20,9 @@ export function BookingDropDate(dropTime) {
 export function BookingDropTime(dropTime) {
     return moment(dropTime).format("h:mm A");
 }
+
+export function TotalDuration(updationTime, ActualStartTime) {
+    let ms = moment(updationTime).diff(moment(ActualStartTime));
+    let d = moment.duration(ms);
+    return Math.floor(d.asHours()) + "h " + Math.floor(d.minutes()) + "m";
+}

@@ -3,6 +3,8 @@ import {
     Card, CardTitle, CardBody, Row, Col, ButtonToolbar, Button, Progress
 } from 'reactstrap';
 
+import { TotalDuration } from './../../../../Utils/booking.utils';
+
 import './bookingRideReturn.css';
 
 export default class BookingRideReturn extends Component {
@@ -16,6 +18,9 @@ export default class BookingRideReturn extends Component {
 
     render() {
         const { bookingRideReturnData = {} } = this.state;
+        let totalDuration;
+        let totalOdo;
+        let kmDifference;
 
         let getStartingFuelPercentage = bookingRideReturnData.ride_return.start_fuel_percentage;
         let getEndingFuelPercentage = bookingRideReturnData.ride_return.end_fuel_percentage;
@@ -45,6 +50,26 @@ export default class BookingRideReturn extends Component {
                 amountDue += parseFloat(remaining_amount.amount);
             }
         });
+
+        if (bookingRideReturnData.status.id == 6) {
+            totalDuration = TotalDuration(bookingRideReturnData.ride_return.updated_at, bookingRideReturnData.ride_return.actual_start_time);
+        } else {
+            totalDuration = TotalDuration(bookingRideReturnData.ride_return.actual_end_time, bookingRideReturnData.ride_return.actual_start_time);
+        }
+
+        if (bookingRideReturnData.ride_return) {
+            kmDifference = bookingRideReturnData.ride_return.end_odo_reading - bookingRideReturnData.ride_return.start_odo_reading
+        }
+        // Add previous odo reading and current odo reading of vehicle when vehicle is changed
+        let addPreviousOdo = 0;
+        if (bookingRideReturnData.vehicle_change.length) {
+            for (var i in bookingRideReturnData.vehicle_change) {
+                if (bookingRideReturnData.vehicle_change[i].previous_vehicle_start_odo && bookingRideReturnData.vehicle_change[i].previous_vehicle_start_odo) {
+                    addPreviousOdo += (bookingRideReturnData.vehicle_change[i].previous_vehicle_end_odo) - (bookingRideReturnData.vehicle_change[i].previous_vehicle_start_odo);
+                }
+            }
+        }
+        totalOdo = (kmDifference) + (addPreviousOdo);
 
         return (
 
@@ -86,13 +111,13 @@ export default class BookingRideReturn extends Component {
                                                         <i className="fa fa-clock-o" aria-hidden="true"></i>
                                                     </div>
                                                     <div className="no-padding light-red  font-11" align="center">
-                                                        {this.state.totalDuration}
+                                                        {totalDuration}
                                                     </div>
                                                     <div className="total-odo-info" align="center">
                                                         <i className="fa fa-car" aria-hidden="true"></i>
                                                     </div>
                                                     <div className="total-odo" align="center">
-                                                        {this.state.totalOdo} Kms
+                                                        {totalOdo} Kms
                                                                 </div>
                                                 </div>
                                             </Col>
@@ -105,14 +130,14 @@ export default class BookingRideReturn extends Component {
                                                         <i className="fa fa-clock-o" aria-hidden="true"></i>
                                                     </div>
                                                     <div className="no-padding light-red  font-11" align="center">
-                                                        {this.state.totalDuration}
+                                                        {totalDuration}
                                                     </div>
                                                     <div className="total-odo-info" align="center">
                                                         <i className="fa fa-car" aria-hidden="true"></i>
                                                     </div>
                                                     <div className="total-odo" align="center">
                                                         _ _ Kms
-                                                                   </div>
+                                                    </div>
                                                 </div>
                                             </Col>
                                         }
