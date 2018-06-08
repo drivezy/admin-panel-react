@@ -123,18 +123,33 @@
                             position: relative;
                         }
                     }
+
+                    @include themify($themes){
+                        background-color: themed('tableBackground');
+                    }
+
                     tr.table-row {
                         transition: .2s ease; // position: relative;
                         td {
                             border-bottom: 1px solid #ebeef0;
                             border: 1px solid #ececec;
+                            @include themify($themes){
+                                border: themed('tableDataBorder'); 
+                            }
                             border-left: none;
                             color: #183247; // padding: 15px 20px;
                             white-space: nowrap;
                             &.row-key {
                                 // padding: 15px 10px;
                             }
+                            @include themify($themes){
+                                color: themed('dataColor');    
+                            }
+
                             a {
+                                @include themify($themes){
+                                    color: themed('tableLinkColor');    
+                                }
                                 // color: #1e739e;
                                 font-size: 13px;
                                 text-decoration: none;
@@ -187,8 +202,13 @@
                         th {
                             &.action-header {
                                 background: white;
+                                border-left: 1px solid #a4b2b8;
+                                @include themify($themes){
+                                    background: themed('sideTableBackground');
+                                    color: themed('sideTableText');
+                                }
                                 text-align: right;
-                                border-left: 1px solid #ebeef0;
+                                //border-left: 1px solid #ebeef0;
                                 color: #35485a;
                             }
                         }
@@ -199,6 +219,10 @@
                 &.action-column {
                     border-top: 1px solid #ebeef073;
                     border-left: 1px solid #ebeef0;
+                    @include themify($themes){
+                        background: themed('sideTableBackground');
+                        color: themed('sideTableText');
+                    }
                     background: white; // right: 0px;
                     // padding: 14px;
                     padding: 15px 20px;
@@ -312,6 +336,7 @@
             tr.table-row {
                 td.action-column {
                     padding: 15px 20px;
+                    background-color: #000;
                 }
             }
         }
