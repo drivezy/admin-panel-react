@@ -250,11 +250,14 @@ export default class BookingTabsDetail extends Component {
                         tabContent.length ?
                             tabContent.map((tab, key) => (
                                 <NavItem key={key}>
-                                    <NavLink
-                                        className={classnames({ active: activeTab === key ? 'active' : '' })}
-                                        onClick={() => { this.toggle(key, tab); }}>
-                                        <i className="fa fa-bars"></i> {tab.name}
-                                    </NavLink>
+                                    {
+                                        tab.data.length > 0 &&
+                                        <NavLink
+                                            className={classnames({ active: activeTab === key ? 'active' : '' })}
+                                            onClick={() => { this.toggle(key, tab); }}>
+                                            <i className="fa fa-bars"></i> {tab.name}
+                                        </NavLink>
+                                    }
                                 </NavItem>
                             ))
                             : null
@@ -267,7 +270,10 @@ export default class BookingTabsDetail extends Component {
                                 if (activeTab == key) {
                                     return (
                                         <TabPane className='relative' key={key} tabId={key}>
-                                            <TableWrapper listing={tab.data} columns={tab.columns}></TableWrapper>
+                                            {
+                                                tab.data.length > 0 &&
+                                                <TableWrapper listing={tab.data} columns={tab.columns}></TableWrapper>
+                                            }
                                         </TabPane>
                                     )
                                 }
