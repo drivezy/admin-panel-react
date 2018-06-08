@@ -32,6 +32,19 @@ body {
     }
 }
 
+// React Viewer styling
+.react-viewer{
+    .react-viewer-toolbar{
+        .react-viewer-btn{
+            width: auto;
+            min-width: 28px;
+            span.custom-action{
+                padding: 0px 10px;
+            }
+        }
+    }
+}
+
 // Modal Styling
 .modal {
     .modal-dialog {

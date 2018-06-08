@@ -4,7 +4,6 @@ import {
     Route, Switch, Redirect
 } from 'react-router-dom';
 
-import { ToastContainer } from 'react-toastify';
 import { HotKeys } from 'react-hotkeys';
 
 
@@ -18,9 +17,13 @@ import { GetPreferences } from './../Utils/preference.utils';
 import SettingsUtil from './../Utils/settings.utils';
 import { PreserveState } from './../Utils/preserveUrl.utils';
 import { GetMenusFromApi } from './../Utils/menu.utils';
-import { ConfirmModalComponent, ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
 import LoadAsync from './../Utils/loadAsyncScripts.utils';
 import { Location } from './../Utils/location.utils';
+import { ToastContainer } from 'react-toastify';
+import { ConfirmModalComponent, ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
+import ModalWrapper from './../Wrappers/Modal-Wrapper/modalWrapper.component';
+import { LoaderComponent, LoaderUtils } from './../Utils/loader.utils';
+import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 /** Utils Ends */
 
 
@@ -106,15 +109,21 @@ export default class IndexRouter extends Component {
         const menus = this.menus || [];
 
         return (
+            <div>
+                <HotKeys focused={true} attach={window} keyMap={this.keyMap} handlers={this.handlers}>
+                    <div className="app-container">
+                        {
+                            menus && menus.length &&
+                            <Landing match={match} menus={menus} />
+                        }
+                    </div>
+                </HotKeys>
+                <ToastContainer />
+                <ModalWrapper ref={(elem) => ModalManager.registerModal(elem)} />
+                <LoaderComponent ref={(elem) => LoaderUtils.RegisterLoader(elem)} />
+                <ConfirmModalComponent ref={(elem) => ConfirmUtils.RegisterConfirm(elem)} />
+            </div>
 
-            <HotKeys focused={true} attach={window} keyMap={this.keyMap} handlers={this.handlers}>
-                <div className="app-container">
-                    {
-                        menus && menus.length &&
-                        <Landing match={match} menus={menus} />
-                    }
-                </div>
-            </HotKeys>
         )
     }
 }

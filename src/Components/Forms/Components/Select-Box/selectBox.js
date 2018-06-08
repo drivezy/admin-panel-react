@@ -18,7 +18,7 @@ export default class SelectBox extends Component {
         }
     }
 
-    componentWillReceiveProps(props) {
+    UNSAFE_componentWillReceiveProps(props) {
         this.setState({ ...this.returnStateObj(props) });
     }
 
@@ -30,6 +30,8 @@ export default class SelectBox extends Component {
      */
     returnStateObj(props) {
         let options = [], value = {};
+
+        console.log(props.options);
 
         if (Array.isArray(props.options) && typeof props.options[0] != 'object') {
             props.options.forEach(option => {

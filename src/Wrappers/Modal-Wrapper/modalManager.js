@@ -10,8 +10,8 @@ module.exports = {
             // this._currentGlobalLoader.openModal({ modalBody: () => (<h1> hi</h1>) });
         }
     },
-    closeModal: function () {
-        this._currentGlobalLoader.closeModal();
+    closeModal: function ({ ...args }) {
+        this._currentGlobalLoader.closeModal({ ...args });
     }
 }
 
