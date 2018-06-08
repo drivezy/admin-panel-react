@@ -1,4 +1,5 @@
 .booking {
+    background: whitesmoke;
     .booking-detail {
         display: flex;
         .booking-user-detail, .booking-feedback-detail {
@@ -15,7 +16,7 @@
     .booking-tabs {
         display: flex;
         .booking-tabs-detail {
-            flex-grow: 1;
+            flex-basis: 100%;
         }
     }   
 }

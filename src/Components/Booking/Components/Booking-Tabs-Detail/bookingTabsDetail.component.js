@@ -7,6 +7,8 @@ import classnames from 'classnames';
 
 import TableWrapper from './../../../../Components/Table-Wrapper/tableWrapper.component';
 
+import './bookingTabsDetail.css';
+
 export default class BookingTabsDetail extends Component {
 
     constructor(props) {
