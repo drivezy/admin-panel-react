@@ -125,3 +125,7 @@ export const GetUserDetail = (userObject) => {
 export const GetUser = () => {
     return CurrentUser;
 }
+
+export const ImpersonateUser = () => {
+    return CurrentUser;
+}

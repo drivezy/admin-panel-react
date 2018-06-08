@@ -5,10 +5,8 @@ import React, { Component } from 'react';
 
 import Select, { Async } from 'react-select';
 import 'react-select/dist/react-select.css';
-// import Async from 'react-select';
 
 import { Get } from './../../../../Utils/http.utils';
-import { callbackify } from 'util';
 
 export default class SelectBox extends Component {
     constructor(props) {
@@ -85,7 +83,6 @@ export default class SelectBox extends Component {
             const result = await Get({ url: preloadUrl });
 
             if (result.success) {
-                console.log(result);
 
                 let options = result.response.map((entry) => {
                     let option = entry;

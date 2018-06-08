@@ -6,14 +6,15 @@ import { Redirect } from 'react-router-dom';
 import GLOBAL from './../../Constants/global.constants';
 
 import { SubscribeToEvent } from './../../Utils/stateManager.utils';
-import { Get } from './../../Utils/http.utils';
-import { SetItem, GetItem } from './../../Utils/localStorage.utils';
-// /import { SpotlightUtil } from './../Spotlight-Search/spotlightSearch.component';
+import { Get, Post } from './../../Utils/http.utils';
+
 import SettingsUtil from './../../Utils/settings.utils';
 import ThemeUtil from './../../Utils/theme.utils';
 
-import CustomTooltip from '../Custom-Tooltip/customTooltip.component';
-
+import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
+import ImpersonateFrom from './../../Components/Impersonate-Form/impersonateForm.component';
+import ToastNotifications from '../../Utils/toast.utils';
+import { ConfirmUtils } from './../../Utils/confirm-utils/confirm.utils';
 
 export default class PageNav extends Component {
     constructor(props) {
@@ -51,17 +52,33 @@ export default class PageNav extends Component {
         SettingsUtil.configureModal();
     }
 
+    impersonateUser = () => {
+
+        ModalManager.openModal({
+            headerText: "Impersonate User",
+            modalBody: () => (<ImpersonateFrom ></ImpersonateFrom>),
+            onClose: (...args) =>
+                ToastNotifications.success("You are now impersonating " + args[0].impersonatedUser.display_name)
+                
+        })
+
+    }
+
+    deimpersonateUser = () => {
+        const method = async () => {
+            const result = await Post({ urlPrefix: GLOBAL.ROUTE_URL, url: "api/deImpersonateUser" });
+            if (result.success) {
+                ToastNotifications.success('User is deimpersonated');
+                window.location.reload(true);
+            }
+        }
+        ConfirmUtils.confirmModal({ message: "Are you sure you want to deimpersonate?", callback: method });
+    }
+
     logout = async () => {
         const res = await Get({ urlPrefix: GLOBAL.ROUTE_URL, url: 'logout' });
-        // const l = res;
         if (res.success) {
-
             const a = (this.props.location ? this.props.location.state : null) || { from: { pathname: '/login' } };
-
-            // this.props.history.push("/login");
-            // location.href
-            // alert('user loggedout successfully');
-
             this.setState({ redirectToReferrer: true });
         }
     }
@@ -81,9 +98,7 @@ export default class PageNav extends Component {
         const { currentUser, selectedTheme = {} } = this.state;
         const { from } = (this.props.location ? this.props.location.state : null) || { from: { pathname: '/login' } };
         const { redirectToReferrer } = this.state
-        // this.props.setCurrentRoute(from)
         if (redirectToReferrer) {
-            // Global.currentRoute = from;
             return (
                 <Redirect to={from} />
             )
@@ -91,15 +106,20 @@ export default class PageNav extends Component {
 
         return (
             <div className="page-nav flex">
-
-
+                {
+                    currentUser.impersonated &&
+                    <div className="impersonating-link">
+                        <span className="link" onClick={this.deimpersonateUser}>
+                            Deimpersonate
+                    </span>
+                    </div>
+                }
                 <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                     <DropdownToggle color="primary">
 
                         <div className="user-profile">
                             <div className="profile-image">
                                 {this.state.currentUser.photograph ? <img src={`${this.state.currentUser.photograph}`} /> : <i className="fa fa-user-o" aria-hidden="true"></i>}
-
                             </div>
                         </div>
 
@@ -121,7 +141,7 @@ export default class PageNav extends Component {
                         <DropdownItem>Set Homepage</DropdownItem>
                         <DropdownItem>Change Password</DropdownItem>
                         <DropdownItem onClick={this.configureSettings}>Settings</DropdownItem>
-                        <DropdownItem>Impersonate User</DropdownItem>
+                        <DropdownItem onClick={this.impersonateUser}>Impersonate User</DropdownItem>
                         <DropdownItem onClick={(event) => { event.preventDefault(); this.logout() }}>Sign Out</DropdownItem>
                     </DropdownMenu>
 
