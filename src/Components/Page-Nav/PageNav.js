@@ -56,9 +56,7 @@ export default class PageNav extends Component {
 
         ModalManager.openModal({
             headerText: "Impersonate User",
-            modalBody: () => (<ImpersonateFrom ></ImpersonateFrom>),
-            onClose: (...args) =>
-                ToastNotifications.success("You are now impersonating " + args[0].impersonatedUser.display_name)
+            modalBody: () => (<ImpersonateFrom ></ImpersonateFrom>)
                 
         })
 
