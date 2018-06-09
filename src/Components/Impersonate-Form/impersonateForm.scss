@@ -1,0 +1,10 @@
+.impersonate-form {
+    display: flex;
+    flex-direction: column;
+    .modal-body, .modal-actions {
+        .impersonate-actions {
+            float: right;
+            padding: 6px;
+        }
+    }
+}
