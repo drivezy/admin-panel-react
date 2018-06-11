@@ -4,7 +4,6 @@ import {
     Route, Switch, Redirect
 } from 'react-router-dom';
 
-import { ToastContainer } from 'react-toastify';
 import { HotKeys } from 'react-hotkeys';
 
 
@@ -18,10 +17,11 @@ import { GetPreferences } from './../Utils/preference.utils';
 import SettingsUtil from './../Utils/settings.utils';
 import { PreserveState } from './../Utils/preserveUrl.utils';
 import { GetMenusFromApi } from './../Utils/menu.utils';
-import { ConfirmModalComponent, ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
 import LoadAsync from './../Utils/loadAsyncScripts.utils';
 import { Location } from './../Utils/location.utils';
-/** Utils Ends */
+
+
+// import { GetProperties } from './../Utils/openProperty.utils';
 
 
 /** 
@@ -106,15 +106,17 @@ export default class IndexRouter extends Component {
         const menus = this.menus || [];
 
         return (
+            <div>
+                <HotKeys focused={true} attach={window} keyMap={this.keyMap} handlers={this.handlers}>
+                    <div className="app-container">
+                        {
+                            menus && menus.length &&
+                            <Landing match={match} menus={menus} />
+                        }
+                    </div>
+                </HotKeys>
+            </div>
 
-            <HotKeys focused={true} attach={window} keyMap={this.keyMap} handlers={this.handlers}>
-                <div className="app-container">
-                    {
-                        menus && menus.length &&
-                        <Landing match={match} menus={menus} />
-                    }
-                </div>
-            </HotKeys>
         )
     }
 }

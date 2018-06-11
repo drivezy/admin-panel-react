@@ -48,7 +48,7 @@ export default class ConfigureDynamicFilter extends Component {
         };
     }
 
-    componentWillReceiveProps() {
+    unsafe_componentwillreceiveprops() {
         this.urlParams = Location.search();
     }
 

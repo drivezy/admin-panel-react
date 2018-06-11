@@ -39,9 +39,9 @@ export class Spotlight extends Component {
     }
 
     keyboardHandlers = {
-        'moveUp': (event) => { this.traverse(0) },
-        'moveDown': (event) => { this.traverse(1) },
-        'enter': (event) => { this.onSelect(event) }
+        // 'moveUp': (event) => { this.traverse(0) },
+        // 'moveDown': (event) => { this.traverse(1) },
+        // 'enter': (event) => { this.onSelect(event) }
     }
 
 

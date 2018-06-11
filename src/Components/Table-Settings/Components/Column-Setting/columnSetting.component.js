@@ -53,7 +53,7 @@ export default class ColumnSetting extends Component {
     componentDidMount() {
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.column) {
             this.setState({ column: nextProps.column });
         }

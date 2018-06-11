@@ -27,12 +27,6 @@ export default class TableSettings extends Component {
         }
     }
 
-    componentDidMount() {
-    }
-
-    componentWillReceiveProps(nextProps) {
-    }
-
     toggleModal = () => {
         this.setState({ modal: !this.state.modal, activeColumn: {}, tempSelectedColumns: this.props.selectedColumns })
     }

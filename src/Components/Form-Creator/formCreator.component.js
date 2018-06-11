@@ -459,7 +459,7 @@ export default class FormCreator extends Component {
 
                 {
                     payload.columns ?
-                        <FormSettings onSubmit={this.layoutChanged} listName={payload.modelName} selectedColumns={payload.formPreference} columns={payload.columns} />
+                        <FormSettings onSubmit={this.layoutChanged} module={payload.module} listName={payload.modelName} selectedColumns={payload.formPreference} columns={payload.columns} />
                         :
                         null
                 }
