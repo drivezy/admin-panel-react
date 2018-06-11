@@ -1,4 +1,5 @@
 .generic-detail-container {
+        .header {
         display: flex;
         justify-content: space-between;
         //background: #dcdcdc7a;
@@ -18,6 +19,7 @@
             }
         }
     }
+}
     .detail-content {
         margin: 8px;
     }
