@@ -9,6 +9,8 @@ import GLOBAL from './../../Constants/global.constants';
 import { Get } from './../../Utils/http.utils';
 
 import TableWrapper from './../../Components/Table-Wrapper/tableWrapper.component';
+import VehicleCard from './../../Components/Vehicle-Card/vehicleCard.component';
+
 
 import './vehicleDetail.scene.css';
 
@@ -157,62 +159,14 @@ export default class VehicleDetail extends Component {
     render() {
         const { vehicleDetail = {}, activeTab, tabContent = [] } = this.state;
 
-        return (
-            <div className="all-vehicle-detail">
-                {
-                    vehicleDetail.id &&
-                    <div className="vehicle-detail">
-                        <Card className="detail-card">
-                            <CardHeader>
-                                <span>All Vehicle Detail | {vehicleDetail.car.name} | {vehicleDetail.registration_number}</span>
-                            </CardHeader>
-                            <CardImg className="gray-border-bottom" width="100%" src={`${vehicleDetail.car.image}`}></CardImg>
-                            <CardBody>
-                                <CardTitle>Vehicle Detail</CardTitle>
-                                <div className="gray-border-bottom">
-                                </div>
-                                <Row className="gray-border-bottom">
-                                    <Col sm="6">
-                                        <p>Caution Amount</p>
-                                    </Col>
-                                    <Col sm="6">
-                                        <p className="text-right">{vehicleDetail.car.caution_amount}</p>
-                                    </Col>
-                                </Row>
-                                <Row className="gray-border-bottom">
-                                    <Col sm="6">
-                                        <p>Min Booking Duration</p>
-                                    </Col>
-                                    <Col sm="6">
-                                        <p className="text-right">{vehicleDetail.car.min_period / 60}</p>
-                                    </Col>
-                                </Row>
-                                <Row className="gray-border-bottom">
-                                    <Col sm="6">
-                                        <p>Fuel Eficiency</p>
-                                    </Col>
-                                    <Col sm="6">
-                                        <p className="text-right">{vehicleDetail.car.fuel_efficiency}</p>
-                                    </Col>
-                                </Row>
-                                <Row className="gray-border-bottom">
-                                    <Col sm="6">
-                                        <p>Extra Km Charges</p>
-                                    </Col>
-                                    <Col sm="6">
-                                        <p className="text-right">{vehicleDetail.car.extra_km_charges}</p>
-                                    </Col>
-                                </Row>
-                                <Row className="gray-border-bottom">
-                                    <Col sm="6">
-                                        <p>Free Km Per Hour</p>
-                                    </Col>
-                                    <Col sm="6">
-                                        <p className="text-right">{vehicleDetail.car.distance}</p>
-                                    </Col>
-                                </Row>
-                            </CardBody>
-                        </Card>
+        if (vehicleDetail.id) {
+            return (
+                <div className="vehicle-detail">
+                    <br/>
+                    <div className="vehicle-card-content">
+                        <VehicleCard vehicle={vehicleDetail} />
+                    </div>
+                    <div className="vehicle-tabs">
                         <Card className="tabs-card">
                             <Nav tabs>
                                 {
@@ -245,8 +199,13 @@ export default class VehicleDetail extends Component {
                             </TabContent>
                         </Card>
                     </div>
-                }
-            </div>
-        )
+                </div>
+            )
+        } else {
+            return (<div>No Data</div>);
+        }
     }
 }
+
+
+

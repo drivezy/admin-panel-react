@@ -1,27 +1,18 @@
-.all-vehicle-detail {
-    .vehicle-detail {
+.vehicle-detail {
+    margin: 8px;
+
         display: flex;
-        .detail-card {
-            width: 30%;
-            background-color:#f1f1f1;
-            padding-left: 3px;
-            .card-img {
-                background-color:#fff;
-            }
-            .card-body {
-                background-color:#fff;
-            }
-            .gray-border-bottom {
-                border-bottom: 1px solid #f0f4f7;
-                .text-right {
-                    float: right;
-                }
-            }
+
+        .vehicle-card-content{
+            // flex-bas
+            width: 25%;
         }
-        .tabs-card {
-            width: 70%;
-            background-color:#fff;
+
+        .vehicle-tabs{
+            margin-left: 10px;
+            width: 74%;
+            // background-color:#fff;
             padding: 4px;
         }
-    }
+    
 }

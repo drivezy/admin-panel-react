@@ -14,6 +14,7 @@ import BookingDetail from './../../Scenes/Booking-Detail/bookingDetail.scene';
 import UserDetail from './../../Scenes/User-Detail/userDetail.scene';
 import ExpenseVoucherDetail from './../../Scenes/Expense-Voucher/expenseVoucherDetail.scene';
 import UserLicense from './../../Scenes/User-License/userLicense.scene';
+import VehicleDetail from './../../Scenes/Vehicle-Detail/vehicleDetail.scene';
 
 // import { Spotlight } from './../Components/Spotlight-Search/spotlightSearch.component';
 import TicketDetail from './../../Scenes/Ticket-Detail/ticketDetail.scene';
@@ -76,6 +77,7 @@ export default class LandingApp extends Component {
                         <Route exact path='/rosterTimeline' component={RosterTimeline} />
                         <Route exact path='/' component={HomeScene} />
                         <Route exact path='/user/:userId' component={UserDetail} />
+                        <Route exact path='/vehicle/:vehicleId' component={VehicleDetail} />
 
                     </Switch>
                 </div>
