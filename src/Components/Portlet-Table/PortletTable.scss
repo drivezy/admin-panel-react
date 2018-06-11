@@ -143,7 +143,7 @@
                                 // padding: 15px 10px;
                             }
                             @include themify($themes){
-                                color: themed('textBlack');    
+                                color: themed('textSecondary');    
                             }
 
                             a {
@@ -201,11 +201,11 @@
                     tr {
                         th {
                             &.action-header {
-                                background: white;
-                                border-left: 1px solid #a4b2b8;
+                                border: 1px solid #a4b2b8;
                                 @include themify($themes){
                                     background: themed('sideTableBackground');
-                                    color: themed('secondaryColor');
+                                    color: themed('sideBarIcons');
+                                    border: themed('actionBarBorder');
                                 }
                                 text-align: right;
                                 //border-left: 1px solid #ebeef0;
@@ -221,7 +221,7 @@
                     border-left: 1px solid #ebeef0;
                     @include themify($themes){
                         background: themed('sideTableBackground');
-                        color: themed('secondaryColor');
+                        color: themed('sideBarIcons');
                         border: themed('actionBarBorder');
                     }
                     background: white; // right: 0px;

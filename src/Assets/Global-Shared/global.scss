@@ -369,7 +369,7 @@ th{
 
 .fa-times{
     @include themify($themes){
-        color: themed('secondaryColor');
+        color: themed('sideBarIcons');
     }
 }
 

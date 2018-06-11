@@ -42,7 +42,7 @@
             border-bottom: 1px solid;
             @include themify($themes) {
                 background: themed('navHeader');
-                border-color: themed('navHeader');
+                border-color: themed('headerBorder');
                 color: themed('arrowHeader');
             }
             span.logo-container {

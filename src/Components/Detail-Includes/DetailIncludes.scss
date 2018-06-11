@@ -4,7 +4,7 @@
     .card-body {
         @include themify($themes){
             background-color: themed('detailsBackground');
-            color: themed('textBlack');
+            color: themed('textSecondary');
         }
         padding: 6px 8px;
         .nav{
