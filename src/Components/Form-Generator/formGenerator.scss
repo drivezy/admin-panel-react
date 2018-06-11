@@ -1,0 +1,12 @@
+.form-generator {
+    display: flex;
+    
+    .component-wrapper {
+        flex-basis: 40%;
+        min-height: 300px;
+    }
+    .preview-wrapper {
+        flex-basis: 60%;
+        min-height: 300px;
+    }
+}

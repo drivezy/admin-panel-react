@@ -1,0 +1,204 @@
+.elements-wrapper {
+    .empty-panel {
+        .panel-body {
+            min-height: 60px;
+        }
+    }
+    .panel-container {
+        background: white;
+        border: 1px solid #e6e5e5;
+        padding: 14px;
+        border-radius: 4px;
+        min-height: 500px;
+        padding-top: 0px;
+        editable-label.form-title {
+            h4 {
+                color: #5d4e4e;
+            }
+        }
+        form {
+            .panel.selected-inputs {
+                margin-bottom: 5px;
+                .panel-body {
+                    min-height: 60px; // padding: 10px 0px 0px;
+                    ng-form {
+                        display: flex;
+                        flex-direction: column;
+                        .first-row {
+                            position: relative;
+                            display: flex;
+                            flex-direction: row;
+                            margin: 5px 0px;
+                            justify-content: space-between;
+                            .input-type {
+                                flex-basis: 30%;
+                            }
+                            .input-label {
+                                flex-basis: 60%;
+                            }
+                            .btn-delete {
+                                position: absolute;
+                                top: -10px;
+                                right: -10px;
+                                color: #ab2929;
+                            }
+                        }
+                        .second-row {
+                            margin: 5px 0px;
+                            justify-content: space-between;
+
+                            display: flex;
+                            align-items: center;
+                            .route-holder{
+                                flex-basis: 50%;
+                            }
+                        }
+                        .third-row {
+                            justify-content: space-between;
+                            display: flex;
+                            label {
+                                font-weight: 100 !important;
+                                font-size: 11px;
+                            }
+        
+                            editable-label.field-name {
+                                h4 {
+                                    font-size: 13px;
+                                }
+                                .input-wrapper {
+                                    // width: 40px;
+                                    display: inline-block;
+                                    font-size: 13px;
+                                }
+                            }
+        
+                        }
+                    }
+                    input {
+                        border: none;
+                        box-shadow: none;
+                        border-radius: 0px;
+                        border-bottom: 1px solid #efebeb;
+                    }
+                    custom-select-field {
+                        .btn-group {
+                            // width: 120%;
+                        }
+                    }
+                    .form-group {
+                        margin-bottom: 2px;
+                    }
+                }
+                .panel-footer {
+                    padding-top: 10px;
+                    background: white;
+                    border: white;
+                }
+            }
+        }
+        .panel-footer {
+            background: white;
+            border: none;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            .links {
+                .custom-field-link {
+                    cursor: pointer;
+                    &:hover {
+                        text-decoration: underline;
+                        i.fa {
+                            display: inline;
+                        }
+                    }
+                    i {
+                        display: none;
+                    }
+                }
+            }
+            .actions {}
+        }
+        .split-bar {
+            text-align: center;
+            border: 1px solid #dedede;
+            margin: 8px 0px;
+            border-radius: 2px;
+            background: whitesmoke;
+            small {
+                color: rgba(90, 82, 82, 0.65);
+            }
+        }
+        .form-contents {
+            margin-top: 10px;
+            border: 1px solid whitesmoke;
+            padding: 10px;
+            min-height: 130px;
+            .text-info {
+                padding: 5px;
+            }
+            &.script-container {
+                background: #212121;
+                color: #949494;
+                border-radius: 4px;
+            }
+        }
+        small.text-info {
+            margin: 12px 0px;
+        }
+        .script-addition-block {
+            margin-top: 10px;
+            uib-accordion {
+                .panel-group {
+                    margin-bottom: 5px;
+                    .panel {
+                        box-shadow: none;
+                        .panel-heading {
+                            background: #212121;
+                            color: #949494;
+                            border-radius: 4px;
+                            h4.panel-title {
+                                i.fa {
+                                    // float: left!important;
+                                }
+                            }
+                            button.btn {
+                                background: rgba(255, 255, 255, 0.21);
+                                &:hover {
+                                    background: white;
+                                }
+                            }
+                        }
+                        .panel-collapse {
+                            margin: 2px;
+                            background: #f6f5f6;
+                            border: 1px solid #e6e6e6;
+                            .panel-body {
+                                border-top: none;
+                                div.code-block {
+                                    display: flex;
+                                    flex-direction: column;
+                                    justify-content: space-between;
+                                    p.code-text {
+                                        word-break: break-word;
+                                    }
+                                    .actions {
+                                        display: flex;
+                                        flex-direction: row;
+                                        justify-content: flex-end;
+                                        span.delete-icon {
+                                            cursor: pointer;
+                                            color: gray;
+                                            &:hover {
+                                                color: brown;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

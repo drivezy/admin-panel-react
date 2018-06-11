@@ -1,0 +1,37 @@
+
+.template-root {
+    cursor: pointer;
+    .transclude-container {
+        display: flex;
+        .tranclude-text {
+            * {
+                padding-bottom: 5px;
+                border-bottom: 1px solid white;
+                &:hover {
+                    border-color: #cecece;
+                }
+            }
+        }
+        i.fa {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: #564b4b;
+            margin-top: -5px;
+        }
+    }
+    .input-wrapper {
+        font-size: 18px;
+        margin-top: 7px;
+        margin-bottom: 10px;
+        input {
+            outline: none;
+            border: none;
+            border-bottom: 1px solid #cecece;
+            color: #5d4e4e;
+        }
+        i.fa {
+            color: green;
+        }
+    }
+}
