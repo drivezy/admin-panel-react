@@ -7,7 +7,7 @@
         padding: 10px;
         color: #000;
         @include themify($themes){
-            color: themed('textColorWhite');
+            color: themed('whiteColor');
         }       
         &:hover { 
             text-decoration: underline;
