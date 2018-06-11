@@ -16,10 +16,9 @@ $themes: (
         headerBorder:#c1c1c1,
         // Header Ends
         // Sub Header
-        subHeader:#f1f0f0,
+        subHeader:#FFFFFF,
         subHeaderBorder:#d4d4d4,
         // Sub Header Ends
-
         // Table Styling
         tableHeader:#efefef,
         tableHeaderBorder:#ececec,
@@ -35,39 +34,63 @@ $themes: (
         buttonBorder: 2px solid #fff,
         ),
         dark: (
+            darkThemeDark: #000,
             // Body
-            bodyBackground:#ebeef0,
+            bodyBackground:#2f2f2f,
+            textColorWhite:#cccaca,
             // Body Ends
+            // Side Table Styling
+            sideTableBackground: #292929,
+            searchBorder: 1px solid #292929,
+            lightText:#a4b2b8,
+            // Card Background
+            cardBackground: #5b5c5d,
+            detailBackgroundCard:#293140,
+            grayBackground: #585858,
+            //Buttons Styling
+                // Default Button
+            defaultThemeDark: #2b3b46,
+            whiteColor: #ffffff,
+                // Secondary Button
+            noBorder: 0px,
+            secondaryThemeDark: #E73E7E,
+                // Primary Button
+            primaryBorder: 1px solid #3d3d3a,
+            primaryThemeDark:#3d3d3a,
+            // Dropdown Styling
+            dropdownBorder:1px solid #000,
+            dropdownInputBackground:#424242,
+            //menu
+            detailsBackground:#1f2938,
             // Sidbar Styling
-            sideBackground:#ffffff,
-            sidebarBorder:#bfbfbf,
-            logoBackground:#f9f6f6,
+            sideBackground:#11181d,
+            sidebarBorder:#020202,
+            darkBackground:#1C252B,
             logoBottomBorder:#e9e7e7,
-            menuHover:#f2f2f2,
-            // Sidebar Styling Ends 
-            // Header Styling
-            headerBackground:#e7e7e7,
-            headerBorder:#c1c1c1,
-            // Header Ends
+            lightColor:#fffccd,
+            // Sidebar Styling Ends
+            // Panel
+            menuBorderPanel: 0px 0px 1px 1px #000000,
             // Sub Header
-            subHeader:#f1f0f0,
-            subHeaderBorder:#d4d4d4,
+            subHeader:#232323,
             // Sub Header Ends
-    
             // Table Styling
-            tableHeader:#efefef,
-            tableHeaderBorder:#ececec,
-            columnTitle:#3b6877,
-            dropdownLink:#b1493ce8,
+            tableDataBorder: 1px solid #000,
+            tableBackground: #2e2e2e,
+            columnTitle:#9e9d9a,
+            sortLink:#F15590,
             // Table Styling Ends
-            backgroundColor: #fff,
-            textColor: #408bbd,
-            buttonTextColor: #408bbd,
-            buttonTextTransform: none,
-            buttonTextHoverColor: #61b0e7,
-            buttonColor: #fff,
+            // Menu Table Styling
+            menuTableBackground:#1e2838,
+            menuBorder:1px solid #000,
+            menuBorderRadius:5px,
+            // Ends
             buttonBorder: 2px solid #fff,
+            expandMenuHeader: #12181f,
             ),
+            // darkTheme:(
+            //     dark:'#232323'
+            // )
             drivezy: (
                 // Body
                 bodyBackground:#ebeef0,
@@ -209,3 +232,6 @@ $onErrorThemeDark: #ffffff;
 // Drivezy Dark Theme Colours
 $primaryDark:#032134;
 // Drivezy Dark Theme Ends
+
+// Dark Theme Button Colors
+

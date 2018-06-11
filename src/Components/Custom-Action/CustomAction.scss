@@ -2,6 +2,9 @@
 .header-actions {
     .custom-actions {
         .button-element {
+            @include themify($themes){
+                color: themed('textColorWhite');
+            } 
             text-transform: capitalize;
             .action-label {
                 padding-left: 10px;

@@ -1,5 +1,5 @@
 .generic-detail-container {
-    .header {
+        .header {
         display: flex;
         justify-content: space-between;
         background: #dcdcdc7a;
@@ -19,6 +19,7 @@
             }
         }
     }
+}
     .detail-content {
         margin: 8px;
     }
@@ -28,4 +29,4 @@
     .nav-item {
         cursor: pointer;
     }
-}
+
