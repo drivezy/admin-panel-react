@@ -34,8 +34,8 @@ export default class IndexRouter extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            sideNavExpanded: false,
-            menuFetched: false,
+            sideNavExpanded: true,
+            menuFetched: true,
         }
         // props.GetCities();
         Location.getHistoryMethod(this.getRouterProps); // pass methods, so that location utils can get history object

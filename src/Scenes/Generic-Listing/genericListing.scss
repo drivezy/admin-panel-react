@@ -22,7 +22,7 @@
         .table-settings {
             margin: 0px;
         }
-        .search-wrapper {}
+        .search-wrapper {} 
         .header-actions {
             display: flex;
             align-items: center;
@@ -41,8 +41,14 @@
         }
     }
     .card {
+        @include themify($themes){
+            background: themed('cardBackground');
+        }
         // width: 95%;
-        margin: 8px;
+        // border: none !important;
+        padding: 5px;
+        //margin: 8px;
+        border: none !important; 
         .card-body {
             overflow-x: scroll;
             padding: 0px; // Table Begins

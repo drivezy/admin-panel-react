@@ -1,10 +1,14 @@
-.current-filter-view { 
+@import 'Assets/Global-Shared/theme.scss';
+.current-filter-view {
     .dynamic-filter-container { 
         height: 100%;
         display: flex;
         align-items: center;
         padding: 10px;
-        color: #5c5c5d;
+        color: #000;
+        @include themify($themes){
+            color: themed('textColorWhite');
+        }       
         &:hover { 
             text-decoration: underline;
         }
