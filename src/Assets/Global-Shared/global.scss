@@ -331,23 +331,23 @@ Non critical css goes here
 .btn-default {
     @include themify($themes) {
         background: themed('defaultThemeDark') !important;
-        color: themed('onDefaultThemeDark');
+        color: themed('whiteColor');
         font-size: 98%;
     }
 }
 
 .btn-secondary {
     @include themify($themes) {
-        border: themed('secondaryBorder');
+        border: themed('noBorder');
         background: themed('secondaryThemeDark') !important;
-        color: themed('onSecondaryThemeDark');
+        color: themed('whiteColor');
     }
 }
 
 th{
     @include themify($themes){
         color: themed('table');
-        background: themed('tableRowBackground');
+        background: themed('defaultThemeDark');
     }
 }
 
@@ -355,21 +355,21 @@ th{
     @include themify($themes) {
         border: themed('primaryBorder');
         background: themed('primaryThemeDark') !important;
-        color: themed('onPrimaryThemeDark');
+        color: themed('whiteColor');
     }
 }
 
 .dropdown-menu.menu-operations {
     @include themify($themes){
-        background: themed('dropdownBtnBackground');
+        background: themed('bodyBackground');
         border: themed('dropdownBorder');
-        color: themed('dropdownTextColor');
+        color: themed('lightText');
     }
 }
 
 .fa-times{
     @include themify($themes){
-        color: themed('dropdownIconColor');
+        color: themed('whiteColor');
     }
 }
 
@@ -386,7 +386,7 @@ th{
 
 .detail-portlet{
     @include themify($themes){
-        color: themed('onDefaultThemeDark');
+        color: themed('whiteColor');
     }
 }
 

@@ -23,8 +23,8 @@
                             border: 1px solid;
                             border-left: none;
                             @include themify($themes) {
-                                border-color: themed('tableHeaderBorder');
-                                background: themed('tableHeader');
+                                border-color: themed('darkThemeDark');
+                                background: themed('subHeader');
                             }
                             &.header-index {
                                 .select-box {
@@ -67,7 +67,7 @@
                                             text-decoration: none;
                                             opacity: 0.8;
                                             @include themify($themes) {
-                                                color: themed('dropdownLink');
+                                                color: themed('sortLink');
                                             }
                                         }
                                     }
@@ -143,12 +143,12 @@
                                 // padding: 15px 10px;
                             }
                             @include themify($themes){
-                                color: themed('dataColor');    
+                                color: themed('lightText');    
                             }
 
                             a {
                                 @include themify($themes){
-                                    color: themed('tableLinkColor');    
+                                    color: themed('lightColor');    
                                 }
                                 // color: #1e739e;
                                 font-size: 13px;
@@ -205,7 +205,7 @@
                                 border-left: 1px solid #a4b2b8;
                                 @include themify($themes){
                                     background: themed('sideTableBackground');
-                                    color: themed('sideTableText');
+                                    color: themed('lightText');
                                 }
                                 text-align: right;
                                 //border-left: 1px solid #ebeef0;
@@ -221,7 +221,7 @@
                     border-left: 1px solid #ebeef0;
                     @include themify($themes){
                         background: themed('sideTableBackground');
-                        color: themed('sideTableText');
+                        color: themed('lightText');
                     }
                     background: white; // right: 0px;
                     // padding: 14px;

@@ -36,8 +36,8 @@
         }
         .search-box-header {
             @include themify($themes){
-                background: themed('darkThemeHeader');
-                border-bottom:
+                background: #12181f;
+                border-bottom: 0px;
             }
             background: white;
             display: flex;
@@ -77,7 +77,7 @@
             p.search-hint {
                 color: #5f4a24;
                 @include themify($themes){
-                    color: themed('tableMenuNavLinks');
+                    color: themed('lightColor');
                 }
                 margin: 9px 16px;
                 font-size: 12px;
@@ -91,8 +91,8 @@
                 }
                 .panel-heading {
                     @include themify($themes){
-                        color: themed('onSecondaryThemeDark');
-                        background-color: themed('tableHeaderBorder')
+                        color: themed('whiteColor');
+                        background-color: themed('darkThemeDark')
                     }
                     padding: 5px 8px;
                     font-weight: 500;
@@ -105,7 +105,12 @@
                         cursor: pointer;
                         color: #2b3742;
                         @include themify($themes){
-                            color: themed('textColorNav');
+                            color: themed('textColorWhite');
+                        }
+                        &:hover{
+                            @include themify($themes){
+                                color: themed('darkThemeDark');
+                            }
                         }
                         padding: 5px;
                         -webkit-font-smoothing: antialiased;

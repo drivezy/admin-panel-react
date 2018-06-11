@@ -14,7 +14,7 @@
     @include themify($themes) {
         background: themed('sideBackground');
         border-color: themed('sidebarBorder');
-        color: themed('textColorNav');
+        color: themed('textColorWhite');
     }
     &.collapsed {
         width: 40px;
@@ -41,8 +41,8 @@
             justify-content: space-between;
             border-bottom: 1px solid;
             @include themify($themes) {
-                background: themed('logoBackground');
-                border-color: themed('logoBackground');
+                background: themed('darkBackground');
+                border-color: themed('darkBackground');
             }
             span.logo-container {
                 padding: 5px 20px;
@@ -85,7 +85,7 @@
                     border-radius: 2px;
                     @include themify($themes) {
                         color: themed('menuIcon');
-                        border-radius: themed('borderRadius');
+                        border-radius: themed('noBorder');
                     }
                     .menu-icon {
                         width: 30px;
@@ -101,8 +101,8 @@
                     }
                     &:hover {
                         @include themify($themes) {
-                            background: themed('menuHover');
-                            color: themed('menuIconHover');
+                            background: themed('lightColor');
+                            color: themed('darkThemeDark');
                             border-left: themed('sideBorder');
                         }
                     }

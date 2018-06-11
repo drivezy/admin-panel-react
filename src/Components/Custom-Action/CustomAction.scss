@@ -3,7 +3,7 @@
     .custom-actions {
         .button-element {
             @include themify($themes){
-                color: themed('filterText');
+                color: themed('textColorWhite');
             } 
             text-transform: capitalize;
             .action-label {

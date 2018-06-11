@@ -4,7 +4,7 @@
     .card-body {
         @include themify($themes){
             background-color: themed('detailsBackground');
-            color: themed('onDefaultThemeDark');
+            color: themed('whiteColor');
         }
         padding: 6px 8px;
         .nav{
@@ -16,14 +16,14 @@
                         &.active{
                             border-bottom: 2px solid #1b62ab;
                             @include themify($themes){
-                                background-color: themed('tableMenuNavLinks');
-                                border-bottom: themed('tableMenuNavBorder');
+                                background-color: themed('lightColor');
+                                border-bottom: themed('noBorder');
                             }
                         }
                         &:hover{
                             @include themify($themes){
-                                background-color: themed('tableMenuNavHoverBG');
-                                color: themed('tableMenuNavHover');
+                                background-color: themed('lightColor');
+                                color: themed('darkThemeDark');
                             }
                         }
                     }

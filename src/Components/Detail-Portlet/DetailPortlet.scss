@@ -19,7 +19,7 @@
         background: #f9f9f9;
         @include themify($themes){
             background-color: themed('menuTableBackground');
-            color: themed('onPrimaryThemeDark');
+            color: themed('whiteColor');
             border: themed('menuBorder');
             border-radius: themed('menuBorderRadius');
         }
@@ -28,7 +28,7 @@
         background: #f9f9f9;
         @include themify($themes){
             background-color: themed('menuTableBackground');
-            color: themed('onPrimaryThemeDark');
+            color: themed('whiteColor');
             border: themed('menuBorder');
             border-radius: themed('menuBorderRadius');
         }
