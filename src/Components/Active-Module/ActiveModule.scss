@@ -36,8 +36,8 @@
         }
         .search-box-header {
             @include themify($themes){
-                background: #12181f;
-                border-bottom: 0px;
+                background: themed('expandMenuHeader');
+                border-bottom: themed('noBorder');
             }
             background: white;
             display: flex;

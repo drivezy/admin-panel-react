@@ -380,8 +380,10 @@ th{
 }
 
 .listing-search-container .listing-search-tool .listing-input-tool .input-select{
-    background-color: #585858;
-    border: 1px solid #292929;
+    @include themify($themes){
+        background-color: themed('grayBackground');
+        border: themed('searchBorder');
+    }
 }
 
 .detail-portlet{
