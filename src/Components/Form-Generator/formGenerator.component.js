@@ -48,7 +48,7 @@ export default class FormGenerator extends Component {
     }
 
     removeInput = (key) => {
-        let fields = this.state;
+        let {fields} = this.state;
         fields.splice(key, 1);
         this.setState({ fields });
     }
