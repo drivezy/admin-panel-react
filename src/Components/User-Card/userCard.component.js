@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
     Card
 } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 import './userCard.component.css';
 
@@ -29,7 +30,10 @@ export default class UserCard extends Component {
                 <Card>
                     <div className="user-info">
                         <div className="user-info-detail">
-                            <p className="name-colour">{userData.display_name}</p>
+                            <Link to={`/user/${userData.id}`} className="menu-list">
+                                {userData.display_name}
+                            </Link>
+                            {/* <p className="name-colour">{userData.display_name}</p> */}
                             <p><i className="fa fa-phone" aria-hidden="true"></i> {userData.mobile} <i className="fa fa-check-circle text-green" aria-hidden="true"></i></p>
                             <p><i className="fa fa-birthday-cake" aria-hidden="true"></i> {userData.dob}</p>
                             {

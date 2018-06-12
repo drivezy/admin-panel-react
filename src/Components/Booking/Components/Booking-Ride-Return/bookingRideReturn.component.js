@@ -202,7 +202,7 @@ export default class BookingRideReturn extends Component {
                                     </div>
                             }
                             <div className="fuel-progress-bar">
-                                <Row className="gray-border-bottom">
+                                <Row className="trip-gray-border-bottom">
                                     {
                                         bookingRideReturnData && bookingRideReturnData.status && (bookingRideReturnData.status.id == 6 || bookingRideReturnData.status.id == 7) &&
                                         [
@@ -293,33 +293,50 @@ export default class BookingRideReturn extends Component {
                                 <p>Amount Paid</p>
                                 <p>Rs. {paidAmount}</p>
                             </Col>
+
                             {
-                                (!bookingRideReturnData.status || bookingRideReturnData.status.id == 5 || bookingRideReturnData.status.id == 6) ?
+                                (bookingRideReturnData.status != null && bookingRideReturnData.status.id != 5 && bookingRideReturnData.status.id != 6) ?
                                     <Col sm="4">
                                         <p>Total Fare</p>
                                         <p>Rs. {fairAmount}</p>
                                     </Col>
                                     : null
                             }
+
                             {
-                                (bookingRideReturnData.collection.length || (bookingRideReturnData.status && bookingRideReturnData.status.id == 8)) ?
+                                (bookingRideReturnData.collection.length == 0 || bookingRideReturnData.status == null) ?
                                     <Col sm="4">
                                         <p>Tentative Amount</p>
                                         <p>Rs. {bookingRideReturnData.tentative_amount}</p>
                                     </Col>
                                     : null
                             }
-                            <Col sm="4">
-                                {
-                                    (bookingRideReturnData && amountDue > 0) ?
-                                        <div>
-                                            <p>Refund</p>
-                                            <p>Rs. {amountDue}</p>
-                                        </div>
-                                        :
-                                        null
-                                }
-                            </Col>
+
+                            {
+                                (bookingRideReturnData && bookingRideReturnData.type.id != 580 && amountDue < 0 && bookingRideReturnData.status.id != 5 && bookingRideReturnData.status.id != 6) &&
+                                <Col sm="4">
+                                    {
+                                        amountDue < 0 &&
+                                        <p>Amount Due</p>
+                                    }
+                                    {
+                                        amountDue < 0 ?
+                                            <p>Rs. {0 - amountDue}</p>
+                                            : "No Amount Due"
+                                    }
+                                </Col>
+                            }
+
+                            {
+                                (bookingRideReturnData && amountDue > 0 && bookingRideReturnData.status.id != 5 && bookingRideReturnData.status.id != 6) ?
+                                    <Col sm="4">
+                                        <p>Refund</p>
+                                        <p>Rs. {amountDue}</p>
+                                    </Col>
+                                    : null
+                            }
+
+
                         </Row>
                     </CardBody>
                 </div>

@@ -4,8 +4,10 @@ import {
 } from 'reactstrap';
 
 import './bookingPreRide.css';
+import { Link } from 'react-router-dom';
 
 import { BookingPickupDate, BookingPickupTime, BookingDropDate, BookingDropTime } from './../../../../Utils/booking.utils';
+import CustomTooltip from '../../../Custom-Tooltip/customTooltip.component';
 
 export default class BookingPreRide extends Component {
 
@@ -18,11 +20,16 @@ export default class BookingPreRide extends Component {
 
     render() {
         const { bookingPreRideData = {} } = this.state;
+        let couponDescription;
 
         let bookingPickupDate = BookingPickupDate(bookingPreRideData.pickup_time);
         let bookingPickupTime = BookingPickupTime(bookingPreRideData.pickup_time);
         let bookingDropDate = BookingDropDate(bookingPreRideData.drop_time);
         let bookingDropTime = BookingDropTime(bookingPreRideData.drop_time);
+
+        if (bookingPreRideData.coupon) {
+            couponDescription = bookingPreRideData.coupon.campaign.cashback ? 'Campaign Discription:' + bookingPreRideData.coupon.campaign.description : 'Campaign Discription:' + bookingPreRideData.coupon.campaign.description + ' | ' + (bookingPreRideData.coupon.description ? "Coupon Description:" + bookingPreRideData.coupon.description : " ") + "Discount Amount:" + bookingPreRideData.coupon_discount;
+        }
 
         return (
 
@@ -53,23 +60,36 @@ export default class BookingPreRide extends Component {
                                         <img className="media-object width-100" src={`${bookingPreRideData.vehicle.car.image}`} alt="" />
                                     </Col>
                                     <Col sm="8">
-                                        <span className="vehicle-number"><h6>{bookingPreRideData.vehicle.registration_number}</h6></span>
-                                        <span>({bookingPreRideData.vehicle.car.name})</span>
+                                        <h4>
+                                            <Link to={`/allVehicleDetail/${bookingPreRideData.vehicle.id}`} className="menu-list">
+                                                {bookingPreRideData.vehicle.registration_number}
+                                            </Link>
+                                            <span className="font-14">
+                                                <CustomTooltip placement="top" html={bookingPreRideData.vehicle.car.name} title="Current Vehicle"></CustomTooltip>
+                                            </span>
+                                        </h4>
+                                        {
+                                            bookingPreRideData.billing_car == null &&
+                                            <p>
+                                                {bookingPreRideData.vehicle.car.name}
+                                            </p>
+                                        }
+                                        {
+                                            bookingPreRideData.billing_car != null &&
+                                            <CustomTooltip placement="top" html={bookingPreRideData.billing_car.name} title="Billing Vehicle"></CustomTooltip>
+                                        }
                                         <p>
                                             {bookingPreRideData.type.value}
                                             <span>({bookingPreRideData.fuel_package == null ? bookingPreRideData.with_fuel ? 'withfuel' : 'fuelless' : bookingPreRideData.fuel_package + ' Kms fuel package'})</span>
                                         </p>
-                                        {/* <p uib-tooltip="Billing Vehicle" tooltip-placement="bottom-left" ng-if="bookingPreRideData.billing_car!=null">
-                                                                <b>{bookingPreRideData.billing_car.name}</b>
-                                                            </p> */}
                                     </Col>
                                 </Row>
                             </Col>
                             <Col sm="2">
-                                {/* <div className="no-padding coupon-code black-text " uib-tooltip="{viewBooking.couponDescription}" tooltip-placement="top-left"
-                                                    ng-if="bookingPreRideData.coupon_id">
-                                                    {bookingPreRideData.coupon.coupon_code}
-                                                </div> */}
+                                {
+                                    bookingPreRideData.coupon_id &&
+                                    <CustomTooltip placement="top" html={bookingPreRideData.coupon.coupon_code} title={couponDescription}></CustomTooltip>
+                                }
                             </Col>
                         </Row>
                         <Row className="booking-detail-date">
@@ -82,7 +102,9 @@ export default class BookingPreRide extends Component {
                                         {bookingPickupTime}
                                     </div>
                                     <div className="booking-detail-drop-venue">
-                                        {bookingPreRideData.venue_pick.name}
+                                        <Link to={`/venue/${bookingPreRideData.venue_pick.id}`} className="menu-list">
+                                            {bookingPreRideData.venue_pick.name}
+                                        </Link>
                                     </div>
                                     <div className="no-padding text-black font-12">
                                         {bookingPreRideData.venue_pick.city.name}
@@ -96,7 +118,7 @@ export default class BookingPreRide extends Component {
                                     </div>
                                     <div className="no-padding light-red  font-11" align="center">
                                         53 Hrs.
-                                                    </div>
+                                    </div>
                                 </div>
                             </Col>
                             <Col sm="5">
@@ -111,7 +133,9 @@ export default class BookingPreRide extends Component {
                                         bookingPreRideData.venue_drop &&
                                         [
                                             <div key={1} className="booking-detail-drop-venue" align="right">
-                                                {bookingPreRideData.venue_drop.name}
+                                                <Link to={`/venue/${bookingPreRideData.venue_drop.id}`} className="menu-list">
+                                                    {bookingPreRideData.venue_drop.name}
+                                                </Link>
                                             </div>,
                                             <div key={2} className="no-padding text-black font-12" align="right">
                                                 {bookingPreRideData.venue_drop.city.name}

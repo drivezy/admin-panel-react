@@ -46,9 +46,8 @@ export default class BookingDetail extends Component {
                     </div>
                     <div className="booking-feedback-detail">
                         {
-                            bookingDetail.id ?
-                                <BookingFeedback bookingFeedback={bookingDetail} />
-                                : null
+                            (bookingDetail.id && bookingDetail.status != null) &&
+                            <BookingFeedback bookingFeedback={bookingDetail} />
                         }
                     </div>
                 </div>
