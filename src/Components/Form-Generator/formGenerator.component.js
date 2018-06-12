@@ -11,16 +11,18 @@ export default class FormGenerator extends Component {
 
         this.state = {
             formOutput: props.formOutput,
-            fields: props.fields
+            fields: props.fields,
+            inputSubTypes: props.inputSubTypes
         };
     }
 
     render() {
-        const { formOutput, fields } = this.state;
+        const { formOutput, fields, inputSubTypes } = this.state;
+        console.log(inputSubTypes);
         return (
             <div className="form-generator">
                 <div className="component-wrapper">
-                    <FormElements formOutput={formOutput} fields={fields} />
+                    <FormElements inputSubTypes={inputSubTypes} formOutput={formOutput} fields={fields} />
                 </div>
                 <div className="preview-wrapper">
                     <FormPreview />

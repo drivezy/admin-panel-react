@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './formElements.css';
 
 import EditableLabel from './../Editable-Label/editableLable.component';
+import SelectBox from './../../../Forms/Components/Select-Box/selectBox';
 
 
 export default class FormElements extends Component {
@@ -31,13 +32,16 @@ export default class FormElements extends Component {
 
         this.state = {
             formOutput: props.formOutput,
-            fields: props.fields
+            fields: props.fields,
+            inputSubTypes: props.inputSubTypes,
+            type: ''
         };
     }
 
 
     render() {
-        const { formOutput } = this.state;
+        const { formOutput, fields, inputSubTypes, type } = this.state;
+        console.log(inputSubTypes);
         return (
             <div className="elements-wrapper">
                 {
@@ -71,88 +75,114 @@ export default class FormElements extends Component {
                             </div>
                         }
                         {
+                            fields.length > 0 &&
                             fields.map((input, key) => {
                                 return (
-                                    <div key={key} className="panel selected-inputs" >
-                                        <div className="panel-body">
-                                            <div ng-switch="input.type">
-                                                <div ng-switch-when="input">
-                                                    <div className='form-group'>
-                                                        <form name="childForm">
-                                                            <div className="first-row">
-                                                                <div className="input-type">
-                                                                    <custom-select-field ng-model="input.formElements.type" call-it="formGenerator.selectSubType" place-holder="Type" obj="formGenerator.inputSubTypes"
-                                                                        iterate-item="name" required="true">
-                                                                    </custom-select-field>
-                                                                </div>
-                                                                <div className="input-label">
-                                                                    <div>
-                                                                        <input ng-change="formGenerator.editFieldName(input,$index)" validate="required" placeholder="Label" ng-model="input.formElements.display_name"
-                                                                            type="text" className="form-control" />
+                                    <div key={key}>
+                                        {
+                                            input.formElements &&
+                                            <div className="panel selected-inputs" >
+                                                <div className="panel-body">
+                                                    <div ng-switch="input.type">
+                                                        <div ng-switch-when="input">
+                                                            <div className='form-group'>
+                                                                <div className="first-row">
+                                                                    <div className="input-type">
+                                                                        <SelectBox
+                                                                            onChange={(data) => this.setState({ type: data })}
+                                                                            value={type}
+                                                                            options={inputSubTypes}
+                                                                            placeholder="Type"
+                                                                            field='name'
+                                                                        />
+                                                                        {/* <custom-select-field ng-model="input.formElements.type" call-it="formGenerator.selectSubType" place-holder="Type" obj="formGenerator.inputSubTypes"
+                                                                            iterate-item="name" required="true">
+                                                                        </custom-select-field> */}
                                                                     </div>
-                                                                </div>
+                                                                    <div className="input-label">
+                                                                        <div>
+                                                                            <input ng-change="formGenerator.editFieldName(input,$index)" validate="required" placeholder="Label" ng-model="input.formElements.display_name"
+                                                                                type="text" className="form-control" />
+                                                                        </div>
+                                                                    </div>
 
-                                                                <button type="button" className="btn btn-xs btn-delete" ng-click="formGenerator.removeElement($index)">
-                                                                    <i className="fa fa-trash-o" aria-hidden="true"></i>
-                                                                </button>
-                                                            </div>
-                                                            <div className="second-row" ng-if="input.formElements.type.selected.id==117||input.formElements.type.selected.id==116">
-                                                                <div className="route-holder">
+                                                                    <button type="button" className="btn btn-xs btn-delete" ng-click="formGenerator.removeElement($index)">
+                                                                        <i className="fa fa-trash-o" aria-hidden="true"></i>
+                                                                    </button>
+                                                                </div>
+                                                                {
+                                                                    (input.formElements.type && input.formElements.type.selected && input.formElements.type.selected.id == 117) || (input.formElements.type && input.formElements.type.selected && input.formElements.type.selected.id == 116) &&
+                                                                    <div className="second-row">
+                                                                        <div className="route-holder">
+                                                                            <div className="form-group">
+                                                                                <label className="sr-only" for="exampleInputEmail3">Route</label>
+                                                                                <input ng-model="input.formElements.route" type="text" className="form-control" placeholder="Route" />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div>
+                                                                            <small>or</small>
+                                                                        </div>
+                                                                        <div className="scope-variable">
+                                                                            <div className="form-group">
+                                                                                <label className="sr-only" for="exampleInputEmail3">Scope</label>
+                                                                                <input ng-model="input.formElements.scope" type="text" className="form-control" placeholder="Scope" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                                <div className="third-row">
+                                                                    <div className="column-name">
+                                                                        <label>
+                                                                            Column Name :
+                                                                            </label>
+                                                                        {
+                                                                            formOutput &&
+                                                                            <editable-label className="field-name" value={input.formElements.column_name} placeholder={input.formElements.column_name || 'edit'}>
+                                                                            </editable-label>
+                                                                        }
+                                                                    </div>
                                                                     <div className="form-group">
-                                                                        <label className="sr-only" for="exampleInputEmail3">Route</label>
-                                                                        <input ng-model="input.formElements.route" type="text" className="form-control" placeholder="Route" />
+                                                                        <label>
+                                                                            Display Column :
+                                                                            </label>
+                                                                        {
+                                                                            formOutput &&
+                                                                            <editable-label className="field-name" value={input.formElements.display_column} placeholder={input.formElements.display_column || 'edit'}>
+                                                                            </editable-label>
+                                                                        }
+                                                                    </div>
+                                                                    <div className="form-group">
+                                                                        <label>
+                                                                            Key :
+                                                                            </label>
+                                                                        {
+                                                                            formOutput &&
+                                                                            <editable-label className="field-name" value={input.formElements.key} placeholder={input.formElements.key || 'edit'}>
+                                                                            </editable-label>
+                                                                        }
                                                                     </div>
                                                                 </div>
-                                                                <div>
-                                                                    <small>or</small>
-                                                                </div>
-                                                                <div className="scope-variable">
-                                                                    <div className="form-group">
-                                                                        <label className="sr-only" for="exampleInputEmail3">Scope</label>
-                                                                        <input ng-model="input.formElements.scope" type="text" className="form-control" placeholder="Scope" />
+                                                                {
+                                                                    (input.formElements.type && input.formElements.type.selected && input.formElements.type.selected.id == 117) || (input.formElements.type && input.formElements.type.selected && input.formElements.type.selected.id == 116) &&
+                                                                    <div className="on-select">
+                                                                        <button type="button" type="submit" className="btn btn-danger btn-xs" ng-click="formGenerator.assignOnSelectScript(input)">
+                                                                            {input.formElements.onSelect ? 'Edit Script' : 'Add onSelect Method'}
+                                                                        </button>
+                                                                        <div>
+                                                                            <small className="">
+                                                                                <code>
+                                                                                    {input.formElements.onSelect}
+                                                                                </code>
+                                                                            </small>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
+                                                                }
                                                             </div>
-                                                            <div className="third-row">
-                                                                <div className="column-name">
-                                                                    <label for="">
-                                                                        Column Name :
-                                                                            </label>
-                                                                    <editable-label className="field-name" ng-if="formGenerator.formOutput" model="input.formElements.column_name" placeholder="{{input.formElements.column_name||'edit'}}">
-                                                                    </editable-label>
-                                                                </div>
-                                                                <div className="form-group">
-                                                                    <label for="">
-                                                                        Display Column :
-                                                                            </label>
-                                                                    <editable-label className="field-name" ng-if="formGenerator.formOutput" model="input.formElements.display_column" placeholder="{{input.formElements.display_column||'edit'}}">
-                                                                    </editable-label>
-                                                                </div>
-                                                                <div className="form-group">
-                                                                    <label for="">
-                                                                        Key :
-                                                                            </label>
-                                                                    <editable-label className="field-name" ng-if="formGenerator.formOutput" model="input.formElements.key" placeholder="{{input.formElements.key||'edit'}}">
-                                                                    </editable-label>
-                                                                </div>
-                                                            </div>
-                                                            <div className="on-select" ng-if="input.formElements.type.selected.id==117||input.formElements.type.selected.id==116">
-                                                                <button type="button" type="submit" className="btn btn-danger btn-xs" ng-click="formGenerator.assignOnSelectScript(input)">
-                                                                    {input.formElements.onSelect ? 'Edit Script' : 'Add onSelect Method'}
-                                                                </button>
-                                                                <div>
-                                                                    <small className="">
-                                                                        <code>
-                                                                            {input.formElements.onSelect}
-                                                                        </code>
-                                                                    </small>
-                                                                </div>
-                                                            </div>
-                                                        </form>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        }
                                     </div>
                                 )
                             })
