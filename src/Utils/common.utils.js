@@ -106,3 +106,12 @@ export function BuildUrlForGetCall(url, params) {
     };
     return newUrl.slice(0, -1);
 }
+
+/**
+ * Returns true if object is having keys
+ * false if object is empty 
+ * @param  {Object} obj
+ */
+export function IsObjectHaveKeys(obj) {
+    return obj && typeof obj == 'object' && Object.keys(obj).length;
+}

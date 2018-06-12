@@ -60,8 +60,6 @@ export default class DatePicker extends Component {
 
         };
 
-        // let { value } = this.state;
-
         if (this.props.single) {
             if (this.state.value) {
                 props.startDate = moment(this.state.value).format(this.state.format);
