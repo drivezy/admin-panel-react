@@ -1,0 +1,31 @@
+.booking-feedback-card {
+    margin: 2px;
+    .card {
+        .row {
+            text-align: center;
+            height: 150px;
+        .user-feedback-info {
+            margin-top: 10px;
+            .user-feedback {
+                .user-stars {
+                    color: #f4d03f;
+                }
+            }
+            .feedback-stars {
+                margin-left: 108px;
+            }
+        }
+        .fleet-feedback-info {
+            margin-top: 10px;
+            .fleet-feedback {
+                .fleet-stars {
+                    color: #f4d03f;
+                }
+            }
+            .feedback-stars {
+                margin-left: 108px;
+            }
+        }
+        }        
+    }
+}

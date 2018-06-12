@@ -21,10 +21,10 @@
                             display: table-cell;
                             padding: 12px;
                             border: 1px solid;
-                            border-left: none;
                             @include themify($themes) {
-                                border-color: themed('darkThemeDark');
-                                background: themed('subHeader');
+                                border-color: themed('darkColor');
+                                background: themed('tableBackground');
+                                border: themed('tableHeadBorder')
                             }
                             &.header-index {
                                 .select-box {
@@ -143,12 +143,12 @@
                                 // padding: 15px 10px;
                             }
                             @include themify($themes){
-                                color: themed('lightText');    
+                                color: themed('textSecondary');    
                             }
 
                             a {
                                 @include themify($themes){
-                                    color: themed('lightColor');    
+                                    color: themed('linkColor');    
                                 }
                                 // color: #1e739e;
                                 font-size: 13px;
@@ -201,11 +201,11 @@
                     tr {
                         th {
                             &.action-header {
-                                background: white;
-                                border-left: 1px solid #a4b2b8;
+                                border: 1px solid #a4b2b8;
                                 @include themify($themes){
                                     background: themed('sideTableBackground');
-                                    color: themed('lightText');
+                                    color: themed('sideBarIcons');
+                                    border: themed('actionBarBorder');
                                 }
                                 text-align: right;
                                 //border-left: 1px solid #ebeef0;
@@ -221,12 +221,13 @@
                     border-left: 1px solid #ebeef0;
                     @include themify($themes){
                         background: themed('sideTableBackground');
-                        color: themed('lightText');
+                        color: themed('sideBarIcons');
+                        border: themed('actionBarBorder');
                     }
                     background: white; // right: 0px;
                     // padding: 14px;
                     padding: 15px 20px;
-                    border-bottom: 1px solid #ececec;
+                    
                     i.fa {
                         margin: 0px 4px; // font-size: 20px;
                         cursor: pointer; // color: #4f6273;

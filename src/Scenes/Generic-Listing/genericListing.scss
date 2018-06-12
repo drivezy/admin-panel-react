@@ -11,10 +11,10 @@
         display: flex;
         justify-content: space-between; // width: 95%;
         padding: 4px 8px;
-        border-bottom: 1px solid;
+        border-bottom: 1px solid #000;
         @include themify($themes) {
             background: themed('subHeader');
-            border-color: themed('subHeaderBorder');
+            border-bottom: themed('subHeaderBorder');
         }
         .search-bar {
             display: flex;
@@ -52,6 +52,9 @@
         .card-body {
             overflow-x: scroll;
             padding: 0px; // Table Begins
+        }
+        @include themify($themes){
+            margin: themed('cardMargin');
         }
     }
 }

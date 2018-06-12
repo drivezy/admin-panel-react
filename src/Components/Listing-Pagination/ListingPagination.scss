@@ -38,7 +38,7 @@
         }
         .pagination-record{
             @include themify($themes) {
-                color:themed('whiteColor');
+                color:themed('secondaryColor');
             }
         }
     }
