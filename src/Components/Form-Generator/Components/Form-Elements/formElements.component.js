@@ -25,6 +25,8 @@ const ElementFormContent = props => {
 
             <div className="element-detail">
                 <div className="element-label">
+                    <label>Column Name</label>
+
                     <Field className={`form-control`} type="text" name="label" placeholder={`Enter Label`} />
                 </div>
                 <div className="element-type">

@@ -1,5 +1,18 @@
-.elements-wrapper{
-    .card{
-        
+.elements-wrapper {
+    // display: flex;
+    &.card {
+        .element-detail {
+            display: flex;
+            .element-label {
+                margin: 4px;
+
+                flex-basis: 50%;
+            }
+            .element-type {
+                margin: 4px;
+
+                flex-basis: 50%;
+            }
+        }
     }
 }
