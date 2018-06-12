@@ -91,7 +91,7 @@
                 }
                 .panel-heading {
                     @include themify($themes){
-                        color: themed('whiteColor');
+                        color: themed('secondaryColor');
                         background-color: themed('subMenuHeader')
                     }
                     padding: 5px 8px;

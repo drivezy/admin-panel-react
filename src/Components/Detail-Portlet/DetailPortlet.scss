@@ -21,7 +21,7 @@
         @include themify($themes){
             background-color: themed('menuTableBackground');
             color: themed('textSecondary');
-            border: themed('menuBorder');
+            border: themed('borderBottom');
             border-radius: themed('menuBorderRadius');
         }
     }
@@ -30,7 +30,7 @@
         @include themify($themes){
             background-color: themed('menuTableBackground');
             color: themed('textSecondary');
-            border: themed('menuBorder');
+            border: themed('borderBottom');
             border-radius: themed('menuBorderRadius');
         }
     }

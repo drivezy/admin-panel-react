@@ -328,11 +328,13 @@ Non critical css goes here
     }
 }
 
-.btn-default {
+.search-button{
+    .btn-default {
     @include themify($themes) {
         background: themed('defaultThemeDark') !important;
         color: themed('whiteColor');
         font-size: 98%;
+    }
     }
 }
 

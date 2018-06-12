@@ -23,10 +23,9 @@
 }
 
 .gray-border-bottom {
-    border-bottom: 1px solid ;
-
     @include themify($themes)
     {
+        border-bottom: themed('borderBottom');
         border-color: themed('borderColor');
     }
     
