@@ -27,16 +27,21 @@ const ElementFormContent = props => {
                 <div className="element-label">
                     <label>Column Name</label>
 
-                    <Field className={`form-control`} type="text" name="label" placeholder={`Enter Label`} />
+                    <Field autoComplete="false" className={`form-control`} type="text" name="label" placeholder={`Enter Label`} />
                 </div>
                 <div className="element-type">
                     <label>Type</label>
                     <Field
                         name='type'
                         render={({ field /* _form */ }) => (
-                            <SelectBox valueKey="value" field="name" onChange={(selected) => { setFieldValue('type', selected.value) }} value={values.rejection_reason} options={props.inputSubTypes} />
+                            <SelectBox valueKey="value" field="name" onChange={(selected) => { setFieldValue('type', selected.value) }} value={values.rejection_reason} options={props.types} />
                         )}
                     />
+                </div>
+                <div>
+                    <button className="btn delete-button" onClick={props.onDelete}>
+                        <i className="fa fa-trash-o" aria-hidden="true"></i>
+                    </button>
                 </div>
             </div>
 
@@ -50,7 +55,7 @@ const ElementFormContent = props => {
 
             <div className="form-group">
                 <div className="margin-top-5" id="buttonWidth">
-                    <button className="btn btn-primary pull-right button-blue" type="submit" disabled={isSubmitting}>
+                    <button className="btn btn-secondary btn-sm pull-right" type="submit" disabled={isSubmitting}>
                         Save Changes
                     </button>
                 </div>
@@ -101,28 +106,22 @@ export default class FormElements extends Component {
         super(props);
 
         this.state = {
-            formOutput: props.formOutput,
-            fields: props.fields,
+            element: props.element,
             inputSubTypes: props.inputSubTypes,
-            type: ''
         };
     }
 
 
     render() {
-        const { formOutput, fields, inputSubTypes, type } = this.state;
+        const { element, inputSubTypes } = this.state;
+
+        const { onDelete } = this.props;
 
         return (
             <Card className="elements-wrapper">
                 <CardBody className="element-contents">
 
-                    <ElementForm types={inputSubTypes} />
-
-
-
-
-
-
+                    <ElementForm element={element} types={inputSubTypes} onDelete={onDelete} />
 
                 </CardBody>
             </Card>

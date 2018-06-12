@@ -30,7 +30,7 @@ export default class SelectBox extends Component {
     returnStateObj(props) {
         let options = [], value = {};
 
-        console.log(props.options);
+        // console.log(props.options);
 
         if (Array.isArray(props.options) && typeof props.options[0] != 'object') {
             props.options.forEach(option => {
@@ -131,6 +131,7 @@ export default class SelectBox extends Component {
                 multi={multi}
             />
         } else {
+
             elem = <Select autoFocus={false}
                 name="form-field-name"
                 value={value}
@@ -139,7 +140,7 @@ export default class SelectBox extends Component {
                 labelKey={field}
                 valueKey={valueKey}
                 clearable
-                placeholder={placeholder}
+                placeholder={placeholder||'Select '}
                 multi={multi}
             />
         }

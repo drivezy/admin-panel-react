@@ -1,7 +1,11 @@
 .elements-wrapper {
     // display: flex;
     &.card {
+        .element-contents{
+            padding: 14px;
+        }
         .element-detail {
+            position: relative;
             display: flex;
             .element-label {
                 margin: 4px;
@@ -12,6 +16,13 @@
                 margin: 4px;
 
                 flex-basis: 50%;
+            }
+            .delete-button{
+                position: absolute;
+                top: -10px;
+                right: -10px;
+                font-size: 12px;
+            
             }
         }
     }

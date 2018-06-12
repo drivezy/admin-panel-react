@@ -115,7 +115,7 @@ export default class FormBuilder extends Component {
         return (
             <div className="form-builder">
                 {
-                    formOutput.id && inputSubTypes ?
+                    formOutput.id && inputSubTypes.length ?
                         <FormGenerator inputSubTypes={inputSubTypes} formOutput={formOutput} onSubmit={this.formCreated} /> : null
                 }
                 <div className="preview-wrapper">

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './formGenerator.css';
 
+import { Card, CardBody } from 'reactstrap';
+
 import FormElement from './../Form-Generator/Components/Form-Elements/formElements.component';
 import FormPreview from './Components/Form-Preview/formPreview.component.js';
 
@@ -11,7 +13,7 @@ export default class FormGenerator extends Component {
         super(props);
 
         this.state = {
-            formOutput: props.formOutput,
+            fields: JSON.parse(props.formOutput.fields),
             inputSubTypes: props.inputSubTypes
         };
     }
@@ -35,10 +37,24 @@ export default class FormGenerator extends Component {
         description: 'Post submission scripts are triggered after the form submission.Do operations like closing modal in here.'
     }];
 
-    render() {
-        const { formOutput, inputSubTypes } = this.state;
+    unsafe_componentwillreceiveprops = (nextProps) => {
+        this.setState({ inputSubTypes: nextProps.inputSubTypes });
+    }
 
-        const fields = JSON.parse(formOutput.fields)
+    addInput = () => {
+        let { fields } = this.state;
+        fields.push({});
+        this.setState({ fields });
+    }
+
+    removeInput = (key) => {
+        let fields = this.state;
+        fields.splice(key, 1);
+        this.setState({ fields });
+    }
+
+    render() {
+        const { inputSubTypes, fields } = this.state;
 
         return (
             <div className="form-generator">
@@ -50,9 +66,29 @@ export default class FormGenerator extends Component {
 
                 {/* Fields Below */}
                 {
-                    fields.map((formElement, key) => <FormElement key={key} element={formElement} />)
+                    fields.map((formElement, key) => <FormElement key={key} onDelete={() => this.removeInput(key)} inputSubTypes={inputSubTypes} element={formElement} />)
                 }
                 {/* Fields Ends */}
+
+
+                {/* Toolbox */}
+                <Card className="toolbox">
+                    <CardBody className="toolbox-contents">
+                        <div className="config">
+                            <div className="left"></div>
+                            <div className="right">
+                                <button className="btn btn-secondary btn-sm" onClick={this.addInput}>
+                                    Add Input
+                                </button>
+                            </div>
+                        </div>
+                        <div className="config">
+                        </div>
+                    </CardBody>
+                </Card>
+                {/* Toolbox Ends */}
+
+
 
 
             </div>
