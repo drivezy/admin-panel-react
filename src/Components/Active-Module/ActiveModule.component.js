@@ -45,7 +45,7 @@ export default class ActiveModule extends Component {
         this.setState({ menus: module.menus, collapsed: false });
     }
 
-    componentWillReceiveProps(nextProps) {
+    unsafe_componentwillreceiveprops(nextProps) {
         // if (nextProps.visible != this.props.visible) {
         //     this.setState({ visible: nextProps.visible });
         // }

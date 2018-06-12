@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import FormGenerator from './../../Components/Form-Generator/formGenerator.component';
 import { Get } from './../../Utils/http.utils';
+
+import './formBuilder.css';
 
 import { SelectFromOptions } from './../../Utils/common.utils';
 import { GetLookupValues } from './../../Utils/lookup.utils';
 
+import FormPreview from './../../Components/Form-Generator/Components/Form-Preview/formPreview.component';
+import FormGenerator from './../../Components/Form-Generator/formGenerator.component';
 
 const inputTypes = [
     {
@@ -35,32 +38,35 @@ export default class FormBuilder extends Component {
     }
 
     componentDidMount() {
-        this.getForm();
+
+        const { formId } = this.props.match.params;
+
+        if (formId) {
+            this.getForm(formId);
+        }
         this.getLookups();
     }
 
-    getForm = async () => {
+    getForm = async (formId) => {
         const { fields } = this.state;
-        const { formId } = this.props.match.params;
         const url = 'formDetail/' + formId;
         const result = await Get({ url });
 
         if (result.success) {
             const formOutput = result.response;
-            console.log(formOutput);
             this.setState({ formOutput });
-            formOutput.fields = JSON.parse(formOutput.fields);
+            // formOutput.fields = JSON.parse(formOutput.fields);
 
-            formOutput.fields.forEach((formElement) => {
-                if (typeof formElement == 'object') {
-                    // Build fields with the template 
-                    fields.push(this.getFormElement(formElement));
-                    this.setState({ fields })
-                } else {
-                    fields.push(formElement);
-                    this.setState({ fields })
-                }
-            });
+            // formOutput.fields.forEach((formElement) => {
+            //     if (typeof formElement == 'object') {
+            //         // Build fields with the template 
+            //         fields.push(this.getFormElement(formElement));
+            //         this.setState({ fields })
+            //     } else {
+            //         fields.push(formElement);
+            //         this.setState({ fields })
+            //     }
+            // });
         }
     }
 
@@ -74,7 +80,7 @@ export default class FormBuilder extends Component {
                     column_type: inputType.id
                 });
             });
-            this.setState({inputSubTypes});
+            this.setState({ inputSubTypes });
         }
 
     }
@@ -104,9 +110,18 @@ export default class FormBuilder extends Component {
     }
 
     render() {
-        const { formOutput, fields, inputSubTypes } = this.state;
+        const { formOutput, inputSubTypes } = this.state;
+
         return (
-            formOutput.id && inputSubTypes ? <FormGenerator inputSubTypes={inputSubTypes} formOutput={formOutput} fields={fields} onSubmit={this.formCreated()} /> : null
+            <div className="form-builder">
+                {
+                    formOutput.id && inputSubTypes ?
+                        <FormGenerator inputSubTypes={inputSubTypes} formOutput={formOutput} onSubmit={this.formCreated} /> : null
+                }
+                <div className="preview-wrapper">
+                    <FormPreview />
+                </div>
+            </div>
         )
     }
 }

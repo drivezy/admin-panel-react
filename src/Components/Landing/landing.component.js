@@ -76,7 +76,7 @@ export default class LandingApp extends Component {
                         {/* <Spotlight ref={(elem) => SettingsUtil.registerModal(elem)} /> */}
                         <Route exact path='/ticket/:ticketId' component={TicketDetail} />
                         <Route exact path='/rosterTimeline' component={RosterTimeline} />
-                        <Route exact path='/formBuilder/:formId' component={FormBuilder} />
+                        <Route exact path='/form/:formId' component={FormBuilder} />
                         <Route exact path='/' component={HomeScene} />
                         <Route exact path='/user/:userId' component={UserDetail} />
                         <Route exact path='/vehicle/:vehicleId' component={VehicleDetail} />

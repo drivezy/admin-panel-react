@@ -1,0 +1,8 @@
+.form-builder {
+    display: flex;
+    height: 100vh;
+    margin: 8px;
+    .preview-wrapper {
+        flex-basis: 50%;
+    }
+}
