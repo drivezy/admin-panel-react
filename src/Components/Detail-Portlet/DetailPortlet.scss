@@ -3,6 +3,7 @@
     .card{
         @include themify($themes){
             background-color: themed('detailBackgroundCard');
+            color: themed('textSecondary');
         }
     }
     margin: 4px 0px;
@@ -19,8 +20,8 @@
         background: #f9f9f9;
         @include themify($themes){
             background-color: themed('menuTableBackground');
-            color: themed('whiteColor');
-            border: themed('menuBorder');
+            color: themed('textSecondary');
+            border: themed('borderBottom');
             border-radius: themed('menuBorderRadius');
         }
     }
@@ -28,8 +29,8 @@
         background: #f9f9f9;
         @include themify($themes){
             background-color: themed('menuTableBackground');
-            color: themed('whiteColor');
-            border: themed('menuBorder');
+            color: themed('textSecondary');
+            border: themed('borderBottom');
             border-radius: themed('menuBorderRadius');
         }
     }

@@ -1,0 +1,73 @@
+@import 'Assets/Global-Shared/theme.scss';
+.expense-voucher {
+    .expense-voucher-header {
+        display: flex;
+        background: #dcdcdc7a;
+        min-height: 45px;
+        height: 45px;
+        border: 1px solid #d6d6d6;
+        margin: 3px;
+        .header-content {
+            margin: 5px;
+            display: -ms-flexbox;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-basis: 100%;
+        }
+    }
+    .expense-cards {
+        display: flex;
+        flex-direction: row;
+        margin: 3px;
+        .voucher-detail {
+            display: flex;
+            flex-direction: column;
+            width: 30%;
+            .expense-detail, .vendor-detail, .payee-detail {
+                .expense-detail-header {
+                    color: $primaryThemeLight !important;
+                    background-color: #fcf8e3;
+                    border-color: #faebcc;
+                }
+                .expense-payee-details, .expense-vendor-details {
+                    color: $primaryThemeLight !important;
+                    background-color: #d9edf7;
+                    border-color: #bce8f1;
+                }
+                background-color:#f1f1f1;
+                margin: 3px;
+                .card-body {
+                    background-color:#fff;
+                }
+                .gray-border-bottom {
+                    border-bottom: 1px solid #f0f4f7;
+                    .text-right {
+                        float: right;
+                    }
+                }
+            }
+            .padding-top-10 {
+                padding-top: 10px;
+            }
+        }
+        .tabs-card {
+            display: flex;
+            flex-direction: column;
+            width: 70%;
+            .comments-card, .receipts-card, .cash-card {
+                background-color:#f1f1f1;
+                margin: 3px;
+                .card-body {
+                    background-color:#fff;
+                }
+                .gray-border-bottom {
+                    border-bottom: 1px solid #f0f4f7;
+                    .text-right {
+                        float: right;
+                    }
+                }
+            }
+        }
+    }
+}

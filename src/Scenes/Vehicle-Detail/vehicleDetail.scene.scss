@@ -1,0 +1,18 @@
+.vehicle-detail {
+    margin: 8px;
+
+        display: flex;
+
+        .vehicle-card-content{
+            // flex-bas
+            width: 25%;
+        }
+
+        .vehicle-tabs{
+            margin-left: 10px;
+            width: 74%;
+            // background-color:#fff;
+            padding: 4px;
+        }
+    
+}

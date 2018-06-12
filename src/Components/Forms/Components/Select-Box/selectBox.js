@@ -2,6 +2,7 @@
 // Refer https://github.com/JedWatson/react-select
 
 import React, { Component } from 'react';
+import './selectBox.css';
 
 import Select, { Async } from 'react-select';
 import 'react-select/dist/react-select.css';
@@ -16,7 +17,7 @@ export default class SelectBox extends Component {
         }
     }
 
-    componentWillReceiveProps(props) {
+    UNSAFE_componentWillReceiveProps(props) {
         this.setState({ ...this.returnStateObj(props) });
     }
 
@@ -28,6 +29,8 @@ export default class SelectBox extends Component {
      */
     returnStateObj(props) {
         let options = [], value = {};
+
+        console.log(props.options);
 
         if (Array.isArray(props.options) && typeof props.options[0] != 'object') {
             props.options.forEach(option => {
@@ -142,7 +145,7 @@ export default class SelectBox extends Component {
         }
 
         return (
-            <div>
+            <div className="select-box">
                 {elem}
             </div>
         );

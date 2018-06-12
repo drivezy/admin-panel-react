@@ -328,17 +328,19 @@ Non critical css goes here
     }
 }
 
-.btn-default {
+.search-button{
+    .btn-default {
     @include themify($themes) {
         background: themed('defaultThemeDark') !important;
         color: themed('whiteColor');
         font-size: 98%;
     }
+    }
 }
 
 .btn-secondary {
     @include themify($themes) {
-        border: themed('noBorder');
+        border: themed('themeBorder');
         background: themed('secondaryThemeDark') !important;
         color: themed('whiteColor');
     }
@@ -363,13 +365,13 @@ th{
     @include themify($themes){
         background: themed('bodyBackground');
         border: themed('dropdownBorder');
-        color: themed('lightText');
+        color: themed('secondaryColor');
     }
 }
 
 .fa-times{
     @include themify($themes){
-        color: themed('whiteColor');
+        color: themed('sideBarIcons');
     }
 }
 
@@ -381,7 +383,7 @@ th{
 
 .listing-search-container .listing-search-tool .listing-input-tool .input-select{
     @include themify($themes){
-        background-color: themed('grayBackground');
+        background-color: themed('searchBackground');
         border: themed('searchBorder');
     }
 }
@@ -397,4 +399,3 @@ th{
         background-color: themed('sideBackground');
     }
 }
-

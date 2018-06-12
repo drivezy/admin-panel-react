@@ -5,6 +5,20 @@ export default class TableWrapper extends Component {
         super(props);
     }
 
+    checkType = (selectedColumn, listingRow) => {
+        switch (selectedColumn.type) {
+            case 'link':
+                return <a target="_blank" href={`${eval('listingRow.' + selectedColumn.field)}`}>{selectedColumn.placeholder ? selectedColumn.placeholder : eval('listingRow.' + selectedColumn.field)}</a>
+            case 'sref':
+                return <a href={`${selectedColumn.sref}${selectedColumn.id ? `${eval('listingRow.' + selectedColumn.id)}` : listingRow.id}`}>
+                    <i className={`fa ${selectedColumn.class}`} />
+                    <span>{eval('listingRow.' + selectedColumn.field)}</span>
+                </a>
+            default:
+                return <span>{selectedColumn.placeholder ? selectedColumn.placeholder : eval('listingRow.' + selectedColumn.field)}</span>
+        }
+    }
+
     render() {
         const { listing, columns } = this.props;
         return (
@@ -40,7 +54,9 @@ export default class TableWrapper extends Component {
                                                 return (
                                                     <td key={key}>
                                                         <span>
-                                                            {selectedColumn.placeholder ? selectedColumn.placeholder : eval('listingRow.' + selectedColumn.field)}
+                                                            {
+                                                                this.checkType(selectedColumn, listingRow)
+                                                            }
                                                         </span>
                                                     </td>
                                                 )
