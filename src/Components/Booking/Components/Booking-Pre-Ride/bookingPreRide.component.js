@@ -114,7 +114,7 @@ export default class BookingPreRide extends Component {
                             <Col sm="2">
                                 <div className="jr-time-icon">
                                     <div className="no-padding margin-top-12 " align="center">
-                                        <i className="fa fa-car" aria-hidden="true"></i>
+                                        <i className="fa fa-clock-o" aria-hidden="true"></i>
                                     </div>
                                     <div className="no-padding light-red  font-11" align="center">
                                         53 Hrs.
