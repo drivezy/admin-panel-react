@@ -4,6 +4,7 @@ import {
 } from 'reactstrap';
 
 import { BookingPickupDate, BookingPickupTime, BookingDropDate, BookingDropTime, TotalDuration } from './../../../../Utils/booking.utils';
+import { Link } from 'react-router-dom';
 
 import './bookingRideReturn.css';
 
@@ -227,8 +228,10 @@ export default class BookingRideReturn extends Component {
                                         bookingRideReturnData && bookingRideReturnData.status && (bookingRideReturnData.status.id == 6 || bookingRideReturnData.status.id == 7) &&
                                         <Col sm="6">
                                             <div className="jr-start-time">
-                                                <i className="fa fa-key" aria-hidden="true"></i>
-                                                {bookingRideReturnData.ride_return.handover_user.display_name}
+                                                <i className="fa fa-key" aria-hidden="true"></i> 
+                                                <Link to={`/user/${bookingRideReturnData.ride_return.handover_user.id}`} className="menu-list">
+                                                    {bookingRideReturnData.ride_return.handover_user.display_name}
+                                                </Link>
                                             </div>
                                         </Col>
                                     }
@@ -236,8 +239,10 @@ export default class BookingRideReturn extends Component {
                                         bookingRideReturnData && bookingRideReturnData.status && bookingRideReturnData.ride_return && bookingRideReturnData.ride_return.picker_user && (bookingRideReturnData.status.id == 6 || bookingRideReturnData.status.id == 7) &&
                                         <Col sm="6">
                                             <div className="jr-time-icon">
-                                                <i className="fa fa-key" aria-hidden="true"></i>
-                                                {bookingRideReturnData.ride_return.picker_user.display_name}
+                                                <i className="fa fa-key" aria-hidden="true"></i> 
+                                                <Link to={`/user/${bookingRideReturnData.ride_return.picker_user.id}`} className="menu-list">
+                                                    {bookingRideReturnData.ride_return.picker_user.display_name}
+                                                </Link>
                                             </div>
                                         </Col>
                                     }
