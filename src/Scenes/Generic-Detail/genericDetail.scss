@@ -1,3 +1,4 @@
+@import 'Assets/Global-Shared/theme.scss';
 .generic-detail-container {
         .header {
         display: flex;
@@ -10,6 +11,9 @@
         .right {
             display: flex;
             align-items: center;
+            @include themify($themes){
+                color: themed('secondaryColor');
+            }
           
             .table-settings {
                 .btn {

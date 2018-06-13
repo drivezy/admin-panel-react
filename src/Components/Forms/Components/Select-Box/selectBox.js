@@ -8,6 +8,7 @@ import Select, { Async } from 'react-select';
 import 'react-select/dist/react-select.css';
 
 import { Get } from './../../../../Utils/http.utils';
+import { IsObjectHaveKeys } from './../../../../Utils/common.utils';
 
 export default class SelectBox extends Component {
     constructor(props) {
@@ -106,12 +107,12 @@ export default class SelectBox extends Component {
     render() {
         const { async, getOptions, multi, placeholder } = this.props;
         const { value, options, field, valueKey } = this.state;
-
+        console.log(value, IsObjectHaveKeys(value));
         let elem;
         if (async) {
             elem = <Async
                 name="form-field-name"
-                value={value}
+                value={IsObjectHaveKeys(value) ? value : undefined}
                 loadOptions={this.getOptions}
                 onChange={this.handleChange}
                 labelKey={field}
@@ -122,7 +123,7 @@ export default class SelectBox extends Component {
         } else if (getOptions) {
             elem = <Async
                 name="form-field-name"
-                value={value}
+                value={IsObjectHaveKeys(value) ? value : undefined}
                 loadOptions={getOptions}
                 onChange={this.handleChange}
                 labelKey={field}
@@ -134,7 +135,7 @@ export default class SelectBox extends Component {
 
             elem = <Select autoFocus={false}
                 name="form-field-name"
-                value={value}
+                value={IsObjectHaveKeys(value) ? value : undefined}
                 onChange={this.handleChange}
                 options={options}
                 labelKey={field}

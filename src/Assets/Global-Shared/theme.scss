@@ -1,43 +1,86 @@
 // Themes
 $themes: ( 
     light: (
-        // Body
-        bodyBackground:#ebeef0,
-        // Body Ends
-        // Sidbar Styling
-        sideBackground:#ffffff,
-        sidebarBorder:#bfbfbf,
-        logoBackground:#f9f6f6,
-        logoBottomBorder:#e9e7e7,
-        menuHover:#f2f2f2,
-        // Sidebar Styling Ends 
-        // Header Styling
-        headerBackground:#e7e7e7,
-        headerBorder:#c1c1c1,
-        // Header Ends
-        // Sub Header
-        subHeader:#FFFFFF,
-        subHeaderBorder:#d4d4d4,
-        // Sub Header Ends
-        // Table Styling
-        tableHeader:#efefef,
-        tableHeaderBorder:#ececec,
-        columnTitle:#3b6877,
-        dropdownLink:#b1493ce8,
-        // Table Styling Ends
-        backgroundColor: #fff,
-        textColor: #408bbd,
-        buttonTextColor: #408bbd,
-        buttonTextTransform: none,
-        buttonTextHoverColor: #61b0e7,
-        buttonColor: #fff,
-        buttonBorder: 2px solid #fff,
+            secondaryColor: #000,
+            themePrimaryColor: #fff,
+            // Body
+            bodyBackground:#f5f5f5,
+            navLinkColor:#464545,
+            sideBarIcons: #6f6f6f,
+            // Body Ends
+            // Side Table Styling
+            sideTableBackground: #f5f5f5,
+            searchBorder: 1px solid #d8d8d8,
+            textSecondary:#000000,
+            headerBackground: #f5f5f5,
+            headerBorder: #d8d8d8,
+            // Card Background
+            cardBackground: #e8e9e8,
+            detailBackgroundCard:#eceeef,
+            searchBackground: #f5f5f5,
+            //Buttons Styling
+                // Default Button
+            defaultThemeDark: #E96957,
+            whiteColor: #ffffff,
+                // Secondary Button
+            themeBorder: 0 0 1px 0 solid #000,
+            secondaryThemeDark: #15ab12,
+                // Primary Button
+            primaryBorder: 1px solid #e96857,
+            primaryThemeDark:#e96857,
+            // Dropdown Styling
+            dropdownBorder:1px solid #000,
+            dropdownInputBackground:#d1d1d1,
+            //menu
+            detailsBackground:#eceeef,
+            // Sidbar Styling
+            sideBackground:#f5f5f5,
+            sidebarBorder:#d8d8d8,
+            navHeader:#f5f5f5,
+            logoBottomBorder:#e9e7e7,
+            lightColorText:#D34031,
+            actionBarBorder: 1px solid #d8d8d8,
+            // Sidebar Styling Ends
+            // Panel
+            menuBorderPanel: 0px 0px 1px 1px #d8d8d8,
+            borderBottom: 0px,
+            // Sub Header
+            subHeader:#ffffff,
+            subHeaderBorder: #d8d8d8,
+            // Sub Header Ends
+            // Table Styling
+            tableDataBorder: 1px solid #f5f5f5,
+            tableBackground: #ffffff,
+            tableHeadBorder: 1px solid #f5f5f5,
+            columnTitle:#9e9d9a,
+            sortLink:#F15590,
+            tooltipText: #ffffff,
+            // Table Styling Ends
+            // Menu Table Styling
+            menuTableBackground:#f5f5f5,
+            menuBorder: 0px,
+            menuBorderRadius:0px,
+            // Ends
+            buttonBorder: 2px solid #fff,
+            expandMenuHeader: #f5f5f5,
+            //
+            hintText: #D34031,
+            hoverColor: #ffffff,
+            linkHover: #000000,
+            subMenuHeader: #ecebec,
+            subMenuHover: #ffffff,
+            linkColor: #137DAE,
+            menuLinkBorder: 0,
+            arrowHeader: #000000,
+            filterText:#000000,
+            cardMargin : 18px,
         ),
         dark: (
-            darkThemeDark: #000,
+            secondaryColor: #fff,
+            darkColor: #000,
             // Body
             bodyBackground:#2f2f2f,
-            textColorWhite:#cccaca,
+            navLinkColor:#cccaca,
             // Body Ends
             // Side Table Styling
             sideTableBackground: #292929,
@@ -46,13 +89,16 @@ $themes: (
             // Card Background
             cardBackground: #5b5c5d,
             detailBackgroundCard:#293140,
-            grayBackground: #585858,
+            searchBackground: #585858,
+            textSecondary:#efefef,
+            tooltipText: #ffffff,
             //Buttons Styling
                 // Default Button
             defaultThemeDark: #2b3b46,
             whiteColor: #ffffff,
+            actionBarBorder: 1px solid #ececec,
                 // Secondary Button
-            noBorder: 0px,
+            themeBorder: 0px,
             secondaryThemeDark: #E73E7E,
                 // Primary Button
             primaryBorder: 1px solid #3d3d3a,
@@ -65,12 +111,13 @@ $themes: (
             // Sidbar Styling
             sideBackground:#11181d,
             sidebarBorder:#020202,
-            darkBackground:#1C252B,
+            navHeader:#1C252B,
             logoBottomBorder:#e9e7e7,
             lightColor:#fffccd,
             // Sidebar Styling Ends
             // Panel
             menuBorderPanel: 0px 0px 1px 1px #000000,
+            borderBottom: 0px,
             // Sub Header
             subHeader:#232323,
             // Sub Header Ends
@@ -87,6 +134,16 @@ $themes: (
             // Ends
             buttonBorder: 2px solid #fff,
             expandMenuHeader: #12181f,
+            hintText: #D34031,
+            hoverColor: #e9e8e8,
+            linkHover: #000000,
+            subMenuHeader: #000000,
+            subMenuHover: #DBDBDB,
+            linkColor: #fffccd,
+            menuLinkBorder: 0,
+            arrowHeader: #fff,
+            filterText:#000000,
+            cardMargin : 0px,
             ),
             // darkTheme:(
             //     dark:'#232323'

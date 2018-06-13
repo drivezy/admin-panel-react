@@ -189,6 +189,7 @@ const formElements = props => {
                 <ModalBody>
                     <Card>
                         <CardBody>
+                            <DisplayFormikState props={props.values} />
                             <div className="form-row">
                                 {
                                     payload.formPreference.map((preference, key) => {
@@ -262,12 +263,14 @@ const FormContents = withFormik({
 
         let response = {}
 
-        payload.formPreference.forEach((preference) => {
-            if (typeof preference != 'string') {
-                let column = payload.columns[preference.column];
-                response[column.column_name] = payload.listingRow[column.column_name] || '';
-            }
-        });
+        if (payload.formPreference.length) {
+            payload.formPreference.forEach((preference) => {
+                if (typeof preference != 'string') {
+                    let column = payload.columns[preference.column];
+                    response[column.column_name] = payload.listingRow[column.column_name] || '';
+                }
+            });
+        }
 
         return response;
     },
@@ -285,11 +288,21 @@ const FormContents = withFormik({
 
         const { columns } = props.payload;
 
-        fields.forEach((column) => {
-            if (columns[column].mandatory) {
-                da[columns[column].column_name] = Yup.string().required(columns[column].display_name + ' is required.');
-            }
-        });
+        if (props.payload.formPreference.length) {
+            props.payload.formPreference.forEach((preference) => {
+                if (typeof preference != 'string') {
+                    if (columns[preference.column].mandatory) {
+                        da[columns[preference.column].column_name] = Yup.string().required(columns[preference.column].display_name + ' is required.');
+                    }
+                }
+            });
+        }
+
+        // fields.forEach((column) => {
+        //     if (columns[column].mandatory) {
+        //         da[columns[column].column_name] = Yup.string().required(columns[column].display_name + ' is required.');
+        //     }
+        // });
 
         return Yup.object().shape(da);
 
