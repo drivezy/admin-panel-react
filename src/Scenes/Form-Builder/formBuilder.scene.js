@@ -119,7 +119,7 @@ export default class FormBuilder extends Component {
                         <FormGenerator inputSubTypes={inputSubTypes} formOutput={formOutput} onSubmit={this.formCreated} /> : null
                 }
                 <div className="preview-wrapper">
-                    <FormPreview />
+                    <FormPreview formId={this.props.match.params.formId} formOutput={formOutput}/>
                 </div>
             </div>
         )

@@ -24,6 +24,29 @@
                 font-size: 12px;
             
             }
+            .or {
+                margin-top: 40px;
+            }
+        }
+        .editable-values {
+            justify-content: space-between;
+            display: flex;
+            label {
+                font-weight: 100 !important;
+                font-size: 11px;
+            }
+
+            .field-name {
+                h4 {
+                    font-size: 13px;
+                }
+                .input-wrapper {
+                    // width: 40px;
+                    display: inline-block;
+                    font-size: 13px;
+                }
+            }
+
         }
     }
 }

@@ -17,27 +17,28 @@ const ElementFormContent = props => {
         values,
         handleSubmit,
         isSubmitting,
-        setFieldValue
+        setFieldValue,
+        handleChange
     } = props;
 
     return (
         <form onSubmit={handleSubmit}>
 
             <div className="element-detail">
-                <div className="element-label">
-                    <label>Column Name</label>
-
-                    <Field autoComplete="false" className={`form-control`} type="text" name="label" placeholder={`Enter Label`} />
-                </div>
                 <div className="element-type">
                     <label>Type</label>
                     <Field
-                        name='type'
+                        name='column_type'
                         render={({ field /* _form */ }) => (
-                            <SelectBox valueKey="value" field="name" onChange={(selected) => { setFieldValue('type', selected.value) }} value={values.rejection_reason} options={props.types} />
+                            <SelectBox valueKey="column_type" field="name" onChange={(selected) => { setFieldValue('column_type', selected.column_type) }} value={values.column_type} options={props.types} />
                         )}
                     />
                 </div>
+                <div className="element-label">
+                    <label>Label</label>
+                    <input type="text" name="display_name" className="form-control" value={values.display_name} onChange={handleChange} placeholder="Label" />
+                </div>
+
                 <div>
                     <button className="btn delete-button" onClick={props.onDelete}>
                         <i className="fa fa-trash-o" aria-hidden="true"></i>
@@ -48,8 +49,48 @@ const ElementFormContent = props => {
 
             <div className="element-detail">
                 <div className="element-label">
+                    <label>Route</label>
+                    <input type="text" name="route" value={values.route} className="form-control" onChange={handleChange} placeholder="Route" />
                 </div>
-                <div className="element-type">
+                <div className="or">
+                    <small>or</small>
+                </div>
+                <div className="element-label">
+                    <label>Scope</label>
+                    <input type="text" name="scope" value={values.scope} className="form-control" onChange={handleChange} placeholder="Scope" />
+                </div>
+            </div>
+
+            <div className="editable-values">
+                <div className="form-group">
+                    <label>
+                        Column Name :
+                    </label>
+                    {
+                        props.formOutput &&
+                        <EditableLabel className="field-name" value={values.column_name} placeholder={values.column_name || 'edit'}>
+                        </EditableLabel>
+                    }
+                </div>
+                <div className="form-group">
+                    <label>
+                        Display Column :
+                    </label>
+                    {
+                        props.formOutput &&
+                        <EditableLabel className="field-name" value={values.display_name} placeholder={values.display_column || 'edit'}>
+                        </EditableLabel>
+                    }
+                </div>
+                <div className="form-group">
+                    <label>
+                        Key :
+                    </label>
+                    {
+                        props.formOutput &&
+                        <EditableLabel className="field-name" value={values.key} placeholder={values.key || 'edit'}>
+                        </EditableLabel>
+                    }
                 </div>
             </div>
 
@@ -71,9 +112,16 @@ const ElementForm = withFormik({
     // Transform outer props into form values
     mapPropsToValues: props => {
 
-        const { inputSubTypes } = props;
+        const { element } = props;
 
-        return {}
+        return {
+            column_type: element.column_type || '',
+            display_name: element.display_name || '',
+            route: element.route || '',
+            scope: element.scope || '',
+            column_name: element.column_name || '',
+            key: element.key || '',
+        }
 
     },
 
@@ -108,12 +156,13 @@ export default class FormElements extends Component {
         this.state = {
             element: props.element,
             inputSubTypes: props.inputSubTypes,
+            formOutput: props.formOutput
         };
     }
 
 
     render() {
-        const { element, inputSubTypes } = this.state;
+        const { element, inputSubTypes, formOutput } = this.state;
 
         const { onDelete } = this.props;
 
@@ -121,7 +170,7 @@ export default class FormElements extends Component {
             <Card className="elements-wrapper">
                 <CardBody className="element-contents">
 
-                    <ElementForm element={element} types={inputSubTypes} onDelete={onDelete} />
+                    <ElementForm element={element} types={inputSubTypes} onDelete={onDelete} formOutput={formOutput} />
 
                 </CardBody>
             </Card>

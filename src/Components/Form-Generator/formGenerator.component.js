@@ -4,7 +4,6 @@ import './formGenerator.css';
 import { Card, CardBody } from 'reactstrap';
 
 import FormElement from './../Form-Generator/Components/Form-Elements/formElements.component';
-import FormPreview from './Components/Form-Preview/formPreview.component.js';
 
 
 export default class FormGenerator extends Component {
@@ -14,7 +13,8 @@ export default class FormGenerator extends Component {
 
         this.state = {
             fields: JSON.parse(props.formOutput.fields),
-            inputSubTypes: props.inputSubTypes
+            inputSubTypes: props.inputSubTypes,
+            formOutput: props.formOutput
         };
     }
 
@@ -54,7 +54,7 @@ export default class FormGenerator extends Component {
     }
 
     render() {
-        const { inputSubTypes, fields } = this.state;
+        const { inputSubTypes, fields, formOutput } = this.state;
 
         return (
             <div className="form-generator">
@@ -66,7 +66,7 @@ export default class FormGenerator extends Component {
 
                 {/* Fields Below */}
                 {
-                    fields.map((formElement, key) => <FormElement key={key} onDelete={() => this.removeInput(key)} inputSubTypes={inputSubTypes} element={formElement} />)
+                    fields.map((formElement, key) => <FormElement key={key} onDelete={() => this.removeInput(key)} inputSubTypes={inputSubTypes} element={formElement} formOutput={formOutput}/>)
                 }
                 {/* Fields Ends */}
 
@@ -87,9 +87,6 @@ export default class FormGenerator extends Component {
                     </CardBody>
                 </Card>
                 {/* Toolbox Ends */}
-
-
-
 
             </div>
         )

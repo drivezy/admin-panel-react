@@ -13,22 +13,39 @@ export default class EditableLabel extends Component {
         };
     }
 
+    editMode = (editMode) => {
+        if (this.state.editMode == false) {
+            this.setState({ editMode: true })
+        } else {
+            this.setState({ editMode: false })
+        }
+    }
+
 
     render() {
         const { value, editMode } = this.state;
         return (
-            <div className="template-root">
-                {
-                    editMode &&
-                    <div className="transclude-container">
-                        <div className="tranclude-text" ng-click="editableLabel.editMode = true;">
-                            <h4 className="form-title">
-                                { value }
-                            </h4>
+            <div className="editable-label">
+                <div className="template-root">
+                    {
+                        editMode == false &&
+                        <div className="transclude-container">
+                            <div className="tranclude-text" onClick={() => this.editMode({ editMode: true })}>
+                                <h4 className="form-title">
+                                    {value}
+                                </h4>
+                            </div>
+                            <i className="fa fa-pencil-square" onClick={() => this.editMode({ editMode: true })} aria-hidden="true"></i>
                         </div>
-                        <i className="fa fa-pencil-square" aria-hidden="true"></i>
-                    </div>
-                }
+                    }
+                    {
+                        editMode == true &&
+                        <div className="input-wrapper">
+                            <input className="inputText" onBlur={() => this.editMode({ editMode: false })} type="text" onChange={(event) => this.setState({ value: event.target.value })} value={value} />
+                            <i className="fa fa-check" onClick={() => this.editMode({ editMode: false })} aria-hidden="true"></i>
+                        </div>
+                    }
+                </div>
             </div>
         )
     }
