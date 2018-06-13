@@ -51,8 +51,6 @@ export default class FormPreview extends Component {
                         Form Preview
                     </h4>
                     <CardBody>
-                        {/* <form name="createdForm"> */}
-
                         <div className="panel">
                             <div className="panel-body">
                                 <h1 className="text-center">
@@ -61,8 +59,7 @@ export default class FormPreview extends Component {
 
                                 {
                                     payload.columns && payload.formPreference &&
-                                    <FormCreator payload={payload}>
-                                    </FormCreator>
+                                    <FormCreator payload={payload}></FormCreator>
                                 }
                             </div>
                             <div className="panel-footer text-right">
@@ -79,13 +76,12 @@ export default class FormPreview extends Component {
                                         Clear Form
                                     </button>
 
-                                    <button className="btn btn-success btn-xs" ng-click="formGenerator.createForm()">
+                                    <button className="btn btn-success btn-xs" onClick={this.createForm}>
                                         {formId ? 'Update' : 'Create'} Form
                                     </button>
                                 </div>
                             </div>
                         }
-                        {/* </form> */}
                     </CardBody>
                     <div className="form-contents">
                         <small className="text-muted">

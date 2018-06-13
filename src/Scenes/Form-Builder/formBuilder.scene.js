@@ -69,7 +69,6 @@ export default class FormBuilder extends Component {
                         onSelect: input.onSelect
                     }
                 }
-
             });
             this.setState({ formOutput, fields, columns });
         }
@@ -79,12 +78,6 @@ export default class FormBuilder extends Component {
         const result = await GetLookupValues(31);
         if (result.success) {
             const inputSubTypes = result.response;
-
-            // formOutput.fields.
-            // const inputSubTypes = result.response;
-            // inputSubTypes.forEach((inputType) => {
-            //     columns['temp_column'+inputType+inputType.id] = { ...inputType, column_type: inputType.id }
-            // })
             this.setState({ inputSubTypes });
         }
 
@@ -98,7 +91,6 @@ export default class FormBuilder extends Component {
     render() {
         const { formOutput, inputSubTypes, columns, fields } = this.state;
 
-        console.log(formOutput, columns);
         return (
             <div className="form-builder">
                 {

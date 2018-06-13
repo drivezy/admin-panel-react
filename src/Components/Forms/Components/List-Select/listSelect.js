@@ -42,7 +42,7 @@ export default class ListSelect extends Component {
         }
     }
 
-    unsafe_componentwillreceiveprops(prevProps) {
+    componentWillReceiveProps(prevProps) {
         // if (prevProps.column != this.props.column) {
         this.loadOptions(this.props.column);
         // }

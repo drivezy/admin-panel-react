@@ -31,8 +31,6 @@ export default class SelectBox extends Component {
     returnStateObj(props) {
         let options = [], value = {};
 
-        // console.log(props.options);
-
         if (Array.isArray(props.options) && typeof props.options[0] != 'object') {
             props.options.forEach(option => {
                 options.push({ label: typeof option == 'number' ? option.toString() : option, value: typeof option == 'number' ? option.toString() : option });
@@ -107,7 +105,6 @@ export default class SelectBox extends Component {
     render() {
         const { async, getOptions, multi, placeholder } = this.props;
         const { value, options, field, valueKey } = this.state;
-        console.log(value, IsObjectHaveKeys(value));
         let elem;
         if (async) {
             elem = <Async
