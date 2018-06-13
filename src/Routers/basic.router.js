@@ -14,6 +14,7 @@ import IndexRouter from './index.router';
 
 /** Scenes */
 import LoginScene from './../Scenes/Login-Scene/Login.scene';
+import SignupScene from './../Scenes/Signup-Scene/Signup.scene';
 /** Scenes End*/
 
 /** Components */
@@ -53,6 +54,7 @@ export default class BasicRoute extends Component {
             <div id='parent-admin-element'>
                 <Router>
                     <Switch>
+                        <Route path="/signup" component={SignupScene} />
                         <Route path="/login" component={LoginScene} />
                         <PrivateRoute path="/" loggedUser={loggedUser} component={IndexRouter} />
                     </Switch>
