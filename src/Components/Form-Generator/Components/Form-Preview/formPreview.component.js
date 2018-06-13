@@ -69,7 +69,7 @@ export default class FormPreview extends Component {
                                             <i className="fa fa-table" aria-hidden="true"></i>
                                         </h1>
 
-                                        <FormCreator form={formContent} columns={tempColumns} form-body={formOutput}>
+                                        <FormCreator payload={formOutput.fields}>
                                         </FormCreator>
                                     </div>
                                     <div className="panel-footer text-right">
