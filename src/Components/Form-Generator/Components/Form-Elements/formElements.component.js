@@ -16,7 +16,6 @@ const ElementFormContent = props => {
     const {
         values,
         handleSubmit,
-        isSubmitting,
         setFieldValue,
         handleChange
     } = props;
@@ -94,13 +93,6 @@ const ElementFormContent = props => {
                 </div>
             </div>
 
-            <div className="form-group">
-                <div className="margin-top-5" id="buttonWidth">
-                    <button className="btn btn-secondary btn-sm pull-right" type="submit" disabled={isSubmitting}>
-                        Save Changes
-                    </button>
-                </div>
-            </div>
         </form>
     )
 }

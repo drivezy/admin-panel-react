@@ -21,6 +21,12 @@ export default class EditableLabel extends Component {
         }
     }
 
+    componentDidUpdate = (prevProps) => {
+        if (prevProps.value != this.props.value) {
+            this.setState({ value: this.props.value });
+        }
+    }
+
 
     render() {
         const { value, editMode } = this.state;

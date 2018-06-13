@@ -13,9 +13,8 @@ export default class FormPreview extends Component {
 
         this.state = {
             formOutput: props.formOutput,
-            formContent: {},
-            tempColumns: {},
-            formId: props.formId
+            formId: props.formId,
+            columns: props.columns
         };
     }
 
@@ -34,25 +33,16 @@ export default class FormPreview extends Component {
             const result = await Post({ url, formOutput });
             if (result.success) {
                 var form = result.data.response;
-                // ToastNotifications.info('' +
-                //     'Your form has been created successfully.Use the id ' + form.id + ' to use the form inside a modal by adding ' +
-                //     '<kbd>ModalService.customModal(' + form.id + ')</kbd>' + '. We will add on more ways you can use it. ').result.then(function (result) {
-                //         formOutput.fields = JSON.stringify(formOutput.fields);
-                //     })
             }
         }
     }
 
-    clearForm = () => {
-        this.initializeForm();
-    }
-
-    initializeForm() {
-
-    }
-
     render() {
-        const { formOutput, formContent, tempColumns, formId } = this.state;
+        const { formOutput, formId, columns } = this.state;
+        let payload = {
+            columns: columns,
+            formPreference: JSON.parse(formOutput.fields)
+        };
         return (
             <Card>
                 <div className="">
@@ -61,24 +51,25 @@ export default class FormPreview extends Component {
                     </h4>
                     <CardBody>
                         <form name="createdForm">
-                            {
-                                formOutput.fields && formOutput.fields.length &&
-                                <div className="panel">
-                                    <div className="panel-body">
-                                        <h1 className="text-center">
-                                            <i className="fa fa-table" aria-hidden="true"></i>
-                                        </h1>
 
-                                        <FormCreator payload={formOutput.fields}>
+                            <div className="panel">
+                                <div className="panel-body">
+                                    <h1 className="text-center">
+                                        <i className="fa fa-table" aria-hidden="true"></i>
+                                    </h1>
+
+                                    {
+                                        payload.columns && payload.formPreference &&
+                                        <FormCreator payload={payload}>
                                         </FormCreator>
-                                    </div>
-                                    <div className="panel-footer text-right">
-                                        <small className="text-muted">
-                                            View a preview of the created form in here .
-                                        </small>
-                                    </div>
+                                    }
                                 </div>
-                            }
+                                <div className="panel-footer text-right">
+                                    <small className="text-muted">
+                                        View a preview of the created form in here .
+                                        </small>
+                                </div>
+                            </div>
                             {
                                 formOutput &&
                                 <div className="form-actions text-right">

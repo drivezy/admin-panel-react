@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Get } from './../../Utils/http.utils';
 
 import './formBuilder.css';
 
-import { SelectFromOptions } from './../../Utils/common.utils';
+import { Get } from './../../Utils/http.utils';
 import { GetLookupValues } from './../../Utils/lookup.utils';
 
 import FormPreview from './../../Components/Form-Generator/Components/Form-Preview/formPreview.component';
@@ -22,6 +21,7 @@ const inputTypes = [
         type: 'input'
     }
 ];
+
 export default class FormBuilder extends Component {
 
     fields = inputTypes[0];
@@ -33,12 +33,11 @@ export default class FormBuilder extends Component {
             formOutput: {},
             fields: [],
             columns: {},
-            inputSubTypes: []
+            inputSubTypes: [],
         };
     }
 
     componentDidMount() {
-
         const { formId } = this.props.match.params;
 
         if (formId) {
@@ -48,25 +47,12 @@ export default class FormBuilder extends Component {
     }
 
     getForm = async (formId) => {
-        const { fields } = this.state;
         const url = 'formDetail/' + formId;
         const result = await Get({ url });
 
         if (result.success) {
             const formOutput = result.response;
             this.setState({ formOutput });
-            // formOutput.fields = JSON.parse(formOutput.fields);
-
-            // formOutput.fields.forEach((formElement) => {
-            //     if (typeof formElement == 'object') {
-            //         // Build fields with the template 
-            //         fields.push(this.getFormElement(formElement));
-            //         this.setState({ fields })
-            //     } else {
-            //         fields.push(formElement);
-            //         this.setState({ fields })
-            //     }
-            // });
         }
     }
 
@@ -76,52 +62,31 @@ export default class FormBuilder extends Component {
         if (result.success) {
             const inputSubTypes = result.response;
             inputSubTypes.forEach((inputType) => {
-                columns[inputType.id] = Object.assign(inputType, {
-                    column_type: inputType.id
-                });
-            });
-            this.setState({ inputSubTypes });
+                columns[inputType.id] = { ...inputType, column_type: inputType.id }
+            })
+            this.setState({ inputSubTypes, columns });
         }
 
     }
 
-    getFormElement(form) {
-        const { inputSubTypes } = this.state;
-        return {
-            formElements: {
-                type: SelectFromOptions(inputSubTypes, form.column_type, 'column_type'),
-
-                display_name: form.columnTitle || form.display_name, // for now sending column title in case of fallback , but this wont be required , 
-                column_name: form.field || form.column_name,
-
-                // Display column and Route are only for reference models
-                route: form.route,
-                display_column: form.display_column,
-                key: form.key,
-                onSelect: form.onSelect,
-                scope: form.scope
-            },
-            type: 'input',
-        };
-    }
-
     formCreated = (form) => {
         console.log(form);
+        this.setState({ columns: form.columns })
     }
 
     render() {
-        const { formOutput, inputSubTypes } = this.state;
+        const { formOutput, inputSubTypes, columns } = this.state;
 
         return (
             <div className="form-builder">
                 {
                     formOutput.id && inputSubTypes.length ?
-                        <FormGenerator inputSubTypes={inputSubTypes} formOutput={formOutput} onSubmit={this.formCreated} /> : null
+                        <FormGenerator inputSubTypes={inputSubTypes} formOutput={formOutput} onSubmit={this.formCreated} columns={columns} /> : null
                 }
                 <div className="preview-wrapper">
                     {
                         formOutput.id &&
-                        <FormPreview formId={this.props.match.params.formId} formOutput={formOutput} />
+                        <FormPreview formId={this.props.match.params.formId} columns={columns} formOutput={formOutput} />
                     }
                 </div>
             </div>

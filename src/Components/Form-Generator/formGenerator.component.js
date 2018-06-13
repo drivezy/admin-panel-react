@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import './formGenerator.css';
 
-import { Card, CardBody } from 'reactstrap';
+import { Card, CardBody, Button, ButtonGroup, Collapse } from 'reactstrap';
 
 import FormElement from './../Form-Generator/Components/Form-Elements/formElements.component';
+import { GetLookupValues } from './../../Utils/lookup.utils';
 
 
 export default class FormGenerator extends Component {
@@ -14,7 +15,11 @@ export default class FormGenerator extends Component {
         this.state = {
             fields: JSON.parse(props.formOutput.fields),
             inputSubTypes: props.inputSubTypes,
-            formOutput: props.formOutput
+            formOutput: props.formOutput,
+            methodTypes: [],
+            collapse: false,
+            columns: props.columns,
+            tempColumns: {}
         };
     }
 
@@ -39,6 +44,21 @@ export default class FormGenerator extends Component {
 
     unsafe_componentwillreceiveprops = (nextProps) => {
         this.setState({ inputSubTypes: nextProps.inputSubTypes });
+
+    }
+
+    componentDidMount() {
+        this.getLookups();
+    }
+
+
+    getLookups = async () => {
+        const result = await GetLookupValues(109);
+        if (result.success) {
+            const methodTypes = result.response;
+            this.setState({ methodTypes });
+        }
+
     }
 
     addInput = () => {
@@ -48,13 +68,40 @@ export default class FormGenerator extends Component {
     }
 
     removeInput = (key) => {
-        let {fields} = this.state;
+        let { fields } = this.state;
         fields.splice(key, 1);
         this.setState({ fields });
     }
 
+    toggle = () => {
+        this.setState({ collapse: !this.state.collapse });
+    }
+
+    previewForm = (fields) => {
+        const { columns, tempColumns } = this.state;
+
+        const { onSubmit } = this.props;
+
+        fields.formContents.forEach(function (input) {
+            if (input.column_type) {
+                const columnId = input.column_type;
+                tempColumns['temp_column' + input.column_name + columnId] = {
+                    ...columns[columnId], route: input.route,
+                    display_column: input.display_column,
+                    column_name: input.column_name,
+                    display_name: input.display_name,
+                    key: input.key,
+                    scope: input.scope,
+                    onSelect: input.onSelect
+                }
+            }
+
+        });
+        onSubmit({ columns: tempColumns });
+    }
+
     render() {
-        const { inputSubTypes, fields, formOutput } = this.state;
+        const { inputSubTypes, fields, formOutput, methodTypes } = this.state;
 
         return (
             <div className="form-generator">
@@ -66,7 +113,7 @@ export default class FormGenerator extends Component {
 
                 {/* Fields Below */}
                 {
-                    fields.map((formElement, key) => <FormElement key={key} onDelete={() => this.removeInput(key)} inputSubTypes={inputSubTypes} element={formElement} formOutput={formOutput}/>)
+                    fields.map((formElement, key) => <FormElement key={key} onDelete={() => this.removeInput(key)} inputSubTypes={inputSubTypes} element={formElement} formOutput={formOutput} />)
                 }
                 {/* Fields Ends */}
 
@@ -75,18 +122,64 @@ export default class FormGenerator extends Component {
                 <Card className="toolbox">
                     <CardBody className="toolbox-contents">
                         <div className="config">
-                            <div className="left"></div>
-                            <div className="right">
+                            <div className="form-group">
+                                <input type="text" className="form-control" name="api" value={formOutput.api} placeholder="End Point" onChange={(event) => this.setState({ value: event.target.value })} />
+                            </div>
+                            <div className="form-actions">
+                                <div className="other-inputs">
+                                    <ButtonGroup size="sm">
+                                        {
+                                            methodTypes.map((methodType, key) =>
+                                                <Button key={key} value={formOutput.method_id}>{methodType.value}</Button>
+                                            )
+                                        }
+                                    </ButtonGroup>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="config">
+                            <div className="left">
                                 <button className="btn btn-secondary btn-sm" onClick={this.addInput}>
                                     Add Input
                                 </button>
                             </div>
-                        </div>
-                        <div className="config">
+                            <div className="right">
+                                <button type="button" className="btn btn-success btn-xs pull-right" onClick={() => this.previewForm({ formContents: fields })}>
+                                    Preview
+                                </button>
+
+                                <button type="button" className="btn btn-danger btn-xs pull-right" ng-click="formGenerator.reArrange()">
+                                    Re Arrange
+                                </button>
+
+                                <button type="button" className="btn btn-default btn-xs pull-right" ng-click="formGenerator.clearInputs()">
+                                    Clear
+                                </button>
+                            </div>
                         </div>
                     </CardBody>
                 </Card>
                 {/* Toolbox Ends */}
+
+                {/* <div className="script-addition-block">
+                    <Button color="primary" onClick={this.toggle} style={{ marginBottom: '1rem' }}>Toggle</Button>
+                    {
+                        this.scriptTypes.map((script, key) =>
+                            <Collapse key={key} isOpen={this.state.collapse}>
+                                <Card>
+                                    <CardBody>
+                                        <small className="text-muted">
+                                            {script.name}
+                                        </small>
+                                    </CardBody>
+                                </Card>
+                            </Collapse>
+                        )
+                    }
+                </div> */}
+                {/* <small className="text-info pull-right">
+                    Add scripts that is to be executed before the form submission .
+                </small> */}
 
             </div>
         )
