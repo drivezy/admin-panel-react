@@ -1,0 +1,92 @@
+.trip-panel-container {
+    margin: 2px;
+    border-top: 4px solid orange;
+    padding: 4px 19px;
+    .panel-body {
+        .precheck-status {
+            display: flex;
+            margin-top: 4px;
+            justify-content: space-between;
+            .self-checkin {
+            }
+            .pre-check {
+            }
+            .user-validation {
+                margin-top: 10px;
+            }
+        }
+    }
+    .trip-details {
+        padding-top: 0px;
+        height: 350px;
+        .portlet-title {
+            border-bottom: 0px;
+            margin-bottom: 0px;
+            min-height: 40px;
+        }
+        .trip-gray-border-bottom {
+            border-bottom: 1px solid #f0f4f7;
+        }
+        .total-odo {
+            margin-top: 1px;
+        }
+        .handover-user {
+            margin-top: 10px;
+        }
+        .unvarified-trip-panel {
+            margin-top: 110px;
+            text-align: center;
+            color: grey;
+        }
+        .total-odo-info {
+            margin-top: 25px;
+        }
+        .ride-end-detail {
+            text-align: right;
+        }
+        .trip-detail-info {
+            margin-bottom: 0.5rem;
+        }
+        .fuel-progress-bar {
+            margin-top: 5px;
+            .progress {
+                height: 30px;
+                width: 200px;
+            }
+        }
+        .start-end {
+            p {
+                margin: 0px;
+                margin-bottom: 5px;
+            }
+        }
+        .fuel-percentage {
+            margin-top: 10px;
+            margin-bottom: -10px;
+        }
+        .ride-return-text {
+            text-align: center;
+            margin-top: -5px;
+            //border-top: 1px solid #f0f4f7;
+            .button {
+                padding: -0.625rem .75rem;
+            }
+            .amount-info-text {
+                margin-top: 5px;
+            } 
+        }
+        .cancellation-details {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            .cancelled-type {
+
+            }
+        }
+        .confirm-trip-info {
+            padding: 101px 0px 35px 210px;
+            color: gray;
+        }
+        
+    }
+}           
