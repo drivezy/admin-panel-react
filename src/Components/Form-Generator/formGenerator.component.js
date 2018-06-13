@@ -85,7 +85,8 @@ export default class FormGenerator extends Component {
         fields.formContents.forEach(function (input) {
             if (input.column_type) {
                 const columnId = input.column_type;
-                tempColumns['temp_column' + input.column_name + columnId] = {
+                // 'temp_column' + input.column_name +
+                tempColumns[columnId] = {
                     ...columns[columnId], route: input.route,
                     display_column: input.display_column,
                     column_name: input.column_name,

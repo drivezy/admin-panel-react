@@ -42,10 +42,10 @@ export default class ListSelect extends Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.column) {
-            this.loadOptions(nextProps.column);
-        }
+    unsafe_componentwillreceiveprops(prevProps) {
+        // if (prevProps.column != this.props.column) {
+        this.loadOptions(this.props.column);
+        // }
     }
 
     render() {
@@ -61,7 +61,7 @@ export default class ListSelect extends Component {
                     options={options}
                     name={this.props.name}
                     onChange={this.props.onChange}
-                    field={column.referenced_model.display_column || column.display_column}
+                    field={column.referenced_model ? column.referenced_model.display_column : column.display_column}
                     sortingType={column.sorting_type}
                     // async={url}
                     value={value} />

@@ -47,24 +47,45 @@ export default class FormBuilder extends Component {
     }
 
     getForm = async (formId) => {
+        const { columns } = this.state;
         const url = 'formDetail/' + formId;
         const result = await Get({ url });
 
         if (result.success) {
             const formOutput = result.response;
-            this.setState({ formOutput });
+            const fields = JSON.parse(formOutput.fields);
+            fields.forEach(function (input) {
+                if (input.column_type) {
+                    const columnId = input.column_type;
+                    columns['temp_column' + input.column_name + columnId] = {
+                        ...columns[columnId],
+                        column_type: columnId,
+                        route: input.route,
+                        display_column: input.display_column,
+                        column_name: input.column_name,
+                        display_name: input.display_name,
+                        key: input.key,
+                        scope: input.scope,
+                        onSelect: input.onSelect
+                    }
+                }
+
+            });
+            this.setState({ formOutput, fields, columns });
         }
     }
 
     getLookups = async () => {
-        const { columns } = this.state;
         const result = await GetLookupValues(31);
         if (result.success) {
             const inputSubTypes = result.response;
-            inputSubTypes.forEach((inputType) => {
-                columns[inputType.id] = { ...inputType, column_type: inputType.id }
-            })
-            this.setState({ inputSubTypes, columns });
+
+            // formOutput.fields.
+            // const inputSubTypes = result.response;
+            // inputSubTypes.forEach((inputType) => {
+            //     columns['temp_column'+inputType+inputType.id] = { ...inputType, column_type: inputType.id }
+            // })
+            this.setState({ inputSubTypes });
         }
 
     }
@@ -75,8 +96,9 @@ export default class FormBuilder extends Component {
     }
 
     render() {
-        const { formOutput, inputSubTypes, columns } = this.state;
+        const { formOutput, inputSubTypes, columns, fields } = this.state;
 
+        console.log(formOutput, columns);
         return (
             <div className="form-builder">
                 {
@@ -85,8 +107,8 @@ export default class FormBuilder extends Component {
                 }
                 <div className="preview-wrapper">
                     {
-                        formOutput.id &&
-                        <FormPreview formId={this.props.match.params.formId} columns={columns} formOutput={formOutput} />
+                        formOutput.id && columns &&
+                        <FormPreview formId={this.props.match.params.formId} columns={columns} formOutput={formOutput} fields={fields} />
                     }
                 </div>
             </div>

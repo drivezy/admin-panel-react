@@ -41,7 +41,8 @@ export default class FormPreview extends Component {
         const { formOutput, formId, columns } = this.state;
         let payload = {
             columns: columns,
-            formPreference: JSON.parse(formOutput.fields)
+            formPreference: JSON.parse(formOutput.fields),
+            listingRow: formOutput
         };
         return (
             <Card>
@@ -50,41 +51,41 @@ export default class FormPreview extends Component {
                         Form Preview
                     </h4>
                     <CardBody>
-                        <form name="createdForm">
+                        {/* <form name="createdForm"> */}
 
-                            <div className="panel">
-                                <div className="panel-body">
-                                    <h1 className="text-center">
-                                        <i className="fa fa-table" aria-hidden="true"></i>
-                                    </h1>
+                        <div className="panel">
+                            <div className="panel-body">
+                                <h1 className="text-center">
+                                    <i className="fa fa-table" aria-hidden="true"></i>
+                                </h1>
 
-                                    {
-                                        payload.columns && payload.formPreference &&
-                                        <FormCreator payload={payload}>
-                                        </FormCreator>
-                                    }
-                                </div>
-                                <div className="panel-footer text-right">
-                                    <small className="text-muted">
-                                        View a preview of the created form in here .
+                                {
+                                    payload.columns && payload.formPreference &&
+                                    <FormCreator payload={payload}>
+                                    </FormCreator>
+                                }
+                            </div>
+                            <div className="panel-footer text-right">
+                                <small className="text-muted">
+                                    View a preview of the created form in here .
                                         </small>
+                            </div>
+                        </div>
+                        {
+                            formOutput &&
+                            <div className="form-actions text-right">
+                                <div className="actions">
+                                    <button className="btn btn-secondary btn-xs" ng-click="formGenerator.clearForm()">
+                                        Clear Form
+                                    </button>
+
+                                    <button className="btn btn-success btn-xs" ng-click="formGenerator.createForm()">
+                                        {formId ? 'Update' : 'Create'} Form
+                                    </button>
                                 </div>
                             </div>
-                            {
-                                formOutput &&
-                                <div className="form-actions text-right">
-                                    <div className="actions">
-                                        <button className="btn btn-default btn-xs" ng-click="formGenerator.clearForm()">
-                                            Clear Form
-                                    </button>
-
-                                        <button className="btn btn-success btn-xs" ng-click="formGenerator.createForm()">
-                                            {formId ? 'Update' : 'Create'} Form
-                                    </button>
-                                    </div>
-                                </div>
-                            }
-                        </form>
+                        }
+                        {/* </form> */}
                     </CardBody>
                     <div className="form-contents">
                         <small className="text-muted">
