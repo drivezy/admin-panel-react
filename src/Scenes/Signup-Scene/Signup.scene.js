@@ -2,89 +2,105 @@ import React, { Component } from 'react';
 import './Signup.scene.css';
 import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import GLOBAL from './../../Constants/global.constants';
+import Yup from "yup";
+import classnames from "classnames";
+
 
 import {
     Redirect
 } from 'react-router-dom';
 
-import { LoginCheck } from './../../Utils/user.utils';
 import { Post, Get } from './../../Utils/http.utils';
-
-import { updateUser, setCurrentRoute } from './../../';
-import ToastNotifications from '../../Utils/toast.utils';
 import { Location } from './../../Utils/location.utils';
+import ToastNotifications from '../../Utils/toast.utils';
 
-export default class SignupScene extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            showPassword: false,
-            name: '',
-            email: '',
-            password: '',
-            redirectToReferrer: false
-        }
-        // this.loggedIn.bind(this);
-        this.proceedSignup.bind(this);
-    }
+import { withFormik } from "formik";
 
 
-    async validateCredentials({ name, email, password }) {
-        const exp = (/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-        if (exp.test(email) && email !== '' && password !== '' && name !== '') {
-            this.proceedSignup({ name, email, password });
-        } else {
-            alert('Name or Email incorrect');
-        }
-    }
+const formikEnhancer = withFormik({
+    validationSchema: Yup.object().shape({
+      Name: Yup.string()
+        .min(2, "Minimum 2 characters required")
+        .required("Name is required."),
+      Email: Yup.string()
+        .email("Invalid email address")
+        .required("E-mail is required."),
+      Password: Yup.string()
+        .min(6, "Password should contain more than 6 characters")
+        .required("Password is required!")
+    }),
+  
+    mapPropsToValues: ({ user }) => ({
+      ...user
+    }),
+    handleSubmit: (payload, { setSubmitting }) => {
+        ToastNotifications.success('Successfully Signed Up');
+        //alert(payload.Email);
+        setSubmitting(false);
+    },
+    displayName: "MyForm"
+  });
+  
+  const InputFeedback = ({ error }) =>
+    error ? <div className="input-feedback">{error}</div> : <br />;
 
-    async proceedSignup({ name,email, password }) {
-        // user
-        // name
-        // password
-        // email
-        const res = Post({ urlPrefix: GLOBAL.ROUTE_URL, url: 'user', body: { name, email, password } });
-        const signup = await res;
-        if (signup.success) {
-            //alert('Signed Up Successfully');
-            ToastNotifications.success('Successfully Signed Up');
-            // this.loginCheck();
-            /*const res = await LoginCheck();
-            if (res.success) {
-                this.loggedIn(res.response);
-            }*/
-        }
-        else {
-            alert('Name or Email incorrect');
-        }
-        Location.navigate({url: '/login'});
-    }
-
-    loggedIn = (data) => {
-        console.log(data);
-        const a = (this.props.location ? this.props.location.state : null) || { from: { pathname: '/' } };
-        // if (a && a.from) {
-        //     this.props.setCurrentRoute(a.from.pathname);
-        // }
-
-        this.setState({ redirectToReferrer: true });
-    }
-
-
-    render() {
-        const { from } = (this.props.location ? this.props.location.state : null) || { from: { pathname: '/' } };
-        const { redirectToReferrer } = this.state
-        // this.props.setCurrentRoute(from)
-        if (redirectToReferrer) {
-            // Global.currentRoute = from;
-            return (
-                <Redirect to={from} />
-            )
-        }
-        const { showPassword } = this.state;
-        return (
-            <div className="sign-form">
+  /* const formlabel = ({ error, className, children, ...props }) => {
+    return (
+        <label className="label" {...props}>
+        {children}
+        </label>
+    );
+    };
+    */
+  
+  const TextInput = ({
+    type,
+    id,
+    label,
+    error,
+    value,
+    onChange,
+    className,
+    ...props
+  }) => {
+    const classes = classnames(
+      "input-group",
+      {
+        "animated shake error": !!error
+      },
+      className
+    );
+    /*
+    <formlabel htmlFor={id} error={error}>
+                {label}
+            </formlabel>
+    */
+    return (
+      <div className={classes}>
+        <input
+          id={id}
+          className="text-input"
+          type={type}
+          value={value}
+          onChange={onChange}
+          {...props}
+        />
+        <InputFeedback error={error} />
+      </div>
+    );
+  };
+  const MyForm = props => {
+    const {
+      values,
+      touched,
+      errors,
+      handleChange,
+      handleBlur,
+      handleSubmit,
+      isSubmitting
+    } = props;
+    return (
+        <div className="sign-form">
                 <Card>
                     <CardBody>
                         <div className="Logo">
@@ -93,36 +109,55 @@ export default class SignupScene extends Component {
                         <div className="Name">
                             <p className="text-center">{GLOBAL.ORGANIZATION.name} Dashboard</p>
                         </div>
-                        <Form>
-                        <FormGroup>
-                                <Label>Name</Label>
-                                <input autoComplete="off" onChange={(e) => this.setState({ name: e.target.value })} type="text" className="form-control" id="exampleInputEmail1" placeholder="Name" />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label>Email</Label>
-                                <input autoComplete="off" onChange={(e) => this.setState({ email: e.target.value })} type="email" className="form-control" id="exampleInputEmail1" placeholder="Email" />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label>Password</Label>
-                                <input autoComplete="off" onChange={(e) => this.setState({ password: e.target.value })} className="form-control" type={this.state.showPassword ? 'text' : 'password'} id="exampleInputPassword1" placeholder="Password" />
-                            </FormGroup>
-                            <FormGroup className="button">
-                                <Button onClick={(event) => { event.preventDefault(); this.validateCredentials({ name: this.state.name, email: this.state.email, password: this.state.password }) }} className="btn btn-success btn-block">Sign Up</Button>
-                            </FormGroup>
-                            <div className="row">
-                                <div className="col-sm-6">
-                                    {/* <a href="#" >Forget Password?</a> */}
-                                </div>
-                                <div className="col-sm-6  text-right">
-                                    {/* <a href="" >Create an account</a> */}
-                                </div>
-                            </div>
-                        </Form>
+                            <form onSubmit={handleSubmit}>
+                                <Label> Name </Label>
+                                <TextInput style={{height: 35, width: 400}}
+                                id="Name"
+                                type="text"
+                                label="Name"
+                                placeholder="Enter Your Name"
+                                autoComplete="off"
+                                error={touched.Name && errors.Name}
+                                value={values.Name}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                />
+                                <Label> E-mail </Label>
+                                <TextInput style={{height: 40, width: 400}}
+                                id="Email"
+                                type="email"
+                                label="E-mail"
+                                placeholder="Enter Your E-mail"
+                                autoComplete="off"
+                                error={touched.Email && errors.Email}
+                                value={values.Email}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                />
+                                <Label> Password </Label>
+                                <TextInput style={{height: 40, width: 400}}
+                                id="Password"
+                                type="password"
+                                label="Password"
+                                placeholder="Enter Your Password"
+                                autoComplete="off"
+                                error={touched.Password && errors.Password}
+                                value={values.Password}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                />
+                                <button type="submit" className="btn btn-success btn-block" disabled={isSubmitting}>
+                                Sign Up
+                                </button>
+                            </form>
                         <div className="copyright"> Panel 2017-18 © Powered by Drivezy </div>
                     </CardBody>
                     
-                </Card>
-            </div>
-        )
-    }
-}
+            </Card>
+        </div>
+    );
+  };
+  
+  const MyEnhancedForm = formikEnhancer(MyForm);
+
+  export default MyEnhancedForm;
