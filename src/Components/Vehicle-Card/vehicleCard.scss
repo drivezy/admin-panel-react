@@ -1,0 +1,35 @@
+@import 'Assets/Global-Shared/theme.scss';
+
+.detail-card {
+    // margin-bottom: 0.5px;
+    // font-weight: bold;
+    // font-size: medium;
+    p{
+        margin-bottom: 5px;
+    }
+    .vehicle-detail-header{
+        // text-align: center;
+    }
+
+    .card-header{
+        display: flex;
+        justify-content:space-between;
+    }
+
+    @include themify($themes){
+        background:themed('cardBackground');
+    }
+
+}
+
+.gray-border-bottom {
+    @include themify($themes)
+    {
+        border-bottom: themed('borderBottom');
+        border-color: themed('borderColor');
+    }
+    
+    .text-right {
+        float: right;
+    }
+}

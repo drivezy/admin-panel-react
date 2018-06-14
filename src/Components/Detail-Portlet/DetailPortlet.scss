@@ -1,4 +1,11 @@
+@import 'Assets/Global-Shared/theme.scss';
 .detail-portlet{
+    .card{
+        @include themify($themes){
+            background-color: themed('detailBackgroundCard');
+            color: themed('textSecondary');
+        }
+    }
     margin: 4px 0px;
     .pull-right {
         float: right;
@@ -11,8 +18,20 @@
     }
     .gray-border-bottom:nth-child(4n+1) {
         background: #f9f9f9;
+        @include themify($themes){
+            background-color: themed('menuTableBackground');
+            color: themed('textSecondary');
+            border: themed('borderBottom');
+            border-radius: themed('menuBorderRadius');
+        }
     }
     .gray-border-bottom:nth-child(4n) {
         background: #f9f9f9;
+        @include themify($themes){
+            background-color: themed('menuTableBackground');
+            color: themed('textSecondary');
+            border: themed('borderBottom');
+            border-radius: themed('menuBorderRadius');
+        }
     }
 }

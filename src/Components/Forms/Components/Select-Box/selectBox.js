@@ -2,13 +2,13 @@
 // Refer https://github.com/JedWatson/react-select
 
 import React, { Component } from 'react';
+import './selectBox.css';
 
 import Select, { Async } from 'react-select';
 import 'react-select/dist/react-select.css';
-// import Async from 'react-select';
 
 import { Get } from './../../../../Utils/http.utils';
-import { callbackify } from 'util';
+import { IsObjectHaveKeys } from './../../../../Utils/common.utils';
 
 export default class SelectBox extends Component {
     constructor(props) {
@@ -30,6 +30,8 @@ export default class SelectBox extends Component {
      */
     returnStateObj(props) {
         let options = [], value = {};
+
+        // console.log(props.options);
 
         if (Array.isArray(props.options) && typeof props.options[0] != 'object') {
             props.options.forEach(option => {
@@ -85,7 +87,6 @@ export default class SelectBox extends Component {
             const result = await Get({ url: preloadUrl });
 
             if (result.success) {
-                console.log(result);
 
                 let options = result.response.map((entry) => {
                     let option = entry;
@@ -106,12 +107,12 @@ export default class SelectBox extends Component {
     render() {
         const { async, getOptions, multi, placeholder } = this.props;
         const { value, options, field, valueKey } = this.state;
-
+        console.log(value, IsObjectHaveKeys(value));
         let elem;
         if (async) {
             elem = <Async
                 name="form-field-name"
-                value={value}
+                value={IsObjectHaveKeys(value) ? value : undefined}
                 loadOptions={this.getOptions}
                 onChange={this.handleChange}
                 labelKey={field}
@@ -122,7 +123,7 @@ export default class SelectBox extends Component {
         } else if (getOptions) {
             elem = <Async
                 name="form-field-name"
-                value={value}
+                value={IsObjectHaveKeys(value) ? value : undefined}
                 loadOptions={getOptions}
                 onChange={this.handleChange}
                 labelKey={field}
@@ -133,7 +134,7 @@ export default class SelectBox extends Component {
         } else {
             elem = <Select autoFocus={false}
                 name="form-field-name"
-                value={value}
+                value={IsObjectHaveKeys(value) ? value : undefined}
                 onChange={this.handleChange}
                 options={options}
                 labelKey={field}
@@ -145,7 +146,7 @@ export default class SelectBox extends Component {
         }
 
         return (
-            <div>
+            <div className="select-box">
                 {elem}
             </div>
         );

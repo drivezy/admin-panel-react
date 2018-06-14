@@ -1,21 +1,18 @@
 @import 'Assets/Global-Shared/theme.scss';
-
 body {
-    width: 100%;
-    // font-size: 14px;
+    width: 100%; // font-size: 14px;
 }
 
 .drivezy-page-container {
     padding: 20px 20px;
-    margin-top: 5%;
-    // background: red;
+    margin-top: 5%; // background: red;
 }
 
 .block {
     display: block;
 }
 
-.relative {  
+.relative {
     position: relative;
 }
 
@@ -104,6 +101,7 @@ body {
 .width-50 {
     width: 50%;
 }
+
 .width-40 {
     width: 40%;
 }
@@ -112,7 +110,7 @@ body {
     text-align: center;
 }
 
-.cursor-pointer { 
+.cursor-pointer {
     cursor: pointer;
 }
 
@@ -124,7 +122,7 @@ body {
     font-size: 12px;
 }
 
-.opacity-10  {
+.opacity-10 {
     opacity: 1;
 }
 
@@ -144,7 +142,7 @@ body {
     opacity: .6;
 }
 
-.opacity-0 { 
+.opacity-0 {
     opacity: 0;
 }
 
@@ -160,7 +158,7 @@ body {
     margin-top: 10%;
 }
 
-.no-padding-strict { 
+.no-padding-strict {
     padding: 0 !important;
 }
 
@@ -172,11 +170,11 @@ body {
     padding-top: 0;
 }
 
-.padding-top-5 { 
+.padding-top-5 {
     padding-top: 5%;
 }
 
-.padding-left-10 { 
+.padding-left-10 {
     padding-left: 10px;
 }
 
@@ -204,12 +202,12 @@ body {
     }
 }
 
-.heading { 
+.heading {
     font-weight: 700;
     font-size: 16px;
 }
 
-.sub-description { 
+.sub-description {
     font-size: 12px;
 }
 
@@ -219,47 +217,43 @@ body {
     padding: 20px 0;
     &:before {
         content: '';
-        border: 1px solid rgba(0,0,0,.3);
+        border: 1px solid rgba(0, 0, 0, .3);
         width: 100%;
         position: absolute;
         left: 0;
     }
 }
 
-.text-transform-none { 
+.text-transform-none {
     text-transform: none;
 }
 
-.light-subheader-text { 
-    color: rgba(0,0,0,.7);
+.light-subheader-text {
+    color: rgba(0, 0, 0, .7);
 }
 
-.CalendarDay { 
+.CalendarDay {
     outline: none !important;
 }
 
-.global-loader { 
+.global-loader {
     position: fixed;
     height: 100%;
     width: 100vw;
-    background: rgba(0,0,0,.4);
-    color: #fea658;
+    background: rgba(0, 0, 0, .4); // color: #fea658;
     font-size: 50px;
     text-align: center;
-    top: 0;
-    // @extend .flex-column;
-
-    .drivezy-loader-gif { 
+    top: 0; // @extend .flex-column;
+    .drivezy-loader-gif {
         width: 250px;
     }
 }
 
-
-
 /** 
 Non critical css goes here
 */
-.generic-sub-header { 
+
+.generic-sub-header {
     @extend .font-12;
     line-height: 30px;
     padding: 2px 15px;
@@ -276,9 +270,12 @@ Non critical css goes here
     margin-top: 8px;
 }
 
-.dropdown-button { 
-    border: 1px solid #dadfe3 !important;
-    color: #35485a ;
+.dropdown-button {
+    border: 1px solid #dadfe3;
+    @include themify($themes){
+        border: themed('primaryBorder');
+    }
+    color: #35485a;
     background-color: #fff;
     cursor: pointer;
     vertical-align: middle;
@@ -288,7 +285,6 @@ Non critical css goes here
     padding: 5px 10px;
     text-align: center;
     box-shadow: none !important;
-
     &:hover {
         background: #dadfe3;
         border: 1px solid #dadfe3;
@@ -296,83 +292,110 @@ Non critical css goes here
     }
 }
 
-.modal-xl { 
+.modal-xl {
     width: 92%;
     max-width: 92%;
 }
 
-.Select-menu-outer {  // for select box to appear on top
+.Select-menu-outer {
+    // for select box to appear on top
     z-index: 1066;
-} 
+}
 
-.btn-xs { 
+.btn-xs {
     font-size: 12px;
     line-height: 1.5;
     border-radius: 3px;
 }
 
-.no-data-to-show { 
-    text-align: center; 
+.no-data-to-show {
+    text-align: center;
     padding: 30px;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
 }
 
-
-.drivezy-light-theme { 
-    .btn-primary { 
-        background: $primaryThemeLight  !important;
-        color: $onPrimaryThemeLight;
-        &:hover { 
-            background: $primaryDarkThemeLight;
-            color: $onSecondaryThemeLight;
-        }
-    }
-
-    .btn-secondary { 
-        background: $secondaryThemeLight;
-        color: $onSecondaryThemeLight !important;
-        &:hover { 
-            background: $secondaryDarkThemeLight;
-            color: $onSecondaryThemeLight;
+// Nav Styling
+.nav-tabs {
+    .nav-link {
+        border: none;
+        background: none;
+        cursor: pointer;
+        &.active {
+            background: none;
+            border-bottom: 1px solid red;
         }
     }
 }
 
-.drivezy-dark-theme { 
-    .btn-primary { 
-        background: $primaryThemeDark;
-        color: $onPrimaryThemeDark;
-        &:hover { 
-            background: $primaryDarkThemeDark;
-            color: $onSecondaryThemeLight;
-        }
+.search-button{
+    .btn-default {
+    @include themify($themes) {
+        background: themed('defaultThemeDark') !important;
+        color: themed('whiteColor');
+        font-size: 98%;
     }
-    .btn-secondary { 
-        background: $secondaryThemeDark;
-        color: $onSecondaryThemeDark !important;
-        &:hover { 
-            background: $secondaryDarkThemeDark;
-            color: $onSecondaryThemeLight !important;
-        }
     }
 }
 
-.drivezy-drivezy-theme { 
-    .btn-primary { 
-        background: $primaryThemeDrivezy;
-        color: $onPrimaryThemeDrivezy;
-        &:hover { 
-            background: $primaryDarkThemeDrivezy;
-            color: $onSecondaryThemeLight;
-        }
+.btn-secondary {
+    @include themify($themes) {
+        border: themed('themeBorder');
+        background: themed('secondaryThemeDark') !important;
+        color: themed('whiteColor');
     }
-    .btn-secondary { 
-        background: $secondaryThemeDrivezy;
-        color: $onSecondaryThemeDark !important;
-        &:hover { 
-            background: $secondaryDarkThemeDrivezy;
-            color: $onSecondaryThemeLight !important;
-        }
+}
+
+th{
+    @include themify($themes){
+        color: themed('table');
+        background: themed('defaultThemeDark');
+    }
+}
+
+.dropdown-button{
+    @include themify($themes) {
+        border: themed('primaryBorder');
+        background: themed('primaryThemeDark') !important;
+        color: themed('whiteColor');
+    }
+}
+
+.dropdown-menu.menu-operations {
+    @include themify($themes){
+        background: themed('bodyBackground');
+        border: themed('dropdownBorder');
+        color: themed('secondaryColor');
+    }
+}
+
+.fa-times{
+    @include themify($themes){
+        color: themed('sideBarIcons');
+    }
+}
+
+.form-control{
+    @include themify($themes){
+        background-color: themed('dropdownInputBackground');
+    }
+}
+
+.listing-search-container .listing-search-tool .listing-input-tool .input-select{
+    @include themify($themes){
+        background-color: themed('searchBackground');
+        border: themed('searchBorder');
+    }
+}
+
+.detail-portlet{
+    @include themify($themes){
+        color: themed('whiteColor');
+    }
+}
+
+.generic-detail-container .header{
+    @include themify($themes){
+        background-color: themed('sideBackground');
     }
 }

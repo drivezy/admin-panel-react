@@ -32,9 +32,12 @@ export default class CustomAction extends Component {
         };
     }
 
-    componentWillReceiveProps({ genericData }) {
-        this.setState({ genericData });
+    UNSAFE_componentWillReceiveProps = () => {
+        this.setState({ genericData: this.props.genericData });
     }
+    // componentWillReceiveProps({ genericData }) {
+    //     this.setState({ genericData });
+    // }
 
     componentDidMount = () => {
         const { actions } = this.state
@@ -64,7 +67,7 @@ export default class CustomAction extends Component {
     }
 
     render() {
-        const { actions = [], listingRow = [], genericData = {}, placement } = this.props;
+        const { actions = [], listingRow = [], genericData = {}, placement, position } = this.props;
         return (
             <div className="custom-actions">
                 {
@@ -72,12 +75,23 @@ export default class CustomAction extends Component {
 
                         if (action.placement_id == placement) {
                             const html =
+
                                 // <button key={key}
                                 //     onClick={() => {
                                 //         this.callFunction({ action, listingRow });
                                 //     }}
                                 //     type="button" className="btn btn-sm btn-light">
-                                <i className={`fa ${action.icon}`} onClick={() => { this.callFunction({ action, listingRow }) }} ></i>
+                                <span className="button-element" onClick={() => { this.callFunction({ action, listingRow }) }}>
+                                    <i className={`fa ${action.icon}`}></i>
+
+                                    {/* Temporaririly fix to hide the name for row actions */}
+                                    {
+                                        ((action.placement_id == 168) || (position == 'header')) && <span className="action-label">
+                                            {action.name}
+                                        </span>
+                                    }
+                                </span>
+
                             // </button>
                             return (
                                 <CustomTooltip placement="top" key={key} html={html} title={action.name}></CustomTooltip>

@@ -1,3 +1,4 @@
+@import 'Assets/Global-Shared/theme.scss';
 .dropdown {
     // margin-left: 1000px;    
     .dropdown-toggle {
@@ -25,6 +26,9 @@
                 }
             } // for list item
             .menu-item {
+                @include themify($themes){
+                    color: ('secondaryColor');
+                }
                 padding: 6px;
                 margin: 2px;
                 a.menu-link {

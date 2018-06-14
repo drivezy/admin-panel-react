@@ -28,14 +28,20 @@
     }
 }
 
-.drivezy-dark-theme { 
     .listing-pagination {
+        @include themify($themes) {
+            background: themed('bodyBackground');
+        }
         .highlighted-page > a { 
             background: $primaryThemeDark !important;
             color: $onPrimaryThemeDark;
         }
+        .pagination-record{
+            @include themify($themes) {
+                color:themed('secondaryColor');
+            }
+        }
     }
-}
 
 .drivezy-drivezy-theme { 
     .listing-pagination {

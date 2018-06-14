@@ -27,7 +27,6 @@ export default class DatePicker extends Component {
     }
 
     applyDate = (event, picker) => {
-        // console.log(picker);
         let { value } = this.state;
 
         if (this.props.single) {
@@ -44,27 +43,31 @@ export default class DatePicker extends Component {
         this.setState({ value });
     }
 
-    componentWillReceiveProps = (nextProps) => {
-        // if (nextProps.single) {
+    unsafe_componentwillreceiveprops = (nextProps) => {
         this.setState({
             format: nextProps.format || GLOBAL.DATE_TIME_FORMAT,
             minDate: nextProps.minDate,
             maxDate: nextProps.maxDate,
             value: nextProps.value || '',
         });
-        // }
     }
 
     render() {
 
-        let value, startDate, endDate;
+        let props = {
+            locale: { format: this.state.format },
+            timePicker: this.props.timePicker,
+
+        };
 
         if (this.props.single) {
-            value = moment(this.state.value).format(this.state.format);
+            if (this.state.value) {
+                props.startDate = moment(this.state.value).format(this.state.format);
+            }
         } else {
-            // var { startDate, endDate } = this.state.value;
-            startDate = moment(this.state.value.startDate).format(this.state.format)
-            endDate = moment(this.state.value.endDate).format(this.state.format)
+
+            props.startDate = moment(this.state.value.startDate).format(this.state.format)
+            props.endDate = moment(this.state.value.endDate).format(this.state.format)
         }
 
         return (
@@ -73,14 +76,14 @@ export default class DatePicker extends Component {
                 <div className="form-control">
                     {
                         this.props.single ?
-                            <DateRangePicker locale={{ format: this.state.format }} timePicker={this.props.timePicker} startDate={value} singleDatePicker onApply={this.applyDate}>
+                            <DateRangePicker singleDatePicker onApply={this.applyDate} {...props}>
                                 <div className="picker">
-                                    {value}
+                                    {props.startDate}
                                 </div>
                             </DateRangePicker>
-                            : <DateRangePicker locale={{ format: this.state.format }} timePicker={this.props.timePicker} startDate={startDate} endDate={endDate} onApply={this.applyDate}>
+                            : <DateRangePicker {...props} onApply={this.applyDate}>
                                 <div className="picker">
-                                    {startDate} - {endDate}
+                                    {props.startDate} - {props.endDate}
                                 </div>
                             </DateRangePicker>
                     }

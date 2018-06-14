@@ -10,6 +10,8 @@ import { FormPreferenceEndPoint } from './../../Constants/api.constants';
 
 import { Collapse, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
+import FormColumnSetting from './../../Components/Form-Settings/Components/Form-Column-Setting/formColumnSetting.component';
+
 export default class FormSettings extends Component {
 
     constructor(props) {
@@ -24,6 +26,7 @@ export default class FormSettings extends Component {
             columns: this.props.columns,
             list: {},
             activeColumn: {},
+            module: props.module
         }
     }
 
@@ -71,14 +74,36 @@ export default class FormSettings extends Component {
         this.setState({ tempSelectedColumns: result.array, activeColumn: activeColumn });
     }
 
-    addSplit = () => {
-        var ext = Math.floor(Math.random() * 1000);
+    removeColumn = (column) => {
         var selectedColumns = this.state.tempSelectedColumns;
-        selectedColumns.unshift("e-split-" + ext);
 
-        selectedColumns.unshift("s-split-" + ext);
-        this.setState({ selectedColumns });
+        selectedColumns = selectedColumns.filter((entry) => (entry.column != column.column));
+
+        this.setState({ tempSelectedColumns: selectedColumns })
     }
+
+    addSplit = () => {
+        const { tempSelectedColumns } = this.state;
+        var ext = Math.floor(Math.random() * 1000);
+        tempSelectedColumns.unshift("e-split-" + ext);
+
+        tempSelectedColumns.unshift("s-split-" + ext);
+        this.setState({ tempSelectedColumns });
+    }
+
+    removeSplit = (index, item) => {
+        const { tempSelectedColumns } = this.state;
+        tempSelectedColumns.splice(index, 1);
+        var end;
+        if (item.split("-")[0] == "e") {
+            end = item.replace("e", "s");
+        } else if (item.split("-")[0] == "s") {
+            end = item.replace("s", "e");
+        }
+        var endIndex = tempSelectedColumns.indexOf(end);
+        tempSelectedColumns.splice(endIndex, 1);
+        this.setState({ tempSelectedColumns });
+    };
 
     applyChanges = async () => {
         const { userId, modelId, listName, source } = this.props;
@@ -103,7 +128,7 @@ export default class FormSettings extends Component {
     }
 
     modalWrapper() {
-        const { columns, tempSelectedColumns, activeColumn } = this.state;
+        const { columns, tempSelectedColumns, activeColumn, module } = this.state;
 
         const selectedIds = [];
 
@@ -115,15 +140,16 @@ export default class FormSettings extends Component {
 
         const leftColumns = _.groupBy(columns, 'parent');
 
-        const columnKeys = Object.keys(leftColumns);
+        const columnKeys = [module];
 
         for (var key of columnKeys) {
             leftColumns[key] = leftColumns[key].filter((column) => (
                 selectedIds.indexOf(column.id) == -1
             ));
         }
+
         return (
-            <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="form-settings">
+            <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="form-settings-modal">
                 <ModalHeader toggle={this.toggleModal}>
                     Configure
             </ModalHeader>
@@ -165,7 +191,7 @@ export default class FormSettings extends Component {
                         </Button>
                         <Button color="primary" size="sm" onClick={this.addSplit}>
                             Add Split
-                       </Button>
+                        </Button>
                     </div>
 
                     <div className="right">
@@ -189,18 +215,18 @@ export default class FormSettings extends Component {
                         </ListGroup>
                     </div>
 
-                </ModalBody>
+                </ModalBody >
                 <ModalFooter>
                     <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
                     <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
                 </ModalFooter>
-            </Modal>
+            </Modal >
         )
     }
 
     render() {
         return (
-            <div className="table-settings">
+            <div className="form-settings">
                 <Button color="primary" size="sm" onClick={this.toggleModal}>
                     <i className="fa fa-cog"></i>
                 </Button>

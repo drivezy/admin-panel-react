@@ -1,9 +1,22 @@
 @import 'Assets/Global-Shared/theme.scss';
-
+.landing-wrapper{
+    &.sidenav-open{
+        .active-module{
+            .search-box{
+                &.expanded{
+                    left: 180px;
+                }
+            }
+        }
+    }
+}
 .active-module {
     position: relative;
     .search-box {
         height: 100vh;
+        @include themify($themes){
+            background-color: themed('bodyBackground');
+        }
         background: white;
         position: fixed;
         width: 250px; // right: 140px;
@@ -22,6 +35,10 @@
             box-shadow: 4px 0 13px 0 rgba(74, 74, 74, .3), 30px 0 40px 0 rgba(0, 0, 0, .11);
         }
         .search-box-header {
+            @include themify($themes){
+                background: themed('expandMenuHeader');
+                border-bottom: themed('themeBorder');
+            }
             background: white;
             display: flex;
             align-items: center;
@@ -58,7 +75,10 @@
             padding: 4px;
             overflow-y: scroll;
             p.search-hint {
-                color: #af9564;
+                color: #5f4a24;
+                @include themify($themes){
+                    color: themed('hintText');
+                }
                 margin: 9px 16px;
                 font-size: 12px;
             }
@@ -66,10 +86,17 @@
                 box-shadow: 0px 0px 4px 1px #dbdfe3;
                 border-color: #e4e2e2; // max-height: 80vh;
                 // overflow-y: scroll;
+                @include themify($themes){
+                    box-shadow: themed('menuBorderPanel');
+                }
                 .panel-heading {
+                    @include themify($themes){
+                        color: themed('secondaryColor');
+                        background-color: themed('subMenuHeader')
+                    }
                     padding: 5px 8px;
                     font-weight: 500;
-                    color: #904242; // border-bottom: 1px solid #e4e2e2;
+                    color: #904242; // border-bottom: 1px solid #e4e2e2;  
                 }
                 .panel-body {
                     padding: 5px;
@@ -77,6 +104,14 @@
                         display: block;
                         cursor: pointer;
                         color: #2b3742;
+                        @include themify($themes){
+                            color: themed('navLinkColor');
+                        }
+                        &:hover{
+                            @include themify($themes){
+                                color: themed('linkHover');
+                            }
+                        }
                         padding: 5px;
                         -webkit-font-smoothing: antialiased;
                         font-size: 14px;
@@ -86,7 +121,9 @@
                             border-radius: 2px;
                         }
                         &:hover {
-                            background: #e8e8e8;
+                            @include themify($themes){
+                            background: themed('subMenuHover');
+                           }
                         }
                     }
                 }

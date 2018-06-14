@@ -1,4 +1,4 @@
-
+@import 'Assets/Global-Shared/theme.scss';
 .generic-listing-container {
     // font-size: 12px;
     // padding: 15px;
@@ -11,15 +11,18 @@
         display: flex;
         justify-content: space-between; // width: 95%;
         padding: 4px 8px;
-        background: #f1f1f1;
-        border-bottom: 1px solid #d4d4d4;
+        border-bottom: 1px solid #000;
+        @include themify($themes) {
+            background: themed('subHeader');
+            border-bottom: themed('subHeaderBorder');
+        }
         .search-bar {
             display: flex;
         }
         .table-settings {
             margin: 0px;
         }
-        .search-wrapper {}
+        .search-wrapper {} 
         .header-actions {
             display: flex;
             align-items: center;
@@ -29,7 +32,6 @@
             .btn-group {
                 margin: 0px 2px;
             }
-            
         }
         .pre-defined-filter {
             margin-left: 1100px;
@@ -39,11 +41,20 @@
         }
     }
     .card {
+        @include themify($themes){
+            background: themed('cardBackground');
+        }
         // width: 95%;
-        margin: 8px;
+        // border: none !important;
+        padding: 5px;
+        //margin: 8px;
+        border: none !important; 
         .card-body {
             overflow-x: scroll;
             padding: 0px; // Table Begins
+        }
+        @include themify($themes){
+            margin: themed('cardMargin');
         }
     }
 }

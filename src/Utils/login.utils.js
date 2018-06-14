@@ -156,3 +156,7 @@ export async function ResendOTP(username) {
 function NavigateToNextScene(history, nextScene) {
     history.push(nextScene ? nextScene : '/');
 }
+
+/**
+ * Function for Forget Password
+ */

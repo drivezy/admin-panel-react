@@ -20,7 +20,7 @@ export default class Home extends Component {
         return (
             <div className="home-scene">
                 {/* <CodeEditor /> */}
-                <SelectBox value={1} options={[1, 2, 3]} />
+                <SelectBox options={[1, 2, 3]}  />
                 <Select
                     name="form-field-name"
                     value={1}
@@ -29,7 +29,6 @@ export default class Home extends Component {
                     autoFocus
                     clearable
                 />
-                <TimePicker />
             </div>
         )
     }

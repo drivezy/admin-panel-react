@@ -1,0 +1,7 @@
+.user-detail {
+    display: flex;
+    flex-direction: row;
+    .user-card-data, .user-license-data {
+        width: 50%;
+    }
+}

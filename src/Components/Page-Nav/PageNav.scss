@@ -4,6 +4,18 @@
     position: relative;
     margin-top: 5px;
     right: 21px;
+    div.impersonating-link {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        span.link {
+            cursor: pointer;
+            margin: 0px 10px;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
     .btn-group {
         box-shadow: none;
         border: none;
@@ -12,6 +24,10 @@
             border: none;
             box-shadow: none;
             background: transparent;
+            &:hover{
+                border: 1px solid whitesmoke;
+                background: none;
+            }
         }
     }
     .user-profile {
@@ -20,7 +36,7 @@
         align-items: center;
         width: 32px;
         height: 32px;
-        border: 1px solid #3b4c5d;
+        // border: 1px solid #3b4c5d;
         border-radius: 50%;
         overflow: hidden;
         &.nil {

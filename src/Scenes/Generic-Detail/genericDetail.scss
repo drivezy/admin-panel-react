@@ -1,5 +1,6 @@
+@import 'Assets/Global-Shared/theme.scss';
 .generic-detail-container {
-    .header {
+        .header {
         display: flex;
         justify-content: space-between;
         background: #dcdcdc7a;
@@ -10,6 +11,9 @@
         .right {
             display: flex;
             align-items: center;
+            @include themify($themes){
+                color: themed('secondaryColor');
+            }
           
             .table-settings {
                 .btn {
@@ -19,6 +23,7 @@
             }
         }
     }
+}
     .detail-content {
         margin: 8px;
     }
@@ -28,4 +33,4 @@
     .nav-item {
         cursor: pointer;
     }
-}
+

@@ -2,6 +2,10 @@
 
 .detail-includes {
     .card-body {
+        @include themify($themes){
+            background-color: themed('detailsBackground');
+            color: themed('textSecondary');
+        }
         padding: 6px 8px;
         .nav{
             &.nav-tabs{
@@ -11,7 +15,16 @@
                         border: none;
                         &.active{
                             border-bottom: 2px solid #1b62ab;
-
+                            @include themify($themes){
+                                background-color: themed('hoverColor');
+                                border-bottom: themed('themeBorder');
+                            }
+                        }
+                        &:hover{
+                            @include themify($themes){
+                                background-color: themed('hoverColor');
+                                color: themed('darkColor');
+                            }
                         }
                     }
                 }

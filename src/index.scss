@@ -3,13 +3,16 @@
     src: url('../src/Assets/fonts/noway-regular-webfont.woff');
 }
 
+@import 'Assets/Global-Shared/theme.scss';
 // import '/node_modules/bootstrap/dist/css/bootstrap.min.css'
 // import 'bootstrap/dist/css/bootstrap.min.css';
 body {
     font-family: adminFont;
     font-size: 13px;
     overflow-x: hidden;
-    background: #ebeef0 !important;
+    @include themify($themes) {
+        background: themed('bodyBackground');
+    }
 }
 
 body {
@@ -18,13 +21,7 @@ body {
         height: 100%;
         .page-container {
             display: flex;
-            height: 100vh; // flex-direction: column;
-            .landing-sidebar {}
-            .landing-wrapper {
-                flex-grow: 1;
-                width: calc(100% - 235px);
-                background: #ebeef0;
-            }
+            height: 100vh;
         }
     }
 }
@@ -32,6 +29,19 @@ body {
 .form-control {
     &:focus {
         box-shadow: none; // border: none;
+    }
+}
+
+// React Viewer styling
+.react-viewer{
+    .react-viewer-toolbar{
+        .react-viewer-btn{
+            width: auto;
+            min-width: 28px;
+            span.custom-action{
+                padding: 0px 10px;
+            }
+        }
     }
 }
 
@@ -46,25 +56,11 @@ body {
                 padding-top: 5px;
                 background: whitesmoke;
             }
-            .modal-footer{
-                .btn{
+            .modal-footer {
+                .btn {
                     margin: 0px 4px;
                 }
             }
-        }
-    }
-}
-
-// Nav Styling
-.nav-tabs {
-    .nav-link {
-        border: none;
-        background: none;
-        cursor: pointer;
-        &.active {
-            background: none;
-
-            border-bottom: 1px solid red !important;
         }
     }
 }
