@@ -30,9 +30,9 @@ export default class DetailPortlet extends Component {
         icon: 'fa-copy',
         subMenu: false,
         onClick: (data) => {
-            let prop = eval("data.listingRow." + data.selectedColumn.absPath);
+            let prop = eval("data.listingRow." + data.selectedColumn.path);
             CopyToClipBoard(prop);
-            ToastNotifications.success("Property of " + data.selectedColumn.absPath + " has been copied");
+            ToastNotifications.success("Property of " + data.selectedColumn.path + " has been copied");
         }
     }, {
         id: 1,
@@ -46,10 +46,7 @@ export default class DetailPortlet extends Component {
         }
     }];
 
-    componentDidMount() {
-    }
-
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
     }
 
     render() {
@@ -63,23 +60,22 @@ export default class DetailPortlet extends Component {
                             {
                                 finalColumns.map((selectedColumn, key) => {
                                     const html =
-                                        selectedColumn.absPath ?
-                                            <Row className="detail-entry" >
-                                                <Col>
-                                                    <strong>
-                                                        {selectedColumn.display_name}
-                                                    </strong>
+                                        <Row className="detail-entry" >
+                                            <Col>
+                                                <strong>
+                                                    {selectedColumn.display_name}
+                                                </strong>
 
-                                                </Col>
-                                                <Col>
-                                                    <span className="pull-right"> {RowTemplate({ selectedColumn, listingRow, path: 'absPath' })}</span>
-                                                    {/* <span className="pull-right">{listingRow[selectedColumn.column_name]}</span> */}
-                                                </Col>
-                                            </Row>
-                                            : null
+                                            </Col>
+                                            <Col>
+                                                <span className="pull-right"> {RowTemplate({ selectedColumn, listingRow })}</span>
+                                                {/* <span className="pull-right">{listingRow[selectedColumn.name]}</span> */}
+                                            </Col>
+                                        </Row>
 
                                     return (
-                                        selectedColumn && selectedColumn.column_type &&
+                                        selectedColumn &&
+                                        // selectedColumn && selectedColumn.column_type &&
                                         <Col className="gray-border-bottom padding-bottom-4 padding-top-4" key={key} xs={selectedColumn.split ? '6' : '12'}>
                                             <RightClick key={key} renderTag="div" rowOptions={this.rowOptions} html={html} listingRow={listingRow} selectedColumn={selectedColumn}></RightClick>
                                         </Col>

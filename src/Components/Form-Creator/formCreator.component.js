@@ -5,9 +5,7 @@ import {
     Card, CardImg, CardText, CardBody,
     CardTitle, CardSubtitle, Button,
     Container,
-    Row, Col,
-    ModalBody,
-    ModalFooter
+    Row, Col
 } from 'reactstrap';
 
 import { withFormik, Field, Form } from 'formik';
@@ -15,6 +13,7 @@ import Yup from 'yup';
 
 import { Upload, Post, Put } from './../../Utils/http.utils';
 import { GetPreference } from './../../Utils/generic.utils';
+import { IsObjectHaveKeys, IsUndefined } from './../../Utils/common.utils';
 
 import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import ReferenceInput from './../Forms/Components/Reference-Input/referenceInput';
@@ -29,6 +28,9 @@ import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from 'constants';
 import FormSettings from './../Form-Settings/FormSettings.component';
 import ScriptInput from './../Forms/Components/Script-Input/scriptInput.component';
 
+import FormUtils from './../../Utils/form.utils';
+
+import { ROUTE_URL } from './../../Constants/global.constants';
 
 const DisplayFormikState = props => (
     <div style={{ margin: '1rem 0' }}>
@@ -50,115 +52,127 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
     const elements = {
 
         // Static Display 
-        768: <h5>{values[column.column_name]}</h5>,
+        768: <h5>{values[column.path]}</h5>,
         // Static Ends
 
         // Number
-        107: <Field autoComplete="off" className="form-control" type="number" name={column.column_name} placeholder={`Enter ${column.display_name}`} />,
+        107: <Field autoComplete="off" className="form-control" type="number" name={column.name} placeholder={`Enter ${column.display_name}`} />,
         // Number Ends
 
-        // Text
-        108: <Field className={`form-control ${props.errors[column.column_name] && props.touched[column.column_name] ? 'is-invalid' : ''}`} type="text" name={column.column_name} placeholder={`Enter ${column.display_name}`} />,
+        // 108: <Field disabled={column.disabled} id={column.name} onChange={({ ...args }) => FormUtils.OnChangeListener(args)} name={column.name} className={`form-control ${props.errors[column.index] && props.touched[column.index] ? 'is-invalid' : ''}`} type="text" placeholder={`Enter ${column.name}`} />,
+
+        108: <Field
+            name={column.path}
+            render={({ field /* _form */ }) => (
+                <input name={column.name} className="form-control" rows="3"
+                    onChange={(event, ...args) => {
+                        FormUtils.OnChangeListener({ column, ...event });
+                        props.handleChange(event, args);
+                    }}
+                    value={values[column.name]}
+                />
+            )}
+        />,
         // Text Ends
 
         // TextArea Begins
         160: <Field
-            name={column.column_name}
+            name={column.path}
             render={({ field /* _form */ }) => (
-                <textarea name={column.column_name} className="form-control" rows="3" onChange={props.handleChange} value={values[column.column_name]}></textarea>
+                <textarea name={column.name} className="form-control" rows="3" onChange={({ ...args }) => { FormUtils.OnChangeListener(args); props.handleChange(args); }} value={values[column.path]}></textarea>
             )}
         />,
         // TextArea Ends
 
         // Switch Begins
         119: <Field
-            name={column.column_name}
+            name={column.name}
             render={({ field /* _form */ }) => (
-                <Switch name={column.column_name} rows="3" onChange={props.setFieldValue} value={values[column.column_name]} />
+                <Switch name={column.name} rows="3" onChange={props.setFieldValue} value={values[column.path]} />
             )}
         />,
         // Switch Ends
 
         // Boolean Select
         111: <Field
-            name={column.column_name}
+            name={column.name}
             render={({ field /* _form */ }) => (
-                <SelectBox name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                <SelectBox name={column.name} onChange={props.setFieldValue} value={values[column.path]} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
             )}
         />,
         // Boolean Ends
 
         // List Select with options from api
         116: <Field
-            name={column.column_name}
+            name={column.name}
             render={({ field /* _form */ }) => (
-                <ListSelect column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />
+                <ListSelect column={column} name={column.name} onChange={props.setFieldValue} model={values[column.path]} />
             )}
         />,
         // List Select Ends
 
         // List Multi Select
         465: <Field
-            name={column.column_name}
+            name={column.name}
             render={({ field /* _form */ }) => (
-                <ListSelect multi={true} column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />
+                <ListSelect multi={true} column={column} name={column.name} onChange={props.setFieldValue} model={values[column.path]} />
             )}
         />,
         // List Ends
 
         // DatePicker
         109: <Field
-            name={column.column_name}
+            name={column.name}
             render={({ field /* _form */ }) => (
-                <DatePicker single={true} name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />
+                <DatePicker single={true} name={column.name} onChange={props.setFieldValue} value={values[column.path]} />
             )}
         />,
         // DatePicker Ends
 
         // Single DatePicker with Timepicker 
         110: <Field
-            name={column.column_name}
+            name={column.name}
             render={({ field /* _form */ }) => (
-                <DatePicker single={true} timePicker={true} name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />
+                <DatePicker single={true} timePicker={true} name={column.name} onChange={props.setFieldValue} value={values[column.path]} />
             )}
         />,
         // Single Datepicker Ends
 
         // Time Picker
         746: <Field
-            name={column.column_name}
+            name={column.name}
             render={({ field /* _form */ }) => (
-                <TimePicker name={column.column_name} onChange={props.setFieldValue} value={values[column.column_name]} />
+                <TimePicker name={column.name} onChange={props.setFieldValue} value={values[column.path]} />
             )}
         />,
         // Time Picker Ends
 
         // Reference Begins
         117: <Field
-            name={column.column_name}
+            name={column.name}
             render={({ field /* _form */ }) => (
-                <ReferenceInput column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />
+                <ReferenceInput column={column} name={column.name} onChange={props.setFieldValue} model={values[column.path]} />
             )}
         />,
         // Reference Ends
 
         // Script Input
-        411: <ScriptInput value={values[column.column_name]} columns={props.payload.columns} payload={props.payload} column={column} name={column.column_name} onChange={props.setFieldValue} model={values[column.column_name]} />,
+        411: <ScriptInput value={values[column.path]} columns={props.payload.dictionary} payload={props.payload} column={column} name={column.name} onChange={props.setFieldValue} model={values[column.index]} />,
         // Script Input Ends
 
         684: 'serialize',
 
         // Image Upload
         708: <Field
-            name={column.column_name}
+            name={column.name}
             render={({ field /* _form */ }) => (
-                <ImageUpload name={column.column_name} onRemove={props.onFileRemove} onSelect={props.onFileUpload} />
+                <ImageUpload name={column.name} onRemove={props.onFileRemove} onSelect={props.onFileUpload} />
             )}
         />,
         // Image Upload Ends
     }
 
-    return elements[column.column_type];
+    return elements[column.column_type_id] || elements[108];
 }
 
 const formElements = props => {
@@ -182,95 +196,88 @@ const formElements = props => {
     //     console.log(image);
     // }
 
+    const column_definition = IsObjectHaveKeys(payload.layout) ? payload.layout.column_definition : [];
     return (
+        <Form role="form" name="genericForm" >
+            <div className="form-row">
+                {
+                    column_definition.map((preference, key) => {
 
-        <div>
-            <Form>
-                <ModalBody>
-                    <Card>
-                        <CardBody>
-                            <DisplayFormikState props={props.values} />
-                            <div className="form-row">
-                                {
-                                    payload.formPreference.map((preference, key) => {
+                        let elem, column;
 
-                                        let elem, column;
+                        if (typeof preference != 'string') {
+                            column = payload.dictionary[preference.index];
 
-                                        if (typeof preference != 'string') {
-                                            column = payload.columns[preference.column];
+                            elem = inputElement({ props, values, column, shouldColumnSplited, key });
 
-                                            elem = inputElement({ props, values, column, shouldColumnSplited, key });
+                        } else if (typeof preference == 'string') {
+                            shouldColumnSplited = preference.includes('s-split-') ? true : preference.includes('e-split-') ? false : shouldColumnSplited;
+                        }
 
-                                        } else if (typeof preference == 'string') {
-                                            shouldColumnSplited = preference.includes('s-split-') ? true : preference.includes('e-split-') ? false : shouldColumnSplited;
-                                        }
+                        if (column && (IsUndefined(column.visible) || column.visible)) {
+                            return (
+                                <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
+                                    <label htmlFor="exampleInputEmail1">{column.label || column.display_name}</label>
+                                    {elem}
 
-                                        if (column) {
-                                            return (
-                                                <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
-                                                    <label htmlFor="exampleInputEmail1">{column.display_name}</label>
-                                                    {elem}
+                                    {/* Showing Errors when there are errors */}
+                                    {
+                                        errors[column.column_name] && touched[column.column_name] ?
+                                            <small id="emailHelp" className="form-text text-danger">
+                                                {errors[column.column_name]}
+                                            </small>
+                                            :
+                                            null
+                                    }
 
-                                                    {/* Showing Errors when there are errors */}
-                                                    {
-                                                        errors[column.column_name] && touched[column.column_name] ?
-                                                            <small id="emailHelp" className="form-text text-danger">
-                                                                {errors[column.column_name]}
-                                                            </small>
-                                                            : null}
+                                    {/* Errors Ends */}
+                                </div>
+                            )
+                        }
+                    })
+                }
+            </div>
 
-                                                    {/* Errors Ends */}
-                                                </div>
-                                            )
-                                        }
-                                    })
-                                }
-                            </div>
-                        </CardBody>
-                    </Card>
-
-                    {/* Uploaded file thumbnails */}
-                    {/* <div className="file-uploads">
+            {/* Uploaded file thumbnails */}
+            {/* <div className="file-uploads">
                 {
                     props.fileUploads.map((file, index) => (
                         <ImageThumbnail file={file} key={index} index={index} removeImage={props.removeImage} />
                     ))
                 }
             </div> */}
-                    {/* Uploaded file thumbnails Ends*/}
-                </ModalBody>
+            {/* Uploaded file thumbnails Ends*/}
 
-                <ModalFooter>
-                    <div className="modal-actions row justify-content-end">
-                        <Button color="secondary" onClick={props.onClose}>
-                            Cancel
-                        </Button>
-                        <button className="btn btn-primary" type="submit">
-                            Submit
-                        </button>
-                    </div>
-                </ModalFooter>
-            </Form>
-        </div>
+            <div className="modal-actions row justify-content-end">
+                <Button color="secondary" onClick={handleReset}>
+                    Clear
+                </Button>
+
+                <button className="btn btn-primary" type="submit">
+                    Submit
+                </button>
+            </div>
+        </Form>
     );
 }
 
 
 const FormContents = withFormik({
+    enableReinitialize: true,
     mapPropsToValues: props => {
 
         const { payload } = props;
 
         let response = {}
 
-        if (payload.formPreference.length) {
-            payload.formPreference.forEach((preference) => {
-                if (typeof preference != 'string') {
-                    let column = payload.columns[preference.column];
-                    response[column.column_name] = payload.listingRow[column.column_name] || '';
-                }
-            });
-        }
+        const column_definition = IsObjectHaveKeys(payload.layout) ? payload.layout.column_definition : [];
+
+        column_definition.forEach((preference) => {
+            if (typeof preference != 'string') {
+                let column = payload.dictionary[preference.index];
+                response[column.name] = payload.data[column.path] || '';
+            }
+        });
 
         return response;
     },
@@ -284,25 +291,15 @@ const FormContents = withFormik({
 
         let da = {}
 
-        let fields = Object.keys(props.payload.columns);
+        let fields = Object.keys(props.payload.dictionary);
 
-        const { columns } = props.payload;
+        const { dictionary } = props.payload;
 
-        if (props.payload.formPreference.length) {
-            props.payload.formPreference.forEach((preference) => {
-                if (typeof preference != 'string') {
-                    if (columns[preference.column].mandatory) {
-                        da[columns[preference.column].column_name] = Yup.string().required(columns[preference.column].display_name + ' is required.');
-                    }
-                }
-            });
-        }
-
-        // fields.forEach((column) => {
-        //     if (columns[column].mandatory) {
-        //         da[columns[column].column_name] = Yup.string().required(columns[column].display_name + ' is required.');
-        //     }
-        // });
+        fields.forEach((column) => {
+            if (dictionary[column].mandatory) {
+                da[dictionary[column].column_name] = Yup.string().required(dictionary[column].display_name + ' is required.');
+            }
+        });
 
         return Yup.object().shape(da);
 
@@ -330,6 +327,17 @@ const FormContents = withFormik({
 
         const { payload } = props;
 
+        // Check this code shubham , 
+        // Modifying the data according to backend requiremend 
+
+        let newValues = {};
+        let keys = Object.keys(values);
+        keys.forEach((key) => {
+            newValues[key] = values[key];
+            // newValues[payload.dataModel + '.' + key] = values[key];
+        })
+
+
         if (props.fileUploads.length) {
             uploadImages(props).then((result) => {
                 console.log(result)
@@ -341,13 +349,14 @@ const FormContents = withFormik({
 
         async function submitGenericForm() {
             if (payload.method == 'edit') {
-                const result = await Put({ url: payload.module + '/' + payload.listingRow.id, body: values });
+                // Shubham , Changing module ==> dataModel as module is null
+                const result = await Put({ url: payload.route + '/' + payload.data[payload.starter + '.id'], body: newValues, urlPrefix: ROUTE_URL });
                 if (result.response) {
                     props.onSubmit();
                 }
 
             } else {
-                const result = await Post({ url: payload.module, body: values });
+                const result = await Post({ url: payload.route, body: newValues, urlPrefix: ROUTE_URL });
                 if (result.success) {
                     props.onSubmit();
                 }
@@ -389,15 +398,15 @@ export default class FormCreator extends Component {
 
     async componentDidMount() {
         const { payload = {} } = this.props;
-        const { formPreference, module } = payload;
-        if (!formPreference && module) {
-            const res = await GetPreference(payload.modelName);
-            console.log(res);
-            if (res) {
-                payload.formPreference = res;
-                this.setState({ payload });
-            }
-        }
+        const { layout, module } = payload;
+        // if (!layout && module) {
+        //     const res = await GetPreference(payload.modelName);
+        //     console.log(res);
+        //     if (res) {
+        //         payload.layout = res;
+        //         this.setState({ payload });
+        //     }
+        // }
 
     }
 
@@ -409,15 +418,15 @@ export default class FormCreator extends Component {
      * On submit press
      */
     formSubmitted = () => {
-        if (this.props.payload.action && typeof this.props.payload.action.callback == 'function') {
-            this.props.payload.action.callback(); // callback to refresh content
+        if (typeof this.props.payload.callback == 'function') {
+            this.props.payload.callback(); // callback to refresh content
         }
         ModalManager.closeModal();
     }
 
     layoutChanged = (selectedColumns) => {
         let { payload } = this.state;
-        payload.formPreference = selectedColumns
+        payload.layout = selectedColumns;
         this.setState({ payload });
     }
 
@@ -467,22 +476,26 @@ export default class FormCreator extends Component {
 
     render() {
         const { payload, fileUploads } = this.state;
+        const { source, modelId } = payload;
         return (
             <div className="form-creator">
-
                 {
-                    payload.columns ?
-                        <FormSettings onSubmit={this.layoutChanged} module={payload.module} listName={payload.modelName} selectedColumns={payload.formPreference} columns={payload.columns} />
+                    payload.dictionary ?
+                        <FormSettings source={source} modelId={modelId} onSubmit={this.layoutChanged} listName={payload.modelName} formLayout={payload.layout} columns={payload.dictionary} />
                         :
                         null
                 }
-
-                {
-                    payload.formPreference ?
-                        <FormContents onClose={this.closeModal} fileUploads={fileUploads} removeImage={this.removeImage} onFileUpload={this.pushFiles} onFileRemove={this.removeFile} onSubmit={this.formSubmitted} payload={payload} />
-                        : null
-                }
-            </div >
+                <Card>
+                    {
+                        payload.layout ?
+                            <CardBody>
+                                <FormContents fileUploads={fileUploads} removeImage={this.removeImage} onFileUpload={this.pushFiles} onFileRemove={this.removeFile} onSubmit={this.formSubmitted.bind(this)} payload={payload} />
+                            </CardBody>
+                            :
+                            null
+                    }
+                </Card>
+            </div>
         )
     }
 }

@@ -41,10 +41,10 @@ export default class ScriptInput extends Component {
             <div className="script-input">
                 {
 
-                    ((column.column_name.indexOf('_id') == -1) && (payload.method == 'edit'))
+                    ((column.name.indexOf('_id') == -1) && (payload.method == 'edit'))
                         ?
                         <AceEditor
-                            mode={column.column_name}
+                            mode={column.name}
                             theme="monokai"
                             name="Drivezy-Code-editor"
                             width='100%'

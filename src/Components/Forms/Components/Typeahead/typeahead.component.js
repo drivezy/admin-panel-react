@@ -26,7 +26,7 @@ export default class TypeaheadComponent extends Component {
         let options = [], value = {};
 
         return {
-            options: props.options,
+            options: props.options && !Array.isArray(props.options) && Object.keys(props.options).length ? Object.values(props.options) : props.options,
             value: props.value,
             field: props.field || undefined,
         }

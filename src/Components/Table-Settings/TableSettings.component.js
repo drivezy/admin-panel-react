@@ -1,26 +1,25 @@
 import React, { Component } from 'react';
-import './TableSettings.css';
+import { Collapse, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import _ from 'lodash';
 
 import { SetPreference } from './../../Utils/preference.utils';
-
 import { changeArrayPosition } from './../../Utils/js.utils';
+import { IsObjectHaveKeys } from './../../Utils/common.utils';
 
-import { Collapse, Card, CardBody, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-
-import Switch from './../../Components/Forms/Components/Switch/switch';
-// import ColumnSetting from './Components/ColumnSetting/columnSetting.component';
 import ColumnSetting from './Components/Column-Setting/columnSetting.component';
+
+import './TableSettings.css';
 
 export default class TableSettings extends Component {
 
     constructor(props) {
         super(props);
 
+        const layout = this.props.layout || {};
         this.state = {
             modal: false,
-            selectedColumns: this.props.selectedColumns || [],
-            tempSelectedColumns: this.props.selectedColumns || [],
+            selectedColumns: layout.column_definition || [],
+            tempSelectedColumns: layout.column_definition || [],
             columns: this.props.columns,
             list: {},
             activeColumn: {},
@@ -28,7 +27,7 @@ export default class TableSettings extends Component {
     }
 
     toggleModal = () => {
-        this.setState({ modal: !this.state.modal, activeColumn: {}, tempSelectedColumns: this.props.selectedColumns })
+        this.setState({ modal: !this.state.modal, activeColumn: {}, tempSelectedColumns: IsObjectHaveKeys(this.props.layout) ? this.props.layout.column_definition : [] })
     }
 
     toggleList = (index) => {
@@ -40,8 +39,12 @@ export default class TableSettings extends Component {
     addColumn = (column) => {
         var selectedColumns = this.state.tempSelectedColumns;
 
+        // const regexForPickingAfterLastDot = /[^\.]+$/;
         selectedColumns.unshift({
-            column: column.parent + "." + column.id, headingCollapsed: true, heading: ""
+            headingCollapsed: true, heading: "", object: column.parent, column: column.name, index: column.parent + '.' + column.name
+            // headingCollapsed: true, heading: "", object: column.parent, column: column.name, index: column.parent + '.' + column.name
+            // headingCollapsed: true, heading: "", object: column.parent.match(regexForPickingAfterLastDot)[0], column: column.name, columnObj: column
+            // column: column.parent + "." + column.id, headingCollapsed: true, heading: ""
         });
 
         this.setState({ tempSelectedColumns: selectedColumns })
@@ -91,15 +94,33 @@ export default class TableSettings extends Component {
         this.setState({ selectedColumns });
     }
 
+
     applyChanges = async () => {
-        const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
-        result.success ? this.setState({ modal: !this.state.modal }) : null;
-        this.props.onSubmit(this.state.tempSelectedColumns);
+        const { userId, menuId, listName, source } = this.props;
+        let { layout } = this.props;
+        const { tempSelectedColumns } = this.state;
+
+        console.log(this.state.tempSelectedColumns);
+        const result = await SetPreference({ userId, source, menuId, name: listName, selectedColumns: this.state.tempSelectedColumns, layout });
+
+        // const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
+
+        if (result.success) {
+            this.setState({ modal: !this.state.modal });
+            if (IsObjectHaveKeys(layout)) {
+                layout.column_definition = tempSelectedColumns;
+            } else {
+                const { response } = result;
+                response.column_definition = JSON.parse(response.column_definition);
+                layout = response;
+            }
+            this.props.onSubmit(layout);
+        }
     }
 
     modalWrapper() {
         const { columns, tempSelectedColumns, activeColumn } = this.state;
-
+        const { source = 'module' } = this.props;
         const selectedIds = [];
 
         for (var value of tempSelectedColumns) {
@@ -159,7 +180,7 @@ export default class TableSettings extends Component {
 
                                                                 <div key={key} className="column-group" onDoubleClick={() => this.addColumn(entry)} >
                                                                     <div className="column-label">
-                                                                        {entry.column_name}
+                                                                        {entry.name}
                                                                     </div>
                                                                     <div className="icon-holder">
                                                                         <button className="add-column btn btn-sm btn-light" onClick={() => this.addColumn(entry)} >
@@ -209,7 +230,16 @@ export default class TableSettings extends Component {
                                         </ListGroupItem>
                                                 :
                                                 // Component Manages column props
-                                                <ColumnSetting removeColumn={this.removeColumn} columns={columns} activeColumn={activeColumn} selectColumn={this.selectColumn} column={column} index={index} key={index} />
+                                                <ColumnSetting
+                                                    source={source}
+                                                    removeColumn={this.removeColumn}
+                                                    columns={columns}
+                                                    activeColumn={activeColumn}
+                                                    selectColumn={this.selectColumn}
+                                                    column={column}
+                                                    index={index}
+                                                    key={index}
+                                                />
                                                 // Column Setting Ends
                                             )
                                         })

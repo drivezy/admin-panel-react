@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
-import './columnSetting.component.css';
 import _ from 'lodash';
-
-// import { SetPreference } from './../../Utils/preference.utils';
-
-// import { changeArrayPosition } from './../../Utils/js.utils';
-
-import { Collapse, Card, CardBody, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Collapse, Card, CardBody } from 'reactstrap';
 
 import Switch from './../../../Forms/Components/Switch/switch';
+
+import './columnSetting.component.css';
 
 export default class ColumnSetting extends Component {
 
@@ -68,7 +64,7 @@ export default class ColumnSetting extends Component {
             <div className={`column-setting ${activeColumn.column == column.column ? 'active' : ''}`} >
                 <div className="column-label">
                     <div className="item-label" onClick={() => this.props.selectColumn(column, this.props.index)} onDoubleClick={() => this.props.removeColumn(column)} >
-                        {column.columnTitle ? column.columnTitle : columns[column.column].column_name}
+                        {column.columnTitle ? column.columnTitle : columns[column.index].name}
                     </div>
                     <div className="column-toggle" onClick={this.toggleSetting}>
                         <i className={`fa ${column.expanded ? ' fa-chevron-down' : ' fa-chevron-right'}`}></i>

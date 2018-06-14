@@ -51,12 +51,25 @@ export async function GetInputRecord({ input: val, currentUser = null, column, q
     if (val == "currentUser" && currentUser) {
         val = currentUser.id;
     }
-    const queryField = queryFieldName ? queryFieldName : column.referenced_model.display_column;
-    let url = column.referenced_model.route_name;
+    const queryField = queryFieldName ? queryFieldName : column.reference_model.display_column;
+    let url = column.reference_model.route_name;
     var options = { query: queryField + ' like %22%25' + val + '%25%22' };
 
     url = BuildUrlForGetCall(url, options);
     return await Get({ url, urlPrefix: GLOBAL.ROUTE_URL });
+}
+
+export function GetSelectedColumn({ selectedColumnQuery, dictionary = {} }) {
+    const regexForPickingAfterLastDot = /[^\.]+$/;
+    const regexForStringWithinTilde = /(?<=\`).*(?=\`)/g;
+
+    const columnName = selectedColumnQuery.match(regexForPickingAfterLastDot)[0];
+    const parentName = selectedColumnQuery.match(regexForStringWithinTilde)[0];
+
+    if (dictionary && !Array.isArray(dictionary)) {
+        dictionary = Object.values(dictionary);
+    }
+    return dictionary.filter(dictionaryObj => dictionaryObj.parent == parentName && dictionaryObj.name == columnName)[0] || {};
 }
 
 /**
@@ -66,7 +79,7 @@ export async function GetInputRecord({ input: val, currentUser = null, column, q
  * @param  {function} finalSql
  * @param  {object} currentUser}
  */
-export async function CreateQuery({ rawQuery, dictionary = [], finalSql: FinalSql, currentUser }) {
+export async function CreateQuery({ rawQuery, dictionary = {}, finalSql: FinalSql, currentUser }) {
     // const {sqlArray} = this.state;
     // arr = [];
     const parentQueries = rawQuery.split(' AND ');
@@ -78,17 +91,29 @@ export async function CreateQuery({ rawQuery, dictionary = [], finalSql: FinalSq
         queries.forEach(async (value, key) => {
             let showSql = '';
             const queryObj = RawStringQueryToObject(value);
-            const column = SelectFromOptions(dictionary, queryObj.selectedColumn, 'column_name');
 
-            showSql += column.display_name + queryObj.selectedFilter;
+            // const regexForPickingAfterLastDot = /[^\.]+$/;
+            // const regexForStringWithinTilde = /(?<=\`).*(?=\`)/g;
+
+            // const columnName = queryObj.selectedColumn.match(regexForPickingAfterLastDot)[0];
+            // const parentName = queryObj.selectedColumn.match(regexForStringWithinTilde)[0];
+
+
+            dictionary = Object.values(dictionary);
+            // const column = dictionary.filter(dictionaryObj => dictionaryObj.parent == parentName && dictionaryObj.name == columnName)[0] || {};
+            // const column = SelectFromOptions(dictionary, columnName, 'name');
+            // const column = SelectFromOptions(dictionary, queryObj.selectedColumn, 'name');
+            const column = GetSelectedColumn({ selectedColumnQuery: queryObj.selectedColumn, dictionary });
+
+            showSql += column.path + queryObj.selectedFilter;
 
             if (!queryObj.selectedFilter.includes('IS NULL') && !queryObj.selectedFilter.includes('IS NOT NULL')) {
-                switch (column.column_type) {
+                switch (column.column_type_id) {
                     // if column type is select type
                     case 116:
                         const res = await GetInputRecord({ input: queryObj.selectedInput, column, queryField: 'id' });
                         if (res && res.success) {
-                            showSql += res.response[0][column.referenced_model.display_column];
+                            showSql += res.response[0][column.reference_model.display_column];
                             FinalSql({ sql: showSql, key, parentKey, arr, sqlArray });
                         }
                         break;
@@ -100,7 +125,7 @@ export async function CreateQuery({ rawQuery, dictionary = [], finalSql: FinalSq
                         if (queryObj.selectedInput == 'currentUser') {
                             showSql += 'Current User';
                         } else if (Array.isArray(result.response) && result.response.length) {
-                            showSql += result.response[0][column.referenced_model.display_column];
+                            showSql += result.response[0][column.reference_model.display_column];
                         }
                         // appendOr(showSql, queries, key, parentKey);
                         FinalSql({ sql: showSql, key, parentKey, arr, sqlArray });

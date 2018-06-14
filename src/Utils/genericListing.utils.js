@@ -1,7 +1,10 @@
 
-import { IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall } from './common.utils';
-import { GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods } from './generic.utils';
+import { IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall, TrimQueryString, IsObjectHaveKeys } from './common.utils';
+import { GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, GetSelectedColumnDefinition } from './generic.utils';
+
 import { Get } from './http.utils';
+
+import { ROUTE_URL } from './../Constants/global.constants';
 
 let tempQuery; // used to decide if stats is to be fetched from server
 
@@ -10,14 +13,16 @@ let tempQuery; // used to decide if stats is to be fetched from server
 * url and menu detail, fetch data and passes them further to the components
 * to show listing data
 */
-export const GetListingRecord = async ({ configuration, queryString = {}, callback, data, currentUser = {} }) => {
+export const GetListingRecord = async ({ configuration, queryString = {}, callback, data, currentUser = {}, index }) => {
     const params = Initialization(configuration, queryString);
     // const this = {};
     this.currentUser = currentUser;
-    const options = GetDefaultOptions();
+    let options = GetDefaultOptions();
 
     params.page = queryString.page ? parseInt(queryString.page) : data.currentPage;
-    options.includes = params.includes;
+    if (params.includes) {
+        options.includes = params.includes;
+    }
     options.order = params.order + "," + params.sort;
 
     if (queryString.search) {
@@ -27,10 +32,10 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
     // Add the input field on the generic listing page to query
     // if (self.searchObj && self.searchObj.hasOwnProperty("id")) {
     //     // @todo Should improve this , too much of manual
-    //     globalSearchField = self.activeSelectField.selected.column_name;
+    //     globalSearchField = self.activeSelectField.selected.name;
     //     options.query += " and " + globalSearchField + "=" + self.searchObj.id;
     // } else if (!IsUndefinedOrNull(self.searchText) && self.activeSelectField.selected) {
-    //     globalSearchField = self.activeSelectField.selected.column_name;
+    //     globalSearchField = self.activeSelectField.selected.name;
     //     if (self.activeSelectField.selected && (self.activeSelectField.selected.column_type == 107 || self.activeSelectField.selected.column_type == 117)) {
     //         options.query += " and " + globalSearchField + "=" + self.searchText;
     //     } else {
@@ -42,15 +47,30 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
     // if there is a query in url , add it to the options.query
     options.query += IsUndefinedOrNull(queryString.query) ? '' : " and " + queryString.query;
 
-    options.query += IsUndefinedOrNull(configuration.restricted_query) ? '' : ' and ' + ConvertToQuery.call(this, configuration.restricted_query);
+    const restricted_query = configuration.restricted_query || configuration.query;
+    options.query += IsUndefinedOrNull(restricted_query) ? '' : ' and ' + ConvertToQuery.call(this, restricted_query);
 
     // If a filter is applied , add the query to options.query
-    if (queryString.filter && Object.keys(queryString.filter).length && Array.isArray(configuration.userFilter)) {
-        const activeFilter = configuration.userFilter.filter(function (filter) {
-            return filter.id == queryString.filter;
+
+    /****************************************************
+     * @TODO based on layout id of urlparam, select query
+     ***************************************************/
+    // let layout;
+    if (queryString.layout) {
+        options.layout_id = queryString.layout
+    } else if (data.layout && data.layout.id) {
+        options.layout_id = data.layout.id;
+    } else if (configuration.layout && configuration.layout.id) {
+        options.layout_id = configuration.layout.id;
+    }
+    // options.layout_id = 9;
+    if (queryString.layout && Object.keys(queryString.layout).length && Array.isArray(configuration.layouts)) {
+        const activeLayout = configuration.layouts.filter(function (layout) {
+            return layout.id == queryString.layout;
         })[0];
-        if (!queryString.query && activeFilter) {
-            options.query += " and " + activeFilter.filter_query;
+        if (!queryString.query && activeLayout && activeLayout.query) {
+            options.query += " and " + activeLayout.query;
+            configuration.layout = activeLayout;
         }
     }
 
@@ -82,9 +102,11 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
      */
     // self.listingOptions = options;
 
+    options = TrimQueryString(options);
+
     // const result = await Get({ url: configuration.url, body: options });
     const url = BuildUrlForGetCall(configuration.url, options);
-    Get({ url, callback: PrepareObjectForListing, extraParams: { callback, page: options.page, limit: options.limit, data, configuration, params }, persist: true });
+    return Get({ url, callback: PrepareObjectForListing, extraParams: { callback, page: options.page, limit: options.limit, data, configuration, params, index, currentUser }, persist: true, urlPrefix: ROUTE_URL });
 }
 
 
@@ -94,9 +116,10 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
  * @param  {object} {extraParams}
  */
 function PrepareObjectForListing(result, { extraParams }) {
-    const { callback, page, limit, data, configuration, params } = extraParams;
-    if (result && result.response) {
+    const { callback, page, limit, data, configuration, params, index, currentUser } = extraParams;
+    if (result.success && result.response) {
 
+        const { data: apiData, dictionary, relationship, stats, base } = result.response;
         // if (columns && columns.length === 0) {
         //     self.orderColumns = params.dictionary[params.starter];
         // }
@@ -110,43 +133,60 @@ function PrepareObjectForListing(result, { extraParams }) {
         //     }
         // }
 
-        params.dictionary = result.dictionary || data.dictionary;
+        params.dictionary = dictionary || data.dictionary;
 
-        if (result.hasOwnProperty("relationship")) {
-            params.relationship = result.relationship;
+        if (relationship && typeof Object.keys(relationship).length) {
+            params.relationship = relationship;
         }
 
-        // relationship = result.relationship ? result.relationship : null;
-        // gatherObject(result.daDeta);
-        const modelName = configuration.model.name.toLowerCase();
+        params.includesList = Object.keys(params.dictionary);
+
+        const model = params.relationship[base];
+        const modelName = model.name.toLowerCase();
+
+        let formPreference = {};
+        if (configuration.form_layouts) {
+            formPreference = configuration.form_layouts[0] || {};
+        } else {
+            formPreference = model.form_layouts[0] || {};
+        }
+        if (IsObjectHaveKeys(formPreference)) {
+            formPreference.column_definition = JSON.parse(formPreference.column_definition);
+        }
 
         // Preparing the generic listing object
         const genericListingObj = {
-            stats: result.stats || data.stats,
-            dictionary: result.dictionary || data.dictionary,
-            relationship: result.relationship || data.relationship, // modelName: self.configuration.formPreferenceName + '.form',
-            listing: result.response,
+            stats: stats || data.stats,
+            dictionary: dictionary || data.dictionary,
+            relationship: relationship || data.relationship, // modelName: self.configuration.formPreferenceName + '.form',
+            listing: apiData,
             currentPage: page,
             limit,
             pageName: configuration.pageName,
-            starter: configuration.starter,
+            starter: base,
+            // state_name: configuration.listName,
+            // listName: configuration.listName + ".list",
             includes: configuration.includes,
-            state_name: configuration.listName,
-            listName: configuration.listName + ".list",
             defaultOrder: configuration.order + ',' + configuration.sort,
             finalColumns: [],
-            columns: GetColumnsForListing(params),
-            selectedColumns: configuration.preference[configuration.listName + ".list"] ? JSON.parse(configuration.preference[configuration.listName + ".list"]) : null, // formPreference: configuration.preference[configuration.listName + '.form'] ? JSON.parse(configuration.preference[configuration.listName + '.form']) : null,
-            nextActions: configuration.nextActions,
+            columns: GetColumnsForListing({ ...params, ...{ isArray: false } }),
+            // @TODO uncomment this line to get selectedColumn
+            layout: configuration.layout || {},
+            // layout: configuration.preference[configuration.listName + ".list"] ? JSON.parse(configuration.preference[configuration.listName + ".list"]) : null, // formPreference: configuration.preference[configuration.listName + '.form'] ? JSON.parse(configuration.preference[configuration.listName + '.form']) : null,
+            nextActions: model.actions,
+            formPreference,
+            url: configuration.url,
             // formPreference: configuration.preference[modelName + ".form"] ? JSON.parse(configuration.preference[modelName + ".form"]) : null,
-            formPreference:[],
-            modelName: configuration.model.name.toLowerCase() + ".form",
-            module: configuration.module,
-            dataModel: configuration.model,
+            // modelName: configuration.model.name.toLowerCase() + ".form",
+            // module: configuration.module,
+            dataModel: modelName,
+            userFilter: configuration.layouts,
+            userId: currentUser ? currentUser.id : null,
+            menuId: configuration.menuId,
+            modelId: model.id,
+            // userFilter: configuration.userFilter,
             // scopes: data.scopes,
             // restrictColumn: configuration.restrictColumnFilter,
-            // userFilter: configuration.userFilter,
-            // modelId: configuration.model.id,
             // callbackFunction: callFunction,
             // icon: configuration.image,
             // show: configuration.show,
@@ -161,18 +201,19 @@ function PrepareObjectForListing(result, { extraParams }) {
         };
         // Prepairing object for configure-filter directive
         const filterContent = {
-            dictionary: genericListingObj.dictionary[params.starter],
-            selectedColumns: genericListingObj.selectedColumns,
+            dictionary: Object.values(genericListingObj.columns),
+            // dictionary: genericListingObj.dictionary[params.starter],
+            layout: genericListingObj.layout,
             restrictColumns: configuration.restrictColumnFilter,
             scopes: data.scopes
         };
 
         // Build the final columns that is required for the portlet table
-        genericListingObj.finalColumns = CreateFinalColumns(genericListingObj.columns, genericListingObj.selectedColumns, genericListingObj.relationship);
+        genericListingObj.finalColumns = CreateFinalColumns(genericListingObj.columns, genericListingObj.layout.column_definition, genericListingObj.relationship);
         genericListingObj.preDefinedmethods = GetPreSelectedMethods(genericListingObj.nextActions);
         genericListingObj.methods = RegisterMethod(genericListingObj.nextActions);
         if (typeof callback == 'function') {
-            callback({ genericData: genericListingObj, filterContent });
+            callback({ genericData: genericListingObj, filterContent, index });
         }
     }
 }
@@ -184,11 +225,14 @@ export function GetDefaultOptions() {
     return {
         includes: '',
         order: 'id,asc',
-        query: 'id=id',
+        // query: 'id=id',
+        query: '',
         limit: 20,
         page: 1,
+        list: true,
         stats: false,
-        dictionary: false
+        dictionary: false,
+        // layout_id: 1
     };
 }
 
@@ -199,9 +243,9 @@ export function GetDefaultOptions() {
 function Initialization(configuration, urlParameter = {}) {
     const sorts = ["desc", "asc"];
     return {
-        includes: configuration.includes,
+        includes: Array.isArray(configuration.includes) ? configuration.includes.join(',') : configuration.includes,
         dictionary: null,
-        starter: configuration.starter,
+        // starter: configuration.starter,
         order: IsUndefinedOrNull(urlParameter.order) ? configuration.order : urlParameter.order,
         sort: SelectFromOptions(sorts, urlParameter.sort || configuration.sort)
     };

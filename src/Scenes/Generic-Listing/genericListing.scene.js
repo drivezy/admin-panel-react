@@ -57,124 +57,41 @@ export default class GenericListing extends Component {
         }
     }
 
-    // componentDidUpdate(prevState, nextState) { 
-    //     console.log('i am updated');
-    //     console.log(prevState, nex)
-    // }
-
-    componentDidMount() {
-        // this.getMenuData();
-        // ModalManager.showModal({ onClose: this.closeModal, headerText: '1st using method', modalBody: () => (<h1> hi</h1>) });
-    }
-
     componentWillUnmount() {
         this.state.isCollapsed = false;
         UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
 
+    getMenuData = async () => {
+        const { queryString } = this.state;
+        const { menuId, limit, page } = this.props;
+        const result = await GetMenuDetail(menuId);
+        if (result.success) {
 
-    // Preparing option for right click
-    rowOptions = [{
-        id: 0,
-        name: "Copy Row Id",
-        icon: 'fa-copy',
-        subMenu: false,
-        onClick: (data) => {
-            let id = data.listingRow.id;
-            CopyToClipBoard(id);
-            ToastNotifications.success("Id - " + id + " has been copied");
-        },
-        disabled: false
-    }, { subMenu: null }, {
-        id: 1,
-        name: "Show Matching",
-        icon: 'fa-retweet',
-        subMenu: false,
-        onClick: (data) => {
-            this.filterTable(data, [" LIKE ", " = "]);
-            return data.selectedColumn.path.split(".").length < 3;
-        },
-        disabled: false
-    }, {
-        id: 2,
-        name: "Filter Out",
-        icon: 'fa-columns',
-        subMenu: false,
-        onClick: (data) => {
-            this.filterTable(data, [" NOT LIKE ", " != "]);
-            return data.selectedColumn.path.split(".").length < 3;
-        },
-        disabled: false
-    }, {
-        id: 3,
-        name: "Filter More",
-        icon: 'fa-filter',
-        subMenu: false,
-        onClick: (data) => {
-            this.filterColumn(data.selectedColumn);
-            return data.selectedColumn.path.split(".").length < 3;
-        },
-        disabled: false
-    }, {
-        id: 4,
-        name: "Aggregation",
-        icon: 'fa-chart-line',
-        subMenu: true,
-        onClick: (data, operator) => {
-            console.log(data, operator);
-            this.openAggregationResult(operator.name.toLowerCase(), operator.name + ' of ' + data.selectedColumn.display_name + ' equals : ', data)
-        }, disabled: (data) => {
-            return (data.selectedColumn.path.split('.').length != 1)
+            const { response = {} } = result;
+            const menuDetail = ConvertMenuDetailForGenericPage(response || {});
+            // if (typeof response.controller_path == 'string' && response.controller_path.includes('genericListingController.js') != -1) {
+            this.state.menuDetail = menuDetail;
+            console.log(menuDetail);
+            this.getListingData();
+            StoreEvent({ eventName: 'showMenuName', data: { menuName: this.state.menuDetail.pageName } });
+            // }
         }
-    }, { subMenu: null },
-    {
-        id: 4,
-        name: "Redirect Menu Detail",
-        icon: 'fa-deaf',
-        subMenu: false,
-        onClick: (data) => {
-            const { history, match } = this.props;
+    }
 
-            let pageUrl = "/menuDef/" + data.menuDetail.menuId
+    getListingData = () => {
+        const { menuDetail, genericData, queryString, currentUser } = this.state;
+        GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser });
+    }
 
-            history.push(`${pageUrl}`);
-        },
-        disabled: false
-    }, {
-        id: 4,
-        name: "Redirect Model Detail",
-        icon: 'fa-info-circle',
-        subMenu: false,
-        onClick: (data) => {
-            const { history, match } = this.props;
+    dataFetched = ({ genericData, filterContent }) => {
+        this.setState({ genericData, filterContent });
+    }
 
-            let pageUrl = "/modelDetails/" + data.menuDetail.model.id
-
-            history.push(`${pageUrl}`);
-        },
-        disabled: false
-    }, {
-        id: 0,
-        name: "Preferences Settings",
-        icon: 'fa-gift',
-        subMenu: false,
-        disabled: this.preferenceObj ? true : false,
-        onClick: (data) => {
-            const { genericData = {}, menuDetail } = this.state;
-            const preferenceObj = { // used for editing preferences
-                name: menuDetail.pageName, // preference name to be shown on modal
-                role: true
-            }
-            if (genericData.preDefinedmethods && genericData.preDefinedmethods.preferenceSetting) {
-                genericData.preDefinedmethods.preferenceSetting(menuDetail.preference, preferenceObj);
-            }
-        }
-    }];
 
     openAggregationResult = async (operator, caption, data) => {
-
         let options = GetDefaultOptions();
-        options.aggregation_column = data.selectedColumn.column_name;
+        options.aggregation_column = data.selectedColumn.name;
         options.aggregation_operator = operator;
 
         const url = BuildUrlForGetCall(data.menuDetail.url, options);
@@ -187,12 +104,10 @@ export default class GenericListing extends Component {
     }
 
     filterTable = (data, method) => {
-
         const paramProps = {
             history: data.history, match: data.match
         };
 
-        console.log(data, method);
         let query = '';
         if (data.selectedColumn.path.split(".").length == 1) { // for columns which is child of table itself
             if (this.urlParams.query) { // if previous query present then it will executed
@@ -209,7 +124,7 @@ export default class GenericListing extends Component {
                 }
                 if (f == 0) { // if not overlappin
 
-                    query = this.urlParams.query + ' AND ' + data.selectedColumn.column_name + method[0] + "'" + data.listingRow[data.selectedColumn.column_name] + "'";
+                    query = this.urlParams.query + ' AND ' + data.selectedColumn.name + method[0] + "'" + data.listingRow[data.selectedColumn.name] + "'";
 
                     this.urlParams.query = query;
                     Location.search(this.urlParams, { props: paramProps });
@@ -222,7 +137,7 @@ export default class GenericListing extends Component {
                 }
             } else { // if previous query not present then it will executed
 
-                query = data.selectedColumn.column_name + method[0] + "'" + data.listingRow[data.selectedColumn.column_name] + "'";
+                query = data.selectedColumn.name + method[0] + "'" + data.listingRow[data.selectedColumn.name] + "'";
 
                 this.urlParams.query = query;
                 Location.search(this.urlParams, { props: paramProps });
@@ -267,7 +182,7 @@ export default class GenericListing extends Component {
     filterColumn = (column) => {
         let selected;
         if (column.path.split(".").length == 1) { // for columns which is child of table itself
-            selected = column.column_name;
+            selected = column.name;
         } else if (column.path.split(".").length == 2) { // for reference columns (for e.g. Created by table in with any menu)
             selected = column.parentColumn;
         }
@@ -297,52 +212,20 @@ export default class GenericListing extends Component {
         // this.setState({ currentUser: data });
     }
 
-    getMenuData = async () => {
-        const { queryString } = this.state;
-        const { menuId, limit, page } = this.props;
-        const result = await GetMenuDetail(menuId);
-        if (result.success) {
-
-            const { response = {} } = result;
-            const menuDetail = ConvertMenuDetailForGenericPage(response || {});
-            if (typeof response.controller_path == 'string' && response.controller_path.includes('genericListingController.js') != -1) {
-                // this.setState({ menuDetail });
-                this.state.menuDetail = menuDetail
-                this.getListingData();
-                StoreEvent({ eventName: 'showMenuName', data: { menuName: this.state.menuDetail.pageName } });
-            }
-        }
+    predefinedFiltersUpdated = (latyouts) => {
+        const { genericData } = this.state;
+        genericData.layouts = latyouts;
+        // this.setState({ genericData });
+        this.state.genericData = genericData;
     }
 
-    getListingData = () => {
-        const { menuDetail, genericData, queryString, currentUser } = this.state;
-        GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser });
-    }
-
-    dataFetched = ({ genericData, filterContent }) => {
-        // const totalPages = Math.ceil((genericData.stats.records / genericData.stats.count));
-
-        // if (totalPages > 7) {
-        //     // this.setState({ pagesOnDisplay: 7 });
-        //     this.state.pagesOnDisplay = 7;
-        // } else {
-        //     // this.setState({ pagesOnDisplay: totalPages });
-        //     this.state.pagesOnDisplay = Math.ceil(totalPages);
-        // }qw
-        this.setState({ genericData, filterContent });
-    }
-
-    predefinedFiltersUpdated = (filters) => {
-        const { menuDetail } = this.state;
-        menuDetail.userFilter = filters;
-        this.setState({ menuDetail });
-    }
-
-    layoutChanges = (selectedColumns) => {
+    layoutChanges = (layout) => {
         let { genericData } = this.state;
-        genericData.selectedColumns = selectedColumns;
-        genericData.finalColumns = CreateFinalColumns(genericData.columns, selectedColumns, genericData.relationship);
-        this.setState({ genericData });
+        genericData.layout = layout;
+        if (layout && layout.column_definition) {
+            genericData.finalColumns = CreateFinalColumns(genericData.columns, layout.column_definition, genericData.relationship);
+            this.setState({ genericData });
+        }
     }
 
     refreshPage() {
@@ -350,11 +233,11 @@ export default class GenericListing extends Component {
     }
 
     filterLocally = (column, value) => {
-        this.setState({ localSearch: { field: column.column_name, value: value } });
+        this.setState({ localSearch: { field: column.name, value: value } });
         // let { genericData } = this.state;
         // let { listing = [] } = genericData;
         // listing = listing.filter((rowData) => {
-        //     return rowData[column.column_name].toLowerCase().indexOf(value) != -1;
+        //     return rowData[column.name].toLowerCase().indexOf(value) != -1;
         // });
         // genericData.listing = listing;
         // this.setState({ genericData });
@@ -387,7 +270,17 @@ export default class GenericListing extends Component {
                             <div className="search-wrapper">
                                 {
                                     filterContent && filterContent.dictionary &&
-                                    <DynamicFilter toggleAdvancedFilter={this.toggleAdvancedFilter} menuUpdatedCallback={this.predefinedFiltersUpdated} selectedColumns={genericData.selectedColumns} menuId={menuDetail.menuId} currentUser={currentUser} dictionary={filterContent.dictionary} userFilters={menuDetail.userFilter} history={history} match={match} />
+                                    <DynamicFilter
+                                        toggleAdvancedFilter={this.toggleAdvancedFilter}
+                                        menuUpdatedCallback={this.predefinedFiltersUpdated}
+                                        selectedColumns={genericData.layout ? genericData.layout.column_definition : null}
+                                        menuId={menuDetail.menuId}
+                                        currentUser={currentUser}
+                                        dictionary={filterContent.dictionary}
+                                        layouts={menuDetail.layouts}
+                                        history={history}
+                                        match={match}
+                                    />
                                 }
                             </div>
                         </div>
@@ -401,10 +294,13 @@ export default class GenericListing extends Component {
                             {
                                 genericData.columns ?
                                     <TableSettings
+                                        source='menu'
                                         onSubmit={this.layoutChanges}
                                         listName={genericData.listName}
-                                        selectedColumns={genericData.selectedColumns}
+                                        layout={genericData.layout}
                                         columns={genericData.columns}
+                                        menuId={menuDetail.menuId}
+                                        userId={currentUser.id}
                                     />
                                     :
                                     null
@@ -416,8 +312,8 @@ export default class GenericListing extends Component {
                             </Button>
 
                             {
-                                menuDetail && menuDetail.userFilter && menuDetail.userFilter.length > 0 ?
-                                    <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} userFilter={menuDetail.userFilter} history={history} match={match} />
+                                menuDetail && genericData.userFilter && genericData.userFilter.length > 0 ?
+                                    <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} layouts={menuDetail.layouts} history={history} match={match} />
                                     :
                                     null
                             }
@@ -430,7 +326,7 @@ export default class GenericListing extends Component {
                             <ConfigureDynamicFilter
                                 history={history}
                                 match={match}
-                                filters={menuDetail.userFilter}
+                                filters={genericData.userFilter}
                                 content={filterContent}
                             />
                         }
@@ -444,8 +340,15 @@ export default class GenericListing extends Component {
                                 <CardBody className="table-wrapper">
 
                                     {/* Portlet Table */}
-                                    <PortletTable rowTemplate={this.rowTemplate} tableType="listing" rowOptions={this.rowOptions}
-                                        toggleAdvancedFilter={this.toggleAdvancedFilter} history={history} match={match} genericData={genericData} finalColumns={finalColumns} listing={localSearch.value ? filteredResults : listing} callback={this.getListingData} menuDetail={menuDetail} />
+                                    <PortletTable tableType="listing"
+                                        rowOptions={this.rowOptions}
+                                        // toggleAdvancedFilter={this.toggleAdvancedFilter} 
+                                        history={history} match={match}
+                                        genericData={genericData}
+                                        finalColumns={finalColumns}
+                                        listing={localSearch.value ? filteredResults : listing}
+                                        callback={this.getListingData} menuDetail={menuDetail}
+                                    />
                                     {/* Portlet Table Ends */}
 
                                 </CardBody>
@@ -462,4 +365,105 @@ export default class GenericListing extends Component {
             </HotKeys>
         );
     }
+
+
+    // Preparing option for right click
+    rowOptions = [
+        {
+            id: 0,
+            name: "Copy Row Id",
+            icon: 'fa-copy',
+            subMenu: false,
+            onClick: (data) => {
+                let id = data.listingRow.id;
+                CopyToClipBoard(id);
+                ToastNotifications.success("Id - " + id + " has been copied");
+            },
+            disabled: false
+        }, { subMenu: null }, {
+            id: 1,
+            name: "Show Matching",
+            icon: 'fa-retweet',
+            subMenu: false,
+            onClick: (data) => {
+                this.filterTable(data, [" LIKE ", " = "]);
+                return data.selectedColumn.path.split(".").length < 3;
+            },
+            disabled: false
+        }, {
+            id: 2,
+            name: "Filter Out",
+            icon: 'fa-columns',
+            subMenu: false,
+            onClick: (data) => {
+                this.filterTable(data, [" NOT LIKE ", " != "]);
+                return data.selectedColumn.path.split(".").length < 3;
+            },
+            disabled: false
+        }, {
+            id: 3,
+            name: "Filter More",
+            icon: 'fa-filter',
+            subMenu: false,
+            onClick: (data) => {
+                this.filterColumn(data.selectedColumn);
+                return data.selectedColumn.path.split(".").length < 3;
+            },
+            disabled: false
+        }, {
+            id: 4,
+            name: "Aggregation",
+            icon: 'fa-chart-line',
+            subMenu: true,
+            onClick: (data, operator) => {
+                console.log(data, operator);
+                this.openAggregationResult(operator.name.toLowerCase(), operator.name + ' of ' + data.selectedColumn.display_name + ' equals : ', data)
+            }, disabled: (data) => {
+                return (data.selectedColumn.path.split('.').length != 1)
+            }
+        }, { subMenu: null },
+        {
+            id: 4,
+            name: "Redirect Menu Detail",
+            icon: 'fa-deaf',
+            subMenu: false,
+            onClick: (data) => {
+                const { history, match } = this.props;
+
+                let pageUrl = "/menuDef/" + data.menuDetail.menuId
+
+                history.push(`${pageUrl}`);
+            },
+            disabled: false
+        }, {
+            id: 4,
+            name: "Redirect Model Detail",
+            icon: 'fa-info-circle',
+            subMenu: false,
+            onClick: (data) => {
+                const { history, match } = this.props;
+
+                let pageUrl = "/modelDetails/" + data.menuDetail.model.id
+
+                history.push(`${pageUrl}`);
+            },
+            disabled: false
+        }, {
+            id: 0,
+            name: "Preferences Settings",
+            icon: 'fa-gift',
+            subMenu: false,
+            disabled: this.preferenceObj ? true : false,
+            onClick: (data) => {
+                const { genericData = {}, menuDetail } = this.state;
+                const preferenceObj = { // used for editing preferences
+                    name: menuDetail.pageName, // preference name to be shown on modal
+                    role: true
+                }
+                if (genericData.preDefinedmethods && genericData.preDefinedmethods.preferenceSetting) {
+                    genericData.preDefinedmethods.preferenceSetting(menuDetail.preference, preferenceObj);
+                }
+            }
+        }
+    ];
 }

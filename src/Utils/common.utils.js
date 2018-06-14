@@ -94,6 +94,21 @@ export function IsEqualObject(object, otherObject) {
 }
 
 /**
+ * query params in generic utils methods have by default ' and ' prefix
+ * this method remove that prefix 
+ * Used Before making api call, 
+ * @param  {object} options
+ */
+export function TrimQueryString(options) {
+    if (options.query && typeof options.query == 'string') {
+        options.query = options.query.replace(/^ and /, '');
+    } else {
+        delete options.query;
+    }
+    return options;
+}
+
+/**
  * Accepts various params as object and prepare url for get call
  * @param  {string} url
  * @param  {object} params

@@ -33,7 +33,7 @@ export default class ListingSearch extends React.Component {
         this.initialize();
     }
 
-    componentWillReceiveProps() {
+    UNSAFE_componentWillReceiveProps() {
         this.initialize(); // on props update
     }
 
@@ -47,10 +47,10 @@ export default class ListingSearch extends React.Component {
             const values = searchQuery.split(' ');
             const regex = /["%25]/g;
             values[2] = values[2].replace(regex, '');
-            selectedColumn = SelectFromOptions(dictionary, values[0], 'column_name');
+            selectedColumn = SelectFromOptions(dictionary, values[0], 'name');
             activeColumn = selectedColumn;
             let query, obj;
-            if (!(selectedColumn && selectedColumn.referenced_model)) {
+            if (!(selectedColumn && selectedColumn.reference_model)) {
                 query = values[2];
                 // obj = { referenceColumnValue: query };
                 this.state.query = query;
@@ -64,8 +64,8 @@ export default class ListingSearch extends React.Component {
                     this.state.referenceColumnValue = { data: query[0] };
                 }
             }
-        } else if (searchDetail && searchDetail.column_name) {
-            selectedColumn = SelectFromOptions(dictionary, searchDetail.column_name, 'column_name');
+        } else if (searchDetail && searchDetail.name) {
+            selectedColumn = SelectFromOptions(dictionary, searchDetail.name, 'name');
             activeColumn = selectedColumn;
         }
 
@@ -94,9 +94,9 @@ export default class ListingSearch extends React.Component {
     getInputRecord = async ({ input: val, queryField: queryFieldName } = {}) => {
         if (val) {
             const { filterArr } = this.state;
-            const displayName = activeColumn.referenced_model.display_column;
+            const displayName = activeColumn.reference_model.display_column;
             const queryField = queryFieldName ? queryFieldName : displayName;
-            let url = activeColumn.referenced_model.route_name;
+            let url = activeColumn.reference_model.route_name;
             let options;
             if (queryFieldName) {
                 options = {
@@ -126,11 +126,11 @@ export default class ListingSearch extends React.Component {
 
         switch (activeColumn.column_type) {
             case 116: case 117:
-                query += activeColumn.column_name + ' = ' + data.data.id;
+                query += activeColumn.name + ' = ' + data.data.id;
                 break;
 
             default:
-                query += activeColumn.column_name + ' = ' + data.data;
+                query += activeColumn.name + ' = ' + data.data;
                 break;
         }
 
@@ -147,7 +147,7 @@ export default class ListingSearch extends React.Component {
             history: this.props.history, match: this.props.match
         };
 
-        query += activeColumn.column_name + ' like "%25' + this.state.inputValue + '%25"';
+        query += activeColumn.name + ' like "%25' + this.state.inputValue + '%25"';
         urlParams.search = query;
         Location.search(urlParams, { props: paramProps });
 
@@ -177,7 +177,7 @@ export default class ListingSearch extends React.Component {
         const { props } = this;
         const { dictionary, history, match } = this.props;
         const { selectedColumn = {}, query = '' } = this.state;
-        const { referenced_model = {} } = selectedColumn;
+        const { reference_model = {} } = selectedColumn;
         const { referenceColumnValue } = this.state;
 
         return (
@@ -191,11 +191,11 @@ export default class ListingSearch extends React.Component {
                                 value={selectedColumn} field='display_name' options={dictionary} placeholder='Column' />
                         </div>
                         <div className="listing-input-tool">
-                            {referenced_model ? (
+                            {reference_model ? (
                                 <SelectBox
                                     onChange={(data) => this.convertToInputField({ data })}
                                     value={referenceColumnValue.data}
-                                    field={referenced_model.display_column}
+                                    field={reference_model.display_column}
                                     placeholder="Search"
                                     getOptions={(input) => this.getInputRecord({ input })} />
                             ) :

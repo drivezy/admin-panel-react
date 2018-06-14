@@ -42,7 +42,7 @@ export default class PortletTable extends Component {
         };
     }
 
-    unsafe_componentwillreceiveprops(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.setState({
             finalColumns: nextProps.finalColumns,
             listing: nextProps.listing,
@@ -152,12 +152,13 @@ export default class PortletTable extends Component {
     render() {
         const { genericData, finalColumns, listing } = this.state;
 
-        const { history, match, menuDetail, rowTemplate, callback, tableType, rowOptions } = this.props;
+        const { history, match, menuDetail, rowTemplate, callback, tableType, rowOptions, source = 'model' } = this.props;
 
         // As soon as rendering is done adjust the width according to action columns
         setTimeout(() => this.adjustWidth());
 
         let renderItem;
+        console.log(finalColumns);
 
         if (listing.length) {
             renderItem = <div className="table-body">
@@ -171,7 +172,7 @@ export default class PortletTable extends Component {
                                 </th>
                                 {
                                     finalColumns.map((selectedColumn, key) => {
-                                        let conditionForSorting = (this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.column_name))) ? (this.state.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down') : ''
+                                        let conditionForSorting = (this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.name))) ? (this.state.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down') : ''
                                         return (
                                             <th className="column-header" key={key}>
                                                 {/* Column Wrapper */}
@@ -187,7 +188,7 @@ export default class PortletTable extends Component {
 
                                                     {/* Filter Column */}
                                                     {
-                                                        tableType == "listing" && selectedColumn.path.split('.').length < 3 &&
+                                                        tableType == "listing" && selectedColumn && selectedColumn.path && selectedColumn.path.split('.').length < 3 &&
                                                         <div className="filter-column">
                                                             <a onClick={e => this.filterColumn(selectedColumn)}>
                                                                 <i className="fa fa-filter"></i>
@@ -198,7 +199,7 @@ export default class PortletTable extends Component {
                                                     {/* DB Level */}
 
                                                     {
-                                                        (selectedColumn.path.split('.').length == 1) && (selectedColumn.column_type != 118) &&
+                                                        (selectedColumn && selectedColumn.path.split('.').length == 1) && (selectedColumn.column_type != 118) &&
                                                         (
                                                             tableType == "listing" &&
                                                             <div className="db-level-sort">
@@ -284,7 +285,7 @@ export default class PortletTable extends Component {
                                 listing.map((listingRow, rowKey) => (
                                     <tr className="table-row" key={rowKey}>
                                         <td className="action-column">
-                                            <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} placement={167} callback={callback} />
+                                            <CustomAction history={history} source={source} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} placement={167} callback={callback} />
                                         </td>
                                     </tr>
                                 ))
