@@ -140,7 +140,8 @@ export default class FormSettings extends Component {
 
         const leftColumns = _.groupBy(columns, 'parent');
 
-        const columnKeys = [module];
+        const columnKeys = Object.keys(leftColumns);
+        // const columnKeys = [module];
 
         for (var key of columnKeys) {
             leftColumns[key] = leftColumns[key].filter((column) => (

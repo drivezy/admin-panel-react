@@ -104,8 +104,9 @@ export default class PortletTable extends Component {
 
         function generateSortFn(prop, reverse) {
             return function (a, b) {
-                if (eval('a.' + prop) < eval('b.' + prop)) return reverse ? 1 : -1;
-                if (eval('a.' + prop) > eval('b.' + prop)) return reverse ? -1 : 1;
+                if (a[prop] < b[prop]) return reverse ? 1 : -1;
+                // if (eval('a.' + prop) < eval('b.' + prop)) return reverse ? 1 : -1;
+                if (a[prop] > b[prop]) return reverse ? -1 : 1;
                 return 0;
             };
         }
