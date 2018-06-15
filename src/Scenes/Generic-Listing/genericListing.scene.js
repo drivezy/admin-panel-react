@@ -285,7 +285,7 @@ export default class GenericListing extends Component {
 
 
 
-                            <CustomAction position="header" history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
+                            <CustomAction position="header" source='menu' history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
 
                             {
                                 genericData.columns ?
@@ -338,6 +338,7 @@ export default class GenericListing extends Component {
                                     {/* Portlet Table */}
                                     <PortletTable tableType="listing"
                                         rowOptions={this.rowOptions}
+                                        source='menu'
                                         // toggleAdvancedFilter={this.toggleAdvancedFilter} 
                                         history={history} match={match}
                                         genericData={genericData}

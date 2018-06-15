@@ -2,17 +2,14 @@ import React, { Component } from 'react';
 import './formCreator.css';
 
 import {
-    Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Button,
-    Container,
-    Row, Col
+    Card, CardBody, Button
 } from 'reactstrap';
 
 import { withFormik, Field, Form } from 'formik';
 import Yup from 'yup';
 
 import { Upload, Post, Put } from './../../Utils/http.utils';
-import { GetPreference } from './../../Utils/generic.utils';
+// import { GetPreference } from './../../Utils/generic.utils';
 import { IsObjectHaveKeys, IsUndefined } from './../../Utils/common.utils';
 
 import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
@@ -23,12 +20,13 @@ import ListSelect from './../Forms/Components/List-Select/listSelect';
 import Switch from './../Forms/Components/Switch/switch';
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import ImageUpload from './../Forms/Components/Image-Upload/imageUpload.component';
-import ImageThumbnail from './../Forms/Components/Image-Thumbnail/imageThumbnail.component';
-import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from 'constants';
+// import ImageThumbnail from './../Forms/Components/Image-Thumbnail/imageThumbnail.component';
+// import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from 'constants';
 import FormSettings from './../Form-Settings/FormSettings.component';
 import ScriptInput from './../Forms/Components/Script-Input/scriptInput.component';
 
 import FormUtils from './../../Utils/form.utils';
+import { GetUrlForFormCreator } from './../../Utils/generic.utils';
 
 import { ROUTE_URL } from './../../Constants/global.constants';
 
@@ -52,7 +50,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
     const elements = {
 
         // Static Display 
-        768: <h5>{values[column.path]}</h5>,
+        768: <h5>{values[column.name]}</h5>,
         // Static Ends
 
         // Number
@@ -62,7 +60,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // 108: <Field disabled={column.disabled} id={column.name} onChange={({ ...args }) => FormUtils.OnChangeListener(args)} name={column.name} className={`form-control ${props.errors[column.index] && props.touched[column.index] ? 'is-invalid' : ''}`} type="text" placeholder={`Enter ${column.name}`} />,
 
         108: <Field
-            name={column.path}
+            name={column.name}
             render={({ field /* _form */ }) => (
                 <input name={column.name} className="form-control" rows="3"
                     onChange={(event, ...args) => {
@@ -77,9 +75,9 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
 
         // TextArea Begins
         160: <Field
-            name={column.path}
+            name={column.name}
             render={({ field /* _form */ }) => (
-                <textarea name={column.name} className="form-control" rows="3" onChange={({ ...args }) => { FormUtils.OnChangeListener(args); props.handleChange(args); }} value={values[column.path]}></textarea>
+                <textarea name={column.name} className="form-control" rows="3" onChange={({ ...args }) => { FormUtils.OnChangeListener(args); props.handleChange(args); }} value={values[column.name]}></textarea>
             )}
         />,
         // TextArea Ends
@@ -88,7 +86,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         119: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <Switch name={column.name} rows="3" onChange={props.setFieldValue} value={values[column.path]} />
+                <Switch name={column.name} rows="3" onChange={props.setFieldValue} value={values[column.name]} />
             )}
         />,
         // Switch Ends
@@ -97,7 +95,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         111: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <SelectBox name={column.name} onChange={props.setFieldValue} value={values[column.path]} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                <SelectBox name={column.name} onChange={props.setFieldValue} value={values[column.name]} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
             )}
         />,
         // Boolean Ends
@@ -106,7 +104,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         116: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <ListSelect column={column} name={column.name} onChange={props.setFieldValue} model={values[column.path]} />
+                <ListSelect column={column} name={column.name} onChange={props.setFieldValue} model={values[column.name]} />
             )}
         />,
         // List Select Ends
@@ -115,7 +113,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         465: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <ListSelect multi={true} column={column} name={column.name} onChange={props.setFieldValue} model={values[column.path]} />
+                <ListSelect multi={true} column={column} name={column.name} onChange={props.setFieldValue} model={values[column.name]} />
             )}
         />,
         // List Ends
@@ -124,7 +122,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         109: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <DatePicker single={true} name={column.name} onChange={props.setFieldValue} value={values[column.path]} />
+                <DatePicker single={true} name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
             )}
         />,
         // DatePicker Ends
@@ -133,7 +131,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         110: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <DatePicker single={true} timePicker={true} name={column.name} onChange={props.setFieldValue} value={values[column.path]} />
+                <DatePicker single={true} timePicker={true} name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
             )}
         />,
         // Single Datepicker Ends
@@ -142,7 +140,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         746: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <TimePicker name={column.name} onChange={props.setFieldValue} value={values[column.path]} />
+                <TimePicker name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
             )}
         />,
         // Time Picker Ends
@@ -151,13 +149,13 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         117: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <ReferenceInput column={column} name={column.name} onChange={props.setFieldValue} model={values[column.path]} />
+                <ReferenceInput column={column} name={column.name} onChange={props.setFieldValue} model={values[column.name]} />
             )}
         />,
         // Reference Ends
 
         // Script Input
-        411: <ScriptInput value={values[column.path]} columns={props.payload.dictionary} payload={props.payload} column={column} name={column.name} onChange={props.setFieldValue} model={values[column.index]} />,
+        411: <ScriptInput value={values[column.name]} columns={props.payload.dictionary} payload={props.payload} column={column} name={column.name} onChange={props.setFieldValue} model={values[column.index]} />,
         // Script Input Ends
 
         684: 'serialize',
@@ -275,7 +273,7 @@ const FormContents = withFormik({
         column_definition.forEach((preference) => {
             if (typeof preference != 'string') {
                 let column = payload.dictionary[preference.index];
-                response[column.name] = payload.data[column.path] || '';
+                response[column.name] = payload.data[column.name] || '';
             }
         });
 
@@ -347,19 +345,13 @@ const FormContents = withFormik({
             submitGenericForm();
         }
 
-        async function submitGenericForm() {
-            if (payload.method == 'edit') {
-                // Shubham , Changing module ==> dataModel as module is null
-                const result = await Put({ url: payload.route + '/' + payload.data[payload.starter + '.id'], body: newValues, urlPrefix: ROUTE_URL });
-                if (result.response) {
-                    props.onSubmit();
-                }
 
-            } else {
-                const result = await Post({ url: payload.route, body: newValues, urlPrefix: ROUTE_URL });
-                if (result.success) {
-                    props.onSubmit();
-                }
+        async function submitGenericForm() {
+            const url = GetUrlForFormCreator(payload);
+            const Method = payload.method == 'edit' ? Put : Post;
+            const result = await Method({ url, body: newValues, urlPrefix: ROUTE_URL });
+            if (result.success) {
+                props.onSubmit();
             }
         }
 

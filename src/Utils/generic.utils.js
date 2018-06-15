@@ -184,6 +184,7 @@ export function ConvertMenuDetailForGenericPage(menuDetail) {
     }
 
     menuDetail.layouts = menuDetail.list_layouts.map(layout => {
+        // menuDetail.layouts = menuDetail.list_layouts.map(layout => {
         try {
             layout.column_definition = JSON.parse(layout.column_definition);
         } catch (e) {
@@ -390,11 +391,12 @@ export function GetPreSelectedMethods() {
             callback: action.callback,
             starter: genericData.starter,
             dictionary: genericData.columns,
+            relationship: genericData.model,
             layout: genericData.formPreference,
             userId: genericData.userId,
             modelId: genericData.modelId,
             route: genericData.url,
-            name: 'Add' + genericData.starter
+            name: 'Add' + genericData.starter,
         };
 
         ProcessForm({ form });
@@ -406,7 +408,6 @@ export function GetPreSelectedMethods() {
         //     // modalFooter: () => (<ModalFooter payload={payload}></ModalFooter>)
         // });
     }
-
 
     /**
      * Generic edit method
@@ -423,6 +424,7 @@ export function GetPreSelectedMethods() {
             data: listingRow,
             starter: genericData.starter,
             dictionary: genericData.columns,
+            relationship: genericData.model,
             layout: genericData.formPreference,
             userId: genericData.userId,
             modelId: genericData.modelId,
@@ -454,6 +456,7 @@ export function GetPreSelectedMethods() {
             source,
             starter: genericData.starter,
             dictionary: genericData.columns,
+            relationship: genericData.model,
             layout: genericData.formPreference,
             userId: genericData.userId,
             modelId: genericData.modelId,
@@ -624,6 +627,19 @@ function createQueryUrl(url, restrictQuery, genericData) {
     //     url += query;
     // }
 
+    return url;
+}
+
+/**
+ * Returns url for api call
+ * being used in formCreator to detemine the url based on the method
+ * @param  {object} payload
+ */
+export function GetUrlForFormCreator(payload, getDictionary = false) {
+    const url = payload.method == 'edit' ? payload.route + '/' + (payload.data.id || payload.data[payload.starter + '.id']) : payload.route;
+    if (getDictionary) {
+        return url + (payload.method == 'edit' ? '/edit' : '/create');
+    }
     return url;
 }
 
