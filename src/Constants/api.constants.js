@@ -12,7 +12,8 @@ export const SignupEndPoint = 'user'; // signup and
 /** Public routes ends here */
 
 /** Private routes goes here */
-export const GetMenusEndPoint = 'getMenus';
+// export const GetMenusEndPoint = 'getMenus';
+export const GetMenusEndPoint = 'menus';
 export const GetMenuDetailEndPoint = 'menuDetails/';
 
 export const MenuFilterEndPoint = 'menuFilter';
