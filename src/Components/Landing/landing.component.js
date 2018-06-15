@@ -57,11 +57,9 @@ export default class LandingApp extends Component {
                             menus.map((menu, index) => {
                                 if (Array.isArray(menu.menus)) {
                                     return menu.menus.map((state, index) => {
-                                        console.log(`${match.path}${state.url.split('/')[1]}`);
 
                                         const GenericListing = LoadAsyncComponent(() => import(`./../../Scenes${state.component.path}`));
-                                        // return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <LoadAsyncComponent path={state.component.path} {...props} menuId={2} />} />)
-                                        return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericListing {...props} menuId={253} />} />)
+                                        return (<Route key={state.url} path={`${match.path}${state.url}`} render={props => <GenericListing {...props} menuId={state.id} />} />)
 
 
                                         // return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericListing {...props} menuId={state.id} />} />)
