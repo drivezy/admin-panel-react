@@ -6,7 +6,7 @@ import {
 
 /** Components */
 import HomeScene from './../../Scenes/Home-Scene/home.scene';
-import GenericListing from './../../Scenes/Generic-Listing/genericListing.scene';
+// import GenericListing from './../../Scenes/Generic-Listing/genericListing.scene';
 import GenericDetail from './../../Scenes/Generic-Detail/genericDetail.scene';
 import SideNav from './../../Scenes/Side-Nav/sideNav.scene';
 import Header from './../../Scenes/Header/header.scene';
@@ -20,7 +20,11 @@ import VehicleDetail from './../../Scenes/Vehicle-Detail/vehicleDetail.scene';
 import TicketDetail from './../../Scenes/Ticket-Detail/ticketDetail.scene';
 import RosterTimeline from './../../Scenes/Roster-Timeline/rosterTimeline.scene';
 
+import LoadAsyncComponent from './../../Async/async';
+
 import './landing.component.css';
+
+// const GenericListing = LoadAsyncComponent(() => import('./../../Scenes/Generic-Listing/genericListing.scene'));
 
 export default class LandingApp extends Component {
     constructor(props) {
@@ -40,6 +44,7 @@ export default class LandingApp extends Component {
         const { menus = [], sideNavExpanded } = this.state;
         const { match } = this.props;
 
+        console.log(menus);
         return (
             <div className="page-container">
                 <div className="landing-sidebar">
@@ -53,14 +58,20 @@ export default class LandingApp extends Component {
                                 if (Array.isArray(menu.menus)) {
                                     return menu.menus.map((state, index) => {
 
-                                        if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericListingController.js') != -1) {
-                                            return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericListing {...props} menuId={state.id} />} />)
-                                        } else if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericDetailCtrl.js') != -1) {
-                                            return (<Route key={state.url} path={state.url} render={props => <GenericDetail {...props} menuId={state.id} />} />)
-                                            // return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericDetail {...props} menuId={state.id} />} />)
-                                        } else {
-                                            // return (<Route key={state.url} path={state.url} component={BookingDetail} />)
-                                        }
+                                        const GenericListing = LoadAsyncComponent(() => import(`./../../Scenes${state.component.path}`));
+                                        return (<Route key={state.url} path={`${match.path}${state.url}`} render={props => <GenericListing {...props} menuId={state.id} />} />)
+
+
+                                        // return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericListing {...props} menuId={state.id} />} />)
+
+                                        // if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericListingController.js') != -1) {
+                                        //     return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericListing {...props} menuId={state.id} />} />)
+                                        // } else if (typeof state.controller_path == 'string' && state.controller_path.indexOf('genericDetailCtrl.js') != -1) {
+                                        //     return (<Route key={state.url} path={state.url} render={props => <GenericDetail {...props} menuId={state.id} />} />)
+                                        //     // return (<Route key={state.url} path={`${match.path}${state.url.split('/')[1]}`} render={props => <GenericDetail {...props} menuId={state.id} />} />)
+                                        // } else {
+                                        //     // return (<Route key={state.url} path={state.url} component={BookingDetail} />)
+                                        // }
                                     })
                                 }
                             })
