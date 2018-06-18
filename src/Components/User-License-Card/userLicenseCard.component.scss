@@ -1,40 +1,54 @@
-.user-license-card {
-    .no-padding {
-        padding: 0px;
-    }
-    .card {
-        height: 150px;
-        .row {
-            height: 150px;
+.user-license-card{
+
+    display: flex;
+    flex-direction: column;
+    padding: 2px;
+    margin-bottom: 2px;
+
+    .user-license-photo{
+        .inline-container {
+            height: 250px;
+        }
+        img{
+            width: 98%;
+            margin: 3px;
+            border-radius: 2%;
+            
+            
         }
     }
-    .user-license-info {
+
+
+    .user-license-data{
+
         display: flex;
         flex-direction: row;
-        margin-top: 8px;
-        padding-left: 20px;
-        height: 130px;
-        .user-detail-info-card {
-            width: 70%;
-            display: flex;
-            flex-direction: column;
-            .user-email, .user-license-validate, .user-promo, .user-cash {
-                margin-top: 10px;
-                display: flex;
-                flex-direction: row;
-                .detail-content {
-                    flex-basis: 50%;
-                }
+        justify-content: space-evenly;
+        font-size: 17px;
+
+        .data-field{
+
+            .licence-number-verified{
+
+                    color: #039603;
+                    i.fa{
+                         margin-right: 7px;
+                        }
             }
-        }
-        .user-photograph {
-            width: 30%;
-            img {
-                width: 50%;
-                border: 1px solid #eee;
-                width: 150px;
-                height: 132px;
+
+            .licence-number-not-verified{
+
+                color: red;
+                i.fa{
+                     margin-right: 7px;
+                    }
             }
-        }
+
+
+        }       
+    }
+
+    .user-card{
+        
     }
 }

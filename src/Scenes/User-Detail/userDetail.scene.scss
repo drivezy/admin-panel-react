@@ -1,7 +1,37 @@
-.user-detail {
+.display{
     display: flex;
     flex-direction: row;
-    .user-card-data, .user-license-data {
-        width: 50%;
+
+    .user-detail{
+        width: 20%;
+        max-width: 1203 px;
+        display: flex;
+        flex-direction: column;
+        
+
+        
+
+        .user-license-data {
+            order:1;
+            
+            
+        }
+        .user-card-data {
+            order:2;
+            flex-basis:99%;
+                      
+        
+        }
+
+        
+
+    }
+    
+
+    .tab-wrapper{
+        width: 100%;
+       // margin-left:2px;
+        overflow-x: scroll;
+        // margin-right: 5px;
     }
 }

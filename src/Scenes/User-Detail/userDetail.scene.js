@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col, TabContent, TabPane } from 'reactstrap';
 
 import {
-    Card, CardImg, CardText, CardBody, Button,
+    Card,CardImg, CardText, CardBody, Button,
     CardTitle, CardSubtitle, Nav, NavItem, NavLink, Table
 } from 'reactstrap';
 
@@ -208,53 +208,64 @@ export default class UserDetail extends Component {
 
         return (
 
-            <div>
-                <div className="user-detail">
-                    <div className="user-card-data">
-                        {
-                            userData.id ? <UserCard userData={userData} /> : null
-                        }
-                    </div>
-                    <div className="user-license-data">
-                        {
-                            userData.id ? <UserLicenseCard userData={userData} /> : null
-                        }
-                    </div>
-                </div>
+            <div className="display">
 
-                <div>
-                    <Card className="tab-content">
-                        <Nav tabs>
-                            {
-                                tabContent.length ?
-                                    tabContent.map((tab, key) => (
-                                        <NavItem key={key}>
-                                            <NavLink
-                                                className={classnames({ active: activeTab === key ? 'active' : '' })}
-                                                onClick={() => { this.toggle(key, tab); }}>
-                                                <i className="fa fa-bars"></i> {tab.name}
-                                            </NavLink>
-                                        </NavItem>
-                                    ))
-                                    : null
-                            }
-                        </Nav>
-                        <TabContent activeTab={activeTab}>
-                            {
-                                tabContent.length ?
-                                    tabContent.map((tab, key) => {
-                                        if (activeTab == key) {
-                                            return (
-                                                <TabPane className='relative' key={key} tabId={key}>
-                                                    <TableWrapper listing={tab.data} columns={tab.columns}></TableWrapper>
-                                                </TabPane>
-                                            )
-                                        }
-                                    })
-                                    : null}
-                        </TabContent>
-                    </Card>
-                </div>
+                {/* <Row> */}
+                        <div className="user-detail">
+                            {/* <Col lg="12" sm= md= xs= > */}
+                                <div className="user-card-data">
+                                    {
+                                    userData.id ? <UserCard userData={userData} /> : null
+                                    }
+                                </div>
+                                {/* <div className="user-license-data">
+                                    {
+                                        userData.id ? <UserLicenseCard userData={userData} /> : null
+                                    }
+                                </div> */}
+                            {/* </Col> */}
+                        </div>
+
+                        {/* <Col> */}
+                            <Card className="tab-wrapper">
+                                <Nav tabs>
+                                    {
+                                        tabContent.length ?
+                                            tabContent.map((tab, key) => (
+                                                <NavItem key={key}>
+                                                    {
+                                                        tab.data.length > 0 &&
+                                                        <NavLink
+                                                            className={classnames({ active: activeTab === key ? 'active' : '' })}
+                                                            onClick={() => { this.toggle(key, tab); }}>
+                                                            <i className="fa fa-bars"></i> {tab.name}
+                                                        </NavLink>
+                                                    }
+                                                </NavItem>
+                                            ))
+                                            : null
+                                    }
+                                </Nav>
+                                <TabContent activeTab={activeTab}>
+                                    {
+                                        tabContent.length ?
+                                            tabContent.map((tab, key) => {
+                                                if (activeTab == key) {
+                                                    return (
+                                                        <TabPane className='relative' key={key} tabId={key}>
+                                                            {
+                                                                tab.data.length > 0 &&
+                                                                <TableWrapper listing={tab.data} columns={tab.columns}></TableWrapper>
+                                                            }
+                                                        </TabPane>
+                                                    )
+                                                }
+                                            })
+                                            : null}
+                                </TabContent>
+                            </Card>
+                        {/* </Col> */}
+                {/* // </Row> */}
             </div>
         )
     }

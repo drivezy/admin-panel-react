@@ -4,17 +4,25 @@ import {
 } from 'reactstrap';
 
 import { Get } from './../../Utils/http.utils';
+import { Link } from 'react-router-dom';
+
+import Viewer from 'react-viewer';
+import 'react-viewer/dist/index.css';
+
 
 import './userLicenseCard.component.css';
+import classNames from 'classnames';
 
 export default class UserLicenseCard extends Component {
-
+    container: HTMLDivElement;
     constructor(props) {
         super(props);
         this.state = {
             userData: props.userData,
             promoWallet: 0,
-            cashWallet: 0
+            cashWallet: 0,
+            visible: true,
+            activeIndex: 0,
         };
     }
 
@@ -35,45 +43,61 @@ export default class UserLicenseCard extends Component {
 
     render() {
         const { userData = {}, promoWallet, cashWallet } = this.state;
+
+        let userLicenseImage = [];
+
+        userLicenseImage = userData.licenses.map((image) => {
+            if (image.approved == 1) {
+                image.src = image.license;
+                return image;
+            }
+        })
+
+        // userData.licenses.forEach(function (checkApprovedLicense) {
+        //     if (checkApprovedLicense.approved == 1) {
+        //         return userLicenseImage.push(checkApprovedLicense);
+        //     }
+        // });
+
+        let inline = this.state.mode === 'inline';
+
+        let inlineContainerClass = classNames('inline-container', {
+            show: this.state.visible && inline,
+        });
+
         return (
-            <div className="user-license-card">
-                <Card>
-                    <div className="user-license-info">
-                        <div className="user-detail-info-card">
-                            <div className="user-email">
-                                <span className="detail-content">User Email</span>
-                                <span className="detail-content">{userData.email}</span>
+            <Card className="user-license-card">
+                <div className="user-license-photo">
+                    {
+                        userLicenseImage.length > 0 ?
+                            <div>
+                                <div className={inlineContainerClass} ref={ref => { this.state.container = ref; }}></div>
+                                <Viewer
+                                    container={this.state.container}
+                                    visible={this.state.visible}
+                                    images={userLicenseImage}
+                                    activeIndex={this.state.activeIndex}
+                                    noClose={true}
+                                />
                             </div>
-                            <div className="user-license-validate">
-                                <span className="detail-content">License Validated</span>
-                                {
-                                    (userData.is_license_validated === 1) ?
-                                        <span className="detail-content">Yes</span>
-                                        :
-                                        <span className="detail-content">No</span>
-                                }
-                            </div>
-                            <div className="user-promo">
-                                <span className="detail-content">Promo Wallet</span>
-                                <span className="detail-content">{promoWallet} ₹</span>
-                            </div>
-                            <div className="user-cash">
-                                <span className="detail-content">Cash Wallet</span>
-                                <span className="detail-content">{cashWallet} ₹</span>
-                            </div>
-                        </div>
-                        <div className="user-photograph">
-
-                            {
-                                userData.photograph ?
-                                    <img src={`${userData.photograph}`} alt="" />
-                                    : <img  className="dummy-image" src={require('./../../Assets/images/photograph.png')} alt="" />
-                            }
-
-                        </div>
+                            : <img className='dummy-license' src={require('./../../Assets/images/Dummy-License.jpg')} alt="" />
+                    }
+                </div>
+                <div className="user-license-data">
+                    <div className="text-field">
+                        Licence No.
                     </div>
-                </Card>
-            </div >
+
+                    <div className="data-field">
+                        {
+                            (userData.license_number) ?
+                                <div className="licence-number-verified"><i className="fa fa-check-circle"></i>{userData.license_number}</div>
+                                : <div className="licence-number-not-verified"><i className="fa fa-times"></i>Not verified </div>
+                        }
+
+                    </div>
+                </div>
+            </Card >
         )
     }
 }
