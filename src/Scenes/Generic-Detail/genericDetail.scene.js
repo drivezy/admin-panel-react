@@ -122,8 +122,10 @@ export default class GenericDetail extends Component {
             starter,
             columns: portlet.portletColumns,
             modelName: menuDetail.formPreferenceName + '.form',
-            module: menuDetail.url ? menuDetail.url.split("/:")[0] : '',
-            dataModel: menuDetail.model,
+            // module: menuDetail.url ? menuDetail.url.split("/:")[0] : '',
+            url: menuDetail.url ? menuDetail.url.split("/:")[0] : '',
+            model: portlet.model,
+            modelId: portlet.model && portlet.model.id,
             methods: portlet.methods,
             preDefinedmethods: portlet.preDefinedmethods
         };

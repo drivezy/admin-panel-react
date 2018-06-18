@@ -372,8 +372,8 @@ export function GetPreSelectedMethods() {
 
         const genericData = {
             columns: menuColumns,
-            modelName: url + '.form',
-            module: url
+            // module: url
+            url
         };
         methods.edit({ listingRow: menuDetail, genericData });
     };
