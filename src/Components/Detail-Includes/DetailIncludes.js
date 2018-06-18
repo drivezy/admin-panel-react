@@ -157,10 +157,10 @@ export default class DetailPortlet extends Component {
                                                     {/* Building the table iterating through the row to display tab content */}
                                                     <div className='table-header'>
                                                         <div className='btn-group header-actions'>
-                                                            <CustomAction history={history} source='modelAlias' genericData={tab} actions={tab.nextActions} placement={168} callback={callback} />
+                                                            <CustomAction history={history} source='modelAlias' genericData={tab} actions={tab.nextActions} placement={168} callback={callback} source='modelAlias'/>
                                                         </div>
 
-                                                        <a className="btn btn-secondary btn-sm" onClick={() => Location.navigate({ url: `/modelAliasDetail/${tab.relationship.id}` })}>
+                                                        <a className="btn btn-secondary btn-sm" onClick={() => Location.navigate({ url: `/modelAliasDetail/${tab.relationship[tab.starter].id}` })}>
                                                             <i className="fa fa-outdent" uib-tooltip="Redirect to Model Alias detail"></i>
                                                         </a>
                                                         {
@@ -186,6 +186,7 @@ export default class DetailPortlet extends Component {
                                                         genericData={tab}
                                                         callback={tab.refreshContent}
                                                         rowOptions={this.rowOptions}
+                                                        source='modelAlias'
                                                     />
                                                 </TabPane>
                                             )

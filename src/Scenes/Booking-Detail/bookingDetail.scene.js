@@ -24,8 +24,8 @@ export default class BookingDetail extends Component {
     }
 
     getBookingDetail = async () => {
-        const { bookingId } = this.props.match.params;
-        const result = await Booking(bookingId);
+        const { id } = this.props.match.params;
+        const result = await Booking(id);
         if (result.success) {
             let bookingDetail = result.response;
             this.setState({ bookingDetail })

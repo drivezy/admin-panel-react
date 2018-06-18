@@ -8,10 +8,6 @@ export default class RightClick extends Component {
 
     aggregationOperators = [{ name: 'Sum' }, { name: 'Avg' }, { name: 'Max' }, { name: 'Min' }];
 
-    constructor(props) {
-        super(props);
-    }
-
     render() {
 
         const { renderTag, rowOptions, html, className } = this.props;

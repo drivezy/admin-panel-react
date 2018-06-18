@@ -1,35 +1,31 @@
 import React, { Component } from 'react';
 
-import {
-    Table, Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Dropdown, DropdownToggle, Button, DropdownMenu, DropdownItem
-} from 'reactstrap';
+import './genericListing.css';
 
-import { GetUrlParams, Location } from './../../Utils/location.utils';
-import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
-import { GetListingRecord } from './../../Utils/genericListing.utils';
-import { SubscribeToEvent, UnsubscribeEvent, StoreEvent } from './../../Utils/stateManager.utils';
+import {
+    Card, CardBody, Button
+} from 'reactstrap';
 
 import DynamicFilter from './../../Components/Dynamic-Filter/dynamicFilter.component';
 import ConfigureDynamicFilter from './../../Components/Dynamic-Filter/configureFilter.component';
-
 import ListingPagination from './../../Components/Listing-Pagination/ListingPagination';
 import TableSettings from './../../Components/Table-Settings/TableSettings.component';
 import PortletTable from './../../Components/Portlet-Table/PortletTable.component';
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
-
-import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
-import ModalWrap from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
-
 import PredefinedFilter from './../../Components/Dropdown-Filter/filter.component';
 import ListingSearch from './../../Components/Listing-Search/listingSearch.component';
+
 import { HotKeys } from 'react-hotkeys';
+
 import { CopyToClipBoard } from './../../Utils/common.utils';
 import ToastNotifications from './../../Utils/toast.utils';
 import { Get } from './../../Utils/http.utils';
 import { BuildUrlForGetCall } from './../../Utils/common.utils';
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
-import './genericListing.css';
+import { GetUrlParams, Location } from './../../Utils/location.utils';
+import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
+import { GetListingRecord } from './../../Utils/genericListing.utils';
+import { SubscribeToEvent, UnsubscribeEvent, StoreEvent } from './../../Utils/stateManager.utils';
 
 export default class GenericListing extends Component {
     filterContent = {};
@@ -146,7 +142,7 @@ export default class GenericListing extends Component {
             let regex = /.([^.]*)$/; // filters out anything before first '.'
             let path = data.selectedColumn.path.replace(regex, "");
             if (this.urlParams.query) { // if previous query present then it will executed
-                let newquery = data.selectedColumn["parentColumn"];
+                let newquery = data.selectedColumn["parent"] + './id';
                 let a = {};
                 let f = 0;
                 a = this.urlParams.query.split(" AND ");
@@ -158,7 +154,7 @@ export default class GenericListing extends Component {
                     }
                 }
                 if (f == 0) { // if not overlapping
-                    query = this.urlParams.query + ' AND ' + data.selectedColumn["parentColumn"] + method[1] + "'" + data.listingRow[path]["id"] + "'";
+                    query = this.urlParams.query + ' AND ' + data.selectedColumn["parent"] + '.id' + method[1] + "'" + data.listingRow[data.starter + '.id'] + "'";
                     Location.search({
                         query: query
                     });
@@ -170,7 +166,7 @@ export default class GenericListing extends Component {
                 }
             } else { // if previous query not present then it will executed
 
-                query = data.selectedColumn["parentColumn"] + method[1] + "'" + data.listingRow[path]["id"] + "'";
+                query = data.selectedColumn["parent"] + '.id' + method[1] + "'" + data.listingRow[data.starter + '.id'] + "'";
 
                 this.urlParams.query = query;
 
@@ -375,7 +371,7 @@ export default class GenericListing extends Component {
             icon: 'fa-copy',
             subMenu: false,
             onClick: (data) => {
-                let id = data.listingRow.id;
+                let id = data.listingRow[data.starter + '.id'];
                 CopyToClipBoard(id);
                 ToastNotifications.success("Id - " + id + " has been copied");
             },

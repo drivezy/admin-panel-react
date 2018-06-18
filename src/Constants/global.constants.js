@@ -4,6 +4,8 @@ module.exports = {
     ROUTE_URL: 'https://newadminapi.justride.in/',
     // API_HOST: 'https://uatapi.justride.in/api/admin/',
     // ROUTE_URL: 'https://uatapi.justride.in/',
+    // API_HOST: 'http://api.drivezy/api/admin/',
+    // ROUTE_URL: 'http://api.drivezy/',
     COLORS: {
         GREEN_COLOR: '#41b6ac',
         BACKGROUND_COLOR: 'white',

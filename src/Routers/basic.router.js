@@ -44,7 +44,8 @@ export default class BasicRoute extends Component {
     }
 
     userDataFetched = (data) => {
-        this.setState({ loggedUser: data });
+        this.state.loggedUser = data
+        // this.setState({ loggedUser: data });
     }
 
     render() {
