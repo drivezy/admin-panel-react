@@ -3,24 +3,25 @@
     flex-direction: row;
 
     .user-detail{
-        width: 20%;
-        max-width: 1203 px;
+        width: 30%;
+        // max-width: 1203 px;
         display: flex;
-        flex-direction: column;
+        flex-direction: column-reverse;
         
+        .user-card-data {
+
+            flex-basis:99%;
+                      
+        
+        }
 
         
 
         .user-license-data {
-            order:1;
+
+            height: 60%;
             
             
-        }
-        .user-card-data {
-            order:2;
-            flex-basis:99%;
-                      
-        
         }
 
         
@@ -32,6 +33,7 @@
         width: 100%;
        // margin-left:2px;
         overflow-x: scroll;
+        height: 40%;
         // margin-right: 5px;
     }
 }

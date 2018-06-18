@@ -41,7 +41,7 @@ export default class UserCard extends Component {
 
 
         return (
-            <div className="user-card card" min-widdth="1200px">
+            <div className="user-card card">
 
                 <UserLicenseCard userData={userData} />
 

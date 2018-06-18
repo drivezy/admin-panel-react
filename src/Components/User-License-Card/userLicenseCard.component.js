@@ -13,16 +13,22 @@ import 'react-viewer/dist/index.css';
 import './userLicenseCard.component.css';
 import classNames from 'classnames';
 
+import ImageViewer from './../../Components/Image-Viewer/imageViewer.component.js';
+
 export default class UserLicenseCard extends Component {
-    container: HTMLDivElement;
+    container = HTMLDivElement;
     constructor(props) {
         super(props);
         this.state = {
+            mode: 'inline',
             userData: props.userData,
             promoWallet: 0,
             cashWallet: 0,
             visible: true,
             activeIndex: 0,
+            userLicenseImage: props.userLicenseImage
+            // container:undefined
+            // container:{}
         };
     }
 
@@ -42,15 +48,17 @@ export default class UserLicenseCard extends Component {
     }
 
     render() {
-        const { userData = {}, promoWallet, cashWallet } = this.state;
+        const { userData = {}, promoWallet, cashWallet, userLicenseImage } = this.state;
 
-        let userLicenseImage = [];
+        let userLicenseImageArr = [];
 
-        userLicenseImage = userData.licenses.map((image) => {
-            if (image.approved == 1) {
-                image.src = image.license;
-                return image;
-            }
+
+
+        userLicenseImageArr = userData.licenses.filter((image) => image.approved == 1).map((image) => {
+            // if (image.approved == 1) {
+            image.src = image.license;
+            return image;
+            // }
         })
 
         // userData.licenses.forEach(function (checkApprovedLicense) {
@@ -69,17 +77,26 @@ export default class UserLicenseCard extends Component {
             <Card className="user-license-card">
                 <div className="user-license-photo">
                     {
-                        userLicenseImage.length > 0 ?
-                            <div>
-                                <div className={inlineContainerClass} ref={ref => { this.state.container = ref; }}></div>
-                                <Viewer
-                                    container={this.state.container}
-                                    visible={this.state.visible}
-                                    images={userLicenseImage}
-                                    activeIndex={this.state.activeIndex}
-                                    noClose={true}
-                                />
-                            </div>
+                        userLicenseImageArr.length > 0 ?
+                            // <div>
+                                <div className={inlineContainerClass} ref={ref => { this.state.container = ref; }}>
+
+                                    {/* <BewViewer images={userLicenseImage}/> */}
+
+                                    {/* <Viewer
+                                        container={this.state.container}
+                                        visible={this.state.visible}
+                                        images={userLicenseImage}
+                                        activeIndex={this.state.activeIndex}
+                                        noClose={true}
+                                        zoomable={false}
+                                    /> */}
+                                    {/* <div> */}
+                                    <ImageViewer userLicenseImageArr={userLicenseImageArr} />
+                                    {/* </div> */}
+
+                                </div>
+                            // </div>
                             : <img className='dummy-license' src={require('./../../Assets/images/Dummy-License.jpg')} alt="" />
                     }
                 </div>

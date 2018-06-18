@@ -6,8 +6,10 @@
     margin-bottom: 2px;
 
     .user-license-photo{
+
+        
         .inline-container {
-            height: 250px;
+            // height: 250px;
         }
         img{
             width: 98%;
@@ -49,6 +51,6 @@
     }
 
     .user-card{
-        
+        position: relative;
     }
 }
