@@ -1,8 +1,12 @@
+
 import React, { Component } from 'react';
 import './FormSettings.css';
 import _ from 'lodash';
 
 import { SetPreference } from './../../Utils/preference.utils';
+
+// import { changeArrayPosition } from './../../Utils/js.utils';
+
 import { IsObjectHaveKeys } from './../../Utils/common.utils';
 import { changeArrayPosition } from './../../Utils/js.utils';
 
@@ -30,8 +34,15 @@ export default class FormSettings extends Component {
         }
     }
 
+    componentDidMount() {
+    }
+
+    unsafe_componentwillreceiveprops(nextProps) {
+    }
+
     toggleModal = () => {
         this.setState({ modal: !this.state.modal, activeColumn: {}, tempSelectedColumns: IsObjectHaveKeys(this.props.formLayout) ? this.props.formLayout.column_definition : [] })
+        // this.setState({ modal: !this.state.modal, activeColumn: {} })
     }
 
     toggleList = (index) => {
@@ -44,7 +55,9 @@ export default class FormSettings extends Component {
         var selectedColumns = this.state.tempSelectedColumns;
 
         selectedColumns.unshift({
+            // display_name: column.display_name,
             object: column.parent, column: column.name, headingCollapsed: true, heading: "", index: column.parent + '.' + column.name
+
             // column: column.parent + "." + column.id, headingCollapsed: true, heading: ""
         });
 
@@ -106,6 +119,7 @@ export default class FormSettings extends Component {
     };
 
     applyChanges = async () => {
+
         const { userId, modelId, listName, source } = this.props;
         let { formLayout } = this.props;
         const { tempSelectedColumns } = this.state;
@@ -125,9 +139,15 @@ export default class FormSettings extends Component {
             }
             this.props.onSubmit(formLayout);
         }
+
+
+        // const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
+        // result.success ? this.setState({ modal: !this.state.modal }) : null;
+        // this.props.onSubmit(this.state.tempSelectedColumns);
     }
 
     modalWrapper() {
+        // const { columns, tempSelectedColumns, selectedColumns, activeColumn, module } = this.state;
         const { columns, tempSelectedColumns, activeColumn, module } = this.state;
 
         const selectedIds = [];
@@ -156,31 +176,55 @@ export default class FormSettings extends Component {
             </ModalHeader>
                 <ModalBody>
                     <div className="left">
-                        <ListGroup>
-                            {
-                                columnKeys.map((column, index) => {
-                                    // show only parent columns
-                                    if (column && column.split('.').length == 1) {
-                                        return (
+
+                        <div className="card" >
+                            <div className="card-body parent-card">
+
+                                <div className="card-top">
+                                    <h6 className="card-title">All Columns</h6>
+
+                                    <div className="input-holder">
+                                        <input type="text" className="search-box" placeholder="Search Columns" />
+                                    </div>
+                                </div>
+                                <ListGroup className="parent-group">
+                                    {
+                                        columnKeys.map((column, index) => (
                                             <div key={index}>
-                                                <ListGroupItem color="info" tag="button" action key={index} onClick={() => this.toggleList(column)}>
-                                                    {column}
-                                                </ListGroupItem>
-                                                <Collapse isOpen={this.state.list[column]}>
-                                                    <ListGroup>
+                                                <div className="column-group" onClick={() => this.toggleList(column)}>
+                                                    <div className="column-label">
+                                                        {column}
+                                                    </div>
+                                                    <div className="icon-holder">
+                                                        <i className={`fa ${!this.state.list[column] ? 'fa-plus' : 'fa-minus'}`} aria-hidden="true"></i>
+                                                    </div>
+                                                </div>
+
+                                                <Collapse isOpen={this.state.list[column]} className="columns-wrapper">
+                                                    <ListGroup className="inner-columns">
                                                         {
                                                             leftColumns[column].map((entry, key) => (
-                                                                <ListGroupItem tag="button" onDoubleClick={() => this.addColumn(entry)} key={key}>{entry.name}</ListGroupItem>
+                                                                <div key={key} className="column-group" onDoubleClick={() => this.addColumn(entry)} >
+                                                                    <div className="column-label">
+                                                                        {entry.name}
+                                                                    </div>
+                                                                    <div className="icon-holder">
+                                                                        <button className="add-column btn btn-sm btn-light" onClick={() => this.addColumn(entry)} >
+                                                                            <i className="fa fa-external-link-square" aria-hidden="true"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                                // <ListGroupItem tag="button" onDoubleClick={() => this.addColumn(entry)} key={key}>{entry.column_name}</ListGroupItem>
                                                             ))
                                                         }
                                                     </ListGroup>
                                                 </Collapse>
                                             </div>
-                                        )
+                                        ))
                                     }
-                                })
-                            }
-                        </ListGroup>
+                                </ListGroup>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="controls">
@@ -196,24 +240,44 @@ export default class FormSettings extends Component {
                     </div>
 
                     <div className="right">
-
-                        {activeColumn.column ? activeColumn.column.column : null}
-                        <ListGroup>
-                            {
-                                tempSelectedColumns.map((column, index) => (
-                                    <div key={index}>
-                                        {typeof column == 'string' ?
-                                            <ListGroupItem tag="button" action>
-                                                ---- {column} ----
-                                        </ListGroupItem>
-                                            : <ListGroupItem tag="button" action onClick={() => this.selectColumn(column, index)} className={`${activeColumn.column == column.column ? 'active' : ''}`}>
-                                                {column.columnTitle ? column.columnTitle : columns[column.index].name}
-                                            </ListGroupItem>
-                                        }
-                                    </div>
-                                ))
-                            }
-                        </ListGroup>
+                        <div className="card">
+                            <div className="card-body parent-card">
+                                {activeColumn.column ? activeColumn.column.column : null}
+                                <ListGroup className="parent-group">
+                                    {
+                                        tempSelectedColumns.length > 0 &&
+                                        tempSelectedColumns.map((column, index) =>
+                                            ((typeof column == 'string') ?
+                                                <ListGroupItem tag="button" action key={index}>
+                                                    <span>---- {column} ----</span>
+                                                    <span className="close margin-top-4" data-dismiss="alert" aria-label="Close" onClick={() => this.removeSplit(index, column)}>
+                                                        <i className="fa fa-times"></i>
+                                                    </span>
+                                                </ListGroupItem>
+                                                :
+                                                // Component Manages column props
+                                                <FormColumnSetting removeColumn={this.removeColumn} columns={columns} activeColumn={activeColumn} selectColumn={this.selectColumn} column={column} index={index} key={index} />
+                                                // Column Setting Ends
+                                            )
+                                        )
+                                    }
+                                    {/* {
+                                        tempSelectedColumns.map((column, index) => (
+                                            <div key={index}>
+                                                {typeof column == 'string' ?
+                                                    <ListGroupItem tag="button" action>
+                                                        ---- {column} ----
+                                                            </ListGroupItem>
+                                                    : <ListGroupItem tag="button" action onClick={() => this.selectColumn(column, index)} className={`${activeColumn.column == column.column ? 'active' : ''}`}>
+                                                        {column.columnTitle ? column.columnTitle : columns[column.column].column_name}
+                                                    </ListGroupItem>
+                                                }
+                                            </div>
+                                        ))
+                                    } */}
+                                </ListGroup>
+                            </div>
+                        </div>
                     </div>
 
                 </ModalBody >
@@ -240,6 +304,3 @@ export default class FormSettings extends Component {
         )
     }
 }
-
-
-
