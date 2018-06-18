@@ -25,12 +25,13 @@
 
         display: flex;
         flex-direction: row;
-        justify-content: space-evenly;
+        justify-content: left;
         font-size: 17px;
 
         .data-field{
-
+            margin-left: 13px;
             .licence-number-verified{
+
 
                     color: #039603;
                     i.fa{
