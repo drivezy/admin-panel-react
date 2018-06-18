@@ -157,7 +157,7 @@ export default class DetailPortlet extends Component {
                                                     {/* Building the table iterating through the row to display tab content */}
                                                     <div className='table-header'>
                                                         <div className='btn-group header-actions'>
-                                                            <CustomAction history={history} source='modelAlias' genericData={tab} actions={tab.nextActions} placement={168} callback={callback} source='modelAlias'/>
+                                                            <CustomAction history={history} source='modelAlias' genericData={tab} actions={tab.nextActions} placement={168} callback={callback} source='modelAlias' />
                                                         </div>
 
                                                         <a className="btn btn-secondary btn-sm" onClick={() => Location.navigate({ url: `/modelAliasDetail/${tab.relationship[tab.starter].id}` })}>
@@ -326,7 +326,8 @@ export default class DetailPortlet extends Component {
         icon: 'fa-copy',
         subMenu: false,
         onClick: (data) => {
-            let id = data.listingRow.id;
+            // let id = data.listingRow.id;
+            let id = data.listingRow[data.starter + '.id'];
             CopyToClipBoard(id);
             ToastNotifications.success("Id - " + id + " has been copied");
         }

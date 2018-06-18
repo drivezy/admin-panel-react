@@ -20,7 +20,8 @@ export default class DetailPortlet extends Component {
 
         this.state = {
             listingRow: this.props.listingRow,
-            finalColumns: this.props.finalColumns
+            finalColumns: this.props.finalColumns,
+            starter: this.props.starter
         }
     }
 
@@ -30,7 +31,9 @@ export default class DetailPortlet extends Component {
         icon: 'fa-copy',
         subMenu: false,
         onClick: (data) => {
-            let prop = eval("data.listingRow." + data.selectedColumn.path);
+            // let prop = eval("data.listingRow." + data.selectedColumn.path);
+            // let prop = eval("data.listingRow." + data.selectedColumn[data.starter] + '.name');
+            let prop = data.listingRow[data.selectedColumn.path];
             CopyToClipBoard(prop);
             ToastNotifications.success("Property of " + data.selectedColumn.path + " has been copied");
         }
@@ -40,7 +43,8 @@ export default class DetailPortlet extends Component {
         icon: 'fa-copy',
         subMenu: false,
         onClick: (data) => {
-            let id = data.listingRow.id;
+            // let id = data.listingRow.id;
+            let id = data.listingRow[data.starter + '.id'];
             CopyToClipBoard(id);
             ToastNotifications.success("Id - " + id + " has been copied");
         }
@@ -50,7 +54,7 @@ export default class DetailPortlet extends Component {
     }
 
     render() {
-        const { finalColumns, listingRow } = this.props;
+        const { finalColumns, listingRow, starter } = this.props;
         return (
             <div className="detail-portlet">
                 <Card>
@@ -77,7 +81,7 @@ export default class DetailPortlet extends Component {
                                         selectedColumn &&
                                         // selectedColumn && selectedColumn.column_type &&
                                         <Col className="gray-border-bottom padding-bottom-4 padding-top-4" key={key} xs={selectedColumn.split ? '6' : '12'}>
-                                            <RightClick key={key} renderTag="div" rowOptions={this.rowOptions} html={html} listingRow={listingRow} selectedColumn={selectedColumn}></RightClick>
+                                            <RightClick key={key} renderTag="div" rowOptions={this.rowOptions} html={html} listingRow={listingRow} selectedColumn={selectedColumn} starter={starter}></RightClick>
                                         </Col>
                                     )
                                 })
