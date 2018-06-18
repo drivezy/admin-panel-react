@@ -61,6 +61,7 @@ export default class IndexRouter extends Component {
         // const locationChanged = nextProps.location !== this.props.location;
     }
 
+
     async componentDidMount() {
         LoadAsync.loadStyleSheetGlobal();
         // GetProperties();
@@ -74,11 +75,13 @@ export default class IndexRouter extends Component {
             }
         });
 
-        const result = await GetMenusFromApi();
-        if (result.success) {
-            this.menus = result.response;
-            this.setState({ menuFetched: true });
-        }
+        // const result = await GetMenusFromApi();
+        // if (result.success) {
+        //     this.menus = result.response;
+        //     this.setState({ menuFetched: true });
+        // }
+        this.menus = await GetMenusFromApi();
+        this.setState({ menuFetched: true });
 
         LoginCheck();
 

@@ -164,6 +164,7 @@ function PrepareObjectForListing(result, { extraParams }) {
             limit,
             pageName: configuration.pageName,
             starter: base,
+            model,
             // state_name: configuration.listName,
             // listName: configuration.listName + ".list",
             includes: configuration.includes,

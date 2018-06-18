@@ -60,8 +60,8 @@ export function isMobile() {
  * @param  {string} key (optional)
  */
 // Array.prototype.ArrayToObject = function (key) {
-export function ArrayToObject(key) {
-    const array = this;
+export function ArrayToObject(array, key) {
+    // const array = this;
     const obj = {};
 
     array.forEach((element, index) => {

@@ -107,7 +107,6 @@ export default class SelectBox extends Component {
     render() {
         const { async, getOptions, multi, placeholder } = this.props;
         const { value, options, field, valueKey } = this.state;
-        console.log(value, IsObjectHaveKeys(value));
         let elem;
         if (async) {
             elem = <Async
