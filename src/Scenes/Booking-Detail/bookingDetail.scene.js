@@ -36,7 +36,8 @@ export default class BookingDetail extends Component {
         const { bookingDetail = {} } = this.state;
         return (
             <div className="booking">
-                <div className="booking-detail">
+                <div className="booking-details">
+
                     <div className="booking-user-detail">
                         {
                             bookingDetail.user && bookingDetail.user.id ?
@@ -44,14 +45,14 @@ export default class BookingDetail extends Component {
                                 : null
                         }
                     </div>
-                    <div className="booking-feedback-detail">
+                    {/* <div className="booking-feedback-detail">
                         {
                             (bookingDetail.id && bookingDetail.status != null) &&
                             <BookingFeedback bookingFeedback={bookingDetail} />
                         }
-                    </div>
-                </div>
-                <div className="booking-ride">
+                    </div> */}
+
+
                     <div className="booking-pre-ride-detail">
                         {
                             bookingDetail.id ?
@@ -59,14 +60,15 @@ export default class BookingDetail extends Component {
                                 : null
                         }
                     </div>
-                    <div className="booking-ride-return-detail">
+                    {/* <div className="booking-ride-return-detail">
                         {
                             bookingDetail.id ?
                                 <BookingRideReturn bookingRideReturnData={bookingDetail} />
                                 : null
                         }
-                    </div>
+                    </div> */}
                 </div>
+
                 <div className="booking-tabs">
                     <div className="booking-tabs-detail">
                         {
@@ -77,6 +79,7 @@ export default class BookingDetail extends Component {
                     </div>
                 </div>
             </div>
+
         )
     }
 }
