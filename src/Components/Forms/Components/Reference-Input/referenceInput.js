@@ -6,6 +6,8 @@ import React, { Component } from 'react';
 import GLOBAL from './../../../../Constants/global.constants';
 
 import SelectBox from './../../Components/Select-Box/selectBox';
+import Typeahead from './../../Components/Typeahead/typeahead.component';
+
 // import SelectBox from './../Select-Box/selectBoxForGenericForm.component';
 import './referenceInput.css';
 
@@ -25,11 +27,14 @@ export default class ReferenceInput extends Component {
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.column) {
-            this.loadInitialContent(nextProps.column);
+            this.loadInitialContent(nextProps);
         }
     }
 
-    loadInitialContent = async (column) => {
+    loadInitialContent = async (props) => {
+
+
+        const { column, model } = props;
 
         let url = '';
 
@@ -37,22 +42,35 @@ export default class ReferenceInput extends Component {
             var route = column.reference_model.route_name;
 
             url = route;
-            // url = route.split('api/')[1]
         } else if (column.route) {
 
             var route = column.route;
 
             url = route;
-            // url = route.split('api/')[1]
         }
 
-        this.setState({ url });
+        if(model){
+            let preloadUrl = url + '?query=id=' + model
+
+            const result = await Get({ url: preloadUrl, urlPrefix: 'https://newadminapi.justride.in/' });
+    
+            if (result.success) {
+    
+                let options = result.response.map((entry) => {
+                    let option = entry;
+                    option.value = option.id;
+                    option.label = option.name;
+                    return option
+                });
+    
+                console.log(options)
+    
+                this.setState({ url: url, value: options.pop() });
+            }
+        }else{
+            this.setState({url});
+        }
     }
-
-    getOptions = async () => {
-
-    }
-
 
     render() {
 
@@ -73,6 +91,15 @@ export default class ReferenceInput extends Component {
                     async={url}
                     value={value}
                 />
+
+                {/* <Typeahead
+                    options={[]}
+                    onType={this.getOptions}
+                    onChange={this.props.onChange}
+                // value={child.inputField}
+                // field={'path'}
+                // placeholder='Input Value'
+                />; */}
             </div>
         );
     }

@@ -63,12 +63,15 @@ export default class SelectBox extends Component {
         if (!value) {
             return;
         }
-        this.setState({ value });
+
+        // this.state.value = value.id;
+        this.state.value = value;
+        // this.setState({ value: value.id });
 
         if (typeof onChange == 'function') {
             const finalValue = !field ? value[stateField] : value;
             // onChange(finalValue, name);
-            onChange(field, finalValue.id);
+            onChange(name, finalValue.id);
         }
     }
 
@@ -95,31 +98,35 @@ export default class SelectBox extends Component {
                 // this.props.onChange(options);
 
             }
-        } else if (value) {
-            let preloadUrl = async + '?query=' + index + '=' + value
-            const result = await Get({ url: preloadUrl, urlPrefix: 'https://newadminapi.justride.in/' });
-
-            if (result.success) {
-
-                console.log(result);
-
-                let options = result.response.map((entry) => {
-                    let option = entry;
-                    option.value = option.id;
-                    option.label = option.name;
-                    return option
-                });
-
-                console.log(options)
-
-                callback(options);
-                // callback(null, {
-                //     options
-                // });
-
-                this.props.onChange(result.response[0]);
-            }
         }
+        
+        // else if (value) {
+        //     let preloadUrl = async + '?query=' + index + '=' + value
+        //     const result = await Get({ url: preloadUrl, urlPrefix: 'https://newadminapi.justride.in/' });
+
+        //     if (result.success) {
+
+        //         console.log(result);
+
+        //         let options = result.response.map((entry) => {
+        //             let option = entry;
+        //             option.value = option.id;
+        //             option.label = option.name;
+        //             return option
+        //         });
+
+        //         console.log(options)
+
+        //         // this.setState({ value: options.pop() });
+
+        //         callback(options);
+        //         // callback(null, {
+        //         //     options
+        //         // });
+
+        //         // this.props.onChange(result.response[0]);
+        //     }
+        // }
     }
 
     render() {
@@ -130,10 +137,14 @@ export default class SelectBox extends Component {
         if (async) {
             elem = <AsyncSelect
                 name="form-field-name"
+                // value={value}
                 // value={(typeof value != 'object' || IsObjectHaveKeys(value)) ? value : undefined}
                 value={value}
+                // defaultValue={value}
                 loadOptions={this.getOptions}
                 onChange={this.handleChange}
+                // onInputChange={this.handleChange}
+                defaultOptions
                 // labelKey={field}
                 // valueKey={valueKey}
                 placeholder={placeholder}

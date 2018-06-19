@@ -22,6 +22,7 @@ export async function ProcessForm({ form, scripts }) {
 
     if (result.success) {
         const { response } = result;
+        const { client_scripts: scripts } = response;
 
         const params = {
             relationship: form.relationship,
@@ -33,49 +34,60 @@ export async function ProcessForm({ form, scripts }) {
             form.data = response.data;
         }
 
-    }
-
-    scripts = [{
-        id: 1,
-        script: `
-
-        if(form.data['column_type_id'] == 5 || form.data['column_type_id'] == 6) {
-            FormUtils.SetVisible('reference_model_id', true);
-        } else { 
-            FormUtils.SetVisible('reference_model_id', false);
+        if (Array.isArray(scripts)) {
+            form = ExecuteScript({ form, scripts });
         }
 
-        // console.log(form.dictionary['reference_model_id'])
-            
-        // FormUtils.onChange({ column: 'menu.name', callback: (event, column)=> console.log(column) })
+        ModalManager.openModal({
+            headerText: form.name,
+            modalBody: () => (<FormCreator payload={form} />),
+        });
 
-        FormUtils.onChange({ column: 'menu.name', callback: (event, column)=> console.log(column) })
-        FormUtils.PageName('Custom Name hello')
-        `
-    }, {
-        id: 2,
-        script: `    
-        // alert('dfbj');
-        FormUtils.onChange({ column: 'description', callback: (event, column)=> {
-            console.log('changed', form, column);
-            if(form.data['description'] == 5 || form.data['description'] == 6) {
-                FormUtils.SetVisible('reference_model_id', true);
-            } else { 
-                FormUtils.SetVisible('reference_model_id', false);
-            }
-        } })
 
-        `
-    }];
 
-    if (Array.isArray(scripts)) {
-        form = ExecuteScript({ form, scripts });
     }
 
+    // scripts = [{
+    //     id: 1,
+    //     script: `
+
+    //     if(form.data['column_type_id'] == 5 || form.data['column_type_id'] == 6) {
+    //         FormUtils.SetVisible('reference_model_id', true);
+    //     } else { 
+    //         FormUtils.SetVisible('reference_model_id', false);
+    //     }
+
+    //     // console.log(form.dictionary['reference_model_id'])
+
+    //     // FormUtils.onChange({ column: 'menu.name', callback: (event, column)=> console.log(column) })
+
+    //     FormUtils.onChange({ column: 'menu.name', callback: (event, column)=> console.log(column) })
+    //     FormUtils.PageName('Custom Name hello')
+    //     `
+    // }, {
+    //     id: 2,
+    //     script: `    
+    //     // alert('dfbj');
+    //     FormUtils.onChange({ column: 'description', callback: (event, column)=> {
+    //         console.log('changed', form, column);
+    //         if(form.data['description'] == 5 || form.data['description'] == 6) {
+    //             FormUtils.SetVisible('reference_model_id', true);
+    //         } else { 
+    //             FormUtils.SetVisible('reference_model_id', false);
+    //         }
+    //     } })
+
+    //     `
+    // }];
+
+    // if (Array.isArray(scripts)) {
+    //     form = ExecuteScript({ form, scripts });
+    // }
 
 
-    ModalManager.openModal({
-        headerText: form.name,
-        modalBody: () => (<FormCreator payload={form} />),
-    });
+
+    // ModalManager.openModal({
+    //     headerText: form.name,
+    //     modalBody: () => (<FormCreator payload={form} />),
+    // });
 }

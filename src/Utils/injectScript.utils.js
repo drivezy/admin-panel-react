@@ -28,7 +28,12 @@ export function ExecuteScript({ form, scripts }) {
                 // } else {
                 //     eval(scripts[i].script);
                 // }
-                eval(scripts[i].script);
+                // eval(scripts[i].script);
+
+                const s = PrefixScript(scripts[i]);
+                console.log(s);
+                eval(s);
+
                 form = FormUtils.GetFormValue(true);
                 RemoveError(scripts[i]);
             } catch (err) {
@@ -79,3 +84,12 @@ export function RemoveError(script) {
         pageContent.removeChild(errorElemenet);
     }
 };
+
+// Prepare script for execution according to script type
+export function PrefixScript(definition) {
+    if (definition.activity_type_id == 1) {
+        return definition.script;
+    } else if (definition.activity_type_id == 2) {
+        return `FormUtils.onChange({ column: '${definition.column}', callback: (event, column)=> { ${definition.script}} })`;
+    }
+}
