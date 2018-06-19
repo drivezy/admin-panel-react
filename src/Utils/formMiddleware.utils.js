@@ -15,23 +15,10 @@ import { ROUTE_URL } from './../Constants/global.constants';
 
 export async function ProcessForm({ form, scripts }) {
 
-    scripts = [{
-        id: 1,
-        script: `
-        console.log('form', form);
-        FormUtils.onChange({ column: 'menu.name', callback: (event, column)=> console.log(column) })
-        FormUtils.PageName('Custom Name hello')
-        `
-    }];
-
-    if (Array.isArray(scripts)) {
-        form = ExecuteScript({ form, scripts });
-    }
 
     const url = GetUrlForFormCreator(form, true);
 
     const result = await Get({ url, urlPrefix: ROUTE_URL });
-
 
     if (result.success) {
         const { response } = result;
@@ -47,6 +34,45 @@ export async function ProcessForm({ form, scripts }) {
         }
 
     }
+
+    scripts = [{
+        id: 1,
+        script: `
+
+        if(form.data['modelcolumn.column_type_id'] == 5 || form.data['modelcolumn.column_type_id'] == 6) {
+            FormUtils.SetVisible('modelcolumn.reference_model_id', true);
+        } else { 
+            FormUtils.SetVisible('modelcolumn.reference_model_id', false);
+        }
+
+        console.log(form.dictionary['modelcolumn.reference_model_id'])
+            
+        // FormUtils.onChange({ column: 'menu.name', callback: (event, column)=> console.log(column) })
+
+        FormUtils.onChange({ column: 'menu.name', callback: (event, column)=> console.log(column) })
+        FormUtils.PageName('Custom Name hello')
+        `
+    }, {
+        id: 2,
+        script: `    
+        // alert('dfbj');
+        FormUtils.onChange({ column: 'modelcolumn.description', callback: (event, column)=> {
+            console.log(column);
+            if(form.data['modelcolumn.description'] == 5 || form.data['modelcolumn.description'] == 6) {
+                FormUtils.SetVisible('modelcolumn.reference_model_id', true);
+            } else { 
+                FormUtils.SetVisible('modelcolumn.reference_model_id', false);
+            }
+        } })
+
+        `
+    }];
+
+    if (Array.isArray(scripts)) {
+        form = ExecuteScript({ form, scripts });
+    }
+
+
 
     ModalManager.openModal({
         headerText: form.name,

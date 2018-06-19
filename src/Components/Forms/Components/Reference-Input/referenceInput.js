@@ -22,6 +22,13 @@ export default class ReferenceInput extends Component {
         }
     }
 
+
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if (nextProps.column) {
+            this.loadInitialContent(nextProps.column);
+        }
+    }
+
     loadInitialContent = async (column) => {
 
         let url = '';
@@ -29,12 +36,14 @@ export default class ReferenceInput extends Component {
         if ((column.reference_model) && column.reference_model.route_name) {
             var route = column.reference_model.route_name;
 
-            url = route.split('api/admin/')[1]
+            url = route;
+            // url = route.split('api/')[1]
         } else if (column.route) {
 
             var route = column.route;
 
-            url = route.split('api/admin/')[1]
+            url = route;
+            // url = route.split('api/')[1]
         }
 
         this.setState({ url });
@@ -44,11 +53,6 @@ export default class ReferenceInput extends Component {
 
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.column) {
-            this.loadInitialContent(nextProps.column);
-        }
-    }
 
     render() {
 

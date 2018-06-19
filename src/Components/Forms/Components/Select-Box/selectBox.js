@@ -76,7 +76,7 @@ export default class SelectBox extends Component {
         // For first time match the id with provided value to preselect the field 
         if (input) {
             const url = async + '?query=' + queryField + ' LIKE \'%' + input + '%\'';
-            const result = await Get({ url });
+            const result = await Get({ url: url });
             if (result.success) {
                 callback(null, {
                     options: result.response
@@ -84,19 +84,23 @@ export default class SelectBox extends Component {
             }
         } else if (value) {
             let preloadUrl = async + '?query=' + index + '=' + value
-            const result = await Get({ url: preloadUrl });
+            const result = await Get({ url: preloadUrl, urlPrefix: 'https://newadminapi.justride.in/' });
 
             if (result.success) {
+
+                console.log(result);
 
                 let options = result.response.map((entry) => {
                     let option = entry;
                     option.value = option.id;
-                    option.label = option.display_name;
+                    option.label = option.name;
                     return option
                 });
 
+                console.log(options)
+
                 callback(null, {
-                    options: result.response,
+                    options
                 });
 
                 this.props.onChange(result.response[0]);
