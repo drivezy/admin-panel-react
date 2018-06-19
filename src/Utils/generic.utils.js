@@ -56,7 +56,7 @@ export function ConvertToQuery(params) {
  * @param  {object} dictionary
  * @param  {boolean} excludeStarter}
  */
-export function GetColumnsForListing({ includes, relationship, starter, dictionary, excludeStarter, includesList = [] }) {
+export function GetColumnsForListing({ includes, relationship, starter, dictionary, excludeStarter, includesList = [] }, excludeParent = false) {
     const columns = [];
     const dictionaryColumns = {};
     // const includesList = [];
@@ -85,7 +85,8 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
         for (const j in columns[i]) {
             const selectedColumn = {};
 
-            const element = `${i}.${columns[i][j].name}`;
+            const element = !excludeParent ? `${i}.${columns[i][j].name}` : columns[i][j].name;
+            // const element = `${i}.${columns[i][j].name}`;
 
             // columns[i][j].path = element.replace(/\.?([A-Z]+)/g, (x, y) => {
             //     return `_${y.toLowerCase()}`;
@@ -109,7 +110,10 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
                     selectedColumn.reference_route = relationship[relationIndex].state_name;
                 }
             }
-            dictionaryColumns[selectedColumn.parent + '.' + selectedColumn.name] = selectedColumn;
+
+            // const index = selectedColumn.parent + '.' + selectedColumn.name;
+            const index = !excludeParent ? selectedColumn.parent + '.' + selectedColumn.name : selectedColumn.name;
+            dictionaryColumns[index] = selectedColumn;
             // dictionaryColumns[`${columns[i][j].parent}.${columns[i][j].id}`] = columns[i][j];
         }
 

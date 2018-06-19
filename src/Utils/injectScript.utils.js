@@ -53,7 +53,7 @@ export function ExecuteScript({ form, scripts }) {
 * @param  {string} message - text message to be displayed
 */
 export function InjectError(script, message) {
-    var pageContent = document.getElementById('app-container'); // main page element
+    var pageContent = document.getElementById('parent-admin-element'); // main page element
     var errorElemenet = document.createElement("div"); // new error element to be injected at top
     errorElemenet.classList.add("alert");
     errorElemenet.classList.add("alert-danger");
@@ -65,7 +65,7 @@ export function InjectError(script, message) {
     crossSymbol.innerHTML = "&times;";
     errorElemenet.appendChild(crossSymbol);
 
-    // pageContent.insertBefore(errorElemenet, pageContent.firstChild);
+    pageContent.insertBefore(errorElemenet, pageContent.firstChild);
 };
 
 /**
@@ -73,7 +73,7 @@ export function InjectError(script, message) {
  * @param  {} script
  */
 export function RemoveError(script) {
-    var pageContent = document.getElementById('app-container');
+    var pageContent = document.getElementById('parent-admin-element');
     var errorElemenet = document.getElementById("script-" + script.id);
     if (errorElemenet) {
         pageContent.removeChild(errorElemenet);

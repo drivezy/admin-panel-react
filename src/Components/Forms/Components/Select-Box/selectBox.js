@@ -103,7 +103,7 @@ export default class SelectBox extends Component {
                     options
                 });
 
-                this.props.onChange(result.response[0]);
+                // this.props.onChange(result.response[0]);
             }
         }
     }
@@ -112,21 +112,24 @@ export default class SelectBox extends Component {
         const { async, getOptions, multi, placeholder } = this.props;
         const { value, options, field, valueKey } = this.state;
         let elem;
+        console.log(value);
         if (async) {
             elem = <Async
                 name="form-field-name"
-                value={IsObjectHaveKeys(value) ? value : undefined}
+                value={(typeof value != 'object' || IsObjectHaveKeys(value)) ? value : undefined}
+                // value={value}
                 loadOptions={this.getOptions}
                 onChange={this.handleChange}
-                labelKey={field}
-                valueKey={valueKey}
+                // labelKey={field}
+                // valueKey={valueKey}
                 placeholder={placeholder}
                 multi={multi}
             />
         } else if (getOptions) {
             elem = <Async
                 name="form-field-name"
-                value={IsObjectHaveKeys(value) ? value : undefined}
+                // value={value}
+                value={(typeof value != 'object' || IsObjectHaveKeys(value)) ? value : undefined}
                 loadOptions={getOptions}
                 onChange={this.handleChange}
                 labelKey={field}
@@ -137,7 +140,8 @@ export default class SelectBox extends Component {
         } else {
             elem = <Select autoFocus={false}
                 name="form-field-name"
-                value={IsObjectHaveKeys(value) ? value : undefined}
+                // value={value}
+                value={(typeof value != 'object' || IsObjectHaveKeys(value)) ? value : undefined}
                 onChange={this.handleChange}
                 options={options}
                 labelKey={field}
