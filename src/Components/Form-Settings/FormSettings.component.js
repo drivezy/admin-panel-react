@@ -66,7 +66,7 @@ export default class FormSettings extends Component {
 
     selectColumn = (column, index) => {
         if (typeof column != 'string') {
-            column.index = index;
+            // column.index = index;
             this.setState({ activeColumn: column });
         }
     }
@@ -154,19 +154,23 @@ export default class FormSettings extends Component {
 
         for (var value of tempSelectedColumns) {
             if (typeof value != 'string') {
-                selectedIds.push(parseInt(value.column.split('.').pop()));
+                selectedIds.push(value.column);
             }
         }
 
-        const leftColumns = _.groupBy(columns, 'parent');
+        let leftColumns = [];
+        // const leftColumns = _.groupBy(columns, 'parent');
 
-        const columnKeys = Object.keys(leftColumns);
+        const columnKeys = Object.keys(columns);
         // const columnKeys = [module];
 
         for (var key of columnKeys) {
-            leftColumns[key] = leftColumns[key].filter((column) => (
-                selectedIds.indexOf(column.id) == -1
-            ));
+            if (selectedIds.indexOf(columns[key].name) == -1) {
+                leftColumns.push(columns[key]);
+            }
+            // leftColumns[key] = columns[key].filter((column) => (
+            //     selectedIds.indexOf(column.id) == -1
+            // ));
         }
 
         return (
@@ -189,37 +193,18 @@ export default class FormSettings extends Component {
                                 </div>
                                 <ListGroup className="parent-group">
                                     {
-                                        columnKeys.map((column, index) => (
-                                            <div key={index}>
-                                                <div className="column-group" onClick={() => this.toggleList(column)}>
-                                                    <div className="column-label">
-                                                        {column}
-                                                    </div>
-                                                    <div className="icon-holder">
-                                                        <i className={`fa ${!this.state.list[column] ? 'fa-plus' : 'fa-minus'}`} aria-hidden="true"></i>
-                                                    </div>
+                                        leftColumns.map((entry, key) => (
+                                            <div key={key} className="column-group" onDoubleClick={() => this.addColumn(entry)} >
+                                                <div className="column-label">
+                                                    {entry.name}
                                                 </div>
-
-                                                <Collapse isOpen={this.state.list[column]} className="columns-wrapper">
-                                                    <ListGroup className="inner-columns">
-                                                        {
-                                                            leftColumns[column].map((entry, key) => (
-                                                                <div key={key} className="column-group" onDoubleClick={() => this.addColumn(entry)} >
-                                                                    <div className="column-label">
-                                                                        {entry.name}
-                                                                    </div>
-                                                                    <div className="icon-holder">
-                                                                        <button className="add-column btn btn-sm btn-light" onClick={() => this.addColumn(entry)} >
-                                                                            <i className="fa fa-external-link-square" aria-hidden="true"></i>
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                                // <ListGroupItem tag="button" onDoubleClick={() => this.addColumn(entry)} key={key}>{entry.column_name}</ListGroupItem>
-                                                            ))
-                                                        }
-                                                    </ListGroup>
-                                                </Collapse>
+                                                <div className="icon-holder">
+                                                    <button className="add-column btn btn-sm btn-light" onClick={() => this.addColumn(entry)} >
+                                                        <i className="fa fa-external-link-square" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
                                             </div>
+                                            // <ListGroupItem tag="button" onDoubleClick={() => this.addColumn(entry)} key={key}>{entry.column_name}</ListGroupItem>
                                         ))
                                     }
                                 </ListGroup>

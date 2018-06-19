@@ -12,6 +12,8 @@ import { Upload, Post, Put } from './../../Utils/http.utils';
 // import { GetPreference } from './../../Utils/generic.utils';
 import { IsObjectHaveKeys, IsUndefined } from './../../Utils/common.utils';
 
+//  import SelectBox from './../Forms/Components/Select-Box/selectBox';
+
 import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import ReferenceInput from './../Forms/Components/Reference-Input/referenceInput';
 import DatePicker from './../Forms/Components/Date-Picker/datePicker';
@@ -146,7 +148,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // Time Picker Ends
 
         // Reference Begins
-        117: <Field
+        6: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
                 <ReferenceInput column={column} name={column.name} onChange={props.setFieldValue} model={values[column.name]} />
@@ -211,8 +213,8 @@ const formElements = props => {
                         } else if (typeof preference == 'string') {
                             shouldColumnSplited = preference.includes('s-split-') ? true : preference.includes('e-split-') ? false : shouldColumnSplited;
                         }
-
-                        if (column && (IsUndefined(column.visible) || column.visible)) {
+                        console.log(column);
+                        if (column && (IsUndefined(column.visibility) || column.visibility)) {
                             return (
                                 <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
                                     <label htmlFor="exampleInputEmail1">{column.label || column.display_name}</label>

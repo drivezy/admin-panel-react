@@ -65,7 +65,7 @@ export function InjectError(script, message) {
     crossSymbol.innerHTML = "&times;";
     errorElemenet.appendChild(crossSymbol);
 
-    pageContent.insertBefore(errorElemenet, pageContent.firstChild);
+    // pageContent.insertBefore(errorElemenet, pageContent.firstChild);
 };
 
 /**
