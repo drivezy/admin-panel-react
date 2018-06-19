@@ -175,8 +175,8 @@ export default class FormUtil {
      */
     static GetFormValue(clearFormValue) {
         const form = self.form;
-        self.form = {};
-        self.onChangeListeners = {};
+        // self.form = {};
+        // self.onChangeListeners = {};
         return form;
     }
 

@@ -56,7 +56,7 @@ export default class FormSettings extends Component {
 
         selectedColumns.unshift({
             // display_name: column.display_name,
-            object: column.parent, column: column.name, headingCollapsed: true, heading: "", index: column.parent + '.' + column.name
+            object: column.parent, column: column.name, headingCollapsed: true, heading: "", index: column.name
 
             // column: column.parent + "." + column.id, headingCollapsed: true, heading: ""
         });
