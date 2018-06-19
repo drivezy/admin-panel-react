@@ -5,7 +5,8 @@ import React, { Component } from 'react';
 import './selectBox.css';
 
 import Select, { Async } from 'react-select';
-import 'react-select/dist/react-select.css';
+import AsyncSelect from 'react-select/lib/Async';
+// import 'react-select/dist/react-select.css';
 
 import { Get } from './../../../../Utils/http.utils';
 import { IsObjectHaveKeys } from './../../../../Utils/common.utils';
@@ -73,14 +74,17 @@ export default class SelectBox extends Component {
     getOptions = async (input, callback) => {
         const { async, queryField, value, index } = this.props;
 
+        console.log(this);
+
         // For first time match the id with provided value to preselect the field 
         if (input) {
             const url = async + '?query=' + queryField + ' LIKE \'%' + input + '%\'';
-            const result = await Get({ url: url });
+            const result = await Get({ url: url, urlPrefix: 'https://newadminapi.justride.in/' });
             if (result.success) {
-                callback(null, {
-                    options: result.response
-                });
+                callback(result.response);
+                // callback(null, {
+                //     options: result.response
+                // });
             }
         } else if (value) {
             let preloadUrl = async + '?query=' + index + '=' + value
@@ -99,11 +103,13 @@ export default class SelectBox extends Component {
 
                 console.log(options)
 
-                callback(null, {
-                    options
-                });
+                callback(options);
+                // callback(null, {
+                //     options
+                // });
 
-                this.props.onChange(result.response[0]);
+                // this.props.onChange(options);
+                // this.props.onChange(result.response[0]);
             }
         }
     }
@@ -113,18 +119,22 @@ export default class SelectBox extends Component {
         const { value, options, field, valueKey } = this.state;
         let elem;
         if (async) {
-            elem = <Async
+            elem = <AsyncSelect
                 name="form-field-name"
-                value={IsObjectHaveKeys(value) ? value : undefined}
+                value={value}
+                // value={IsObjectHaveKeys(value) ? value : undefined}
                 loadOptions={this.getOptions}
-                onChange={this.handleChange}
+                cacheOptions
+                defaultOptions
+                defaultValue={value}
+                // onChange={this.handleChange}
                 labelKey={field}
                 valueKey={valueKey}
-                placeholder={placeholder}
-                multi={multi}
+            // placeholder={placeholder}
+            // multi={multi}
             />
         } else if (getOptions) {
-            elem = <Async
+            elem = <AsyncSelect
                 name="form-field-name"
                 value={IsObjectHaveKeys(value) ? value : undefined}
                 loadOptions={getOptions}

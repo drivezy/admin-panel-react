@@ -69,6 +69,7 @@ export default class ReferenceInput extends Component {
                     field={column.reference_model.display_column || column.display_column}
                     sortingType={column.sorting_type}
                     // getOptions={this.getOptions}
+                    queryField={column.reference_model.display_column || column.display_column}
                     async={url}
                     value={value}
                 />
