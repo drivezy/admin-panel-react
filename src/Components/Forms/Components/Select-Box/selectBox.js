@@ -67,7 +67,8 @@ export default class SelectBox extends Component {
 
         if (typeof onChange == 'function') {
             const finalValue = !field ? value[stateField] : value;
-            onChange(finalValue, name);
+            // onChange(finalValue, name);
+            onChange(field, finalValue.id);
         }
     }
 
@@ -81,10 +82,18 @@ export default class SelectBox extends Component {
             const url = async + '?query=' + queryField + ' LIKE \'%' + input + '%\'';
             const result = await Get({ url: url, urlPrefix: 'https://newadminapi.justride.in/' });
             if (result.success) {
-                callback(result.response);
-                // callback(null, {
-                //     options: result.response
-                // });
+
+                let options = result.response.map((entry) => {
+                    let option = entry;
+                    option.value = option.id;
+                    option.label = option.name;
+                    return option
+                });
+
+                callback(options);
+
+                // this.props.onChange(options);
+
             }
         } else if (value) {
             let preloadUrl = async + '?query=' + index + '=' + value
@@ -108,7 +117,7 @@ export default class SelectBox extends Component {
                 //     options
                 // });
 
-                // this.props.onChange(result.response[0]);
+                this.props.onChange(result.response[0]);
             }
         }
     }
@@ -121,8 +130,8 @@ export default class SelectBox extends Component {
         if (async) {
             elem = <AsyncSelect
                 name="form-field-name"
-                value={(typeof value != 'object' || IsObjectHaveKeys(value)) ? value : undefined}
-                // value={value}
+                // value={(typeof value != 'object' || IsObjectHaveKeys(value)) ? value : undefined}
+                value={value}
                 loadOptions={this.getOptions}
                 onChange={this.handleChange}
                 // labelKey={field}
