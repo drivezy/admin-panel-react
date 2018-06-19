@@ -22,76 +22,74 @@ const ElementFormContent = props => {
 
     return (
         <form onSubmit={handleSubmit}>
+            <Card className="no-border">
+                <div className="element-detail">
+                    <div className="element-type">
+                        <label>Type</label>
+                        <Field
+                            name='column_type'
+                            render={({ field /* _form */ }) => (
+                                <SelectBox valueKey="column_type" field="name" onChange={(selected) => { setFieldValue('column_type', selected.column_type) }} value={values.column_type} options={props.types} />
+                            )}
+                        />
+                    </div>
+                    <div className="element-label">
+                        <label>Label</label>
+                        <input type="text" name="display_name" className="form-control" value={values.display_name} onChange={handleChange} placeholder="Label" />
+                    </div>
 
-            <div className="element-detail">
-                <div className="element-type">
-                    <label>Type</label>
-                    <Field
-                        name='column_type'
-                        render={({ field /* _form */ }) => (
-                            <SelectBox valueKey="column_type" field="name" onChange={(selected) => { setFieldValue('column_type', selected.column_type) }} value={values.column_type} options={props.types} />
-                        )}
-                    />
+                    <div>
+                        <button className="btn delete-button" onClick={props.onDelete}>
+                            <i className="fa fa-trash-o" aria-hidden="true"></i>
+                        </button>
+                    </div>
                 </div>
-                <div className="element-label">
-                    <label>Label</label>
-                    <input type="text" name="display_name" className="form-control" value={values.display_name} onChange={handleChange} placeholder="Label" />
+                <div className="element-detail">
+                    <div className="element-label">
+                        <label>Route</label>
+                        <input type="text" name="route" value={values.route} className="form-control" onChange={handleChange} placeholder="Route" />
+                    </div>
+                    <div className="or">
+                        <small>or</small>
+                    </div>
+                    <div className="element-label">
+                        <label>Scope</label>
+                        <input type="text" name="scope" value={values.scope} className="form-control" onChange={handleChange} placeholder="Scope" />
+                    </div>
                 </div>
-
-                <div>
-                    <button className="btn delete-button" onClick={props.onDelete}>
-                        <i className="fa fa-trash-o" aria-hidden="true"></i>
-                    </button>
-                </div>
-            </div>
-
-
-            <div className="element-detail">
-                <div className="element-label">
-                    <label>Route</label>
-                    <input type="text" name="route" value={values.route} className="form-control" onChange={handleChange} placeholder="Route" />
-                </div>
-                <div className="or">
-                    <small>or</small>
-                </div>
-                <div className="element-label">
-                    <label>Scope</label>
-                    <input type="text" name="scope" value={values.scope} className="form-control" onChange={handleChange} placeholder="Scope" />
-                </div>
-            </div>
-
-            <div className="editable-values">
-                <div className="form-group">
-                    <label>
-                        Column Name :
+                <div className="editable-values">
+                    <div className="form-group">
+                        <label>
+                            Column Name :
                     </label>
-                    {
-                        props.formOutput &&
-                        <EditableLabel className="field-name" value={values.column_name} placeholder={values.column_name || 'edit'}>
-                        </EditableLabel>
-                    }
-                </div>
-                <div className="form-group">
-                    <label>
-                        Display Column :
+                        {
+                            props.formOutput &&
+                            <EditableLabel className="field-name" value={values.column_name} placeholder={values.column_name || 'edit'}>
+                            </EditableLabel>
+                        }
+                    </div>
+                    <div className="form-group">
+                        <label>
+                            Display Column :
                     </label>
-                    {
-                        props.formOutput &&
-                        <EditableLabel className="field-name" value={values.display_name} placeholder={values.display_column || 'edit'}>
-                        </EditableLabel>
-                    }
-                </div>
-                <div className="form-group">
-                    <label>
-                        Key :
+                        {
+                            props.formOutput &&
+                            <EditableLabel className="field-name" value={values.display_name} placeholder={values.display_column || 'edit'}>
+                            </EditableLabel>
+                        }
+                    </div>
+                    <div className="form-group">
+                        <label>
+                            Key :
                     </label>
-                    {
-                        props.formOutput &&
-                        <EditableLabel className="field-name" value={values.key} placeholder={values.key || 'edit'}>
-                        </EditableLabel>
-                    }
+                        {
+                            props.formOutput &&
+                            <EditableLabel className="field-name" value={values.key} placeholder={values.key || 'edit'}>
+                            </EditableLabel>
+                        }
+                    </div>
                 </div>
-            </div>
+            </Card>
 
         </form>
     )
@@ -159,13 +157,13 @@ export default class FormElements extends Component {
         const { onDelete } = this.props;
 
         return (
-            <Card className="elements-wrapper">
+            <div className="elements-wrapper">
                 <CardBody className="element-contents">
 
                     <ElementForm element={element} types={inputSubTypes} onDelete={onDelete} formOutput={formOutput} />
 
                 </CardBody>
-            </Card>
+            </div>
         )
     }
 }

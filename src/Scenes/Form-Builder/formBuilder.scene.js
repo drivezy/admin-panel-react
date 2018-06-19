@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 
 import './formBuilder.css';
 
+import {
+    Row, Col
+} from 'reactstrap';
+
 import { Get } from './../../Utils/http.utils';
 import { GetLookupValues } from './../../Utils/lookup.utils';
 
@@ -93,16 +97,24 @@ export default class FormBuilder extends Component {
 
         return (
             <div className="form-builder">
-                {
-                    formOutput.id && inputSubTypes.length ?
-                        <FormGenerator inputSubTypes={inputSubTypes} formOutput={formOutput} onSubmit={this.formCreated} columns={columns} /> : null
-                }
-                <div className="preview-wrapper">
-                    {
-                        formOutput.id && columns &&
-                        <FormPreview formId={this.props.match.params.formId} columns={columns} formOutput={formOutput} fields={fields} />
-                    }
-                </div>
+                <Row>
+                    <Col sm="6">
+                        {
+                            formOutput.id && inputSubTypes.length ?
+                                <FormGenerator inputSubTypes={inputSubTypes} formOutput={formOutput} onSubmit={this.formCreated} columns={columns} /> : null
+                        }
+                    </Col>
+                    <Col sm="6">
+                        <div className="preview-wrapper">
+                            {
+                                formOutput.id && columns &&
+                                <FormPreview formId={this.props.match.params.formId} columns={columns} formOutput={formOutput} fields={fields} />
+                            }
+                        </div>
+                    </Col>
+                </Row>
+
+
             </div>
         )
     }

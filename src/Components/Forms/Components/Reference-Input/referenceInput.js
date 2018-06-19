@@ -44,7 +44,7 @@ export default class ReferenceInput extends Component {
 
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.column) {
             this.loadInitialContent(nextProps.column);
         }
@@ -62,7 +62,7 @@ export default class ReferenceInput extends Component {
                     name={this.props.name}
                     onChange={this.props.onChange}
                     index="id"
-                    field={column.referenced_model.display_column || column.display_column}
+                    field={column.display_column || column.referenced_model.display_column}
                     sortingType={column.sorting_type}
                     // getOptions={this.getOptions}
                     async={url}

@@ -1,18 +1,52 @@
 .form-generator {
-    display: flex;
-    flex-direction: column;
-    flex-basis: 50%;
-    .toolbox {
-        margin-top: 4px;
-        .toolbox-contents {
-            display: flex;
-            flex-direction: column;
-            .config {
-                display: flex;
-                justify-content: space-between;
-            }
+    margin: 10px;
+    // display: flex;
+    // flex-direction: column;
+    // flex-basis: 50%;
+    // .toolbox {
+    //     margin-top: 4px;
+    //     .toolbox-contents {
+    //         display: flex;
+    //         flex-direction: column;
+    //         .config {
+    //             display: flex;
+    //             justify-content: space-between;
+    //         }
+    //     }
+    // }
+    .form-title {
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 1px solid rgba(0, 0, 0, 0.125);
+        border-radius: .25rem;
+        .editable-label {
+            margin: 13px 0px 3px 16px;
         }
     }
+
+    .form-actions {
+        background: whitesmoke;
+        padding: 8px;
+        border: 1px solid #ececec;
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        .other-inputs {
+            // flex-grow: 1;
+            display: flex;
+            justify-content: space-between;
+        }
+        .actions {
+            // flex-grow: 1;
+        }
+        button.btn {
+            margin: 2px;
+        }
+    }
+
     .script-addition-block {
         margin-top: 10px;
     }

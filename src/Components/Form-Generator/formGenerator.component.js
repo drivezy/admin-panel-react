@@ -4,6 +4,8 @@ import './formGenerator.css';
 import { Card, CardBody, Button, ButtonGroup, Collapse } from 'reactstrap';
 
 import FormElement from './../Form-Generator/Components/Form-Elements/formElements.component';
+import EditableLabel from './../../Components/Form-Generator/Components/Editable-Label/editableLable.component';
+
 import { GetLookupValues } from './../../Utils/lookup.utils';
 
 
@@ -106,6 +108,10 @@ export default class FormGenerator extends Component {
 
         return (
             <div className="form-generator">
+                <div className="form-title">
+                    <EditableLabel class="form-title" value={formOutput.name} placeholder="Form Title">
+                    </EditableLabel>
+                </div>
 
                 {/* Form Title */}
 
@@ -120,46 +126,40 @@ export default class FormGenerator extends Component {
 
 
                 {/* Toolbox */}
-                <Card className="toolbox">
-                    <CardBody className="toolbox-contents">
-                        <div className="config">
-                            <div className="form-group">
-                                <input type="text" className="form-control" name="api" value={formOutput.api} placeholder="End Point" onChange={(event) => this.setState({ value: event.target.value })} />
-                            </div>
-                            <div className="form-actions">
-                                <div className="other-inputs">
-                                    <ButtonGroup size="sm">
-                                        {
-                                            methodTypes.map((methodType, key) =>
-                                                <Button key={key} value={formOutput.method_id}>{methodType.value}</Button>
-                                            )
-                                        }
-                                    </ButtonGroup>
-                                </div>
+                <div className="form-actions">
+                    <div className="other-inputs">
+                        <div className="form-group">
+                            <input type="text" className="form-control" name="api" value={formOutput.api} placeholder="End Point" onChange={(event) => this.setState({ value: event.target.value })} />
+                        </div>
+                        <div className="form-actions">
+                            <div className="other-inputs">
+                                <ButtonGroup size="sm">
+                                    {
+                                        methodTypes.map((methodType, key) =>
+                                            <Button key={key} value={formOutput.method_id}>{methodType.value}</Button>
+                                        )
+                                    }
+                                </ButtonGroup>
                             </div>
                         </div>
-                        <div className="config">
-                            <div className="left">
-                                <button className="btn btn-secondary btn-sm" onClick={this.addInput}>
-                                    Add Input
-                                </button>
-                            </div>
-                            <div className="right">
-                                <button type="button" className="btn btn-success btn-xs pull-right" onClick={() => this.previewForm({ formContents: fields })}>
-                                    Preview
-                                </button>
+                    </div>
+                    <div className="actions">
+                        <button className="btn btn-secondary btn-sm" onClick={this.addInput}>
+                            Add Input
+                        </button>
+                        <button type="button" className="btn btn-success btn-xs pull-right" onClick={() => this.previewForm({ formContents: fields })}>
+                            Preview
+                        </button>
 
-                                <button type="button" className="btn btn-danger btn-xs pull-right" ng-click="formGenerator.reArrange()">
-                                    Re Arrange
-                                </button>
+                        <button type="button" className="btn btn-danger btn-xs pull-right" ng-click="formGenerator.reArrange()">
+                            Re Arrange
+                        </button>
 
-                                <button type="button" className="btn btn-default btn-xs pull-right" ng-click="formGenerator.clearInputs()">
-                                    Clear
-                                </button>
-                            </div>
-                        </div>
-                    </CardBody>
-                </Card>
+                        <button type="button" className="btn btn-default btn-xs pull-right" ng-click="formGenerator.clearInputs()">
+                            Clear
+                        </button>
+                    </div>
+                </div>
                 {/* Toolbox Ends */}
 
                 {/* <div className="script-addition-block">
