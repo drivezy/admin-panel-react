@@ -156,7 +156,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
                     // onChange={props.setFieldValue}
                     onChange={(event, ...args) => {
                         FormUtils.OnChangeListener({ column, value: args[0], ...event });
-                        props.setFieldValue(event, args);
+                        props.setFieldValue(event, args[0]);
                     }}
                     // onChange={({ ...args }) => { FormUtils.OnChangeListener(args); props.setFieldValue(args); }}
                     model={values[column.name]} />

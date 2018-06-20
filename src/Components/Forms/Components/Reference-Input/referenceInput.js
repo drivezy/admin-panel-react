@@ -49,26 +49,26 @@ export default class ReferenceInput extends Component {
             url = route;
         }
 
-        if(model){
+        if (model) {
             let preloadUrl = url + '?query=id=' + model
 
-            const result = await Get({ url: preloadUrl, urlPrefix: 'https://newadminapi.justride.in/' });
-    
+            const result = await Get({ url: preloadUrl, urlPrefix: GLOBAL.ROUTE_URL });
+
             if (result.success) {
-    
+
                 let options = result.response.map((entry) => {
                     let option = entry;
                     option.value = option.id;
                     option.label = option.name;
                     return option
                 });
-    
+
                 console.log(options)
-    
+
                 this.setState({ url: url, value: options.pop() });
             }
-        }else{
-            this.setState({url});
+        } else {
+            this.setState({ url });
         }
     }
 
