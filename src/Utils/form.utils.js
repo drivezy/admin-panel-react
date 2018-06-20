@@ -1,4 +1,6 @@
 import { IsObjectHaveKeys } from './common.utils';
+import { StoreEvent } from './stateManager.utils';
+
 let self = {};
 let onChangeListeners = {};
 
@@ -22,7 +24,7 @@ export default class FormUtil {
      * @param  {object} ...event}
      */
     static OnChangeListener({ column, value, ...event }) {
-        console.log('latest value',  value);
+        console.log('latest value', value);
         self.form.data[column.name] = value;
         const callback = onChangeListeners[column.path];
         if (typeof callback == 'function') {
@@ -34,7 +36,7 @@ export default class FormUtil {
      * if id is provided return particular element else returns form element
      * @param  {string} column {optional}
      */
-    static GetElement(column) {
+    static getElement(column) {
         if (!column) {
             return document.getElementsByTagName("form")[0];
         }
@@ -46,24 +48,26 @@ export default class FormUtil {
      * @param  {string} name
      * @param  {object} form
      */
-    static PageName(name, form) {
+    static pageName(name, form) {
         self.form.name = name;
     }
+
     /**
      * set element to visible or invisible depending on visibility
      * @param  {string} column
      * @param  {boolean} visibility
      */
-    static SetVisible(column, visibility) {
+    static setVisible(column, visibility) {
         self.form.dictionary[column].visibility = visibility;
     };
+
 
     /**
      * returns ngModel value of the column type param
      * @param  {object} form - form object
      * @param  {string} column - column type
      */
-    static GetColumnValue(column) {
+    static getValue(column) {
         if (typeof self.form == "object" && self.form.data[column]) {
             return self.form.data[column];
         }
@@ -77,7 +81,7 @@ export default class FormUtil {
      * @param  {string} column - column type
      * @param  {any} value - value to be set for particular element
      */
-    static SetValue(column, value) {
+    static setValue(column, value) {
         if (typeof self.form == "object" && self.form.data[column]) {
             self.form.data[column] = value;
             return self.form.data[column];
@@ -87,12 +91,37 @@ export default class FormUtil {
     };
 
     /**
+     * sets value of input fields & textareas
+     * @param  {object} form - form ngmodel value
+     * @param  {string} column - column type
+     * @param  {any} value - value to be set for particular element
+     */
+    static getAttribute(column) {
+        return self.form.dictionary[column];
+    };
+
+    /**
+     * sets value of input fields & textareas
+     * @param  {object} form - form ngmodel value
+     * @param  {string} column - column type
+     * @param  {any} value - value to be set for particular element
+     */
+    static setAttribute(column, attribute) {
+        const dict = { ...self.form.dictionary[column], ...attribute };
+        self.form.dictionary[column] = dict;
+        FormUtil.updateForm(false);
+        // this.updateForm();
+    };
+
+
+    /**
      * disables particular form element
      * @param  {string} column - column type
      * @param  {boolean} value -true if disabled, false if enabled
      */
-    static SetDisabled(column, value) {
+    static setDisabled(column, value) {
         self.form.dictionary[column].disabled = value;
+        FormUtil.updateForm(false);
     }
 
     /**
@@ -100,8 +129,9 @@ export default class FormUtil {
      * @param  {string} column
      * @param  {boolean} value -true if disabled, false if enabled
      */
-    static SetMandatory(column, value) {
+    static setMandatory(column, value) {
         self.form.dictionary[column].required = value;
+        FormUtil.updateForm(false);
     }
 
     /**
@@ -147,7 +177,7 @@ export default class FormUtil {
     /**
      * saves form without closing modal
      */
-    static Save() {
+    static save() {
         const formUtil = new FormUtil();
         const formELement = formUtil.GetElement();
         // angular.element(formELement).scope().$parent.modalObj.submitForm(true);
@@ -157,7 +187,7 @@ export default class FormUtil {
      * saves form and close modal
      * use this method only with onChange
      */
-    static Submit() {
+    static submit() {
         const formUtil = new FormUtil();
         // const formElement = formUtil.GetElement();
         // angular.element(formELement).scope().$parent.modalObj.submitForm(false);
@@ -167,7 +197,7 @@ export default class FormUtil {
      * every time new script is to be run, this method is invoked to update form object value
      * @param  {object} form
      */
-    static SetFormValue(form) {
+    static setForm(form) {
         self.form = form;
     };
 
@@ -175,7 +205,7 @@ export default class FormUtil {
      * Once script is executed, returns modified form obj
      * @param  {boolean} clearFormValue
      */
-    static GetFormValue(clearFormValue) {
+    static getForm(clearFormValue) {
         const form = self.form;
         // self.form = {};
         // self.onChangeListeners = {};
@@ -203,6 +233,9 @@ export default class FormUtil {
         this.compileHTML(input);
     }
 
+
+
+
     /**
      * when there is new attribute added, it needs to be compiled
      * @param  {} input
@@ -213,5 +246,10 @@ export default class FormUtil {
         // $injector.invoke(function ($compile) {
         //     $compile(input)($scope);
         // });
+    }
+
+
+    static updateForm(updateState = true) {
+        StoreEvent({ eventName: 'formChanged', data: { ...self.form, ...{ updateState } } });
     }
 }

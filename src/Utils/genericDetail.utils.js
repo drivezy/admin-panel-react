@@ -51,7 +51,7 @@ function PrepareObjectForDetailPage(result, { extraParams }) {
     const tabDetail = {
         tabs
     }
-    console.log(tabDetail);
+    // console.log(tabDetail);
 
     // flag to check promise
     // params.dictionary = data.dictionary || params.dictionary;
@@ -174,7 +174,7 @@ export function GetDataForPortlet({ portletDetail, genericDetailObject }) {
     //     preference: genericDetailObject.listName, scripts: genericDetailObject.scripts
     // });
 
-    console.log(obj);
+    // console.log(obj);
     return obj;
 }
 
@@ -188,7 +188,7 @@ export function GetDataForTabs({ tabs }) {
     for (let i in tabs) {
         tabs[i] = ConvertMenuDetailForGenericPage(tabs[i]);
     }
-    console.log(tabs);
+    // console.log(tabs);
     return tabs;
 }
 

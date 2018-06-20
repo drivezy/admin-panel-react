@@ -13,10 +13,9 @@ import { Get } from './http.utils';
 
 import { ROUTE_URL } from './../Constants/global.constants';
 
-export async function ProcessForm({ form, scripts }) {
+export async function ProcessForm({ formContent, scripts }) {
 
-
-    const url = GetUrlForFormCreator(form, true);
+    const url = GetUrlForFormCreator(formContent, true);
 
     const result = await Get({ url, urlPrefix: ROUTE_URL });
 
@@ -25,69 +24,22 @@ export async function ProcessForm({ form, scripts }) {
         const { client_scripts: scripts } = response;
 
         const params = {
-            relationship: form.relationship,
+            relationship: formContent.relationship,
             includesList: Object.keys(response.dictionary),
             dictionary: response.dictionary
         }
-        form.dictionary = GetColumnsForListing(params, true);
-        if (form.method == 'edit') {
-            form.data = response.data;
+        formContent.dictionary = GetColumnsForListing(params, true);
+        if (formContent.method == 'edit') {
+            formContent.data = response.data;
         }
 
         if (Array.isArray(scripts)) {
-            form = ExecuteScript({ form, scripts });
+            formContent = ExecuteScript({ formContent, scripts });
         }
 
         ModalManager.openModal({
-            headerText: form.name,
-            modalBody: () => (<FormCreator payload={form} />),
+            headerText: formContent.name,
+            modalBody: () => (<FormCreator payload={formContent} />),
         });
-
-
-
     }
-
-    // scripts = [{
-    //     id: 1,
-    //     script: `
-
-    //     if(form.data['column_type_id'] == 5 || form.data['column_type_id'] == 6) {
-    //         FormUtils.SetVisible('reference_model_id', true);
-    //     } else { 
-    //         FormUtils.SetVisible('reference_model_id', false);
-    //     }
-
-    //     // console.log(form.dictionary['reference_model_id'])
-
-    //     // FormUtils.onChange({ column: 'menu.name', callback: (event, column)=> console.log(column) })
-
-    //     FormUtils.onChange({ column: 'menu.name', callback: (event, column)=> console.log(column) })
-    //     FormUtils.PageName('Custom Name hello')
-    //     `
-    // }, {
-    //     id: 2,
-    //     script: `    
-    //     // alert('dfbj');
-    //     FormUtils.onChange({ column: 'description', callback: (event, column)=> {
-    //         console.log('changed', form, column);
-    //         if(form.data['description'] == 5 || form.data['description'] == 6) {
-    //             FormUtils.SetVisible('reference_model_id', true);
-    //         } else { 
-    //             FormUtils.SetVisible('reference_model_id', false);
-    //         }
-    //     } })
-
-    //     `
-    // }];
-
-    // if (Array.isArray(scripts)) {
-    //     form = ExecuteScript({ form, scripts });
-    // }
-
-
-
-    // ModalManager.openModal({
-    //     headerText: form.name,
-    //     modalBody: () => (<FormCreator payload={form} />),
-    // });
 }

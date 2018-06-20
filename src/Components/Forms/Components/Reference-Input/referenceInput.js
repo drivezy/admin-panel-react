@@ -13,6 +13,8 @@ import './referenceInput.css';
 
 import { Get } from './../../../../Utils/http.utils';
 
+let unmounted = false;
+
 export default class ReferenceInput extends Component {
 
     constructor(props) {
@@ -27,12 +29,13 @@ export default class ReferenceInput extends Component {
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.column) {
-            this.loadInitialContent(nextProps);
+            if (!unmounted) {
+                this.loadInitialContent(nextProps);
+            }
         }
     }
 
     loadInitialContent = async (props) => {
-
 
         const { column, model } = props;
 
@@ -63,13 +66,17 @@ export default class ReferenceInput extends Component {
                     return option
                 });
 
-                console.log(options)
+                // console.log(options)
 
                 this.setState({ url: url, value: options.pop() });
             }
         } else {
             this.setState({ url });
         }
+    }
+
+    componentWillUnmount = () => {
+        // unmounted = true;
     }
 
     render() {

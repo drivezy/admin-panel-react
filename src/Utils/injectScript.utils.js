@@ -6,18 +6,18 @@
  */
 import FormUtils from './form.utils';
 
-export function ExecuteScript({ form, scripts }) {
+export function ExecuteScript({ formContent, scripts }) {
     if (!Array.isArray(scripts) || !scripts.length) {
-        return form;
+        return formContent;
     }
 
     const methods = {};
 
     for (let i in scripts) {
-        methods[scripts[i].id] = function ({ form, FormUtils }) {
+        methods[i] = function ({ formContent, FormUtils: form }) {
             // if (!extraParam || (typeof extraParam == "object" && (!extraParam.trigger_type || extraParam.trigger_type.indexOf(scripts[i].trigger_type) > -1)) && scripts[i].active) {
             try {
-                FormUtils.SetFormValue(form);
+                form.setForm(formContent);
                 // @todo once we get support for column name to be watched from db will enable this way
                 // if (extraParam.trigger_type == 363) {
                 //     FormUtil.onChange(onChange, column);
@@ -34,7 +34,7 @@ export function ExecuteScript({ form, scripts }) {
                 console.log(s);
                 eval(s);
 
-                form = FormUtils.GetFormValue(true);
+                formContent = form.getForm(true);
                 RemoveError(scripts[i]);
             } catch (err) {
                 InjectError(scripts[i], err);
@@ -46,10 +46,10 @@ export function ExecuteScript({ form, scripts }) {
             // }
         };
         // return methods[scripts[0].name];
-        methods[scripts[i].id]({ form, FormUtils });
+        methods[i]({ formContent, FormUtils });
     }
 
-    return form;
+    return formContent;
 }
 
 /**
@@ -90,6 +90,7 @@ export function PrefixScript(definition) {
     if (definition.activity_type_id == 1) {
         return definition.script;
     } else if (definition.activity_type_id == 2) {
-        return `FormUtils.onChange({ column: '${definition.column}', callback: (event, column)=> { ${definition.script}} })`;
+        return `form.onChange({ column: '${definition.column}', callback: (event, column)=> { ${definition.script}} })`;
     }
 }
+

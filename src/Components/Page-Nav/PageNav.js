@@ -57,7 +57,7 @@ export default class PageNav extends Component {
         ModalManager.openModal({
             headerText: "Impersonate User",
             modalBody: () => (<ImpersonateFrom ></ImpersonateFrom>)
-                
+
         })
 
     }
@@ -130,7 +130,7 @@ export default class PageNav extends Component {
                                     {this.state.currentUser.display_name}
                                 </div>
                                 <div className="email">
-                                    {this.state.currentUser.email}
+                                    {this.state.currentUser.email ? this.state.currentUser.email.substring(0, 6) : null}
                                     <i className="fa fa-cog" aria-hidden="true"></i>
                                 </div>
                             </a>

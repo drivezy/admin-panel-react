@@ -78,7 +78,7 @@ export default class SelectBox extends Component {
     getOptions = async (input, callback) => {
         const { async, queryField, value, index } = this.props;
 
-        console.log(this);
+        // console.log(this);
 
         // For first time match the id with provided value to preselect the field 
         if (input) {
@@ -94,46 +94,16 @@ export default class SelectBox extends Component {
                 });
 
                 callback(options);
-
-                // this.props.onChange(options);
-
             }
         }
-        
-        // else if (value) {
-        //     let preloadUrl = async + '?query=' + index + '=' + value
-        //     const result = await Get({ url: preloadUrl, urlPrefix: 'https://newadminapi.justride.in/' });
-
-        //     if (result.success) {
-
-        //         console.log(result);
-
-        //         let options = result.response.map((entry) => {
-        //             let option = entry;
-        //             option.value = option.id;
-        //             option.label = option.name;
-        //             return option
-        //         });
-
-        //         console.log(options)
-
-        //         // this.setState({ value: options.pop() });
-
-        //         callback(options);
-        //         // callback(null, {
-        //         //     options
-        //         // });
-
-        //         // this.props.onChange(result.response[0]);
-        //     }
-        // }
+      
     }
 
     render() {
         const { async, getOptions, multi, placeholder } = this.props;
         const { value, options, field, valueKey } = this.state;
         let elem;
-        console.log(value);
+        // console.log(value);
         if (async) {
             elem = <AsyncSelect
                 name="form-field-name"
