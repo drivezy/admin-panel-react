@@ -78,7 +78,7 @@ export default class SelectBox extends Component {
     getOptions = async (input, callback) => {
         const { async, queryField, value, index } = this.props;
 
-        console.log(this);
+        // console.log(this);
 
         // For first time match the id with provided value to preselect the field 
         if (input) {
@@ -103,7 +103,7 @@ export default class SelectBox extends Component {
         const { async, getOptions, multi, placeholder } = this.props;
         const { value, options, field, valueKey } = this.state;
         let elem;
-        console.log(value);
+        // console.log(value);
         if (async) {
             elem = <AsyncSelect
                 name="form-field-name"

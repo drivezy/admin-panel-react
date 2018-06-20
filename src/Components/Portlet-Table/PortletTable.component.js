@@ -159,7 +159,7 @@ export default class PortletTable extends Component {
         setTimeout(() => this.adjustWidth());
 
         let renderItem;
-        console.log(finalColumns);
+        // console.log(finalColumns);
 
         if (listing.length) {
             renderItem = <div className="table-body">

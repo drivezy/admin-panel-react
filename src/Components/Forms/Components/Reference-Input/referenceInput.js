@@ -66,7 +66,7 @@ export default class ReferenceInput extends Component {
                     return option
                 });
 
-                console.log(options)
+                // console.log(options)
 
                 this.setState({ url: url, value: options.pop() });
             }

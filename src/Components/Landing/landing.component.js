@@ -44,7 +44,7 @@ export default class LandingApp extends Component {
         const { menus = [], sideNavExpanded } = this.state;
         const { match } = this.props;
 
-        console.log(menus);
+        // console.log(menus);
         return (
             <div className="page-container">
                 <div className="landing-sidebar">

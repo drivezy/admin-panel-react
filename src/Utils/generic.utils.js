@@ -389,7 +389,7 @@ export function GetPreSelectedMethods() {
      * @param  {object} genericData}
      */
     methods.add = ({ action, listingRow, genericData, source = 'module' }) => {
-        const form = {
+        const formContent = {
             source,
             data: listingRow,
             callback: action.callback,
@@ -403,7 +403,7 @@ export function GetPreSelectedMethods() {
             name: 'Add' + genericData.starter,
         };
 
-        ProcessForm({ form });
+        ProcessForm({ formContent });
         // ModalManager.openModal({
         //     payload,
         //     headerText: 'Add modal',
@@ -421,7 +421,7 @@ export function GetPreSelectedMethods() {
      */
     methods.edit = ({ action, listingRow, genericData, source = 'module' }) => {
         // const payload = { method: 'edit', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module };
-        const form = {
+        const formContent = {
             source,
             method: 'edit',
             callback: action.callback,
@@ -442,7 +442,7 @@ export function GetPreSelectedMethods() {
             // action,
             // url: genericData.url
         };
-        ProcessForm({ form });
+        ProcessForm({ formContent });
     }
 
     /**
@@ -453,7 +453,7 @@ export function GetPreSelectedMethods() {
      * @param  {object} genericData}
      */
     methods.copy = ({ action, listingRow, genericData, source = 'module' }) => {
-        const form = {
+        const formContent = {
             method: 'add',
             callback: action.callback,
             data: listingRow,
@@ -467,7 +467,7 @@ export function GetPreSelectedMethods() {
             route: genericData.url,
             name: 'Add' + genericData.starter
         };
-        ProcessForm({ form });
+        ProcessForm({ formContent });
         // ModalManager.openModal({
         //     payload,
         //     // modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),

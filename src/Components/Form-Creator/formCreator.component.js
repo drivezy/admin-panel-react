@@ -416,8 +416,13 @@ export default class FormCreator extends Component {
 
     }
 
-    formUpdated = form => {
-        this.setState({ form });
+    formUpdated = (form) => {
+        const { updateState } = form;
+        if (updateState) {
+            this.setState({ form });
+        } else {
+            this.state.form = form;
+        }
     }
 
     closeModal = () => {
