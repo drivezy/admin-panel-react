@@ -6,6 +6,7 @@
             // transition: all 1s ease-in;
             overflow-x: scroll;
             .table {
+                margin-bottom: 0px;
                 thead {
                     border-top: none;
                     @supports (-webkit-appearance: none) {

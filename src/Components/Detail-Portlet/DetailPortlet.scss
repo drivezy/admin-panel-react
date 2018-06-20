@@ -1,9 +1,13 @@
 @import 'Assets/Global-Shared/theme.scss';
-.detail-portlet{
-    .card{
-        @include themify($themes){
+.detail-portlet {
+    .card {
+        overflow: hidden;
+        @include themify($themes) {
             background-color: themed('detailBackgroundCard');
             color: themed('textSecondary');
+        }
+        .card-body {
+            padding: 0px;
         }
     }
     margin: 4px 0px;
@@ -18,7 +22,7 @@
     }
     .gray-border-bottom:nth-child(4n+1) {
         background: #f9f9f9;
-        @include themify($themes){
+        @include themify($themes) {
             background-color: themed('menuTableBackground');
             color: themed('textSecondary');
             border: themed('borderBottom');
@@ -27,7 +31,7 @@
     }
     .gray-border-bottom:nth-child(4n) {
         background: #f9f9f9;
-        @include themify($themes){
+        @include themify($themes) {
             background-color: themed('menuTableBackground');
             color: themed('textSecondary');
             border: themed('borderBottom');

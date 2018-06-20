@@ -6,7 +6,7 @@ import {
 
 /** Components */
 import HomeScene from './../../Scenes/Home-Scene/home.scene';
-// import GenericListing from './../../Scenes/Generic-Listing/genericListing.scene';
+import GenericListing from './../../Scenes/Generic-Listing/genericListing.scene';
 import GenericDetail from './../../Scenes/Generic-Detail/genericDetail.scene';
 import SideNav from './../../Scenes/Side-Nav/sideNav.scene';
 import Header from './../../Scenes/Header/header.scene';
@@ -57,6 +57,7 @@ export default class LandingApp extends Component {
                             menus.map((menu, index) => {
                                 if (Array.isArray(menu.menus)) {
                                     return menu.menus.map((state, index) => {
+                                        // return {name:'ashique'};
 
                                         const GenericListing = LoadAsyncComponent(() => import(`./../../Scenes${state.component.path}`));
                                         return (<Route key={state.url} path={`${match.path}${state.url}`} render={props => <GenericListing {...props} menuId={state.id} />} />)
@@ -76,7 +77,7 @@ export default class LandingApp extends Component {
                                 }
                             })
                         }
-                        {/* <Route path={`${match.path}activeBookings`} component={GenericListing} /> */}
+                        {/* <Route menuId="5" path={`${match.path}models`} component={GenericListing} /> */}
                         {/* <Route path={`${match.path}list/:page`} component={GenericListing} />
                             <Route path={`${match.path}detail/:page/:detailId`} component={GenericDetail} /> */}
 

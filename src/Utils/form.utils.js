@@ -1,4 +1,4 @@
-import { IsObjectHaveKeys } from './common.utils';
+import { IsObjectHaveKeys, BuildUrlForGetCall } from './common.utils';
 import { StoreEvent } from './stateManager.utils';
 
 let self = {};
@@ -89,6 +89,18 @@ export default class FormUtil {
 
         return false;
     };
+
+    // static 
+
+    static setquery(column, queryParams) {
+        const dict = self.form.dictionary[column];
+
+        if (dict && dict.reference_model) {
+            let url = dict.reference_model.route_name;
+            url = BuildUrlForGetCall(url, queryParams);
+            self.form.dictionary[column].reference_model.route_name = url;
+        }
+    }
 
     /**
      * sets value of input fields & textareas
@@ -253,3 +265,15 @@ export default class FormUtil {
         StoreEvent({ eventName: 'formChanged', data: { ...self.form, ...{ updateState } } });
     }
 }
+
+
+// function test() {
+//     let model = form.getValue('model_id');
+
+//     let sourceColumnAttribute = form.getAttribute('source_column_id');
+//     // sourceColumnAttribute.reference_model.route_name = 'api/admin/modelColumn?query=model_id=' + model;
+
+//     form.setquery('source_column_id', { query: 'model_id=' + model });
+//     form.setAttribute('source_column_id', sourceColumnAttribute);
+//     form.updateForm();
+// }
