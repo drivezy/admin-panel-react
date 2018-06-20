@@ -11,43 +11,86 @@ export function ExecuteScript({ formContent, scripts }) {
         return formContent;
     }
 
-    const methods = {};
+
+    // const methods = {};
+
+    let script = '';
 
     for (let i in scripts) {
-        methods[i] = function ({ formContent, FormUtils: form }) {
-            // if (!extraParam || (typeof extraParam == "object" && (!extraParam.trigger_type || extraParam.trigger_type.indexOf(scripts[i].trigger_type) > -1)) && scripts[i].active) {
-            try {
-                form.setForm(formContent);
-                // @todo once we get support for column name to be watched from db will enable this way
-                // if (extraParam.trigger_type == 363) {
-                //     FormUtil.onChange(onChange, column);
-
-                //     function onChange(newVal, oldVal){
-                //         eval(scripts[i].script);
-                //     }
-                // } else {
-                //     eval(scripts[i].script);
-                // }
-                // eval(scripts[i].script);
-
-                const s = PrefixScript(scripts[i]);
-                console.log(s);
-                eval(s);
-
-                formContent = form.getForm(true);
-                RemoveError(scripts[i]);
-            } catch (err) {
-                InjectError(scripts[i], err);
-                console.log("%c🍺 Not valid Script", "color: #49ba8e; font-size:20px;");
-                console.log("%cError =======> " + err, "color: '#49ba8e'; font-size:14px;");
-                console.log("%cScript ======> " + scripts[i].script, "color: blue; font-size:14px;");
-                // console.log(scripts[i].name + ' - ' + err);
-            }
-            // }
-        };
-        // return methods[scripts[0].name];
-        methods[i]({ formContent, FormUtils });
+        script += PrefixScript(scripts[i]);
     }
+
+    function methods({ formContent, FormUtils: form }) {
+        // if (!extraParam || (typeof extraParam == "object" && (!extraParam.trigger_type || extraParam.trigger_type.indexOf(scripts[i].trigger_type) > -1)) && scripts[i].active) {
+        try {
+            form.setForm(formContent);
+            // @todo once we get support for column name to be watched from db will enable this way
+            // if (extraParam.trigger_type == 363) {
+            //     FormUtil.onChange(onChange, column);
+
+            //     function onChange(newVal, oldVal){
+            //         eval(scripts[i].script);
+            //     }
+            // } else {
+            //     eval(scripts[i].script);
+            // }
+            // eval(scripts[i].script);
+
+            // const s = PrefixScript(script);
+            // console.log(s);
+            eval(script);
+
+            formContent = form.getForm(true);
+            RemoveError(scripts);
+        } catch (err) {
+            InjectError(scripts, err);
+            console.log("%c🍺 Not valid Script", "color: #49ba8e; font-size:20px;");
+            console.log("%cError =======> " + err, "color: '#49ba8e'; font-size:14px;");
+            console.log("%cScript ======> " + scripts, "color: blue; font-size:14px;");
+            // console.log(scripts[i].name + ' - ' + err);
+        }
+        // }
+    };
+    // return methods[scripts[0].name];
+    methods({ formContent, FormUtils });
+
+    // const methods = {};
+
+    // for (let i in scripts) {
+    //     methods[i] = function ({ formContent, FormUtils: form }) {
+    //         // if (!extraParam || (typeof extraParam == "object" && (!extraParam.trigger_type || extraParam.trigger_type.indexOf(scripts[i].trigger_type) > -1)) && scripts[i].active) {
+    //         try {
+    //             form.setForm(formContent);
+    //             // @todo once we get support for column name to be watched from db will enable this way
+    //             // if (extraParam.trigger_type == 363) {
+    //             //     FormUtil.onChange(onChange, column);
+
+    //             //     function onChange(newVal, oldVal){
+    //             //         eval(scripts[i].script);
+    //             //     }
+    //             // } else {
+    //             //     eval(scripts[i].script);
+    //             // }
+    //             // eval(scripts[i].script);
+
+    //             const s = PrefixScript(scripts[i]);
+    //             console.log(s);
+    //             eval(s);
+
+    //             formContent = form.getForm(true);
+    //             RemoveError(scripts[i]);
+    //         } catch (err) {
+    //             InjectError(scripts[i], err);
+    //             console.log("%c🍺 Not valid Script", "color: #49ba8e; font-size:20px;");
+    //             console.log("%cError =======> " + err, "color: '#49ba8e'; font-size:14px;");
+    //             console.log("%cScript ======> " + scripts[i].script, "color: blue; font-size:14px;");
+    //             // console.log(scripts[i].name + ' - ' + err);
+    //         }
+    //         // }
+    //     };
+    //     // return methods[scripts[0].name];
+    //     methods[i]({ formContent, FormUtils });
+    // }
 
     return formContent;
 }
