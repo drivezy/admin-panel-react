@@ -23,7 +23,9 @@ export default class FormUtil {
      * @param  {object} {column - columns object
      * @param  {object} ...event}
      */
-    static OnChangeListener({ column, ...event }) {
+    static OnChangeListener({ column, value, ...event }) {
+        console.log('latest value',  value);
+        self.form.data[column.name] = value;
         const callback = onChangeListeners[column.path];
         if (typeof callback == 'function') {
             callback(event, column);

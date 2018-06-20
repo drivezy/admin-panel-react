@@ -377,7 +377,7 @@ th{
 
 .form-control{
     @include themify($themes){
-        background-color: themed('dropdownInputBackground');
+        // background-color: themed('dropdownInputBackground');
     }
 }
 

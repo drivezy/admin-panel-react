@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 
 import Select, { Async } from 'react-select';
-import 'react-select/dist/react-select.css';
+// import 'react-select/dist/react-select.css';
 // import Async from 'react-select';
 
 import { Get } from './../../../../Utils/http.utils';
