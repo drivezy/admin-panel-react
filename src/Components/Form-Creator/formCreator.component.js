@@ -27,6 +27,8 @@ import ImageUpload from './../Forms/Components/Image-Upload/imageUpload.componen
 import FormSettings from './../Form-Settings/FormSettings.component';
 import ScriptInput from './../Forms/Components/Script-Input/scriptInput.component';
 
+import { SubscribeToEvent } from './../../Utils/stateManager.utils';
+
 import FormUtils from './../../Utils/form.utils';
 import { GetUrlForFormCreator } from './../../Utils/generic.utils';
 
@@ -221,7 +223,6 @@ const formElements = props => {
                         } else if (typeof preference == 'string') {
                             shouldColumnSplited = preference.includes('s-split-') ? true : preference.includes('e-split-') ? false : shouldColumnSplited;
                         }
-                        console.log(column);
                         if (column && (IsUndefined(column.visibility) || column.visibility)) {
                             return (
                                 <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
@@ -396,6 +397,9 @@ export default class FormCreator extends Component {
             payload: this.props.payload,
             fileUploads: []
         }
+
+        this.formUpdated.bind(this);
+        SubscribeToEvent({ eventName: 'formChanged', callback: this.formUpdated });
     }
 
     async componentDidMount() {
@@ -410,6 +414,10 @@ export default class FormCreator extends Component {
         //     }
         // }
 
+    }
+
+    formUpdated = form => {
+        this.setState({ form });
     }
 
     closeModal = () => {
