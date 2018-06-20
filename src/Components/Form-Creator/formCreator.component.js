@@ -69,7 +69,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
                         FormUtils.OnChangeListener({ column, value: event.target.value, ...event });
                         props.handleChange(event, args);
                     }}
-                    autoComplete={false}
+                    autoComplete="off"
                     value={values[column.name]}
                 />
             )}

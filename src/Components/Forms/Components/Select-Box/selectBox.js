@@ -94,39 +94,9 @@ export default class SelectBox extends Component {
                 });
 
                 callback(options);
-
-                // this.props.onChange(options);
-
             }
         }
-        
-        // else if (value) {
-        //     let preloadUrl = async + '?query=' + index + '=' + value
-        //     const result = await Get({ url: preloadUrl, urlPrefix: 'https://newadminapi.justride.in/' });
-
-        //     if (result.success) {
-
-        //         console.log(result);
-
-        //         let options = result.response.map((entry) => {
-        //             let option = entry;
-        //             option.value = option.id;
-        //             option.label = option.name;
-        //             return option
-        //         });
-
-        //         console.log(options)
-
-        //         // this.setState({ value: options.pop() });
-
-        //         callback(options);
-        //         // callback(null, {
-        //         //     options
-        //         // });
-
-        //         // this.props.onChange(result.response[0]);
-        //     }
-        // }
+      
     }
 
     render() {
