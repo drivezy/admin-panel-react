@@ -23,7 +23,7 @@ import ToastNotifications from './../../Utils/toast.utils';
 import './DetailIncludes.css';
 
 let shouldComponentWillReceivePropsRun = true;
-export default class DetailPortlet extends Component {
+export default class DetailIncludes extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -50,7 +50,7 @@ export default class DetailPortlet extends Component {
      * Iterate through each tab, 
      * Makes api call for individual tab and callback
      * @param {object} props
-     * @memberof DetailPortlet
+     * @memberof DetailIncludes
      */
     buildTabData = async (props) => {
         // @TODO get Active tab and load that first
@@ -200,125 +200,6 @@ export default class DetailPortlet extends Component {
 
         )
     }
-
-
-
-    // @TODO keeping old code temporarily... will remove later
-    // /**
-    //  * splits includes on comma and iterates through them to add extra properties to each tab
-    //  * @param  {object} props 
-    //  */
-    // buildTabData = (props) => {
-    //     // 
-    //     const data = props.tabs;
-    //     const hash = window.location.hash;
-
-    //     // this.resolve = [];
-    //     const includes = data.includes.split(",");
-
-    //     this.preferences = {};
-    //     this.state.tabContent = [];
-    //     for (const i in includes) {
-    //         const tab = {};
-    //         const inclusions = includes[i].split(".");
-    //         const index = data.starter + "." + inclusions[0];
-    //         const relationship = data.relationship[index];
-    //         const configure = data.dictionary[index];
-
-    //         tab.listName = index + ".list";
-    //         tab.modelName = index + ".form"; // earlier formName in old panel
-    //         // tab.formName = index + ".form"; // earlier formName in old panel
-
-    //         tab.relationship = relationship;
-    //         tab.dataModel = relationship.related_model; // new entry
-    //         if (relationship.related_model && relationship.related_model.route_name) {
-    //             tab.module = relationship.related_model.route_name.replace('api/admin/', '');
-    //         }
-
-    //         tab.name = relationship.alias_name;
-    //         tab.image = relationship.image;
-    //         tab.path = relationship.route_name;
-
-    //         tab.index = index; // earlier index in old panel
-    //         if (hash.includes(index)) {
-    //             this.state.activeTab = parseInt(i);
-    //         }
-    //         // index == 
-    //         tab.identifier = inclusions[0];
-    //         tab.preference = "";
-    //         tab.fixedParams = data.fixedParams;
-    //         tab.refreshContent = data.refreshContent; //  function to refresh whole detail content
-    //         tab.scripts = [];
-
-    //         // this.formPreferences = []; // @TODO seems useless, remove line after sometime, 
-
-    //         // check if there are other includes of the same identifier
-    //         let finalIncludes = includes[i];
-    //         for (const j in includes) {
-    //             if (includes[i] != includes[j]) {
-    //                 if (includes[j].split(".")[0] == inclusions[0]) {
-    //                     finalIncludes += "," + includes[j];
-    //                     delete includes[j];
-    //                 }
-    //             }
-    //         }
-
-    //         const params = {
-    //             includes: CreateInclusions(finalIncludes), starter: data.starter, dictionary: {}
-    //         };
-
-    //         const dictionary = params.includes.split(",");
-    //         for (const k in dictionary) {
-    //             const dicIndex = data.starter + "." + dictionary[k];
-    //             params.dictionary[dicIndex] = data.dictionary[dicIndex];
-    //         }
-    //         params.relationship = data.relationship;
-
-    //         // list of columns of all included models, used to configure view columns
-    //         const par = JSON.parse(JSON.stringify(params));
-    //         // const par = { ...{}, ...params };
-    //         tab.columns = GetColumnsForDetail(par);
-    //         // tab.columns = GetColumnsForListing(params);
-    //         // tab.columns = MenuService.getColumns(params);
-
-    //         params.includes = inclusions[0];
-    //         params.dictionary = {};
-    //         params.dictionary[index] = configure;
-    //         params.excludeStarter = 1;
-
-    //         // list of columns only related to particular model, used to configure generic forms
-    //         tab.configure = GetColumnsForListing({ ...params });
-
-    //         relationship.actions.map((action) => (
-    //             action.callback = tab.refreshContent
-    //         ));
-
-    //         tab.nextActions = relationship.actions; // generic actions (can be predefined or custom ones)
-    //         tab.preDefinedmethods = data.preDefinedmethods;
-    //         tab.methods = RegisterMethod(tab.nextActions);
-
-    //         // @TODO script incjection is disabled as of now
-    //         // var scripts = InjectScriptFactory.returnMatchingScripts({
-    //         //     preference: index, scripts: this.responseArray.scripts, searchConstraint: "startsWith"
-    //         // });
-    //         // Array.prototype.push.apply(tab.scripts, scripts);
-
-    //         this.preferences[tab.identifier] = relationship.preferences[tab.listName] ? JSON.parse(relationship.preferences[tab.listName]) : null;
-
-    //         // preference for form of particular tab
-    //         tab.formPreference = relationship.preferences[tab.modelName] ? JSON.parse(relationship.preferences[tab.modelName]) : null;
-
-    //         tab.selectedColumns = this.preferences[tab.identifier];
-    //         // list of selected column preference
-    //         tab.finalColumns = CreateFinalColumns(tab.columns, this.preferences[tab.identifier], params.relationship);
-    //         this.state.tabContent.push(tab);
-    //     }
-
-    //     const tabContent = this.state.tabContent;
-    //     this.setState({ tabContent });
-    //     // this.setState({})
-    // }
-
 
     rowOptions = [{
         id: 0,

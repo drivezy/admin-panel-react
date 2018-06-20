@@ -60,33 +60,33 @@ export default class DetailPortlet extends Component {
                 <Card>
                     <CardBody>
 
-                        <Row>
-                            {
-                                finalColumns.map((selectedColumn, key) => {
-                                    const html =
-                                        <Row className="detail-entry" >
-                                            <Col>
-                                                <strong>
-                                                    {selectedColumn.display_name}
-                                                </strong>
+                        {/* <Row> */}
+                        {
+                            finalColumns.map((selectedColumn, key) => {
+                                const html =
+                                    <Row className="detail-entry" >
+                                        <Col>
+                                            <strong>
+                                                {selectedColumn.display_name}
+                                            </strong>
 
-                                            </Col>
-                                            <Col>
-                                                <span className="pull-right"> {RowTemplate({ selectedColumn, listingRow })}</span>
-                                                {/* <span className="pull-right">{listingRow[selectedColumn.name]}</span> */}
-                                            </Col>
-                                        </Row>
-
-                                    return (
-                                        selectedColumn &&
-                                        // selectedColumn && selectedColumn.column_type &&
-                                        <Col className="gray-border-bottom padding-bottom-4 padding-top-4" key={key} xs={selectedColumn.split ? '6' : '12'}>
-                                            <RightClick key={key} renderTag="div" rowOptions={this.rowOptions} html={html} listingRow={listingRow} selectedColumn={selectedColumn} starter={starter}></RightClick>
                                         </Col>
-                                    )
-                                })
-                            }
-                        </Row>
+                                        <Col>
+                                            <span className="pull-right"> {RowTemplate({ selectedColumn, listingRow })}</span>
+                                            {/* <span className="pull-right">{listingRow[selectedColumn.name]}</span> */}
+                                        </Col>
+                                    </Row>
+
+                                return (
+                                    selectedColumn &&
+                                    // selectedColumn && selectedColumn.column_type &&
+                                    <Col className="gray-border-bottom padding-bottom-4 padding-top-4" key={key} xs={selectedColumn.split ? '6' : '12'}>
+                                        <RightClick key={key} renderTag="div" rowOptions={this.rowOptions} html={html} listingRow={listingRow} selectedColumn={selectedColumn} starter={starter}></RightClick>
+                                    </Col>
+                                )
+                            })
+                        }
+                        {/* </Row> */}
 
                     </CardBody>
                 </Card>

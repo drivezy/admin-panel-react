@@ -2,11 +2,11 @@
 
 .detail-includes {
     .card-body {
+        padding: 0px;
         @include themify($themes){
             background-color: themed('detailsBackground');
             color: themed('textSecondary');
         }
-        padding: 6px 8px;
         .nav{
             &.nav-tabs{
                 li.nav-item{
