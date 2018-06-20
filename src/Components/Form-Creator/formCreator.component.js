@@ -58,12 +58,12 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // Static Ends
 
         // Number
-        107: <Field autoComplete="off" className="form-control" type="number" name={column.name} placeholder={`Enter ${column.display_name}`} />,
+        2: <Field autoComplete="off" className="form-control" type="number" name={column.name} placeholder={`Enter ${column.display_name}`} />,
         // Number Ends
 
         // 108: <Field disabled={column.disabled} id={column.name} onChange={({ ...args }) => FormUtils.OnChangeListener(args)} name={column.name} className={`form-control ${props.errors[column.index] && props.touched[column.index] ? 'is-invalid' : ''}`} type="text" placeholder={`Enter ${column.name}`} />,
 
-        108: <Field
+        1: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
                 <input name={column.name} className="form-control" rows="3"
@@ -97,7 +97,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // Switch Ends
 
         // Boolean Select
-        111: <Field
+        5: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
                 <SelectBox name={column.name} onChange={props.setFieldValue} value={values[column.name]} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
@@ -106,7 +106,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // Boolean Ends
 
         // List Select with options from api
-        116: <Field
+        7: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
                 <ListSelect column={column} name={column.name} onChange={props.setFieldValue} model={values[column.name]} />
@@ -124,7 +124,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // List Ends
 
         // DatePicker
-        109: <Field
+        3: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
                 <DatePicker single={true} name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
@@ -133,7 +133,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // DatePicker Ends
 
         // Single DatePicker with Timepicker 
-        110: <Field
+        4: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
                 <DatePicker single={true} timePicker={true} name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
