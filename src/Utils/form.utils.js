@@ -21,7 +21,9 @@ export default class FormUtil {
      * @param  {object} {column - columns object
      * @param  {object} ...event}
      */
-    static OnChangeListener({ column, ...event }) {
+    static OnChangeListener({ column, value, ...event }) {
+        console.log('latest value',  value);
+        self.form.data[column.name] = value;
         const callback = onChangeListeners[column.path];
         if (typeof callback == 'function') {
             callback(event, column);
@@ -38,7 +40,7 @@ export default class FormUtil {
         }
         return document.getElementById(column);
     };
-    
+
     /**
      * Used to change page name
      * @param  {string} name
@@ -175,8 +177,8 @@ export default class FormUtil {
      */
     static GetFormValue(clearFormValue) {
         const form = self.form;
-        self.form = {};
-        self.onChangeListeners = {};
+        // self.form = {};
+        // self.onChangeListeners = {};
         return form;
     }
 

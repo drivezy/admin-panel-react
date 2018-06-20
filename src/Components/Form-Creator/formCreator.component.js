@@ -66,9 +66,10 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
             render={({ field /* _form */ }) => (
                 <input name={column.name} className="form-control" rows="3"
                     onChange={(event, ...args) => {
-                        FormUtils.OnChangeListener({ column, ...event });
+                        FormUtils.OnChangeListener({ column, value: event.target.value, ...event });
                         props.handleChange(event, args);
                     }}
+                    autoComplete={false}
                     value={values[column.name]}
                 />
             )}
@@ -151,7 +152,14 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         6: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <ReferenceInput column={column} name={column.name} onChange={props.setFieldValue} model={values[column.name]} />
+                <ReferenceInput column={column} name={column.name}
+                    // onChange={props.setFieldValue}
+                    onChange={(event, ...args) => {
+                        FormUtils.OnChangeListener({ column, value: args[0], ...event });
+                        props.setFieldValue(event, args[0]);
+                    }}
+                    // onChange={({ ...args }) => { FormUtils.OnChangeListener(args); props.setFieldValue(args); }}
+                    model={values[column.name]} />
             )}
         />,
         // Reference Ends

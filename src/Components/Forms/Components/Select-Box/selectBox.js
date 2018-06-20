@@ -5,7 +5,8 @@ import React, { Component } from 'react';
 import './selectBox.css';
 
 import Select, { Async } from 'react-select';
-import 'react-select/dist/react-select.css';
+import AsyncSelect from 'react-select/lib/Async';
+// import 'react-select/dist/react-select.css';
 
 import { Get } from './../../../../Utils/http.utils';
 import { IsObjectHaveKeys } from './../../../../Utils/common.utils';
@@ -62,33 +63,28 @@ export default class SelectBox extends Component {
         if (!value) {
             return;
         }
-        this.setState({ value });
+
+        // this.state.value = value.id;
+        this.state.value = value;
+        // this.setState({ value: value.id });
 
         if (typeof onChange == 'function') {
             const finalValue = !field ? value[stateField] : value;
-            onChange(finalValue, name);
+            // onChange(finalValue, name);
+            onChange(name, finalValue.id);
         }
     }
 
     getOptions = async (input, callback) => {
         const { async, queryField, value, index } = this.props;
 
+        console.log(this);
+
         // For first time match the id with provided value to preselect the field 
         if (input) {
             const url = async + '?query=' + queryField + ' LIKE \'%' + input + '%\'';
-            const result = await Get({ url: url });
+            const result = await Get({ url: url, urlPrefix: 'https://newadminapi.justride.in/' });
             if (result.success) {
-                callback(null, {
-                    options: result.response
-                });
-            }
-        } else if (value) {
-            let preloadUrl = async + '?query=' + index + '=' + value
-            const result = await Get({ url: preloadUrl, urlPrefix: 'https://newadminapi.justride.in/' });
-
-            if (result.success) {
-
-                console.log(result);
 
                 let options = result.response.map((entry) => {
                     let option = entry;
@@ -97,36 +93,68 @@ export default class SelectBox extends Component {
                     return option
                 });
 
-                console.log(options)
+                callback(options);
 
-                callback(null, {
-                    options
-                });
+                // this.props.onChange(options);
 
-                this.props.onChange(result.response[0]);
             }
         }
+        
+        // else if (value) {
+        //     let preloadUrl = async + '?query=' + index + '=' + value
+        //     const result = await Get({ url: preloadUrl, urlPrefix: 'https://newadminapi.justride.in/' });
+
+        //     if (result.success) {
+
+        //         console.log(result);
+
+        //         let options = result.response.map((entry) => {
+        //             let option = entry;
+        //             option.value = option.id;
+        //             option.label = option.name;
+        //             return option
+        //         });
+
+        //         console.log(options)
+
+        //         // this.setState({ value: options.pop() });
+
+        //         callback(options);
+        //         // callback(null, {
+        //         //     options
+        //         // });
+
+        //         // this.props.onChange(result.response[0]);
+        //     }
+        // }
     }
 
     render() {
         const { async, getOptions, multi, placeholder } = this.props;
         const { value, options, field, valueKey } = this.state;
         let elem;
+        console.log(value);
         if (async) {
-            elem = <Async
+            elem = <AsyncSelect
                 name="form-field-name"
-                value={IsObjectHaveKeys(value) ? value : undefined}
+                // value={value}
+                // value={(typeof value != 'object' || IsObjectHaveKeys(value)) ? value : undefined}
+                value={value}
+                // defaultValue={value}
                 loadOptions={this.getOptions}
                 onChange={this.handleChange}
-                labelKey={field}
-                valueKey={valueKey}
+                // onInputChange={this.handleChange}
+                defaultOptions
+                // labelKey={field}
+                // valueKey={valueKey}
                 placeholder={placeholder}
                 multi={multi}
             />
         } else if (getOptions) {
-            elem = <Async
+            elem = <AsyncSelect
                 name="form-field-name"
-                value={IsObjectHaveKeys(value) ? value : undefined}
+                // value={value}
+                value={(typeof value != 'object' || IsObjectHaveKeys(value)) ? value : undefined}
                 loadOptions={getOptions}
                 onChange={this.handleChange}
                 labelKey={field}
@@ -137,7 +165,8 @@ export default class SelectBox extends Component {
         } else {
             elem = <Select autoFocus={false}
                 name="form-field-name"
-                value={IsObjectHaveKeys(value) ? value : undefined}
+                // value={value}
+                value={(typeof value != 'object' || IsObjectHaveKeys(value)) ? value : undefined}
                 onChange={this.handleChange}
                 options={options}
                 labelKey={field}
