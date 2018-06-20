@@ -39,11 +39,11 @@ export async function ProcessForm({ form, scripts }) {
         id: 1,
         script: `
 
-        if(form.data['column_type_id'] == 5 || form.data['column_type_id'] == 6) {
-            FormUtils.SetVisible('reference_model_id', true);
-        } else { 
-            FormUtils.SetVisible('reference_model_id', false);
-        }
+        // if(form.data['column_type_id'] == 5 || form.data['column_type_id'] == 6) {
+        //     FormUtils.SetVisible('reference_model_id', true);
+        // } else { 
+        //     FormUtils.SetVisible('reference_model_id', false);
+        // }
 
         // console.log(form.dictionary['reference_model_id'])
             
@@ -56,13 +56,17 @@ export async function ProcessForm({ form, scripts }) {
         id: 2,
         script: `    
         // alert('dfbj');
-        FormUtils.onChange({ column: 'description', callback: (event, column)=> {
-            console.log('changed', form, column);
-            if(form.data['description'] == 5 || form.data['description'] == 6) {
+        FormUtils.onChange({ column: 'reference_model_id', callback: (event, column)=> {
+            const value = event.target.value;
+            console.log('changed', value, form.data);
+            
+            if(value == 5 || value == 6) {
                 FormUtils.SetVisible('reference_model_id', true);
             } else { 
                 FormUtils.SetVisible('reference_model_id', false);
             }
+
+            FormUtils.UpdateFormObject();
         } })
 
         `

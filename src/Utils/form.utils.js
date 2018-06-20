@@ -1,4 +1,6 @@
 import { IsObjectHaveKeys } from './common.utils';
+import { StoreEvent } from './stateManager.utils';
+
 let self = {};
 let onChangeListeners = {};
 
@@ -38,7 +40,7 @@ export default class FormUtil {
         }
         return document.getElementById(column);
     };
-    
+
     /**
      * Used to change page name
      * @param  {string} name
@@ -211,5 +213,10 @@ export default class FormUtil {
         // $injector.invoke(function ($compile) {
         //     $compile(input)($scope);
         // });
+    }
+
+
+    static UpdateFormObject() {
+        StoreEvent({ eventName: 'formChanged', data: self.form });
     }
 }
