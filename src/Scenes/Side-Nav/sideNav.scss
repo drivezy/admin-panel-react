@@ -24,6 +24,7 @@
                 padding: 0px;
                 .menu-item {
                     .menu-label {
+                        border-radius: 0px;
                         padding: 8px 12px;
                     }
                 }
@@ -102,7 +103,7 @@
                     }
                     &:hover {
                         @include themify($themes) {
-                            border-radius: themed('menuLinkBorder');
+                            // border-radius: themed('menuLinkBorder');
                             background: themed('hoverColor');
                             color: themed('linkHover');
                             border-left: themed('sideBorder');

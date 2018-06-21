@@ -24,39 +24,45 @@
             border: none;
             box-shadow: none;
             background: transparent;
-            &:hover {
-                // border: 1px solid whitesmoke;
-                background: none;
+            background: none;
+            &.btn-secondary{
+                background: none!important;
+            }            
+            &:hover,
+            &:active {
+                // background: none;
+                background: none!important;
+                box-shadow: none;
+                .user-profile {
+                    border-color: #37b320;
+                }
             }
-        }
-    }
-    .user-profile {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 32px;
-        height: 32px; // border: 1px solid #3b4c5d;
-        border-radius: 3px;
-        // overflow:hidden;
-        overflow: hidden;
-        &.nil {
-            border: 1px solid #f1f1f1;
-            border-radius: 50%;
-            background: #f9f9f9;
-            color: #848484;
-        }
-        .profile-image {
-            color: #717171;
-            // padding: 3px;
-            width: 32px;
-            height: 32px;
-            transition: all 200ms;
-            background-size: cover !important;
-            background-repeat: no-repeat !important;
-            background-clip: padding-box;
-            border:1px solid #dadada;
-            img {
-                width: 100%;
+            .user-profile {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 32px;
+                height: 32px; // border: 1px solid #3b4c5d;
+                border-radius: 3px; // overflow:hidden;
+                overflow: hidden;
+                border: 1px solid #dadada;
+                &.nil {
+                    border: 1px solid #f1f1f1;
+                    border-radius: 50%;
+                    background: #f9f9f9;
+                    color: #848484;
+                }
+                .profile-image {
+                    color: #717171; // padding: 3px;
+                    width: 32px;
+                    height: 32px; // transition: all 200ms;
+                    // background-size: cover !important;
+                    // background-repeat: no-repeat !important;
+                    // background-clip: padding-box;
+                    img {
+                        width: 100%;
+                    }
+                }
             }
         }
     }

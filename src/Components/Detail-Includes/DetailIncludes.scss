@@ -15,7 +15,7 @@
                         &.active {
                             border-bottom: 2px solid #1b62ab;
                             @include themify($themes) {
-                                background-color: themed('hoverColor');
+                                // background-color: themed('hoverColor');
                                 border-color: themed('themeBorder');
                             }
                         }
@@ -47,7 +47,7 @@
             .tooltip-element {
                 cursor: pointer;
                 padding: 7px 10px;
-                border-radius: 3px; // background: #4f6070;
+                // border-radius: 3px; // background: #4f6070;
                 // color: white;
                 margin: 0px 2px; // &:hover {
                 //     background: #4a6a88;

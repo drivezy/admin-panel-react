@@ -15,7 +15,7 @@ import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import ImpersonateFrom from './../../Components/Impersonate-Form/impersonateForm.component';
 import ToastNotifications from '../../Utils/toast.utils';
 import { ConfirmUtils } from './../../Utils/confirm-utils/confirm.utils';
-import { LoaderComponent,LoaderUtils } from './../../Utils/loader.utils';
+import { LoaderComponent, LoaderUtils } from './../../Utils/loader.utils';
 
 export default class PageNav extends Component {
     constructor(props) {
@@ -117,14 +117,12 @@ export default class PageNav extends Component {
                     </div>
                 }
                 <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-                    <DropdownToggle color="primary">
-
+                    <DropdownToggle>
                         <div className="user-profile">
                             <div className="profile-image">
                                 {this.state.currentUser.photograph ? <img src={`${this.state.currentUser.photograph}`} /> : <i className="fa fa-user-o" aria-hidden="true"></i>}
                             </div>
                         </div>
-
                     </DropdownToggle>
 
                     <DropdownMenu right>
