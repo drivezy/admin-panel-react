@@ -52,8 +52,15 @@ export default class ReferenceInput extends Component {
             url = route;
         }
 
-        if (model) {
-            let preloadUrl = url + '?query=id=' + model
+        this.setState({ url });
+
+        if (model && url) {
+            let preloadUrl;
+            if (url.includes('query')) {
+                preloadUrl = url + ' and id=' + model
+            } else {
+                preloadUrl = url + '?query=id=' + model
+            }
 
             const result = await Get({ url: preloadUrl, urlPrefix: GLOBAL.ROUTE_URL });
 
@@ -68,7 +75,7 @@ export default class ReferenceInput extends Component {
 
                 // console.log(options)
 
-                this.setState({ url: url, value: options.pop() });
+                this.setState({ value: options.pop() });
             }
         } else {
             this.setState({ url });
