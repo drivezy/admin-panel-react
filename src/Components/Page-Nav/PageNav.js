@@ -15,6 +15,7 @@ import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import ImpersonateFrom from './../../Components/Impersonate-Form/impersonateForm.component';
 import ToastNotifications from '../../Utils/toast.utils';
 import { ConfirmUtils } from './../../Utils/confirm-utils/confirm.utils';
+import { LoaderComponent,LoaderUtils } from './../../Utils/loader.utils';
 
 export default class PageNav extends Component {
     constructor(props) {
@@ -104,12 +105,15 @@ export default class PageNav extends Component {
 
         return (
             <div className="page-nav flex">
+                <LoaderComponent ref={(elem) => LoaderUtils.RegisterLoader(elem)} />
+
+
                 {
                     currentUser.impersonated &&
                     <div className="impersonating-link">
                         <span className="link" onClick={this.deimpersonateUser}>
                             Deimpersonate
-                    </span>
+                        </span>
                     </div>
                 }
                 <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>

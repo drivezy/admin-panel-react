@@ -3,6 +3,7 @@
     position: relative;
     margin-top: 5px;
     right: 21px;
+    align-items: center;
     div.impersonating-link {
         display: flex;
         flex-direction: column;
@@ -35,7 +36,8 @@
         align-items: center;
         width: 32px;
         height: 32px; // border: 1px solid #3b4c5d;
-        border-radius: 50%;
+        border-radius: 3px;
+        // overflow:hidden;
         overflow: hidden;
         &.nil {
             border: 1px solid #f1f1f1;
@@ -45,13 +47,14 @@
         }
         .profile-image {
             color: #717171;
-            padding: 3px;
+            // padding: 3px;
             width: 32px;
             height: 32px;
             transition: all 200ms;
             background-size: cover !important;
             background-repeat: no-repeat !important;
             background-clip: padding-box;
+            border:1px solid #dadada;
             img {
                 width: 100%;
             }
