@@ -107,14 +107,12 @@ export default class IndexRouter extends Component {
             <div>
                 <HotKeys focused={true} attach={window} keyMap={this.keyMap} handlers={this.handlers}>
                     <div className="app-container">
-                        {
-                            menus && menus.length &&
-                            <Landing match={match} menus={menus} />
-                        }
+                        {/* Landing Is the Basic Layout that builds the routes and the layout */}
+                        <Landing match={match} menus={menus} />
+                        {/* Landing Ends */}
                     </div>
                 </HotKeys>
             </div>
-
         )
     }
 }

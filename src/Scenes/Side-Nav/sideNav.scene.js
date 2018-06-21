@@ -78,7 +78,7 @@ export default class Sidenav extends Component {
                                         <div className="menu-item" key={key} onClick={() => this.toggleMenu(menu)}>
                                             <div className="menu-label">
                                                 <div className="menu-icon">
-                                                    <i className={`menu-icon fa ${menu.image}`}></i>
+                                                    <i className={`menu-icon fa ${menu.image?menu.image:'fa-flickr'}`}></i>
 
                                                 </div>
                                                 <div className="item-label `${visible ? 'menu-visible' : 'menu-hide'}`">

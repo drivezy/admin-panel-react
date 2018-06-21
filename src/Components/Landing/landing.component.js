@@ -36,6 +36,12 @@ export default class LandingApp extends Component {
         }
     }
 
+    componentDidUpdate = (prevProps) => {
+        if (prevProps.menus != this.props.menus) {
+            this.setState({ menus: this.props.menus });
+        }
+    }
+
     onCollapse = (sideNavExpanded) => {
         this.setState({ sideNavExpanded: !sideNavExpanded });
     }
