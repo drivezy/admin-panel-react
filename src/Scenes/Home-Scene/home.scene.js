@@ -14,7 +14,7 @@ import TimePicker from 'rc-time-picker';
 import Select from 'react-select';
 
 import FormUtil from './../../Utils/form.utils';
-
+import Timeago from  './../../Components/Time-Ago/timeAgo.Component.js';
 export default class Home extends Component {
     render() {
         return (
@@ -50,7 +50,7 @@ export default class Home extends Component {
 
     render() {
         const { align } = this.state;
-
+         const time='20180105';
 
         return (
             <div className="home-scene">
@@ -62,7 +62,7 @@ export default class Home extends Component {
                     onChange={this.exp}
                     onType={(data) => console.log(data)}
                 />
-
+               < Timeago time={time}/>
             </div>
         );
     }
