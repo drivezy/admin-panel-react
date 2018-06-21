@@ -78,6 +78,8 @@ export class LoaderUtils {
     }
 
     static endLoader() {
-        this._currentGlobalLoader.endLoader();
+        if(this._currentGlobalLoader) {
+            this._currentGlobalLoader.endLoader();
+        }
     }
 }
