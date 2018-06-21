@@ -3,7 +3,7 @@
     .card {
         overflow: hidden;
         @include themify($themes) {
-            background-color: themed('detailBackgroundCard');
+            // background-color: themed('detailBackgroundCard');
             color: themed('textSecondary');
         }
         .card-body {

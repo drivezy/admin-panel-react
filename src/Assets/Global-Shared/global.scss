@@ -237,16 +237,22 @@ body {
 }
 
 .global-loader {
-    position: fixed;
-    height: 100%;
-    width: 100vw;
-    background: rgba(0, 0, 0, .4); // color: #fea658;
-    font-size: 50px;
+    // position: fixed;
+    // height: 100%;
+    // width: 100vw;
+    // background: rgba(0, 0, 0, .4); // color: #fea658;
+    // font-size: 0px;
     text-align: center;
     top: 0; // @extend .flex-column;
     .drivezy-loader-gif {
         width: 250px;
     }
+    svg{
+        width: 75px;
+        height: 50px;
+        margin: 0px;
+        display:inline-block;
+      }
 }
 
 /** 
@@ -340,7 +346,7 @@ Non critical css goes here
 
 .btn-secondary {
     @include themify($themes) {
-        border: themed('themeBorder');
+        border-color: themed('themeBorder');
         background: themed('secondaryThemeDark') !important;
         color: themed('whiteColor');
     }

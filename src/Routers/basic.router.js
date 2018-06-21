@@ -26,7 +26,6 @@ import { Spotlight } from './../Components/Spotlight-Search/spotlightSearch.comp
 /** Util */
 import SettingsUtil from './../Utils/settings.utils';
 import { SubscribeToEvent } from './../Utils/stateManager.utils';
-import { LoaderComponent, LoaderUtils } from './../Utils/loader.utils';
 import { ConfirmModalComponent, ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
 /** Util Ends*/
 
@@ -62,7 +61,6 @@ export default class BasicRoute extends Component {
                 </Router>
                 <ToastContainer />
                 <ModalWrapper ref={(elem) => ModalManager.registerModal(elem)} />
-                <LoaderComponent ref={(elem) => LoaderUtils.RegisterLoader(elem)} />
                 <ConfirmModalComponent ref={(elem) => ConfirmUtils.RegisterConfirm(elem)} />
                 <Spotlight ref={(elem) => SettingsUtil.registerModal(elem)} />
             </div>
