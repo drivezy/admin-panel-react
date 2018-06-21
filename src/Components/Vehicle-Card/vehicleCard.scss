@@ -20,6 +20,18 @@
         background:themed('cardBackground');
     }
 
+    .row-data{
+        display: flex;
+        justify-content: space-between;
+        margin:10px 0px;
+        .field-label{
+
+        }
+        .field-data{
+
+        }
+    }
+
 }
 
 .gray-border-bottom {

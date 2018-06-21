@@ -35,48 +35,51 @@ export default class VehicleCard extends Component {
                 <CardImg className="" width="100%" src={`${vehicle.car.image}`}></CardImg>
                 <CardBody>
                     <CardTitle className="vehicle-detail-header">Vehicle Detail</CardTitle>
-                    <Row className="">
-                    </Row>
-                    <Row className="">
-                        <Col sm="6">
-                            <p>Caution Amount</p>
-                        </Col>
-                        <Col sm="6">
-                            <p className="text-right" >₹ {vehicle.car.caution_amount}</p>
-                        </Col>
-                    </Row>
-                    <Row className="">
-                        <Col sm="6">
-                            <p>Min Booking Duration</p>
-                        </Col>
-                        <Col sm="6">
-                            <p className="text-right">{vehicle.car.min_period / 60} hr</p>
-                        </Col>
-                    </Row>
-                    <Row className="">
-                        <Col sm="6">
-                            <p>Fuel Efficiency</p>
-                        </Col>
-                        <Col sm="6">
-                            <p className="text-right">{vehicle.car.fuel_efficiency} km/hr</p>
-                        </Col>
-                    </Row>
-                    <Row className="">
-                        <Col sm="6">
-                            <p>Extra Km Charges</p>
-                        </Col>
-                        <Col sm="6">
-                            <p className="text-right">₹ {vehicle.car.extra_km_charges}</p>
-                        </Col>
-                    </Row>
-                    <Row className="">
-                        <Col sm="6">
-                            <p>Free Km Per Hour</p>
-                        </Col>
-                        <Col sm="6">
-                            <p className="text-right">{vehicle.car.distance} km</p>
-                        </Col>
-                    </Row>
+
+                    <div className="row-data">
+                        <div className="field-label">
+                            Caution Amount
+                        </div>
+                        <div className="field-data">
+                            ₹ {vehicle.car.caution_amount}
+                        </div>
+                    </div>
+
+                    <div className="row-data">
+                        <div className="field-label">
+                            Min Booking Duration
+                        </div>
+                        <div className="field-data">
+                            {vehicle.car.min_period / 60} hr
+                        </div>
+                    </div>
+
+                    <div className="row-data">
+                        <div className="field-label">
+                            Fuel Efficiency
+                        </div>
+                        <div className="field-data">
+                            {vehicle.car.fuel_efficiency} km/hr
+                        </div>
+                    </div>
+
+                    <div className="row-data">
+                        <div className="field-label">
+                            Extra Km Charges
+                        </div>
+                        <div className="field-data">
+                            ₹ {vehicle.car.extra_km_charges}
+                        </div>
+                    </div>
+
+
+                    <div className="row-data">
+                        <div className="field-label">
+                            Free Km Per Hour
+                        </div>
+                        <div className="field-data">
+                            {vehicle.car.distance} km                        </div>
+                    </div>
                 </CardBody>
             </Card>
         )

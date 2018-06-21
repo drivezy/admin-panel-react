@@ -58,6 +58,7 @@ export default class LandingApp extends Component {
                 </div>
                 <div className={`landing-wrapper ${sideNavExpanded ? 'sidenav-open' : 'sidenav-closed'}`} id="main" style={{ height: '100%' }}>
                     <Header className={`${sideNavExpanded ? 'expanded' : 'collapsed'}`} />
+                    <div className="landing-body">
                     <Switch>
                         {
                             menus.map((menu, index) => {
@@ -98,6 +99,7 @@ export default class LandingApp extends Component {
                         {/* <Route exact path='/vehicle/:vehicleId' component={VehicleDetail} /> */}
 
                     </Switch>
+                        </div> 
                 </div>
             </div>
         )
