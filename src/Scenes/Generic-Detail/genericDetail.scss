@@ -1,22 +1,21 @@
 @import 'Assets/Global-Shared/theme.scss';
 .generic-detail-container {
-        .header {
+    .header {
         display: flex;
         justify-content: space-between;
         background: #dcdcdc7a;
         height: 40px;
         padding: 0px 4px;
         border-bottom: 1px solid #ccc9c9;
+        margin: -8px;
         .left {}
         .right {
             margin-right: 15px;
             display: flex;
             align-items: center;
-            @include themify($themes){
+            @include themify($themes) {
                 color: themed('secondaryColor');
-            }
-          
-            // .table-settings {
+            } // .table-settings {
             //     .btn {
             //         padding: 1px 5px;
             //         margin: 0px 5px;
@@ -24,11 +23,10 @@
             // }
         }
     }
-}
     .detail-content {
-        margin: 8px;
+        margin-top: 14px;
     }
     .nav-item {
         cursor: pointer;
     }
-
+}
