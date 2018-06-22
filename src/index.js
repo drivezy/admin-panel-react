@@ -8,7 +8,6 @@ import BasicRoute from './Routers/basic.router';
 
 import registerServiceWorker from './registerServiceWorker';
 
-// ReactDOM.render(<BasicRoute />, document.getElementById('admin-root'));
 ReactDOM.render(<BasicRoute />, document.getElementById('admin-root'));
 
 registerServiceWorker();

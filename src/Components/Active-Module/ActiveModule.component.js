@@ -21,17 +21,6 @@ export default class ActiveModule extends Component {
 
     componentDidMount() {
         SubscribeToEvent({ eventName: 'showMenuName', callback: this.listenMenuChange });
-        // const main = document.getElementById("main");
-
-        // if (main) {
-        //     main.addEventListener('click', () => {
-        //         if (this.state.visible) {
-        //             this.toggleNav();
-        //         }
-        //     })
-        // }
-        // this.closeNav();
-
         SubscribeToEvent({ eventName: 'toggledMenu', callback: this.toggledMenu })
     }
 
@@ -45,53 +34,8 @@ export default class ActiveModule extends Component {
         this.setState({ menus: module.menus, collapsed: false });
     }
 
-    componentWillReceiveProps(nextProps) {
-        // if (nextProps.visible != this.props.visible) {
-        //     this.setState({ visible: nextProps.visible });
-        // }
-    }
-
-    openNav = () => {
-        // const sideNav = document.getElementById("mySidenav");
-        // const main = document.getElementById("main");
-        // if (sideNav && main) {
-        //     sideNav.style.width = "250px";
-        //     main.style.marginLeft = "250px";
-        //     document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
-        // }
-    }
-
-    closeNav = () => {
-        // const sideNav = document.getElementById("mySidenav");
-        // const main = document.getElementById("main");
-        // if (sideNav && main) {
-        //     sideNav.style.width = "50px";
-        //     main.style.marginLeft = "50px";
-        //     document.body.style.backgroundColor = "white";
-        // }
-    }
-
-    operation(visible) {
-        // if (!visible) {
-        //     this.closeNav();
-        // } else {
-        //     this.openNav();
-        // }
-    }
-
-    toggleNav = (visible = this.state.visible) => {
-        // this.state.visible = !visible;
-        // this.setState({ visible: !visible });
-        // this.operation(this.state.visible);
-    }
-
     toggleMenus() {
         this.setState({ collapsed: !this.state.collapsed });
-    }
-
-    navigateTo(menu) {
-
-        // console.log(menu);
     }
 
     clickedValue = (menu) => {
@@ -102,10 +46,7 @@ export default class ActiveModule extends Component {
     }
 
     render() {
-        // const { visible } = this.state;
-        // this.operation(visible);
-        // const { menus } = this.props;
-        const { menuName } = this.state;
+        const { menuName, menus } = this.state;
 
         return (
             <div className="active-module">
@@ -122,21 +63,24 @@ export default class ActiveModule extends Component {
                     <div className="search-box-body">
                         <p className="search-hint">
                             Select a module to list menus in it or type to search all the menus
-                    </p>
-                        <div className="panel menus">
-                            <div className="panel-heading">
-                                Menus
-                            </div>
-                            <div className="panel-body">
-                                {
-                                    this.state.menus.map((menu, key) => {
-                                        return (menu.active == 1) && (menu.visibility == 1) && (<Link onClick={() => this.clickedValue(menu)} to={menu.url} className="menu-list" key={key}>
-                                            {menu.name}
-                                        </Link>)
-                                    })
-                                }
-                            </div>
-                        </div>
+                        </p>
+                        {
+                            menus.length != 0 ?
+                                <div className="panel menus">
+                                    <div className="panel-heading">
+                                        Menus
+                                    </div>
+                                    <div className="panel-body">
+                                        {
+                                            menus.map((menu, key) => (
+                                                (menu.active == 1) && (menu.visibility == 1) && (<Link onClick={() => this.clickedValue(menu)} to={menu.url} className="menu-list" key={key}>
+                                                    {menu.name}
+                                                </Link>)
+                                            ))
+                                        }
+                                    </div>
+                                </div> : null
+                        }
                     </div>
                 </div>
                 <div className="search-button">
