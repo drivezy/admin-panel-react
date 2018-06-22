@@ -23,6 +23,7 @@ export default class TableSettings extends Component {
             columns: this.props.columns,
             list: {},
             activeColumn: {},
+            showSplitFlag: this.props.showSplitFlag
         }
     }
 
@@ -31,13 +32,13 @@ export default class TableSettings extends Component {
     }
 
     toggleList = (index) => {
-        var obj = this.state.list;
+        let obj = this.state.list;
         obj[index] = !obj[index];
         this.setState({ list: obj });
     }
 
     addColumn = (column) => {
-        var selectedColumns = this.state.tempSelectedColumns;
+        let selectedColumns = this.state.tempSelectedColumns;
 
         // const regexForPickingAfterLastDot = /[^\.]+$/;
         selectedColumns.unshift({
@@ -51,7 +52,7 @@ export default class TableSettings extends Component {
     }
 
     removeColumn = (column) => {
-        var selectedColumns = this.state.tempSelectedColumns;
+        let selectedColumns = this.state.tempSelectedColumns;
 
         selectedColumns = selectedColumns.filter((entry) => (entry.column != column.column));
 
@@ -63,10 +64,10 @@ export default class TableSettings extends Component {
     }
 
     selectColumn = (column, index) => {
-        if (typeof column != 'string') {
-            column.index = index;
-            this.setState({ activeColumn: column });
-        }
+        // if (typeof column != 'string') {
+        column.position = index;
+        this.setState({ activeColumn: column });
+        // }
     }
 
     moveSelectedUp = () => {
@@ -78,21 +79,49 @@ export default class TableSettings extends Component {
     }
 
     moveSelectedItem = (key) => {
-        var activeColumn = this.state.activeColumn;
-        var index = this.state.activeColumn.index;
-        var result = changeArrayPosition(this.state.tempSelectedColumns, index, index + key)
-        activeColumn.index = result.index;
+        let activeColumn = this.state.activeColumn;
+        let { position } = this.state.activeColumn;
+        let result = changeArrayPosition(this.state.tempSelectedColumns, position, position + key)
+        activeColumn.position = result.position;
         this.setState({ tempSelectedColumns: result.array, activeColumn: activeColumn });
     }
 
     addSplit = () => {
-        var ext = Math.floor(Math.random() * 1000);
-        var selectedColumns = this.state.tempSelectedColumns;
-        selectedColumns.unshift("e-split-" + ext);
+        const { tempSelectedColumns } = this.state;
+        let ext = Math.floor(Math.random() * 1000);
+        tempSelectedColumns.push({ split: true, label: "s-split-" + ext });
 
-        selectedColumns.unshift("s-split-" + ext);
-        this.setState({ selectedColumns });
+        tempSelectedColumns.push({ split: true, label: "e-split-" + ext })
+        this.setState({ tempSelectedColumns });
     }
+
+    addHSplit = () => {
+        const { tempSelectedColumns } = this.state;
+        tempSelectedColumns.push({ split: true, label: "seperator", headingCollapsed: true, heading: "" });
+        this.setState({ tempSelectedColumns });
+    }
+
+    removeSplit = (index, item) => {
+        const { tempSelectedColumns } = this.state;
+        tempSelectedColumns.splice(index, 1);
+        let end;
+        if (item.label.split("-")[0] == "s") {
+            end = item.label.replace("s", "e");
+        } else if (item.label.split("-")[0] == "e") {
+            end = item.label.replace("e", "s");
+        }
+
+        let endIndex;
+
+        for (let i in tempSelectedColumns) {
+            if (tempSelectedColumns[i].label == end) {
+                endIndex = i;
+            }
+        }
+
+        tempSelectedColumns.splice(endIndex, 1);
+        return tempSelectedColumns;
+    };
 
 
     applyChanges = async () => {
@@ -119,13 +148,16 @@ export default class TableSettings extends Component {
     }
 
     modalWrapper() {
-        const { columns, tempSelectedColumns, activeColumn } = this.state;
+        const { columns, tempSelectedColumns, activeColumn, showSplitFlag } = this.state;
         const { source = 'module' } = this.props;
         const selectedIds = [];
 
-        for (var value of tempSelectedColumns) {
+        console.log(showSplitFlag);
+
+        for (let value of tempSelectedColumns) {
             if (typeof value != 'string') {
-                selectedIds.push(parseInt(value.column.split('.').pop()));
+                selectedIds.push(value);
+                // selectedIds.push(parseInt(value.column.split('.').pop()));
             }
         }
 
@@ -133,7 +165,7 @@ export default class TableSettings extends Component {
 
         const columnKeys = Object.keys(leftColumns);
 
-        for (var key of columnKeys) {
+        for (let key of columnKeys) {
             leftColumns[key] = leftColumns[key].filter((column) => (
                 selectedIds.indexOf(column.id) == -1
             ));
@@ -211,7 +243,21 @@ export default class TableSettings extends Component {
                         <Button color="primary" size="sm" onClick={this.moveSelectedDown}>
                             <i className="fa fa-arrow-down"></i>
                         </Button>
+
+                        {
+                            showSplitFlag == true &&
+                            <Button color="primary" size="sm" onClick={this.addSplit}>
+                                Add Split
+                            </Button>
+                        }
+                        {
+                            showSplitFlag == true &&
+                            <Button color="primary" size="sm" onClick={this.addHSplit}>
+                                H-Split
+                            </Button>
+                        }
                     </div>
+
 
                     <div className="right">
 
@@ -223,11 +269,14 @@ export default class TableSettings extends Component {
 
                                 <ListGroup className="parent-group">
                                     {
-                                        tempSelectedColumns.map((column, index) => {
-                                            return ((typeof column == 'string') ?
-                                                <ListGroupItem tag="button" action key={index}>
-                                                    ---- {column} ----
-                                        </ListGroupItem>
+                                        tempSelectedColumns.map((column, index) =>
+                                            ((column.split) ?
+                                                <ListGroupItem tag="button" action key={index} onClick={() => this.selectColumn(column, index)}>
+                                                    ---- {column.label} ----
+                                                    <span className="close margin-top-4" data-dismiss="alert" aria-label="Close" onClick={() => this.removeSplit(index, column)}>
+                                                        <i className="fa fa-times"></i>
+                                                    </span>
+                                                </ListGroupItem>
                                                 :
                                                 // Component Manages column props
                                                 <ColumnSetting
@@ -242,7 +291,7 @@ export default class TableSettings extends Component {
                                                 />
                                                 // Column Setting Ends
                                             )
-                                        })
+                                        )
                                     }
                                 </ListGroup>
 

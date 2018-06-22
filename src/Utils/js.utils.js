@@ -13,9 +13,9 @@ export function changeArrayPosition(array, from, to) {
         var temp = tempArray[from];
         tempArray[from] = tempArray[to];
         tempArray[to] = temp;
-        return { array: tempArray, index: to };
+        return { array: tempArray, position: to };
     } else {
-        return { array: tempArray, index: from };
+        return { array: tempArray, position: from };
     }
 }
 

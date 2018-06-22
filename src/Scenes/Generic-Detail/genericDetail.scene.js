@@ -149,6 +149,7 @@ export default class GenericDetail extends Component {
                                 columns={portlet.portletColumns}
                                 menuId={menuDetail.menuId}
                                 userId={currentUser.id}
+                                showSplitFlag={true}
                             // finalColumns={finalColumns}
                             />
                             : null
