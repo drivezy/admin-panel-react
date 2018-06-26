@@ -133,11 +133,9 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
     const finalColumnDefinition = [];
     let splitEnabled = false;
     // const selectedColumns = GetSelectedColumnDefinition(layout);
-
-
     for (const i in selectedColumns) {
         const selected = selectedColumns[i];
-        if (typeof (selected) == "object") {
+        if (!selected.split) {
             const dict = columns[selected.index];
             if (dict) {
                 finalColumnDefinition[i] = dict;
@@ -148,8 +146,8 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
                     finalColumnDefinition[i].filter = selected.filter;
                 }
 
-                // const relationIndex                  = dict.parent.split('.');
                 const relationIndex = dict.parent;
+
                 if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && relationship[relationIndex].hasOwnProperty('related_model')) {
                     finalColumnDefinition[i].reference_route = relationship[relationIndex].related_model.state_name;
                 }
@@ -162,18 +160,21 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
                 // }
             }
         } else {
-            finalColumnDefinition[i] = {
-                name: selected, column_type: null
-            };
+            finalColumnDefinition[i] = { ...selected, isSplit: true }
+
             splitEnabled = !splitEnabled;
-        }
+
+        };
+        // finalColumnDefinition[i] = {
+        //     name: selected, column_type: null
+        // };
 
         // if it is a seperator
         if (selected.name == "seperator") {
             finalColumnDefinition[i] = selected;
         }
-    }
 
+    }
     return finalColumnDefinition;
 }
 

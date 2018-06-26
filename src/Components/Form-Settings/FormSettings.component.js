@@ -5,8 +5,6 @@ import _ from 'lodash';
 
 import { SetPreference } from './../../Utils/preference.utils';
 
-// import { changeArrayPosition } from './../../Utils/js.utils';
-
 import { IsObjectHaveKeys } from './../../Utils/common.utils';
 import { changeArrayPosition } from './../../Utils/js.utils';
 
@@ -66,7 +64,7 @@ export default class FormSettings extends Component {
 
     selectColumn = (column, index) => {
         if (typeof column != 'string') {
-            // column.index = index;
+            column.position = index;
             this.setState({ activeColumn: column });
         }
     }
@@ -81,9 +79,11 @@ export default class FormSettings extends Component {
 
     moveSelectedItem = (key) => {
         var activeColumn = this.state.activeColumn;
-        var index = this.state.activeColumn.index;
-        var result = changeArrayPosition(this.state.tempSelectedColumns, index, index + key)
-        activeColumn.index = result.index;
+        var { position } = this.state.activeColumn;
+        var result = changeArrayPosition(this.state.tempSelectedColumns, position, position + key)
+
+        activeColumn.position = result.position;
+
         this.setState({ tempSelectedColumns: result.array, activeColumn: activeColumn });
     }
 
@@ -98,9 +98,9 @@ export default class FormSettings extends Component {
     addSplit = () => {
         const { tempSelectedColumns } = this.state;
         var ext = Math.floor(Math.random() * 1000);
-        tempSelectedColumns.unshift("e-split-" + ext);
+        tempSelectedColumns.push({ split: true, label: "s-split-" + ext });
 
-        tempSelectedColumns.unshift("s-split-" + ext);
+        tempSelectedColumns.push({ split: true, label: "e-split-" + ext });
         this.setState({ tempSelectedColumns });
     }
 
@@ -117,6 +117,7 @@ export default class FormSettings extends Component {
         tempSelectedColumns.splice(endIndex, 1);
         this.setState({ tempSelectedColumns });
     };
+
 
     applyChanges = async () => {
 
@@ -232,16 +233,23 @@ export default class FormSettings extends Component {
                                     {
                                         tempSelectedColumns.length > 0 &&
                                         tempSelectedColumns.map((column, index) =>
-                                            ((typeof column == 'string') ?
-                                                <ListGroupItem tag="button" action key={index}>
-                                                    <span>---- {column} ----</span>
+                                            ((column.split) ?
+                                                <ListGroupItem tag="button" action key={index} onClick={() => this.selectColumn(column, index)}>
+                                                    <span>---- {column.label} ----</span>
                                                     <span className="close margin-top-4" data-dismiss="alert" aria-label="Close" onClick={() => this.removeSplit(index, column)}>
                                                         <i className="fa fa-times"></i>
                                                     </span>
                                                 </ListGroupItem>
                                                 :
                                                 // Component Manages column props
-                                                <FormColumnSetting removeColumn={this.removeColumn} columns={columns} activeColumn={activeColumn} selectColumn={this.selectColumn} column={column} index={index} key={index} />
+                                                <FormColumnSetting
+                                                    removeColumn={this.removeColumn}
+                                                    columns={columns}
+                                                    activeColumn={activeColumn}
+                                                    selectColumn={this.selectColumn}
+                                                    column={column}
+                                                    index={index}
+                                                    key={index} />
                                                 // Column Setting Ends
                                             )
                                         )

@@ -14,7 +14,7 @@ import TimePicker from 'rc-time-picker';
 import Select from 'react-select';
 
 import FormUtil from './../../Utils/form.utils';
-
+import Timeago from  './../../Components/Time-Ago/timeAgo.Component.js';
 export default class Home extends Component {
 
     radios = [
@@ -34,26 +34,11 @@ export default class Home extends Component {
 
     render() {
         const { align } = this.state;
-
+         const time='20180105';
 
         return (
             <div className="home-scene">
-                {/* <CodeEditor /> */}
-                <SelectBox options={[1, 2, 3]} />
-
-                <SelectBox options={[{ name: 'Place', value: 'place' }]} label="name" />
-
-                {/* Select Box Ends */}
-
-                {/* <Select
-                    name="form-field-name"
-                    // value={1}
-                    onChange={this.handleChange}
-                    options={[{ value: 1, label: 1 }, { value: 2, label: 2 }]}
-                    field="name"
-                    autoFocus
-                    clearable
-                /> */}
+   
             </div>
         );
     }

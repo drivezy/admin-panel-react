@@ -66,6 +66,9 @@ export default class ColumnSetting extends Component {
                     <div className="item-label" onClick={() => this.props.selectColumn(column, this.props.index)} onDoubleClick={() => this.props.removeColumn(column)} >
                         {column.columnTitle ? column.columnTitle : columns[column.index].name}
                     </div>
+                    <div className="column-toggle" onClick={() => this.props.removeColumn(column)}>
+                        <i className={`fa fa-trash`}></i>
+                    </div>
                     <div className="column-toggle" onClick={this.toggleSetting}>
                         <i className={`fa ${column.expanded ? ' fa-chevron-down' : ' fa-chevron-right'}`}></i>
                     </div>
