@@ -16,22 +16,6 @@ import Select from 'react-select';
 import FormUtil from './../../Utils/form.utils';
 import Timeago from  './../../Components/Time-Ago/timeAgo.Component.js';
 export default class Home extends Component {
-    render() {
-        return (
-            <div className="home-scene">
-                {/* <CodeEditor /> */}
-                <SelectBox options={[1, 2, 3]}  />
-                <Select
-                    name="form-field-name"
-                    value={1}
-                    onChange={this.handleChange}
-                    options={[{ value: 1, label: 1 }, { value: 2, label: 2 }]}
-                    autoFocus
-                    clearable
-                />
-            </div>
-        )
-    }
 
     radios = [
         { label: 'Justify (default)' },
@@ -54,15 +38,7 @@ export default class Home extends Component {
 
         return (
             <div className="home-scene">
-                <Typeahead
-                    searchLabel={''}
-                    field="label"
-                    options={this.radios}
-                    placeholder="Choose a state..."
-                    onChange={this.exp}
-                    onType={(data) => console.log(data)}
-                />
-               < Timeago time={time}/>
+   
             </div>
         );
     }

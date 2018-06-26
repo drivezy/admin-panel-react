@@ -15,6 +15,14 @@ export default class SelectBox extends Component {
     constructor(props) {
         super(props);
         this.state = {
+
+            // 
+            // options: props.options,
+            // value: props.value,
+            // field: props.field || 'name',
+            // valueKey: props.valueKey || 'value',
+            // queryField: props.queryField
+
             ...this.returnStateObj(props)
         }
     }
@@ -32,15 +40,12 @@ export default class SelectBox extends Component {
     returnStateObj(props) {
         let options = [], value = {};
 
-        // console.log(props.options);
-
         if (Array.isArray(props.options) && typeof props.options[0] != 'object') {
             props.options.forEach(option => {
                 options.push({ label: typeof option == 'number' ? option.toString() : option, value: typeof option == 'number' ? option.toString() : option });
             });
 
             if (props.value) {
-                // ,value: typeof props.value == 'number' ? props.value.toString() : props.value 
                 value = typeof props.value == 'object' ? {} : { label: typeof props.value == 'number' ? props.value.toString() : props.value };
             }
         } else {
@@ -51,7 +56,8 @@ export default class SelectBox extends Component {
         return {
             options,
             value,
-            field: props.field || 'label',
+            label: props.label || 'label', // Label is what will be displayed of the selected option
+            field: props.field || 'name', // Field is what will be assigned  
             valueKey: props.valueKey || 'value',
             queryField: props.queryField
         }
@@ -71,14 +77,13 @@ export default class SelectBox extends Component {
         if (typeof onChange == 'function') {
             const finalValue = !field ? value[stateField] : value;
             // onChange(finalValue, name);
-            onChange(name, finalValue.id);
+            onChange(name, finalValue);
+            // onChange(name, finalValue.id);
         }
     }
 
     getOptions = async (input, callback) => {
         const { async, queryField, value, index } = this.props;
-
-        // console.log(this);
 
         // For first time match the id with provided value to preselect the field 
         if (input) {
@@ -96,59 +101,52 @@ export default class SelectBox extends Component {
                 callback(options);
             }
         }
-      
+
     }
 
     render() {
         const { async, getOptions, multi, placeholder } = this.props;
-        const { value, options, field, valueKey } = this.state;
+        const { value, options, label, valueKey } = this.state;
+
         let elem;
-        // console.log(value);
+
         if (async) {
             elem = <AsyncSelect
                 name="form-field-name"
-                // value={value}
-                // value={(typeof value != 'object' || IsObjectHaveKeys(value)) ? value : undefined}
                 value={value}
-                // defaultValue={value}
                 loadOptions={this.getOptions}
                 onChange={this.handleChange}
                 // onInputChange={this.handleChange}
                 defaultOptions
-                // labelKey={field}
-                // valueKey={valueKey}
                 placeholder={placeholder}
                 multi={multi}
             />
         } else if (getOptions) {
             elem = <AsyncSelect
                 name="form-field-name"
-                // value={value}
                 value={(typeof value != 'object' || IsObjectHaveKeys(value)) ? value : undefined}
                 loadOptions={getOptions}
                 onChange={this.handleChange}
-                labelKey={field}
-                valueKey={valueKey}
                 placeholder={placeholder}
                 multi={multi}
             />
         } else {
             elem = <Select autoFocus={false}
                 name="form-field-name"
-                // value={value}
                 value={(typeof value != 'object' || IsObjectHaveKeys(value)) ? value : undefined}
                 onChange={this.handleChange}
                 options={options}
-                labelKey={field}
-                valueKey={valueKey}
                 clearable
                 placeholder={placeholder}
                 multi={multi}
+                // formatOptionLabel={(context, inputValue) => <span>{context[label]}</span>}
+                getOptionLabel={(context, inputValue) => <span>{context[label]}</span>}
+                getOptionValue={(context, inputValue) => <span>{context[label]}</span>}
             />
         }
 
         return (
-            <div className="select-box">
+            <div className="select-box" >
                 {elem}
             </div>
         );

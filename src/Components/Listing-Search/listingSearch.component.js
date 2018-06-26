@@ -185,10 +185,10 @@ export default class ListingSearch extends React.Component {
                 {
                     <div className="listing-search-tool">
                         <div className="listing-select-tool">
-                            <SelectBox valueKey="id" onChange={(data) => {
+                            <SelectBox label="display_name" onChange={(data) => {
                                 this.filterChange(data)
                             }}
-                                value={selectedColumn} field='display_name' options={dictionary} placeholder='Column' />
+                                value={selectedColumn} options={dictionary} placeholder='Column' />
                         </div>
                         <div className="listing-input-tool">
                             {reference_model ? (
