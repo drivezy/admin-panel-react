@@ -19,28 +19,6 @@ import Timeago from './../../Components/Time-Ago/timeAgo.Component.js';
 
 
 export default class Home extends Component {
-    constructor() {
-        super();
-        this.state = {
-            
-        }
-    }
-    render() {
-        return (
-            <div className="home-scene">
-                {/* <CodeEditor /> */}
-                <SelectBox options={[1, 2, 3]} />
-                <Select
-                    name="form-field-name"
-                    value={1}
-                    onChange={this.handleChange}
-                    options={[{ value: 1, label: 1 }, { value: 2, label: 2 }]}
-                    autoFocus
-                    clearable
-                />
-            </div>
-        )
-    }
 
 
 
@@ -72,22 +50,7 @@ export default class Home extends Component {
           ];
         return (
             <div className="home-scene">
-                <Typeahead
-                    searchLabel={''}
-                    field="label"
-                    options={this.radios}
-                    placeholder="Choose a state..."
-                    onChange={this.exp}
-                    onType={(data) => console.log(data)}
-                />
-                < Timeago time={time} />
-
-                <button onClick={() => ToastUtils.error({description:'safbsffs',title:'sdVDJBDAKFN',actions:actions})} > Hello Message</button>
-                
-               
-                
-                
-
+   
             </div>
         );
     }

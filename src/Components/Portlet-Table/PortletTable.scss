@@ -228,7 +228,9 @@
                     background: white; // right: 0px;
                     // padding: 14px;
                     padding: 15px 20px;
-                    
+                    .custom-actions{
+                        display: flex;
+                    }
                     i.fa {
                         margin: 0px 4px; // font-size: 20px;
                         cursor: pointer; // color: #4f6273;

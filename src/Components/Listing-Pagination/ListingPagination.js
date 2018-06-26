@@ -51,7 +51,7 @@ export default class ListingPagination extends Component {
     createPaginationNumber = (startPage, totalPages) => {
 
         const { statsData } = this.state
-        var number_of_pages = Math.round(statsData.records / statsData.count);
+        var number_of_pages = Math.round(statsData.total / statsData.record);
 
         const pages = [];
 
@@ -66,7 +66,7 @@ export default class ListingPagination extends Component {
 
         if (startPage >= 2) {
             pages.push({ page: 1 });
-            if (startPage > 2) {
+            if (startPage > 5) {
                 pages.push({ page: '...' })
             }
         }
@@ -106,8 +106,8 @@ export default class ListingPagination extends Component {
         const getTotalPages = [20, 40, 75, 100];
         const { limit } = this.state;
 
-        if (statsData && statsData.records) {
-            var number_of_pages = Math.round(statsData.records / statsData.count);
+        if (statsData && statsData.total) {
+            var number_of_pages = Math.round(statsData.total / statsData.record);
             pages = this.createPaginationNumber(currentPage, showPages);
         }
 
@@ -119,7 +119,7 @@ export default class ListingPagination extends Component {
 
         return (
             <div className="listing-pagination">
-                <Pagination size="sm">
+                <Pagination>
                     <PaginationItem disabled={previousPage == 0}>
                         <PaginationLink previous onClick={() => this.redirectToPage(`?limit=20&page=${previousPage}`)} />
                     </PaginationItem>
@@ -150,9 +150,9 @@ export default class ListingPagination extends Component {
                 </Pagination>
 
                 {
-                    statsData && statsData.records > 0 &&
+                    statsData && statsData.total > 0 &&
                     <div className="pagination-record">
-                        Showing {currentPage ? ((((currentPage) * 20) - 20) + 1) : 0} - {currentPage ? ((currentPage) * 20) : 0} results from {statsData ? statsData.records : 0} records.
+                        Showing {currentPage ? ((((currentPage) * 20) - 20) + 1) : 0} - {currentPage ? ((currentPage) * 20) : 0} results from {statsData ? statsData.total : 0} total.
                     </div>
                 }
             </div>
