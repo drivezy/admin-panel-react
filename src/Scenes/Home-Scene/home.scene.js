@@ -9,7 +9,6 @@ import CodeEditor from './../../Components/Code-Editor/codeEditor.component';
 import './home.scene.css';
 
 import SelectBox from './../../Components/Forms/Components/Select-Box/selectBox';
-import { toast } from 'react-toastify';
 import TimePicker from 'rc-time-picker';
 import Select from 'react-select';
 import ToastUtils from './../../Utils/toast.utils.js';
@@ -83,7 +82,7 @@ export default class Home extends Component {
                 />
                 < Timeago time={time} />
 
-                <button onClick={() => ToastUtils.success({description:'safbsffs',title:'sdVDJBDAKFN',actions:actions})} > Hello Message</button>
+                <button onClick={() => ToastUtils.error({description:'safbsffs',title:'sdVDJBDAKFN',actions:actions})} > Hello Message</button>
                 
                
                 

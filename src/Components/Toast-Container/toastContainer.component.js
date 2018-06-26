@@ -85,7 +85,7 @@ export default class Toastcontainer extends Component {
         return (
             <div>
                 <FlagGroup onDismissed={this.dismissFlag}>
-                    {this.state.flags.map((flag, key) => <Flag key={key} actions={flag.actions} title={flag.title} description={flag.message} icon={getIcon(flag.icon)} />)}
+                    {this.state.flags.map((flag, key) => <Flag key={key} actions={flag.actions} title={flag.title} description={flag.description} icon={getIcon(flag.icon)} />)}
                 </FlagGroup>
             </div>
         );
