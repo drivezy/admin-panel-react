@@ -150,8 +150,10 @@ function PrepareObjectForListing(result, { extraParams }) {
         } else {
             formPreference = model.form_layouts[0] || {};
         }
-        if (IsObjectHaveKeys(formPreference)) {
+        if (IsObjectHaveKeys(formPreference) && formPreference.column_definition) {
             formPreference.column_definition = JSON.parse(formPreference.column_definition);
+        } else {
+            formPreference = {};
         }
 
         // Preparing the generic listing object
