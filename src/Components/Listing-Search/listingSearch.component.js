@@ -15,11 +15,11 @@ import { Get } from './../../Utils/http.utils';
 import { BuildUrlForGetCall } from './../../Utils/common.utils';
 import DatePicker from './../Forms/Components/Date-Picker/datePicker';
 
-
 let activeColumn = {};
 
 export default class ListingSearch extends React.Component {
     urlParams = Location.search();
+
     constructor(props) {
         super(props);
         this.state = {
@@ -30,18 +30,20 @@ export default class ListingSearch extends React.Component {
     }
 
     componentDidMount() {
-        this.initialize();
+        // this.initialize(this.props);
     }
 
-    UNSAFE_componentWillReceiveProps() {
-        this.initialize(); // on props update
+    UNSAFE_componentWillReceiveProps(nextProps, prevProps) {
+        if (nextProps.localSearch != prevProps.localSearch) {
+            this.initialize(nextProps); // on props update
+        }
     }
 
     /**
      * extracts query from string and assing value
      */
-    initialize = async () => {
-        const { dictionary, searchQuery, searchDetail } = this.props;
+    initialize = async (props) => {
+        const { dictionary, searchQuery, searchDetail, localSearch } = props;
         let selectedColumn;
         if (searchQuery) {
             const values = searchQuery.split(' ');
@@ -67,9 +69,17 @@ export default class ListingSearch extends React.Component {
         } else if (searchDetail && searchDetail.name) {
             selectedColumn = SelectFromOptions(dictionary, searchDetail.name, 'name');
             activeColumn = selectedColumn;
+        } else if (localSearch && localSearch.value) {
+            // let { query } = this.state;
+            // query = localSearch.value;
+            // this.setState({ query });
+            selectedColumn = SelectFromOptions(dictionary, localSearch.field, 'name');
+
+            // { localSearch: { field: column.name, value: value } }
+            this.state.query = localSearch.value
         }
 
-        this.setState({ selectedColumn, });
+        this.setState({ selectedColumn });
     }
 
     /**
@@ -139,7 +149,7 @@ export default class ListingSearch extends React.Component {
         Location.search(urlParams);
     };
 
-    callFunction = () => {
+    callFunction = (event) => {
         let query = '';
         const urlParams = this.urlParams;
 
@@ -147,10 +157,9 @@ export default class ListingSearch extends React.Component {
             history: this.props.history, match: this.props.match
         };
 
-        query += activeColumn.name + ' like "%25' + this.state.inputValue + '%25"';
+        query += activeColumn.name + ' like "%25' + event.target.value + '%25"';
         urlParams.search = query;
         Location.search(urlParams, { props: paramProps });
-
     }
 
     /**
@@ -162,14 +171,17 @@ export default class ListingSearch extends React.Component {
             this.callFunction();
             return;
         }
-        this.setState({ inputValue: this.state.query + e.key })
+        // this.setState({ inputValue: this.state.query + e.key })
     }
 
     searchLocally = (event) => {
-        this.setState({ query: event.target.value });
+        // this.callFunction(event);
+
+        this.props.onEdit(this.state.selectedColumn, event.target.value);
+
+        // this.setState({ query: event.target.value });
 
         // this.
-        this.props.onEdit(this.state.selectedColumn, event.target.value);
     }
 
 
@@ -177,7 +189,7 @@ export default class ListingSearch extends React.Component {
         const { props } = this;
         const { dictionary, history, match } = this.props;
         const { selectedColumn = {}, query = '' } = this.state;
-        const { reference_model = {} } = selectedColumn;
+        const { reference_model } = selectedColumn;
         const { referenceColumnValue } = this.state;
 
         return (
@@ -187,27 +199,27 @@ export default class ListingSearch extends React.Component {
                         <div className="listing-select-tool">
                             <SelectBox label="display_name" onChange={(data) => {
                                 this.filterChange(data)
-                            }}
-                                value={selectedColumn} options={dictionary} placeholder='Column' />
+                            }} value={selectedColumn} options={dictionary} placeholder='Column' />
                         </div>
                         <div className="listing-input-tool">
-                            {reference_model ? (
-                                <SelectBox
-                                    onChange={(data) => this.convertToInputField({ data })}
-                                    value={referenceColumnValue.data}
-                                    field={reference_model.display_column}
-                                    placeholder="Search"
-                                    getOptions={(input) => this.getInputRecord({ input })} />
-                            ) :
-                                (
-                                    <input type="text"
-                                        className="input-select form-control"
-                                        placeholder={`Search ${selectedColumn.display_name}`}
-                                        value={query}
-                                        onChange={event => this.searchLocally(event)}
-                                        onKeyPress={this.handleKeyPress}
-                                    />
-                                )
+                            {
+                                reference_model ? (
+                                    <SelectBox
+                                        onChange={(data) => this.convertToInputField({ data })}
+                                        value={referenceColumnValue.data}
+                                        field={reference_model.display_column}
+                                        placeholder="Search"
+                                        getOptions={(input) => this.getInputRecord({ input })} />
+                                ) :
+                                    (
+                                        <input type="text"
+                                            className="input-select form-control"
+                                            placeholder={`Search ${selectedColumn.display_name}`}
+                                            value={query}
+                                            onChange={event => this.searchLocally(event)}
+                                            onKeyPress={this.handleKeyPress}
+                                        />
+                                    )
                             }
                         </div>
                     </div>
