@@ -2,13 +2,17 @@
     height: 100%;
     padding-right: 15px;
     padding-left: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
     margin-top: 2px;
     margin-bottom: 2px;
+    margin-left: 2px;
     .summary-card-heading {
         font-weight: 700;
         font-size: 18px;
         padding-left: 15px;
         margin-top: 2px;
+        padding-bottom: 15px;
     }
     .summary-card-body {
         border-top: 1px solid whitesmoke;
@@ -26,13 +30,14 @@
                 margin-left: 2px;
                 margin-bottom: 8px;
                 .title {
-                    flex-basis: 35%;
+                    flex-basis: 50%;
                     text-align: left;
-                    color: #989898;
+                    color: #000000;
                 }
                 .data {
                     flex-basis: 35%;
                     text-align: right;
+                    color: #989898;
                 }
             }
         }
@@ -42,6 +47,7 @@
             font-weight: 700;
             font-size: 15px;
             padding-left: 15px;
+            padding-bottom: 15px;
             margin-top: 2px;
 
             i.fa{
@@ -59,7 +65,7 @@
             padding-left: 10px;
             padding-right: 10px;
             padding-top: 0px;
-            padding-bottom: 10 px;
+            padding-bottom: 0px;
             .card-object {
                 font-size: 10px;
                 display: flex;

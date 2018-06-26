@@ -47,51 +47,55 @@ export default class BookingDetail extends Component {
                         }
                     </div>
 
-                    <div className="details-body">
-                        <div className="pre-ride-detail-and-summary">
-                            <div className="booking-pre-ride-detail">
-                                {
-                                    bookingDetail.id ?
-                                        <BookingPreRide bookingPreRideData={bookingDetail} />
-                                        : null
-                                }
-                            </div>
+                    {/* <div className="details-body"> */}
+                    <div className="pre-ride-detail-and-ride-return">
+                        <div className="booking-pre-ride-detail">
+                            {
+                                bookingDetail.id ?
+                                    <BookingPreRide bookingPreRideData={bookingDetail} />
+                                    : null
+                            }
+                        </div>
 
-                            <div className="summary-detail-card">
-                                {
-                                    (bookingDetail.id ?
-                                        <SummaryCard bookingData={bookingDetail} />
-                                        : null)
-                                }
+                        <div className="booking-ride-return-detail">
+                            {
+                                bookingDetail.id ?
+                                    <BookingRideReturn bookingRideReturnData={bookingDetail} />
+                                    : null
+                            }
 
-                            </div>
 
                         </div>
 
-                        <div className="ride-return-and-feedback">
-
-                            <div className="booking-ride-return-detail">
-                                {
-                                    bookingDetail.id ?
-                                        <BookingRideReturn bookingRideReturnData={bookingDetail} />
-                                        : null
-                                }
 
 
-                            </div>
 
+
+                    </div>
+
+                    <div className="summary-and-feedback">
+
+                        <div className="summary-detail-card">
                             {
-                                (bookingDetail.id && bookingDetail.status != null && bookingDetail.feedback.length) ?
-                                    <div className="booking-feedback-detail">
-                                        <BookingFeedback bookingFeedback={bookingDetail.feedback} />
-                                    </div>
-                                    : null
+                                (bookingDetail.id ?
+                                    <SummaryCard bookingData={bookingDetail} />
+                                    : null)
                             }
 
                         </div>
 
+                        {
+                            (bookingDetail.id && bookingDetail.status != null && bookingDetail.feedback.length) ?
+                                <div className="booking-feedback-detail">
+                                    <BookingFeedback bookingFeedback={bookingDetail.feedback} />
+                                </div>
+                                : null
+                        }
 
                     </div>
+
+
+                    {/* </div> */}
 
 
                 </div>

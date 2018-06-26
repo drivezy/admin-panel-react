@@ -101,6 +101,13 @@ export default class BookingFeedback extends Component {
                                                     <span className="feedback-rate-value">{Math.floor(category.rating)} / 5 </span>
                                                     <Progress className="feedback-rate-bar" itemRef={(Math.floor(category.rating)) * 20} barClassName="file-field-list-item__progress-bar" value={(Math.floor(category.rating)) * 20}></Progress>
 
+                                                    <span className="feedback-rate-name">{category.category.name} </span>
+                                                    <span className="feedback-rate-value">{Math.floor(category.rating)} / 5 </span>
+                                                    <Progress className="feedback-rate-bar" itemRef={(Math.floor(category.rating)) * 20} barClassName="file-field-list-item__progress-bar" value={(Math.floor(category.rating)) * 20}></Progress>
+                                                    <span className="feedback-rate-name">{category.category.name} </span>
+                                                    <span className="feedback-rate-value">{Math.floor(category.rating)} / 5 </span>
+                                                    <Progress className="feedback-rate-bar" itemRef={(Math.floor(category.rating)) * 20} barClassName="file-field-list-item__progress-bar" value={(Math.floor(category.rating)) * 20}></Progress>
+
                                                 </div>
                                             )
                                         })

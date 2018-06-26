@@ -6,7 +6,7 @@ import {
 import './bookingPreRide.css';
 import { Link } from 'react-router-dom';
 
-import { BookingPickupDate, BookingPickupTime, BookingDropDate, BookingDropTime } from './../../../../Utils/booking.utils';
+import { BookingPickupDate, BookingPickupTime, BookingDropDate, BookingDropTime, TotalDuration } from './../../../../Utils/booking.utils';
 import CustomTooltip from '../../../Custom-Tooltip/customTooltip.component';
 
 export default class BookingPreRide extends Component {
@@ -21,12 +21,12 @@ export default class BookingPreRide extends Component {
     render() {
         const { bookingPreRideData = {} } = this.state;
         let couponDescription;
-        let duration;
 
         let bookingPickupDate = BookingPickupDate(bookingPreRideData.pickup_time);
         let bookingPickupTime = BookingPickupTime(bookingPreRideData.pickup_time);
         let bookingDropDate = BookingDropDate(bookingPreRideData.drop_time);
         let bookingDropTime = BookingDropTime(bookingPreRideData.drop_time);
+        let duration = TotalDuration(bookingPreRideData.drop_time, bookingPreRideData.pickup_time);
 
         if (bookingPreRideData.coupon) {
             couponDescription = bookingPreRideData.coupon.campaign.cashback ? 'Campaign Discription:' + bookingPreRideData.coupon.campaign.description : 'Campaign Discription:' + bookingPreRideData.coupon.campaign.description + ' | ' + (bookingPreRideData.coupon.description ? "Coupon Description:" + bookingPreRideData.coupon.description : " ") + "Discount Amount:" + bookingPreRideData.coupon_discount;
@@ -146,7 +146,7 @@ export default class BookingPreRide extends Component {
                                         <i className="fa fa-clock-o" aria-hidden="true"></i>
                                     </div>
                                     <div className="no-padding light-red  font-11" align="center">
-                                        53 Hrs.
+                                        {duration}
                                         </div>
                                 </div>
                             </Col>

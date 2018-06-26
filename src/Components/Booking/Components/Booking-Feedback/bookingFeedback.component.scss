@@ -8,6 +8,7 @@
     .card {
         padding-left: 15px;
         padding-right: 15px;
+        padding-top: 15px;
         max-height: 309px;
         min-height: 309px;
         justify-content: space-between;
@@ -21,6 +22,7 @@
             font-weight: 700;
             padding-left: 15px;
             padding-right: 15px;
+            padding-bottom: 15px;
             font-family: adminFont;
         }
 
@@ -45,7 +47,8 @@
                     display: flex;
                     flex-direction: row;
                     .user{    
-                        flex-basis: 27%;
+                        width: 50%;
+                        padding-right: 0px;
 
                     .user-feedback-info {
                         margin-top: 10px;
@@ -63,7 +66,7 @@
                             }
 
                             .user-feedback-comment{
-                                width: 130px;
+                                width: 108px;
                                 max-height: 60px;
                                 overflow-y: scroll;
                                 padding-top: 6px;

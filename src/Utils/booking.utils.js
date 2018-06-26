@@ -26,3 +26,5 @@ export function TotalDuration(updationTime, ActualStartTime) {
     let d = moment.duration(ms);
     return Math.floor(d.asHours()) + "h " + Math.floor(d.minutes()) + "m";
 }
+
+
