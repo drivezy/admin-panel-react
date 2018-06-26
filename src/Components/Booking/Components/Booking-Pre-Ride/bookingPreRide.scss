@@ -1,14 +1,18 @@
 
 .booking-panel-container{
-    margin: 2px;
+    //margin: 2px;
+
+    
     
 
-    padding: 4px 4px;
+    padding-left: 15px;
+    padding-right: 15px;
 
     .booking-details{
-        padding:4px;
+        //padding:4px;
         .heading{
             font-size: 18px;
+            
         }
     }
     .panel-body {
@@ -34,40 +38,40 @@
             }
             .booking-status-cancelled {
                 width: 100%;
-                padding-top: 4px;
-                border-top: 4px solid #cc0000;
+                
+                border-top: 3px solid #cc0000;
                 color: #cc0000;
                 margin: 0px;
             }
 
             .booking-status-active {
                 width: 100%;
-                padding-top: 4px;
-                border-top: 4px solid #1b6e14;
+                
+                border-top: 3px solid #1eb10480;
                 color: #1b6e14;
                 margin: 0px;
             }
 
             .booking-status-complete {
                 width: 100%;
-                padding-top: 4px;
-                border-top: 4px solid #d37a06;
+                
+                border-top: 3px solid #d37a06;
                 color: #d37a06;
                 margin: 0px;
             }
 
             .booking-status-pending {
                 width: 100%;
-                padding-top: 4px;
-                border-top: 4px solid #11a2ce;
+                
+                border-top: 3px solid #11a2ce;
                 color: #11a2ce;
                 margin: 0px;
             }
 
             .booking-status-unverified {
                 width: 100%;
-                padding-top: 4px;
-                border-top: 4px solid rgb(7, 6, 6);
+                
+                border-top: 3px solid rgb(7, 6, 6);
                 color: rgb(7, 6, 6);
                 margin: 0px;
             }
@@ -79,27 +83,44 @@
         .booked-vehicle-data{
             padding: 0;
             .vehicle-info{
-                padding-bottom: 21px;
-                margin: 0;
-                border-top: 2px solid rgba(255, 255, 255, 0.795);
-                border-bottom: 2px solid rgba(255, 255, 255, 0.795);
-                .vehicle-photo{
-                    float: left;
-                    width: 100%;
-                    height: auto;
-                }
-                .vehicle-info-data{
-                    padding-top: 18px;
-                    font-size: 15px;
-                }
+                    padding-bottom: 21px;
+                    margin: 0;
+                    border-top: 2px solid rgba(255, 255, 255, 0.795);
+                    border-bottom: 2px solid rgba(255, 255, 255, 0.795);
+                    .vehicle-photo{
+                        float: left;
+                        width: 100%;
+                        height: auto;
+                    }
+                    .vehicle-info-data{
+                        padding-top: 18px;
+                        font-size: 15px;
+                        margin-bottom: 0.5 rem;
+                    }
+                    .coupon-data{
+                        //font-family: sans-serif;
+                        font-size: 15px;
+                        font-weight: 400;
+                        vertical-align: middle;
+                        flex-basis: 100%;
+                        color: #212529;
+                        padding-top: 18px;
+                        float: right;
 
-                
+                    }
+
                 }
 
                 .booking-detail-date{
                     font-family: sans-serif;
                     font-size: 15px;
-                    padding: 7px;
+                    padding: 15px;
+
+                    .jr-time-icon{
+                        i.fa{
+                            color: #5c5c5c;
+                        }
+                    }
                 
                     }
                 }

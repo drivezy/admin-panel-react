@@ -27,3 +27,7 @@ export function Setter(key, value) {
 export function Getter(key) {
     return content[key];
 }
+
+export function TruncateDecimal(value){
+    return value.toFixed(2);
+}

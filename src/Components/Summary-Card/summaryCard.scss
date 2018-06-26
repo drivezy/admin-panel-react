@@ -1,0 +1,79 @@
+.summary-card {
+    height: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    .summary-card-heading {
+        font-weight: 700;
+        font-size: 18px;
+        padding-left: 15px;
+        margin-top: 2px;
+    }
+    .summary-card-body {
+        border-top: 1px solid whitesmoke;
+        .row-1 {
+            width: 100%;
+            margin-left: 0.5px;
+            margin-right: 0.5px;
+            padding: 12px;
+            .class {
+                font-family: adminFont;
+                font-size: 14px;
+                display: flex;
+                flex-direction: row;
+                flex-basis: 50%;
+                margin-left: 2px;
+                margin-bottom: 8px;
+                .title {
+                    flex-basis: 35%;
+                    text-align: left;
+                    color: #989898;
+                }
+                .data {
+                    flex-basis: 35%;
+                    text-align: right;
+                }
+            }
+        }
+    }
+    .pricing-object {
+        .pricing {
+            font-weight: 700;
+            font-size: 15px;
+            padding-left: 15px;
+            margin-top: 2px;
+
+            i.fa{
+                padding: 2px;
+            }
+        }
+        .display-button {
+            color: #000000;
+            background-color: aliceblue;
+            margin: 10px;
+        }
+        .card-body {
+            overflow-y: scroll;
+            height: 120px;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 0px;
+            padding-bottom: 10 px;
+            .card-object {
+                font-size: 10px;
+                display: flex;
+                flex-direction: column;
+                padding-top: 12px;
+                padding-bottom: 12px;
+                .item {
+                    text-align: left;
+                    width: 135px;
+                }
+                .value {
+                    text-align: right;
+                }
+            }
+        }
+    }
+}

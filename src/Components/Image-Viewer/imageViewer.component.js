@@ -24,7 +24,7 @@ export default class ImageViewer extends Component {
         $image.viewer({
             inline: true,
             viewed: function () {
-                $image.viewer('zoomTo', 0.4);
+                // $image.viewer('zoomTo', 0.4);
             }
         });
 

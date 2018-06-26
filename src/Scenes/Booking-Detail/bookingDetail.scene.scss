@@ -1,37 +1,63 @@
-.booking{   
-
+.booking {
     display: flex;
     flex-direction: column;
-
-   .booking-details
-    {
+    .booking-details {
+        height: 75%;
         background: whitesmoke;
-        
         display: flex;
         flex-direction: row;
-
-        .booking-user-detail  
-        {
-            flex-basis: 22%;
+        .booking-user-detail {
+            flex-basis: 28%;
         }
+        .details-body {
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            .pre-ride-detail-and-summary {
+                display: flex;
+                flex-direction: row;
+                margin-left: 2px;
+                .booking-pre-ride-detail {
+                    flex-basis: 70%;
+                }
+                .summary-detail-card{
+                    flex-basis: 30%;
 
-        
+                  .pricing-object{
+                      .heading{
+                          font-size: 12;
+                      }
+                  } 
+                }
+            }
 
-        .booking-pre-ride-detail 
-        {
-            flex-basis: 56%;
+            .ride-return-and-feedback {
+                display: flex;
+                flex-direction: row;
+                .booking-ride-return-detail {
+                    flex-basis: 70%;
+                }
+                .booking-feedback-detail{
+                    flex-basis: 30%;
+                    position: relative;
+                }
+            }
         }
-
-        
-            
     }
-  
-    .booking-tabs 
-    {
-              
-        .booking-tabs-detail 
-        {
+    .booking-tabs {
+        height: 25%;
+        .booking-tabs-detail {
             flex-basis: 100%;
         }
-    }   
+    }
+}
+
+.booking {
+    .booking-details {
+        .heading {
+            .color-black {
+                color: black;
+            }
+        }
+    }
 }
