@@ -113,7 +113,7 @@ export default class GenericDetail extends Component {
     }
 
     render() {
-        const { history } = this.props;
+        const { history, location, match } = this.props;
         const { menuDetail = {}, portlet = {}, tabDetail = {}, currentUser = {} } = this.state;
         const { finalColumns = [], data = {}, formPreference = {}, starter } = portlet;
 
@@ -170,7 +170,7 @@ export default class GenericDetail extends Component {
 
                     {
                         tabDetail && tabDetail.tabs ?
-                            <DetailIncludes tabs={tabDetail.tabs} callback={this.getDetailRecord} currentUser={currentUser} />
+                            <DetailIncludes tabs={tabDetail.tabs} callback={this.getDetailRecord} currentUser={currentUser} location={location} match={match} />
                             : null
                     }
                 </div>

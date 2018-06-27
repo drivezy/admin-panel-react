@@ -39,7 +39,8 @@ export default class GenericListing extends Component {
             localSearch: {},
             genericData: {},
             filterContent: null,
-            isCollapsed: true
+            isCollapsed: true,
+            state: this.props.source || 'menu'
         };
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
@@ -56,6 +57,19 @@ export default class GenericListing extends Component {
     componentWillUnmount() {
         this.state.isCollapsed = false;
         UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
+    }
+
+    userDataArrived = (user) => {
+        const { menuDetail } = this.props;
+        this.state.currentUser = user;
+
+        if (menuDetail) {
+            this.state.menuDetail = menuDetail;
+            // this.setState({ menuDetail });
+            this.getListingData();
+        } else {
+            this.getMenuData();
+        }
     }
 
     getMenuData = async () => {
@@ -199,12 +213,6 @@ export default class GenericListing extends Component {
         const { isCollapsed } = this.state;
         this.setState({ isCollapsed: !isCollapsed });
         StoreEvent({ eventName: 'ToggleAdvancedFilter', data: { isCollapsed: !isCollapsed, ...payload } });
-    }
-
-    userDataArrived = (user) => {
-        this.state.currentUser = user;
-        this.getMenuData();
-        // this.setState({ currentUser: data });
     }
 
     predefinedFiltersUpdated = (latyouts) => {
