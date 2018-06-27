@@ -84,7 +84,6 @@ export default class GenericListing extends Component {
         this.setState({ genericData, filterContent });
     }
 
-
     openAggregationResult = async (operator, caption, data) => {
         let options = GetDefaultOptions();
         options.aggregation_column = data.selectedColumn.name;
@@ -188,10 +187,10 @@ export default class GenericListing extends Component {
         }
     };
 
-
     keyMap = {
         moveUp: 'shift+r',
     }
+
     handlers = {
         'moveUp': (event) => this.getListingData()
     }
@@ -228,25 +227,22 @@ export default class GenericListing extends Component {
         this.getListingData();
     }
 
+    /**
+     * Maintain localSearch for locally searching on type 
+     */
     filterLocally = (column, value) => {
-        this.setState({ localSearch: { field: column.name, value: value } });
-        // let { genericData } = this.state;
-        // let { listing = [] } = genericData;
-        // listing = listing.filter((rowData) => {
-        //     return rowData[column.name].toLowerCase().indexOf(value) != -1;
-        // });
-        // genericData.listing = listing;
-        // this.setState({ genericData });
+        this.setState({ localSearch: { field: column ? column.name : '', value: value ? value : null } });
     }
 
     render() {
         const { localSearch, genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent, currentUser } = this.state;
         const { listing = [], finalColumns = [] } = genericData;
+        const { starter } = genericData;
 
         let filteredResults = [];
 
         if (localSearch.value) {
-            filteredResults = listing.filter(entry => entry[localSearch.field] && (entry[localSearch.field].toString().toLowerCase().indexOf(localSearch.value) != -1));
+            filteredResults = listing.filter(entry => entry[starter + '.' + localSearch.field] && (entry[starter + '.' + localSearch.field].toString().toLowerCase().indexOf(localSearch.value) != -1));
         }
 
         // const listingData = 
@@ -259,10 +255,9 @@ export default class GenericListing extends Component {
                             <div className="generic-listing-search">
                                 {
                                     filterContent && filterContent.dictionary &&
-                                    <ListingSearch onEdit={this.filterLocally} searchDetail={menuDetail.search} searchQuery={this.urlParams.search} dictionary={filterContent.dictionary} />
+                                    <ListingSearch localSearch={localSearch} onEdit={this.filterLocally} searchDetail={{ name: genericData.model.display_column }} searchQuery={this.urlParams.search} dictionary={filterContent.dictionary} />
                                 }
                             </div>
-
                             <div className="search-wrapper">
                                 {
                                     filterContent && filterContent.dictionary &&
@@ -280,13 +275,8 @@ export default class GenericListing extends Component {
                                 }
                             </div>
                         </div>
-
                         <div className="header-actions">
-
-
-
                             <CustomAction position="header" history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
-
                             {
                                 genericData.columns ?
                                     <TableSettings
@@ -301,12 +291,9 @@ export default class GenericListing extends Component {
                                     :
                                     null
                             }
-
-
                             <Button color="primary" size="sm" onClick={() => { this.refreshPage() }}>
                                 <i className="fa fa-refresh"></i>
                             </Button>
-
                             {
                                 menuDetail && genericData.userFilter && genericData.userFilter.length > 0 ?
                                     <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} layouts={menuDetail.layouts} history={history} match={match} />
@@ -315,7 +302,6 @@ export default class GenericListing extends Component {
                             }
                         </div>
                     </div>
-
                     <div>
                         {
                             filterContent &&
@@ -330,8 +316,6 @@ export default class GenericListing extends Component {
 
                     {
                         (finalColumns && finalColumns.length) ?
-
-
                             <Card>
                                 <CardBody className="table-wrapper">
 
@@ -356,7 +340,6 @@ export default class GenericListing extends Component {
                             <ListingPagination history={history} match={match} currentPage={genericData.currentPage} limit={genericData.limit} statsData={genericData.stats} /> : null
                     }
                     {/* Listing Pagination Ends */}
-
                 </div>
             </HotKeys>
         );

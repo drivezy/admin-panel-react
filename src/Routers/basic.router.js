@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom';
 
 
-import { ToastContainer } from 'react-toastify';
+// import { ToastContainer } from 'react-toastify';
 
 /** Router */
 import PrivateRoute from './privateRoute.router';
@@ -21,12 +21,14 @@ import SignupScene from './../Scenes/Signup-Scene/Signup.scene';
 import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 import ModalWrapper from './../Wrappers/Modal-Wrapper/modalWrapper.component';
 import { Spotlight } from './../Components/Spotlight-Search/spotlightSearch.component';
+import ToastContainer from './../Components/Toast-Container/toastContainer.component';
 /** Component Ends */
 
 /** Util */
 import SettingsUtil from './../Utils/settings.utils';
 import { SubscribeToEvent } from './../Utils/stateManager.utils';
 import { ConfirmModalComponent, ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
+import ToastUtils from './../Utils/toast.utils';
 /** Util Ends*/
 
 
@@ -59,7 +61,10 @@ export default class BasicRoute extends Component {
                         <PrivateRoute path="/" loggedUser={loggedUser} component={IndexRouter} />
                     </Switch>
                 </Router>
-                <ToastContainer />
+                <ToastContainer ref={(elem) => { ToastUtils.register(elem); }} />
+
+
+
                 <ModalWrapper ref={(elem) => ModalManager.registerModal(elem)} />
                 <ConfirmModalComponent ref={(elem) => ConfirmUtils.RegisterConfirm(elem)} />
                 <Spotlight ref={(elem) => SettingsUtil.registerModal(elem)} />

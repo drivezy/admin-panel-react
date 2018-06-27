@@ -285,7 +285,7 @@ function defaultResolve(response, hideMessage, hideLoader, { persist, url, body,
     } else if (!hideMessage && response && typeof response == 'object' && (typeof response.response == 'string' || typeof response.reason == 'string')) {
         const type = response.success ? 'success' : 'error';
         // @TODO show message -response.response
-        ToastUtils[type](response.reason || response.response);
+        ToastUtils[type]({ message: response.reason || response.response });
     }
     if (persist && !CheckInternet()) {
         StoreEvent({ eventName: url, data: response, objParams: body, isMemoryStore: true });
@@ -324,7 +324,7 @@ function defaultReject(response, hideMessage, hideLoader, { url, body }) {
             message = 'Internal server error';
         }
         if (message) {
-            ToastUtils.error(message);
+            ToastUtils.error({ message: message });
         }
     }
     return response;
