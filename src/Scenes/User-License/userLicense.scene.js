@@ -14,6 +14,8 @@ import { Get, Put, Delete } from './../../Utils/http.utils';
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
 import ToastNotifications from './../../Utils/toast.utils';
 import { ConfirmUtils } from './../../Utils/confirm-utils/confirm.utils';
+import { BuildUrlForGetCall } from './../../Utils/common.utils';
+
 
 import UserLicenseForm from './../../Components/User-License-Form/userLicenseForm.component';
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
@@ -23,10 +25,11 @@ import RejectLicenseForm from './../../Components/Reject-License-Form/rejectLice
 
 
 export default class UserLicense extends Component {
-    container: HTMLDivElement;
+    // container: HTMLDivElement;
     constructor(props) {
         super(props);
         this.state = {
+            userData: props.userData,
             userObj: {},
             images: [],
             visible: true,
@@ -37,12 +40,16 @@ export default class UserLicense extends Component {
             detectedText: [],
             detectedExpiryDate: []
         };
+
+
     }
 
     componentDidMount() {
         this.getUserDetail();
         this.getLicense();
     }
+
+
 
     getUserDetail = async () => {
         const { userId } = this.props.match.params;
@@ -53,10 +60,17 @@ export default class UserLicense extends Component {
             const userObj = result.response;
             this.setState({ userObj });
         }
+
+
     }
 
     updateCurrentIndex = () => {
+        const { userId } = this.props.match.params;
+
         const { images = [], currentIndex } = this.state;
+
+
+
         var newIndex = currentIndex;
         for (var i in images) {
             images[i].visible = false;
@@ -82,28 +96,45 @@ export default class UserLicense extends Component {
         const { userId, detectedDob, detectedLicense, detectedText, detectedExpiryDate } = this.props.match.params;
         options.query += " and user_id=" + userId;
         options.query += " and approved is null and rejection_reason is null";
-        var url = "userLicense";
-        const result = await Get({ url, options });
+        const endpoint = "userLicense";
+        const url = BuildUrlForGetCall(endpoint, options);
+
+        const result = await Get({ url });
+
+
         if (result.success) {
-            const images = result.response;
+
+
+            let images = [];
+
+            result.response.map((item, key) => {
+
+                if (item.user_id == userId) {
+                    images.push(item);
+                }
+
+            }
+                // (item.user_id == userId) ? images.push(item) : null
+            )
+
             this.setState({ images });
 
-            for (var i in images) {
-                if (images[i].dob != null) {
-                    detectedDob.push(images[i].dob);
-                }
-                if (images[i].license_number != null) {
-                    detectedLicense.push(images[i].license_number);
-                }
+            // for (var i in images) {
+            //     if (images[i].dob != null) {
+            //         detectedDob.push(images[i].dob);
+            //     }
+            //     if (images[i].license_number != null) {
+            //         detectedLicense.push(images[i].license_number);
+            //     }
 
-                if (images[i].text != null) {
-                    detectedText.push(images[i].text);
-                    if (images[i].text.search("validity") != -1) {
-                        var regex = /v\w{7} \d{2,4}(\/|-)\d{2,4}(\/|-)\d{2,4}/i;
-                        detectedExpiryDate.push(regex[0]);
-                    }
-                }
-            }
+            //     if (images[i].text != null) {
+            //         detectedText.push(images[i].text);
+            //         if (images[i].text.search("validity") != -1) {
+            //             var regex = /v\w{7} \d{2,4}(\/|-)\d{2,4}(\/|-)\d{2,4}/i;
+            //             detectedExpiryDate.push(regex[0]);
+            //         }
+            //     }
+            // }
             this.change();
 
             this.updateCurrentIndex();
@@ -152,7 +183,7 @@ export default class UserLicense extends Component {
     }
 
     render() {
-        const { images = [], userObj = {}, currentIndex, detectedDob, detectedLicense, detectedText, detectedExpiryDate } = this.state;
+        const { images = [], userObj = {}, currentIndex, detectedDob, detectedLicense, detectedText, detectedExpiryDate, userData } = this.state;
 
         const licenses = images.map((image) => {
             image.src = image.license;
@@ -173,7 +204,7 @@ export default class UserLicense extends Component {
                         <CardBody>
                             {
                                 userObj.id &&
-                                <UserLicenseForm userObj={userObj} detectedDob={detectedDob} detectedLicense={detectedLicense} detectedText={detectedText} detectedExpiryDate={detectedExpiryDate} />
+                                <UserL icenseForm userObj={userObj} detectedDob={detectedDob} detectedLicense={detectedLicense} detectedText={detectedText} detectedExpiryDate={detectedExpiryDate} />
                             }
                         </CardBody>
                     </Card>

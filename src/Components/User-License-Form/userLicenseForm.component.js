@@ -17,16 +17,16 @@ const InnerForm = ({
 }) => (
         <form onSubmit={handleSubmit}>
             <div className="form-group">
-                <label className="">First Name<span className="text-red">*</span></label>
-                <input type="text" name="first_name" className="form-control" value={values.first_name} onChange={handleChange} />
+                {/* <label className="">First Name<span className="text-red">*</span></label> */}
+                <input type="text" name="first_name" placeholder="First Name" className="form-control" value={values.first_name} onChange={handleChange} />
             </div>
             <div className="form-group">
-                <label className="">Last Name</label>
-                <input type="text" name="last_name" className="form-control" value={values.last_name} onChange={handleChange} />
+                {/* <label className="">Last Name</label> */}
+                <input type="text" name="last_name" placeholder="Last Name" className="form-control" value={values.last_name} onChange={handleChange} />
             </div>
             <div className="form-group">
-                <label className="">Date Of Birth<span className="text-red">*</span></label>
-                <input type="text" name="dob" className="form-control" value={values.dob} onChange={handleChange} />
+                {/* <label className="">Date Of Birth<span className="text-red">*</span></label> */}
+                <input type="text" name="dob" placeholder="Date Of Birth" className="form-control" value={values.dob} onChange={handleChange} />
                 {
                     values.detectedDob.map((dob, key) => {
                         return (
@@ -41,26 +41,26 @@ const InnerForm = ({
             </div>
 
             <div className="form-group">
-                <label className="control-label">Gender</label>
+                {/* <label className="control-label">Gender</label> */}
                 <Field
                     name='gender'
                     render={({ field /* _form */ }) => (
-                        <SelectBox valueKey="value" field="label" name='gender' onChange={(selected) => { setFieldValue('gender', selected.value) }} value={values.gender} options={[{ value: "male", label: "Male" }, { value: "female", label: "Female" }, { value: "others", label: "Others" }]} />
+                        <SelectBox valueKey="value" field="label" name='gender' placeholder={'Gender' }onChange={(selected) => { setFieldValue('gender', selected.value) }} value={values.gender} options={[{ value: "male", label: "Male" }, { value: "female", label: "Female" }, { value: "others", label: "Others" }]} />
                     )}
                 />
             </div>
 
             <div className="form-group">
-                <label className="">Email</label>
-                <input type="text" name="email" className="form-control" value={values.email} onChange={handleChange} />
+                {/* <label className="">Email</label> */}
+                <input type="text" name="email" placeholder="Email" className="form-control" value={values.email} onChange={handleChange} />
             </div>
             <div className="form-group">
-                <label className="">Mobile</label>
-                <input type="text" name="mobile" className="form-control" value={values.mobile} onChange={handleChange} />
+                {/* <label className="">Mobile</label> */}
+                <input type="text" name="mobile" placeholder="Mobile" className="form-control" value={values.mobile} onChange={handleChange} />
             </div>
             <div className="form-group">
-                <label className="">License Number</label>
-                <input type="text" name="license_number" className="form-control" value={values.license_number} onChange={handleChange} />
+                {/* <label className="">License Number</label> */}
+                <input type="text" name="license_number" placeholder="Licence Number" className="form-control" value={values.license_number} onChange={handleChange} />
                 {
                     values.detectedLicense.map((license, key) => {
                         return (
