@@ -231,7 +231,7 @@ export default class GenericListing extends Component {
      * Maintain localSearch for locally searching on type 
      */
     filterLocally = (column, value) => {
-        this.setState({ localSearch: { field: column.name, value: value } });
+        this.setState({ localSearch: { field: column ? column.name : '', value: value ? value : null } });
     }
 
     render() {
@@ -255,7 +255,7 @@ export default class GenericListing extends Component {
                             <div className="generic-listing-search">
                                 {
                                     filterContent && filterContent.dictionary &&
-                                    <ListingSearch localSearch={localSearch} onEdit={this.filterLocally} searchDetail={menuDetail.search} searchQuery={this.urlParams.search} dictionary={filterContent.dictionary} />
+                                    <ListingSearch localSearch={localSearch} onEdit={this.filterLocally} searchDetail={{ name: genericData.model.display_column }} searchQuery={this.urlParams.search} dictionary={filterContent.dictionary} />
                                 }
                             </div>
                             <div className="search-wrapper">

@@ -30,7 +30,7 @@ export default class ListingSearch extends React.Component {
     }
 
     componentDidMount() {
-        // this.initialize(this.props);
+        this.initialize(this.props);
     }
 
     UNSAFE_componentWillReceiveProps(nextProps, prevProps) {
@@ -76,6 +76,8 @@ export default class ListingSearch extends React.Component {
             selectedColumn = SelectFromOptions(dictionary, localSearch.field, 'name');
 
             // { localSearch: { field: column.name, value: value } }
+            this.state.query = localSearch.value
+        } else { 
             this.state.query = localSearch.value
         }
 
@@ -176,7 +178,6 @@ export default class ListingSearch extends React.Component {
 
     searchLocally = (event) => {
         // this.callFunction(event);
-
         this.props.onEdit(this.state.selectedColumn, event.target.value);
 
         // this.setState({ query: event.target.value });
