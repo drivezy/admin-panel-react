@@ -72,12 +72,13 @@ export default class SelectBox extends Component {
 
         // this.state.value = value.id;
         this.state.value = value;
-        // this.setState({ value: value.id });
+        // this.setState({ value: value });
 
         if (typeof onChange == 'function') {
             const finalValue = !field ? value[stateField] : value;
             // onChange(finalValue, name);
-            onChange(name, finalValue);
+            // onChange(name, finalValue);
+            onChange(value);
             // onChange(name, finalValue.id);
         }
     }

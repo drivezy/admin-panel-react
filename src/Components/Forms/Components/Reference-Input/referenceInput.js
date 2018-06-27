@@ -89,6 +89,7 @@ export default class ReferenceInput extends Component {
     render() {
 
         const { column } = this.props;
+        const reference_model = column.reference_model ? column.reference_model : {};
 
         const { url, value } = this.state;
 
@@ -98,10 +99,10 @@ export default class ReferenceInput extends Component {
                     name={this.props.name}
                     onChange={this.props.onChange}
                     index="id"
-                    field={column.reference_model.display_column || column.display_column}
+                    label={reference_model.display_column || column.display_column}
                     sortingType={column.sorting_type}
                     // getOptions={this.getOptions}
-                    queryField={column.reference_model.display_column || column.display_column}
+                    queryField={reference_model.display_column || column.display_column}
                     async={url}
                     value={value}
                 />
