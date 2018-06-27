@@ -15,7 +15,7 @@ import ToastUtils from './../../Utils/toast.utils.js';
 import FormUtil from './../../Utils/form.utils';
 import Timeago from './../../Components/Time-Ago/timeAgo.Component.js';
 
-// import ToastUtils frpom './toast.utils';
+//import ToastUtils from './toast.utils';
 
 
 export default class Home extends Component {
@@ -41,16 +41,10 @@ export default class Home extends Component {
     render() {
         const { align } = this.state;
         const time = '20180105';
-        const actions = [
-            {
-              content: 'Nice one!',
-              onClick: () => {alert("hello")},
-            },
-            { content: 'Not right now thanks', onClick: ()=>{ alert("do u dumbit")} },
-          ];
+       
         return (
             <div className="home-scene">
-   
+               <button onClick={()=> ToastUtils.success({description:'ssdhdh',title:'aSHADGJJG'})}>onclick</button>
             </div>
         );
     }
