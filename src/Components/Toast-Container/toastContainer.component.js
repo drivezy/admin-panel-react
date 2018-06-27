@@ -55,7 +55,7 @@ export default class Toastcontainer extends Component {
       * @param  {Object} params={}
       */
     success = (params) => {
-        let flags = this.state.flags;
+        const flags = this.state.flags;
         params.icon = 'success';
         this.addFlag(flags, params);
     };
@@ -65,7 +65,7 @@ export default class Toastcontainer extends Component {
        * @param  {Object} params={}
        */
     error = (params) => {
-        let flags = this.state.flags;
+        const flags = this.state.flags;
         params.icon = 'error';
         this.addFlag(flags, params);
     };
@@ -75,7 +75,7 @@ export default class Toastcontainer extends Component {
        * @param  {Object} params={}
        */
     warn = (params) => {
-        let flags = this.state.flags;
+        const flags = this.state.flags;
         params.icon = 'warning';
         this.addFlag(flags, params);
     };
