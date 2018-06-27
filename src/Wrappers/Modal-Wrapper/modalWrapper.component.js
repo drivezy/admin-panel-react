@@ -22,7 +22,8 @@ export default class ModalWrapper extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            ...props
+            ...props,
+            modals: [] // Array maintained for opening multiple modals at the same time
         }
     }
 
@@ -33,48 +34,75 @@ export default class ModalWrapper extends Component {
     }
 
     openModal = ({ ...args }) => {
-        // this.state.modalBody = null;
-        this.setState({ isVisible: true, ...args });
+        let { modals } = this.state;
+        args.isVisible = true;
+        var index = modals.push({ ...args })
+        this.setState({ modals });
     }
 
-    closeModal = ({ ...args }) => {
-        const { onClose } = this.state;
-        this.setState({ isVisible: false });
-        if (typeof onClose == 'function') {
-            onClose({ ...args });
-        }
+    // closeModal = ({ ...args }) => {
+    //     const { onClose } = this.state;
+    //     this.setState({ isVisible: false });
+    //     if (typeof onClose == 'function') {
+    //         onClose({ ...args });
+    //     }
+    // }
+    closeModal = (modal, key) => {
+        let { modals } = this.state;
+        modals.splice(key, 1);
+
+        this.setState({ modals });
     }
+
 
     render() {
-        const { headerText, modalHeader, modalBody, modalFooter, size = 'lg' } = this.state;
 
-        const isVisible = this.state.isVisible || this.props.isVisible;
+        const { modals, size = 'lg' } = this.state;
 
         return (
-            <Modal size={size} isOpen={isVisible} toggle={this.closeModal} className={this.props.className} backdrop={this.state.backdrop}>
+            <div className="modals-wrapper">
                 {
-                    modalHeader ?
-                        <ModalHeader toggle={this.closeModal}>{modalHeader()}</ModalHeader>
-                        :
-                        headerText ?
-                            <ModalHeader toggle={this.closeModal}>{headerText}</ModalHeader>
-                            : null
+                    modals.map((modal, key) =>
+                        <Modal key={key} size={size} isOpen={modal.isVisible} toggle={() => {
+                            console.log(modal, key);
+                            this.closeModal(modal, key)
+                        }
+                        } className={this.props.className} backdrop={this.state.backdrop}>
+                            {
+                                modal.modalHeader ?
+                                    <ModalHeader toggle={() => {
+                                        console.log(modal, key);
+                                        this.closeModal(modal, key)
+                                    }}>{modal.modalHeader()}</ModalHeader>
+                                    :
+                                    modal.headerText ?
+                                        <ModalHeader toggle={() => {
+                                            console.log(modal, key);
+                                            this.closeModal(modal, key)
+
+
+                                        }}>{modal.headerText}</ModalHeader>
+                                        : null
+                            }
+
+                            {
+                                modal.modalBody &&
+                                // <ModalBody>
+                                modal.modalBody()
+                                // </ModalBody>
+                            }
+
+                            {
+                                modal.modalFooter &&
+                                <ModalFooter>
+                                    {modal.modalFooter()}
+                                </ModalFooter>
+                            }
+                        </Modal>
+                    )
                 }
 
-                {
-                    modalBody &&
-                    // <ModalBody>
-                    modalBody()
-                    // </ModalBody>
-                }
-
-                {
-                    modalFooter &&
-                    <ModalFooter>
-                        {modalFooter()}
-                    </ModalFooter>
-                }
-            </Modal>
+            </div>
         )
     }
 }
