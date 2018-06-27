@@ -25,11 +25,14 @@ export default class FormUtil {
      */
     static OnChangeListener({ column, value, ...event }) {
         console.log('latest value', value);
-        self.form.data[column.name] = value;
-        const callback = onChangeListeners[column.path];
-        if (typeof callback == 'function') {
-            callback(value, column, event);
+        if (self.form) {
+            self.form.data[column.name] = value;
+            const callback = onChangeListeners[column.path];
+            if (typeof callback == 'function') {
+                callback(value, column, event);
+            }
         }
+
     }
 
     // /**

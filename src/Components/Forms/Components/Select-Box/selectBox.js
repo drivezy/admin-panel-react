@@ -11,6 +11,7 @@ import AsyncSelect from 'react-select/lib/Async';
 import { Get } from './../../../../Utils/http.utils';
 import { IsObjectHaveKeys } from './../../../../Utils/common.utils';
 
+
 export default class SelectBox extends Component {
     constructor(props) {
         super(props);
@@ -25,6 +26,8 @@ export default class SelectBox extends Component {
 
             ...this.returnStateObj(props)
         }
+
+        console.log('he;ll');
     }
 
     UNSAFE_componentWillReceiveProps(props) {
@@ -140,6 +143,7 @@ export default class SelectBox extends Component {
                 clearable
                 placeholder={placeholder}
                 multi={multi}
+                key='id'
                 // formatOptionLabel={(context, inputValue) => <span>{context[label]}</span>}
                 getOptionLabel={(context, inputValue) => <span>{context[label]}</span>}
                 getOptionValue={(context, inputValue) => <span>{context[label]}</span>}
