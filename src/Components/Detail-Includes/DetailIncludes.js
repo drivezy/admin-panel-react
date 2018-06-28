@@ -10,6 +10,7 @@ import {
 import CustomAction from './../Custom-Action/CustomAction.component';
 import PortletTable from './../../Components/Portlet-Table/PortletTable.component';
 import TableSettings from './../../Components/Table-Settings/TableSettings.component';
+import GenericListing from './../../Scenes/Generic-Listing/genericListing.scene';
 
 import { Location } from './../../Utils/location.utils';
 import { CreateInclusions, GetColumnsForListing, CreateFinalColumns, RegisterMethod } from './../../Utils/generic.utils';
@@ -29,7 +30,7 @@ export default class DetailIncludes extends Component {
         this.state = {
             tabs: this.props.tabs,
             tabContent: [],
-            activeTab: 0
+            activeTab: 0,
         }
     }
 
@@ -66,14 +67,14 @@ export default class DetailIncludes extends Component {
         activeTab = activeTab == -1 ? 0 : activeTab;
 
         const tab = tabsArr[activeTab];
-        await GetListingRecord({ configuration: tab, callback: this.updateTabContent, data: tabContent[activeTab] || {}, currentUser, index: activeTab })
+        // await GetListingRecord({ configuration: tab, callback: this.updateTabContent, data: tabContent[activeTab] || {}, currentUser, index: activeTab })
         this.state.activeTab = activeTab;
 
-        tabsArr.forEach((tab, key) => {
-            if (activeTab != key) {
-                GetListingRecord({ configuration: tab, callback: this.updateTabContent, data: tabContent[key] || {}, currentUser, index: key })
-            }
-        })
+        // tabsArr.forEach((tab, key) => {
+        //     if (activeTab != key) {
+        //         GetListingRecord({ configuration: tab, callback: this.updateTabContent, data: tabContent[key] || {}, currentUser, index: key })
+        //     }
+        // })
     }
 
     /**
@@ -82,14 +83,14 @@ export default class DetailIncludes extends Component {
      * @param  {object} {genericData
      * @param  {int} index}
      */
-    updateTabContent = ({ genericData: tabDetail, index }) => {
-        const { tabContent, tabs } = this.state;
-        const tabsIndices = Object.keys(tabs);
-        tabDetail.modelId = tabDetail.menuId;
-        tabContent[index] = tabDetail;
-        tabContent[index].index = tabsIndices[index];
-        this.setState({ tabContent });
-    }
+    // updateTabContent = ({ genericData: tabDetail, index }) => {
+    //     const { tabContent, tabs } = this.state;
+    //     const tabsIndices = Object.keys(tabs);
+    //     tabDetail.modelId = tabDetail.menuId;
+    //     tabContent[index] = tabDetail;
+    //     tabContent[index].index = tabsIndices[index];
+    //     this.setState({ tabContent });
+    // }
 
     /**
      * Change tab selection
@@ -121,7 +122,7 @@ export default class DetailIncludes extends Component {
 
     render() {
         const { tabs, tabContent, activeTab } = this.state;
-        const { history = {}, callback, currentUser } = this.props;
+        const { history = {}, callback, currentUser, location, match } = this.props;
         const arr = [];
         const tabsArr = Object.values(tabs);
         // Object.keys(tabs.data).map((tab)=>(
@@ -134,8 +135,8 @@ export default class DetailIncludes extends Component {
                     <div className='generic-tabs-container'>
                         <Nav tabs>
                             {
-                                tabContent.length ?
-                                    tabContent.map((tab, key) => (
+                                tabsArr.length ?
+                                    tabsArr.map((tab, key) => (
                                         <NavItem key={key} >
                                             <NavLink
                                                 className={`${activeTab === key ? 'active' : ''}`}
@@ -149,8 +150,8 @@ export default class DetailIncludes extends Component {
                         </Nav>
                         <TabContent activeTab={activeTab}>
                             {
-                                tabContent.length ?
-                                    tabContent.map((tab, key) => {
+                                tabsArr.length ?
+                                    tabsArr.map((tab, key) => {
                                         if (activeTab == key) {
                                             return (
                                                 <TabPane className='relative' key={key} tabId={key}>
@@ -180,13 +181,19 @@ export default class DetailIncludes extends Component {
                                                         }
                                                     </div>
 
-                                                    <PortletTable
+                                                    {/* <PortletTable
                                                         finalColumns={tab.finalColumns}
                                                         listing={tab.listing}
                                                         genericData={tab}
                                                         callback={tab.refreshContent}
                                                         rowOptions={this.rowOptions}
                                                         source='modelAlias'
+                                                    /> */}
+                                                    <GenericListing
+                                                        menuDetail={tab}
+                                                        source='modelAlias'
+                                                        location={location}
+                                                        match= {match}
                                                     />
                                                 </TabPane>
                                             )

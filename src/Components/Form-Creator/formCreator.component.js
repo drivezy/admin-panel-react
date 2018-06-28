@@ -8,7 +8,7 @@ import {
 import { withFormik, Field, Form } from 'formik';
 import Yup from 'yup';
 
-import { Upload, Post, Put } from './../../Utils/http.utils';
+import { Upload, Post, Put, Get } from './../../Utils/http.utils';
 // import { GetPreference } from './../../Utils/generic.utils';
 import { IsObjectHaveKeys, IsUndefined } from './../../Utils/common.utils';
 
@@ -140,6 +140,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
             )}
         />,
         // Single Datepicker Ends
+
 
         // Time Picker
         746: <Field
@@ -281,10 +282,17 @@ const FormContents = withFormik({
 
         const column_definition = IsObjectHaveKeys(payload.layout) ? payload.layout.column_definition : [];
 
-        column_definition.forEach((preference) => {
+        column_definition.forEach(async (preference) => {
             if (typeof preference != 'string') {
                 let column = payload.dictionary[preference.index];
                 response[column.name] = payload.data[column.name] || '';
+
+                // if (column.reference_model) {
+                //     const url = column.reference_model.route_name;
+                //     const result = await Get({ url: url + '?query=id=' + payload.data[column.name], urlPrefix: ROUTE_URL  });
+                //     console.log(result);
+                //     response[column.name] = result;
+                // }
             }
         });
 
@@ -342,7 +350,9 @@ const FormContents = withFormik({
         let newValues = {};
         let keys = Object.keys(values);
         keys.forEach((key) => {
-            newValues[key] = values[key];
+            const value = values[key];
+
+            newValues[key] = value && typeof value == 'object' ? value.id : value;
             // newValues[payload.dataModel + '.' + key] = values[key];
         })
 
