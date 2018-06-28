@@ -92,7 +92,7 @@ export default class PortletTable extends Component {
     dropdownToggle = (column) => {
         let dropdownOpen = this.state.dropdownOpen;
 
-        dropdownOpen[column.id] = !dropdownOpen[column.id]
+        dropdownOpen[column.name] = !dropdownOpen[column.name]
 
         this.setState({
             dropdownOpen
@@ -133,7 +133,7 @@ export default class PortletTable extends Component {
 
         const urlParams = this.urlParams;
 
-        urlParams.order = column.path;
+        urlParams.order = column.name;
         urlParams.sort = sort.type;
         Location.search(urlParams, { props: paramProps });
 
@@ -144,7 +144,7 @@ export default class PortletTable extends Component {
         }
 
         this.setState({
-            sortKey: column.path,
+            sortKey: column.name,
         })
 
         this.dropdownToggle(column);
@@ -200,12 +200,12 @@ export default class PortletTable extends Component {
                                                     {/* DB Level */}
 
                                                     {
-                                                        (selectedColumn && selectedColumn.path.split('.').length == 1) && (selectedColumn.column_type != 118) &&
+                                                        (selectedColumn && selectedColumn.path.split('.').length == 2) && (selectedColumn.column_type != 118) &&
                                                         (
                                                             tableType == "listing" &&
                                                             <div className="db-level-sort">
                                                                 {
-                                                                    <Dropdown isOpen={this.state.dropdownOpen[selectedColumn.id]} toggle={() => this.dropdownToggle(selectedColumn)}>
+                                                                    <Dropdown isOpen={this.state.dropdownOpen[selectedColumn.name]} toggle={() => this.dropdownToggle(selectedColumn)}>
                                                                         <DropdownToggle tag="span" data-toggle="dropdown" aria-expanded={this.state.dropdownOpen}>
                                                                             <a className="dropdown-link">
                                                                                 <i className="fa fa-sort-amount-asc"></i>
@@ -213,13 +213,11 @@ export default class PortletTable extends Component {
                                                                         </DropdownToggle>
                                                                         <DropdownMenu>
                                                                             {
-                                                                                this.sortTypes.map((sort, key) => {
-                                                                                    return (
-                                                                                        <div className="dropdown-item" key={key} onClick={e => this.dropdownSortOnDB(sort, selectedColumn)}>
-                                                                                            <i className={`fa ${sort.icon}`} /> {sort.caption}
-                                                                                        </div>
-                                                                                    )
-                                                                                })
+                                                                                this.sortTypes.map((sort, key) =>
+                                                                                    <div className="dropdown-item" key={key} onClick={e => this.dropdownSortOnDB(sort, selectedColumn)}>
+                                                                                        <i className={`fa ${sort.icon}`} /> {sort.caption}
+                                                                                    </div>
+                                                                                )
                                                                             }
                                                                         </DropdownMenu>
                                                                     </Dropdown>

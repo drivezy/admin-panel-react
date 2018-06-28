@@ -117,7 +117,9 @@ export function BuildUrlForGetCall(url, params) {
     let newUrl = url + "?";
     for (const i in params) {
         const value = params[i];
-        newUrl += i + "=" + value + "&";
+        if (value) {
+            newUrl += i + "=" + value + "&";
+        }
     };
     return newUrl.slice(0, -1);
 }
