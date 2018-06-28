@@ -5,8 +5,10 @@ import React, { Component } from 'react';
 
 import GLOBAL from './../../../../Constants/global.constants';
 
-import SelectBox from './../../Components/Select-Box/selectBox';
+// import SelectBox from './../../Components/Select-Box/selectBox';
+import SelectBox from './../../Components/Select-Box/selectBoxForGenericForm.component';
 import Typeahead from './../../Components/Typeahead/typeahead.component';
+
 
 // import SelectBox from './../Select-Box/selectBoxForGenericForm.component';
 import './referenceInput.css';
@@ -24,15 +26,23 @@ export default class ReferenceInput extends Component {
             url: '',
             value: this.props.model || ''
         }
+
+        this.loadInitialContent(props);
     }
 
-
     UNSAFE_componentWillReceiveProps(nextProps) {
-        if (nextProps.column) {
-            if (!unmounted) {
-                this.loadInitialContent(nextProps);
-            }
+        // if (nextProps.column) {
+        //     if (!unmounted) {
+        //         this.loadInitialContent(nextProps);
+        //     }
+        // }
+        if (nextProps.model && typeof nextProps.model == 'object') {
+            this.setState({ value: nextProps.model });
         }
+    }
+
+    componentWillUnmount = () => {
+        // unmounted = true;
     }
 
     loadInitialContent = async (props) => {
@@ -52,7 +62,8 @@ export default class ReferenceInput extends Component {
             url = route;
         }
 
-        this.setState({ url });
+        // this.setState({ url });
+        this.state.url = url;
 
         if (model && url) {
             let preloadUrl;
@@ -77,15 +88,8 @@ export default class ReferenceInput extends Component {
 
                 this.setState({ value: options.pop() });
             }
-        } else {
-            this.setState({ url });
-        }
+        } 
     }
-
-    componentWillUnmount = () => {
-        // unmounted = true;
-    }
-
     render() {
 
         const { column } = this.props;
@@ -99,7 +103,7 @@ export default class ReferenceInput extends Component {
                     name={this.props.name}
                     onChange={this.props.onChange}
                     index="id"
-                    label={reference_model.display_column || column.display_column}
+                    field={reference_model.display_column || column.display_column}
                     sortingType={column.sorting_type}
                     // getOptions={this.getOptions}
                     queryField={reference_model.display_column || column.display_column}
