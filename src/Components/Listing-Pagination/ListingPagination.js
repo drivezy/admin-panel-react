@@ -28,7 +28,8 @@ export default class ListingPagination extends Component {
     redirectToPage = (pageNumber = this.state.currentPage, limit = 20) => {
 
         let temPageNumber = pageNumber;
-        let tempUrl = `${`?limit=${limit}&page=${pageNumber}`}`;
+        let tempLimit = limit.value ? limit.value : limit ;
+        let tempUrl = `${`?limit=${tempLimit}&page=${pageNumber}`}`;
         // let tempUrl = `${`?limit=${limit}&page=${this.state.currentPage}`}`;
         if (this.state.currentPage === '...') {
             temPageNumber = this.state.currentPage - this.state.showPages
@@ -41,7 +42,7 @@ export default class ListingPagination extends Component {
             temPageNumber = parseInt(this.state.currentPage) + this.state.showPages
             tempUrl = `${`?limit=${pageNumber}&page=${temPageNumber}`}`;
         }
-        this.setState({ currentPage: temPageNumber, limit })
+        this.setState({ currentPage: temPageNumber, tempLimit })
         const { history, match } = this.props;
         history.push(tempUrl);
     }
@@ -66,7 +67,7 @@ export default class ListingPagination extends Component {
 
         if (startPage >= 2) {
             pages.push({ page: 1 });
-            if (startPage > 5) {
+            if (startPage > 2) {
                 pages.push({ page: '...' })
             }
         }
