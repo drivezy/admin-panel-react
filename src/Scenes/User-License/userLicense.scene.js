@@ -3,9 +3,9 @@ import './userLicense.scene.css';
 
 import Viewer from 'react-viewer';
 import 'react-viewer/dist/index.css';
-
+import UserLicenseCard from './../../Components/User-License-Card/userLicenseCard.component';
 import {
-    Card, CardHeader, CardBody
+    Card, CardHeader, CardBody,Row , Col 
 } from 'reactstrap';
 
 import classNames from 'classnames';
@@ -29,7 +29,7 @@ export default class UserLicense extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userData: props.userData,
+
             userObj: {},
             images: [],
             visible: true,
@@ -47,13 +47,15 @@ export default class UserLicense extends Component {
     componentDidMount() {
         this.getUserDetail();
         this.getLicense();
+
+
     }
 
 
 
     getUserDetail = async () => {
         const { userId } = this.props.match.params;
-        const url = 'user/' + userId;
+        const url = 'user/' + userId + '?includes=licenses';
         const result = await Get({ url });
 
         if (result.success) {
@@ -93,13 +95,16 @@ export default class UserLicense extends Component {
 
     getLicense = async () => {
         let options = GetDefaultOptions();
-        const { userId, detectedDob, detectedLicense, detectedText, detectedExpiryDate } = this.props.match.params;
+        const { userId } = this.props.match.params;
+        const { detectedLicense, detectedDob, detectedText, detectedExpiryDate } = this.state;
         options.query += " and user_id=" + userId;
         options.query += " and approved is null and rejection_reason is null";
         const endpoint = "userLicense";
         const url = BuildUrlForGetCall(endpoint, options);
 
         const result = await Get({ url });
+
+        console.log(this.state.userObj);
 
 
         if (result.success) {
@@ -124,7 +129,7 @@ export default class UserLicense extends Component {
             //         detectedDob.push(images[i].dob);
             //     }
             //     if (images[i].license_number != null) {
-            //         detectedLicense.push(images[i].license_number);
+            //         detectedLicense.push(this.state.images[i].license_number);
             //     }
 
             //     if (images[i].text != null) {
@@ -135,6 +140,31 @@ export default class UserLicense extends Component {
             //         }
             //     }
             // }
+
+            images.map((item, key) => {
+                if (item.license_number) {
+                    detectedLicense.push(item.license_number);
+                }
+
+                if (item.dob) {
+                    detectedDob.push(item.dob);
+                }
+
+                if (item.text) {
+                    detectedText.push(item.text);
+
+                    if (item.text.search("validity") != -1) {
+                        var regex = /v\w{7} \d{2,4}(\/|-)\d{2,4}(\/|-)\d{2,4}/i;
+                        detectedExpiryDate.push(regex[0]);
+
+                    }
+                }
+
+
+
+            }
+            );
+
             this.change();
 
             this.updateCurrentIndex();
@@ -183,8 +213,8 @@ export default class UserLicense extends Component {
     }
 
     render() {
-        const { images = [], userObj = {}, currentIndex, detectedDob, detectedLicense, detectedText, detectedExpiryDate, userData } = this.state;
-
+        const { images = [], userObj = {}, currentIndex, detectedDob, detectedLicense, detectedText, detectedExpiryDate } = this.state;
+        // console.log(userData);
         const licenses = images.map((image) => {
             image.src = image.license;
             return image;
@@ -200,21 +230,21 @@ export default class UserLicense extends Component {
             <div className="user-license">
                 <div className="user-license-form">
                     <Card>
-                        <CardHeader>User Details</CardHeader>
+                        <CardHeader className="heading">User Details</CardHeader>
                         <CardBody>
                             {
                                 userObj.id &&
-                                <UserL icenseForm userObj={userObj} detectedDob={detectedDob} detectedLicense={detectedLicense} detectedText={detectedText} detectedExpiryDate={detectedExpiryDate} />
+                                <UserLicenseForm userObj={userObj} detectedDob={detectedDob} detectedLicense={detectedLicense} detectedText={detectedText} detectedExpiryDate={detectedExpiryDate} />
                             }
                         </CardBody>
                     </Card>
                 </div>
                 <div className="container licence-viewer">
                     <Card>
-                        <CardHeader>
+                        <CardHeader className="heading">
                             User Licenses {currentIndex + 1} of {images.length}
                         </CardHeader>
-                        <CardBody>
+                        {/* <CardBody>
                             <div className={inlineContainerClass} ref={ref => { this.container = ref; }}></div>
                             <Viewer
                                 container={this.container}
@@ -252,7 +282,17 @@ export default class UserLicense extends Component {
                                     ]);
                                 }}
                             />
-                        </CardBody>
+                        </CardBody> */}
+
+                        {
+                            userObj.id &&
+                            <CardBody>
+                                <UserLicenseCard userData={userObj} />
+
+                                
+
+                            </CardBody>
+                        }
                     </Card>
 
                 </div>

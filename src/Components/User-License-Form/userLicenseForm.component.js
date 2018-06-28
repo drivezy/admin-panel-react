@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { withFormik, Field } from 'formik';
 import { Put } from './../../Utils/http.utils';
 import SelectBox from './../Forms/Components/Select-Box/selectBox';
-
+import './userLicenseForm.component.css'
 // Our inner form component which receives our form's state and updater methods as props
 const InnerForm = ({
     values,
@@ -13,27 +13,29 @@ const InnerForm = ({
     handleBlur,
     handleSubmit,
     isSubmitting,
-    setFieldValue
+    setFieldValue,
+
 }) => (
         <form onSubmit={handleSubmit}>
             <div className="form-group">
-                {/* <label className="">First Name<span className="text-red">*</span></label> */}
+                <label className="name">First Name<span className="text-red">*</span></label>
                 <input type="text" name="first_name" placeholder="First Name" className="form-control" value={values.first_name} onChange={handleChange} />
             </div>
             <div className="form-group">
-                {/* <label className="">Last Name</label> */}
+                <label className="name">Last Name</label>
                 <input type="text" name="last_name" placeholder="Last Name" className="form-control" value={values.last_name} onChange={handleChange} />
             </div>
             <div className="form-group">
-                {/* <label className="">Date Of Birth<span className="text-red">*</span></label> */}
-                <input type="text" name="dob" placeholder="Date Of Birth" className="form-control" value={values.dob} onChange={handleChange} />
+                <label className="name">Date Of Birth<span className="text-red">*</span></label>
+                <input type="text" name="dob" placeholder="yyyy-mm-dd" className="form-control" value={values.dob} onChange={handleChange} />
                 {
                     values.detectedDob.map((dob, key) => {
                         return (
                             <small className="detected-items" key={key}>Detected DoB:
-                                <span className="item" ng-click="userLicense.copySuggested(dob,'dob')">{dob}
-                                    <span ng-show="!$last" className="list-comma">, </span>
+                                <span className="item" onClick={() => setFieldValue('dob',dob)}>{dob}
+                                    
                                 </span>
+                                <br/>
                             </small>
                         );
                     })
@@ -41,39 +43,47 @@ const InnerForm = ({
             </div>
 
             <div className="form-group">
-                {/* <label className="control-label">Gender</label> */}
+                <label className="name">Gender</label>
                 <Field
                     name='gender'
                     render={({ field /* _form */ }) => (
-                        <SelectBox valueKey="value" field="label" name='gender' placeholder={'Gender' }onChange={(selected) => { setFieldValue('gender', selected.value) }} value={values.gender} options={[{ value: "male", label: "Male" }, { value: "female", label: "Female" }, { value: "others", label: "Others" }]} />
+                        <SelectBox valueKey="value" field="label" name='gender' placeholder={'Gender'} onChange={(selected) => { setFieldValue('gender', selected.value) }} value={values.gender} options={[{ value: "male", label: "Male" }, { value: "female", label: "Female" }, { value: "others", label: "Others" }]} />
                     )}
                 />
             </div>
 
             <div className="form-group">
-                {/* <label className="">Email</label> */}
+                <label className="name">Email</label>
                 <input type="text" name="email" placeholder="Email" className="form-control" value={values.email} onChange={handleChange} />
             </div>
             <div className="form-group">
-                {/* <label className="">Mobile</label> */}
+                <label className="name">Mobile</label>
                 <input type="text" name="mobile" placeholder="Mobile" className="form-control" value={values.mobile} onChange={handleChange} />
             </div>
             <div className="form-group">
-                {/* <label className="">License Number</label> */}
+                <label className="name">License Number</label>
                 <input type="text" name="license_number" placeholder="Licence Number" className="form-control" value={values.license_number} onChange={handleChange} />
                 {
-                    values.detectedLicense.map((license, key) => {
+                   (values.detectedLicense) &&
+                   values.detectedLicense.map((license, key) => {
                         return (
-                            <small className="detected-items" key={key}>Detected DoB:
-                                <span className="item" ng-click="userLicense.copySuggested(dob,'dob')">{license}
-                                    <span ng-show="!$last" className="list-comma">, </span>
+                           
+                            <small className="detected-items" key={key}>Detected License Number:
+                                
+                                <span className="item" onClick={() => setFieldValue('license_number',license)}>{license}
                                 </span>
+                            <br/>
                             </small>
                         );
+
+                        
+                        console.log(license);
+
                     })
                 }
 
             </div>
+
             <div className="form-group">
                 <div className="margin-top-5" id="buttonWidth">
                     <button className="btn btn-primary pull-right button-blue" type="submit" disabled={isSubmitting}>
@@ -165,6 +175,7 @@ const LicenseForm = withFormik({
 })(InnerForm);
 
 
+
 export default class UserLicenseForm extends Component {
     constructor(props) {
         super(props);
@@ -177,6 +188,7 @@ export default class UserLicenseForm extends Component {
             detectedExpiryDate: this.props.detectedExpiryDate
         }
     }
+    
 
     render() {
         const { userContent, detectedDob, detectedLicense, detectedText, detectedExpiryDate } = this.state;

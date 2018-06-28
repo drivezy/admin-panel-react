@@ -6,7 +6,7 @@ import {
 import { Get } from './../../Utils/http.utils';
 import { Link } from 'react-router-dom';
 
-import Viewer from 'react-viewer';
+
 import 'react-viewer/dist/index.css';
 
 
@@ -52,9 +52,9 @@ export default class UserLicenseCard extends Component {
 
         let userLicenseImageArr = [];
 
+        //.filter((image) => image.approved == 1)
 
-
-        userLicenseImageArr = userData.licenses.filter((image) => image.approved == 1).map((image) => {
+        userLicenseImageArr = userData.licenses.map((image) => {
             // if (image.approved == 1) {
             image.src = image.license;
             return image;
