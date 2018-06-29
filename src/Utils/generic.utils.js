@@ -8,7 +8,7 @@ import { ConfirmUtils } from './confirm-utils/confirm.utils';
 import { ProcessForm } from './formMiddleware.utils';
 
 import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
-import { GetMenuDetailEndPoint } from './../Constants/api.constants';
+import { GetMenuDetailEndPoint, FormDetailEndPoint } from './../Constants/api.constants';
 import { RECORD_URL } from './../Constants/global.constants';
 
 // import FormCreator from './../Components/Form-Creator/formCreator.component'
@@ -188,15 +188,7 @@ export function ConvertMenuDetailForGenericPage(menuDetail) {
         var splits = menuDetail.default_order.split(",");
     }
 
-    menuDetail.layouts = menuDetail.list_layouts.map(layout => {
-        // menuDetail.layouts = menuDetail.list_layouts.map(layout => {
-        try {
-            layout.column_definition = JSON.parse(layout.column_definition);
-        } catch (e) {
-            layout.column_definition = {};
-        }
-        return layout;
-    })
+    menuDetail.layouts = GetParsedLayoutScript(menuDetail.list_layouts)
 
     const layout = menuDetail.list_layouts.length ? menuDetail.list_layouts[0] : null; // @TODO for now taking 0th element as default layout, change later 
 
@@ -442,9 +434,10 @@ export function GetPreSelectedMethods() {
 
     }
 
-    methods.customForm = ({ action, listingRow, genericData, source = 'module' }) => {
+    methods.customForm = ({ action, listingRow, genericData, source = 'form' }) => {
         const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Add' });
-        ProcessForm({ formContent });
+        formContent.form = action;
+        ProcessForm({ formContent, isForm: true });
     }
 
     /**
@@ -656,7 +649,7 @@ function createQueryUrl(url, restrictQuery, genericData) {
 export function GetUrlForFormCreator({ payload, getDictionary = false, isForm }) {
     let url = '';
     if (isForm) {
-        url = `formDetails/${payload.form_id}`;
+        url = `${FormDetailEndPoint}/${payload.form.form_id}`;
         return url;
     }
     url = payload.method == 'edit' ? payload.route + '/' + (payload.data.id || payload.data[payload.starter + '.id']) : payload.route;
@@ -676,9 +669,22 @@ export function GetSelectedColumnDefinition(layout) {
 
 export function RemoveStarterFromThePath({ data, starter }) {
     const obj = {}
-    for (let  i in data) {
+    for (let i in data) {
         const index = i.replace(starter + '.', '');
         obj[index] = data[i];
     }
     return obj;
+}
+
+export function GetParsedLayoutScript(listLayouts) {
+    return listLayouts.map(layout => {
+        // menuDetail.layouts = menuDetail.list_layouts.map(layout => {
+        try {
+            layout.column_definition = JSON.parse(layout.column_definition);
+        } catch (e) {
+            layout.column_definition = {};
+        }
+        return layout;
+    })
+
 }

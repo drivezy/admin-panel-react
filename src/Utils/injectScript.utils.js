@@ -33,6 +33,7 @@ function methods({ formContent, context, contextName, script, scripts }) {
         eval(script);
 
         formContent = window[contextName].getForm(true);
+        // window[contextName].updateForm();
         delete window[contextName];
         RemoveError(scripts);
     } catch (err) {

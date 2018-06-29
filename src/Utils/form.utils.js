@@ -1,4 +1,4 @@
-import { IsObjectHaveKeys, BuildUrlForGetCall } from './common.utils';
+import { IsObjectHaveKeys, BuildUrlForGetCall, IsUndefined } from './common.utils';
 import { StoreEvent } from './stateManager.utils';
 
 let self = {};
@@ -50,7 +50,7 @@ export default class FormUtil {
      * Used to change page name
      * @param  {string} name
      */
-    static pageName(name) {
+    static formName(name) {
         self.form.name = name;
     }
 
@@ -82,7 +82,7 @@ export default class FormUtil {
      * @param  {any} value - value to be set for particular element
      */
     static setValue(column, value) {
-        if (typeof self.form == "object" && self.form.data[column]) {
+        if (typeof self.form == "object" && !IsUndefined(self.form.data[column])) {
             self.form.data[column] = value;
             return self.form.data[column];
         }
@@ -100,6 +100,10 @@ export default class FormUtil {
             url = BuildUrlForGetCall(url, queryParams);
             self.form.dictionary[column].reference_model.route_name = url;
         }
+    }
+
+    static getRecordValue(column) {
+        return self.form.record[column];
     }
 
     /**

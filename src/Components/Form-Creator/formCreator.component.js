@@ -28,6 +28,7 @@ import FormSettings from './../Form-Settings/FormSettings.component';
 import ScriptInput from './../Forms/Components/Script-Input/scriptInput.component';
 
 import { SubscribeToEvent } from './../../Utils/stateManager.utils';
+import { ExecuteScript } from './../../Utils/injectScript.utils';
 
 import FormUtils from './../../Utils/form.utils';
 import { GetUrlForFormCreator } from './../../Utils/generic.utils';
@@ -281,7 +282,7 @@ const FormContents = withFormik({
         let response = {}
 
         const column_definition = IsObjectHaveKeys(payload.layout) ? payload.layout.column_definition : [];
-
+        console.log(column_definition);
         column_definition.forEach(async (preference) => {
             if (typeof preference != 'string') {
                 let column = payload.dictionary[preference.index];
@@ -427,12 +428,14 @@ export default class FormCreator extends Component {
     }
 
     formUpdated = (form) => {
-        const { updateState } = form;
-        if (updateState) {
-            this.setState({ form });
-        } else {
-            this.state.form = form;
-        }
+        setTimeout(() => {
+            const { updateState } = form;
+            if (updateState) {
+                this.setState({ form });
+            } else {
+                this.state.form = form;
+            }
+        }, 1000);
     }
 
     closeModal = () => {
@@ -452,6 +455,8 @@ export default class FormCreator extends Component {
     layoutChanged = (selectedColumns) => {
         let { payload } = this.state;
         payload.layout = selectedColumns;
+
+        payload = ExecuteScript({ formContent: payload, scripts: payload.scripts, context: FormUtils, contextName: 'form' });
         this.setState({ payload });
     }
 
