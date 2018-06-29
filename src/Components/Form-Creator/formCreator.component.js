@@ -368,7 +368,7 @@ const FormContents = withFormik({
 
 
         async function submitGenericForm() {
-            const url = GetUrlForFormCreator(payload);
+            const url = GetUrlForFormCreator({ payload });
             const Method = payload.method == 'edit' ? Put : Post;
             const result = await Method({ url, body: newValues, urlPrefix: ROUTE_URL });
             if (result.success) {

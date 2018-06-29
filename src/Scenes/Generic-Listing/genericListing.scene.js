@@ -284,7 +284,7 @@ export default class GenericListing extends Component {
                             </div>
                         </div>
                         <div className="header-actions">
-                            <CustomAction position="header" history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
+                            <CustomAction position="header" history={history} genericData={genericData} actions={genericData.nextActions} placement={'as_header'} />
                             {
                                 genericData.columns ?
                                     <TableSettings

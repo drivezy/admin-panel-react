@@ -284,7 +284,7 @@ export default class PortletTable extends Component {
                                 listing.map((listingRow, rowKey) => (
                                     <tr className="table-row" key={rowKey}>
                                         <td className="action-column">
-                                            <CustomAction history={history} source={source} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} placement={167} callback={callback} />
+                                            <CustomAction history={history} source={source} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} callback={callback} />
                                         </td>
                                     </tr>
                                 ))

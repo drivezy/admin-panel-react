@@ -223,7 +223,7 @@ export function ConvertMenuDetailForGenericPage(menuDetail) {
         layout,
         pageName: menuDetail.name,
         image: menuDetail.image,
-
+        uiActions: menuDetail.ui_actions
         // starter: menuDetail.starter,
         // userMethod: menuDetail.method,
         // formPreferenceName: menuDetail.state_name.toLowerCase(),
@@ -272,7 +272,7 @@ export function CreateInclusions(includes) {
 export function CreateUrl({ url = '', obj }) {
     const reg = /(:)\w+/g;
     const params = url.match(reg);
-    if (!params.length) {
+    if (!(params && params.length)) {
         return url;
     }
     for (let i in params) {
@@ -390,28 +390,22 @@ export function GetPreSelectedMethods() {
      * @param  {object} genericData}
      */
     methods.add = ({ action, listingRow, genericData, source = 'module' }) => {
-        const formContent = {
-            source,
-            data: listingRow,
-            callback: action.callback,
-            starter: genericData.starter,
-            dictionary: genericData.columns,
-            relationship: genericData.model,
-            layout: genericData.formPreference,
-            userId: genericData.userId,
-            modelId: genericData.modelId,
-            route: genericData.url,
-            name: 'Add' + genericData.starter,
-        };
-
+        const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Add' });
         ProcessForm({ formContent });
-        // ModalManager.openModal({
-        //     payload,
-        //     headerText: 'Add modal',
-        //     // modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),
-        //     modalBody: () => (<FormCreator payload={payload} />),
-        //     // modalFooter: () => (<ModalFooter payload={payload}></ModalFooter>)
-        // });
+        // const formContent = {
+        //     source,
+        //     callback: action.callback,
+        //     data: listingRow,
+        //     starter: genericData.starter,
+        //     dictionary: genericData.columns,
+        //     relationship: genericData.model,
+        //     layout: genericData.formPreference,
+        //     userId: genericData.userId,
+        //     modelId: genericData.modelId,
+        //     route: genericData.url,
+        //     name: 'Add' + genericData.starter,
+        // };
+
     }
 
     /**
@@ -421,28 +415,35 @@ export function GetPreSelectedMethods() {
      * @param  {object} genericData}
      */
     methods.edit = ({ action, listingRow, genericData, source = 'module' }) => {
+        const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Edit' });
+        ProcessForm({ formContent });
         // const payload = { method: 'edit', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module };
-        const formContent = {
-            source,
-            method: 'edit',
-            callback: action.callback,
-            data: listingRow,
-            starter: genericData.starter,
-            dictionary: genericData.columns,
-            relationship: genericData.model,
-            layout: genericData.formPreference,
-            userId: genericData.userId,
-            modelId: genericData.modelId,
-            route: genericData.url,
-            name: 'Edit' + genericData.starter
-            // columns: genericData.columns,
-            // formPreference: genericData.formPreference,
-            // modelName: genericData.modelName,
-            // module: genericData.module,
-            // dataModel: genericData.dataModel,
-            // action,
-            // url: genericData.url
-        };
+        // const formContent = {
+        //     source,
+        //     method: 'edit',
+        //     callback: action.callback,
+        //     data: listingRow,
+        //     starter: genericData.starter,
+        //     dictionary: genericData.columns,
+        //     relationship: genericData.model,
+        //     layout: genericData.formPreference,
+        //     userId: genericData.userId,
+        //     modelId: genericData.modelId,
+        //     route: genericData.url,
+        //     name: 'Edit' + genericData.starter
+        //     // columns: genericData.columns,
+        //     // formPreference: genericData.formPreference,
+        //     // modelName: genericData.modelName,
+        //     // module: genericData.module,
+        //     // dataModel: genericData.dataModel,
+        //     // action,
+        //     // url: genericData.url
+        // };
+
+    }
+
+    methods.customForm = ({ action, listingRow, genericData, source = 'module' }) => {
+        const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Add' });
         ProcessForm({ formContent });
     }
 
@@ -454,27 +455,22 @@ export function GetPreSelectedMethods() {
      * @param  {object} genericData}
      */
     methods.copy = ({ action, listingRow, genericData, source = 'module' }) => {
-        const formContent = {
-            method: 'add',
-            callback: action.callback,
-            data: listingRow,
-            source,
-            starter: genericData.starter,
-            dictionary: genericData.columns,
-            relationship: genericData.model,
-            layout: genericData.formPreference,
-            userId: genericData.userId,
-            modelId: genericData.modelId,
-            route: genericData.url,
-            name: 'Add' + genericData.starter
-        };
+        const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Add' });
         ProcessForm({ formContent });
-        // ModalManager.openModal({
-        //     payload,
-        //     // modalHeader: () => (<ModalHeader payload={payload}></ModalHeader>),
-        //     headerText: 'Add modal',
-        //     modalBody: () => (<FormCreator payload={payload} />)
-        // });
+        // const formContent = {
+        //     source,
+        //     method: 'add',
+        //     callback: action.callback,
+        //     data: listingRow,
+        //     starter: genericData.starter,
+        //     dictionary: genericData.columns,
+        //     relationship: genericData.model,
+        //     layout: genericData.formPreference,
+        //     userId: genericData.userId,
+        //     modelId: genericData.modelId,
+        //     route: genericData.url,
+        //     name: 'Add' + genericData.starter
+        // };
     }
 
     methods.delete = async ({ action, listingRow, genericData }) => {
@@ -526,6 +522,23 @@ export function GetPreSelectedMethods() {
                 modalBody: () => (<TableWrapper listing={auditData} columns={columns.auditData}></TableWrapper>)
             })
         }
+    }
+
+    function getFormContent({ listingRow, action, genericData, source, method }) {
+        return {
+            method: method.toLowerCase(),
+            source,
+            callback: action.callback,
+            data: listingRow,
+            starter: genericData.starter,
+            dictionary: genericData.columns,
+            relationship: genericData.model,
+            layout: genericData.formPreference,
+            userId: genericData.userId,
+            modelId: genericData.modelId,
+            route: genericData.url,
+            name: method + genericData.starter,
+        };
     }
     return methods;
 }
@@ -640,8 +653,13 @@ function createQueryUrl(url, restrictQuery, genericData) {
  * being used in formCreator to detemine the url based on the method
  * @param  {object} payload
  */
-export function GetUrlForFormCreator(payload, getDictionary = false) {
-    const url = payload.method == 'edit' ? payload.route + '/' + (payload.data.id || payload.data[payload.starter + '.id']) : payload.route;
+export function GetUrlForFormCreator({ payload, getDictionary = false, isForm }) {
+    let url = '';
+    if (isForm) {
+        url = `formDetails/${payload.form_id}`;
+        return url;
+    }
+    url = payload.method == 'edit' ? payload.route + '/' + (payload.data.id || payload.data[payload.starter + '.id']) : payload.route;
     if (getDictionary) {
         return url + (payload.method == 'edit' ? '/edit' : '/create');
     }
@@ -654,4 +672,13 @@ export function GetSelectedColumnDefinition(layout) {
     if (typeof selectedColumnsDefinition == 'string') {
         return JSON.parse(selectedColumnsDefinition);
     }
+}
+
+export function RemoveStarterFromThePath({ data, starter }) {
+    const obj = {}
+    for (let  i in data) {
+        const index = i.replace(starter + '.', '');
+        obj[index] = data[i];
+    }
+    return obj;
 }
