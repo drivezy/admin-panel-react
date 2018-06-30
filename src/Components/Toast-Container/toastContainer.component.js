@@ -19,6 +19,7 @@ const getIcon = (key) => {
 /** method for showing icon in one of three situation */
 const iconMap = (key, color) => {
     const icons = {
+        info: <Info label="Info icon" primaryColor={color || colors.P300} />,
         success: <Tick label="Success icon" primaryColor={color || colors.G300} />,
         warning: (
             <Warning label="Warning icon" primaryColor={color || colors.Y300} />
@@ -77,6 +78,11 @@ export default class Toastcontainer extends Component {
     warn = (params) => {
         const flags = this.state.flags;
         params.icon = 'warning';
+        this.addFlag(flags, params);
+    };
+    info = (params) => {
+        const flags = this.state.flags;
+        params.icon = 'info';
         this.addFlag(flags, params);
     };
 
