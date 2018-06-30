@@ -102,8 +102,16 @@ export default class FormUtil {
         }
     }
 
+    static getMenuDetail() {
+        return self.form.menu;
+    }
+
     static getRecordValue(column) {
         return self.form.record[column];
+    }
+
+    static getParentValue(column) {
+        return self.form.parent[column];
     }
 
     /**
@@ -156,7 +164,14 @@ export default class FormUtil {
      */
     static setForm(form) {
         self.form = form;
+        console.log(form);
+        self.data = { ...self.form.data } || {};
+        // self.data = self.form.data || {};
     };
+
+    static getOriginalData() {
+        return self.data;
+    }
 
     /**
      * Returns form object

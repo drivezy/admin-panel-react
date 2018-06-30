@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Get } from './http.utils';
-import { IsUndefinedOrNull, BuildUrlForGetCall } from './common.utils';
+import { IsUndefinedOrNull, BuildUrlForGetCall, IsObjectHaveKeys } from './common.utils';
 import ToastNotifications from './toast.utils';
 import { Delete } from './http.utils';
 import { Location } from './location.utils';
@@ -381,8 +381,8 @@ export function GetPreSelectedMethods() {
      * @param  {object} listingRow
      * @param  {object} genericData}
      */
-    methods.add = ({ action, listingRow, genericData, source = 'module' }) => {
-        const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Add' });
+    methods.add = ({ action, listingRow, genericData, source = 'module', menuDetail, parent }) => {
+        const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Add', menuDetail, parent });
         ProcessForm({ formContent });
         // const formContent = {
         //     source,
@@ -406,8 +406,8 @@ export function GetPreSelectedMethods() {
      * @param  {object} listingRow
      * @param  {object} genericData}
      */
-    methods.edit = ({ action, listingRow, genericData, source = 'module' }) => {
-        const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Edit' });
+    methods.edit = ({ action, listingRow, genericData, source = 'module', menuDetail, parent }) => {
+        const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Edit', menuDetail, parent });
         ProcessForm({ formContent });
         // const payload = { method: 'edit', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module };
         // const formContent = {
@@ -434,8 +434,8 @@ export function GetPreSelectedMethods() {
 
     }
 
-    methods.customForm = ({ action, listingRow, genericData, source = 'form' }) => {
-        const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Add' });
+    methods.customForm = ({ action, listingRow, genericData, source = 'form', menuDetail, parent }) => {
+        const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Add', menuDetail, parent });
         formContent.form = action;
         ProcessForm({ formContent, isForm: true });
     }
@@ -447,8 +447,8 @@ export function GetPreSelectedMethods() {
      * @param  {object} listingRow
      * @param  {object} genericData}
      */
-    methods.copy = ({ action, listingRow, genericData, source = 'module' }) => {
-        const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Add' });
+    methods.copy = ({ action, listingRow, genericData, source = 'module', menuDetail, parent }) => {
+        const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Add', menuDetail, parent });
         ProcessForm({ formContent });
         // const formContent = {
         //     source,
@@ -517,10 +517,12 @@ export function GetPreSelectedMethods() {
         }
     }
 
-    function getFormContent({ listingRow, action, genericData, source, method }) {
+    function getFormContent({ listingRow, action, genericData, source, method, menuDetail = {}, parent={} }) {
         return {
             method: method.toLowerCase(),
+            menu: menuDetail,
             source,
+            parent: parent,
             callback: action.callback,
             data: listingRow,
             starter: genericData.starter,
@@ -648,14 +650,30 @@ function createQueryUrl(url, restrictQuery, genericData) {
  */
 export function GetUrlForFormCreator({ payload, getDictionary = false, isForm }) {
     let url = '';
-    if (isForm) {
+    if (payload.source == 'form' || isForm) {
         url = `${FormDetailEndPoint}/${payload.form.form_id}`;
         return url;
     }
+
+    // @TODO @shubham remove below line after sometime - shubham
     url = payload.method == 'edit' ? payload.route + '/' + (payload.data.id || payload.data[payload.starter + '.id']) : payload.route;
+    
     if (getDictionary) {
         return url + (payload.method == 'edit' ? '/edit' : '/create');
     }
+    return url;
+}
+
+export function GetUrlForFormSubmit({ payload }) {
+    let url = '';
+    const isForm = payload.source == 'form' ? true : false;
+    if (isForm) {
+        // get url
+        url = ConvertToQuery.bind({ data: payload.data, record: payload.record })(payload.route);
+        return url;
+    }
+    url = payload.method == 'edit' ? payload.route + '/' + (payload.data.id || payload.data[payload.starter + '.id']) : payload.route;
+
     return url;
 }
 
@@ -687,4 +705,19 @@ export function GetParsedLayoutScript(listLayouts) {
         return layout;
     })
 
+}
+
+export function GetChangedMethods(newValues, originalValues) {
+    const data = {};
+    if (IsObjectHaveKeys(originalValues)) {
+        for (let i in originalValues) {
+            const newValue = newValues[i];
+            const oldValue = originalValues[i];
+            if (newValue != oldValue) {
+                data[i] = newValue;
+            }
+        }
+    }
+
+    return data;
 }

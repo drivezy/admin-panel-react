@@ -15,6 +15,7 @@ import TableSettings from './../../Components/Table-Settings/TableSettings.compo
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 import RightClick from './../../Components/Right-Click/rightClick.component';
 
+import { RemoveStarterFromThePath } from './../../Utils/generic.utils';
 import { GetUrlParams, Location } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
 import { GetDetailRecord } from './../../Utils/genericDetail.utils';
@@ -30,7 +31,8 @@ export default class GenericDetail extends Component {
             menuDetail: {},
             portlet: {},
             tabs: {},
-            tabsPreference: {}
+            tabsPreference: {},
+            parentData: {}
         };
 
         this.currentUrl = this.getHref();
@@ -93,7 +95,8 @@ export default class GenericDetail extends Component {
 
     dataFetched = ({ tabDetail, portlet }) => {
         tabDetail.refreshContent = this.getDetailRecord;
-        this.setState({ portlet, tabDetail });
+        const parentData = RemoveStarterFromThePath({ data: portlet.data, starter: portlet.starter });
+        this.setState({ portlet, tabDetail, parentData });
     }
 
     getColumn = (preference, dictionary) => {
@@ -114,7 +117,7 @@ export default class GenericDetail extends Component {
 
     render() {
         const { history, location, match } = this.props;
-        const { menuDetail = {}, portlet = {}, tabDetail = {}, currentUser = {} } = this.state;
+        const { menuDetail = {}, portlet = {}, tabDetail = {}, currentUser = {}, parentData } = this.state;
         const { finalColumns = [], data = {}, formPreference = {}, starter } = portlet;
 
         const genericDataForCustomColumn = {
@@ -136,7 +139,7 @@ export default class GenericDetail extends Component {
 
                 <div className="right">
                     <div className="btn-group header-actions" id="generic-detail-header-dynamic-icon-group">
-                        <CustomAction history={history} genericData={genericDataForCustomColumn} actions={portlet.nextActions} listingRow={data} placement={167} callback={this.getDetailRecord} />
+                        <CustomAction menuDetail={menuDetail} history={history} genericData={genericDataForCustomColumn} actions={portlet.nextActions} listingRow={data} placement={'as_header'} callback={this.getDetailRecord} />
                     </div>
 
                     {
@@ -170,7 +173,7 @@ export default class GenericDetail extends Component {
 
                     {
                         tabDetail && tabDetail.tabs ?
-                            <DetailIncludes tabs={tabDetail.tabs} callback={this.getDetailRecord} currentUser={currentUser} location={location} match={match} />
+                            <DetailIncludes tabs={tabDetail.tabs} parentData={parentData} callback={this.getDetailRecord} currentUser={currentUser} location={location} match={match} />
                             : null
                     }
                 </div>

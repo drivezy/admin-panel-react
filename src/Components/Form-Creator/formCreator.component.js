@@ -9,7 +9,7 @@ import { withFormik, Field, Form } from 'formik';
 import Yup from 'yup';
 
 import { Upload, Post, Put, Get } from './../../Utils/http.utils';
-// import { GetPreference } from './../../Utils/generic.utils';
+import { GetChangedMethods } from './../../Utils/generic.utils';
 import { IsObjectHaveKeys, IsUndefined } from './../../Utils/common.utils';
 
 //  import SelectBox from './../Forms/Components/Select-Box/selectBox';
@@ -31,7 +31,7 @@ import { SubscribeToEvent } from './../../Utils/stateManager.utils';
 import { ExecuteScript } from './../../Utils/injectScript.utils';
 
 import FormUtils from './../../Utils/form.utils';
-import { GetUrlForFormCreator } from './../../Utils/generic.utils';
+import { GetUrlForFormSubmit } from './../../Utils/generic.utils';
 
 import { ROUTE_URL } from './../../Constants/global.constants';
 
@@ -282,7 +282,6 @@ const FormContents = withFormik({
         let response = {}
 
         const column_definition = IsObjectHaveKeys(payload.layout) ? payload.layout.column_definition : [];
-        console.log(column_definition);
         column_definition.forEach(async (preference) => {
             if (typeof preference != 'string') {
                 let column = payload.dictionary[preference.index];
@@ -369,9 +368,12 @@ const FormContents = withFormik({
 
 
         async function submitGenericForm() {
-            const url = GetUrlForFormCreator({ payload });
+            const url = GetUrlForFormSubmit({ payload });
             const Method = payload.method == 'edit' ? Put : Post;
-            const result = await Method({ url, body: newValues, urlPrefix: ROUTE_URL });
+
+            const originalValues = FormUtils.getOriginalData();
+            const body = GetChangedMethods(newValues, originalValues);
+            const result = await Method({ url, body, urlPrefix: ROUTE_URL });
             if (result.success) {
                 props.onSubmit();
             }

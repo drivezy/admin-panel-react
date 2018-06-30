@@ -46,17 +46,18 @@ export default class CustomAction extends Component {
 
     callFunction = ({ action, listingRow }) => {
         const args = [];
-        const { genericData, history, callback, source = 'model' } = this.props;
+        const { genericData, history, callback, source = 'model', menuDetail = {}, parentData = {} } = this.props;
         this.genericData = genericData;
-        const data = RemoveStarterFromThePath({ data: listingRow, starter: 'datamodel' });
+        const data = RemoveStarterFromThePath({ data: listingRow, starter: genericData.starter });
+        
 
         if (action.form_id) {
             action.callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : callback) : callback;
-            genericData.preDefinedmethods.customForm({ action, listingRow: data, genericData, history });
+            genericData.preDefinedmethods.customForm({ action, listingRow: data, genericData, history, menuDetail, parent: parentData });
         } else {
-
             const pageContent = {
                 data,
+                parent: parentData,
                 execution_script: action.execution_script
             }
             ProcessPage({ pageContent });
