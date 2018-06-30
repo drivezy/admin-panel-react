@@ -124,7 +124,7 @@ export function GetDataForPortlet({ portletDetail, genericDetailObject }) {
     obj.starter = portletDetail.base;
     obj.relationship = relationship;
     const model = obj.model = relationship[obj.starter];
-    obj.nextActions = obj.model.actions;
+    obj.nextActions = [...obj.model.actions, ...genericDetailObject.uiActions];
     obj.model = model;
     const formPreference = model.form_layouts[0] || {};
     if (IsObjectHaveKeys(formPreference)) {

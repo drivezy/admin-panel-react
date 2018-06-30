@@ -254,7 +254,7 @@ export default class GenericListing extends Component {
         }
 
         // const listingData = 
-        const { history, match } = this.props;
+        const { history, match, parentData = {} } = this.props;
         return (
             <HotKeys keyMap={this.keyMap} handlers={this.handlers}>
                 <div className="generic-listing-container">
@@ -284,7 +284,7 @@ export default class GenericListing extends Component {
                             </div>
                         </div>
                         <div className="header-actions">
-                            <CustomAction position="header" history={history} genericData={genericData} actions={genericData.nextActions} placement={168} />
+                            <CustomAction position="header" parentData={parentData} menuDetail={menuDetail} history={history} genericData={genericData} actions={genericData.nextActions} placement={'as_header'} />
                             {
                                 genericData.columns ?
                                     <TableSettings
@@ -330,12 +330,14 @@ export default class GenericListing extends Component {
                                     {/* Portlet Table */}
                                     <PortletTable tableType="listing"
                                         rowOptions={this.rowOptions}
+                                        parentData={parentData}
                                         // toggleAdvancedFilter={this.toggleAdvancedFilter} 
                                         history={history} match={match}
                                         genericData={genericData}
                                         finalColumns={finalColumns}
                                         listing={localSearch.value ? filteredResults : listing}
-                                        callback={this.getListingData} menuDetail={menuDetail}
+                                        callback={this.getListingData}
+                                        menuDetail={menuDetail}
                                     />
                                     {/* Portlet Table Ends */}
 

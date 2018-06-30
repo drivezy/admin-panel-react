@@ -122,7 +122,7 @@ export default class DetailIncludes extends Component {
 
     render() {
         const { tabs, tabContent, activeTab } = this.state;
-        const { history = {}, callback, currentUser, location, match } = this.props;
+        const { history = {}, callback, currentUser, location, match, parentData } = this.props;
         const arr = [];
         const tabsArr = Object.values(tabs);
         // Object.keys(tabs.data).map((tab)=>(
@@ -158,7 +158,7 @@ export default class DetailIncludes extends Component {
                                                     {/* Building the table iterating through the row to display tab content */}
                                                     <div className='table-header'>
                                                         <div className='btn-group header-actions'>
-                                                            <CustomAction history={history} source='modelAlias' genericData={tab} actions={tab.nextActions} placement={168} callback={callback} source='modelAlias' />
+                                                            <CustomAction history={history} source='modelAlias' genericData={tab} actions={tab.nextActions} placement={'as_header'} parentData={parentData} callback={callback} source='modelAlias' />
                                                         </div>
 
                                                         <a className="btn btn-secondary btn-sm" onClick={() => Location.navigate({ url: `/modelAliasDetail/${tab.relationship[tab.starter].id}` })}>
@@ -190,10 +190,11 @@ export default class DetailIncludes extends Component {
                                                         source='modelAlias'
                                                     /> */}
                                                     <GenericListing
+                                                        parentData={parentData}
                                                         menuDetail={tab}
                                                         source='modelAlias'
                                                         location={location}
-                                                        match= {match}
+                                                        match={match}
                                                     />
                                                 </TabPane>
                                             )

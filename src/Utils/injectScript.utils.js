@@ -4,15 +4,11 @@
  * @param  {object} {data
  * @param  {array} script}
  */
-import FormUtils from './form.utils';
 
-export function ExecuteScript({ formContent, scripts }) {
+export function ExecuteScript({ formContent, scripts, context, contextName = 'form' }) {
     if (!Array.isArray(scripts) || !scripts.length) {
         return formContent;
     }
-
-
-    // const methods = {};
 
     let script = '';
 
@@ -20,80 +16,34 @@ export function ExecuteScript({ formContent, scripts }) {
         script += PrefixScript(scripts[i]);
     }
 
-    function methods({ formContent, FormUtils: form }) {
-        // if (!extraParam || (typeof extraParam == "object" && (!extraParam.trigger_type || extraParam.trigger_type.indexOf(scripts[i].trigger_type) > -1)) && scripts[i].active) {
-        try {
-            form.setForm(formContent);
-            // @todo once we get support for column name to be watched from db will enable this way
-            // if (extraParam.trigger_type == 363) {
-            //     FormUtil.onChange(onChange, column);
 
-            //     function onChange(newVal, oldVal){
-            //         eval(scripts[i].script);
-            //     }
-            // } else {
-            //     eval(scripts[i].script);
-            // }
-            // eval(scripts[i].script);
 
-            // const s = PrefixScript(script);
-            // console.log(s);
-            eval(script);
-
-            formContent = form.getForm(true);
-            RemoveError(scripts);
-        } catch (err) {
-            InjectError(scripts, err);
-            console.log("%c🍺 Not valid Script", "color: #49ba8e; font-size:20px;");
-            console.log("%cError =======> " + err, "color: '#49ba8e'; font-size:14px;");
-            console.log("%cScript ======> " + scripts, "color: blue; font-size:14px;");
-            // console.log(scripts[i].name + ' - ' + err);
-        }
-        // }
-    };
-    // return methods[scripts[0].name];
-    methods({ formContent, FormUtils });
-
-    // const methods = {};
-
-    // for (let i in scripts) {
-    //     methods[i] = function ({ formContent, FormUtils: form }) {
-    //         // if (!extraParam || (typeof extraParam == "object" && (!extraParam.trigger_type || extraParam.trigger_type.indexOf(scripts[i].trigger_type) > -1)) && scripts[i].active) {
-    //         try {
-    //             form.setForm(formContent);
-    //             // @todo once we get support for column name to be watched from db will enable this way
-    //             // if (extraParam.trigger_type == 363) {
-    //             //     FormUtil.onChange(onChange, column);
-
-    //             //     function onChange(newVal, oldVal){
-    //             //         eval(scripts[i].script);
-    //             //     }
-    //             // } else {
-    //             //     eval(scripts[i].script);
-    //             // }
-    //             // eval(scripts[i].script);
-
-    //             const s = PrefixScript(scripts[i]);
-    //             console.log(s);
-    //             eval(s);
-
-    //             formContent = form.getForm(true);
-    //             RemoveError(scripts[i]);
-    //         } catch (err) {
-    //             InjectError(scripts[i], err);
-    //             console.log("%c🍺 Not valid Script", "color: #49ba8e; font-size:20px;");
-    //             console.log("%cError =======> " + err, "color: '#49ba8e'; font-size:14px;");
-    //             console.log("%cScript ======> " + scripts[i].script, "color: blue; font-size:14px;");
-    //             // console.log(scripts[i].name + ' - ' + err);
-    //         }
-    //         // }
-    //     };
-    //     // return methods[scripts[0].name];
-    //     methods[i]({ formContent, FormUtils });
-    // }
-
+    // methods({ formContent, context, contextName, script, scripts });
+    methods.bind({ a: 'test' })({ formContent, context, contextName, script, scripts });
+    // methods({ formContent, FormUtils });
     return formContent;
 }
+
+// @TODO change formContent name later as it was built for form execution but later being used in many place
+function methods({ formContent, context, contextName, script, scripts }) {
+    // function methods({ formContent, FormUtils: form }) {
+    try {
+        window[contextName] = context; // as value of 'this' is getting undefined, using window 
+        window[contextName].setForm(formContent);
+        eval(script);
+
+        formContent = window[contextName].getForm(true);
+        // window[contextName].updateForm();
+        delete window[contextName];
+        RemoveError(scripts);
+    } catch (err) {
+        InjectError(scripts, err);
+        console.log("%c🍺 Not valid Script", "color: #49ba8e; font-size:20px;");
+        console.log("%cError =======> " + err, "color: '#49ba8e'; font-size:14px;");
+        console.log("%cScript ======> " + scripts, "color: blue; font-size:14px;");
+        // console.log(scripts[i].name + ' - ' + err);
+    }
+};
 
 /**
 * appends error message if found any error while executing scripts
@@ -130,10 +80,11 @@ export function RemoveError(script) {
 
 // Prepare script for execution according to script type
 export function PrefixScript(definition) {
-    if (definition.activity_type_id == 1) {
-        return definition.script;
-    } else if (definition.activity_type_id == 2) {
+    if (definition.activity_type_id == 2) {
         return `form.onChange({ column: '${definition.column}', callback: (event, column)=> { ${definition.script}} })`;
     }
+    return definition.script;
+
+
 }
 
