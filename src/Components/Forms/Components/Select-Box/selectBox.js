@@ -147,6 +147,7 @@ export default class SelectBox extends Component {
                 // formatOptionLabel={(context, inputValue) => <span>{context[label]}</span>}
                 getOptionLabel={(context, inputValue) => <span>{context[label]}</span>}
                 getOptionValue={(context, inputValue) => <span>{context[label]}</span>}
+                menuPlacement="auto"
             />
         }
 

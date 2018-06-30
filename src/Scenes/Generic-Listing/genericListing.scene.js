@@ -345,7 +345,7 @@ export default class GenericListing extends Component {
 
                     {
                         (listing && listing.length) ?
-                            <ListingPagination history={history} match={match} currentPage={genericData.currentPage} limit={genericData.limit} statsData={genericData.stats} /> : null
+                            <ListingPagination history={history} match={match} current_page={genericData.currentPage} limit={genericData.limit} statsData={genericData.stats} /> : null
                     }
                     {/* Listing Pagination Ends */}
                 </div>

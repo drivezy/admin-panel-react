@@ -3,18 +3,42 @@
     padding-top: 10px;
     display: flex;
     justify-content:space-between;
-    // .highlighted-page { 
-    //     a { 
-    //         background: #2f4d69 !important;
-    //         color: white;
-    //     }
-    // }
+
     .pagination-record {
         margin-top: 10px;
     }
     .page-redirect-number {
         width: 80px;
         margin-left: 25px;
+        .select-box{ 
+            min-width: 100px;
+            div:first-child {
+                padding: 2px;
+                div:first-child {
+                    background: red;
+                    min-height: 0;
+                    div:first-child {
+                        background: green;
+                        padding: 0px 8px;
+                        
+                    }
+                }
+                div:nth-child(2) {
+                    div:first-child {
+                        padding: 5px;
+                    }
+                }
+                // &:nth-child(2) {
+                //     min-height: 0px;
+                //     padding: 0px 8px;
+                //     &:first-child{
+                //         &:nth-child(2){
+                //             padding: 5px;
+                //         }
+                //     }
+                // }
+            }
+        }
     }
 }
 
