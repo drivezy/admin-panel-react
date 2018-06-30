@@ -47,7 +47,14 @@ export default class ToastNotifications {
     // overriding toast params
     this.currentScope.warn(params);
   }
-
-
+ /**
+   * Shows info notification
+   * @param  {string} message
+   * @param  {Object} params={}
+   */
+  static info(params) {
+    // overriding toast params
+    this.currentScope.info(params);
+  }
 
 }
