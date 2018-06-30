@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import './CustomAction.css';
 
-import { CreateUrl, ConvertDependencyInjectionToArgs } from './../../Utils/generic.utils';
-import { IsUndefinedOrNull } from './../../Utils/common.utils';
-import { Delete } from './../../Utils/http.utils';
-import ToastNotifications from './../../Utils/toast.utils';
+import { ProcessForm } from './../../Utils/formMiddleware.utils';
+import { ProcessPage } from './../../Utils/pageMiddleware.utils';
+
+import { CreateUrl, ConvertDependencyInjectionToArgs, RemoveStarterFromThePath } from './../../Utils/generic.utils';
+// import { IsUndefinedOrNull } from './../../Utils/common.utils';
+// import { Delete } from './../../Utils/http.utils';
+// import ToastNotifications from './../../Utils/toast.utils';
 
 // import FormCreator from './../Form-Creator/formCreator.component';
 
-import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
-
-import ModalHeader from './../../Wrappers/Modal-Wrapper/templates/Modal-Header/modalHeader.component'
-// import ModalHeader from './../../Wrappers/Modal-Wrapper/templates/Modal-Header/modalHeader.component';
-import ModalFooter from './../../Wrappers/Modal-Wrapper/templates/Modal-Footer/modalFooter.component';
+// import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
+// import ModalHeader from './../../Wrappers/Modal-Wrapper/templates/Modal-Header/modalHeader.component'
+// import ModalFooter from './../../Wrappers/Modal-Wrapper/templates/Modal-Footer/modalFooter.component';
 
 import CustomTooltip from '../Custom-Tooltip/customTooltip.component';
 
@@ -45,35 +46,51 @@ export default class CustomAction extends Component {
 
     callFunction = ({ action, listingRow }) => {
         const args = [];
-        const { genericData, history, callback, source = 'model' } = this.props;
+        const { genericData, history, callback, source = 'model', menuDetail = {}, parentData = {} } = this.props;
         this.genericData = genericData;
-        if (genericData.methods && typeof genericData.methods[action.name] == "function") {
-            // var callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : customMethods[action.callback]) : listing.callbackFunction.function;
+        const data = RemoveStarterFromThePath({ data: listingRow, starter: genericData.starter });
+        
 
-            const callbackMethod = (action.callback && typeof genericData.methods[action.callback] == "function") ? genericData.methods[action.callback] : callback;
-            const args = ConvertDependencyInjectionToArgs.call(this, action.dependency);
-            args.reverse();
-            args.push(callbackMethod);
-            action.placement_id == 167 ? args.push(listingRow) : args.push("");
-            args.reverse();
-
-            genericData.methods[action.name].apply(this, args);
-        } else { // For add, edit,delete
+        if (action.form_id) {
             action.callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : callback) : callback;
-            if (typeof genericData.preDefinedmethods[action.name] == "function") {
-                genericData.preDefinedmethods[action.name]({ action, listingRow, genericData, history, source });
+            genericData.preDefinedmethods.customForm({ action, listingRow: data, genericData, history, menuDetail, parent: parentData });
+        } else {
+            const pageContent = {
+                data,
+                parent: parentData,
+                execution_script: action.execution_script
             }
+            ProcessPage({ pageContent });
+            // script evaluation goes here
         }
+        // if (genericData.methods && typeof genericData.methods[action.name] == "function") {
+        //     // var callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : customMethods[action.callback]) : listing.callbackFunction.function;
+
+        //     const callbackMethod = (action.callback && typeof genericData.methods[action.callback] == "function") ? genericData.methods[action.callback] : callback;
+        //     const args = ConvertDependencyInjectionToArgs.call(this, action.dependency);
+        //     args.reverse();
+        //     args.push(callbackMethod);
+        //     action.placement_id == 167 ? args.push(listingRow) : args.push("");
+        //     args.reverse();
+
+        //     genericData.methods[action.name].apply(this, args);
+        // } else { // For add, edit,delete
+        //     action.callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : callback) : callback;
+        //     if (typeof genericData.preDefinedmethods[action.name] == "function") {
+        //         genericData.preDefinedmethods[action.name]({ action, listingRow, genericData, history, source });
+        //     }
+        // }
     }
 
     render() {
-        const { actions = [], listingRow = [], genericData = {}, placement, position } = this.props;
+        const { actions = [], listingRow = [], genericData = {}, placement = 'as_context', position } = this.props;
         return (
             <div className="custom-actions">
                 {
                     actions.map((action, key) => {
 
-                        if (action.placement_id == placement) {
+                        if (action[placement]) {
+                            // if (action.placement_id == placement || true) {
                             const html =
 
                                 // <button key={key}
@@ -82,7 +99,8 @@ export default class CustomAction extends Component {
                                 //     }}
                                 //     type="button" className="btn btn-sm btn-light">
                                 <span className="button-element" onClick={() => { this.callFunction({ action, listingRow }) }}>
-                                    <i className={`fa ${action.icon}`}></i>
+                                    {/* <i className={`fa ${action.icon}`}></i> */}
+                                    <i className={`fa ${action.image}`}></i>
 
                                     {/* Temporaririly fix to hide the name for row actions */}
                                     {

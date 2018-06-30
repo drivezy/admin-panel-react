@@ -166,7 +166,7 @@ export default class PortletTable extends Component {
     render() {
         const { genericData, finalColumns, listing } = this.state;
 
-        const { history, match, menuDetail, rowTemplate, callback, tableType, rowOptions, source = 'model' } = this.props;
+        const { history, match, menuDetail, rowTemplate, callback, tableType, rowOptions, source = 'model', parentData } = this.props;
 
         // As soon as rendering is done adjust the width according to action columns
         setTimeout(() => this.adjustWidth());
@@ -297,7 +297,7 @@ export default class PortletTable extends Component {
                                 listing.map((listingRow, rowKey) => (
                                     <tr className="table-row" key={rowKey}>
                                         <td className="action-column">
-                                            <CustomAction history={history} source={source} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} placement={167} callback={callback} />
+                                            <CustomAction parentData={parentData} menuDetail={menuDetail} history={history} source={source} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} callback={callback} />
                                         </td>
                                     </tr>
                                 ))

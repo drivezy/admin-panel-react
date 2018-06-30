@@ -71,7 +71,8 @@ function GetSourceMorphMap(source) {
     const sourceMorph = {
         menu: 'Drivezy\\LaravelAdmin\\Models\\Menu',
         model: 'Drivezy\\LaravelRecordManager\\Models\\DataModel',
-        modelAlias: 'Drivezy\\LaravelRecordManager\\Models\\ModelRelationship'
+        modelAlias: 'Drivezy\\LaravelRecordManager\\Models\\ModelRelationship',
+        form: 'Drivezy\\LaravelRecordManager\\Models\\CustomForm'
     };
     return sourceMorph[source];
 }

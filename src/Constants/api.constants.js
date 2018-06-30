@@ -20,4 +20,6 @@ export const MenuFilterEndPoint = 'menuFilter';
 
 export const ListPreference = 'listPreference';
 export const FormPreferenceEndPoint = 'formPreference';
+
+export const FormDetailEndPoint = 'formDetails';
 /** Private routes ends here */
