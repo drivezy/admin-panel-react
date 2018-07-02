@@ -262,7 +262,7 @@ export default class PortletTable extends Component {
 
 
                                     <tr className="table-row" key={rowKey}>
-
+                                    
                                         <td className="row-key">
                                             {rowKey + 1}
                                         </td>
