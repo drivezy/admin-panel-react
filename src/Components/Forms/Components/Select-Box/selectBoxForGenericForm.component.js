@@ -7,6 +7,7 @@ import Select, { Async } from 'react-select';
 // import Async from 'react-select';
 import GLOBAL from './../../../../Constants/global.constants';
 
+import { IsObjectHaveKeys } from './../../../../Utils/common.utils';
 import { Get } from './../../../../Utils/http.utils';
 import { callbackify } from 'util';
 
@@ -30,25 +31,49 @@ export default class SelectBox extends Component {
         this.setState({ ...this.setOptions(nextProps) });
     }
 
-    setOptions = props => {
-        let options = [];
-        let value = '';
-        if (props.options && props.options.length) {
-            options = props.options.map((option) => {
-                return { ...option, ...{ label: option[props.field || 'name'], value: option[props.key || 'id'] } }
+    // setOptions = props => {
+    //     let options = [];
+    //     let value = '';
+    //     if (props.options && props.options.length) {
+    //         options = props.options.map((option) => {
+    //             return { ...option, ...{ label: option[props.field || 'name'], value: option[props.key || 'id'] } }
+    //         });
+    //         // this.setState({ options });
+    //     }
+
+    //     if (props.value) {
+    //         value = props.value;
+    //         // this.setState({ value });
+    //     }
+    //     return { value, options, key: props.key || 'id' };
+    // }
+
+    setOptions(props) {
+        let options = [], value = {};
+
+        if (Array.isArray(props.options) && typeof props.options[0] != 'object') {
+            props.options.forEach(option => {
+                options.push({ name: typeof option == 'number' ? option.toString() : option, value: typeof option == 'number' ? option.toString() : option });
             });
-            // this.setState({ options });
+
+            if (props.value) {
+                value = typeof props.value == 'object' ? {} : { name: typeof props.value == 'number' ? props.value.toString() : props.value };
+            }
+        } else {
+            options = props.options && !Array.isArray(props.options) && Object.keys(props.options).length ? Object.values(props.options) : props.options;
+            value = props.value || {};
         }
 
-        if (props.value) {
-            value = props.value;
-            // this.setState({ value });
+        return {
+            options,
+            value,
+            key: props.key || 'id'
         }
-        return { value, options, key: props.key || 'id' };
     }
 
     handleChange = (value) => {
         const { key } = this.state;
+        const { options } = this.props;
         // this.setState({ value: value[this.state.key] });
         if (!value) {
             return;
@@ -60,8 +85,12 @@ export default class SelectBox extends Component {
             this.setState({ value });
         }
 
+        if (Array.isArray(options) && typeof options[0] != 'object') {
+            value = value['value'];
+        }
+
         if (this.props.onChange) {
-            this.props.onChange(this.props.name, value);
+            this.props.onChange(value, this.props.name);
             // this.props.onChange(this.props.name, key ? value[key] : value);
         }
     }
@@ -114,8 +143,11 @@ export default class SelectBox extends Component {
 
     render() {
         const { async, getOptions } = this.props;
-        const { value, options, field, key } = this.state;
+        const { options, field, key } = this.state;
+        let { value } = this.state;
         let elem;
+
+        value = (typeof value != 'object' || IsObjectHaveKeys(value)) ? value : undefined;
 
         if (async) {
             elem = <Async
