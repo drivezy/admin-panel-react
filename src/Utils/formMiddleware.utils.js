@@ -8,7 +8,7 @@ import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 import FormCreator from './../Components/Form-Creator/formCreator.component';
 
 import FormUtils from './form.utils';
-import { GetUrlForFormCreator, GetColumnsForListing, GetParsedLayoutScript } from './generic.utils';
+import { GetUrlForFormCreator, GetColumnsForListing, GetParsedLayoutScript, ParseRestrictedQuery } from './generic.utils';
 import { ExecuteScript } from './injectScript.utils';
 import { Get } from './http.utils';
 
@@ -52,6 +52,12 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
         if (Array.isArray(scripts)) {
             formContent = ExecuteScript({ formContent, scripts, context: FormUtils, contextName: 'form' });
         }
+
+        const restrictedQuery = ParseRestrictedQuery(formContent.menu.restricted_query);
+        for (let i in restrictedQuery) {
+            formContent = FormUtils.setDisabled(i, true, formContent);
+        }
+        formContent.data = { ...formContent.data, ...restrictedQuery };
 
         if (openModal) {
             ModalManager.openModal({
