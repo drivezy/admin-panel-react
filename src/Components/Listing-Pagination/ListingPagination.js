@@ -11,79 +11,82 @@ export default class ListingPagination extends Component {
         super(props);
 
         this.state = {
-            currentPage: props.currentPage ? props.currentPage : 1,
-            showPages: 5,
-            statsData: props.statsData ? props.statsData : {},
-            limit: props.limit || 20
+            current_page: props.current_page,
+            statsData: props.statsData,
+            limit: props.limit,
+            showPages: 5
         }
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         this.setState({
-            currentPage: nextProps.currentPage ? nextProps.currentPage : 1,
-            statsData: nextProps.statsData ? nextProps.statsData : {}
+            current_page: nextProps.current_page,
+            statsData: nextProps.statsData
         })
     }
 
-    redirectToPage = (pageNumber = this.state.currentPage, limit = 20) => {
+    redirectToPage = (current_page, limit) => {
+        const { showPages } = this.state
+        let temPageNumber = current_page;
 
-        let temPageNumber = pageNumber;
-        let tempLimit = limit.value ? limit.value : limit ;
-        let tempUrl = `${`?limit=${tempLimit}&page=${pageNumber}`}`;
-        // let tempUrl = `${`?limit=${limit}&page=${this.state.currentPage}`}`;
-        if (this.state.currentPage === '...') {
-            temPageNumber = this.state.currentPage - this.state.showPages
+        let tempLimit = limit.value ? limit.value : limit;
+
+        let tempUrl = `${`?limit=${tempLimit}&page=${current_page}`}`;
+
+        if (current_page === '...') {
+            temPageNumber = current_page - showPages
             if (temPageNumber < 1) {
                 temPageNumber = 1
             }
-            tempUrl = `${`?limit=${pageNumber}&page=${temPageNumber}`}`;
+            tempUrl = `${`?limit=${current_page}&page=${temPageNumber}`}`;
         }
-        if (this.state.currentPage === '....') {
-            temPageNumber = parseInt(this.state.currentPage) + this.state.showPages
-            tempUrl = `${`?limit=${pageNumber}&page=${temPageNumber}`}`;
+
+        if (this.state.current_page === '....') {
+            temPageNumber = parseInt(current_page) + showPages
+            tempUrl = `${`?limit=${current_page}&page=${temPageNumber}`}`;
         }
-        this.setState({ currentPage: temPageNumber, tempLimit })
+
+        this.setState({ current_page: temPageNumber, tempLimit })
         const { history, match } = this.props;
         history.push(tempUrl);
     }
 
-    // startPage --> current page
-    // totalPages -- pages which you want to show current is 5
-    createPaginationNumber = (startPage, totalPages) => {
+
+    createPaginationNumber = (currentPage, showPages) => {
 
         const { statsData } = this.state
-        var number_of_pages = Math.round(statsData.total / statsData.record);
+        let number_of_pages = Math.round(statsData.total / statsData.record);
 
         const pages = [];
 
-        if (number_of_pages <= totalPages) {
+        if (number_of_pages <= showPages) {
             for (let i = 1; i <= number_of_pages; i++) {
                 pages.push({ page: i });
             }
             return pages;
         }
 
-        startPage = parseInt(startPage);
+        currentPage = parseInt(currentPage);
 
-        if (startPage >= 2) {
+        if (currentPage >= 2) {
             pages.push({ page: 1 });
-            if (startPage > 2) {
+            if (currentPage > 2) {
                 pages.push({ page: '...' })
             }
         }
 
-        let endPage = startPage + totalPages;
+        let endPage = currentPage + showPages;
 
         if (endPage <= number_of_pages) {
-            for (let i = startPage; i < endPage; i++) {
+            for (let i = currentPage; i < endPage; i++) {
                 pages.push({ page: i });
             }
             if (endPage < number_of_pages) {
                 pages.push({ page: '....' })
             }
         } else {
-            let startIndex = startPage - totalPages;
-            let endIndex = endPage - totalPages;
+            let startIndex = currentPage - showPages;
+            let endIndex = endPage - showPages;
             if (startIndex <= 0) {
                 startIndex = 1;
                 endIndex = number_of_pages - 1;
@@ -92,7 +95,7 @@ export default class ListingPagination extends Component {
                 pages.push({ page: i });
             }
         }
-        if (startPage != number_of_pages) {
+        if (currentPage != number_of_pages) {
             pages.push({ page: number_of_pages })
         }
         return pages;
@@ -100,60 +103,60 @@ export default class ListingPagination extends Component {
 
 
     render() {
-        const { currentPage, showPages, statsData } = this.state
+        const { current_page, limit, statsData, showPages } = this.state
+        console.log(current_page, limit, statsData);
+        const pageRecordOptions = [20, 40, 75, 100];
+
         let previousPage;
+
         let nextPage;
+
         let pages = [];
-        const getTotalPages = [20, 40, 75, 100];
-        const { limit } = this.state;
 
         if (statsData && statsData.total) {
-            var number_of_pages = Math.round(statsData.total / statsData.record);
-            pages = this.createPaginationNumber(currentPage, showPages);
+            var page_length = Math.round(statsData.total / statsData.record);
+            pages = this.createPaginationNumber(current_page, showPages);
         }
 
-        if (currentPage) {
-            previousPage = parseInt(currentPage) - 1;
-            nextPage = parseInt(currentPage) + 1;
+        if (current_page) {
+            previousPage = parseInt(current_page) - 1;
+            nextPage = parseInt(current_page) + 1;
         }
-
 
         return (
             <div className="listing-pagination">
-                <Pagination>
+                <Pagination className="sm">
                     <PaginationItem disabled={previousPage == 0}>
                         <PaginationLink previous onClick={() => this.redirectToPage(`?limit=20&page=${previousPage}`)} />
                     </PaginationItem>
                     {
-                        pages && pages.length && pages.map((key, count) => {
-                            return (
-                                <PaginationItem onClick={() => this.redirectToPage(key.page)} className={currentPage == key.page ? 'highlighted-page' : ''} key={count}>
-                                    <PaginationLink >
-                                        {key.page}
-                                    </PaginationLink>
-                                </PaginationItem>
-                            )
-                        })
+                        pages && pages.length && pages.map((key, count) =>
+                            <PaginationItem onClick={() => this.redirectToPage(key.page, limit)} className={current_page == key.page ? 'highlighted-page' : ''} key={count}>
+                                <PaginationLink >
+                                    {key.page}
+                                </PaginationLink>
+                            </PaginationItem>
+                        )
                     }
 
-                    <PaginationItem disabled={nextPage == number_of_pages + 1}>
+                    <PaginationItem disabled={nextPage == page_length + 1}>
                         <PaginationLink next onClick={() => this.redirectToPage(nextPage)} />
                     </PaginationItem>
 
                     <div className="page-redirect-number">
                         <SelectBox
                             value={limit}
-                            onChange={(data) => { this.redirectToPage(undefined, data) }}
-                            options={getTotalPages}
+                            onChange={(data) => { this.redirectToPage(current_page, data) }}
+                            options={pageRecordOptions}
                         />
                     </div>
-
                 </Pagination>
+
 
                 {
                     statsData && statsData.total > 0 &&
                     <div className="pagination-record">
-                        Showing {currentPage ? ((((currentPage) * 20) - 20) + 1) : 0} - {currentPage ? ((currentPage) * 20) : 0} results from {statsData ? statsData.total : 0} total.
+                        Showing {current_page ? ((((current_page) * limit) - 20) + 1) : 0} - {current_page ? ((current_page) * limit) : 0} results from {statsData ? statsData.total : 0} total.
                     </div>
                 }
             </div>

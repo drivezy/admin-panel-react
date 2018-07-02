@@ -10,7 +10,7 @@ export default class RightClick extends Component {
 
     render() {
 
-        const { renderTag, rowOptions, html, className } = this.props;
+        const { renderTag, rowOptions, html, className, callback, source } = this.props;
 
         const identifier = "entry " + Math.random(Math.random() * 1000);
 
@@ -32,13 +32,12 @@ export default class RightClick extends Component {
                                         </MenuItem> :
                                         <SubMenu disabled={typeof rowOption.disabled == 'function' ? rowOption.disabled(this.props) : rowOption.disabled} key={key} title={[<i key={1} className={`fa ${rowOption.icon}`} />, <span key={2}> {rowOption.name}</span>]}>
                                             {
-                                                this.aggregationOperators.map((operator, index) => {
-                                                    return (
-                                                        <MenuItem key={index} onClick={() => rowOption.onClick(this.props, operator)} data={this.props}>
-                                                            {operator.name}
-                                                        </MenuItem>
-                                                    )
-                                                })
+                                                this.aggregationOperators.map((operator, index) =>
+                                                    <MenuItem key={index} onClick={() => rowOption.onClick(this.props, operator)} data={this.props}>
+                                                        {operator.name}
+                                                    </MenuItem>
+                                                )
+
                                             }
                                         </SubMenu>
                                 )

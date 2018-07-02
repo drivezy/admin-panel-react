@@ -168,6 +168,17 @@ export default class PortletTable extends Component {
 
         const { history, match, menuDetail, rowTemplate, callback, tableType, rowOptions, source = 'model', parentData } = this.props;
 
+
+        let rightClickOptions = [];
+
+        for (let i in genericData.nextActions) {
+            if (genericData.nextActions[i].as_context == 1) {
+                rightClickOptions = rightClickOptions.concat(rowOptions, genericData.nextActions[i]);
+            }
+        }
+
+        console.log(rightClickOptions);
+
         // As soon as rendering is done adjust the width according to action columns
         setTimeout(() => this.adjustWidth());
 
@@ -247,35 +258,35 @@ export default class PortletTable extends Component {
                         </thead>
                         <tbody>
                             {
-                                listing.map((listingRow, rowKey) => {
-
-                                    return (
-                                        <tr className="table-row" key={rowKey}>
-
-                                            <td className="row-key">
-                                                {rowKey + 1}
-                                            </td>
-
-                                            {
-                                                finalColumns.map((selectedColumn, key) => {
-                                                    const html =
-                                                        rowTemplate ?
-                                                            rowTemplate({ listingRow, selectedColumn })
-                                                            :
-                                                            RowTemplate({ listingRow, selectedColumn });
-
-                                                    return (
-                                                        <td key={key} className=''>
-                                                            <RightClick html={html} history={history} match={match} key={key} renderTag="div" className='generic-table-td' rowOptions={rowOptions} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail} starter={genericData.starter} />
-                                                        </td>
-                                                    )
-                                                })
-                                            }
+                                listing.map((listingRow, rowKey) =>
 
 
-                                        </tr>
-                                    )
-                                })
+                                    <tr className="table-row" key={rowKey}>
+
+                                        <td className="row-key">
+                                            {rowKey + 1}
+                                        </td>
+
+                                        {
+                                            finalColumns.map((selectedColumn, key) => {
+                                                const html =
+                                                    rowTemplate ?
+                                                        rowTemplate({ listingRow, selectedColumn })
+                                                        :
+                                                        RowTemplate({ listingRow, selectedColumn });
+
+                                                return (
+                                                    <td key={key} className=''>
+                                                        <RightClick html={html} history={history} match={match} key={key} renderTag="div" className='generic-table-td' rowOptions={rightClickOptions} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail} starter={genericData.starter} callback={callback} source={source} />
+                                                    </td>
+                                                )
+                                            })
+                                        }
+
+
+                                    </tr>
+
+                                )
                             }
                         </tbody>
                     </Table>

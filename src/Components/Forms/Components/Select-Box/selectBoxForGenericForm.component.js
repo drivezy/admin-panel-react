@@ -146,11 +146,12 @@ export default class SelectBox extends Component {
                 multi={this.props.multi}
                 getOptionLabel={(context, inputValue) => <span>{context[field]}</span>}
                 getOptionValue={(context, inputValue) => <span>{context[key]}</span>}
+                menuPlacement="auto"
             />
         }
 
         return (
-            <div>
+            <div className="select-box" >
                 {elem}
             </div>
         );

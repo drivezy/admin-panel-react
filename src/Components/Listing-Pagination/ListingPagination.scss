@@ -3,24 +3,24 @@
     padding-top: 10px;
     display: flex;
     justify-content:space-between;
-    // .highlighted-page { 
-    //     a { 
-    //         background: #2f4d69 !important;
-    //         color: white;
-    //     }
-    // }
+
     .pagination-record {
         margin-top: 10px;
     }
     .page-redirect-number {
-        width: 80px;
         margin-left: 25px;
+        .select-box{ 
+            min-width: 100px;
+        }
     }
 }
 
 /** Theme specific css */
 .drivezy-light-theme { 
     .listing-pagination {
+        .page-item > a {
+            height: 38px;
+        }
         .highlighted-page > a  { 
             background: $primaryThemeLight !important;
             color: $onPrimaryThemeLight;
@@ -28,23 +28,29 @@
     }
 }
 
-    .listing-pagination {
+.listing-pagination {
+    @include themify($themes) {
+        background: themed('bodyBackground');
+    }
+    .page-item > a {
+        height: 38px;
+    }
+    .highlighted-page > a { 
+        background: $primaryThemeDark !important;
+        color: $onPrimaryThemeDark;
+    }
+    .pagination-record {
         @include themify($themes) {
-            background: themed('bodyBackground');
-        }
-        .highlighted-page > a { 
-            background: $primaryThemeDark !important;
-            color: $onPrimaryThemeDark;
-        }
-        .pagination-record{
-            @include themify($themes) {
-                color:themed('secondaryColor');
-            }
+            color:themed('secondaryColor');
         }
     }
+}
 
 .drivezy-drivezy-theme { 
     .listing-pagination {
+        .page-item > a {
+            height: 38px;
+        }
         .highlighted-page > a { 
             background: $primaryThemeDrivezy !important;
             color: $onPrimaryThemeDrivezy;
