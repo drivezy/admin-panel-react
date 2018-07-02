@@ -1,7 +1,7 @@
 
 /*
-Contains all server and firebase(if any) endpoints
-*/
+ * Contains all server and firebase(if any) endpoints
+ */
 
 /** Public routes goes here */
 export const FetchCities = 'city';
