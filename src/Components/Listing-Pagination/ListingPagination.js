@@ -150,13 +150,13 @@ export default class ListingPagination extends Component {
                             options={pageRecordOptions}
                         />
                     </div>
-
                 </Pagination>
+
 
                 {
                     statsData && statsData.total > 0 &&
                     <div className="pagination-record">
-                        Showing {current_page ? ((((current_page) * 20) - 20) + 1) : 0} - {current_page ? ((current_page) * 20) : 0} results from {statsData ? statsData.total : 0} total.
+                        Showing {current_page ? ((((current_page) * limit) - 20) + 1) : 0} - {current_page ? ((current_page) * limit) : 0} results from {statsData ? statsData.total : 0} total.
                     </div>
                 }
             </div>
