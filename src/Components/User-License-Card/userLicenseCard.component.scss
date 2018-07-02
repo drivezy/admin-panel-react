@@ -19,6 +19,39 @@
             
             
         }
+
+        .accept{
+            background-color: #3f3f3f;
+            color: #ffffff;
+            position: absolute;
+            top: 75%;
+            left: 20%;
+            
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .reject{
+            background-color: #3f3f3f;
+            color: #ffffff;
+            position: absolute;
+            top: 75%;
+            left: 67%;
+            
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .delete{
+            background-color: #3f3f3f;
+            color: #ffffff;
+            position: absolute;
+            top: 75%;
+            left: 82%;
+            
+            text-align: center;
+            font-size: 14px;
+        }
     }
 
 

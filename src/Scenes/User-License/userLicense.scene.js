@@ -5,7 +5,7 @@ import Viewer from 'react-viewer';
 import 'react-viewer/dist/index.css';
 import UserLicenseCard from './../../Components/User-License-Card/userLicenseCard.component';
 import {
-    Card, CardHeader, CardBody,Row , Col 
+    Card, CardHeader, CardBody, Row, Col, Button
 } from 'reactstrap';
 
 import classNames from 'classnames';
@@ -171,6 +171,10 @@ export default class UserLicense extends Component {
         }
     }
 
+    sample = () => {
+        console.log ('abcdesfghijklmnopqrstuve=wcz');
+    }
+
     acceptL = () => {
         const { images = [], currentIndex } = this.state;
         const method = async () => {
@@ -185,7 +189,7 @@ export default class UserLicense extends Component {
     }
 
     rejectL = () => {
-        const { images, currentIndex } = this.state;
+        const { images  = [], currentIndex } = this.state;
 
         const rejectdData = {
             approved: 0,
@@ -212,9 +216,12 @@ export default class UserLicense extends Component {
         ConfirmUtils.confirmModal({ message: "Are you sure you want to delete license?", callback: method });
     }
 
+
+
     render() {
         const { images = [], userObj = {}, currentIndex, detectedDob, detectedLicense, detectedText, detectedExpiryDate } = this.state;
         // console.log(userData);
+        const flag = 0;
         const licenses = images.map((image) => {
             image.src = image.license;
             return image;
@@ -242,7 +249,7 @@ export default class UserLicense extends Component {
                 <div className="container licence-viewer">
                     <Card>
                         <CardHeader className="heading">
-                            User Licenses {currentIndex + 1} of {images.length}
+                            User Licenses {currentIndex + 1} of {images.length + 1}
                         </CardHeader>
                         {/* <CardBody>
                             <div className={inlineContainerClass} ref={ref => { this.container = ref; }}></div>
@@ -287,10 +294,10 @@ export default class UserLicense extends Component {
                         {
                             userObj.id &&
                             <CardBody>
-                                <UserLicenseCard userData={userObj} />
-
-                                
-
+                                <UserLicenseCard userData={userObj} flag={1} acceptL={this.acceptL} rejectL={this.rejectL} deleteL={this.deleteL}/>
+                                <div className="detected-text-label">Detected Text</div>
+                                <div className="detected-text-data">{detectedText} </div>
+                              
                             </CardBody>
                         }
                     </Card>

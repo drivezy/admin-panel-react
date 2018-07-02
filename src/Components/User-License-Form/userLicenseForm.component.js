@@ -1,5 +1,6 @@
 // Higher Order Component
 import React, { Component } from 'react';
+
 import { withFormik, Field } from 'formik';
 import { Put } from './../../Utils/http.utils';
 import SelectBox from './../Forms/Components/Select-Box/selectBox';
@@ -21,6 +22,7 @@ const InnerForm = ({
                 <label className="name">First Name<span className="text-red">*</span></label>
                 <input type="text" name="first_name" placeholder="First Name" className="form-control" value={values.first_name} onChange={handleChange} />
             </div>
+
             <div className="form-group">
                 <label className="name">Last Name</label>
                 <input type="text" name="last_name" placeholder="Last Name" className="form-control" value={values.last_name} onChange={handleChange} />
@@ -32,10 +34,10 @@ const InnerForm = ({
                     values.detectedDob.map((dob, key) => {
                         return (
                             <small className="detected-items" key={key}>Detected DoB:
-                                <span className="item" onClick={() => setFieldValue('dob',dob)}>{dob}
-                                    
+                                <span className="item" onClick={() => setFieldValue('dob', dob)}>{dob}
+
                                 </span>
-                                <br/>
+                                <br />
                             </small>
                         );
                     })
@@ -47,7 +49,7 @@ const InnerForm = ({
                 <Field
                     name='gender'
                     render={({ field /* _form */ }) => (
-                        <SelectBox valueKey="value" field="label" name='gender' placeholder={'Gender'} onChange={(selected) => { setFieldValue('gender', selected.value) }} value={values.gender} options={[{ value: "male", label: "Male" }, { value: "female", label: "Female" }, { value: "others", label: "Others" }]} />
+                        <SelectBox valueKey="value" field="label" name='gender' placeholder={'Gender'} onChange={(selected) => { setFieldValue('gender', selected ? selected.value : values.gender) }} value={values.gender} options={[{ value: "male", label: "Male" }, { value: "female", label: "Female" }, { value: "others", label: "Others" }]} />
                     )}
                 />
             </div>
@@ -64,25 +66,46 @@ const InnerForm = ({
                 <label className="name">License Number</label>
                 <input type="text" name="license_number" placeholder="Licence Number" className="form-control" value={values.license_number} onChange={handleChange} />
                 {
-                   (values.detectedLicense) &&
-                   values.detectedLicense.map((license, key) => {
+                    (values.detectedLicense) &&
+                    values.detectedLicense.map((license, key) => {
                         return (
-                           
+
                             <small className="detected-items" key={key}>Detected License Number:
-                                
-                                <span className="item" onClick={() => setFieldValue('license_number',license)}>{license}
+
+                                <span className="item" onClick={() => setFieldValue('license_number', license)}>{license}
                                 </span>
-                            <br/>
+                                <br />
                             </small>
                         );
 
-                        
+
                         console.log(license);
 
                     })
                 }
 
             </div>
+
+            <div className="type-licenses-group">
+                <label className="name">Type of License<span className="text-red">*</span></label>
+                <div className="licenses-checkbox">
+                    <div>
+                        <span> <input type="checkbox" name="license_validated_for_4_wheeler" placeholder="Is License validated for 4 wheeler" value={values.license_validated_for_4_wheeler} checked={values.license_validated_for_4_wheeler} onChange={handleChange} /></span>
+                        <span className="tick-name">4 Wheeler </span>
+                    </div>
+                    <div>
+                        <span> <input type="checkbox" name="license_validated_for_two_wheeler" placeholder="Is License validated for 2 wheeler" value={values.license_validated_for_two_wheeler} checked={values.license_validated_for_two_wheeler} onChange={handleChange} /></span>
+                        <span className="tick-name">2 Wheeler with Gear  </span>
+                    </div>
+                    <div>
+                        <span> <input type="checkbox" name="license_validated_for_two_wheeler_gearless" placeholder="Is License validated for 2 wheeler gearless" value={values.license_validated_for_two_wheeler_gearless} checked={values.license_validated_for_two_wheeler_gearless} onChange={handleChange} /></span>
+                        <span className="tick-name">2 Wheeler without Gear </span>
+                    </div>
+
+                </div>
+            </div>
+
+
 
             <div className="form-group">
                 <div className="margin-top-5" id="buttonWidth">
@@ -104,11 +127,15 @@ const LicenseForm = withFormik({
         return {
             first_name: userContent.first_name || '',
             last_name: userContent.last_name || '',
+
             email: userContent.email || '',
             mobile: userContent.mobile || '',
             gender: userContent.gender || '',
             dob: userContent.dob || '',
             license_number: userContent.license_number || '',
+            license_validated_for_4_wheeler: userContent.license_validated_for_4_wheeler == 1 ? true : false || '',
+            license_validated_for_two_wheeler: userContent.license_validated_for_two_wheeler || '',
+            license_validated_for_two_wheeler_gearless: userContent.license_validated_for_two_wheeler_gearless || '',
             detectedDob: detectedDob,
             detectedLicense: detectedLicense,
             detectedText: detectedText,
@@ -168,7 +195,12 @@ const LicenseForm = withFormik({
                 dob: values.dob,
                 email: values.email,
                 mobile: values.mobile,
-                gender: values.gender
+                gender: values.gender,
+                license_validated_for_4_wheeler: values.license_validated_for_4_wheeler,
+                license_validated_for_two_wheeler: values.license_validated_for_two_wheeler,
+                license_validated_for_two_wheeler_gearless: values.license_validated_for_two_wheeler_gearless,
+                display_name: values.first_name +' '+values.last_name
+
             }
         });
     },
@@ -186,14 +218,15 @@ export default class UserLicenseForm extends Component {
             detectedLicense: this.props.detectedLicense,
             detectedText: this.props.detectedText,
             detectedExpiryDate: this.props.detectedExpiryDate
+
         }
     }
-    
+
 
     render() {
         const { userContent, detectedDob, detectedLicense, detectedText, detectedExpiryDate } = this.state;
         return (
-            <div>
+            <div className="license-form">
                 <LicenseForm userContent={userContent} detectedDob={detectedDob} detectedLicense={detectedLicense} detectedText={detectedText} detectedExpiryDate={detectedExpiryDate} />
             </div>
         )

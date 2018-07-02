@@ -43,7 +43,7 @@ export default class UserCard extends Component {
         return (
             <div className="user-card card">
 
-                <UserLicenseCard userData={userData} />
+                <UserLicenseCard userData={userData} flag={0}/>
 
                 <Card>
 
