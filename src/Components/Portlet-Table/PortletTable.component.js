@@ -277,7 +277,7 @@ export default class PortletTable extends Component {
 
                                                 return (
                                                     <td key={key} className=''>
-                                                        <RightClick html={html} history={history} match={match} key={key} renderTag="div" className='generic-table-td' rowOptions={rightClickOptions} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail} starter={genericData.starter} callback={callback} source={source} />
+                                                        <RightClick html={html} history={history} match={match} key={key} renderTag="div" className='generic-table-td' rowOptions={rightClickOptions} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail} starter={genericData.starter} callback={callback} source={source} genericData={genericData} />
                                                     </td>
                                                 )
                                             })
