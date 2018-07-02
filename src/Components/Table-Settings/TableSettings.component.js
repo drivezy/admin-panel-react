@@ -27,6 +27,11 @@ export default class TableSettings extends Component {
         }
     }
 
+    componentDidMount() {
+        const co = JSON.stringify(this.state.columns);
+        this.setState({ tempColumns: JSON.parse(co) });
+    }
+
     toggleModal = () => {
         this.setState({ modal: !this.state.modal, activeColumn: {}, tempSelectedColumns: IsObjectHaveKeys(this.props.layout) ? this.props.layout.column_definition : [] })
     }
@@ -38,6 +43,7 @@ export default class TableSettings extends Component {
     }
 
     addColumn = (column) => {
+
         let selectedColumns = this.state.tempSelectedColumns;
 
         // const regexForPickingAfterLastDot = /[^\.]+$/;
@@ -48,7 +54,15 @@ export default class TableSettings extends Component {
             // column: column.parent + "." + column.id, headingCollapsed: true, heading: ""
         });
 
-        this.setState({ tempSelectedColumns: selectedColumns })
+        this.state.tempSelectedColumns = selectedColumns;
+        // this.setState({ tempSelectedColumns: selectedColumns })
+        this.removeColumnFromLeft(column);
+    }
+
+    removeColumnFromLeft(column) {
+        const { tempColumns } = this.state;
+        delete tempColumns[column.path];
+        this.setState({ tempColumns });
     }
 
     removeColumn = (column) => {
@@ -57,6 +71,11 @@ export default class TableSettings extends Component {
         selectedColumns = selectedColumns.filter((entry) => (entry.column != column.column));
 
         this.setState({ tempSelectedColumns: selectedColumns })
+        this.addColumnToLeft(column);
+    }
+
+    addColumnToLeft(column){
+        console.log(column);
     }
 
     toggleColumn = (column) => {
@@ -148,11 +167,12 @@ export default class TableSettings extends Component {
     }
 
     modalWrapper() {
-        const { columns, tempSelectedColumns, activeColumn, showSplitFlag } = this.state;
+        const { tempColumns: columns, columns: originalColumns, tempSelectedColumns, activeColumn, showSplitFlag } = this.state;
+        //console.log(columns);
         const { source = 'module' } = this.props;
         const selectedIds = [];
 
-        console.log(showSplitFlag);
+        //console.log(showSplitFlag);
 
         for (let value of tempSelectedColumns) {
             if (typeof value != 'string') {
@@ -282,7 +302,7 @@ export default class TableSettings extends Component {
                                                 <ColumnSetting
                                                     source={source}
                                                     removeColumn={this.removeColumn}
-                                                    columns={columns}
+                                                    columns={originalColumns}
                                                     activeColumn={activeColumn}
                                                     selectColumn={this.selectColumn}
                                                     column={column}
@@ -311,7 +331,7 @@ export default class TableSettings extends Component {
     render() {
         return (
             <div className="table-settings">
-                <Button color="secondary" size="sm" onClick={this.toggleModal}>
+                <Button color="secondary" size="sm" onClick={this.toggleModal} className="settingBtn">
                     <i className="fa fa-cog"></i>
                 </Button>
 
