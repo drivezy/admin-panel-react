@@ -311,7 +311,7 @@ export default class TableSettings extends Component {
     render() {
         return (
             <div className="table-settings">
-                <Button color="secondary" size="sm" onClick={this.toggleModal}>
+                <Button color="secondary" size="sm" onClick={this.toggleModal} className="settingBtn">
                     <i className="fa fa-cog"></i>
                 </Button>
 

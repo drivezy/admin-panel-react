@@ -27,8 +27,8 @@ $themes: (
             whiteColor: #ffffff,
             // Secondary Button
             // themeBorder: 0 0 1px 0 solid #000,
-            themeBorder:#15ab12,
-            secondaryThemeDark: #15ab12,
+            themeBorder:#000000,
+            secondaryThemeDark: #000000,
             // Primary Button
             primaryBorder: 1px solid #e96857,
             primaryThemeDark:#e96857,
@@ -147,7 +147,7 @@ $themes: (
             menuLinkBorder: 0,
             arrowHeader: #fff,
             filterText:#000000,
-            cardMargin : 0px,
+            cardMargin : 18px,
             ),
             // darkTheme:(
             //     dark:'#232323'
@@ -188,6 +188,7 @@ $themes: (
                 buttonTextHoverColor: #61b0e7,
                 buttonColor: #fff,
                 buttonBorder: 2px solid #fff,
+                cardMargin : 18px,
                 ),
 );
 // Themes Ends
