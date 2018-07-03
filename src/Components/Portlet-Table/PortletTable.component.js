@@ -32,13 +32,13 @@ export default class PortletTable extends Component {
 
     headerOptions = [{
         id: 0,
-        name: "Copy Actual Name",
+        name: "Copy Column Name",
         icon: 'fa-copy',
         subMenu: false,
         onClick: (data) => {
             let prop = data.selectedColumn.name;
             CopyToClipBoard(prop);
-            ToastUtils.success({ description: "Actual name " + data.selectedColumn.name + " has been copied", title: 'Actual Name' });
+            ToastUtils.success({ description: "Column name " + data.selectedColumn.name + " has been copied", title: 'Column Name' });
         }
     }];
 
