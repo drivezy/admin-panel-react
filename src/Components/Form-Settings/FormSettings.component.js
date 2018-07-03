@@ -30,7 +30,7 @@ export default class FormSettings extends Component {
             columns: this.props.columns,
             list: {},
             activeColumn: {},
-            hasFormConfiguratorRole: '',
+            formConfigurator: '',
             module: props.module
         }
     }
@@ -40,12 +40,14 @@ export default class FormSettings extends Component {
     }
 
     userDataFetched = (data) => {
-        for (var i in data.access_object.roleIdentifiers) {
-            if (data.access_object.roleIdentifiers[i] == 'form-configurator') {
-                let hasFormConfiguratorRole = data.access_object.roleIdentifiers[i];
-                this.setState({ hasFormConfiguratorRole });
-            }
-        }
+        let formConfigurator = data.hasRole['form-configurator'];
+        // for (var i in data.access_object.roleIdentifiers) {
+        //     if (data.access_object.roleIdentifiers[i] == 'form-configurator') {
+        //         let formConfigurator = data.access_object.roleIdentifiers[i];
+        //         this.setState({ formConfigurator });
+        //     }
+        // }
+        this.setState({ formConfigurator });
     }
 
     unsafe_componentwillreceiveprops(nextProps) {
@@ -135,7 +137,7 @@ export default class FormSettings extends Component {
         const { userId, menuId, listName, source } = this.props;
         let { layout } = this.props;
         const { tempSelectedColumns } = this.state;
-        const result = await SetPreference({ userId, source, menuId, name: listName, selectedColumns: this.state.tempSelectedColumns, layout,override_all:1 });
+        const result = await SetPreference({ userId, source, menuId, name: listName, selectedColumns: this.state.tempSelectedColumns, layout, override_all: 1 });
 
         // const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
 
@@ -183,7 +185,7 @@ export default class FormSettings extends Component {
 
     modalWrapper() {
         // const { columns, tempSelectedColumns, selectedColumns, activeColumn, module } = this.state;
-        const { columns, tempSelectedColumns, activeColumn, module, hasFormConfiguratorRole } = this.state;
+        const { columns, tempSelectedColumns, activeColumn, module, formConfigurator } = this.state;
 
         const selectedIds = [];
 
@@ -309,7 +311,7 @@ export default class FormSettings extends Component {
 
                 </ModalBody >
                 <ModalFooter>
-                    {hasFormConfiguratorRole ?
+                    {formConfigurator ?
                         <Button color="primary" onClick={this.applyChangesToAll}>Apply For All</Button>
                         : null
                     }

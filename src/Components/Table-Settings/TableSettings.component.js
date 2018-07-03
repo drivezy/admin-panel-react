@@ -26,7 +26,7 @@ export default class TableSettings extends Component {
             list: {},
             activeColumn: {},
             showSplitFlag: this.props.showSplitFlag,
-            hasFormConfiguratorRole: ''
+            formConfigurator: ''
         }
     }
 
@@ -48,12 +48,14 @@ export default class TableSettings extends Component {
     }
 
     userDataFetched = (data) => {
-        for (var i in data.access_object.roleIdentifiers) {
-            if (data.access_object.roleIdentifiers[i] == 'form-configurator') {
-                let hasFormConfiguratorRole = data.access_object.roleIdentifiers[i];
-                this.setState({ hasFormConfiguratorRole });
-            }
-        }
+        let formConfigurator = data.hasRole['form-configurator'];
+        // for (var i in data.access_object.roleIdentifiers) {
+        //     if (data.access_object.roleIdentifiers[i] == 'form-configurator') {
+        //         let formConfigurator = data.access_object.roleIdentifiers[i];
+        //         this.setState({ formConfigurator });
+        //     }
+        // }
+        this.setState({ formConfigurator });
     }
 
     addColumn = (column) => {
@@ -207,7 +209,7 @@ export default class TableSettings extends Component {
     }
 
     modalWrapper() {
-        const { tempColumns: columns, columns: originalColumns, tempSelectedColumns, activeColumn, showSplitFlag, hasFormConfiguratorRole } = this.state;
+        const { tempColumns: columns, columns: originalColumns, tempSelectedColumns, activeColumn, showSplitFlag, formConfigurator } = this.state;
         //console.log(columns);
         const { source = 'module' } = this.props;
         const selectedIds = [];
@@ -361,7 +363,7 @@ export default class TableSettings extends Component {
 
                 </ModalBody>
                 <ModalFooter>
-                    {hasFormConfiguratorRole ?
+                    {formConfigurator ?
                         <Button color="primary" onClick={this.applyChangesToAll}>Apply For All</Button>
                         : null
                     }
