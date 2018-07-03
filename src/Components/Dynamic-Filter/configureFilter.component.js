@@ -916,7 +916,7 @@ export default class ConfigureDynamicFilter extends Component {
                                     value={sort} options={this.sorts} placeholder='Sort'
                                 />
                             </div>
-                            <div className="col-sm-3 col-xs-3 border-select-filter margin-top-8" ng-if="configureFilter.scopeGroup.length">
+                            {/* <div className="col-sm-3 col-xs-3 border-select-filter margin-top-8" ng-if="configureFilter.scopeGroup.length">
                                 <div className='form-group'>
                                     {/* <div className="input-group select-input-form admin-ui-select">
                                             <span className="input-group-addon">
@@ -926,8 +926,8 @@ export default class ConfigureDynamicFilter extends Component {
                                                 iterate-item="alias_name">
                                             </multiple-select-field-async>
                                         </div> */}
-                                </div>
-                            </div>
+                                {/* </div>
+                            </div> */}
                             <div className="text-right">
                                 <button className="btn btn-default" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
                                     Close
