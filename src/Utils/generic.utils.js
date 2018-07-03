@@ -11,9 +11,14 @@ import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 import { GetMenuDetailEndPoint, FormDetailEndPoint } from './../Constants/api.constants';
 import { RECORD_URL } from './../Constants/global.constants';
 import { MATCH_PARENT_PATH, MATCH_WHITESPACE } from './../Constants/regex.constants';
+import COLUMN_TYPE from './../Constants/columnType.constants';
 
 // import FormCreator from './../Components/Form-Creator/formCreator.component'
 import PortletTable from '../Components/Portlet-Table/PortletTable.component';
+
+import ParseComponent from './../Components/Generic-Column-Filters/parseComponent.component';
+// import LoadAsyncComponent from './../Async/async';
+
 import TableWrapper from './../Components/Table-Wrapper/tableWrapper.component';
 import PreferenceSetting from './../Components/Preference-Setting/preferenceSetting.component';
 
@@ -143,9 +148,9 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
                 finalColumnDefinition[i].route = selected.route ? selected.route : false;
                 finalColumnDefinition[i].display_name = selected.columnTitle ? selected.columnTitle : finalColumnDefinition[i].display_name;
                 finalColumnDefinition[i].split = splitEnabled;
-                if (selected.filter) {
-                    finalColumnDefinition[i].filter = selected.filter;
-                }
+                // if (selected.filter) {
+                finalColumnDefinition[i].filter = selected.filter;
+                // }
 
                 const relationIndex = dict.parent;
 
@@ -560,7 +565,7 @@ export async function GetPreference(paramName) {
  * @param  {string} path='path'}
  */
 export function RowTemplate({ selectedColumn, listingRow, path = 'path' }) {
-    if (selectedColumn.column_type == 111) {
+    if (selectedColumn.column_type == COLUMN_TYPE.BOOLEAN) {
         // return eval('listingRow.' + selectedColumn.path) ? 'Yes' : 'No';
         return listingRow[selectedColumn.path] ? 'Yes' : 'No';
     } else if (selectedColumn.route) {
@@ -588,11 +593,12 @@ export function RowTemplate({ selectedColumn, listingRow, path = 'path' }) {
 
 function defaultRowValue({ listingRow, selectedColumn, path }) {
     try {
-        return listingRow[selectedColumn.path];
+        return <ParseComponent data={listingRow[selectedColumn.path]} filter={selectedColumn.filter} />;
         // return eval('listingRow.' + selectedColumn[path]);
     } catch (e) {
         return '';
     }
+
 }
 
 function convertIt(str) {

@@ -71,10 +71,15 @@ export default class SelectBox extends Component {
         }
     }
 
-    handleChange = (value) => {
+    handleChange = (value, e) => {
         const { key } = this.state;
         const { options } = this.props;
         // this.setState({ value: value[this.state.key] });
+
+        if (e && e.action == 'clear') {
+            this.props.onChange(null, this.props.name);
+            return;
+        }
         if (!value) {
             return;
         }
@@ -142,7 +147,7 @@ export default class SelectBox extends Component {
     }
 
     render() {
-        const { async, getOptions } = this.props;
+        const { async, getOptions, isClearable = true } = this.props;
         const { options, field, key } = this.state;
         let { value } = this.state;
         let elem;
@@ -153,6 +158,7 @@ export default class SelectBox extends Component {
             elem = <Async
                 name="form-field-name"
                 value={value}
+                isClearable={isClearable}
                 loadOptions={this.getOptions}
                 onChange={this.handleChange.bind(this)}
                 multi={this.props.multi}
@@ -164,6 +170,7 @@ export default class SelectBox extends Component {
                 name="form-field-name"
                 value={value}
                 loadOptions={getOptions}
+                isClearable={isClearable}
                 onChange={this.handleChange.bind(this)}
                 multi={this.props.multi}
                 getOptionLabel={(context, inputValue) => <span>{context[field]}</span>}
@@ -176,6 +183,7 @@ export default class SelectBox extends Component {
                 onChange={this.handleChange.bind(this)}
                 options={options}
                 multi={this.props.multi}
+                isClearable={isClearable}
                 getOptionLabel={(context, inputValue) => <span>{context[field]}</span>}
                 getOptionValue={(context, inputValue) => <span>{context[key]}</span>}
                 menuPlacement="auto"
