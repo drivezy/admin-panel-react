@@ -18,7 +18,7 @@ import ListingSearch from './../../Components/Listing-Search/listingSearch.compo
 import { HotKeys } from 'react-hotkeys';
 
 import { CopyToClipBoard } from './../../Utils/common.utils';
-import ToastNotifications from './../../Utils/toast.utils';
+import ToastUtils from './../../Utils/toast.utils';
 import { Get } from './../../Utils/http.utils';
 import { BuildUrlForGetCall } from './../../Utils/common.utils';
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
@@ -111,7 +111,7 @@ export default class GenericListing extends Component {
         const result = await Get({ url });
 
         if (result.success) {
-            ToastNotifications.success(caption + result.response);
+            ToastUtils.success({ description: result.response, title: caption });
         }
     }
 
@@ -369,7 +369,7 @@ export default class GenericListing extends Component {
             onClick: (data) => {
                 let id = data.listingRow[data.starter + '.id'];
                 CopyToClipBoard(id);
-                ToastNotifications.success("Id - " + id + " has been copied");
+                ToastUtils.success({ description: "Id - " + id + " has been copied", title: 'Copy Id' });
             },
             disabled: false
         }, { subMenu: null }, {
