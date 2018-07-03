@@ -171,10 +171,14 @@ export default class PortletTable extends Component {
 
         let rightClickOptions = [];
 
-        for (let i in genericData.nextActions) {
-            if (genericData.nextActions[i].as_context == 1) {
-                rightClickOptions = rightClickOptions.concat(rowOptions, genericData.nextActions[i]);
+        if (genericData.nextActions.length) {
+            for (let i in genericData.nextActions) {
+                if (genericData.nextActions[i].as_context == 1) {
+                    rightClickOptions = rightClickOptions.concat(rowOptions, genericData.nextActions[i]);
+                }
             }
+        } else {
+            rightClickOptions = rightClickOptions.concat(rowOptions, []);
         }
 
         console.log(rightClickOptions);
@@ -262,7 +266,7 @@ export default class PortletTable extends Component {
 
 
                                     <tr className="table-row" key={rowKey}>
-                                    
+
                                         <td className="row-key">
                                             {rowKey + 1}
                                         </td>
