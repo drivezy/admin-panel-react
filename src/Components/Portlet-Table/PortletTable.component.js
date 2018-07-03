@@ -50,7 +50,7 @@ export default class PortletTable extends Component {
             listing: this.props.listing,
             genericData: this.props.genericData,
             sortKey: '',
-            reverse: false,
+            reverse: true,
             dropdownOpen: {},
         };
     }
@@ -112,15 +112,35 @@ export default class PortletTable extends Component {
         });
     }
 
-    onSort = (event, sortKey) => {
+    onSort = (sortKey) => {
+        console.log(sortKey);
         const listing = this.state.listing;
 
         function generateSortFn(prop, reverse) {
             return function (a, b) {
-                if (a[prop] < b[prop]) return reverse ? 1 : -1;
-                // if (eval('a.' + prop) < eval('b.' + prop)) return reverse ? 1 : -1;
-                if (a[prop] > b[prop]) return reverse ? -1 : 1;
-                return 0;
+
+                //ascending: reverse off , descending: reverse on
+
+                if (a[prop] == null && b[prop]!=null) {                 //reverse: off- put valued object above null. reverse: on- put valued object below null
+                    return reverse ? -1 : 1;
+                }
+
+                else if (b[prop] == null && a[prop]!=null) {           //reverse: off- put valued object below null. reverse: on- put valued object above nul
+                    return reverse ? 1 : -1;
+                }
+
+                else if (b[prop] == null && a[prop]== null) {           //reverse: off, on - do nothing for both nulls
+                    //Do_nothing
+                }
+
+                else if (a[prop] < b[prop]) {                           //Do comparison on the basis of alphabetical order.
+                   return reverse ? 1 : -1;
+                }
+                
+                else if (a[prop] > b[prop]) {                           //Do comparison on the basis of alphabetical order.
+                    return reverse ? -1 : 1; 
+                }
+                
             };
         }
 
@@ -197,11 +217,11 @@ export default class PortletTable extends Component {
                                 </th>
                                 {
                                     finalColumns.map((selectedColumn, key) => {
-                                        let conditionForSorting = (this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.name))) ? (this.state.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down') : ''
+                                        let conditionForSorting = (this.state.sortKey === selectedColumn.name) ? (this.state.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down') : ''
                                         const html = <div className="column-wrapper">
                                             {/* Column Title */}
                                             <div className="column-title printable">
-                                                <a onClick={e => this.onSort(e, selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName))}>
+                                                <a onClick={() => this.onSort(selectedColumn.column_type_id ? (selectedColumn.path) : (selectedColumn.headerName))}>
                                                     <span>{selectedColumn.display_name}</span> &nbsp;
                                                 <i className={`fa ${conditionForSorting}`} />
                                                 </a>
@@ -221,7 +241,7 @@ export default class PortletTable extends Component {
                                             {/* DB Level */}
 
                                             {
-                                                (selectedColumn && selectedColumn.path.split('.').length == 2) && (selectedColumn.column_type != 118) &&
+                                                (selectedColumn && selectedColumn.path.split('.').length == 2) && (selectedColumn.column_type_id ) &&
                                                 (
                                                     tableType == "listing" &&
                                                     <div className="db-level-sort">
