@@ -28,7 +28,6 @@ export default class SelectBox extends Component {
             key: this.props.key || 'id'
         }
 
-        console.log('he;ll');
     }
 
     UNSAFE_componentWillReceiveProps(props) {
