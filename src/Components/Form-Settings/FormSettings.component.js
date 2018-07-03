@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { SetPreference } from './../../Utils/preference.utils';
 
 import { IsObjectHaveKeys } from './../../Utils/common.utils';
+import { SubscribeToEvent, UnsubscribeEvent } from './../../Utils/stateManager.utils';
 import { changeArrayPosition } from './../../Utils/js.utils';
 
 import { FormPreferenceEndPoint } from './../../Constants/api.constants';
@@ -13,6 +14,7 @@ import { FormPreferenceEndPoint } from './../../Constants/api.constants';
 import { Collapse, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import FormColumnSetting from './../../Components/Form-Settings/Components/Form-Column-Setting/formColumnSetting.component';
+
 
 export default class FormSettings extends Component {
 
@@ -28,11 +30,22 @@ export default class FormSettings extends Component {
             columns: this.props.columns,
             list: {},
             activeColumn: {},
+            hasFormConfiguratorRole: '',
             module: props.module
         }
     }
 
     componentDidMount() {
+        SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
+    }
+
+    userDataFetched = (data) => {
+        for (var i in data.access_object.roleIdentifiers) {
+            if (data.access_object.roleIdentifiers[i] == 'form-configurator') {
+                let hasFormConfiguratorRole = data.access_object.roleIdentifiers[i];
+                this.setState({ hasFormConfiguratorRole });
+            }
+        }
     }
 
     unsafe_componentwillreceiveprops(nextProps) {
@@ -118,6 +131,27 @@ export default class FormSettings extends Component {
         this.setState({ tempSelectedColumns });
     };
 
+    applyChangesToAll = async () => {
+        const { userId, menuId, listName, source } = this.props;
+        let { layout } = this.props;
+        const { tempSelectedColumns } = this.state;
+        const result = await SetPreference({ userId, source, menuId, name: listName, selectedColumns: this.state.tempSelectedColumns, layout,override_all:1 });
+
+        // const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
+
+        if (result.success) {
+            this.setState({ modal: !this.state.modal });
+            if (IsObjectHaveKeys(layout)) {
+                layout.column_definition = tempSelectedColumns;
+            } else {
+                const { response } = result;
+                response.column_definition = JSON.parse(response.column_definition);
+                layout = response;
+            }
+            this.props.onSubmit(layout);
+        }
+    }
+
 
     applyChanges = async () => {
 
@@ -149,7 +183,7 @@ export default class FormSettings extends Component {
 
     modalWrapper() {
         // const { columns, tempSelectedColumns, selectedColumns, activeColumn, module } = this.state;
-        const { columns, tempSelectedColumns, activeColumn, module } = this.state;
+        const { columns, tempSelectedColumns, activeColumn, module, hasFormConfiguratorRole } = this.state;
 
         const selectedIds = [];
 
@@ -275,6 +309,10 @@ export default class FormSettings extends Component {
 
                 </ModalBody >
                 <ModalFooter>
+                    {hasFormConfiguratorRole ?
+                        <Button color="primary" onClick={this.applyChangesToAll}>Apply For All</Button>
+                        : null
+                    }
                     <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
                     <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
                 </ModalFooter>

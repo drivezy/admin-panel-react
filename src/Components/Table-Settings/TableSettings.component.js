@@ -8,6 +8,8 @@ import { IsObjectHaveKeys } from './../../Utils/common.utils';
 
 import ColumnSetting from './Components/Column-Setting/columnSetting.component';
 
+import { SubscribeToEvent, UnsubscribeEvent } from './../../Utils/stateManager.utils';
+
 import './TableSettings.css';
 
 export default class TableSettings extends Component {
@@ -23,7 +25,8 @@ export default class TableSettings extends Component {
             columns: this.props.columns,
             list: {},
             activeColumn: {},
-            showSplitFlag: this.props.showSplitFlag
+            showSplitFlag: this.props.showSplitFlag,
+            hasFormConfiguratorRole: ''
         }
     }
 
@@ -31,6 +34,7 @@ export default class TableSettings extends Component {
         const co = JSON.stringify(this.state.columns);
         // this.setState({ tempColumns: JSON.parse(co) });
         this.setState({ tempColumns: { ...this.state.columns } });
+        SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
     }
 
     toggleModal = () => {
@@ -41,6 +45,15 @@ export default class TableSettings extends Component {
         let obj = this.state.list;
         obj[index] = !obj[index];
         this.setState({ list: obj });
+    }
+
+    userDataFetched = (data) => {
+        for (var i in data.access_object.roleIdentifiers) {
+            if (data.access_object.roleIdentifiers[i] == 'form-configurator') {
+                let hasFormConfiguratorRole = data.access_object.roleIdentifiers[i];
+                this.setState({ hasFormConfiguratorRole });
+            }
+        }
     }
 
     addColumn = (column) => {
@@ -79,6 +92,10 @@ export default class TableSettings extends Component {
         const { tempColumns, columns } = this.state;
         column = columns[column.index];
         tempColumns[column.path] = column;
+    }
+
+    searchResult = (event) => {
+        let searchValue = event.target.value;
     }
 
     toggleColumn = (column) => {
@@ -145,6 +162,28 @@ export default class TableSettings extends Component {
         return tempSelectedColumns;
     };
 
+    applyChangesToAll = async () => {
+        const { userId, menuId, listName, source } = this.props;
+        let { layout } = this.props;
+        const { tempSelectedColumns } = this.state;
+        const result = await SetPreference({ userId, source, menuId, name: listName, selectedColumns: this.state.tempSelectedColumns, layout,override_all:1 });
+
+        // const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
+
+        if (result.success) {
+            this.setState({ modal: !this.state.modal });
+            if (IsObjectHaveKeys(layout)) {
+                layout.column_definition = tempSelectedColumns;
+            } else {
+                const { response } = result;
+                response.column_definition = JSON.parse(response.column_definition);
+                layout = response;
+            }
+            this.props.onSubmit(layout);
+        }
+    }
+
+
 
     applyChanges = async () => {
         const { userId, menuId, listName, source } = this.props;
@@ -168,7 +207,7 @@ export default class TableSettings extends Component {
     }
 
     modalWrapper() {
-        const { tempColumns: columns, columns: originalColumns, tempSelectedColumns, activeColumn, showSplitFlag } = this.state;
+        const { tempColumns: columns, columns: originalColumns, tempSelectedColumns, activeColumn, showSplitFlag, hasFormConfiguratorRole } = this.state;
         //console.log(columns);
         const { source = 'module' } = this.props;
         const selectedIds = [];
@@ -206,7 +245,7 @@ export default class TableSettings extends Component {
                                     <h6 className="card-title">All Columns</h6>
 
                                     <div className="input-holder">
-                                        <input type="text" className="search-box" placeholder="Search Columns" />
+                                        <input type="text" onClick={(event) => this.searchResult} className="search-box" placeholder="Search Columns" />
                                     </div>
                                 </div>
 
@@ -322,9 +361,9 @@ export default class TableSettings extends Component {
 
                 </ModalBody>
                 <ModalFooter>
-                    {
-
-                        <Button color="primary" onClick={this.applyChanges}>Apply For All</Button>
+                    {hasFormConfiguratorRole ?
+                        <Button color="primary" onClick={this.applyChangesToAll}>Apply For All</Button>
+                        : null
                     }
                     <div className="rightButtons">
                         <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
