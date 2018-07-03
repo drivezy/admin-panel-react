@@ -422,7 +422,7 @@ export default class GenericListing extends Component {
             onClick: (data) => {
                 const { history, match } = this.props;
 
-                let pageUrl = "/menuDef/" + data.menuDetail.menuId
+                let pageUrl = "/menu/" + data.menuDetail.menuId
 
                 history.push(`${pageUrl}`);
             },
@@ -435,7 +435,7 @@ export default class GenericListing extends Component {
             onClick: (data) => {
                 const { history, match } = this.props;
 
-                let pageUrl = "/modelDetails/" + data.menuDetail.model.id
+                let pageUrl = "/model/" + data.menuDetail.model.id
 
                 history.push(`${pageUrl}`);
             },
