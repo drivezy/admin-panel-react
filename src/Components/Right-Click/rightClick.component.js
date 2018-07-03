@@ -1,26 +1,24 @@
 import React, { Component } from 'react';
-import './rightClick.css';
 
 import { ContextMenu, MenuItem, ContextMenuTrigger, SubMenu } from "react-contextmenu";
 
 import { RemoveStarterFromThePath } from './../../Utils/generic.utils';
-
 import { ProcessPage } from './../../Utils/pageMiddleware.utils';
 
+import './rightClick.css';
 
 let customMethods = {};
-export default class RightClick extends Component {
 
+export default class RightClick extends Component {
 
     aggregationOperators = [{ name: 'Sum' }, { name: 'Avg' }, { name: 'Max' }, { name: 'Min' }];
 
+    // Calling function for ui actions
     callFunction = ({ rowOption, listingRow }) => {
         let action = rowOption;
-        const args = [];
         const { genericData, history, callback, source = 'model', menuDetail = {}, parentData = {} } = this.props;
         this.genericData = genericData;
         const data = RemoveStarterFromThePath({ data: listingRow, starter: genericData.starter });
-
 
         if (action.form_id) {
             action.callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : callback) : callback;
@@ -32,38 +30,20 @@ export default class RightClick extends Component {
                 execution_script: action.execution_script
             }
             ProcessPage({ pageContent });
-            // script evaluation goes here
         }
-        // if (genericData.methods && typeof genericData.methods[action.name] == "function") {
-        //     // var callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : customMethods[action.callback]) : listing.callbackFunction.function;
-
-        //     const callbackMethod = (action.callback && typeof genericData.methods[action.callback] == "function") ? genericData.methods[action.callback] : callback;
-        //     const args = ConvertDependencyInjectionToArgs.call(this, action.dependency);
-        //     args.reverse();
-        //     args.push(callbackMethod);
-        //     action.placement_id == 167 ? args.push(listingRow) : args.push("");
-        //     args.reverse();
-
-        //     genericData.methods[action.name].apply(this, args);
-        // } else { // For add, edit,delete
-        //     action.callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : callback) : callback;
-        //     if (typeof genericData.preDefinedmethods[action.name] == "function") {
-        //         genericData.preDefinedmethods[action.name]({ action, listingRow, genericData, history, source });
-        //     }
-        // }
     }
 
     render() {
 
-        const { renderTag, rowOptions, html, className, listingRow, source } = this.props;
+        const { renderTag, rowOptions, html, className, listingRow } = this.props;
 
-
+        // Generating random identifier
         const identifier = "entry " + Math.random(Math.random() * 1000);
 
         return (
             [
                 <ContextMenuTrigger key={1} id={identifier} renderTag={renderTag} attributes={{ className }} holdToDisplay={1000}>
-                    {html || ''}
+                    <span className={`base-class ${html ? 'is-active' : ''}`} >{html || '.'}</span>
                 </ContextMenuTrigger>,
 
                 <ContextMenu key={2} id={identifier}>

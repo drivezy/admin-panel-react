@@ -96,6 +96,9 @@ export default class GenericListing extends Component {
 
     dataFetched = ({ genericData, filterContent }) => {
         this.setState({ genericData, filterContent });
+        if (genericData) {
+            StoreEvent({ eventName: 'rightClickData', data: { menuData: genericData } });
+        }
     }
 
     openAggregationResult = async (operator, caption, data) => {

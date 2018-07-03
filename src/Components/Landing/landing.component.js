@@ -50,17 +50,16 @@ export default class LandingApp extends Component {
 
     render() {
         const { menus = [], sideNavExpanded } = this.state;
-        const { match } = this.props;
+        const { match, history } = this.props;
         const { loadedComponent } = this;
 
-        // console.log(menus);
         return (
             <div className="page-container">
                 <div className="landing-sidebar">
                     <SideNav visible={sideNavExpanded} onCollapse={this.onCollapse.bind(this)} menus={menus} />
                 </div>
                 <div className={`landing-wrapper ${sideNavExpanded ? 'sidenav-open' : 'sidenav-closed'}`} id="main" style={{ height: '100%' }}>
-                    <Header className={`${sideNavExpanded ? 'expanded' : 'collapsed'}`} />
+                    <Header className={`${sideNavExpanded ? 'expanded' : 'collapsed'}`} history={history} />
                     <div className="landing-body">
                         <Switch>
                             {
@@ -68,12 +67,12 @@ export default class LandingApp extends Component {
                                     if (Array.isArray(menu.menus)) {
                                         return menu.menus.map((state, index) => {
                                             return (<Route key={state.url} path={`${match.path}${state.url}`} render={props => {
-                                                if (!Array.isArray(this.loadedComponent[parentIndex])) { 
+                                                if (!Array.isArray(this.loadedComponent[parentIndex])) {
                                                     // since in dynamic import, component gets remounted on every setState being happened in this level
                                                     // using this.loadedComponent to prevent from the same
                                                     this.loadedComponent[parentIndex] = [];
-                                                } 
-                                                 if (!loadedComponent[parentIndex][index]) {
+                                                }
+                                                if (!loadedComponent[parentIndex][index]) {
                                                     this.loadedComponent[parentIndex][index] = LoadAsyncComponent(() => import(`./../../Scenes${state.component.path}`));
                                                 }
                                                 const GenericListing = this.loadedComponent[parentIndex][index];
