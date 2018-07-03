@@ -142,9 +142,18 @@ export default class FormUtil {
      * @param  {string} column - column name
      * @param  {boolean} value -true if disabled, false if enabled
      */
-    static setDisabled(column, value) {
-        self.form.dictionary[column].disabled = value;
+    static setDisabled(column, value = true, form = self.form) {
+        const columnObj = form.dictionary[column];
+
+        if (!columnObj) {
+            return form;
+        }
+
+        form.dictionary[column].disabled = value;
+
+        self.form = form;
         FormUtil.updateForm(false);
+        return form;
     }
 
     /**
