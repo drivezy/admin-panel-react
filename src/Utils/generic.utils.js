@@ -10,6 +10,7 @@ import { ProcessForm } from './formMiddleware.utils';
 import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 import { GetMenuDetailEndPoint, FormDetailEndPoint } from './../Constants/api.constants';
 import { RECORD_URL } from './../Constants/global.constants';
+import { MATCH_PARENT_PATH, MATCH_WHITESPACE } from './../Constants/regex.constants';
 
 // import FormCreator from './../Components/Form-Creator/formCreator.component'
 import PortletTable from '../Components/Portlet-Table/PortletTable.component';
@@ -517,7 +518,7 @@ export function GetPreSelectedMethods() {
         }
     }
 
-    function getFormContent({ listingRow, action, genericData, source, method, menuDetail = {}, parent={} }) {
+    function getFormContent({ listingRow, action, genericData, source, method, menuDetail = {}, parent = {} }) {
         return {
             method: method.toLowerCase(),
             menu: menuDetail,
@@ -657,7 +658,7 @@ export function GetUrlForFormCreator({ payload, getDictionary = false, isForm })
 
     // @TODO @shubham remove below line after sometime - shubham
     url = payload.method == 'edit' ? payload.route + '/' + (payload.data.id || payload.data[payload.starter + '.id']) : payload.route;
-    
+
     if (getDictionary) {
         return url + (payload.method == 'edit' ? '/edit' : '/create');
     }
@@ -720,4 +721,24 @@ export function GetChangedMethods(newValues, originalValues) {
     }
 
     return data;
+}
+
+export function ParseRestrictedQuery(queryString) {
+    const parsedQuery = [];
+    if (!queryString) {
+        return parsedQuery;
+    }
+    const queries = queryString.split(' and ');
+    queries.forEach(query => {
+        if (!query) {
+            return;
+        }
+
+        query = query.replace(MATCH_PARENT_PATH, '').replace(MATCH_WHITESPACE, '');
+        query = query.split('=');
+        parsedQuery[query[0]] = query[1];
+        // parsedQuery.push(query)
+
+    });
+    return parsedQuery;
 }

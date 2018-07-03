@@ -158,9 +158,9 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
             render={({ field /* _form */ }) => (
                 <ReferenceInput column={column} name={column.name}
                     // onChange={props.setFieldValue}
-                    onChange={(event, ...args) => {
-                        FormUtils.OnChangeListener({ column, value: args[0], ...event });
-                        props.setFieldValue(event, args[0]);
+                    onChange={(value, event) => {
+                        FormUtils.OnChangeListener({ column, value, ...event });
+                        props.setFieldValue(event, value);
                     }}
                     // onChange={({ ...args }) => { FormUtils.OnChangeListener(args); props.setFieldValue(args); }}
                     model={values[column.name]} />

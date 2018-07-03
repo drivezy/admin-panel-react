@@ -23,15 +23,16 @@ export default class SelectBox extends Component {
             // field: props.field || 'name',
             // valueKey: props.valueKey || 'value',
             // queryField: props.queryField
-
-            ...this.returnStateObj(props)
+            ...this.setOptions(props),
+            field: this.props.field || 'name',
+            key: this.props.key || 'id'
         }
 
         console.log('he;ll');
     }
 
     UNSAFE_componentWillReceiveProps(props) {
-        this.setState({ ...this.returnStateObj(props) });
+        this.setState({ ...this.setOptions(props) });
     }
 
     /**
@@ -40,7 +41,7 @@ export default class SelectBox extends Component {
      * converts array of object internally and passes forward (since this library doesnt support array of strings)
      * @param  {object} props - expected to have options, value, field(optional when array of strings), queryField(for async calls), key
      */
-    returnStateObj(props) {
+    setOptions(props) {
         let options = [], value = {};
 
         if (Array.isArray(props.options) && typeof props.options[0] != 'object') {
