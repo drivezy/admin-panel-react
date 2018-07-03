@@ -210,7 +210,7 @@ export default class PortletTable extends Component {
 
                 {/* Contents Table */}
                 <div className="table-content">
-                    <Table striped className="sortable">
+                    <Table className="sortable">
                         <thead>
                             <tr>
                                 <th>

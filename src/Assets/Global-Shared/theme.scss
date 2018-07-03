@@ -2,7 +2,7 @@
 $themes: ( 
     light: (
             primaryColor:red,             
-            secondaryColor: #000,
+            secondaryColor: #6a9a0b,
             themePrimaryColor: #fff,
             // Body
             bodyBackground:white,
@@ -16,7 +16,8 @@ $themes: (
             searchBorder: 1px solid #d8d8d8,
             textSecondary:#000000,
             headerBackground: #f5f5f5,
-            headerBorder: #d8d8d8,
+            // headerBorder: #d8d8d8,
+            headerBorder:white,
             // Card Background
             cardBackground: #e8e9e8,
             detailBackgroundCard:#eceeef,
@@ -28,7 +29,7 @@ $themes: (
             // Secondary Button
             // themeBorder: 0 0 1px 0 solid #000,
             themeBorder:#000000,
-            secondaryThemeDark: #000000,
+            secondaryThemeDark: #6a9a0b,
             // Primary Button
             primaryBorder: 1px solid #e96857,
             primaryThemeDark:#e96857,
@@ -38,27 +39,32 @@ $themes: (
             //menu
             detailsBackground:#eceeef,
             // Sidbar Styling
-            sideBackground:#f5f5f5,
+            // sideBackground:#f5f5f5,
+            sideBackground:white,
             sidebarBorder:#d8d8d8,
             navHeader:#f5f5f5,
             logoBottomBorder:#e9e7e7,
             lightColorText:#D34031,
-            actionBarBorder: 1px solid #d8d8d8,
+            // actionBarBorder: 1px solid #d8d8d8,
+            actionBarBorder: none,
+
             // Sidebar Styling Ends
             // Panel
             menuBorderPanel: 0px 0px 1px 1px #d8d8d8,
             borderBottom: 0px,
             // Sub Header
-            subHeader:#e8e8e8,
-            subHeaderBorder: #d8d8d8,
+            subHeader:#f8f8f8,
+            subHeaderBorder:#fdfdfd,
             // Sub Header Ends
             // Table Styling
             tableDataBorder: 1px solid #f5f5f5,
             tableBackground: #ffffff,
             tableHeadBorder: 1px solid #f5f5f5,
-            columnTitle:#9e9d9a,
+            columnTitle:#928d8d,
             sortLink:#F15590,
+            tableData:#4a4b58,
             tooltipText: #ffffff,
+            tableRowBorder:#eae8e8,
             // Table Styling Ends
             // Menu Table Styling
             menuTableBackground:#f5f5f5,
@@ -69,8 +75,8 @@ $themes: (
             expandMenuHeader: #f5f5f5,
             //
             hintText: #D34031,
-            hoverColor: #dedede,
-            linkHover: #000000,
+            hoverColor: #c5e5ff,
+            linkHover: #3b82d6,
             subMenuHeader: #ecebec,
             subMenuHover: #ffffff,
             linkColor: #137DAE,
