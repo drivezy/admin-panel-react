@@ -82,7 +82,6 @@ export default class GenericListing extends Component {
             const menuDetail = ConvertMenuDetailForGenericPage(response || {});
             // if (typeof response.controller_path == 'string' && response.controller_path.includes('genericListingController.js') != -1) {
             this.state.menuDetail = menuDetail;
-            console.log(menuDetail);
             this.getListingData();
             StoreEvent({ eventName: 'showMenuName', data: { menuName: this.state.menuDetail.pageName } });
             // }
@@ -306,7 +305,7 @@ export default class GenericListing extends Component {
                                 <i className="fa fa-refresh"></i>
                             </Button>
                             {
-                                menuDetail && genericData.userFilter && genericData.userFilter.length > 0 ?
+                                menuDetail && menuDetail.layouts && menuDetail.layouts.length > 0 ?
                                     <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} layouts={menuDetail.layouts} history={history} match={match} />
                                     :
                                     null

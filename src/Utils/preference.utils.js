@@ -54,7 +54,7 @@ export function SetPreference({ userId, menuId, name = 'default', selectedColumn
 
 export function DeletePreference({ layout }) {
     const url = ListPreference + '/' + layout.id;
-    return Delete({ url });
+    return Delete({ url, urlPrefix: RECORD_URL });
 }
 // export function DeletePreference(key, value, forAll) {
 //     preferences[key] = value;
