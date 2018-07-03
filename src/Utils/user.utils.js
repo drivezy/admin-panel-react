@@ -10,6 +10,8 @@ import { StoreEvent } from './stateManager.utils';
 
 import { GetItem } from './localStorage.utils';
 
+import { LoginCheckEndPoint } from './../Constants/api.constants';
+
 
 let CurrentUser = {};
 
@@ -27,7 +29,7 @@ export const GetFireToken = async () => {
 };
 
 export const LoginCheck = async () => {
-    const result = await Get({ urlPrefix: GLOBAL.ROUTE_URL, url: 'loginCheck' });
+    const result = await Get({ urlPrefix: GLOBAL.ROUTE_URL, url: LoginCheckEndPoint });
     let loggedUser = {};
     if (result.success) {
         loggedUser = GetUserDetail(result.response);
