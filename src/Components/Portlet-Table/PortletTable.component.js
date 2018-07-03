@@ -217,11 +217,11 @@ export default class PortletTable extends Component {
                                 </th>
                                 {
                                     finalColumns.map((selectedColumn, key) => {
-                                        let conditionForSorting = (this.state.sortKey === (selectedColumn.column_type_id != 118 ? (selectedColumn.path) : (selectedColumn.name))) ? (this.state.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down') : ''
+                                        let conditionForSorting = (this.state.sortKey === selectedColumn.name) ? (this.state.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down') : ''
                                         const html = <div className="column-wrapper">
                                             {/* Column Title */}
                                             <div className="column-title printable">
-                                                <a onClick={() => this.onSort(selectedColumn.column_type_id != 118 ? (selectedColumn.path) : (selectedColumn.headerName))}>
+                                                <a onClick={() => this.onSort(selectedColumn.column_type_id ? (selectedColumn.path) : (selectedColumn.headerName))}>
                                                     <span>{selectedColumn.display_name}</span> &nbsp;
                                                 <i className={`fa ${conditionForSorting}`} />
                                                 </a>
@@ -241,7 +241,7 @@ export default class PortletTable extends Component {
                                             {/* DB Level */}
 
                                             {
-                                                (selectedColumn && selectedColumn.path.split('.').length == 2) && (selectedColumn.column_type_id != 118) &&
+                                                (selectedColumn && selectedColumn.path.split('.').length == 2) && (selectedColumn.column_type_id ) &&
                                                 (
                                                     tableType == "listing" &&
                                                     <div className="db-level-sort">
