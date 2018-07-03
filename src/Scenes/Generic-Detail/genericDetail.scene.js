@@ -191,7 +191,7 @@ export default class GenericDetail extends Component {
             onClick: (data) => {
                 const { history, match } = this.props;
 
-                let pageUrl = "/menuDef/" + this.state.menuDetail.menuId
+                let pageUrl = "/menu/" + this.state.menuDetail.menuId
                 Location.navigate({ url: pageUrl });
                 // history.push(`${pageUrl}`);
             }
@@ -203,7 +203,7 @@ export default class GenericDetail extends Component {
             onClick: (data) => {
                 const { history, match } = this.props;
 
-                let url = "/modelDetails/" + this.state.menuDetail.model.id
+                let url = "/model/" + this.state.menuDetail.model.id
                 Location.navigate({ url });
                 // history.push(`${url}`);
             }

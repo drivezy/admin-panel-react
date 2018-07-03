@@ -74,8 +74,12 @@ export default class TableSettings extends Component {
         this.addColumnToLeft(column);
     }
 
-    addColumnToLeft(column){
+    addColumnToLeft(column) {
         console.log(column);
+        const { tempColumns, columns } = this.state;
+        column = columns[column.index];
+        tempColumns[column.path] = column;
+        console.log(tempColumns);
     }
 
     toggleColumn = (column) => {
@@ -321,6 +325,10 @@ export default class TableSettings extends Component {
 
                 </ModalBody>
                 <ModalFooter>
+                    {/* {
+                        userObjedfsd &&
+                        <Button color="primary" onClick={this.applyChanges}>Apply For All</Button>
+                    } */}
                     <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
                     <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
                 </ModalFooter>

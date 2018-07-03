@@ -50,7 +50,7 @@ export default class PortletTable extends Component {
             listing: this.props.listing,
             genericData: this.props.genericData,
             sortKey: '',
-            reverse: false,
+            reverse: true,
             dropdownOpen: {},
         };
     }
@@ -73,7 +73,6 @@ export default class PortletTable extends Component {
         var oldresize = window.onresize;
 
         window.onresize = (e) => {
-            // console.log(e);
             var event = window.event || e;
             if (typeof (oldresize) === 'function' && !oldresize.call(window, event)) {
                 return false;
@@ -112,15 +111,34 @@ export default class PortletTable extends Component {
         });
     }
 
-    onSort = (event, sortKey) => {
+    onSort = (sortKey) => {
         const listing = this.state.listing;
 
         function generateSortFn(prop, reverse) {
             return function (a, b) {
-                if (a[prop] < b[prop]) return reverse ? 1 : -1;
-                // if (eval('a.' + prop) < eval('b.' + prop)) return reverse ? 1 : -1;
-                if (a[prop] > b[prop]) return reverse ? -1 : 1;
-                return 0;
+
+                //ascending: reverse off , descending: reverse on
+
+                if (a[prop] == null && b[prop]!=null) {                 //reverse: off- put valued object above null. reverse: on- put valued object below null
+                    return reverse ? -1 : 1;
+                }
+
+                else if (b[prop] == null && a[prop]!=null) {           //reverse: off- put valued object below null. reverse: on- put valued object above nul
+                    return reverse ? 1 : -1;
+                }
+
+                else if (b[prop] == null && a[prop]== null) {           //reverse: off, on - do nothing for both nulls
+                    //Do_nothing
+                }
+
+                else if (a[prop] < b[prop]) {                           //Do comparison on the basis of alphabetical order.
+                   return reverse ? 1 : -1;
+                }
+                
+                else if (a[prop] > b[prop]) {                           //Do comparison on the basis of alphabetical order.
+                    return reverse ? -1 : 1; 
+                }
+                
             };
         }
 
@@ -171,19 +189,21 @@ export default class PortletTable extends Component {
 
         let rightClickOptions = [];
 
-        for (let i in genericData.nextActions) {
-            if (genericData.nextActions[i].as_context == 1) {
-                rightClickOptions = rightClickOptions.concat(rowOptions, genericData.nextActions[i]);
+        if (genericData.nextActions.length) {
+            for (let i in genericData.nextActions) {
+                if (genericData.nextActions[i].as_context == 1) {
+                    rightClickOptions = rightClickOptions.concat(rowOptions, genericData.nextActions[i]);
+                }
             }
+        } else {
+            rightClickOptions = rightClickOptions.concat(rowOptions, []);
         }
 
-        console.log(rightClickOptions);
 
         // As soon as rendering is done adjust the width according to action columns
         setTimeout(() => this.adjustWidth());
 
         let renderItem;
-        // console.log(finalColumns);
 
         if (listing.length) {
             renderItem = <div className="table-body">
@@ -197,11 +217,11 @@ export default class PortletTable extends Component {
                                 </th>
                                 {
                                     finalColumns.map((selectedColumn, key) => {
-                                        let conditionForSorting = (this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.name))) ? (this.state.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down') : ''
+                                        let conditionForSorting = (this.state.sortKey === selectedColumn.name) ? (this.state.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down') : ''
                                         const html = <div className="column-wrapper">
                                             {/* Column Title */}
                                             <div className="column-title printable">
-                                                <a onClick={e => this.onSort(e, selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName))}>
+                                                <a onClick={() => this.onSort(selectedColumn.column_type_id ? (selectedColumn.path) : (selectedColumn.headerName))}>
                                                     <span>{selectedColumn.display_name}</span> &nbsp;
                                                 <i className={`fa ${conditionForSorting}`} />
                                                 </a>
@@ -221,7 +241,7 @@ export default class PortletTable extends Component {
                                             {/* DB Level */}
 
                                             {
-                                                (selectedColumn && selectedColumn.path.split('.').length == 2) && (selectedColumn.column_type != 118) &&
+                                                (selectedColumn && selectedColumn.path.split('.').length == 2) && (selectedColumn.column_type_id ) &&
                                                 (
                                                     tableType == "listing" &&
                                                     <div className="db-level-sort">
@@ -262,7 +282,7 @@ export default class PortletTable extends Component {
 
 
                                     <tr className="table-row" key={rowKey}>
-                                    
+
                                         <td className="row-key">
                                             {rowKey + 1}
                                         </td>
