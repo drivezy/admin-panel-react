@@ -73,7 +73,6 @@ export default class PortletTable extends Component {
         var oldresize = window.onresize;
 
         window.onresize = (e) => {
-            // console.log(e);
             var event = window.event || e;
             if (typeof (oldresize) === 'function' && !oldresize.call(window, event)) {
                 return false;
@@ -113,7 +112,6 @@ export default class PortletTable extends Component {
     }
 
     onSort = (sortKey) => {
-        console.log(sortKey);
         const listing = this.state.listing;
 
         function generateSortFn(prop, reverse) {
@@ -201,13 +199,11 @@ export default class PortletTable extends Component {
             rightClickOptions = rightClickOptions.concat(rowOptions, []);
         }
 
-        console.log(rightClickOptions);
 
         // As soon as rendering is done adjust the width according to action columns
         setTimeout(() => this.adjustWidth());
 
         let renderItem;
-        // console.log(finalColumns);
 
         if (listing.length) {
             renderItem = <div className="table-body">

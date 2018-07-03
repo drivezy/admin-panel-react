@@ -53,7 +53,6 @@ export default class LandingApp extends Component {
         const { match, history } = this.props;
         const { loadedComponent } = this;
 
-        // console.log(menus);
         return (
             <div className="page-container">
                 <div className="landing-sidebar">
