@@ -55,7 +55,6 @@ export default class DetailPortlet extends Component {
 
     render() {
         const { finalColumns, listingRow, starter } = this.props;
-        console.log(finalColumns);
         return (
             <div className="detail-portlet">
                 <Card>

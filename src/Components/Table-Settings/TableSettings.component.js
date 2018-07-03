@@ -29,7 +29,8 @@ export default class TableSettings extends Component {
 
     componentDidMount() {
         const co = JSON.stringify(this.state.columns);
-        this.setState({ tempColumns: JSON.parse(co) });
+        // this.setState({ tempColumns: JSON.parse(co) });
+        this.setState({ tempColumns: { ...this.state.columns } });
     }
 
     toggleModal = () => {
@@ -75,11 +76,9 @@ export default class TableSettings extends Component {
     }
 
     addColumnToLeft(column) {
-        console.log(column);
         const { tempColumns, columns } = this.state;
         column = columns[column.index];
         tempColumns[column.path] = column;
-        console.log(tempColumns);
     }
 
     toggleColumn = (column) => {
@@ -151,8 +150,6 @@ export default class TableSettings extends Component {
         const { userId, menuId, listName, source } = this.props;
         let { layout } = this.props;
         const { tempSelectedColumns } = this.state;
-
-        console.log(this.state.tempSelectedColumns);
         const result = await SetPreference({ userId, source, menuId, name: listName, selectedColumns: this.state.tempSelectedColumns, layout });
 
         // const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
@@ -325,12 +322,14 @@ export default class TableSettings extends Component {
 
                 </ModalBody>
                 <ModalFooter>
-                    {/* {
-                        userObjedfsd &&
+                    {
+
                         <Button color="primary" onClick={this.applyChanges}>Apply For All</Button>
-                    } */}
-                    <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
-                    <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
+                    }
+                    <div className="rightButtons">
+                        <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
+                        <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
+                    </div>
                 </ModalFooter>
             </Modal >
         )

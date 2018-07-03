@@ -102,4 +102,11 @@
             }
         }
     }
+    .modal-footer{
+        justify-content: none;
+        .rightButtons{
+            width: 100%;
+            text-align: right;
+        }
+    }
 }
