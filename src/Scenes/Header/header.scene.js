@@ -5,24 +5,37 @@ import ActiveModule from './../../Components/Active-Module/ActiveModule.componen
 import PageNav from './../../Components/Page-Nav/PageNav';
 
 import RightClick from './../../Components/Right-Click/rightClick.component';
+import { SubscribeToEvent } from './../../Utils/stateManager.utils';
 
 export default class Header extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            visible: props.visible || false
+            visible: props.visible || false,
+            menuDetail: {},
+            history: props.history,
         }
     }
 
-    render() {
+    componentDidMount() {
+        SubscribeToEvent({ eventName: 'rightClickData', callback: this.getMenuData });
+    }
 
+    getMenuData = (data) => {
+        this.setState({
+            menuDetail: data
+        })
+    }
+
+    render() {
         return (
 
             <div className="landing-header">
-                <RightClick rowOptions={this.rowOptions} renderTag="span" className='generic-table-td'/>
+
                 <div className="header-content">
 
                     <ActiveModule />
+                    <RightClick rowOptions={this.rowOptions} renderTag="div" className='generic-table-td' />
                     <PageNav />
 
                 </div>
@@ -37,9 +50,9 @@ export default class Header extends Component {
             icon: 'fa-deaf',
             subMenu: false,
             onClick: (data) => {
-                const { history, match } = this.props;
+                const { menuDetail, history } = this.state;
 
-                let pageUrl = "/menuDef/" + data.menuDetail.menuId
+                let pageUrl = "/menu/" + menuDetail.menuData.menuId
 
                 history.push(`${pageUrl}`);
             },
@@ -50,9 +63,9 @@ export default class Header extends Component {
             icon: 'fa-info-circle',
             subMenu: false,
             onClick: (data) => {
-                const { history, match } = this.props;
+                const { menuDetail, history } = this.state;
 
-                let pageUrl = "/modelDetails/" + data.menuDetail.model.id
+                let pageUrl = "/model/" + menuDetail.menuData.model.id
 
                 history.push(`${pageUrl}`);
             },
