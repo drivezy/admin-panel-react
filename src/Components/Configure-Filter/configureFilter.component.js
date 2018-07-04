@@ -15,7 +15,7 @@ import { Location } from './../../Utils/location.utils';
 
 import GLOBAL from './../../Constants/global.constants';
 import COLUMN_TYPE from './../../Constants/columnType.constants';
-import './dynamicFilter.css';
+import './configureFilter.component.css';
 
 export default class ConfigureDynamicFilter extends Component {
     stringFilterArr = [" LIKE ", " NOT LIKE ", " IS NULL ", " IS NOT NULL "];
@@ -881,7 +881,6 @@ export default class ConfigureDynamicFilter extends Component {
                                                         )
                                                     })
                                                 }
-
                                             </div>
                                         )
                                     })
@@ -895,52 +894,47 @@ export default class ConfigureDynamicFilter extends Component {
                             </div>
 
                         </form>
-                        <div className="row footer-content nomargin">
-                            <div className="col-sm-3 col-xs-3 border-select-filter margin-top-8">
-                                {/* <custom-select-field ng-model="configureFilter.order" place-holder="Order" obj="configureFilter.dictionary" iterate-item="name">
-                                    </custom-select-field> */}
-                                <SelectBox
-                                    onChange={(data) => {
-                                        this.setState({ order: data });
-                                    }}
-                                    value={order} field='name' options={content.dictionary} placeholder='Order'
-                                />
-                            </div>
-                            <div className="col-sm-3 col-xs-3 border-select-filter margin-top-8">
-                                {/* <custom-select-field ng-model="configureFilter.sort" place-holder="Sort" obj="configureFilter.sorts">
-                                    </custom-select-field> */}
-                                <SelectBox
-                                    onChange={(data) => {
-                                        this.setState({ sort: data });
-                                    }}
-                                    value={sort} options={this.sorts} placeholder='Sort'
-                                />
-                            </div>
-                            <div className="col-sm-3 col-xs-3 border-select-filter margin-top-8" ng-if="configureFilter.scopeGroup.length">
-                                <div className='form-group'>
-                                    {/* <div className="input-group select-input-form admin-ui-select">
-                                            <span className="input-group-addon">
-                                                <i className="fa fa-superscript"></i>
-                                            </span>
-                                            <multiple-select-field-async ng-model="configureFilter.scopes" obj="configureFilter.scopeGroup" place-holder="Select scopes list"
-                                                iterate-item="alias_name">
-                                            </multiple-select-field-async>
-                                        </div> */}
+                        <div className="footer-content">
+                            <div className="footer-group order-content">
+                                <label>
+                                    Order By
+                                </label>
+                                <div className="filter-box">
+                                    <SelectBox
+                                        onChange={(data) => {
+                                            this.setState({ order: data });
+                                        }}
+                                        value={order} field='name' options={content.dictionary} placeholder='Order'
+                                    />
                                 </div>
                             </div>
-                            <div className="text-right">
-                                <button className="btn btn-default" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
-                                    Close
+                            <div className="footer-group sort-by-content">
+                                <label>
+                                    Sory By
+                                </label>
+                                <div className="filter-box">
+                                    <SelectBox
+                                        onChange={(data) => {
+                                            this.setState({ sort: data });
+                                        }}
+                                        value={sort} options={this.sorts} placeholder='Sort'
+                                    />
+                                </div>
+                            </div>
+                            <div className="footer-actions">
+                                <div className="actions">
+                                    <button className="btn btn-danger" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
+                                        Close
                                     </button>
-                                {/* <button className="btn btn-info" style={{ margin: '8px' }}> */}
-                                <button className="btn btn-info" onClick={this.submit} style={{ margin: '8px' }}>
-                                    Go
+                                    <button className="btn btn-success" onClick={this.submit} style={{ margin: '8px' }}>
+                                        Go
                                     </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </Collapse >
+            </Collapse>
         );
     }
 }

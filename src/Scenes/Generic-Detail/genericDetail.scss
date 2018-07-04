@@ -3,11 +3,12 @@
     .header {
         display: flex;
         justify-content: space-between;
-        background: #dcdcdc7a;
+        // background: #dcdcdc7a;
         height: 40px;
         padding: 0px 4px;
         border-bottom: 1px solid #ccc9c9;
-        margin: -8px;
+        background: whitesmoke;
+        // margin: -8px;
         .left {}
         .right {
             margin-right: 15px;
@@ -24,7 +25,7 @@
         }
     }
     .detail-content {
-        margin-top: 14px;
+        // margin-top: 14px;
     }
     .nav-item {
         cursor: pointer;

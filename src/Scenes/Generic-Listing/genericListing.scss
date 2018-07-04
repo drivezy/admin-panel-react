@@ -13,7 +13,7 @@
         display: flex;
         justify-content: space-between; // width: 95%;
         padding: 4px 8px;
-        border-bottom: 1px solid #000;
+        border-bottom: 1px solid;
         align-items: center;
         @include themify($themes) {
             background: themed('subHeader');
@@ -29,8 +29,24 @@
         .header-actions {
             display: flex;
             align-items: center;
+            .refresh-button {
+                @include themify($themes) {
+                    &.btn {
+                        border: none;
+                        // background: black!important;
+                        background: themed('refreshButtonBackground')!important;
+                        color: themed('refreshButton')!important;
+                    }
+                }
+            }
             .btn {
                 margin: 0px 4px;
+                &.refresh-button {
+                    @include themify($themes) {
+                        background: themed('refreshButtonBackground');
+                        color: themed('refreshButton');
+                    }
+                }
             }
             .btn-group {
                 margin: 0px 2px;
@@ -42,6 +58,9 @@
         .generic-listing-search {
             width: 50%;
         }
+    }
+    .configure-filter-wrapper {
+        // margin: 4px;
     }
     .card {
         border: none;
