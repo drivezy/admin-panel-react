@@ -1,5 +1,8 @@
 @import 'Assets/Global-Shared/theme.scss';
 .generic-listing-container {
+    .noListMessage{
+        padding: 10px;
+    }
     // font-size: 12px;
     // padding: 15px;
     .header {
@@ -61,5 +64,27 @@
         @include themify($themes) {
             // margin-top: themed('cardMargin');
         }
+    }
+}
+
+.loadingText h6 {
+    position: absolute;
+    top: 35%;
+    left: 45%;
+    color: rgba(0, 0, 0, .3);
+    font-size: 2em
+}
+.loadingText h6:before {
+    content: attr(data-text);
+    position: absolute;
+    overflow: hidden;
+    max-width: 7em;
+    white-space: nowrap;
+    color: #000;
+    animation: loading .5s ease-in;
+}
+@keyframes loading {
+    0% {
+        max-width: 0;
     }
 }
