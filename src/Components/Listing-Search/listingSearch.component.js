@@ -47,14 +47,16 @@ export default class ListingSearch extends React.Component {
     initialize = async (props) => {
         const { dictionary, searchQuery, searchDetail, localSearch } = props;
         let selectedColumn;
+
+
         if (searchQuery) {
             const values = searchQuery.split(" ");
             const regex = /["%25]/g;
             values[2] = values[2].replace(regex, '');
-            selectedColumn = SelectFromOptions(dictionary, values[0], 'name');
-            console.log(selectedColumn);
 
-            this.setState({ activeColumn: selectedColumn });
+            selectedColumn = SelectFromOptions(dictionary, values[0], 'name');
+            // this.setState({ activeColumn: selectedColumn });
+            this.state.activeColumn = selectedColumn;
 
             let query, obj;
             if (!(selectedColumn && selectedColumn.reference_model)) {
@@ -71,12 +73,13 @@ export default class ListingSearch extends React.Component {
                     this.state.referenceColumnValue = { data: query[0] };
                 }
             }
+        } else if (searchDetail && searchDetail.name) {
+            selectedColumn = SelectFromOptions(dictionary, searchDetail.name, 'name');
+            this.state.activeColumn = selectedColumn;
         }
-        // @TODO remove this code after sometime
-        // {        else if (searchDetail && searchDetail.name) {
-        //             selectedColumn = SelectFromOptions(dictionary, searchDetail.name, 'name');
-        //             activeColumn = selectedColumn;
-        //         } else if (localSearch && localSearch.value) {
+
+        //@To be deleted after sometime
+    //   else if (localSearch && localSearch.value) {
         //             // let { query } = this.state;
         //             // query = localSearch.value;
         //             // this.setState({ query });
@@ -190,7 +193,7 @@ export default class ListingSearch extends React.Component {
         console.log(event);
         console.log(selectedColumn)
         // this.callFunction(event);
-        this.props.onEdit(selectedColumn , event.target.value);
+        this.props.onEdit(selectedColumn, event.target.value);
 
         this.setState({ query: event.target.value });
 
