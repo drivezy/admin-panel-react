@@ -64,59 +64,94 @@ export const GetUserDetail = (userObject) => {
             oauth_token: userObject.oauth_token,
             calling_number: userObject.calling_number
         };
-        // Takes role name and return true and false if user has same role
+
+        // Takes role name if he has same role then return true otherwise false
         const hasRole = function (roleName) {
-            if (currentUser.isSuperAdmin) {
-                return true;
-            }
-            if (currentUser.roles.indexOf(roleName) == -1) {
-                return false;
-            } else {
-                return true;
+            for (let i in currentUser.roles) {
+                if (currentUser.roleIdentifiers[i] == 'super-admin') {
+                    return true;
+                } else {
+                    if (currentUser.roles[i] == roleName || currentUser.roleIdentifiers[i] == roleName) {
+                        return true;
+                    }
+                }
             }
         };
 
         const hasAbsoluteRole = function (roleName) {
-            if (currentUser.roles.indexOf(roleName) == -1) {
-                return false;
-            } else {
-                return true;
+            for (let i in currentUser.roles) {
+                if (currentUser.roles[i] == roleName) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            for (let i in currentUser.roleIdentifiers) {
+                if (currentUser.roleIdentifiers[i] == roleName) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         };
 
+        // Takes permission name and return true and false if user has same permission
         const hasPermission = function (permissionName) {
-            if (currentUser.isSuperAdmin) {
-                return true;
-            }
-            if (currentUser.permissions.indexOf(permissionName) == -1) {
-                return false;
-            } else {
-                return true;
+            for (let i in currentUser.permissions) {
+                if (currentUser.permissions[i] == permissionName || currentUser.permissionIdentifiers[i] == permissionName) {
+                    return true;
+                }
             }
         };
 
-        if (userObject.parent_user) {
-            currentUser.parent_user = userObject.parent_user;
-            currentUser.impersonated = true;
-        }
+        const hasAbsolutePermission = function (permissionName) {
+            for (let i in currentUser.permissions) {
+                if (currentUser.permissions[i] == permissionName) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            for (let i in currentUser.permissionIdentifiers) {
+                if (currentUser.permissionIdentifiers[i] == permissionName) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        };
+
+        // if (userObject.parent_user) {
+        //     currentUser.parent_user = userObject.parent_user;
+        //     currentUser.impersonated = true;
+        // }
 
         currentUser.roles = [];
         currentUser.permissions = [];
+        currentUser.roleIdentifiers = [];
+        currentUser.permissionIdentifiers = [];
         currentUser.hasRole = hasRole;
+        currentUser.hasPermission = hasPermission;
         currentUser.hasAbsoluteRole = hasAbsoluteRole;
+        currentUser.hasAbsolutePermission = hasAbsolutePermission;
 
-        for (var i in userObject.roles) {
-            currentUser.roles.push(userObject.roles[i].role.identifier);
+        for (let i in userObject.access_object.roles) {
+            currentUser.roles.push(userObject.access_object.roles[i]);
         }
 
-        for (var j in userObject.permissions) {
-            if (userObject.permissions[j] && userObject.permissions[j]) {
-                var permission = userObject.permissions[j].name;
-                currentUser.permissions.push(permission);
-            }
+        for (let j in userObject.access_object.permissions) {
+            currentUser.permissions.push(userObject.access_object.permissions[j]);
         }
-        currentUser.isSuperAdmin = hasRole("super_admin");
-        currentUser.isAdmin = hasRole("admin");
+
+        for (let i in userObject.access_object.roleIdentifiers) {
+            currentUser.roleIdentifiers.push(userObject.access_object.roleIdentifiers[i]);
+        }
+
+        for (let j in userObject.access_object.permissionIdentifiers) {
+            currentUser.permissionIdentifiers.push(userObject.access_object.permissionIdentifiers[j]);
+        }
+        // currentUser.isSuperAdmin = hasRole("super_admin");
+        // currentUser.isAdmin = hasRole("admin");
 
         return currentUser;
     } catch (err) {
@@ -124,10 +159,10 @@ export const GetUserDetail = (userObject) => {
     }
 };
 
-export const GetUser = () => {
-    return CurrentUser;
-}
+// export const GetUser = () => {
+//     return CurrentUser;
+// }
 
-export const ImpersonateUser = () => {
-    return CurrentUser;
-}
+// export const ImpersonateUser = () => {
+//     return CurrentUser;
+// }

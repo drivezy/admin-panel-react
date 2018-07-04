@@ -60,6 +60,8 @@ export default class GenericListing extends Component {
     }
 
     userDataArrived = (user) => {
+        console.log(user.hasAbsoluteRole(3));
+        user.hasAbsoluteRole(3);
         const { menuDetail } = this.props;
         this.state.currentUser = user;
 
