@@ -289,12 +289,10 @@ Non critical css goes here
         background-color: themed('themePrimaryColor');
         color: themed('secondaryDark');
     }
-    color: black; // @todo During to merge conflict resolution, color left blank and master was corrupted. keeping black color temporarily
     cursor: pointer;
     vertical-align: middle;
     -webkit-font-smoothing: antialiased;
     transition: .1s ease-in;
-    color: #183247;
     padding: 5px 10px;
     text-align: center;
     box-shadow: none !important;
