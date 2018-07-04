@@ -83,13 +83,13 @@ export default class ConfigureDynamicFilter extends Component {
         collapse = forcefullyUpdate ? collapse : !isCollapsed;
 
         if (!collapse) {
-            const active_filter = this.urlParams.filter;
+            const active_filter = this.urlParams.layout;
 
             // IF there is an active filter then add that first 
             if (active_filter && !this.urlParams.query) {
                 this.resetColumns();
                 this.activeFilter(active_filter);
-                this.prepopulate(this.state.activeFilter.filter_query);
+                this.prepopulate(this.state.activeFilter.query);
             } else if (this.urlParams.query) {
                 this.prepopulate(this.urlParams.query);
             } else {
@@ -913,7 +913,7 @@ export default class ConfigureDynamicFilter extends Component {
                                     value={sort} options={this.sorts} placeholder='Sort'
                                 />
                             </div>
-                            <div className="col-sm-3 col-xs-3 border-select-filter margin-top-8" ng-if="configureFilter.scopeGroup.length">
+                            <div className="col-sm-5 col-xs-5 border-select-filter margin-top-8" ng-if="configureFilter.scopeGroup.length">
                                 <div className='form-group'>
                                     {/* <div className="input-group select-input-form admin-ui-select">
                                             <span className="input-group-addon">
