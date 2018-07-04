@@ -9,15 +9,42 @@ $themes: (
             navLinkColor:#464545,
             sideBarIcons: #6f6f6f,
             // Body Ends
-            // Side Nav Styling
+
+            /**
+
+            Sidenav Styling
+
+            **/
+            sidenavBorder:white,
             sideTableBackground: #f5f5f5,
-            // Side Nav Styling Ends
+            sidebarBorder:#e0dfdf,
+            /**
+
+            SideNav Styling Ends
+
+            **/
+            navHeader:white,
 
             searchBorder: 1px solid #d8d8d8,
             textSecondary:#000000,
-            headerBackground: #f5f5f5,
+            sideBackground:white,
+
+
+            /**
+
+            Header Styling
+
+            **/
+            headerBackground: white,
             // headerBorder: #d8d8d8,
-            headerBorder:white,
+            headerBorder:#e0dfdf,
+            /**
+
+            Header Styling Ends
+
+            **/
+
+
             // Card Background
             cardBackground: #e8e9e8,
             detailBackgroundCard:#eceeef,
@@ -40,9 +67,6 @@ $themes: (
             detailsBackground:#eceeef,
             // Sidbar Styling
             // sideBackground:#f5f5f5,
-            sideBackground:white,
-            sidebarBorder:#d8d8d8,
-            navHeader:#f5f5f5,
             logoBottomBorder:#e9e7e7,
             lightColorText:#D34031,
             // actionBarBorder: 1px solid #d8d8d8,
@@ -56,16 +80,27 @@ $themes: (
             subHeader:#f8f8f8,
             subHeaderBorder:#fdfdfd,
             // Sub Header Ends
-            // Table Styling
+
+            /**
+
+            Table Styling
+
+            **/
             tableDataBorder: 1px solid #f5f5f5,
             tableBackground: #ffffff,
             tableHeadBorder: 1px solid #f5f5f5,
             columnTitle:#928d8d,
-            sortLink:#F15590,
+            sortLink:brown,
             tableData:#4a4b58,
             tooltipText: #ffffff,
             tableRowBorder:#eae8e8,
-            // Table Styling Ends
+            filterLink:#6d98c7,
+            /**
+
+            Table Styling Ends
+
+            **/
+            
             // Menu Table Styling
             menuTableBackground:#f5f5f5,
             menuBorder: 0px,

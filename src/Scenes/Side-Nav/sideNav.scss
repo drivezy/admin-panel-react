@@ -10,10 +10,10 @@
     transition: 0.1s;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid;
+    // border-right: 1px solid;
     @include themify($themes) {
         background: themed('sideBackground');
-        border-color: themed('sidebarBorder');
+        border-color: themed('sidenavBorder');
         color: themed('navLinkColor');
     }
     &.collapsed {
@@ -69,6 +69,11 @@
     .sidebar-menus {
         display: flex;
         flex-direction: column;
+        height: 100vh;
+        border-right: 1px solid;
+        @include themify($themes){
+            border-color: themed('sidebarBorder')
+        }
         .menus {
             // background: #35485b;
             padding: 8px 10px;

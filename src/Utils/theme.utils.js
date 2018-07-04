@@ -3,8 +3,8 @@ import { SetItem, GetItem } from './localStorage.utils';
 
 let themes = [
     { theme: 'light', name: 'Light', class: 'light' },
-    { theme: 'dark', name: 'Dark', class: 'dark' },
-    { theme: 'drivezy', name: 'Drivezy', class: 'drivezy' }
+    // { theme: 'dark', name: 'Dark', class: 'dark' },
+    // { theme: 'drivezy', name: 'Drivezy', class: 'drivezy' }
 ];
 
 let spacings = [
