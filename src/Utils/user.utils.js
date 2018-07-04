@@ -65,70 +65,22 @@ export const GetUserDetail = (userObject) => {
             calling_number: userObject.calling_number
         };
 
-        // Takes role name if the user has same role then return true otherwise false
         const hasRole = function (roleName) {
-            for (let i in currentUser.roles) {
-                //super user should always get access to all the resources in the system
-                if (currentUser.roleIdentifiers[i] == 'super-admin' || currentUser.roles[i] == 1) {
-                    return true;
-                } else {
-                    if (currentUser.roles[i] == roleName || currentUser.roleIdentifiers[i] == roleName) {
-                        return true;
-                    }
-                }
-            }
+            // super user should always get access to all the resources in the system
+            return currentUser.roles.indexOf('super-admin') != -1 || currentUser.roles.indexOf(1) != -1 || currentUser.roleIdentifiers.indexOf(roleName) != -1 || currentUser.roleIdentifiers.indexOf(roleName) != -1;
         };
 
-        // Takes role name or role id if the user has same role then return true otherwise false
         const hasAbsoluteRole = function (roleName) {
-            for (let i in currentUser.roles) {
-                if (currentUser.roles[i] == roleName) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-            for (let i in currentUser.roleIdentifiers) {
-                if (currentUser.roleIdentifiers[i] == roleName) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
+            return currentUser.roles.indexOf(roleName) != -1 || currentUser.roleIdentifiers.indexOf(roleName) != -1;
         };
 
-        // Takes permission name if the user has same permission then return true otherwise false
         const hasPermission = function (permissionName) {
-            for (let i in currentUser.roles) {
-                // super user should always get access to all the resources in the system
-                if (currentUser.roles[i] == 1) {
-                    return true;
-                } else {
-                    for (let i in currentUser.permissions) {
-                        if (currentUser.permissions[i] == permissionName || currentUser.permissionIdentifiers[i] == permissionName) {
-                            return true;
-                        }
-                    }
-                }
-            }
+            // super user should always get access to all the resources in the system
+            return currentUser.permissions.indexOf('super-admin') != -1 || currentUser.permissions.indexOf(1) != -1 || currentUser.permissionIdentifiers.indexOf(permissionName) != -1 || currentUser.permissionIdentifiers.indexOf(permissionName) != -1;
         };
 
-        // Takes permission name or permission id if the user has same permission then return true otherwise false
         const hasAbsolutePermission = function (permissionName) {
-            for (let i in currentUser.permissions) {
-                if (currentUser.permissions[i] == permissionName) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-            for (let i in currentUser.permissionIdentifiers) {
-                if (currentUser.permissionIdentifiers[i] == permissionName) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
+            return currentUser.permissions.indexOf(permissionName) != -1 || currentUser.permissionIdentifiers.indexOf(permissionName) != -1;
         };
 
         if (userObject.parent_user) {
@@ -160,8 +112,8 @@ export const GetUserDetail = (userObject) => {
         for (let j in userObject.access_object.permissionIdentifiers) {
             currentUser.permissionIdentifiers.push(userObject.access_object.permissionIdentifiers[j]);
         }
-        currentUser.isSuperAdmin = hasRole("super_admin");
-        currentUser.isAdmin = hasRole("admin");
+        // currentUser.isSuperAdmin = hasRole("super_admin");
+        // currentUser.isAdmin = hasRole("admin");
 
         return currentUser;
     } catch (err) {
