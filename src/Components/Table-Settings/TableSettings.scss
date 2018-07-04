@@ -93,6 +93,11 @@
                     }
                 }
             }
+            .list-group-item{
+                &.active{
+                    background: #5bc263;
+                }
+            }
         }
         .controls {
             display: flex;

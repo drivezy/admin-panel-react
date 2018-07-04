@@ -133,38 +133,13 @@ export default class FormSettings extends Component {
         this.setState({ tempSelectedColumns });
     };
 
-    applyChangesToAll = async () => {
-        const { userId, menuId, listName, source } = this.props;
-        let { layout } = this.props;
-        const { tempSelectedColumns } = this.state;
-        const result = await SetPreference({ userId, source, menuId, name: listName, selectedColumns: this.state.tempSelectedColumns, layout, override_all: 1 });
 
-        // const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
-
-        if (result.success) {
-            this.setState({ modal: !this.state.modal });
-            if (IsObjectHaveKeys(layout)) {
-                layout.column_definition = tempSelectedColumns;
-            } else {
-                const { response } = result;
-                response.column_definition = JSON.parse(response.column_definition);
-                layout = response;
-            }
-            this.props.onSubmit(layout);
-        }
-    }
-
-
-    applyChanges = async () => {
+    applyChanges = async (overRide = false) => {
 
         const { userId, modelId, listName, source } = this.props;
         let { formLayout } = this.props;
         const { tempSelectedColumns } = this.state;
-        const result = await SetPreference({ userId, source, menuId: modelId, name: listName, selectedColumns: tempSelectedColumns, layout: formLayout, url: FormPreferenceEndPoint });
-        // const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
-
-        // result.success ? this.setState({ modal: !this.state.modal }) : null;
-        // this.props.onSubmit(this.state.tempSelectedColumns);
+        const result = await SetPreference({ userId, source, menuId: modelId, name: listName, selectedColumns: tempSelectedColumns, layout: formLayout, url: FormPreferenceEndPoint, override_all: overRide ? 1 : 0 });
         if (result.success) {
             this.setState({ modal: !this.state.modal });
             if (IsObjectHaveKeys(formLayout)) {
@@ -176,11 +151,6 @@ export default class FormSettings extends Component {
             }
             this.props.onSubmit(formLayout);
         }
-
-
-        // const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
-        // result.success ? this.setState({ modal: !this.state.modal }) : null;
-        // this.props.onSubmit(this.state.tempSelectedColumns);
     }
 
     modalWrapper() {
@@ -312,7 +282,7 @@ export default class FormSettings extends Component {
                 </ModalBody >
                 <ModalFooter>
                     {formConfigurator ?
-                        <Button color="primary" onClick={this.applyChangesToAll}>Apply For All</Button>
+                        <Button color="primary" onClick={() => this.applyChanges(true)}>Apply For All</Button>
                         : null
                     }
                     <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>

@@ -16,33 +16,58 @@ export default class ColumnSetting extends Component {
 
         this.state = {
             column: this.props.column,
-            // tempColumn: this.props.column
+            // tempColumn: { ...this.props.column }
             // formContent: {}
         }
+
+
 
         this.filterArr = Object.values(Filters);
     }
 
+    UNSAFE_componentWillMount() {
+        this.setState({ tempColumn: { ...this.props.column } });
+    }
+
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.column) {
-            this.setState({ column: nextProps.column });
+            this.setState({ column: nextProps.column, tempColumn: { ...nextProps.column } });
+        }
+    }
+
+    columnCollapse = (isSave = false) => {
+        let { tempColumn, column } = this.state;
+        const { selectedColumnUpdate } = this.props;
+        console.log(tempColumn);
+        const expanded = !tempColumn.expanded;
+        console.log(tempColumn.column);
+        if (isSave) {
+            column = tempColumn;
+            tempColumn.expanded = column.expanded = expanded;
+            selectedColumnUpdate(tempColumn);
+            //this.setState({ column: tempColumn, tempColumn });
+        }
+        else {
+            tempColumn = column;
+            tempColumn.expanded = column.expanded = expanded;
+            this.setState({ tempColumn });
         }
     }
 
     toggleSetting = () => {
-        let column = this.state.column;
-        column.expanded = !column.expanded;
-        this.setState({ column });
+        let tempColumn = this.state.tempColumn;
+        tempColumn.expanded = !tempColumn.expanded;
+        this.setState({ tempColumn });
     }
 
     updateColumnHyperlink = (field, value) => {
 
-        let { column } = this.state;
+        let { tempColumn } = this.state;
         //console.log(column);
 
-        column.route = value ? true : false;
+        tempColumn.route = value ? true : false;
 
-        this.setState({ column });
+        this.setState({ tempColumn });
     }
 
     columnNameChange = (event) => {
@@ -60,10 +85,10 @@ export default class ColumnSetting extends Component {
 
     render() {
         const { filterArr } = this;
-        const { column } = this.state;
+        const { tempColumn: column = {} } = this.state;
         const { columns, activeColumn } = this.props;
         const { columnTitle, route, filter } = column;
-
+        console.log(column);
         //console.log(column, columns);
         return (
             <div className={`column-setting ${activeColumn.column == column.column ? 'active' : ''}`} >
@@ -113,7 +138,8 @@ export default class ColumnSetting extends Component {
 
                                 <div className="row">
                                     <div className="col">
-                                        <button type="button" onClick={this.toggleSetting} className="btn btn-secondary">Close</button>
+                                        <button type="button" onClick={() => this.columnCollapse()} className="btn btn-secondary">Close</button>
+                                        <button type="button" onClick={() => this.columnCollapse(true)} className="btn btn-secondary">Save</button>
                                     </div>
                                 </div>
                             </form>
