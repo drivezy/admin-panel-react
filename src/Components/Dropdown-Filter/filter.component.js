@@ -97,7 +97,7 @@ export default class PredefinedFilter extends React.Component {
                     </DropdownToggle>
                 <DropdownMenu className="dropdown-menu custom-click pull-right menu-operations" right>
                     {
-                        layouts.length > 3 ?
+                        layouts.length > 1 ?
                             <div>
                                 <div className="form-group has-feedback">
                                     <input value={searchText} onChange={this.searchFilter} type="text" className="form-control" id="search-operation" placeholder='Search Actions' />
@@ -109,7 +109,7 @@ export default class PredefinedFilter extends React.Component {
                     }
                     {
                         filters.map((filter, index) => {
-                            if (filter.name && filter.query) {
+                            if (filter.name && filter.query && filter.name != 'default') {
                                 return (
                                     <div className="menu-item" key={index} role="menuitem" onClick={() => this.submit(filter)}>
                                         <a className="menu-link">

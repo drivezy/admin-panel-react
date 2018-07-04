@@ -295,7 +295,7 @@ export default class ConfigureDynamicFilter extends Component {
         // html, inputField are fields used by different filters, so initiailizing it
         filterArr[parentIndex][childIndex].html = null;
 
-        if (filter.includes("IS NULL") || filter.includes("IS NOT NULL")) {
+        if (!filter || filter.includes("IS NULL") || filter.includes("IS NOT NULL")) {
             return false;
         }
         let child = filterArr[parentIndex][childIndex];
@@ -663,10 +663,13 @@ export default class ConfigureDynamicFilter extends Component {
         this.setState({ isCollapsed: true });
     }
 
-    getQuery({ column, filter, value, joinMethod }) {
-        let columnString = '';
+    getPathWithParent(column) {
         // if (column.path.split('.').length > 2) {
-        columnString = `\`${column.parent}\`.${column.referenced_column ? column.referenced_column : column.name}`;
+        return `\`${column.parent}\`.${column.referenced_column ? column.referenced_column : column.name}`;
+    }
+
+    getQuery({ column, filter, value, joinMethod }) {
+        let columnString = this.getPathWithParent(column);
         // } else {
         //     columnString = column.name;
         // }
@@ -688,11 +691,11 @@ export default class ConfigureDynamicFilter extends Component {
                 if (!IsUndefinedOrNull(value.column) && Object.keys(value.column).length) {
                     const joinMethod = value.joinMethod;
                     if (value.filter.includes('IS NULL') || value.filter.includes('IS NOT NULL')) {
-                        query += value.column.name + value.filter + ' AND ';
+                        query += this.getPathWithParent(value.column) + value.filter + ' AND ';
                     } else if (value.filter == ' BETWEEN ' || value.filter == ' NOT BETWEEN ') {
                         // query += value.column.name + value.filter + ''' + value.slot.startDate + "' and '" + value.slot.endDate + "'" + joinMethod;
                         // query += `${value.column.name}${value.filter} '${value.slot.startDate}' and '${value.slot.endDate}'${joinMethod}`;
-                        query += `${value.column.name}${value.filter} '${value.inputField}' and '${value.secondInputField}'${joinMethod}`;
+                        query += `${this.getPathWithParent(value.column)}${value.filter} '${value.inputField}' and '${value.secondInputField}'${joinMethod}`;
                     } else if (!IsUndefined(value.inputField)) {
                         switch (value.column.column_type_id) {
                             case 7:
@@ -834,21 +837,15 @@ export default class ConfigureDynamicFilter extends Component {
                                                             <div key={childIndex}>
                                                                 <div className="flex-box filter-row event-flow">
                                                                     <div className="event-select">
-                                                                        {/* <custom-select-field ng-model="child.column" allow-clear="false" extra-params="{index:childIndex,parentIndex:parentIndex}" call-it="this.columnChange"
-                                                                            place-holder="Column" obj="child.selectField" iterate-item="display_name" required="true">
-                                                                        </custom-select-field> */}
-
-                                                                        <SelectBox onChange={(data) => {
-                                                                            this.columnChange(data, { parentIndex, childIndex, setValue: true })
-                                                                        }}
+                                                                        <SelectBox
+                                                                            isClearable={false}
+                                                                            onChange={(data) => {
+                                                                                this.columnChange(data, { parentIndex, childIndex, setValue: true })
+                                                                            }}
                                                                             value={child.column} field='path' options={child.selectField} placeholder='Column' />
                                                                     </div>
                                                                     <div className="method-select">
-                                                                        {/* <custom-select-field ng-model="child.filter" allow-clear="false" extra-params="{index:childIndex,parentIndex:parentIndex}" call-it="this.filterChange"
-                                                                            place-holder="Filter" obj="child.filterField">
-                                                                        </custom-select-field> */}
-
-                                                                        <SelectBox onChange={(data) => this.filterChange(data, { parentIndex, childIndex, setValue: true })} value={child.filter} options={childfilterField} placeholder='Filter' />
+                                                                        <SelectBox isClearable={false} onChange={(data) => this.filterChange(data, { parentIndex, childIndex, setValue: true })} value={child.filter} options={childfilterField} placeholder='Filter' />
                                                                     </div>
                                                                     <div className="operator-select">
                                                                         {/* <span id="inject" dynamic="child.html"></span> */}
