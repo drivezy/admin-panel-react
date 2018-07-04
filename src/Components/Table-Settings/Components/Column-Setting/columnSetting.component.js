@@ -61,7 +61,6 @@ export default class ColumnSetting extends Component {
     updateColumnHyperlink = (field, value) => {
 
         let { tempColumn } = this.state;
-        //console.log(column);
 
         tempColumn.route = value ? true : false;
 
@@ -86,8 +85,6 @@ export default class ColumnSetting extends Component {
         const { tempColumn: column = {} } = this.state;
         const { columns, activeColumn } = this.props;
         const { columnTitle, route, filter } = column;
-        console.log(column.filter);
-        //console.log(column, columns);
         return (
             <div className={`column-setting ${activeColumn.column == column.column ? 'active' : ''}`} >
                 <div className="column-label">
