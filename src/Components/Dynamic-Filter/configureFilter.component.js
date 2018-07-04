@@ -757,18 +757,22 @@ export default class ConfigureDynamicFilter extends Component {
 
             // If query is added to an existing filter , add that filter 
             // IF there is an active filter then add that first 
-            const active_filter = this.urlParams.filter;
+            const active_filter = this.urlParams.layout;
             this.activeFilter(active_filter);
 
             const urlParams = this.urlParams;
 
             if (activeFilter.id) {
-                urlParams.filter = activeFilter.id;
+                urlParams.layout = activeFilter.id;
                 urlParams.query = query;
                 Location.search(urlParams, { props: paramProps });
             } else {
                 urlParams.query = query;
+                // urlParams.columns = JSON.stringify({ query });
                 Location.search(urlParams, { props: paramProps });
+
+                const url = Location.search();
+                console.log(url);
             }
         }
 
