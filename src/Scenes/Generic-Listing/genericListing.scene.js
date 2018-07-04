@@ -40,7 +40,8 @@ export default class GenericListing extends Component {
             genericData: {},
             filterContent: null,
             isCollapsed: true,
-            state: this.props.source || 'menu',
+            source: this.props.source || 'menu',
+            isTab: this.props.source ? true : false,
             loading: true
         };
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
@@ -247,7 +248,7 @@ export default class GenericListing extends Component {
     }
 
     render() {
-        const { localSearch, genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent, currentUser, loading } = this.state;
+        const { localSearch, genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent, currentUser, loading, isTab, source } = this.state;
         const { listing = [], finalColumns = [] } = genericData;
         const { starter } = genericData;
 
@@ -288,11 +289,11 @@ export default class GenericListing extends Component {
                             </div>
                         </div>
                         <div className="header-actions">
-                            <CustomAction position="header" parentData={parentData} menuDetail={menuDetail} history={history} genericData={genericData} actions={genericData.nextActions} placement={'as_header'} />
+                            <CustomAction position="header" source={isTab ? source : undefined} parentData={parentData} menuDetail={menuDetail} history={history} genericData={genericData} actions={genericData.nextActions} placement={'as_header'} />
                             {
                                 genericData.columns ?
                                     <TableSettings
-                                        source='menu'
+                                        source={source}
                                         onSubmit={this.layoutChanges}
                                         listName={genericData.listName}
                                         layout={genericData.layout}
@@ -345,6 +346,7 @@ export default class GenericListing extends Component {
                                             listing={localSearch.value ? filteredResults : listing}
                                             callback={this.getListingData}
                                             menuDetail={menuDetail}
+                                            source={source}
                                         />
                                         {/* Portlet Table Ends */}
 
