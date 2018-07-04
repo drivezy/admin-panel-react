@@ -68,7 +68,8 @@ export const GetUserDetail = (userObject) => {
         // Takes role name if the user has same role then return true otherwise false
         const hasRole = function (roleName) {
             for (let i in currentUser.roles) {
-                if (currentUser.roleIdentifiers[i] == 'super-admin') {
+                //super user should always get access to all the resources in the system
+                if (currentUser.roleIdentifiers[i] == 'super-admin' || currentUser.roles[i] == 1) {
                     return true;
                 } else {
                     if (currentUser.roles[i] == roleName || currentUser.roleIdentifiers[i] == roleName) {
@@ -98,9 +99,16 @@ export const GetUserDetail = (userObject) => {
 
         // Takes permission name if the user has same permission then return true otherwise false
         const hasPermission = function (permissionName) {
-            for (let i in currentUser.permissions) {
-                if (currentUser.permissions[i] == permissionName || currentUser.permissionIdentifiers[i] == permissionName) {
+            for (let i in currentUser.roles) {
+                // super user should always get access to all the resources in the system
+                if (currentUser.roles[i] == 1) {
                     return true;
+                } else {
+                    for (let i in currentUser.permissions) {
+                        if (currentUser.permissions[i] == permissionName || currentUser.permissionIdentifiers[i] == permissionName) {
+                            return true;
+                        }
+                    }
                 }
             }
         };
