@@ -248,11 +248,7 @@ export default class GenericListing extends Component {
     }
 
     render() {
-<<<<<<< HEAD
-        const { localSearch, genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent, currentUser, isTab, source } = this.state;
-=======
-        const { localSearch, genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent, currentUser, loading } = this.state;
->>>>>>> master
+        const { localSearch, genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent, currentUser, loading, isTab, source } = this.state;
         const { listing = [], finalColumns = [] } = genericData;
         const { starter } = genericData;
 
@@ -332,26 +328,6 @@ export default class GenericListing extends Component {
                     </div>
 
                     {
-<<<<<<< HEAD
-                        (finalColumns && finalColumns.length) ?
-                            <Card>
-                                <CardBody className="table-wrapper">
-
-                                    {/* Portlet Table */}
-                                    <PortletTable tableType="listing"
-                                        rowOptions={this.rowOptions}
-                                        parentData={parentData}
-                                        // toggleAdvancedFilter={this.toggleAdvancedFilter} 
-                                        history={history} match={match}
-                                        genericData={genericData}
-                                        finalColumns={finalColumns}
-                                        listing={localSearch.value ? filteredResults : listing}
-                                        callback={this.getListingData}
-                                        menuDetail={menuDetail}
-                                        source={source}
-                                    />
-                                    {/* Portlet Table Ends */}
-=======
                         loading?<div className="loadingText"><h6 data-text="Loading…"></h6></div>:                    
                         <div>
                         {
@@ -370,6 +346,7 @@ export default class GenericListing extends Component {
                                             listing={localSearch.value ? filteredResults : listing}
                                             callback={this.getListingData}
                                             menuDetail={menuDetail}
+                                            source={source}
                                         />
                                         {/* Portlet Table Ends */}
 
@@ -383,7 +360,6 @@ export default class GenericListing extends Component {
                         }
                         {/* Listing Pagination Ends */}
                     </div>
->>>>>>> master
 
 
                     }
