@@ -65,7 +65,7 @@ export const GetUserDetail = (userObject) => {
             calling_number: userObject.calling_number
         };
 
-        // Takes role name if he has same role then return true otherwise false
+        // Takes role name if the user has same role then return true otherwise false
         const hasRole = function (roleName) {
             for (let i in currentUser.roles) {
                 if (currentUser.roleIdentifiers[i] == 'super-admin') {
@@ -78,6 +78,7 @@ export const GetUserDetail = (userObject) => {
             }
         };
 
+        // Takes role name or role id if the user has same role then return true otherwise false
         const hasAbsoluteRole = function (roleName) {
             for (let i in currentUser.roles) {
                 if (currentUser.roles[i] == roleName) {
@@ -95,7 +96,7 @@ export const GetUserDetail = (userObject) => {
             }
         };
 
-        // Takes permission name and return true and false if user has same permission
+        // Takes permission name if the user has same permission then return true otherwise false
         const hasPermission = function (permissionName) {
             for (let i in currentUser.permissions) {
                 if (currentUser.permissions[i] == permissionName || currentUser.permissionIdentifiers[i] == permissionName) {
@@ -104,6 +105,7 @@ export const GetUserDetail = (userObject) => {
             }
         };
 
+        // Takes permission name or permission id if the user has same permission then return true otherwise false
         const hasAbsolutePermission = function (permissionName) {
             for (let i in currentUser.permissions) {
                 if (currentUser.permissions[i] == permissionName) {
