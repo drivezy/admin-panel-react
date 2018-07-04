@@ -4,7 +4,7 @@
         margin: 0px 5px;
     }
     .settingBtn{
-        padding: 4px 8px;
+        padding: 5px 9px !important;
     }
     .modal-header {
         padding: 10px 20px;
@@ -93,6 +93,11 @@
                     }
                 }
             }
+            .list-group-item{
+                &.active{
+                    background: #5bc263;
+                }
+            }
         }
         .controls {
             display: flex;
@@ -100,6 +105,13 @@
             button {
                 margin: 4px;
             }
+        }
+    }
+    .modal-footer{
+        justify-content: none;
+        .rightButtons{
+            width: 100%;
+            text-align: right;
         }
     }
 }
