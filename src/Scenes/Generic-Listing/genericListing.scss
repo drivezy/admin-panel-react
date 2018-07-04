@@ -7,12 +7,14 @@
         padding: 6px 20px;
     }
     .page-bar {
-        margin: -8px;
-        height: 45px;
+        // margin: -8px;
+        // height: 70px;
+        height: 60px;
         display: flex;
         justify-content: space-between; // width: 95%;
         padding: 4px 8px;
         border-bottom: 1px solid #000;
+        align-items: center;
         @include themify($themes) {
             background: themed('subHeader');
             border-color: themed('subHeaderBorder');
@@ -42,8 +44,9 @@
         }
     }
     .card {
+        border: none;
         @include themify($themes) {
-            background: themed('cardBackground');
+            // background: themed('cardBackground');
         } // width: 95%;
         // border: none !important;
         // padding: 5px; //margin: 8px;
@@ -51,9 +54,12 @@
         .card-body {
             overflow-x: scroll;
             padding: 0px; // Table Begins
+            &.table-wrapper {
+                // padding: 1.25rem 0px
+            }
         }
         @include themify($themes) {
-            margin-top: themed('cardMargin');
+            // margin-top: themed('cardMargin');
         }
     }
 }
