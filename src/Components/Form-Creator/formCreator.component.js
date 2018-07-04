@@ -217,13 +217,14 @@ const formElements = props => {
 
                         let elem, column;
 
-                        if (typeof preference != 'string') {
+                        // If it is not a split
+                        if (!preference.split) {
                             column = payload.dictionary[preference.index];
 
                             elem = inputElement({ props, values, column, shouldColumnSplited, key });
 
-                        } else if (typeof preference == 'string') {
-                            shouldColumnSplited = preference.includes('s-split-') ? true : preference.includes('e-split-') ? false : shouldColumnSplited;
+                        } else {
+                            shouldColumnSplited = preference.label.includes('s-split-') ? true : preference.label.includes('e-split-') ? false : shouldColumnSplited;
                         }
                         if (column && (IsUndefined(column.visibility) || column.visibility)) {
                             return (
@@ -283,7 +284,7 @@ const FormContents = withFormik({
 
         const column_definition = IsObjectHaveKeys(payload.layout) ? payload.layout.column_definition : [];
         column_definition.forEach(async (preference) => {
-            if (typeof preference != 'string') {
+            if (!preference.split) {
                 let column = payload.dictionary[preference.index];
                 response[column.name] = payload.data[column.name] || '';
 

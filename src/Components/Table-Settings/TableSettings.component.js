@@ -261,7 +261,6 @@ export default class TableSettings extends Component {
             leftColumns[key] = leftColumns[key].filter((column) => (
                 selectedIds.indexOf(column.name) == -1
             ));
-            console.log(leftColumns.menu.length);
         }
         return (
             <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="table-settings">
@@ -275,7 +274,7 @@ export default class TableSettings extends Component {
                             <div className="card-body parent-card">
 
                                 <div className="card-top">
-                                    <h6 className="card-title">All Columns({leftColumns.menu.length})</h6>
+                                    <h6 className="card-title">All Columns({leftColumns.menu?leftColumns.menu.length:0})</h6>
 
                                     <div className="input-holder">
                                         <input type="text" onChange={event => this.searchColumn(event)} className="search-box" placeholder="Search Columns" />
