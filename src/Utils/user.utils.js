@@ -32,6 +32,7 @@ export const LoginCheck = async () => {
     const result = await Get({ urlPrefix: GLOBAL.ROUTE_URL, url: LoginCheckEndPoint });
     let loggedUser = {};
     if (result.success) {
+        // loggedUser = result.response;
         loggedUser = GetUserDetail(result.response);
         CurrentUser = result.response;
     }

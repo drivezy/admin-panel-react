@@ -152,12 +152,18 @@ export default class SelectBox extends Component {
         let { value } = this.state;
         let elem;
 
-        value = (typeof value != 'object' || IsObjectHaveKeys(value)) ? value : undefined;
+        let param = {};
+        if(IsObjectHaveKeys(value)){
+            param.value=value;
+        }
+
+        // value = (typeof value != 'object' || IsObjectHaveKeys(value)) ? value : undefined;
 
         if (async) {
             elem = <Async
                 name="form-field-name"
-                value={value}
+                // value={value}
+                {...param}
                 isClearable={isClearable}
                 loadOptions={this.getOptions}
                 onChange={this.handleChange.bind(this)}
@@ -168,7 +174,9 @@ export default class SelectBox extends Component {
         } else if (getOptions) {
             elem = <Async
                 name="form-field-name"
-                value={value}
+                // value={value}
+                {...param}
+
                 loadOptions={getOptions}
                 isClearable={isClearable}
                 onChange={this.handleChange.bind(this)}
@@ -179,7 +187,9 @@ export default class SelectBox extends Component {
         } else {
             elem = <Select
                 name="form-field-name"
-                value={value}
+                {...param}
+
+                // value={value}
                 onChange={this.handleChange.bind(this)}
                 options={options}
                 multi={this.props.multi}

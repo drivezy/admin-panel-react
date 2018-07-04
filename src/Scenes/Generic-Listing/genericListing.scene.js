@@ -41,7 +41,8 @@ export default class GenericListing extends Component {
             filterContent: null,
             isCollapsed: true,
             source: this.props.source || 'menu',
-            isTab: this.props.source ? true : false
+            isTab: this.props.source ? true : false,
+            loading: true
         };
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
@@ -90,12 +91,13 @@ export default class GenericListing extends Component {
     }
 
     getListingData = () => {
+        // this.setState({loading:})
         const { menuDetail, genericData, queryString, currentUser } = this.state;
         GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser });
     }
 
     dataFetched = ({ genericData, filterContent }) => {
-        this.setState({ genericData, filterContent });
+        this.setState({ genericData, filterContent, loading: false });
         if (genericData) {
             StoreEvent({ eventName: 'rightClickData', data: { menuData: genericData } });
         }
@@ -246,7 +248,11 @@ export default class GenericListing extends Component {
     }
 
     render() {
+<<<<<<< HEAD
         const { localSearch, genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent, currentUser, isTab, source } = this.state;
+=======
+        const { localSearch, genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent, currentUser, loading } = this.state;
+>>>>>>> master
         const { listing = [], finalColumns = [] } = genericData;
         const { starter } = genericData;
 
@@ -326,6 +332,7 @@ export default class GenericListing extends Component {
                     </div>
 
                     {
+<<<<<<< HEAD
                         (finalColumns && finalColumns.length) ?
                             <Card>
                                 <CardBody className="table-wrapper">
@@ -344,16 +351,43 @@ export default class GenericListing extends Component {
                                         source={source}
                                     />
                                     {/* Portlet Table Ends */}
+=======
+                        loading?<div className="loadingText"><h6 data-text="Loading…"></h6></div>:                    
+                        <div>
+                        {
+                            (finalColumns && finalColumns.length) ?
+                                <Card>
+                                    <CardBody className="table-wrapper">
 
-                                </CardBody>
-                            </Card> : null
+                                        {/* Portlet Table */}
+                                        <PortletTable tableType="listing"
+                                            rowOptions={this.rowOptions}
+                                            parentData={parentData}
+                                            // toggleAdvancedFilter={this.toggleAdvancedFilter} 
+                                            history={history} match={match}
+                                            genericData={genericData}
+                                            finalColumns={finalColumns}
+                                            listing={localSearch.value ? filteredResults : listing}
+                                            callback={this.getListingData}
+                                            menuDetail={menuDetail}
+                                        />
+                                        {/* Portlet Table Ends */}
+
+                                    </CardBody>
+                                </Card> : null
+                        }
+
+                        {
+                            (finalColumns && finalColumns.length) ?
+                                <ListingPagination history={history} match={match} current_page={genericData.currentPage} limit={genericData.limit} statsData={genericData.stats} /> : <div className="noListMessage">Looks like no columns are selected , Configure it by pressing the settings icon.</div>
+                        }
+                        {/* Listing Pagination Ends */}
+                    </div>
+>>>>>>> master
+
+
                     }
 
-                    {
-                        (listing && listing.length) ?
-                            <ListingPagination history={history} match={match} current_page={genericData.currentPage} limit={genericData.limit} statsData={genericData.stats} /> : null
-                    }
-                    {/* Listing Pagination Ends */}
                 </div>
             </HotKeys>
         );
