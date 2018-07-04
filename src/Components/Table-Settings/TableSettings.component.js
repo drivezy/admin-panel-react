@@ -192,24 +192,17 @@ export default class TableSettings extends Component {
     // }
 
     searchColumn = (event) => {
-        //console.log(event.target.value);
         const { tempColumns } = this.state;
-        //console.log(tempColumns);
         const searchedColumns = {};
-        // const searchedColumns = Object.values(tempColumns).filter(tempColumn => {
-        //     return tempColumn.name.toString().toLowerCase().indexOf(event.target.value) != -1;
-        // });
-
+        
         for (var i in tempColumns) {
             if (tempColumns[i].name.toString().toLowerCase().indexOf(event.target.value) != -1) {
-                // console.log(tempColumns[i].name);
                 searchedColumns[i] = tempColumns[i];
             }
         }
         this.state.leftSearchText = event.target.value;
         this.state.searchedColumns = searchedColumns;
         this.expandAll();
-        // this.setState({ searchedColumns });
     }
 
 
@@ -242,7 +235,6 @@ export default class TableSettings extends Component {
 
     modalWrapper() {
         const { tempColumns: columns, searchedColumns, columns: originalColumns, tempSelectedColumns, activeColumn, showSplitFlag, formConfigurator, leftSearchText } = this.state;
-        //console.log(columns);
         const { source = 'module' } = this.props;
         const selectedIds = [];
 

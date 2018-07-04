@@ -37,14 +37,12 @@ export default class ColumnSetting extends Component {
 
     columnCollapse = (isSave = false) => {
         let { tempColumn, column } = this.state;
-        const { selectedColumnUpdate } = this.props;
-        console.log(tempColumn);
+        const { selectedColumnUpdate,index } = this.props;
         const expanded = !tempColumn.expanded;
-        console.log(tempColumn.column);
         if (isSave) {
             column = tempColumn;
             tempColumn.expanded = column.expanded = expanded;
-            selectedColumnUpdate(tempColumn);
+            selectedColumnUpdate(tempColumn,index);
             //this.setState({ column: tempColumn, tempColumn });
         }
         else {
@@ -88,7 +86,7 @@ export default class ColumnSetting extends Component {
         const { tempColumn: column = {} } = this.state;
         const { columns, activeColumn } = this.props;
         const { columnTitle, route, filter } = column;
-        console.log(column);
+        console.log(column.filter);
         //console.log(column, columns);
         return (
             <div className={`column-setting ${activeColumn.column == column.column ? 'active' : ''}`} >
@@ -128,7 +126,7 @@ export default class ColumnSetting extends Component {
                                     <SelectBox
                                         onChange={(filter) => {
                                             column.filter = filter;
-                                            this.setState({ column });
+                                            this.setState({ tempColumn: column });
                                         }}
                                         value={filter}
                                         options={filterArr}
