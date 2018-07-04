@@ -34,7 +34,7 @@
                     margin-bottom: 0px;
                     color: #395167;
                 }
-                .list-group.parent-group {
+                .list-group .parent-group {
                     padding: 10px 15px;
                 }
             }
@@ -82,6 +82,9 @@
             }
         }
         .right {
+            ul{
+                min-height: 45px;
+            }
             max-height: 70vh;
             overflow-y: scroll;
             flex-basis: 40%;

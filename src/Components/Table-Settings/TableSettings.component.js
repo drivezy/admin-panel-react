@@ -242,7 +242,7 @@ export default class TableSettings extends Component {
 
         for (let value of tempSelectedColumns) {
             if (typeof value != 'string') {
-                selectedIds.push(value);
+                selectedIds.push(value.column);
                 // selectedIds.push(parseInt(value.column.split('.').pop()));
             }
         }
@@ -255,10 +255,13 @@ export default class TableSettings extends Component {
         const columnKeys = Object.keys(leftColumns);
         this.state.parents = columnKeys;
 
+
+
         for (let key of columnKeys) {
             leftColumns[key] = leftColumns[key].filter((column) => (
-                selectedIds.indexOf(column.id) == -1
+                selectedIds.indexOf(column.name) == -1
             ));
+            console.log(leftColumns.menu.length);
         }
         return (
             <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="table-settings">
@@ -272,7 +275,7 @@ export default class TableSettings extends Component {
                             <div className="card-body parent-card">
 
                                 <div className="card-top">
-                                    <h6 className="card-title">All Columns</h6>
+                                    <h6 className="card-title">All Columns({leftColumns.menu.length})</h6>
 
                                     <div className="input-holder">
                                         <input type="text" onChange={event => this.searchColumn(event)} className="search-box" placeholder="Search Columns" />
@@ -354,7 +357,7 @@ export default class TableSettings extends Component {
                         <div className="card">
                             <div className="card-body parent-card">
                                 <div className="card-top">
-                                    <h6 className="card-title">Selected Columns</h6>
+                                    <h6 className="card-title">Selected Columns({tempSelectedColumns.length})</h6>
                                 </div>
 
                                 <ListGroup className="parent-group">
