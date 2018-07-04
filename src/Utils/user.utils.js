@@ -123,10 +123,10 @@ export const GetUserDetail = (userObject) => {
             }
         };
 
-        // if (userObject.parent_user) {
-        //     currentUser.parent_user = userObject.parent_user;
-        //     currentUser.impersonated = true;
-        // }
+        if (userObject.parent_user) {
+            currentUser.parent_user = userObject.parent_user;
+            currentUser.impersonated = true;
+        }
 
         currentUser.roles = [];
         currentUser.permissions = [];
@@ -152,8 +152,8 @@ export const GetUserDetail = (userObject) => {
         for (let j in userObject.access_object.permissionIdentifiers) {
             currentUser.permissionIdentifiers.push(userObject.access_object.permissionIdentifiers[j]);
         }
-        // currentUser.isSuperAdmin = hasRole("super_admin");
-        // currentUser.isAdmin = hasRole("admin");
+        currentUser.isSuperAdmin = hasRole("super_admin");
+        currentUser.isAdmin = hasRole("admin");
 
         return currentUser;
     } catch (err) {
@@ -161,10 +161,10 @@ export const GetUserDetail = (userObject) => {
     }
 };
 
-// export const GetUser = () => {
-//     return CurrentUser;
-// }
+export const GetUser = () => {
+    return CurrentUser;
+}
 
-// export const ImpersonateUser = () => {
-//     return CurrentUser;
-// }
+export const ImpersonateUser = () => {
+    return CurrentUser;
+}
