@@ -83,13 +83,13 @@ export default class ConfigureDynamicFilter extends Component {
         collapse = forcefullyUpdate ? collapse : !isCollapsed;
 
         if (!collapse) {
-            const active_filter = this.urlParams.filter;
+            const active_filter = this.urlParams.layout;
 
             // IF there is an active filter then add that first 
             if (active_filter && !this.urlParams.query) {
                 this.resetColumns();
                 this.activeFilter(active_filter);
-                this.prepopulate(this.state.activeFilter.filter_query);
+                this.prepopulate(this.state.activeFilter.query);
             } else if (this.urlParams.query) {
                 this.prepopulate(this.urlParams.query);
             } else {
