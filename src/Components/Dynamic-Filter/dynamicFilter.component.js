@@ -184,7 +184,7 @@ export default class DynamicFilter extends Component {
             urlParams.layout = result.response.id;
             urlParams.query = null;
             Location.search(urlParams, { props: { match, history } });
-            ToastNotifications.success("Filter updated");
+            ToastNotifications.success({ message: "Filter updated" });
         }
     }
 

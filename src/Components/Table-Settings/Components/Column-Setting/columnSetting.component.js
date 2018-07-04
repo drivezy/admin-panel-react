@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import { Collapse, Card, CardBody } from 'reactstrap';
 
+import SelectBox from './../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import Switch from './../../../Forms/Components/Switch/switch';
+
+import Filters from './../../../../Constants/filters';
 
 import './columnSetting.component.css';
 
@@ -15,6 +18,14 @@ export default class ColumnSetting extends Component {
             column: this.props.column,
             // tempColumn: this.props.column
             // formContent: {}
+        }
+
+        this.filterArr = Object.values(Filters);
+    }
+
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if (nextProps.column) {
+            this.setState({ column: nextProps.column });
         }
     }
 
@@ -47,19 +58,11 @@ export default class ColumnSetting extends Component {
         // console.log()
     }
 
-    componentDidMount() {
-    }
-
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        if (nextProps.column) {
-            this.setState({ column: nextProps.column });
-        }
-    }
-
     render() {
+        const { filterArr } = this;
         const { column } = this.state;
         const { columns, activeColumn } = this.props;
-        const { columnTitle, route } = column;
+        const { columnTitle, route, filter } = column;
 
         //console.log(column, columns);
         return (
@@ -91,6 +94,21 @@ export default class ColumnSetting extends Component {
                                         Hyperlink
                                     </label>
                                     <Switch name="route" onChange={this.updateColumnHyperlink} value={route} />
+                                </div>
+
+                                <div className="form-group">
+                                    <label htmlFor="exampleInputEmail1">
+                                        Filter
+                                    </label>
+                                    <SelectBox
+                                        onChange={(filter) => {
+                                            column.filter = filter;
+                                            this.setState({ column });
+                                        }}
+                                        value={filter}
+                                        options={filterArr}
+                                        placeholder='Filter'
+                                    />
                                 </div>
 
                                 <div className="row">
