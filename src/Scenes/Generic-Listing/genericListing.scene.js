@@ -7,7 +7,7 @@ import {
 } from 'reactstrap';
 
 import DynamicFilter from './../../Components/Dynamic-Filter/dynamicFilter.component';
-import ConfigureDynamicFilter from './../../Components/Dynamic-Filter/configureFilter.component';
+import ConfigureDynamicFilter from './../../Components/Configure-Filter/configureFilter.component';
 import ListingPagination from './../../Components/Listing-Pagination/ListingPagination';
 import TableSettings from './../../Components/Table-Settings/TableSettings.component';
 import PortletTable from './../../Components/Portlet-Table/PortletTable.component';
@@ -18,7 +18,7 @@ import ListingSearch from './../../Components/Listing-Search/listingSearch.compo
 import { HotKeys } from 'react-hotkeys';
 
 import { CopyToClipBoard } from './../../Utils/common.utils';
-import ToastNotifications from './../../Utils/toast.utils';
+import ToastUtils from './../../Utils/toast.utils';
 import { Get } from './../../Utils/http.utils';
 import { BuildUrlForGetCall } from './../../Utils/common.utils';
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
@@ -40,7 +40,9 @@ export default class GenericListing extends Component {
             genericData: {},
             filterContent: null,
             isCollapsed: true,
-            state: this.props.source || 'menu'
+            source: this.props.source || 'menu',
+            isTab: this.props.source ? true : false,
+            loading: true
         };
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
@@ -82,7 +84,6 @@ export default class GenericListing extends Component {
             const menuDetail = ConvertMenuDetailForGenericPage(response || {});
             // if (typeof response.controller_path == 'string' && response.controller_path.includes('genericListingController.js') != -1) {
             this.state.menuDetail = menuDetail;
-            console.log(menuDetail);
             this.getListingData();
             StoreEvent({ eventName: 'showMenuName', data: { menuName: this.state.menuDetail.pageName } });
             // }
@@ -90,12 +91,16 @@ export default class GenericListing extends Component {
     }
 
     getListingData = () => {
+        // this.setState({loading:})
         const { menuDetail, genericData, queryString, currentUser } = this.state;
         GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser });
     }
 
     dataFetched = ({ genericData, filterContent }) => {
-        this.setState({ genericData, filterContent });
+        this.setState({ genericData, filterContent, loading: false });
+        if (genericData) {
+            StoreEvent({ eventName: 'rightClickData', data: { menuData: genericData } });
+        }
     }
 
     openAggregationResult = async (operator, caption, data) => {
@@ -108,7 +113,7 @@ export default class GenericListing extends Component {
         const result = await Get({ url });
 
         if (result.success) {
-            ToastNotifications.success(caption + result.response);
+            ToastUtils.success({ description: result.response, title: caption });
         }
     }
 
@@ -243,7 +248,7 @@ export default class GenericListing extends Component {
     }
 
     render() {
-        const { localSearch, genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent, currentUser } = this.state;
+        const { localSearch, genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent, currentUser, loading, isTab, source } = this.state;
         const { listing = [], finalColumns = [] } = genericData;
         const { starter } = genericData;
 
@@ -277,6 +282,8 @@ export default class GenericListing extends Component {
                                         currentUser={currentUser}
                                         dictionary={filterContent.dictionary}
                                         layouts={menuDetail.layouts}
+                                        restrictedQuery={menuDetail.restricted_query}
+                                        restrictedColumn={menuDetail.restrictColumnFilter}
                                         history={history}
                                         match={match}
                                     />
@@ -284,11 +291,11 @@ export default class GenericListing extends Component {
                             </div>
                         </div>
                         <div className="header-actions">
-                            <CustomAction position="header" parentData={parentData} menuDetail={menuDetail} history={history} genericData={genericData} actions={genericData.nextActions} placement={'as_header'} />
+                            <CustomAction position="header" source={isTab ? source : undefined} parentData={parentData} menuDetail={menuDetail} history={history} genericData={genericData} actions={genericData.nextActions} placement={'as_header'} />
                             {
                                 genericData.columns ?
                                     <TableSettings
-                                        source='menu'
+                                        source={source}
                                         onSubmit={this.layoutChanges}
                                         listName={genericData.listName}
                                         layout={genericData.layout}
@@ -299,18 +306,18 @@ export default class GenericListing extends Component {
                                     :
                                     null
                             }
-                            <Button color="primary" size="sm" onClick={() => { this.refreshPage() }}>
+                            <Button className="refresh-button" size="sm" onClick={() => { this.refreshPage() }}>
                                 <i className="fa fa-refresh"></i>
                             </Button>
                             {
-                                menuDetail && genericData.userFilter && genericData.userFilter.length > 0 ?
+                                menuDetail && menuDetail.layouts && menuDetail.layouts.length > 0 ?
                                     <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} layouts={menuDetail.layouts} history={history} match={match} />
                                     :
                                     null
                             }
                         </div>
                     </div>
-                    <div>
+                    <div className="configure-filter-wrapper">
                         {
                             filterContent &&
                             <ConfigureDynamicFilter
@@ -323,33 +330,43 @@ export default class GenericListing extends Component {
                     </div>
 
                     {
-                        (finalColumns && finalColumns.length) ?
-                            <Card>
-                                <CardBody className="table-wrapper">
+                        loading ? <div className="loadingText"><h6 data-text="Loading…"></h6></div> :
+                            <div>
+                                {
+                                    (finalColumns && finalColumns.length) ?
+                                        <Card>
+                                            <CardBody className="table-wrapper">
 
-                                    {/* Portlet Table */}
-                                    <PortletTable tableType="listing"
-                                        rowOptions={this.rowOptions}
-                                        parentData={parentData}
-                                        // toggleAdvancedFilter={this.toggleAdvancedFilter} 
-                                        history={history} match={match}
-                                        genericData={genericData}
-                                        finalColumns={finalColumns}
-                                        listing={localSearch.value ? filteredResults : listing}
-                                        callback={this.getListingData}
-                                        menuDetail={menuDetail}
-                                    />
-                                    {/* Portlet Table Ends */}
+                                                {/* Portlet Table */}
+                                                <PortletTable tableType="listing"
+                                                    rowOptions={this.rowOptions}
+                                                    parentData={parentData}
+                                                    // toggleAdvancedFilter={this.toggleAdvancedFilter} 
+                                                    history={history} match={match}
+                                                    genericData={genericData}
+                                                    finalColumns={finalColumns}
+                                                    listing={localSearch.value ? filteredResults : listing}
+                                                    callback={this.getListingData}
+                                                    menuDetail={menuDetail}
+                                                    source={source}
+                                                    filterColumn={this.filterColumn}
+                                                />
+                                                {/* Portlet Table Ends */}
 
-                                </CardBody>
-                            </Card> : null
+                                            </CardBody>
+                                        </Card> : null
+                                }
+
+                                {
+                                    (finalColumns && finalColumns.length) ?
+                                        <ListingPagination history={history} match={match} current_page={genericData.currentPage} limit={genericData.limit} statsData={genericData.stats} /> : <div className="noListMessage">Looks like no columns are selected , Configure it by pressing the settings icon.</div>
+                                }
+                                {/* Listing Pagination Ends */}
+                            </div>
+
+
                     }
 
-                    {
-                        (listing && listing.length) ?
-                            <ListingPagination history={history} match={match} current_page={genericData.currentPage} limit={genericData.limit} statsData={genericData.stats} /> : null
-                    }
-                    {/* Listing Pagination Ends */}
                 </div>
             </HotKeys>
         );
@@ -366,7 +383,7 @@ export default class GenericListing extends Component {
             onClick: (data) => {
                 let id = data.listingRow[data.starter + '.id'];
                 CopyToClipBoard(id);
-                ToastNotifications.success("Id - " + id + " has been copied");
+                ToastUtils.success({ description: "Id - " + id + " has been copied", title: 'Copy Id' });
             },
             disabled: false
         }, { subMenu: null }, {
@@ -419,7 +436,7 @@ export default class GenericListing extends Component {
             onClick: (data) => {
                 const { history, match } = this.props;
 
-                let pageUrl = "/menuDef/" + data.menuDetail.menuId
+                let pageUrl = "/menu/" + data.menuDetail.menuId
 
                 history.push(`${pageUrl}`);
             },
@@ -432,7 +449,7 @@ export default class GenericListing extends Component {
             onClick: (data) => {
                 const { history, match } = this.props;
 
-                let pageUrl = "/modelDetails/" + data.menuDetail.model.id
+                let pageUrl = "/model/" + data.menuDetail.model.id
 
                 history.push(`${pageUrl}`);
             },

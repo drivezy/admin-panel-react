@@ -1,5 +1,6 @@
 @import 'Assets/Global-Shared/theme.scss';
 .detail-includes {
+    margin: 4px;
     .card-body {
         padding: 0px;
         @include themify($themes) {

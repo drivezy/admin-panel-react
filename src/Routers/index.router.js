@@ -100,7 +100,7 @@ export default class IndexRouter extends Component {
     getRouterProps = () => ({ history: this.props.history });
 
     render() {
-        const { match } = this.props; // match.path = '/'
+        const { match, history } = this.props; // match.path = '/'
         const menus = this.menus || [];
 
         return (
@@ -108,7 +108,7 @@ export default class IndexRouter extends Component {
                 <HotKeys focused={true} attach={window} keyMap={this.keyMap} handlers={this.handlers}>
                     <div className="app-container">
                         {/* Landing Is the Basic Layout that builds the routes and the layout */}
-                        <Landing match={match} menus={menus} />
+                        <Landing match={match} menus={menus} history={history}/>
                         {/* Landing Ends */}
                     </div>
                 </HotKeys>

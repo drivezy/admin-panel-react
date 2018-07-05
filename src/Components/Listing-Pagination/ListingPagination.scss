@@ -1,6 +1,6 @@
 @import 'Assets/Global-Shared/theme.scss';
 .listing-pagination {
-    padding-top: 10px;
+    padding: 10px;
     display: flex;
     justify-content:space-between;
 
@@ -13,27 +13,11 @@
             min-width: 100px;
         }
     }
-}
-
-/** Theme specific css */
-.drivezy-light-theme { 
-    .listing-pagination {
-        .page-item > a {
-            height: 38px;
-        }
-        .highlighted-page > a  { 
-            background: $primaryThemeLight !important;
-            color: $onPrimaryThemeLight;
-        }
-    }
-}
-
-.listing-pagination {
     @include themify($themes) {
         background: themed('bodyBackground');
     }
     .page-item > a {
-        height: 38px;
+        // height: 38px;
     }
     .highlighted-page > a { 
         background: $primaryThemeDark !important;
@@ -41,9 +25,13 @@
     }
     .pagination-record {
         @include themify($themes) {
-            color:themed('secondaryColor');
+            // color:themed('secondaryColor');
         }
     }
+}
+
+.listing-pagination {
+ 
 }
 
 .drivezy-drivezy-theme { 

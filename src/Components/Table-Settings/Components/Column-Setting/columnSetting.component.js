@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import { Collapse, Card, CardBody } from 'reactstrap';
 
+import SelectBox from './../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import Switch from './../../../Forms/Components/Switch/switch';
+
+import Filters from './../../../../Constants/filters';
 
 import './columnSetting.component.css';
 
@@ -13,25 +16,55 @@ export default class ColumnSetting extends Component {
 
         this.state = {
             column: this.props.column,
-            // tempColumn: this.props.column
+            // tempColumn: { ...this.props.column }
             // formContent: {}
+        }
+
+
+
+        this.filterArr = Object.values(Filters);
+    }
+
+    UNSAFE_componentWillMount() {
+        this.setState({ tempColumn: { ...this.props.column } });
+    }
+
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if (nextProps.column) {
+            this.setState({ column: nextProps.column, tempColumn: { ...nextProps.column } });
+        }
+    }
+
+    columnCollapse = (isSave = false) => {
+        let { tempColumn, column } = this.state;
+        const { selectedColumnUpdate,index } = this.props;
+        const expanded = !tempColumn.expanded;
+        if (isSave) {
+            column = tempColumn;
+            tempColumn.expanded = column.expanded = expanded;
+            selectedColumnUpdate(tempColumn,index);
+            //this.setState({ column: tempColumn, tempColumn });
+        }
+        else {
+            tempColumn = column;
+            tempColumn.expanded = column.expanded = expanded;
+            this.setState({ tempColumn });
         }
     }
 
     toggleSetting = () => {
-        let column = this.state.column;
-        column.expanded = !column.expanded;
-        this.setState({ column });
+        let tempColumn = this.state.tempColumn;
+        tempColumn.expanded = !tempColumn.expanded;
+        this.setState({ tempColumn });
     }
 
     updateColumnHyperlink = (field, value) => {
 
-        let { column } = this.state;
-        //console.log(column);
+        let { tempColumn } = this.state;
 
-        column.route = value ? true : false;
+        tempColumn.route = value ? true : false;
 
-        this.setState({ column });
+        this.setState({ tempColumn });
     }
 
     columnNameChange = (event) => {
@@ -47,21 +80,11 @@ export default class ColumnSetting extends Component {
         // console.log()
     }
 
-    componentDidMount() {
-    }
-
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        if (nextProps.column) {
-            this.setState({ column: nextProps.column });
-        }
-    }
-
     render() {
-        const { column } = this.state;
+        const { filterArr } = this;
+        const { tempColumn: column = {} } = this.state;
         const { columns, activeColumn } = this.props;
-        const { columnTitle, route } = column;
-
-        //console.log(column, columns);
+        const { columnTitle, route, filter } = column;
         return (
             <div className={`column-setting ${activeColumn.column == column.column ? 'active' : ''}`} >
                 <div className="column-label">
@@ -93,9 +116,25 @@ export default class ColumnSetting extends Component {
                                     <Switch name="route" onChange={this.updateColumnHyperlink} value={route} />
                                 </div>
 
+                                <div className="form-group">
+                                    <label htmlFor="exampleInputEmail1">
+                                        Filter
+                                    </label>
+                                    <SelectBox
+                                        onChange={(filter) => {
+                                            column.filter = filter;
+                                            this.setState({ tempColumn: column });
+                                        }}
+                                        value={filter}
+                                        options={filterArr}
+                                        placeholder='Filter'
+                                    />
+                                </div>
+
                                 <div className="row">
                                     <div className="col">
-                                        <button type="button" onClick={this.toggleSetting} className="btn btn-secondary">Close</button>
+                                        <button type="button" onClick={() => this.columnCollapse()} className="btn btn-secondary">Close</button>
+                                        <button type="button" onClick={() => this.columnCollapse(true)} className="btn btn-secondary">Save</button>
                                     </div>
                                 </div>
                             </form>

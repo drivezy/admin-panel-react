@@ -20,12 +20,10 @@
                         th {
                             // color: #6f7c87;
                             display: table-cell;
-                            padding: 12px;
-                            border: 1px solid;
+                            padding: 12px; // border: 1px solid;
                             @include themify($themes) {
-                                border-color: themed('darkColor');
-                                background: themed('tableBackground');
-                                border: themed('tableHeadBorder')
+                                // border-color: themed('darkColor');
+                                background: themed('tableBackground'); // border: themed('tableHeadBorder')
                             }
                             &.header-index {
                                 .select-box {
@@ -42,81 +40,83 @@
                             }
                             a {
                                 color: inherit;
-                            }
-                            // &.column-header {
-                                cursor: pointer; // border-bottom: 1px solid #ddd; // border-bottom: none;
-                                white-space: nowrap;
-                                .column-wrapper {
-                                    align-items: center;
-                                    display: flex;
-                                    justify-content: space-around;
-                                    flex-direction: row;
-                                    .column-title {
-                                        // color: #6f7c87;
-                                        margin-right: 10px;
-                                        -ms-flex-preferred-size: 80%;
-                                        flex-grow: 1;
-                                        font-weight: 100;
-                                        font-size: 13px;
+                            } // &.column-header {
+                            cursor: pointer; // border-bottom: 1px solid #ddd; // border-bottom: none;
+                            white-space: nowrap;
+                            .column-wrapper {
+                                align-items: center;
+                                display: flex;
+                                justify-content: space-around;
+                                flex-direction: row;
+                                .column-title {
+                                    text-align: center; // color: #6f7c87;
+                                    margin-right: 10px;
+                                    -ms-flex-preferred-size: 80%;
+                                    flex-grow: 1;
+                                    font-weight: 100;
+                                    font-size: 13px;
+                                    @include themify($themes) {
+                                        color: themed('columnTitle');
+                                    }
+                                }
+                                .db-level-sort {
+                                    cursor: pointer;
+                                    flex-basis: 5%;
+                                    .dropdown {}
+                                    a.dropdown-link {
+                                        text-decoration: none;
+                                        opacity: 0.8;
                                         @include themify($themes) {
-                                            color: themed('columnTitle');
-                                        }
-                                    }
-                                    .db-level-sort {
-                                        cursor: pointer;
-                                        flex-basis: 5%;
-                                        .dropdown {}
-                                        a.dropdown-link {
-                                            text-decoration: none;
-                                            opacity: 0.8;
-                                            @include themify($themes) {
-                                                color: themed('sortLink');
-                                            }
-                                        }
-                                    }
-                                    .filter-column {
-                                        cursor: pointer;
-                                        margin: 0px 4px;
-                                        flex-basis: 5%;
-                                        a {
-                                            opacity: 0.8;
+                                            color: themed('sortLink');
                                         }
                                     }
                                 }
-                                &:hover {
-                                    // .column-title {
-                                    //     color: #66a5cc;
-                                    // }
-                                    .filter-column {
-                                        a {
-                                            // color: #66a5cc;
-                                            opacity: 1;
-                                        }
+                                .filter-column {
+                                    cursor: pointer;
+                                    margin: 0px 4px;
+                                    flex-basis: 5%;
+                                    @include themify($themes) {
+                                        color: themed('filterLink');
                                     }
-                                    .db-level-sort {
-                                        a.dropdown-link {
-                                            opacity: 1;
-                                        }
+
+                                    a {
+                                        // opacity: 0.8;
                                     }
                                 }
-                                &.table-option-selectable {
-                                    position: relative;
-                                    &:after {
-                                        content: '';
-                                        position: absolute;
-                                        right: 0px;
-                                        bottom: 0px;
-                                        height: 5px;
-                                        width: 5px;
-                                        /* background: #e0e0e0; */
-                                        transform: rotate(1deg);
-                                        width: 0;
-                                        height: 0;
-                                        border-bottom: 5px solid #f1c9c9;
-                                        border-left: 5px solid transparent;
+                            }
+                            &:hover {
+                                // .column-title {
+                                //     color: #66a5cc;
+                                // }
+                                .filter-column {
+                                    a {
+                                        // color: #66a5cc;
+                                        opacity: 1;
                                     }
                                 }
-                            // }
+                                .db-level-sort {
+                                    a.dropdown-link {
+                                        opacity: 1;
+                                    }
+                                }
+                            }
+                            &.table-option-selectable {
+                                position: relative;
+                                &:after {
+                                    content: '';
+                                    position: absolute;
+                                    right: 0px;
+                                    bottom: 0px;
+                                    height: 5px;
+                                    width: 5px;
+                                    /* background: #e0e0e0; */
+                                    transform: rotate(1deg);
+                                    width: 0;
+                                    height: 0;
+                                    border-bottom: 5px solid #f1c9c9;
+                                    border-left: 5px solid transparent;
+                                }
+                            } // }
                         }
                     }
                 }
@@ -126,18 +126,23 @@
                             position: relative;
                         }
                     }
-
-                    @include themify($themes){
+                    @include themify($themes) {
                         background-color: themed('tableBackground');
                     }
-
                     tr.table-row {
+                        // height: 60px; 
+                        border-bottom: 1px solid;
+                        @include themify($themes) {
+                            border-color: themed('tableRowBorder') // border: themed('tableDataBorder');
+                        }
                         transition: .2s ease; // position: relative;
                         td {
-                            border-bottom: 1px solid #ebeef0;
-                            border: 1px solid #ececec;
-                            @include themify($themes){
-                                border: themed('tableDataBorder'); 
+                            vertical-align: middle;
+                            border: none; // font-size: 12px;
+                            // padding: 15px 20px; // border-bottom: 1px solid #ebeef0;
+                            // border: 1px solid #ececec;
+                            @include themify($themes) {
+                                color: themed('tableData') // border: themed('tableDataBorder');
                             }
                             border-left: none;
                             color: #183247; // padding: 15px 20px;
@@ -145,16 +150,15 @@
                             &.row-key {
                                 // padding: 15px 10px;
                             }
-                            @include themify($themes){
-                                color: themed('textSecondary');    
+                            @include themify($themes) {
+                                color: themed('textSecondary');
                             }
-
                             a {
-                                @include themify($themes){
-                                    color: themed('linkColor');    
-                                }
-                                // color: #1e739e;
-                                font-size: 13px;
+                                @include themify($themes) {
+                                    color: themed('linkColor');
+                                } // color: #1e739e;
+                                // font-size: 12px;
+                                font-weight: 600; // font
                                 text-decoration: none;
                                 transition: all 200ms linear; // &:hover {
                                 //     color: #2ea3de;
@@ -204,38 +208,47 @@
                     tr {
                         th {
                             &.action-header {
-                                border: 1px solid #a4b2b8;
-                                @include themify($themes){
-                                    background: themed('sideTableBackground');
-                                    color: themed('sideBarIcons');
-                                    border: themed('actionBarBorder');
+                                text-align: center;
+                                // border: 1px solid #a4b2b8;
+                                @include themify($themes) {
+                                    // background: themed('sideTableBackground');
+                                    // color: themed('sideBarIcons');
+                                    // border: themed('actionBarBorder');
+                                    background: themed('tableBackground');
                                 }
-                                text-align: right;
-                                //border-left: 1px solid #ebeef0;
+                                text-align: right; //border-left: 1px solid #ebeef0;
                                 color: #35485a;
                             }
                         }
                     }
                 }
             }
-            td {
-                &.action-column {
-                    border-top: 1px solid #ebeef073;
-                    border-left: 1px solid #ebeef0;
-                    @include themify($themes){
-                        background: themed('sideTableBackground');
-                        color: themed('sideBarIcons');
-                        border: themed('actionBarBorder');
+            tr {
+                &.table-row {
+                    border-bottom: 1px solid;
+                    @include themify($themes) {
+                        border-color: themed('tableRowBorder') // border: themed('tableDataBorder');
                     }
-                    background: white; // right: 0px;
-                    // padding: 14px;
-                    padding: 15px 20px;
-                    .custom-actions{
-                        display: flex;
-                    }
-                    i.fa {
-                        margin: 0px 4px; // font-size: 20px;
-                        cursor: pointer; // color: #4f6273;
+                    td {
+                        &.action-column {
+                            border-top: 1px solid #ebeef073;
+                            border-left: 1px solid #ebeef0;
+                            @include themify($themes) {
+                                // background: themed('sideTableBackground');
+                                color: themed('sideBarIcons');
+                                border: themed('actionBarBorder');
+                            }
+                            background: white; // right: 0px;
+                            // padding: 14px;
+                            // padding: 15px 20px;
+                            .custom-actions {
+                                display: flex;
+                            }
+                            i.fa {
+                                margin: 0px 4px; // font-size: 20px;
+                                cursor: pointer; // color: #4f6273;
+                            }
+                        }
                     }
                 }
             }
@@ -265,6 +278,7 @@
             thead {
                 tr {
                     th.action-header {
+                        text-align: center;
                         padding: 6px 10px;
                     }
                 }
@@ -291,7 +305,7 @@
                 }
                 tr.table-row {
                     td {
-                        padding: 10px 8px;
+                        padding: 12px 20px; // padding: 10px 8px;
                     }
                 }
             }
@@ -306,7 +320,8 @@
             }
             tr.table-row {
                 td.action-column {
-                    padding: 10px 8px;
+                    // padding: 10px 8px;
+                    padding: 12px 8px;
                 }
             }
         }
@@ -340,6 +355,7 @@
                 }
             }
             tr.table-row {
+                height: 60px;
                 td.action-column {
                     padding: 15px 20px;
                     background-color: #000;

@@ -52,17 +52,16 @@ export default class LandingApp extends Component {
 
     render() {
         const { menus = [], sideNavExpanded } = this.state;
-        const { match } = this.props;
+        const { match, history } = this.props;
         const { loadedComponent } = this;
 
-        // console.log(menus);
         return (
             <div className="page-container">
                 <div className="landing-sidebar">
                     <SideNav visible={sideNavExpanded} onCollapse={this.onCollapse.bind(this)} menus={menus} />
                 </div>
                 <div className={`landing-wrapper ${sideNavExpanded ? 'sidenav-open' : 'sidenav-closed'}`} id="main" style={{ height: '100%' }}>
-                    <Header className={`${sideNavExpanded ? 'expanded' : 'collapsed'}`} />
+                    <Header className={`${sideNavExpanded ? 'expanded' : 'collapsed'}`} history={history} />
                     <div className="landing-body">
                         <Switch>
                             {

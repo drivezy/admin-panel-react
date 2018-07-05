@@ -2,16 +2,13 @@ import React, { Component } from 'react';
 import './DetailPortlet.css';
 
 import {
-    Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Button,
-    Container,
-    Row, Col
+    Card, CardBody, Row, Col
 } from 'reactstrap';
 
 import RightClick from './../../Components/Right-Click/rightClick.component';
 
 import { CopyToClipBoard } from './../../Utils/common.utils';
-import ToastNotifications from './../../Utils/toast.utils';
+import ToastUtils from './../../Utils/toast.utils';
 import { RowTemplate } from './../../Utils/generic.utils';
 
 export default class DetailPortlet extends Component {
@@ -27,15 +24,23 @@ export default class DetailPortlet extends Component {
 
     rowOptions = [{
         id: 0,
+        name: "Copy Column Name",
+        icon: 'fa-copy',
+        subMenu: false,
+        onClick: (data) => {
+            let prop = data.selectedColumn.name;
+            CopyToClipBoard(prop);
+            ToastUtils.success({ description: "Column name " + data.selectedColumn.name + " has been copied", title: 'Column Name' });
+        }
+    }, {
+        id: 0,
         name: "Copy Property",
         icon: 'fa-copy',
         subMenu: false,
         onClick: (data) => {
-            // let prop = eval("data.listingRow." + data.selectedColumn.path);
-            // let prop = eval("data.listingRow." + data.selectedColumn[data.starter] + '.name');
             let prop = data.listingRow[data.selectedColumn.path];
             CopyToClipBoard(prop);
-            ToastNotifications.success("Property of " + data.selectedColumn.path + " has been copied");
+            ToastUtils.success({ description: "Property of " + data.selectedColumn.path + " has been copied", title: "Copy " + data.selectedColumn.path });
         }
     }, {
         id: 1,
@@ -43,10 +48,9 @@ export default class DetailPortlet extends Component {
         icon: 'fa-copy',
         subMenu: false,
         onClick: (data) => {
-            // let id = data.listingRow.id;
             let id = data.listingRow[data.starter + '.id'];
             CopyToClipBoard(id);
-            ToastNotifications.success("Id - " + id + " has been copied");
+            ToastUtils.success({ description: "Id - " + id + " has been copied", title: 'Copy Id' });
         }
     }];
 
@@ -55,7 +59,6 @@ export default class DetailPortlet extends Component {
 
     render() {
         const { finalColumns, listingRow, starter } = this.props;
-        console.log(finalColumns);
         return (
             <div className="detail-portlet">
                 <Card>
@@ -73,13 +76,11 @@ export default class DetailPortlet extends Component {
                                             </Col>
                                             <Col>
                                                 <span className="pull-right"> {RowTemplate({ selectedColumn, listingRow })}</span>
-                                                {/* <span className="pull-right">{listingRow[selectedColumn.name]}</span> */}
                                             </Col>
                                         </div>
 
                                     return (
                                         selectedColumn &&
-                                        // selectedColumn && selectedColumn.column_type &&
                                         <Col className="gray-border-bottom padding-bottom-4 padding-top-4" key={key} xs={selectedColumn.split ? '6' : '12'}>
                                             <RightClick key={key} renderTag="div" rowOptions={this.rowOptions} html={html} listingRow={listingRow} selectedColumn={selectedColumn} starter={starter}></RightClick>
                                         </Col>

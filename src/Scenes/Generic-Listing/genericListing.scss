@@ -1,5 +1,8 @@
 @import 'Assets/Global-Shared/theme.scss';
 .generic-listing-container {
+    .noListMessage{
+        padding: 10px;
+    }
     // font-size: 12px;
     // padding: 15px;
     .header {
@@ -7,12 +10,14 @@
         padding: 6px 20px;
     }
     .page-bar {
-        margin: -8px;
-        height: 45px;
+        // margin: -8px;
+        // height: 70px;
+        height: 60px;
         display: flex;
         justify-content: space-between; // width: 95%;
         padding: 4px 8px;
-        border-bottom: 1px solid #000;
+        border-bottom: 1px solid;
+        align-items: center;
         @include themify($themes) {
             background: themed('subHeader');
             border-color: themed('subHeaderBorder');
@@ -27,8 +32,24 @@
         .header-actions {
             display: flex;
             align-items: center;
+            .refresh-button {
+                @include themify($themes) {
+                    &.btn {
+                        border: none;
+                        // background: black!important;
+                        background: themed('refreshButtonBackground')!important;
+                        color: themed('refreshButton')!important;
+                    }
+                }
+            }
             .btn {
                 margin: 0px 4px;
+                &.refresh-button {
+                    @include themify($themes) {
+                        background: themed('refreshButtonBackground');
+                        color: themed('refreshButton');
+                    }
+                }
             }
             .btn-group {
                 margin: 0px 2px;
@@ -41,9 +62,13 @@
             width: 50%;
         }
     }
+    .configure-filter-wrapper {
+        // margin: 4px;
+    }
     .card {
+        border: none;
         @include themify($themes) {
-            background: themed('cardBackground');
+            // background: themed('cardBackground');
         } // width: 95%;
         // border: none !important;
         // padding: 5px; //margin: 8px;
@@ -51,9 +76,34 @@
         .card-body {
             overflow-x: scroll;
             padding: 0px; // Table Begins
+            &.table-wrapper {
+                // padding: 1.25rem 0px
+            }
         }
         @include themify($themes) {
-            margin-top: themed('cardMargin');
+            // margin-top: themed('cardMargin');
         }
+    }
+}
+
+.loadingText h6 {
+    position: absolute;
+    top: 35%;
+    left: 45%;
+    color: rgba(0, 0, 0, .3);
+    font-size: 2em
+}
+.loadingText h6:before {
+    content: attr(data-text);
+    position: absolute;
+    overflow: hidden;
+    max-width: 7em;
+    white-space: nowrap;
+    color: #000;
+    animation: loading .5s ease-in;
+}
+@keyframes loading {
+    0% {
+        max-width: 0;
     }
 }

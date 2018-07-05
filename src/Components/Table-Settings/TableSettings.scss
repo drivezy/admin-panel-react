@@ -1,9 +1,20 @@
+@import 'Assets/Global-Shared/theme.scss';
+
 .table-settings {
-    .btn {
-        padding: 1px 5px;
-        margin: 0px 5px;
+    .settings-button {
+        background: transparent;
+
+        &.btn {
+            padding: 1px 5px;
+            margin: 0px 5px;
+            @include themify($themes) {
+                background: transparent;
+                background: themed('settingsButtonBackground');
+                border-color: themed('settingsButton');
+            }
+        }
     }
-    .settingBtn{
+    .setting-button {
         padding: 4px 8px;
     }
     .modal-header {
@@ -34,7 +45,7 @@
                     margin-bottom: 0px;
                     color: #395167;
                 }
-                .list-group.parent-group {
+                .list-group .parent-group {
                     padding: 10px 15px;
                 }
             }
@@ -82,6 +93,9 @@
             }
         }
         .right {
+            ul{
+                min-height: 45px;
+            }
             max-height: 70vh;
             overflow-y: scroll;
             flex-basis: 40%;
@@ -93,6 +107,11 @@
                     }
                 }
             }
+            .list-group-item{
+                &.active{
+                    background: #5bc263;
+                }
+            }
         }
         .controls {
             display: flex;
@@ -100,6 +119,13 @@
             button {
                 margin: 4px;
             }
+        }
+    }
+    .modal-footer{
+        justify-content: none;
+        .rightButtons{
+            width: 100%;
+            text-align: right;
         }
     }
 }

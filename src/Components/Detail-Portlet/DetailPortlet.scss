@@ -1,5 +1,6 @@
 @import 'Assets/Global-Shared/theme.scss';
 .detail-portlet {
+    margin: 4px;
     .card {
         overflow: hidden;
         @include themify($themes) {
@@ -10,7 +11,7 @@
             padding: 0px;
         }
     }
-    margin: 4px 0px;
+    // margin: 4px 0px;
     .detail-entry {
         padding: 4px 0px;
         display: flex;

@@ -32,13 +32,13 @@ export default class PortletTable extends Component {
 
     headerOptions = [{
         id: 0,
-        name: "Copy Actual Name",
+        name: "Copy Column Name",
         icon: 'fa-copy',
         subMenu: false,
         onClick: (data) => {
             let prop = data.selectedColumn.name;
             CopyToClipBoard(prop);
-            ToastUtils.success({ description: "Actual name " + data.selectedColumn.name + " has been copied", title: 'Actual Name' });
+            ToastUtils.success({ description: "Column name " + data.selectedColumn.name + " has been copied", title: 'Column Name' });
         }
     }];
 
@@ -52,6 +52,7 @@ export default class PortletTable extends Component {
             sortKey: '',
             reverse: true,
             dropdownOpen: {},
+            filterColumn: this.props.filterColumn
         };
     }
 
@@ -73,7 +74,6 @@ export default class PortletTable extends Component {
         var oldresize = window.onresize;
 
         window.onresize = (e) => {
-            // console.log(e);
             var event = window.event || e;
             if (typeof (oldresize) === 'function' && !oldresize.call(window, event)) {
                 return false;
@@ -113,7 +113,6 @@ export default class PortletTable extends Component {
     }
 
     onSort = (sortKey) => {
-        console.log(sortKey);
         const listing = this.state.listing;
 
         function generateSortFn(prop, reverse) {
@@ -184,33 +183,35 @@ export default class PortletTable extends Component {
     };
 
     render() {
-        const { genericData, finalColumns, listing } = this.state;
+        const { genericData, finalColumns, listing, filterColumn } = this.state;
 
         const { history, match, menuDetail, rowTemplate, callback, tableType, rowOptions, source = 'model', parentData } = this.props;
 
 
         let rightClickOptions = [];
 
-        for (let i in genericData.nextActions) {
-            if (genericData.nextActions[i].as_context == 1) {
-                rightClickOptions = rightClickOptions.concat(rowOptions, genericData.nextActions[i]);
+        if (genericData.nextActions.length) {
+            for (let i in genericData.nextActions) {
+                if (genericData.nextActions[i].as_context == 1) {
+                    rightClickOptions = rightClickOptions.concat(rowOptions, genericData.nextActions[i]);
+                }
             }
+        } else {
+            rightClickOptions = rightClickOptions.concat(rowOptions, []);
         }
 
-        console.log(rightClickOptions);
 
         // As soon as rendering is done adjust the width according to action columns
         setTimeout(() => this.adjustWidth());
 
         let renderItem;
-        // console.log(finalColumns);
 
         if (listing.length) {
             renderItem = <div className="table-body">
 
                 {/* Contents Table */}
                 <div className="table-content">
-                    <Table striped className="sortable">
+                    <Table className="sortable">
                         <thead>
                             <tr>
                                 <th>
@@ -230,9 +231,9 @@ export default class PortletTable extends Component {
 
                                             {/* Filter Column */}
                                             {
-                                                tableType == "listing" && selectedColumn && selectedColumn.path && selectedColumn.path.split('.').length < 3 &&
+                                                tableType == "listing" && selectedColumn && selectedColumn.path &&
                                                 <div className="filter-column">
-                                                    <a onClick={e => this.filterColumn(selectedColumn)}>
+                                                    <a onClick={e => filterColumn(selectedColumn)}>
                                                         <i className="fa fa-filter"></i>
                                                     </a>
                                                 </div>
@@ -282,7 +283,7 @@ export default class PortletTable extends Component {
 
 
                                     <tr className="table-row" key={rowKey}>
-                                    
+
                                         <td className="row-key">
                                             {rowKey + 1}
                                         </td>

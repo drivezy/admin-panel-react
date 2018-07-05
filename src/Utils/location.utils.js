@@ -53,18 +53,28 @@ export class Location {
     static getHistoryMethod(method) {
         this.historyFetchMethod = method;
     }
-    
+
     /**
      * used to get and set query strings
      * if obj is empty, works as getter, else as setter
      * @param  {object} obj - object params to be set as query param
      * @param  {boolean} reset=false}={} - if true, overrides existing query else extend previous query
      */
-    static search(obj, {  reset = false } = {}) {
+    static search(obj, { reset = false } = {}) {
         const location = window.location;
+        let hash = window.location.hash.replace('#', '');
         let urlParams = GenerateObjectFromUrlParams(decodeURIComponent(location.search))
 
+        if (hash) {
+            urlParams = urlParams[hash] ? JSON.parse(urlParams[hash]) : {};
+        }
         if (!obj) {
+            hash = window.location.hash.replace('#', '');
+            // if (hash) {
+            //     const params = urlParams[hash] ? JSON.parse(urlParams[hash]) : {};
+            //     console.log(params);
+            //     return params;
+            // }
             return urlParams;
         }
 
@@ -87,7 +97,17 @@ export class Location {
             return;
         }
         if (History) {
-            const queryUrl = SerializeObj(urlParams);
+            let obj = {};
+            // obj = urlParams;
+            if (hash) {
+                obj[hash] = JSON.stringify(urlParams);
+            } else {
+                obj = urlParams;
+            }
+            let queryUrl = SerializeObj(obj);
+            if (hash) {
+                queryUrl = queryUrl + '#' + hash;
+            }
             History.push(queryUrl);
         }
     }

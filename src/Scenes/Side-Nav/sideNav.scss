@@ -10,17 +10,17 @@
     transition: 0.1s;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid;
+    // border-right: 1px solid;
     @include themify($themes) {
         background: themed('sideBackground');
-        border-color: themed('sidebarBorder');
+        border-color: themed('sidenavBorder');
         color: themed('navLinkColor');
     }
     &.collapsed {
         width: 40px;
         .sidebar-menus {
             .menus {
-                margin-top: 8px;
+                // margin-top: 8px;
                 padding: 0px;
                 .menu-item {
                     .menu-label {
@@ -61,9 +61,7 @@
                     font-size: 16px;
                     padding: 10px; // color: #5c7084;
                 }
-                &:hover{
-
-                }
+                &:hover {}
             }
         }
         .sidebar-toggle {}
@@ -71,6 +69,11 @@
     .sidebar-menus {
         display: flex;
         flex-direction: column;
+        height: 100vh;
+        border-right: 1px solid;
+        @include themify($themes){
+            border-color: themed('sidebarBorder')
+        }
         .menus {
             // background: #35485b;
             padding: 8px 10px;
@@ -105,8 +108,8 @@
                         @include themify($themes) {
                             // border-radius: themed('menuLinkBorder');
                             background: themed('hoverColor');
-                            color: themed('linkHover');
-                            border-left: themed('sideBorder');
+                            color: themed('linkHover'); // border-left: themed('sideBorder');
+                            border-right: 1px solid themed('linkHover');
                         }
                     }
                 }
