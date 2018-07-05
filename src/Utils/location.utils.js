@@ -41,8 +41,14 @@ export function SerializeObj(obj) {
 }
 
 export function GetUrlParams(props) {
+    // let urlParams = GenerateObjectFromUrlParams(decodeURIComponent(props.location.search));
+    // let hash = window.location.hash.replace('#', '');
+
+    // if (hash) {
+    //     urlParams = urlParams[hash] ? JSON.parse(urlParams[hash]) : {};
+    // }
     return {
-        queryString: GenerateObjectFromUrlParams(decodeURIComponent(props.location.search)),
+        queryString: Location.search(),
         params: props.match.params
     }
 }

@@ -85,7 +85,7 @@ export default class CustomAction extends Component {
     render() {
         const { actions = [], listingRow = [], genericData = {}, placement = 'as_context', position } = this.props;
         return (
-            <div className="custom-actions">
+            <div className="custom-actions flex">
                 {
                     actions.map((action, key) => {
 
@@ -103,11 +103,11 @@ export default class CustomAction extends Component {
                                     <i className={`fa ${action.image}`}></i>
 
                                     {/* Temporaririly fix to hide the name for row actions */}
-                                    {
+                                    {/* {
                                         ((action.placement_id == 168) || (position == 'header')) && <span className="action-label">
                                             {action.name}
                                         </span>
-                                    }
+                                    } */}
                                 </span>
 
                             // </button>
