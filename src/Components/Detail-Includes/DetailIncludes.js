@@ -30,8 +30,22 @@ export default class DetailIncludes extends Component {
         const tabs = {};
 
         for (let i in this.props.tabs) {
-            tabs[i] = this.props.tabs[i];
+            const tab = this.props.tabs[i];
+            const { uiActions = [] } = tab;
+            const modelAliasRedirect = {
+                // @TODO add model alias rediect method
+                as_header: true,
+                image: 'fa-outdent',
+                parameter: 'menuDef/:id',
+                active: true,
+                name: 'Redirect Model Alias'
+            };
+
+            tab.uiActions.push(modelAliasRedirect);
+
+            tabs[i] = tab;
             tabs[i].index = i;
+
         }
         this.state = {
             tabs,
@@ -163,13 +177,13 @@ export default class DetailIncludes extends Component {
                                                 <TabPane className='relative' key={key} tabId={key}>
                                                     {/* Building the table iterating through the row to display tab content */}
                                                     <div className='table-header'>
-                                                        <div className='btn-group header-actions'>
+                                                        {/* <div className='btn-group header-actions'>
                                                             <CustomAction history={history} source='modelAlias' genericData={tab} actions={tab.nextActions} placement={'as_header'} parentData={parentData} callback={callback} source='modelAlias' />
                                                         </div>
 
                                                         <a className="btn btn-secondary btn-sm" onClick={() => Location.navigate({ url: `/modelAliasDetail/${tab.relationship[tab.starter].id}` })}>
                                                             <i className="fa fa-outdent" uib-tooltip="Redirect to Model Alias detail"></i>
-                                                        </a>
+                                                        </a> */}
                                                         {
                                                             tab.columns && tab.finalColumns ?
                                                                 <TableSettings

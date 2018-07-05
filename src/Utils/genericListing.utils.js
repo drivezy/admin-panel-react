@@ -178,7 +178,7 @@ function PrepareObjectForListing(result, { extraParams }) {
             // @TODO uncomment this line to get selectedColumn
             layout: configuration.layout || {},
             // layout: configuration.preference[configuration.listName + ".list"] ? JSON.parse(configuration.preference[configuration.listName + ".list"]) : null, // formPreference: configuration.preference[configuration.listName + '.form'] ? JSON.parse(configuration.preference[configuration.listName + '.form']) : null,
-            nextActions: configuration.uiActions,
+            nextActions: [...model.actions, ...configuration.uiActions],
             // nextActions: model.actions,
             formPreference,
             url: configuration.url,
