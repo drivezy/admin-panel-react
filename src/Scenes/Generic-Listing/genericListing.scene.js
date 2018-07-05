@@ -349,6 +349,7 @@ export default class GenericListing extends Component {
                                                     callback={this.getListingData}
                                                     menuDetail={menuDetail}
                                                     source={source}
+                                                    filterColumn={this.filterColumn}
                                                 />
                                                 {/* Portlet Table Ends */}
 
