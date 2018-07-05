@@ -49,6 +49,7 @@ export default class ManageReportDetail extends Component {
     render() {
         const { queryListingData = {}, reportingQueryData = {} } = this.state;
         const { history, match } = this.props;
+
         return (
             <div className="manage-report">
                 {
@@ -67,11 +68,13 @@ export default class ManageReportDetail extends Component {
                 }
 
                 {
-                    queryListingData.length &&
-                    <PortletTable tableType="listing"
+                    queryListingData.response &&
+                    <QueryTable tableType="listing"
                         history={history}
                         match={match}
                         genericData={queryListingData}
+                        listing={listing}
+                        finalColumns={listing}
                     />
                 }
             </div>
