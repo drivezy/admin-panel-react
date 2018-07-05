@@ -20,6 +20,8 @@ import UserLicense from './../../Scenes/User-License/userLicense.scene';
 import TicketDetail from './../../Scenes/Ticket-Detail/ticketDetail.scene';
 import RosterTimeline from './../../Scenes/Roster-Timeline/rosterTimeline.scene';
 
+import ManageReportDetail from './../../Scenes/Manage-Report-Detail/manageReportDetail.scene';
+
 import LoadAsyncComponent from './../../Async/async';
 
 import './landing.component.css';
@@ -68,12 +70,12 @@ export default class LandingApp extends Component {
                                     if (Array.isArray(menu.menus)) {
                                         return menu.menus.map((state, index) => {
                                             return (<Route key={state.url} path={`${match.path}${state.url}`} render={props => {
-                                                if (!Array.isArray(this.loadedComponent[parentIndex])) { 
+                                                if (!Array.isArray(this.loadedComponent[parentIndex])) {
                                                     // since in dynamic import, component gets remounted on every setState being happened in this level
                                                     // using this.loadedComponent to prevent from the same
                                                     this.loadedComponent[parentIndex] = [];
-                                                } 
-                                                 if (!loadedComponent[parentIndex][index]) {
+                                                }
+                                                if (!loadedComponent[parentIndex][index]) {
                                                     this.loadedComponent[parentIndex][index] = LoadAsyncComponent(() => import(`./../../Scenes${state.component.path}`));
                                                 }
                                                 const GenericListing = this.loadedComponent[parentIndex][index];
@@ -108,6 +110,7 @@ export default class LandingApp extends Component {
                             <Route exact path='/userLicense/:userId' component={UserLicense} />
                             {/* <Spotlight ref={(elem) => SettingsUtil.registerModal(elem)} /> */}
                             <Route exact path='/ticket/:ticketId' component={TicketDetail} />
+                            <Route exact path='/manageReport/:reportId' component={ManageReportDetail} />
                             <Route exact path='/rosterTimeline' component={RosterTimeline} />
                             <Route exact path='/' component={HomeScene} />
                             {/* <Route exact path='/user/:userId' component={UserDetail} /> */}

@@ -1,0 +1,21 @@
+@import 'Assets/Global-Shared/theme.scss';
+.manage-report {
+    .reporting-query {
+        .reporting-query-header {
+            display: flex;
+            background: #dcdcdc7a;
+            min-height: 45px;
+            height: 45px;
+            border: 1px solid #d6d6d6;
+            margin: 3px;
+            .header-content {
+                margin: 5px;
+                display: -ms-flexbox;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-basis: 100%;
+            }
+        }
+    }
+}
