@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 
 
 import QueryForm from './../../Components/Manage-Report/Components/Query-Form/queryForm.component';
-import PortletTable from './../../Components/Portlet-Table/PortletTable.component';
+import QueryTable from './../../Components/Manage-Report/Components/Query-Table/queryTable.component';
+
+
+import { CreateFinalColumnsForQueryListing } from './../../Utils/query.utils';
 
 import { Get, Post } from './../../Utils/http.utils';
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
@@ -21,7 +24,7 @@ export default class ManageReportDetail extends Component {
 
     componentDidMount() {
         this.getReportingQuery();
-        this.getDataForListing();
+        
     }
 
     getReportingQuery = async () => {
@@ -32,6 +35,7 @@ export default class ManageReportDetail extends Component {
         if (result.success) {
             const reportingQueryData = result.response;
             this.setState({ reportingQueryData });
+            this.getDataForListing();
         }
     }
 
@@ -42,6 +46,8 @@ export default class ManageReportDetail extends Component {
         const result = await Post({ url, options, body: { month: "2018-07", query_name: "invoice_details" } });
         if (result.success) {
             const queryListingData = result;
+            GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser });
+            queryListingData.finalColumns = CreateFinalColumnsForQueryListing(queryListingData.columns, queryListingData.relationship);
             this.setState({ queryListingData });
         }
     }
@@ -73,8 +79,8 @@ export default class ManageReportDetail extends Component {
                         history={history}
                         match={match}
                         genericData={queryListingData}
-                        listing={listing}
-                        finalColumns={listing}
+                        listing={queryListingData.finalColumns}
+                        finalColumns={queryListingData.finalColumns}
                     />
                 }
             </div>
