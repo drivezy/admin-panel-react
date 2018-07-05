@@ -70,11 +70,11 @@ export class Location {
         }
         if (!obj) {
             hash = window.location.hash.replace('#', '');
-            if (hash) {
-                const params = urlParams[hash] ? JSON.parse(urlParams[hash]) : {};
-                console.log(params);
-                return params;
-            }
+            // if (hash) {
+            //     const params = urlParams[hash] ? JSON.parse(urlParams[hash]) : {};
+            //     console.log(params);
+            //     return params;
+            // }
             return urlParams;
         }
 
