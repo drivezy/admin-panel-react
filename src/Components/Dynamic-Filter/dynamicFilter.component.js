@@ -18,7 +18,7 @@ export default class DynamicFilter extends Component {
             urlParams: Location.search(),
             activeLayout: {},
             layouts: props.layouts,
-            sqlArray: []
+            sqlArray: [props.restrictedQuery]
         };
     }
 
@@ -53,10 +53,14 @@ export default class DynamicFilter extends Component {
      * @param  {object} urlParams
      */
     fetchSql = async (urlParams) => {
-        const { dictionary } = this.props;
-        if (urlParams.query) {
-            // this.createQuery(urlParams.query);
-            const result = await CreateQuery({ rawQuery: urlParams.query, dictionary, finalSql: this.finalSql });
+        const { dictionary, restrictedQuery } = this.props;
+
+        if (urlParams.query || restrictedQuery) {
+            let query = urlParams.query || '';
+            // query += urlParams.query && restrictedQuery ? ' and ' : '';
+            // query += restrictedQuery || '';
+
+            const result = await CreateQuery({ rawQuery: query, dictionary, finalSql: this.finalSql });
         } else {
             this.setState({ sqlArray: [] });
         }
@@ -88,10 +92,14 @@ export default class DynamicFilter extends Component {
     }
 
     finalSql = ({ sql, key, parentKey, arr, sqlArray }) => {
+        const { restrictedQuery } = this.props;
         arr[parentKey] = arr[parentKey] ? arr[parentKey] : [];
         arr[parentKey][key] = sql;
         sqlArray[parentKey] = arr[parentKey];
         sqlArray[parentKey] = sqlArray[parentKey].join(" OR ");
+        if (restrictedQuery) {
+            sqlArray = [...sqlArray, ...[restrictedQuery]];
+        }
         this.setState({ sqlArray });
     }
 
@@ -184,7 +192,7 @@ export default class DynamicFilter extends Component {
             urlParams.layout = result.response.id;
             urlParams.query = null;
             Location.search(urlParams, { props: { match, history } });
-            ToastNotifications.success("Filter updated");
+            ToastNotifications.success({ message: "Filter updated" });
         }
     }
 
@@ -278,8 +286,9 @@ export default class DynamicFilter extends Component {
     }
 
     render() {
-        const { activeLayout, sqlArray = [] } = this.state;
+        let { activeLayout, sqlArray = [] } = this.state;
         const { currentUser = {}, toggleAdvancedFilter } = this.props;
+
         return (
             <div className="current-filter-view flex">
                 <div

@@ -264,7 +264,6 @@ Non critical css goes here
 */
 
 
-
 .margin-top-8 {
     margin-top: 8px;
 }
@@ -273,21 +272,22 @@ Non critical css goes here
     border: 1px solid #dadfe3;
     @include themify($themes){
         border: themed('primaryBorder');
+        background-color: themed('themePrimaryColor');
+        color: themed('secondaryDark');
     }
-    color: #35485a;
-    background-color: #fff;
     cursor: pointer;
     vertical-align: middle;
     -webkit-font-smoothing: antialiased;
     transition: .1s ease-in;
-    color: #183247;
     padding: 5px 10px;
     text-align: center;
     box-shadow: none !important;
     &:hover {
         background: #dadfe3;
         border: 1px solid #dadfe3;
-        color: #35485a;
+        @include themify($themes){
+            color: themed('secondaryDark');
+        }
     }
 }
 

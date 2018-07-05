@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { SetPreference } from './../../Utils/preference.utils';
 
 import { IsObjectHaveKeys } from './../../Utils/common.utils';
+import { SubscribeToEvent, UnsubscribeEvent } from './../../Utils/stateManager.utils';
 import { changeArrayPosition } from './../../Utils/js.utils';
 
 import { FormPreferenceEndPoint } from './../../Constants/api.constants';
@@ -13,6 +14,7 @@ import { FormPreferenceEndPoint } from './../../Constants/api.constants';
 import { Collapse, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import FormColumnSetting from './../../Components/Form-Settings/Components/Form-Column-Setting/formColumnSetting.component';
+
 
 export default class FormSettings extends Component {
 
@@ -28,11 +30,24 @@ export default class FormSettings extends Component {
             columns: this.props.columns,
             list: {},
             activeColumn: {},
+            formConfigurator: '',
             module: props.module
         }
     }
 
     componentDidMount() {
+        SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
+    }
+
+    userDataFetched = (data) => {
+        let formConfigurator = data.hasRole['form-configurator'];
+        // for (var i in data.access_object.roleIdentifiers) {
+        //     if (data.access_object.roleIdentifiers[i] == 'form-configurator') {
+        //         let formConfigurator = data.access_object.roleIdentifiers[i];
+        //         this.setState({ formConfigurator });
+        //     }
+        // }
+        this.setState({ formConfigurator });
     }
 
     unsafe_componentwillreceiveprops(nextProps) {
@@ -119,16 +134,12 @@ export default class FormSettings extends Component {
     };
 
 
-    applyChanges = async () => {
+    applyChanges = async (overRide = false) => {
 
         const { userId, modelId, listName, source } = this.props;
         let { formLayout } = this.props;
         const { tempSelectedColumns } = this.state;
-        const result = await SetPreference({ userId, source, menuId: modelId, name: listName, selectedColumns: tempSelectedColumns, layout: formLayout, url: FormPreferenceEndPoint });
-        // const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
-
-        // result.success ? this.setState({ modal: !this.state.modal }) : null;
-        // this.props.onSubmit(this.state.tempSelectedColumns);
+        const result = await SetPreference({ userId, source, menuId: modelId, name: listName, selectedColumns: tempSelectedColumns, layout: formLayout, url: FormPreferenceEndPoint, override_all: overRide ? 1 : 0 });
         if (result.success) {
             this.setState({ modal: !this.state.modal });
             if (IsObjectHaveKeys(formLayout)) {
@@ -140,16 +151,11 @@ export default class FormSettings extends Component {
             }
             this.props.onSubmit(formLayout);
         }
-
-
-        // const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
-        // result.success ? this.setState({ modal: !this.state.modal }) : null;
-        // this.props.onSubmit(this.state.tempSelectedColumns);
     }
 
     modalWrapper() {
         // const { columns, tempSelectedColumns, selectedColumns, activeColumn, module } = this.state;
-        const { columns, tempSelectedColumns, activeColumn, module } = this.state;
+        const { columns, tempSelectedColumns, activeColumn, module, formConfigurator } = this.state;
 
         const selectedIds = [];
 
@@ -275,6 +281,10 @@ export default class FormSettings extends Component {
 
                 </ModalBody >
                 <ModalFooter>
+                    {formConfigurator ?
+                        <Button color="primary" onClick={() => this.applyChanges(true)}>Apply For All</Button>
+                        : null
+                    }
                     <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
                     <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
                 </ModalFooter>

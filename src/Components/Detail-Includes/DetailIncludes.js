@@ -27,8 +27,14 @@ let shouldComponentWillReceivePropsRun = true;
 export default class DetailIncludes extends Component {
     constructor(props) {
         super(props);
+        const tabs = {};
+
+        for (let i in this.props.tabs) {
+            tabs[i] = this.props.tabs[i];
+            tabs[i].index = i;
+        }
         this.state = {
-            tabs: this.props.tabs,
+            tabs,
             tabContent: [],
             activeTab: 0,
         }

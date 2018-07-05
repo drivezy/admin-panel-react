@@ -24,6 +24,16 @@ export default class DetailPortlet extends Component {
 
     rowOptions = [{
         id: 0,
+        name: "Copy Column Name",
+        icon: 'fa-copy',
+        subMenu: false,
+        onClick: (data) => {
+            let prop = data.selectedColumn.name;
+            CopyToClipBoard(prop);
+            ToastUtils.success({ description: "Column name " + data.selectedColumn.name + " has been copied", title: 'Column Name' });
+        }
+    }, {
+        id: 0,
         name: "Copy Property",
         icon: 'fa-copy',
         subMenu: false,
@@ -49,7 +59,6 @@ export default class DetailPortlet extends Component {
 
     render() {
         const { finalColumns, listingRow, starter } = this.props;
-        console.log(finalColumns);
         return (
             <div className="detail-portlet">
                 <Card>
