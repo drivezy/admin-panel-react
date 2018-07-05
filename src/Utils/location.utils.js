@@ -65,13 +65,16 @@ export class Location {
         let hash = window.location.hash.replace('#', '');
         let urlParams = GenerateObjectFromUrlParams(decodeURIComponent(location.search))
 
+        if (hash) {
+            urlParams = urlParams[hash] ? JSON.parse(urlParams[hash]) : {};
+        }
         if (!obj) {
             hash = window.location.hash.replace('#', '');
-            if (hash) {
-                const params = urlParams[hash] ? JSON.parse(urlParams[hash]) : {};
-                console.log(params);
-                return params;
-            }
+            // if (hash) {
+            //     const params = urlParams[hash] ? JSON.parse(urlParams[hash]) : {};
+            //     console.log(params);
+            //     return params;
+            // }
             return urlParams;
         }
 
