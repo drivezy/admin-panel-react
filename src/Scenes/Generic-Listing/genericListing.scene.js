@@ -7,7 +7,7 @@ import {
 } from 'reactstrap';
 
 import DynamicFilter from './../../Components/Dynamic-Filter/dynamicFilter.component';
-import ConfigureDynamicFilter from './../../Components/Dynamic-Filter/configureFilter.component';
+import ConfigureDynamicFilter from './../../Components/Configure-Filter/configureFilter.component';
 import ListingPagination from './../../Components/Listing-Pagination/ListingPagination';
 import TableSettings from './../../Components/Table-Settings/TableSettings.component';
 import PortletTable from './../../Components/Portlet-Table/PortletTable.component';
@@ -306,7 +306,7 @@ export default class GenericListing extends Component {
                                     :
                                     null
                             }
-                            <Button color="primary" size="sm" onClick={() => { this.refreshPage() }}>
+                            <Button className="refresh-button" size="sm" onClick={() => { this.refreshPage() }}>
                                 <i className="fa fa-refresh"></i>
                             </Button>
                             {
@@ -317,7 +317,7 @@ export default class GenericListing extends Component {
                             }
                         </div>
                     </div>
-                    <div>
+                    <div className="configure-filter-wrapper">
                         {
                             filterContent &&
                             <ConfigureDynamicFilter
