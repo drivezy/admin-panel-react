@@ -84,7 +84,7 @@ export default class ActiveModule extends Component {
                     </div>
                 </div>
                 <div className="search-button">
-                    <button className="btn btn-default" onClick={() => this.toggleMenus()}>
+                    <button className="btn btn-danger" onClick={() => this.toggleMenus()}>
                         <i className="fa fa-bars" aria-hidden="true"></i> {menuName}
                     </button>
                 </div>

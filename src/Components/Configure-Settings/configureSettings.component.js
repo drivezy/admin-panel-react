@@ -168,7 +168,7 @@ export default class ConfugreSettings extends Component {
                 </ModalBody>
                 <ModalFooter>
                     <div>
-                        <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+                        <Button color="secondary" onClick={this.closeModal}>Cancel</Button>
                         <Button color="primary" onClick={() => this.applyChanges()}>Apply Changes</Button>
                     </div>
                 </ModalFooter>
