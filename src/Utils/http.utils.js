@@ -211,6 +211,7 @@ function ApiCall({ url, method, headers, body, resolve = defaultResolve, reject 
             return resolve(response, hideMessage, hideLoader, { url, body, persist, callback, extraParams });
         })
         .catch((error) => {
+            console.error(error);
             return reject(error, hideMessage, hideLoader, { url, body, persist, callback, extraParams });
         });
 }

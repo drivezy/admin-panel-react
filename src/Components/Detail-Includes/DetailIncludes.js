@@ -1,21 +1,13 @@
 import React, { Component } from 'react';
 import {
-    Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Button,
-    Container,
-    Row, Col,
-    TabContent, TabPane, Nav, NavItem, NavLink, Table
+    Card, CardBody,
+    TabContent, TabPane, Nav, NavItem, NavLink
 } from 'reactstrap';
 
-import CustomAction from './../Custom-Action/CustomAction.component';
-import PortletTable from './../../Components/Portlet-Table/PortletTable.component';
 import TableSettings from './../../Components/Table-Settings/TableSettings.component';
 import GenericListing from './../../Scenes/Generic-Listing/genericListing.scene';
 
-import { Location } from './../../Utils/location.utils';
-import { CreateInclusions, GetColumnsForListing, CreateFinalColumns, RegisterMethod } from './../../Utils/generic.utils';
-import { GetColumnsForDetail } from './../../Utils/genericDetail.utils';
-import { GetListingRecord } from './../../Utils/genericListing.utils';
+import { CreateFinalColumns } from './../../Utils/generic.utils';
 
 import { CopyToClipBoard } from './../../Utils/common.utils';
 import ToastNotifications from './../../Utils/toast.utils';
@@ -27,31 +19,15 @@ let shouldComponentWillReceivePropsRun = true;
 export default class DetailIncludes extends Component {
     constructor(props) {
         super(props);
-        const tabs = {};
-
-        for (let i in this.props.tabs) {
-            const tab = this.props.tabs[i];
-            const { uiActions = [] } = tab;
-            const modelAliasRedirect = {
-                // @TODO add model alias rediect method
-                as_header: true,
-                image: 'fa-outdent',
-                parameter: 'menuDef/:id',
-                active: true,
-                name: 'Redirect Model Alias'
-            };
-
-            tab.uiActions.push(modelAliasRedirect);
-
-            tabs[i] = tab;
-            tabs[i].index = i;
-
-        }
+        const tabs = this.getProcessedTab(props.tabs);
 
         const hash = window.location.hash.replace('#', '');
         const includesArr = Object.keys(tabs);
         let activeTab = includesArr.indexOf(hash); // match if default open tab is there on the url
         activeTab = activeTab == -1 ? 0 : activeTab;
+        if (!hash) {
+            window.location.hash = includesArr[0]
+        }
 
         this.state = {
             tabs,
@@ -69,10 +45,33 @@ export default class DetailIncludes extends Component {
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (shouldComponentWillReceivePropsRun) { // when setting hash to the url, prevents componentWillReceiveProps from executing again
             // this.setState({ tabs: nextProps.tabs });
-            this.state.tabs = nextProps.tabs;
+            this.state.tabs = this.getProcessedTab(nextProps.tabs);
             this.buildTabData(nextProps);
         }
         shouldComponentWillReceivePropsRun = true;
+    }
+
+    getProcessedTab(tabsArray) {
+        const tabs = {};
+        for (let i in tabsArray) {
+            const tab = tabsArray[i];
+            const { uiActions = [] } = tab;
+            const modelAliasRedirect = {
+                // @TODO add model alias rediect method
+                as_header: true,
+                image: 'fa-outdent',
+                parameter: 'menuDef/:id',
+                active: true,
+                name: 'Redirect Model Alias'
+            };
+
+            tab.uiActions.push(modelAliasRedirect);
+
+            tabs[i] = tab;
+            tabs[i].index = i;
+        }
+
+        return tabs;
     }
 
     /**
@@ -147,7 +146,7 @@ export default class DetailIncludes extends Component {
         tabContent[activeTab].finalColumns = CreateFinalColumns(tabContent[activeTab].columns, layout.column_definition, tabContent[activeTab].relationship);
         this.setState({ tabContent });
     }
-    
+
     /**
      * Saves generic data of tab to avoid extra call
      * @param  {} genericData
