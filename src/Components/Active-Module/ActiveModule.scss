@@ -153,10 +153,17 @@
         // align-items: center;
         button.btn {
             outline: none;
-            padding: 6px 10px; // color: #183247;
+            padding: 6px 8px; // color: #183247;
             border: none;
+            border-radius: 2px;
             &:hover {
                 background-color: #ebedf0;
+            }
+            &.btn-default {
+                @include themify($themes) {
+                    background: themed('defaultThemeDark');
+                    // color: themed('whiteColor');
+                }
             }
         }
         &.collapsed {
