@@ -47,16 +47,24 @@ export default class DetailIncludes extends Component {
             tabs[i].index = i;
 
         }
+
+        const hash = window.location.hash.replace('#', '');
+        const includesArr = Object.keys(tabs);
+        let activeTab = includesArr.indexOf(hash); // match if default open tab is there on the url
+        activeTab = activeTab == -1 ? 0 : activeTab;
+
         this.state = {
             tabs,
             tabContent: [],
-            activeTab: 0,
+            activeTab: activeTab,
+            tabsGenericData: {}
         }
     }
 
     componentDidMount() {
         this.buildTabData(this.props); // iterate through tabs and fetch data
     }
+
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (shouldComponentWillReceivePropsRun) { // when setting hash to the url, prevents componentWillReceiveProps from executing again
@@ -139,9 +147,20 @@ export default class DetailIncludes extends Component {
         tabContent[activeTab].finalColumns = CreateFinalColumns(tabContent[activeTab].columns, layout.column_definition, tabContent[activeTab].relationship);
         this.setState({ tabContent });
     }
+    
+    /**
+     * Saves generic data of tab to avoid extra call
+     * @param  {} genericData
+     * @param  {} index
+     */
+    storeTabGenericData = (genericData, index) => {
+        const { tabsGenericData } = this.state;
+        tabsGenericData[index] = genericData;
+        this.state.tabsGenericData = tabsGenericData;
+    }
 
     render() {
-        const { tabs, tabContent, activeTab } = this.state;
+        const { tabs, tabContent, activeTab, tabsGenericData } = this.state;
         const { history = {}, callback, currentUser, location, match, parentData } = this.props;
         const arr = [];
         const tabsArr = Object.values(tabs);
@@ -215,6 +234,9 @@ export default class DetailIncludes extends Component {
                                                         source='modelAlias'
                                                         location={location}
                                                         match={match}
+                                                        genericData={tabsGenericData[key]}
+                                                        propageGenericDataToParent={this.storeTabGenericData}
+                                                        index={key}
                                                     />
                                                 </TabPane>
                                             )
