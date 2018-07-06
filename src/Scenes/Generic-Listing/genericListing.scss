@@ -16,11 +16,11 @@
         display: flex;
         justify-content: space-between; // width: 95%;
         padding: 4px 8px;
-        border-bottom: 1px solid;
+        //border-bottom: 1px solid;
         align-items: center;
         @include themify($themes) {
-            background: themed('subHeader');
-            border-color: themed('subHeaderBorder');
+            background: themed('backgroundLight');
+            border-color: themed('secondaryLight');
         }
         .search-bar {
             display: flex;
@@ -37,7 +37,7 @@
                     &.btn {
                         border: none;
                         // background: black!important;
-                        background: themed('refreshButtonBackground')!important;
+                        background: themed('secondaryDark')!important;
                         color: themed('refreshButton')!important;
                     }
                 }

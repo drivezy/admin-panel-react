@@ -1,3 +1,4 @@
+@import 'Assets/Global-Shared/theme.scss';
 .listing-search-container {
     .listing-search-tool {
         display: flex;
@@ -13,7 +14,9 @@
             .input-select {
                 height: 36px;
                 font-size: 12px;
-                background-color: #ffffd9;
+                @include themify($themes) {
+                    background: themed('secondaryLight');
+                }
             }
         }
     }

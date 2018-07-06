@@ -1,7 +1,18 @@
+@import 'Assets/Global-Shared/theme.scss';
+
 .modal-header {
     border-bottom: none;
     padding: 15px 30px;
     color: #1b242ec7;
+    @include themify($themes){
+        background: themed('secondaryDark');
+        color: themed('secondaryLight');
+    }
+    .close{
+        @include themify($themes){
+            color: themed('secondaryLight');
+        }
+    }
 }
 
 .modal-actions {

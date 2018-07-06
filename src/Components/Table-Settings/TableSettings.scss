@@ -2,21 +2,10 @@
 
 .table-settings {
     .settings-button {
-        background: transparent;
-
-        &.btn {
-            padding: 1px 5px;
-            margin: 0px 5px;
-            @include themify($themes) {
-                background: transparent;
-                background: themed('settingsButtonBackground');
-                border-color: themed('settingsButton');
-            }
-        }
+        background: #555;
+        border: none;
     }
-    .setting-button {
-        padding: 4px 8px;
-    }
+    
     .modal-header {
         padding: 10px 20px;
     }
