@@ -43,6 +43,15 @@ export function StoreEvent({ eventName, data, objParams, isMemoryStore }) {
     });
 }
 
+export function DeleteEvent({ eventName, isMemoryStore }) {
+    if (!isMemoryStore) {
+        delete Store[eventName];
+    } else {
+        delete MemoryStore[eventName];
+        SetItem('memoryStore', MemoryStore);
+    }
+}
+
 export function SubscribeToEvent({ eventName, callback, extraParams, objParams, isMemoryStore }) {
     new Promise(resolve => {
         const events = (!isMemoryStore ? SubscibedEvent[eventName] : SubscribedStoreEvent[eventName]) || [];
