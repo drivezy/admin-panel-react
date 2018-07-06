@@ -3,7 +3,7 @@ import { IsUndefinedOrNull } from './../Utils/common.utils';
 
 
 
-export function getColumnsForListing(params, excludeStarter) {
+export function GetColumnsForListing(params, excludeStarter) {
     var columns = [];
     var selectedColumns = {};
     var includes = [];
@@ -36,7 +36,7 @@ export function getColumnsForListing(params, excludeStarter) {
 
             var relationIndex = columns[i][j]["parent"];
 
-            if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex)&& relationship[relationIndex].hasOwnProperty('related_model')) {
+            if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && relationship[relationIndex].hasOwnProperty('related_model')) {
                 columns[i][j].reference_route = relationship[relationIndex].related_model.state_name;
                 columns[i][j].parentColumn = relationship[relationIndex].related_column ? relationship[relationIndex].related_column.column_name : null;
             }
@@ -49,6 +49,7 @@ export function getColumnsForListing(params, excludeStarter) {
 };
 
 
+
 /**
  * returns final list of selected columns to be shown on each car for each row
  * Takes columns list being prepared by 'GetColumnsForListing' method, preference list and relationship
@@ -57,7 +58,7 @@ export function getColumnsForListing(params, excludeStarter) {
  * @param  {object} selectedColumns
  * @param  {object} relationship
  */
-export function CreateFinalColumnsForQueryListing(columns, selectedColumns, relationship) {
+export function CreateFinalObject(columns, selectedColumns, relationship) {
     const finalColumnDefinition = [];
     let splitEnabled = false;
 

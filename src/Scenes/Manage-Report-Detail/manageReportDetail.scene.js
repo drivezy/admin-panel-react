@@ -5,26 +5,34 @@ import QueryForm from './../../Components/Manage-Report/Components/Query-Form/qu
 import QueryTable from './../../Components/Manage-Report/Components/Query-Table/queryTable.component';
 
 
-import { CreateFinalColumnsForQueryListing } from './../../Utils/query.utils';
+import { GetColumnsForListing, CreateFinalObject } from './../../Utils/query.utils';
 
 import { Get, Post } from './../../Utils/http.utils';
+import { GetPreferences } from './../../Utils/preference.utils';
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
 
 import './manageReportDetail.css';
+
 
 export default class ManageReportDetail extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            reportingQueryData: {},
-            queryListingData: {}
+            queryParamsData: {},
+            queryListing: {},
+            preference: {},
+            stats: {},
+            currentPage: 1,
+            params: {},
+            columns: [],
+            finalColumns: []
         };
     }
 
     componentDidMount() {
         this.getReportingQuery();
-        
+
     }
 
     getReportingQuery = async () => {
@@ -33,56 +41,91 @@ export default class ManageReportDetail extends Component {
         const result = await Get({ url });
 
         if (result.success) {
-            const reportingQueryData = result.response;
-            this.setState({ reportingQueryData });
+            const queryParamsData = result.response;
+            let prefName = queryParamsData.short_name + ".list";
+
+            const preference = await GetPreferences(prefName);
+            console.log(preference);
+
+            this.setState({ queryParamsData, preference });
+
             this.getDataForListing();
+
         }
     }
 
 
     getDataForListing = async () => {
+        const { queryParamsData, preference, params, finalColumns, columns } = this.state;
         let options = GetDefaultOptions;
         const url = "getReportData";
-        const result = await Post({ url, options, body: { month: "2018-07", query_name: "invoice_details" } });
+        const result = await Post({ url, options, body: { month: "2016-07", query_name: "invoice_details" } });
         if (result.success) {
-            const queryListingData = result;
-            GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser });
-            queryListingData.finalColumns = CreateFinalColumnsForQueryListing(queryListingData.columns, queryListingData.relationship);
-            this.setState({ queryListingData });
+            const queryListing = result;
+            this.setState({ queryListing });
+
+
+            let stats = queryListing.stats ? queryListing.stats : stats;
+            params.dictionary = queryListing.dictionary ? queryListing.dictionary : params.dictionary;
+            params.includes = "";
+            params.starter = queryParamsData.short_name;
+
+            let currentPage = params.page;
+            const columns = GetColumnsForListing(params);
+
+            if (preference) {
+                const finalColumns = CreateFinalObject(columns, preference);
+            }
+
+            this.setState({ stats, currentPage, params, columns, finalColumns });
+
         }
     }
 
     render() {
-        const { queryListingData = {}, reportingQueryData = {} } = this.state;
+        const { queryListing = {}, queryParamsData = {}, stats, currentPage, preference, params, columns, finalColumns } = this.state;
         const { history, match } = this.props;
+
+        let resultData = {
+            columns: columns,
+            listing: queryListing,
+            selectedColumns: queryParamsData.short_name + ".list",
+            listName: queryParamsData.short_name + ".list",
+            pageName: queryParamsData.name,
+            stats: stats,
+            currentPage: currentPage,
+            // dictionary: params.dictionary[params.starter],
+            restrictColumn: ""
+        };
 
         return (
             <div className="manage-report">
                 {
-                    reportingQueryData.id &&
+                    queryParamsData.id &&
                     <div className="reporting-query">
                         <div className="reporting-query-header">
                             <div className="header-content">
-                                <h6>{reportingQueryData.name}</h6>
+                                <h6>{queryParamsData.name}</h6>
                             </div>
                         </div>
                     </div>
                 }
                 {
-                    reportingQueryData.parameters &&
-                    <QueryForm payload={reportingQueryData.parameters} />
+                    queryParamsData.parameters &&
+                    <QueryForm payload={queryParamsData.parameters} />
                 }
 
-                {
-                    queryListingData.response &&
-                    <QueryTable tableType="listing"
+                {/* {
+                    queryListing.response &&
+                    <QueryTable
                         history={history}
                         match={match}
-                        genericData={queryListingData}
-                        listing={queryListingData.finalColumns}
-                        finalColumns={queryListingData.finalColumns}
+                        queryData={queryParamsData}
+                        preference={preference}
+                        finalColumns={finalColumns}
+                        queryTableObj={resultData}
                     />
-                }
+                } */}
             </div>
         )
     }
