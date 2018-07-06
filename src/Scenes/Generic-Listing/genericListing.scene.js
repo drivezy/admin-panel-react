@@ -25,7 +25,7 @@ import { GetDefaultOptions } from './../../Utils/genericListing.utils';
 import { GetUrlParams, Location } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
 import { GetListingRecord } from './../../Utils/genericListing.utils';
-import { SubscribeToEvent, UnsubscribeEvent, StoreEvent } from './../../Utils/stateManager.utils';
+import { SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent } from './../../Utils/stateManager.utils';
 
 export default class GenericListing extends Component {
     filterContent = {};
@@ -37,7 +37,7 @@ export default class GenericListing extends Component {
             ...GetUrlParams(this.props), // params, queryString
             menuDetail: {},
             localSearch: {},
-            genericData: {},
+            genericData: this.props.genericData || {},
             filterContent: null,
             isCollapsed: true,
             source: this.props.source || 'menu',
@@ -58,14 +58,20 @@ export default class GenericListing extends Component {
 
     componentWillUnmount() {
         this.state.isCollapsed = false;
+        DeleteEvent({ eventName: 'ToggleAdvancedFilter' });
         UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
 
     userDataArrived = (user) => {
-        const { menuDetail } = this.props;
+        const { menuDetail, genericData } = this.props;
         this.state.currentUser = user;
 
-        if (menuDetail) {
+        if (genericData) {
+            this.state.filterContent = genericData.filterContent;
+            this.state.menuDetail = menuDetail;
+            this.state.loading = false;
+            return;
+        } else if (menuDetail) {
             this.state.menuDetail = menuDetail;
             // this.setState({ menuDetail });
             this.getListingData();
@@ -97,8 +103,15 @@ export default class GenericListing extends Component {
     }
 
     dataFetched = ({ genericData, filterContent }) => {
+        const { propageGenericDataToParent, index } = this.props;
+
         this.setState({ genericData, filterContent, loading: false });
         if (genericData) {
+
+            if (typeof propageGenericDataToParent == 'function') {
+                genericData.filterContent = filterContent;
+                propageGenericDataToParent(genericData, index);
+            }
             StoreEvent({ eventName: 'rightClickData', data: { menuData: genericData } });
         }
     }
@@ -354,6 +367,7 @@ export default class GenericListing extends Component {
                                                     callback={this.getListingData}
                                                     menuDetail={menuDetail}
                                                     source={source}
+                                                    filterColumn={this.filterColumn}
                                                 />
                                                 {/* Portlet Table Ends */}
 

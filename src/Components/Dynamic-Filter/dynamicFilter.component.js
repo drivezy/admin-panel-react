@@ -18,7 +18,9 @@ export default class DynamicFilter extends Component {
             urlParams: Location.search(),
             activeLayout: {},
             layouts: props.layouts,
-            sqlArray: [props.restrictedQuery]
+            attachedSqlQueries: [props.restrictedQuery],
+            sqlArray: []
+            // sqlArray: [props.restrictedQuery]
         };
     }
 
@@ -97,9 +99,9 @@ export default class DynamicFilter extends Component {
         arr[parentKey][key] = sql;
         sqlArray[parentKey] = arr[parentKey];
         sqlArray[parentKey] = sqlArray[parentKey].join(" OR ");
-        if (restrictedQuery) {
-            sqlArray = [...sqlArray, ...[restrictedQuery]];
-        }
+        // if (restrictedQuery) {
+        //     sqlArray = [...sqlArray, ...[restrictedQuery]];
+        // }
         this.setState({ sqlArray });
     }
 
@@ -286,7 +288,7 @@ export default class DynamicFilter extends Component {
     }
 
     render() {
-        let { activeLayout, sqlArray = [] } = this.state;
+        let { activeLayout, sqlArray = [], attachedSqlQueries } = this.state;
         const { currentUser = {}, toggleAdvancedFilter } = this.props;
 
         return (
@@ -329,6 +331,20 @@ export default class DynamicFilter extends Component {
                                         </p>
                                     </li>
                                 )
+                            })
+                        }
+
+                        {
+                            attachedSqlQueries.map((query, key) => {
+                                if (query) {
+                                    return (
+                                        <li key={key} className="form-badge list-group-item">
+                                            <p className="filter-name">
+                                                {query}
+                                            </p>
+                                        </li>
+                                    )
+                                }
                             })
                         }
 

@@ -41,8 +41,14 @@ export function SerializeObj(obj) {
 }
 
 export function GetUrlParams(props) {
+    // let urlParams = GenerateObjectFromUrlParams(decodeURIComponent(props.location.search));
+    // let hash = window.location.hash.replace('#', '');
+
+    // if (hash) {
+    //     urlParams = urlParams[hash] ? JSON.parse(urlParams[hash]) : {};
+    // }
     return {
-        queryString: GenerateObjectFromUrlParams(decodeURIComponent(props.location.search)),
+        queryString: Location.search(),
         params: props.match.params
     }
 }
@@ -65,13 +71,16 @@ export class Location {
         let hash = window.location.hash.replace('#', '');
         let urlParams = GenerateObjectFromUrlParams(decodeURIComponent(location.search))
 
+        if (hash) {
+            urlParams = urlParams[hash] ? JSON.parse(urlParams[hash]) : {};
+        }
         if (!obj) {
             hash = window.location.hash.replace('#', '');
-            if (hash) {
-                const params = urlParams[hash] ? JSON.parse(urlParams[hash]) : {};
-                console.log(params);
-                return params;
-            }
+            // if (hash) {
+            //     const params = urlParams[hash] ? JSON.parse(urlParams[hash]) : {};
+            //     console.log(params);
+            //     return params;
+            // }
             return urlParams;
         }
 

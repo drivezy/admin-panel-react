@@ -30,19 +30,41 @@ export default class DetailIncludes extends Component {
         const tabs = {};
 
         for (let i in this.props.tabs) {
-            tabs[i] = this.props.tabs[i];
+            const tab = this.props.tabs[i];
+            const { uiActions = [] } = tab;
+            const modelAliasRedirect = {
+                // @TODO add model alias rediect method
+                as_header: true,
+                image: 'fa-outdent',
+                parameter: 'menuDef/:id',
+                active: true,
+                name: 'Redirect Model Alias'
+            };
+
+            tab.uiActions.push(modelAliasRedirect);
+
+            tabs[i] = tab;
             tabs[i].index = i;
+
         }
+
+        const hash = window.location.hash.replace('#', '');
+        const includesArr = Object.keys(tabs);
+        let activeTab = includesArr.indexOf(hash); // match if default open tab is there on the url
+        activeTab = activeTab == -1 ? 0 : activeTab;
+
         this.state = {
             tabs,
             tabContent: [],
-            activeTab: 0,
+            activeTab: activeTab,
+            tabsGenericData: {}
         }
     }
 
     componentDidMount() {
         this.buildTabData(this.props); // iterate through tabs and fetch data
     }
+
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (shouldComponentWillReceivePropsRun) { // when setting hash to the url, prevents componentWillReceiveProps from executing again
@@ -125,9 +147,20 @@ export default class DetailIncludes extends Component {
         tabContent[activeTab].finalColumns = CreateFinalColumns(tabContent[activeTab].columns, layout.column_definition, tabContent[activeTab].relationship);
         this.setState({ tabContent });
     }
+    
+    /**
+     * Saves generic data of tab to avoid extra call
+     * @param  {} genericData
+     * @param  {} index
+     */
+    storeTabGenericData = (genericData, index) => {
+        const { tabsGenericData } = this.state;
+        tabsGenericData[index] = genericData;
+        this.state.tabsGenericData = tabsGenericData;
+    }
 
     render() {
-        const { tabs, tabContent, activeTab } = this.state;
+        const { tabs, tabContent, activeTab, tabsGenericData } = this.state;
         const { history = {}, callback, currentUser, location, match, parentData } = this.props;
         const arr = [];
         const tabsArr = Object.values(tabs);
@@ -163,13 +196,13 @@ export default class DetailIncludes extends Component {
                                                 <TabPane className='relative' key={key} tabId={key}>
                                                     {/* Building the table iterating through the row to display tab content */}
                                                     <div className='table-header'>
-                                                        <div className='btn-group header-actions'>
+                                                        {/* <div className='btn-group header-actions'>
                                                             <CustomAction history={history} source='modelAlias' genericData={tab} actions={tab.nextActions} placement={'as_header'} parentData={parentData} callback={callback} source='modelAlias' />
                                                         </div>
 
                                                         <a className="btn btn-secondary btn-sm" onClick={() => Location.navigate({ url: `/modelAliasDetail/${tab.relationship[tab.starter].id}` })}>
                                                             <i className="fa fa-outdent" uib-tooltip="Redirect to Model Alias detail"></i>
-                                                        </a>
+                                                        </a> */}
                                                         {
                                                             tab.columns && tab.finalColumns ?
                                                                 <TableSettings
@@ -201,6 +234,9 @@ export default class DetailIncludes extends Component {
                                                         source='modelAlias'
                                                         location={location}
                                                         match={match}
+                                                        genericData={tabsGenericData[key]}
+                                                        propageGenericDataToParent={this.storeTabGenericData}
+                                                        index={key}
                                                     />
                                                 </TabPane>
                                             )

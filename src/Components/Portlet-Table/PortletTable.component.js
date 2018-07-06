@@ -52,6 +52,7 @@ export default class PortletTable extends Component {
             sortKey: '',
             reverse: true,
             dropdownOpen: {},
+            filterColumn: this.props.filterColumn
         };
     }
 
@@ -182,7 +183,7 @@ export default class PortletTable extends Component {
     };
 
     render() {
-        const { genericData, finalColumns, listing } = this.state;
+        const { genericData, finalColumns, listing, filterColumn } = this.state;
 
         const { history, match, menuDetail, rowTemplate, callback, tableType, rowOptions, source = 'model', parentData } = this.props;
 
@@ -230,9 +231,9 @@ export default class PortletTable extends Component {
 
                                             {/* Filter Column */}
                                             {
-                                                tableType == "listing" && selectedColumn && selectedColumn.path && selectedColumn.path.split('.').length < 3 &&
+                                                tableType == "listing" && selectedColumn && selectedColumn.path &&
                                                 <div className="filter-column">
-                                                    <a onClick={e => this.filterColumn(selectedColumn)}>
+                                                    <a onClick={e => filterColumn(selectedColumn)}>
                                                         <i className="fa fa-filter"></i>
                                                     </a>
                                                 </div>
