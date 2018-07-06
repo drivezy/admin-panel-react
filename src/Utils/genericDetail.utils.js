@@ -9,7 +9,7 @@ import { ROUTE_URL } from './../Constants/global.constants';
  * same as ConfigureDataForDirective
  * @param  {object} genericDetailObject - urlParameter
  */
-export function GetDetailRecord({ configuration: genericDetailObject, callback, urlParameter }) {
+export function GetDetailRecord({ configuration: genericDetailObject, callback, data, urlParameter }) {
     const params = Initialization(genericDetailObject);
     const options = {};
 
@@ -18,6 +18,8 @@ export function GetDetailRecord({ configuration: genericDetailObject, callback, 
         options.includes = params.includes;
     }
     options.dictionary = params.dictionary ? false : true;
+
+    options.request_identifier = data.request_identifier;
     const module = CreateUrlForFetchingDetailRecords({ url: genericDetailObject.url, urlParameter });
     if (!module) {
         alert("No Url has been set for this menu, Contact Admin");
@@ -27,7 +29,7 @@ export function GetDetailRecord({ configuration: genericDetailObject, callback, 
     // flag to check promise
 
     const url = BuildUrlForGetCall(module, options);
-    Get({ url, callback: PrepareObjectForDetailPage, extraParams: { callback, params, genericDetailObject }, urlPrefix: ROUTE_URL });
+    Get({ url, callback: PrepareObjectForDetailPage, extraParams: { callback, params, data, genericDetailObject }, urlPrefix: ROUTE_URL });
 }
 
 /**
@@ -36,7 +38,7 @@ export function GetDetailRecord({ configuration: genericDetailObject, callback, 
  * @param  {object} {extraParams}
  */
 function PrepareObjectForDetailPage(result, { extraParams }) {
-    const { callback, params, genericDetailObject } = extraParams;
+    const { callback, params, genericDetailObject, data: portletData } = extraParams;
     const data = result.response;
     if (IsUndefinedOrNull(data)) {
         // swl.info("No Data Returned for this menu");
@@ -45,39 +47,24 @@ function PrepareObjectForDetailPage(result, { extraParams }) {
     }
 
     const portletDetail = data.record;
+    let tabs;   
 
-    const portlet = GetDataForPortlet({ portletDetail, genericDetailObject });
-    const tabs = GetDataForTabs({ tabs: data.tabs });
+    // if fetching data for the first time, process tabs object and attach extra properties
+    if (data.tabs && Object.keys(data.tabs).length) { 
+        tabs = data.tabs
+        tabs = GetDataForTabs({ tabs });
+    } else { // else take from previously fetched data
+        tabs = portletData.tabs;
+    }
+
+    portletData.tabs = { ...tabs };
+
+    const portlet = GetDataForPortlet({ portletDetail, genericDetailObject, portletData });
+
     const tabDetail = {
         tabs
     }
-    // console.log(tabDetail);
-
-    // flag to check promise
-    // params.dictionary = data.dictionary || params.dictionary;
-
-    // var previousColumns = MenuService.getPreviousColumns(params);
-    // genericDetailObject.preference = HealPreferenceFactory.listing(genericDetailObject.preference, previousColumns);
-    // for (var i in data.relationship) {
-    //     previousColumns = MenuService.getPreviousColumnsForListing(params);
-    //     if (typeof data.relationship[i] == "object" && data.relationship[i].hasOwnProperty("preferences")) {
-    //         data.relationship[i].preferences = HealPreferenceFactory.listing(data.relationship[i].preferences, previousColumns);
-    //     }
-    // }
-
-    // const listPortlet = genericDetailObject.listName + ".detail.list";
-    // portlet.listName = listPortlet;
-    // const selectedColumns = genericDetailObject.preference[listPortlet] ? JSON.parse(genericDetailObject.preference[listPortlet]) : null;
-
-
-    // tabs.parentData = data.response;
-    // tabs.fixedParams = EvalQuery.eval(genericDetailObject.query, data.response);
-
-
-    // tabs.callFunction = {
-    //     callback: configureDataForDirective
-    // };
-
+   
     const preDefinedmethods = GetPreSelectedMethods();
     const methods = RegisterMethod(genericDetailObject.nextActions)
     portlet.methods = methods;
@@ -96,17 +83,20 @@ function PrepareObjectForDetailPage(result, { extraParams }) {
 
 /**
  * same as ConfigureDataForPortlet.getData
- * @param  {} data
  * @param  {} genericDetailObject
- * @param  {} params
- * @param  {} configuration
+ * @param  {object} portletDetail - current object returned from api
+ * @param  {object} portletData - previous data object 
  */
-export function GetDataForPortlet({ portletDetail, genericDetailObject }) {
+export function GetDataForPortlet({ portletDetail, genericDetailObject, portletData }) {
     var obj = {};
     obj.data = portletDetail.data;
     // obj.base = portletDetail.base;
 
-    const { relationship, dictionary } = portletDetail;
+    let { relationship, dictionary } = portletDetail;
+
+    dictionary = dictionary && Object.keys(dictionary).length ? dictionary : portletData.dictionary;
+    relationship = relationship && Object.keys(relationship).length ? relationship : portletData.relationship;
+
     // obj.listName = genericDetailObject.listName + ".detail.list";
 
 
@@ -121,60 +111,21 @@ export function GetDataForPortlet({ portletDetail, genericDetailObject }) {
         obj.finalColumns = [];
     }
 
-    obj.starter = portletDetail.base;
+    obj.tabs = portletData.tabs;
+    obj.starter = portletDetail.base || portletData.starter;
+    obj.request_identifier = portletDetail.request_identifier;
     obj.relationship = relationship;
+    obj.dictionary = dictionary;
     const model = obj.model = relationship[obj.starter];
     obj.nextActions = [...obj.model.actions, ...genericDetailObject.uiActions];
     obj.model = model;
     const formPreference = model.form_layouts[0] || {};
-    if (IsObjectHaveKeys(formPreference)) {
+    if (IsObjectHaveKeys(formPreference) && typeof formPreference.column_definition == 'string') {
         formPreference.column_definition = JSON.parse(formPreference.column_definition);
     }
 
     obj.formPreference = formPreference;
 
-    // obj.dictionary = {};
-    // obj.relationship = {};
-
-    // obj.dictionary[genericDetailObject.starter] = data.dictionary[genericDetailObject.starter];
-    // obj.relationship[genericDetailObject.starter] = data.relationship[genericDetailObject.starter];
-
-    // params.dictionary = obj.dictionary;
-    // params.relationship = data.relationship;
-
-
-    // const includes = genericDetailObject.includes.split(",");
-    // const inclusions = [];
-    // includes.forEach(item => {
-    //     const toCheckColumn = item.split(".");
-    //     let index = genericDetailObject.starter + "." + toCheckColumn[0];
-    //     if (data.relationship[index] && data.relationship[index].alias_type == 164) {
-    //         for (var i in toCheckColumn) {
-    //             var name = parseInt(i) ? inclusions[inclusions.length - 1] + "." + toCheckColumn[i] : toCheckColumn[i];
-    //             inclusions.push(name);
-    //         }
-    //     } else {
-    //         delete obj.data[index];
-    //     }
-
-    //     for (i in inclusions) {
-    //         index = genericDetailObject.starter + "." + inclusions[i];
-    //         obj.relationship[index] = data.relationship[index];
-    //         obj.dictionary[index] = data.dictionary[index];
-    //     }
-    // });
-    // obj.includes = inclusions.join(",");
-    // params.includes = obj.includes;
-
-    // const tempParams = params;
-    // obj.portletColumns = GetColumnsForDetail(tempParams);
-
-
-    // obj.scripts = InjectScriptFactory.returnMatchingScripts({
-    //     preference: genericDetailObject.listName, scripts: genericDetailObject.scripts
-    // });
-
-    // console.log(obj);
     return obj;
 }
 
@@ -191,65 +142,6 @@ export function GetDataForTabs({ tabs }) {
     // console.log(tabs);
     return tabs;
 }
-
-// /**
-//  * same as ConfigureDataForTab.getData
-//  * @param  {Object} {data - actual data object
-//  * @param  {Object} genericDetailObject} - meta data about menu
-//  */
-// function GetDataForTabs({ data, genericDetailObject }) {
-//     if (IsUndefinedOrNull(data)) {
-//         alert("No Data Returned for this menu");
-//         // swl.info("No Data Returned for this menu");
-//         return false;
-//     }
-
-//     const obj = {};
-
-//     obj.includes =
-
-//     // obj.data = {};
-//     // obj.relationship = {};
-//     // obj.dictionary = {};
-//     // obj.includes = {};
-//     // obj.scripts = [];
-
-//     // if (!genericDetailObject.includes) {
-//     //     return obj;
-//     // }
-
-//     // var includes = genericDetailObject.includes.split(",");
-//     // var inclusions = [];
-//     // includes.forEach(item => {
-//     //     const toCheckColumn = item.split(".");
-//     //     const index = genericDetailObject.starter + "." + toCheckColumn[0];
-
-//     //     // const scripts = InjectScriptFactory.returnMatchingScripts({
-//     //     //     preference: index, scripts: genericDetailObject.scripts, searchConstraint: "startsWith"
-//     //     // });
-//     //     // if (scripts.length) {
-//     //     //     Array.prototype.push.apply(obj.scripts, scripts);
-//     //     // }
-
-//     //     if (data.relationship[index] && data.relationship[index].alias_type == 163) {
-//     //         inclusions.push(item);
-//     //         let name = genericDetailObject.starter;
-//     //         for (var i in toCheckColumn) {
-//     //             name += "." + toCheckColumn[i];
-//     //             obj.relationship[name] = data.relationship[name];
-//     //             obj.dictionary[name] = data.dictionary[name];
-//     //         }
-//     //         obj.data[index] = data.response[toCheckColumn[0]];
-//     //     }
-//     // });
-//     // obj.includes = inclusions.join(",");
-//     // obj.starter = genericDetailObject.starter;
-
-//     // obj.scripts =
-
-//     return obj;
-// };
-
 
 //@TODO remove this method
 /**

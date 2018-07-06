@@ -194,9 +194,10 @@ export function ConvertMenuDetailForGenericPage(menuDetail) {
         var splits = menuDetail.default_order.split(",");
     }
 
-    menuDetail.layouts = GetParsedLayoutScript(menuDetail.list_layouts);
+    let layouts = menuDetail.list_layouts || menuDetail.layouts;
+    menuDetail.layouts = GetParsedLayoutScript(layouts);
 
-    const layout = menuDetail.list_layouts.length ? menuDetail.list_layouts[0] : null; // @TODO for now taking 0th element as default layout, change later 
+    const layout = layouts.length ? layouts[0] : null; // @TODO for now taking 0th element as default layout, change later 
     menuDetail.layouts = menuDetail.layouts.filter(layout => layout && layout.name && layout.query && layout.name != 'default');
 
     delete menuDetail.list_layouts;
@@ -706,7 +707,7 @@ export function GetParsedLayoutScript(listLayouts) {
     return listLayouts.map(layout => {
         // menuDetail.layouts = menuDetail.list_layouts.map(layout => {
         try {
-            layout.column_definition = JSON.parse(layout.column_definition);
+            layout.column_definition = typeof layout.column_definition == 'string' ? JSON.parse(layout.column_definition) : layout.column_definition;
 
         } catch (e) {
             layout.column_definition = {};

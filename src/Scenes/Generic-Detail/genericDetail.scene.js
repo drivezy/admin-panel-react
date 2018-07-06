@@ -53,10 +53,11 @@ export default class GenericDetail extends Component {
         this.state.queryString = newProps.queryString;
 
         // if menuDetail object has fetched url and current url is different than previous one, fetch data
-        if (this.state.menuDetail.url && this.currentUrl != this.getHref()) {
-            this.currentUrl = this.getHref();
-            this.getDetailRecord();
-        }
+        // As of now we dont need to watch url for portlet
+        // if (this.state.menuDetail.url && this.currentUrl != this.getHref()) {
+        //     this.currentUrl = this.getHref();
+        //     this.getDetailRecord();
+        // }
     }
 
     userDataArrived = (user) => {
@@ -88,9 +89,9 @@ export default class GenericDetail extends Component {
     }
 
     getDetailRecord = () => {
-        const { menuDetail, genericData, urlParameter, params } = this.state;
+        const { menuDetail, portlet, urlParameter, params } = this.state;
         // const {menuId} = this.props
-        GetDetailRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, urlParameter: params });
+        GetDetailRecord({ configuration: menuDetail, callback: this.dataFetched, data: portlet, urlParameter: params });
     }
 
     dataFetched = ({ tabDetail, portlet }) => {
