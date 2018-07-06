@@ -347,6 +347,14 @@ Non critical css goes here
     }
 }
 
+.btn-primary {
+    @include themify($themes) {
+        background: themed('secondaryDark') !important;
+        color: themed('whiteColor');
+        border-color: themed('secondaryDark');
+    }
+}
+
 th{
     @include themify($themes){
         color: themed('table');
