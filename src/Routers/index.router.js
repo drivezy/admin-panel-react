@@ -7,7 +7,7 @@ import Landing from './../Components/Landing/landing.component';
 /** Component Ends */
 
 /** Utils */
-import { LoginCheck } from './../Utils/user.utils';
+// import { LoginCheck } from './../Utils/user.utils';
 import { GetPreferences } from './../Utils/preference.utils';
 import SettingsUtil from './../Utils/settings.utils';
 import { PreserveState } from './../Utils/preserveUrl.utils';
@@ -78,7 +78,7 @@ export default class IndexRouter extends Component {
         this.menus = await GetMenusFromApi();
         this.setState({ menuFetched: true });
 
-        LoginCheck();
+        // LoginCheck();
 
         // Load the preferences
         const preference = await GetPreferences();
