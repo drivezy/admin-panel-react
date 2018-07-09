@@ -48,7 +48,7 @@ export default class TypeaheadComponent extends Component {
     }
 
     render() {
-        let { field, options, isLoading = false, value } = this.state;
+        let { field, options = [], isLoading = false, value } = this.state;
         const { searchLabel, placeholder, onType } = this.props;
         value = typeof value == 'number' ? value.toString() : value;
         if (field)
