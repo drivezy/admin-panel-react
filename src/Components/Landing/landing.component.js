@@ -21,6 +21,7 @@ import TicketDetail from './../../Scenes/Ticket-Detail/ticketDetail.scene';
 import RosterTimeline from './../../Scenes/Roster-Timeline/rosterTimeline.scene';
 
 import GenericQueryDetail from './../../Scenes/Generic-Query/genericQueryDetail.scene';
+import QueryDashboardForm from './../../Components/Query-Report/Query-Dashboard-Form/queryDashboardForm.component'; //remove
 
 import LoadAsyncComponent from './../../Async/async';
 

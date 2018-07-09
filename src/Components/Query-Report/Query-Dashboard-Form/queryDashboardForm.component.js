@@ -8,6 +8,7 @@ import {
 import { withFormik, Field, Form } from 'formik';
 import Yup from 'yup';
 
+import DateTimePicker from './../../../Components/Date-Time-Picker/dateTimePicker.component';
 // import { Upload, Post, Put, Get } from './../../../../Utils/http.utils';
 // import { GetChangedMethods } from './../../../../Utils/generic.utils';
 // import { IsObjectHaveKeys, IsUndefined } from './../../../../Utils/common.utils';
@@ -16,7 +17,7 @@ import Yup from 'yup';
 
 // import SelectBox from './../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 // import ReferenceInput from './../../../Forms/Components/Reference-Input/referenceInput';
-//import DatePicker from './../../../Forms/Components/Date-Picker/datePicker';
+// import DatePicker from './../../../Forms/Components/Date-Picker/datePicker';
 // import DateTimePicker from './../../../Date-Time-Picker/dateTimePicker.component'
 // import TimePicker from './../../../Forms/Components/Time-Picker/timePicker';
 // import ListSelect from './../../../Forms/Components/List-Select/listSelect';
@@ -32,20 +33,20 @@ import Yup from 'yup';
 
 
 
-const DisplayFormikState = props => (
-    <div style={{ margin: '1rem 0' }}>
-        <h3 style={{ fontFamily: 'monospace' }} />
-        <pre
-            style={{
-                background: '#f6f8fa',
-                fontSize: '.65rem',
-                padding: '.5rem',
-            }}>
-            <strong>props</strong> ={' '}
-            {JSON.stringify(props, null, 2)}
-        </pre>
-    </div>
-);
+// const DisplayFormikState = props => (
+//     <div style={{ margin: '1rem 0' }}>
+//         <h3 style={{ fontFamily: 'monospace' }} />
+//         <pre
+//             style={{
+//                 background: '#f6f8fa',
+//                 fontSize: '.65rem',
+//                 padding: '.5rem',
+//             }}>
+//             <strong>props</strong> ={' '}
+//             {JSON.stringify(props, null, 2)}
+//         </pre>
+//     </div>
+// );
 
 // const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
 
@@ -53,82 +54,13 @@ const inputElement = (payload) => {
 
     const elements = {
 
-        // Uncomment This after testing is done
-        // // Number
-        // 107: <Field autoComplete="off" className="form-control" type="number" name={column.name} placeholder={`Enter ${column.display_name}`} />,
-        // // Number Ends
-
-        // // String
+        // String
         // 108: <Field autoComplete="off" className="form-control" type="string" name={column.name} placeholder={`Enter ${column.display_name}`} />,
-        // // String Ends
-
-        // // @ToDo Remove this when a better datepicker is designed
-        // // // DatePicker
-        // // 109: <Field
-        // //     name={column.name}
-        // //     render={({ field /* _form */ }) => (
-        // //         <DatePicker single={true} name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
-        // //     )}
-        // // />,
-        // // // DatePicker Ends
-
-        // // DatePicker
-
-        // 109: <Field
-        //     name={column.name}
-        //     render={({ field /* _form */ }) => (
-        //         <DateTimePicker />
-        //     )}
-        // />,
-        // // DatePicker Ends
-
-        // // Single DatePicker with Timepicker 
-        // 110: <Field
-        //     name={column.name}
-        //     render={({ field /* _form */ }) => (
-        //         <DateTimePicker single={true} timePicker={true} name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
-        //     )}
-        // />,
-        // // Single Datepicker Ends
-
-        // // Boolean Select
-        // 111: <Field
-        //     name={column.name}
-        //     render={({ field /* _form */ }) => (
-        //         <SelectBox name={column.name} onChange={props.setFieldValue} value={values[column.name]} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
-        //     )}
-        // />,
-        // // Boolean Ends
-
-        // // List Select with options from api
-        // 116: <Field
-        //     name={column.name}
-        //     render={({ field /* _form */ }) => (
-        //         <ListSelect column={column} name={column.name} onChange={props.setFieldValue} model={values[column.name]} />
-        //     )}
-        // />,
-        // // List Select Ends
-
-        // // Reference Begins
-        // 117: <Field
-        //     name={column.name}
-        //     render={({ field /* _form */ }) => (
-        //         <ReferenceInput column={column} name={column.name}
-        //             onChange={(value, event) => {
-        //                 FormUtils.OnChangeListener({ column, value, ...event });
-        //                 props.setFieldValue(event, value);
-        //             }}
-        //             model={values[column.name]} />
-        //     )}
-        // />,
-        // // Reference Ends
+        // String Ends
 
         // Single DatePicker with Timepicker 
-        // 594:
-        //     <DateTimePicker />
-        // D
-
-        // Single Datepicker Ends
+        594: <DateTimePicker />
+        // Single DatePicker with Timepicker ends
 
     }
 
@@ -156,46 +88,48 @@ const formElements = props => {
     return (
         <Form role="form" name="genericForm" >
             <div className="form-row">
-                {
-                    payload.map((preference, key) => {
+                <div className="picker">
+                    {
+                        payload.map((preference, key) => {
 
-                        let elem, column;
+                            let elem, column;
 
-                        if (preference) {
-                            column = preference;
-                            elem = inputElement(preference.param_type_id);
-                        }
-                        if (column) {
-                            return (
-                                <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
-                                    <label htmlFor="exampleInputEmail1">{column.label || column.display_name}</label>
-                                    {elem}
+                            if (preference) {
+                                column = preference;
+                                elem = inputElement(preference.param_type_id);
+                            }
+                            if (column) {
+                                return (
+                                    <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
+                                        <label>{column.label || column.display_name}</label>
+                                        {elem}
 
-                                    {/* Showing Errors when there are errors */}
-                                    {/* {
-                                        errors[column.column_name] && touched[column.column_name] ?
-                                            <small id="emailHelp" className="form-text text-danger">
-                                                {errors[column.column_name]}
-                                            </small>
-                                            :
-                                            null
-                                    } */}
+                                        {/* Showing Errors when there are errors */}
+                                        {/* {
+                                            errors[column.column_name] && touched[column.column_name] ?
+                                                <small id="emailHelp" className="form-text text-danger">
+                                                    {errors[column.column_name]}
+                                                </small>
+                                                :
+                                                null
+                                        } */}
 
-                                    {/* Errors Ends */}
-                                </div>
-                            )
-                        }
-                    })
-                }
+                                        {/* Errors Ends */}
+                                    </div>
+                                )
+                            }
+                        })
+                    }
+                </div>
 
-                <div className="modal-actions row justify-content-end">
-                    <Button color="secondary" onClick={handleReset}>
+                <div className="modal-actions">
+                    <Button className="btn btn-primary btn-sm" onClick={handleReset}>
                         Clear
-                </Button>
+                    </Button>
 
-                    <button className="btn btn-primary" type="submit">
+                    <Button className="btn btn-success btn-sm" onSubmit={handleSubmit} type="submit">
                         Submit
-                </button>
+                    </Button>
                 </div>
             </div>
         </Form>
@@ -208,8 +142,6 @@ const FormContents = withFormik({
     mapPropsToValues: props => {
 
         const { payload } = props;
-
-
     },
     displayName: 'BasicForm', // helps with React DevTools
 })(formElements);
@@ -218,7 +150,7 @@ export default class QueryDashboardForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            payload: this.props.fields
+            payload: this.props.payload
         }
     }
 

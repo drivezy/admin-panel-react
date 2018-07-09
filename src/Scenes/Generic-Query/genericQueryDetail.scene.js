@@ -14,7 +14,8 @@ export default class GenericQueryDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            queryParamsData: {}
+            queryParamsData: {},
+            formContent: {}
         };
     }
 
@@ -33,7 +34,8 @@ export default class GenericQueryDetail extends Component {
     }
 
     render() {
-        const { queryParamsData = {} } = this.state;
+        const { queryParamsData, formContent } = this.state;
+        console.log(queryParamsData.parameters);
         return (
             <div className="generic-query">
                 <div className="page-bar">
@@ -85,14 +87,15 @@ export default class GenericQueryDetail extends Component {
                 <div class="reports-content">
 
                     {
-                        !(queryParamsData.comparable == 0 && queryParamsData.parameters && queryParamsData.parameters.length == 0) &&
+                         !(queryParamsData.comparable == 0 && queryParamsData.parameters && queryParamsData.parameters.length == 0) &&
+                        // queryParamsData.parameters &&
                         <QueryDashboardForm
                             savedDashboard={savedDashboard}
                             queryTable={useQueryTable}
                             queryData={queryParamsData}
                             columns={columns}
                             formContent={formContent}
-                            fields={queryParamsData.parameters}
+                            payload={queryParamsData.parameters}
                         />
                     }
 
