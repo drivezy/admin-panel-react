@@ -273,9 +273,9 @@ Non critical css goes here
 .dropdown-button {
     border: 1px solid #dadfe3;
     @include themify($themes){
-        border: themed('primaryBorder');
+        border: themed('themePrimaryColor');
         background-color: themed('themePrimaryColor');
-        color: themed('secondaryDark');
+        color: themed('primaryLight');
     }
     cursor: pointer;
     vertical-align: middle;
@@ -288,7 +288,7 @@ Non critical css goes here
         background: #dadfe3;
         border: 1px solid #dadfe3;
         @include themify($themes){
-            color: themed('secondaryDark');
+            color: themed('primaryLight');
         }
     }
 }
@@ -345,11 +345,11 @@ Non critical css goes here
         background: themed('secondaryThemeDark') !important;
         color: themed('whiteColor');
     }
-}
+} 
 
 .btn-primary {
     @include themify($themes) {
-        background: themed('secondaryDark') !important;
+        background: themed('onPrimaryDark') !important;
         color: themed('whiteColor');
         border-color: themed('secondaryDark');
     }

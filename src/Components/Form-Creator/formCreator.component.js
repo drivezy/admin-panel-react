@@ -260,14 +260,21 @@ const formElements = props => {
             </div> */}
             {/* Uploaded file thumbnails Ends*/}
 
-            <div className="modal-actions row justify-content-end">
-                <Button color="secondary" onClick={handleReset}>
-                    Clear
-                </Button>
+            <div className="modal-actions">
 
-                <button className="btn btn-primary" type="submit">
-                    Submit
-                </button>
+                <Button className="btn btn-danger right-group">
+                    Save and Add Another
+                </Button>
+            
+                <div className="left-group">
+                    <Button className="btn btn-default" color="secondary" onClick={handleReset}>
+                        Cancel
+                    </Button>
+
+                    <Button className="btn btn-success" type="submit">
+                        Submit
+                    </Button>
+                </div>
             </div>
         </Form>
     );

@@ -34,7 +34,18 @@
     .card {
         border: none;
         .card-body {
+            @include themify($themes){
+                background: themed('lightColor');
+            }
             // padding: 0px 15px;
+                .form-row{
+                    @include themify($themes){
+                        background: themed('primaryLight');
+                    }
+                    border-radius: 5px;
+                    margin-bottom: 10px;
+                    padding: 10px 15px;
+                }
         }
     }
     .form-group {
@@ -45,10 +56,10 @@
             color: #330a0a9c;
         }
         input.form-control {
-            border: none;
-            border-radius: 0px;
+            // border: none;
+            // border-radius: 0px;
             border-bottom: 1px solid #c7c7c7;
-            padding: 5px 0px;
+            padding: 5px 10px;
             &:focus {
                 box-shadow: none;
                 border-bottom: 1px solid #964d4d66;
@@ -58,6 +69,20 @@
     .modal-actions {
         button {
             margin: 0 5px;
+        }
+        .btn-default{
+            @include themify($themes){
+                background: themed('primaryLight');
+                color: themed('darkBlack');
+                border: themed('lightBorder');
+            }
+        }
+        .right-group{
+            float: left;
+        }
+        .left-group{
+            display: flex;
+            justify-content: flex-end;
         }
     }
     .file-uploads {
