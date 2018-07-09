@@ -3,7 +3,7 @@ body {
     width: 100%; // font-size: 14px;
 }
 
-.card{
+.card {
     border-radius: 2px;
 }
 
@@ -46,8 +46,6 @@ body {
     @extend .flex;
     flex-direction: row;
 }
-
-
 
 .center-flex {
     @extend .flex;
@@ -253,18 +251,17 @@ body {
     .drivezy-loader-gif {
         width: 250px;
     }
-    svg{
+    svg {
         width: 75px;
         height: 50px;
         margin: 0px;
-        display:inline-block;
-      }
+        display: inline-block;
+    }
 }
 
 /** 
 Non critical css goes here
 */
-
 
 .margin-top-8 {
     margin-top: 8px;
@@ -272,10 +269,10 @@ Non critical css goes here
 
 .dropdown-button {
     border: 1px solid #dadfe3;
-    @include themify($themes){
-        border: themed('primaryBorder');
-        background-color: themed('themePrimaryColor');
-        color: themed('secondaryDark');
+    @include themify($themes) {
+        // border: themed('primaryBorder');
+        // background-color: themed('themePrimaryColor');
+        // color: themed('secondaryDark');
     }
     cursor: pointer;
     vertical-align: middle;
@@ -287,7 +284,7 @@ Non critical css goes here
     &:hover {
         background: #dadfe3;
         border: 1px solid #dadfe3;
-        @include themify($themes){
+        @include themify($themes) {
             color: themed('secondaryDark');
         }
     }
@@ -329,15 +326,6 @@ Non critical css goes here
     }
 }
 
-.search-button{
-    .btn-default {
-    @include themify($themes) {
-        background: themed('defaultThemeDark') !important;
-        color: themed('whiteColor');
-        font-size: 98%;
-    }
-    }
-}
 
 .btn-secondary {
     @include themify($themes) {
@@ -347,64 +335,55 @@ Non critical css goes here
     }
 }
 
-.btn-primary {
+th {
     @include themify($themes) {
-        background: themed('secondaryDark') !important;
-        color: themed('whiteColor');
-        border-color: themed('secondaryDark');
-    }
-}
-
-th{
-    @include themify($themes){
         color: themed('table');
         background: themed('defaultThemeDark');
     }
 }
 
-.dropdown-button{
+.dropdown-button {
     @include themify($themes) {
-        border: themed('primaryBorder');
-        background: themed('primaryThemeDark') !important;
-        color: themed('whiteColor');
+        // border: themed('primaryBorder');
+        // background: themed('primaryThemeDark') !important;
+        // color: themed('whiteColor');
     }
 }
 
 .dropdown-menu.menu-operations {
-    @include themify($themes){
+    @include themify($themes) {
         background: themed('bodyBackground');
-        border: themed('dropdownBorder');
-        // color: themed('secondaryColor');
+        border: themed('dropdownBorder'); // color: themed('secondaryColor');
     }
 }
 
-.fa-times{
-    @include themify($themes){
+.fa-times {
+    @include themify($themes) {
         color: themed('sideBarIcons');
     }
 }
 
-.form-control{
-    @include themify($themes){
+.form-control {
+    @include themify($themes) {
         // background-color: themed('dropdownInputBackground');
     }
 }
 
-.listing-search-container .listing-search-tool .listing-input-tool .input-select{
-    @include themify($themes){
+.listing-search-container .listing-search-tool .listing-input-tool .input-select {
+    @include themify($themes) {
         background-color: themed('searchBackground');
         border: themed('searchBorder');
     }
 }
 
-.detail-portlet{
-    @include themify($themes){
+.detail-portlet {
+    @include themify($themes) {
         color: themed('whiteColor');
     }
 }
 
-.generic-detail-container .header{
-    @include themify($themes){
+.generic-detail-container .header {
+    @include themify($themes) {
         // background-color: themed('sideBackground');
     }
 }

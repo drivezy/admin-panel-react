@@ -1,20 +1,21 @@
 @import 'Assets/Global-Shared/theme.scss';
-.landing-wrapper{
-    &.sidenav-open{
-        .active-module{
-            .search-box{
-                &.expanded{
+.landing-wrapper {
+    &.sidenav-open {
+        .active-module {
+            .search-box {
+                &.expanded {
                     left: 180px;
                 }
             }
         }
     }
 }
+
 .active-module {
     position: relative;
     .search-box {
         height: 100vh;
-        @include themify($themes){
+        @include themify($themes) {
             background-color: themed('bodyBackground');
         }
         background: white;
@@ -35,7 +36,7 @@
             box-shadow: 4px 0 13px 0 rgba(74, 74, 74, .3), 30px 0 40px 0 rgba(0, 0, 0, .11);
         }
         .search-box-header {
-            @include themify($themes){
+            @include themify($themes) {
                 background: themed('expandMenuHeader');
                 border-bottom: themed('themeBorder');
             }
@@ -59,11 +60,12 @@
             }
             button.btn {
                 outline: none;
-                padding: 6px 10px;
-                color: #b58d8e; // color: #183247;
+                padding: 5px 20px;
                 border: none;
-                border-radius: 50%;
-                box-shadow: none;
+                background: #2258b9;
+                font-size: 12px;
+                color: white;
+                border-radius: 2px;
                 &:hover {
                     background-color: #fff8f8; // background-color: #ebedf0;
                 }
@@ -76,7 +78,7 @@
             overflow-y: scroll;
             p.search-hint {
                 color: #5f4a24;
-                @include themify($themes){
+                @include themify($themes) {
                     color: themed('hintText');
                 }
                 margin: 9px 16px;
@@ -86,11 +88,11 @@
                 box-shadow: 0px 0px 4px 1px #dbdfe3;
                 border-color: #e4e2e2; // max-height: 80vh;
                 // overflow-y: scroll;
-                @include themify($themes){
+                @include themify($themes) {
                     box-shadow: themed('menuBorderPanel');
                 }
                 .panel-heading {
-                    @include themify($themes){
+                    @include themify($themes) {
                         color: themed('secondaryColor');
                         background-color: themed('subMenuHeader')
                     }
@@ -104,11 +106,11 @@
                         display: block;
                         cursor: pointer;
                         color: #2b3742;
-                        @include themify($themes){
+                        @include themify($themes) {
                             color: themed('navLinkColor');
                         }
-                        &:hover{
-                            @include themify($themes){
+                        &:hover {
+                            @include themify($themes) {
                                 color: themed('linkHover');
                             }
                         }
@@ -121,9 +123,9 @@
                             border-radius: 2px;
                         }
                         &:hover {
-                            @include themify($themes){
-                            background: themed('subMenuHover');
-                           }
+                            @include themify($themes) {
+                                background: themed('subMenuHover');
+                            }
                         }
                     }
                 }
@@ -151,11 +153,17 @@
         // align-items: center;
         button.btn {
             outline: none;
-            padding: 6px 10px;
-            // color: #183247;
+            padding: 6px 8px; // color: #183247;
             border: none;
+            border-radius: 2px;
             &:hover {
                 background-color: #ebedf0;
+            }
+            &.btn-default {
+                @include themify($themes) {
+                    background: themed('defaultThemeDark');
+                    // color: themed('whiteColor');
+                }
             }
         }
         &.collapsed {
@@ -178,23 +186,5 @@
                 }
             }
         }
-    }
-}
-
-.drivezy-light-theme { 
-    .search-button > button.btn {
-        color: $primaryThemeLight;
-    }
-}
-
-.drivezy-dark-theme { 
-    .search-button > button.btn {
-        color: $primaryThemeDark;
-    }
-}
-
-.drivezy-drivezy-theme { 
-    .search-button > button.btn {
-        color: $primaryThemeDrivezy;
     }
 }

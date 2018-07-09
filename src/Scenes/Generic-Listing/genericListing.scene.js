@@ -343,7 +343,12 @@ export default class GenericListing extends Component {
                     </div>
 
                     {
-                        loading ? <div className="loadingText"><h6 data-text="Loading…"></h6></div> :
+                        loading ?
+                            <div className="loading-text">
+                                <h6>
+                                    Loading content
+                                </h6>
+                            </div> :
                             <div>
                                 {
                                     (finalColumns && finalColumns.length) ?
