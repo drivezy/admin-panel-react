@@ -46,7 +46,7 @@ export default class QueryTable extends Component {
 
         this.state = {
             finalColumns: this.props.finalColumns,
-            listing: this.props.listing,
+            queryTableObj: this.props.queryTableObj,
             genericData: this.props.genericData,
             sortKey: '',
             reverse: true,
@@ -182,7 +182,7 @@ export default class QueryTable extends Component {
     };
 
     render() {
-        const { genericData, finalColumns, listing, filterColumn } = this.state;
+        const { genericData, finalColumns, queryTableObj, filterColumn } = this.state;
 
         const { history, match, menuDetail, rowTemplate, callback, tableType, rowOptions, source = 'model', parentData } = this.props;
 
@@ -205,7 +205,7 @@ export default class QueryTable extends Component {
 
         let renderItem;
 
-        if (listing.length) {
+        if (queryTableObj.listing.length) {
             renderItem = <div className="table-body">
 
                 {/* Contents Table */}
@@ -278,7 +278,7 @@ export default class QueryTable extends Component {
                         </thead>
                         <tbody>
                             {
-                                listing.map((listingRow, rowKey) =>
+                                queryTableObj.listing.map((listingRow, rowKey) =>
 
 
                                     <tr className="table-row" key={rowKey}>
@@ -325,7 +325,7 @@ export default class QueryTable extends Component {
                         </thead>
                         <tbody>
                             {
-                                listing.map((listingRow, rowKey) => (
+                                queryTableObj.listing.map((listingRow, rowKey) => (
                                     <tr className="table-row" key={rowKey}>
                                         <td className="action-column">
                                             {/* <CustomAction parentData={parentData} menuDetail={menuDetail} history={history} source={source} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} callback={callback} /> */}

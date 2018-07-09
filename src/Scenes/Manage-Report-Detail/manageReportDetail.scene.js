@@ -5,10 +5,7 @@ import QueryForm from './../../Components/Manage-Report/Components/Query-Form/qu
 import QueryTable from './../../Components/Manage-Report/Components/Query-Table/queryTable.component';
 
 
-import { GetColumnsForListing, CreateFinalColumns } from './../../Utils/query.utils';
-
-// import { GetColumnsForListing, CreateFinalColumns } from './../../Utils/generic.utils';
-
+import { GetColumnsForListing, CreateFinalObject } from './../../Utils/query.utils';
 
 import { Get, Post } from './../../Utils/http.utils';
 import { GetPreference } from './../../Utils/preference.utils';
@@ -69,25 +66,25 @@ export default class ManageReportDetail extends Component {
         const url = "getReportData";
         const result = await Post({ url, options, body: { month: "2016-07", query_name: "invoice_details" } });
         if (result.success) {
-            const queryListing = result;
+            const queryListing = result.response;
             this.setState({ queryListing });
 
 
-            let stats = queryListing.stats ? queryListing.stats : stats;
-            params.dictionary = queryListing.dictionary ? queryListing.dictionary : params.dictionary;
+            let stats = result.stats ? result.stats : stats;
+            params.dictionary = result.dictionary ? result.dictionary : params.dictionary;
             params.includes = "";
             params.starter = queryParamsData.short_name;
-
             let currentPage = params.page;
-            const columns = GetColumnsForListing(params);
+
+            let tempColumns = GetColumnsForListing(params);
 
             let finalColumns;
 
             if (preference) {
-                finalColumns = CreateFinalColumns(columns, preference);
+                finalColumns = CreateFinalObject(tempColumns, preference);
             }
 
-            this.setState({ stats, currentPage, params, columns, finalColumns });
+            this.setState({ stats, currentPage, params, columns: tempColumns, finalColumns });
 
         }
     }
@@ -95,18 +92,22 @@ export default class ManageReportDetail extends Component {
     render() {
         const { queryListing = {}, queryParamsData = {}, stats, currentPage, preference, params, columns, finalColumns } = this.state;
         const { history, match } = this.props;
+        let resultData;
 
-        let resultData = {
-            columns: columns,
-            listing: queryListing,
-            selectedColumns: queryParamsData.short_name + ".list",
-            listName: queryParamsData.short_name + ".list",
-            pageName: queryParamsData.name,
-            stats: stats,
-            currentPage: currentPage,
-            // dictionary: params.dictionary[params.starter],
-            restrictColumn: ""
-        };
+        if (params.dictionary) {
+            resultData = {
+                columns: columns,
+                listing: queryListing,
+                selectedColumns: queryParamsData.short_name + ".list",
+                listName: queryParamsData.short_name + ".list",
+                pageName: queryParamsData.name,
+                stats: stats,
+                currentPage: currentPage,
+                dictionary: params.dictionary[params.starter],
+                restrictColumn: ""
+            };
+        }
+
 
         return (
             <div className="manage-report">
@@ -126,8 +127,8 @@ export default class ManageReportDetail extends Component {
                 
                 }
 
-                {/* {
-                    queryListing.response &&
+                {
+                    queryListing.response && resultData &&
                     <QueryTable
                         history={history}
                         match={match}
@@ -136,7 +137,7 @@ export default class ManageReportDetail extends Component {
                         finalColumns={finalColumns}
                         queryTableObj={resultData}
                     />
-                } */}
+                }
             </div>
         )
     }
