@@ -380,7 +380,7 @@ export function GetPreSelectedMethods() {
             // module: url
             url
         };
-        methods.edit({ listingRow: menuDetail, genericData });
+        methods.editGeneric({ listingRow: menuDetail, genericData });
     };
 
     /**
@@ -389,7 +389,7 @@ export function GetPreSelectedMethods() {
      * @param  {object} listingRow
      * @param  {object} genericData}
      */
-    methods.add = ({ action, listingRow, genericData, source = 'module', menuDetail, parent }) => {
+    methods.addGeneric = ({ action, listingRow, genericData, source = 'module', menuDetail, parent }) => {
         const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Add', menuDetail, parent });
         ProcessForm({ formContent });
         // const formContent = {
@@ -414,7 +414,7 @@ export function GetPreSelectedMethods() {
      * @param  {object} listingRow
      * @param  {object} genericData}
      */
-    methods.edit = ({ action, listingRow, genericData, source = 'module', menuDetail, parent }) => {
+    methods.editGeneric = ({ action, listingRow, genericData, source = 'model', menuDetail, parent }) => {
         const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Edit', menuDetail, parent });
         ProcessForm({ formContent });
         // const payload = { method: 'edit', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module };
@@ -455,7 +455,7 @@ export function GetPreSelectedMethods() {
      * @param  {object} listingRow
      * @param  {object} genericData}
      */
-    methods.copy = ({ action, listingRow, genericData, source = 'module', menuDetail, parent }) => {
+    methods.copyGeneric = ({ action, listingRow, genericData, source = 'module', menuDetail, parent }) => {
         const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Add', menuDetail, parent });
         ProcessForm({ formContent });
         // const formContent = {
@@ -474,7 +474,7 @@ export function GetPreSelectedMethods() {
         // };
     }
 
-    methods.delete = async ({ action, listingRow, genericData }) => {
+    methods.deleteGeneric = async ({ action, listingRow, genericData }) => {
         const deletekey = IsUndefinedOrNull(action.redirectValueName) ? listingRow.id : listingRow[action.redirectValueName];
 
         const method = async () => {
@@ -496,8 +496,9 @@ export function GetPreSelectedMethods() {
         // }
     }
 
-    methods.auditLog = async ({ action, listingRow, genericData }) => {
-        const result = await Get({ url: "auditLog?" + "model=" + genericData.dataModel.id + "&id=" + listingRow.id + "&includes=created_user&dictionary=true&order=created_at,desc&limit=150" });
+    // auditLog
+    methods.auditGeneric = async ({ action, listingRow, genericData }) => {
+        const result = await Get({ url: "auditLog?" + "model=" + genericData.model.id + "&id=" + listingRow.id + "&includes=created_user&dictionary=true&order=created_at,desc&limit=150" });
         if (result.success) {
             const auditData = result.response.response;
             let columns = {

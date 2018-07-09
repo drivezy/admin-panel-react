@@ -118,7 +118,7 @@ export default class ConfigureDynamicFilter extends Component {
             // this is a fallback if there is query that is to be prepopulated
             filterArr[arrayIndex] = [[...this.filterObj]];
             // to the last element in the array , push the column
-            filterArr[arrayIndex][0].column = SelectFromOptions(content.dictionary, single, 'name');
+            filterArr[arrayIndex][0].column = SelectFromOptions(content.dictionary, single, 'path');
             // once the column is selected , columnChange should be called to load necessary data for the column
             this.columnChange(filterArr[arrayIndex][0].column, {
                 parentIndex: filterArr.length - 1,
