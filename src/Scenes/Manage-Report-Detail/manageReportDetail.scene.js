@@ -5,10 +5,13 @@ import QueryForm from './../../Components/Manage-Report/Components/Query-Form/qu
 import QueryTable from './../../Components/Manage-Report/Components/Query-Table/queryTable.component';
 
 
-import { GetColumnsForListing, CreateFinalObject } from './../../Utils/query.utils';
+import { GetColumnsForListing, CreateFinalColumns } from './../../Utils/query.utils';
+
+// import { GetColumnsForListing, CreateFinalColumns } from './../../Utils/generic.utils';
+
 
 import { Get, Post } from './../../Utils/http.utils';
-import { GetPreferences } from './../../Utils/preference.utils';
+import { GetPreference } from './../../Utils/preference.utils';
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
 
 import './manageReportDetail.css';
@@ -44,8 +47,13 @@ export default class ManageReportDetail extends Component {
             const queryParamsData = result.response;
             let prefName = queryParamsData.short_name + ".list";
 
-            const preference = await GetPreferences(prefName);
-            console.log(preference);
+            // let preference = [];
+            const preference = GetPreference(prefName);
+
+            // if (preferenceResult.success) {
+            //     preference = result.response;
+            // }
+            // console.log(preference);
 
             this.setState({ queryParamsData, preference });
 
@@ -56,7 +64,7 @@ export default class ManageReportDetail extends Component {
 
 
     getDataForListing = async () => {
-        const { queryParamsData, preference, params, finalColumns, columns } = this.state;
+        const { queryParamsData, preference, params } = this.state;
         let options = GetDefaultOptions;
         const url = "getReportData";
         const result = await Post({ url, options, body: { month: "2016-07", query_name: "invoice_details" } });
@@ -73,8 +81,10 @@ export default class ManageReportDetail extends Component {
             let currentPage = params.page;
             const columns = GetColumnsForListing(params);
 
+            let finalColumns;
+
             if (preference) {
-                const finalColumns = CreateFinalObject(columns, preference);
+                finalColumns = CreateFinalColumns(columns, preference);
             }
 
             this.setState({ stats, currentPage, params, columns, finalColumns });
@@ -113,6 +123,7 @@ export default class ManageReportDetail extends Component {
                 {
                     queryParamsData.parameters &&
                     <QueryForm payload={queryParamsData.parameters} />
+                
                 }
 
                 {/* {

@@ -58,7 +58,7 @@ export function GetColumnsForListing(params, excludeStarter) {
  * @param  {object} selectedColumns
  * @param  {object} relationship
  */
-export function CreateFinalObject(columns, selectedColumns, relationship) {
+export function CreateFinalColumns(columns, selectedColumns, relationship) {
     const finalColumnDefinition = [];
     let splitEnabled = false;
 

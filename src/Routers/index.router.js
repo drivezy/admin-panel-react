@@ -30,7 +30,7 @@ export default class IndexRouter extends Component {
         super(props);
         this.state = {
             sideNavExpanded: true,
-            menuFetched: true,
+            menuFetched: false,
         }
         // props.GetCities();
         Location.getHistoryMethod(this.getRouterProps); // pass methods, so that location utils can get history object
@@ -76,7 +76,7 @@ export default class IndexRouter extends Component {
         //     this.setState({ menuFetched: true });
         // }
         this.menus = await GetMenusFromApi();
-        this.setState({ menuFetched: true });
+        // this.setState({ menuFetched: true });
 
         LoginCheck();
 
@@ -86,6 +86,8 @@ export default class IndexRouter extends Component {
         if (preference.success) {
             this.assignSpotlight(preference.response);
         }
+        this.setState({ menuFetched: true });
+
     }
 
     assignSpotlight = (preference) => {
@@ -100,6 +102,8 @@ export default class IndexRouter extends Component {
     getRouterProps = () => ({ history: this.props.history });
 
     render() {
+
+        const { menuFetched } = this.state;
         const { match, history } = this.props; // match.path = '/'
         const menus = this.menus || [];
 
@@ -108,7 +112,10 @@ export default class IndexRouter extends Component {
                 <HotKeys focused={true} attach={window} keyMap={this.keyMap} handlers={this.handlers}>
                     <div className="app-container">
                         {/* Landing Is the Basic Layout that builds the routes and the layout */}
-                        <Landing match={match} menus={menus} history={history}/>
+                        {
+                            menuFetched &&
+                            <Landing match={match} menus={menus} history={history} />
+                        }
                         {/* Landing Ends */}
                     </div>
                 </HotKeys>

@@ -67,7 +67,7 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
     const dictionaryColumns = {};
     // const includesList = [];
 
-    if (!(Array.isArray(includesList) && includesList.length)) {
+    // if (!(Array.isArray(includesList) && includesList.length)) {
         const includesArr = includes.split(',');
         includesList = [];
         for (const i in includesArr) {
@@ -78,8 +78,9 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
                 includesList.push(newStarter);
             }
         }
+        
         !excludeStarter ? includesList.unshift(starter) : null;
-    }
+    // }
 
 
     for (const i in includesList) {

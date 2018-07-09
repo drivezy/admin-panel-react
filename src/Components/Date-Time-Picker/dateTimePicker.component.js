@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import DateRangePicker from 'eonasdan-bootstrap-datetimepicker';
 import './dateTimePicker.css';
+import './../../../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css'
+
 
 import $ from 'jquery';
 // import GLOBAL from './../../../../Constants/global.constants'
@@ -19,8 +21,13 @@ export default class DateTimePicker extends Component {
 
     componentDidMount() {
         let $image = $('#datetimepicker10');
+        let $image1 = $('#datetimepicker1');
 
         $image.datetimepicker({
+            viewMode: 'years',
+            format: 'MM/YYYY'
+        });
+        $image1.datetimepicker({
             viewMode: 'years',
             format: 'MM/YYYY'
         });
@@ -35,13 +42,15 @@ export default class DateTimePicker extends Component {
     render() {
         return (
 
-            <div className="container">
+            <div>
                 <div className="col-sm-6">
                     <div className="form-group">
-                        <div className='input-group date' id='datetimepicker10'>
-                            <input type='text' className="form-control" />
+                        <div className='input-group date' id='datetimepicker10' >
+                            <input type='text' className="form-control" id='datetimepicker1'  />
                             <span className="input-group-addon">
-                                <span className="glyphicon glyphicon-calendar">
+                                <span>
+                                    <i className="fa fa-calendar" aria-hidden="true">
+                                    </i>
                                 </span>
                             </span>
                         </div>

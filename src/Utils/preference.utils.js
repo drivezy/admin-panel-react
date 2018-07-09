@@ -12,6 +12,16 @@ export const GetPreferences = () => {
     return Get({ url: 'userPreference', callback: setValues });
 }
 
+export const GetPreference = (preference) => {
+    // return Get({ url: 'userPreference', callback: setValues });
+    var custom = preferences.filter((preference) => preference.parameter === preference).pop()
+
+    console.log(custom);
+    // return preferences.filter((preference) => preference.parameter === preference).pop()
+    // return preferences[preference];
+}
+
+
 /**
  * accepts source_type = JRAPP, source_id (menuId), user_id, name = default, query = null, column_definition
  * @param  {} key
