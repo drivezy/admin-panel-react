@@ -12,6 +12,8 @@ import { CreateFinalColumns } from './../../Utils/generic.utils';
 import { CopyToClipBoard } from './../../Utils/common.utils';
 import ToastNotifications from './../../Utils/toast.utils';
 
+import { Location } from './../../Utils/location.utils';
+
 
 import './DetailIncludes.css';
 
@@ -26,7 +28,8 @@ export default class DetailIncludes extends Component {
         let activeTab = includesArr.indexOf(hash); // match if default open tab is there on the url
         activeTab = activeTab == -1 ? 0 : activeTab;
         if (!hash) {
-            window.location.hash = includesArr[0]
+            // window.location.hash = includesArr[0];
+            Location.navigate({ url: '#' + includesArr[0], method: 'replace' })
         }
 
         this.state = {

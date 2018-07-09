@@ -73,7 +73,7 @@ export default class ActiveModule extends Component {
                                     <div className="panel-body">
                                         {
                                             menus.map((menu, key) => (
-                                                (menu.visible == 1) && (<Link onClick={() => this.clickedValue(menu)} to={menu.url} className="menu-list" key={key}>
+                                                (menu.visible == 1) && (<Link onClick={() => this.clickedValue(menu)} to={'/' + menu.url} className="menu-list" key={key}>
                                                     {menu.name}
                                                 </Link>)
                                             ))

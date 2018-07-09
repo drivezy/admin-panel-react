@@ -8,6 +8,10 @@ import QueryDashboardForm from './../../Components/Query-Report/Query-Dashboard-
 import QueryTable from './../../Components/Query-Report/Query-Table/queryTable.component';
 
 import { QueryData } from './../../Utils/query.utils';
+import { GetPreferences } from './../../Utils/preference.utils';
+import { GetDefaultOptions } from './../../Utils/genericListing.utils';
+import { Post } from './../../Utils/http.utils';
+import { GetColumnsForListing, CreateFinalColumns } from './../../Utils/query.utils';
 
 export default class GenericQueryDetail extends Component {
 
@@ -15,7 +19,13 @@ export default class GenericQueryDetail extends Component {
         super(props);
         this.state = {
             queryParamsData: {},
-            formContent: {}
+            queryListing: {},
+            preference: {},
+            stats: {},
+            currentPage: 1,
+            params: {},
+            columns: [],
+            finalColumns: []
         };
     }
 
@@ -29,13 +39,74 @@ export default class GenericQueryDetail extends Component {
         if (result.success) {
             let queryParamsData = result.response;
             console.log(queryParamsData);
-            this.setState({ queryParamsData })
+            this.setState({ queryParamsData });
+
+            let prefName = queryParamsData.short_name + ".list";
+
+            let preference = [];
+
+            preference = GetPreferences(prefName);
+
+            console.log(preference);
+
+            this.setState({ queryParamsData, preference });
+
+            this.getDataForListing();
+        }
+    }
+
+    getDataForListing = async () => {
+        const { queryParamsData, preference, params } = this.state;
+        let options = GetDefaultOptions;
+        const url = "getReportData";
+        const result = await Post({ url, options, body: { month: "2016-07", query_name: "invoice_details" } });
+        if (result.success) {
+            const queryListing = result.response;
+            this.setState({ queryListing });
+
+
+            let stats = result.stats ? result.stats : stats;
+            params.dictionary = result.dictionary ? result.dictionary : params.dictionary;
+            params.includes = "";
+            params.starter = queryParamsData.short_name;
+            let currentPage = params.page;
+
+            let tempColumns = GetColumnsForListing(params);
+
+            let finalColumns;
+
+            if (preference) {
+                finalColumns = CreateFinalColumns(tempColumns, preference);
+            }
+
+            this.setState({ stats, currentPage, params, columns: tempColumns, finalColumns });
+
         }
     }
 
     render() {
-        const { queryParamsData, formContent } = this.state;
-        console.log(queryParamsData.parameters);
+
+        const { queryListing = {}, queryParamsData = {}, stats, currentPage, preference, params, columns, finalColumns } = this.state;
+
+        // const { history, match } = this.props;
+
+        let resultData;
+
+        if (params.dictionary) {
+            resultData = {
+                columns: columns,
+                listing: queryListing,
+                selectedColumns: queryParamsData.short_name + ".list",
+                listName: queryParamsData.short_name + ".list",
+                pageName: queryParamsData.name,
+                stats: stats,
+                currentPage: currentPage,
+                dictionary: params.dictionary[params.starter],
+                restrictColumn: ""
+            };
+        }
+
+
         return (
             <div className="generic-query">
                 <div className="page-bar">
@@ -84,25 +155,25 @@ export default class GenericQueryDetail extends Component {
                     </div>
                 </div>
 
-                <div class="reports-content">
+                <div className="reports-content">
 
                     {
                          !(queryParamsData.comparable == 0 && queryParamsData.parameters && queryParamsData.parameters.length == 0) &&
                         // queryParamsData.parameters &&
                         <QueryDashboardForm
-                            savedDashboard={savedDashboard}
-                            queryTable={useQueryTable}
+                            // savedDashboard={savedDashboard}
+                            // queryTable={useQueryTable}
                             queryData={queryParamsData}
                             columns={columns}
-                            formContent={formContent}
-                            payload={queryParamsData.parameters}
+                            // formContent={formContent}
+                            fields={queryParamsData.parameters}
                         />
                     }
 
                     {
-                        resultData && useQueryTable &&
+                        resultData &&
                         <QueryTable
-                            formContent={formContent}
+                            // formContent={formContent}
                             finalColumns={finalColumns}
                             preference={preference}
                             queryTableObj={resultData}

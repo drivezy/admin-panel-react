@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import './Login.scene.css';
-import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Card, CardBody, Button, Form, FormGroup, Label } from 'reactstrap';
+
+import { SubscribeToEvent } from './../../Utils/stateManager.utils';
+import { Location } from './../../Utils/location.utils';
+
 import GLOBAL from './../../Constants/global.constants';
 
 import {
@@ -8,9 +12,7 @@ import {
 } from 'react-router-dom';
 
 import { LoginCheck } from './../../Utils/user.utils';
-import { Post, Get } from './../../Utils/http.utils';
-
-import { updateUser, setCurrentRoute } from './../../';
+import { Post } from './../../Utils/http.utils';
 
 export default class LoginScene extends Component {
 
@@ -24,6 +26,16 @@ export default class LoginScene extends Component {
         }
         // this.loggedIn.bind(this);
         this.proceedLogin.bind(this);
+
+        Location.getHistoryMethod(this.getRouterProps); // pass methods, so that location utils can get history object
+        SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
+    }
+
+    userDataFetched = (data) => {
+        const { history } = this.props;
+        if (data.id) {
+            history.goBack();
+        }
     }
 
 
@@ -107,7 +119,7 @@ export default class LoginScene extends Component {
                         </Form>
                         <div className="copyright"> Panel 2017-18 © Powered by Drivezy </div>
                     </CardBody>
-                    
+
                 </Card>
             </div>
         )

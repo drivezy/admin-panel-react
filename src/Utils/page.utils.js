@@ -40,4 +40,8 @@ export default class Pageutil {
     static alert(message) {
         ToastNotifications.success(message);
     }
+
+    static getMenuDetail() {
+        return self.page.menu;
+    }
 }

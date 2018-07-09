@@ -26,6 +26,7 @@ import ToastContainer from './../Components/Toast-Container/toastContainer.compo
 
 /** Util */
 import SettingsUtil from './../Utils/settings.utils';
+import { LoginCheck } from './../Utils/user.utils';
 import { SubscribeToEvent } from './../Utils/stateManager.utils';
 import { ConfirmModalComponent, ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
 import ToastUtils from './../Utils/toast.utils';
@@ -43,11 +44,16 @@ export default class BasicRoute extends Component {
 
     componentDidMount() {
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
+
+        LoginCheck();
     }
 
     userDataFetched = (data) => {
-        this.state.loggedUser = data
-        // this.setState({ loggedUser: data });
+        if (data.id) {
+            this.state.loggedUser = data;
+        } else {
+            this.setState({ loggedUser: data });
+        }
     }
 
     render() {
