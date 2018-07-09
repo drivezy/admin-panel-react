@@ -330,14 +330,14 @@ Non critical css goes here
 .btn-secondary {
     @include themify($themes) {
         // border-color: themed('themeBorder');
-        background: themed('secondaryThemeDark') !important;
+        background: themed('secondaryDark') !important;
         color: themed('whiteColor');
     }
-} 
+}
 
 th {
     @include themify($themes) {
-        background: themed('onPrimaryDark') !important;
+        background: themed('secondaryLight') !important;
         color: themed('whiteColor');
         border-color: themed('secondaryDark');
     }
