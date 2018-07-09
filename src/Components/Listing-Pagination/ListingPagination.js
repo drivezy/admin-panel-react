@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
+import { Location } from './../../Utils/location.utils';
+
 import './ListingPagination.css';
 
 import SelectBox from './../Forms/Components/Select-Box/selectBox';
@@ -38,6 +40,7 @@ export default class ListingPagination extends Component {
             current_page = 1;
             temPageNumber = current_page;
         }
+        let tempUrl;
 
         if (current_page === '...') {
             temPageNumber = this.state.current_page - parseInt((showPages / 2) + 1);    //when clicked on this, show previous 3 pages
@@ -53,12 +56,16 @@ export default class ListingPagination extends Component {
             tempUrl = `${`?limit=${tempLimit}&page=${temPageNumber}`}`;
         }
 
-        let tempUrl = `${`?limit=${tempLimit}&page=${temPageNumber}`}`;
+        const urlParams = { limit: tempLimit, page: temPageNumber };
+        this.setState({ current_page: temPageNumber, limit: tempLimit });
+        this.state.current_page = temPageNumber;
+        this.state.limit = tempLimit;
 
-        this.setState({ current_page: temPageNumber, limit: tempLimit })
+        Location.search(urlParams);
 
-        const { history, match } = this.props;
-        history.push(tempUrl);
+        // let tempUrl = `${`?limit=${tempLimit}&page=${temPageNumber}`}`;
+        // const { history, match } = this.props;
+        // history.push(tempUrl);
 
     }
 

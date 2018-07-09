@@ -31,6 +31,8 @@ $themes: (
             sideBackground:white,
 
 
+            defaultThemeDark: #2b3b46,
+
             /**
 
             Header Styling
@@ -45,7 +47,7 @@ $themes: (
             refreshButton:#8e4747,
 
             settingsButtonBackground:transparent,
-            settingsButton:red,
+            settingsButton:#353535,
             /**
 
             Header Styling Ends
@@ -217,42 +219,22 @@ $themes: (
             //     dark:'#232323'
             // )
             drivezy: (
+                primaryLight: #ffffff,
+                secondaryLight: #fafafa,
+                lightBorder: #e8e8e8,
+                backgroundLight: #ebeef0,
+                // Sidebar Styling
+                primaryDark: #303e4c,
+                onPrimaryDark: #5c7084,
+                secondaryDark: #35485b,
+                onSecondaryDark: #a4b2b8,
+                hoverBackground: #334658,
+                //
+                // Table
+                backgroundLightTable: #f9f9f9,
                 // Body
                 bodyBackground:#ebeef0,
                 // Body Ends
-                // Sidbar Styling
-                sideBackground:#35485b,
-                sidebarBorder:#bfbfbf,
-                logoBackground:#303e4c,
-                logoBottomBorder:#e9e7e7,
-                menuIcon:#a4b2b8,
-                menuIconHover:white,
-                menuHover:#2c3e4e,
-                // Sidebar Styling Ends 
-                // Header Styling
-                headerBackground:white,
-                headerBorder:#c1c1c1,
-                darkColor:#e0dcdc,
-                // Header Ends
-                // Sub Header
-                subHeader:#f1f0f0,
-                subHeaderBorder:#d4d4d4,
-                // Sub Header Ends
-        
-                // Table Styling
-                tableHeader:#f8f9fa,
-                tableHeaderBorder:#ececec,
-                columnTitle:#3b6877,
-                dropdownLink:#b1493ce8,
-                // Table Styling Ends
-                backgroundColor: #fff,
-                textColor: #408bbd,
-                buttonTextColor: #408bbd,
-                buttonTextTransform: none,
-                buttonTextHoverColor: #61b0e7,
-                buttonColor: #fff,
-                buttonBorder: 2px solid #fff,
-                cardMargin : 18px,
                 ),
 );
 // Themes Ends

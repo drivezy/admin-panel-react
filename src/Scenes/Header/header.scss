@@ -1,12 +1,13 @@
 @import 'Assets/Global-Shared/theme.scss';
+
 .landing-header {
     display: flex;
     min-height: 45px;
     height: 45px;
     border-bottom: 1px solid;
     @include themify($themes) {
-        background: themed('headerBackground');
-        border-color: themed('headerBorder');
+        background: themed('primaryLight');
+        border-color: themed('lightBorder');
     }
     .header-content {
         margin: 5px;

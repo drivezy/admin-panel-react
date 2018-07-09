@@ -49,7 +49,7 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
 
     const restricted_query = configuration.restricted_query || configuration.query;
     options.query += IsUndefinedOrNull(restricted_query) ? '' : ' and ' + ConvertToQuery.call(this, restricted_query);
-
+    options.request_identifier = data.request_identifier;
     // If a filter is applied , add the query to options.query
 
     /****************************************************
@@ -119,7 +119,9 @@ function PrepareObjectForListing(result, { extraParams }) {
     const { callback, page, limit, data, configuration, params, index, currentUser } = extraParams;
     if (result.success && result.response) {
 
-        const { data: apiData, dictionary, relationship, stats, base } = result.response;
+        const { data: apiData, dictionary, relationship, stats, request_identifier } = result.response;
+        let { base } = result.response;
+        base = base || data.starter;
         // if (columns && columns.length === 0) {
         //     self.orderColumns = params.dictionary[params.starter];
         // }
@@ -133,11 +135,12 @@ function PrepareObjectForListing(result, { extraParams }) {
         //     }
         // }
 
-        params.dictionary = dictionary || data.dictionary;
+        params.dictionary = dictionary && Object.keys(dictionary).length ? dictionary : data.dictionary;
+        params.relationship = relationship && Object.keys(relationship).length ? relationship : data.relationship;
 
-        if (relationship && typeof Object.keys(relationship).length) {
-            params.relationship = relationship;
-        }
+        // if (relationship && typeof Object.keys(relationship).length) {
+        //     params.relationship = relationship;
+        // }
 
         params.includesList = Object.keys(params.dictionary);
 
@@ -161,8 +164,8 @@ function PrepareObjectForListing(result, { extraParams }) {
         // Preparing the generic listing object
         const genericListingObj = {
             stats: stats || data.stats,
-            dictionary: dictionary || data.dictionary,
-            relationship: relationship || data.relationship, // modelName: self.configuration.formPreferenceName + '.form',
+            dictionary: params.dictionary,
+            relationship: params.relationship, // modelName: self.configuration.formPreferenceName + '.form',
             listing: apiData,
             currentPage: page,
             limit,
@@ -178,7 +181,7 @@ function PrepareObjectForListing(result, { extraParams }) {
             // @TODO uncomment this line to get selectedColumn
             layout: configuration.layout || {},
             // layout: configuration.preference[configuration.listName + ".list"] ? JSON.parse(configuration.preference[configuration.listName + ".list"]) : null, // formPreference: configuration.preference[configuration.listName + '.form'] ? JSON.parse(configuration.preference[configuration.listName + '.form']) : null,
-            nextActions: configuration.uiActions,
+            nextActions: [...model.actions, ...configuration.uiActions],
             // nextActions: model.actions,
             formPreference,
             url: configuration.url,
@@ -190,6 +193,7 @@ function PrepareObjectForListing(result, { extraParams }) {
             userId: currentUser ? currentUser.id : null,
             menuId: configuration.menuId,
             modelId: model.id,
+            request_identifier
             // userFilter: configuration.userFilter,
             // scopes: data.scopes,
             // restrictColumn: configuration.restrictColumnFilter,

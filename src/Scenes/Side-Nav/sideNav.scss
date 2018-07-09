@@ -11,10 +11,13 @@
     display: flex;
     flex-direction: column;
     // border-right: 1px solid;
+    // @include themify($themes) {
+    //     background: themed('sideBackground');
+    //     border-color: themed('sidenavBorder');
+    //     color: themed('navLinkColor');
+    // }
     @include themify($themes) {
-        background: themed('sideBackground');
-        border-color: themed('sidenavBorder');
-        color: themed('navLinkColor');
+        background: themed('secondaryDark');
     }
     &.collapsed {
         width: 40px;
@@ -42,9 +45,9 @@
             justify-content: space-between;
             border-bottom: 1px solid;
             @include themify($themes) {
-                background: themed('navHeader');
-                border-color: themed('headerBorder');
-                color: themed('arrowHeader');
+                background: themed('primaryDark');
+                border-color: themed('primaryDark');
+                color: themed('onPrimaryDark');
             }
             span.logo-container {
                 padding: 5px 20px;
@@ -72,10 +75,13 @@
         height: 100vh;
         border-right: 1px solid;
         @include themify($themes){
-            border-color: themed('sidebarBorder')
+            border-color: themed('secondaryDark')
         }
         .menus {
             // background: #35485b;
+            @include themify($themes){
+                background: themed('secondaryDark');
+            }
             padding: 8px 10px;
             .menu-item {
                 .menu-label {
@@ -89,7 +95,7 @@
                     height: 40px;
                     border-radius: 2px;
                     @include themify($themes) {
-                        color: themed('menuIcon');
+                        color: themed('onSecondaryDark');
                         border-radius: themed('themeBorder');
                     }
                     .menu-icon {
@@ -107,9 +113,9 @@
                     &:hover {
                         @include themify($themes) {
                             // border-radius: themed('menuLinkBorder');
-                            background: themed('hoverColor');
-                            color: themed('linkHover'); // border-left: themed('sideBorder');
-                            border-right: 1px solid themed('linkHover');
+                            background: themed('hoverBackground');
+                            color: themed('primaryLight'); // border-left: themed('sideBorder');
+                            // border-right: 1px solid themed('linkHover');
                         }
                     }
                 }

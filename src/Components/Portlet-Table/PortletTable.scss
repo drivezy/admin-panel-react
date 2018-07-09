@@ -1,5 +1,6 @@
 @import 'Assets/Global-Shared/theme.scss';
 .table-container {
+    padding: 5px;
     .table-body {
         display: flex;
         .table-content {
@@ -12,6 +13,10 @@
                     @supports (-webkit-appearance: none) {
                         tr {
                             position: relative;
+                            border: 1px solid;
+                            @include themify($themes) {
+                                border-color: themed('lightBorder');
+                            }
                         }
                     }
                     tr {
@@ -21,9 +26,11 @@
                             // color: #6f7c87;
                             display: table-cell;
                             padding: 12px; // border: 1px solid;
+                            border: 1px solid;
                             @include themify($themes) {
                                 // border-color: themed('darkColor');
                                 background: themed('tableBackground'); // border: themed('tableHeadBorder')
+                                border-color: themed('lightBorder');
                             }
                             &.header-index {
                                 .select-box {
@@ -133,25 +140,27 @@
                         // height: 60px; 
                         border-bottom: 1px solid;
                         @include themify($themes) {
-                            border-color: themed('tableRowBorder') // border: themed('tableDataBorder');
+                            border-color: themed('lightBorder');
                         }
                         transition: .2s ease; // position: relative;
                         td {
                             vertical-align: middle;
-                            border: none; // font-size: 12px;
+                            // border: none; // font-size: 12px;
                             // padding: 15px 20px; // border-bottom: 1px solid #ebeef0;
                             // border: 1px solid #ececec;
                             @include themify($themes) {
                                 color: themed('tableData') // border: themed('tableDataBorder');
                             }
-                            border-left: none;
+                            // border-left: none;
                             color: #183247; // padding: 15px 20px;
                             white-space: nowrap;
+                            border: 1px solid;
                             &.row-key {
                                 // padding: 15px 10px;
                             }
                             @include themify($themes) {
                                 color: themed('textSecondary');
+                                border-color: themed('lightBorder');
                             }
                             a {
                                 @include themify($themes) {
@@ -196,6 +205,11 @@
                         // &:hover {
                         //     background-color: #f3f5f7;
                         // }
+                    &:nth-child(2n){
+                        @include themify($themes){
+                        background-color: themed('backgroundLightTable');
+                        }
+                    }
                     }
                 }
             }
@@ -208,6 +222,7 @@
                     tr {
                         th {
                             &.action-header {
+                                border: 1px solid;
                                 text-align: center;
                                 // border: 1px solid #a4b2b8;
                                 @include themify($themes) {
@@ -215,6 +230,7 @@
                                     // color: themed('sideBarIcons');
                                     // border: themed('actionBarBorder');
                                     background: themed('tableBackground');
+                                    border-color: themed('lightBorder');
                                 }
                                 text-align: right; //border-left: 1px solid #ebeef0;
                                 color: #35485a;
@@ -227,7 +243,7 @@
                 &.table-row {
                     border-bottom: 1px solid;
                     @include themify($themes) {
-                        border-color: themed('tableRowBorder') // border: themed('tableDataBorder');
+                        border-color: themed('lightBorder') // border: themed('tableDataBorder');
                     }
                     td {
                         &.action-column {
@@ -279,7 +295,7 @@
                 tr {
                     th.action-header {
                         text-align: center;
-                        padding: 6px 10px;
+                        padding: 6px 8px;
                     }
                 }
             }
