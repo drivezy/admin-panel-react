@@ -1,0 +1,28 @@
+.form-group {
+    display: flex;
+    flex-direction: row;
+    flex-basis: 10%;
+    background-color: #fff;
+    color: #bfa283;
+    font-size: 9px;
+    padding-top: 5px;
+    padding-left: 5px;
+    .data-point{
+        border-right: 1px solid black;
+        .form-label {
+            font-weight: bold;
+            font-weight: bold;
+            color: #330a0a9c;
+        }
+        input.form-control {
+            border: none;
+            border-radius: 0px;
+            border-bottom: 1px solid #c7c7c7;
+            padding: 5px 0px;
+            &:focus {
+                box-shadow: none;
+                border-bottom: 1px solid #964d4d66;
+            }
+        }
+    }
+}

@@ -20,6 +20,8 @@ import UserLicense from './../../Scenes/User-License/userLicense.scene';
 import TicketDetail from './../../Scenes/Ticket-Detail/ticketDetail.scene';
 import RosterTimeline from './../../Scenes/Roster-Timeline/rosterTimeline.scene';
 
+import GenericQueryDetail from './../../Scenes/Generic-Query/genericQueryDetail.scene';
+
 import LoadAsyncComponent from './../../Async/async';
 
 import './landing.component.css';
@@ -109,6 +111,7 @@ export default class LandingApp extends Component {
                             <Route exact path='/ticket/:ticketId' component={TicketDetail} />
                             <Route exact path='/rosterTimeline' component={RosterTimeline} />
                             <Route exact path='/' component={HomeScene} />
+                            <Route exact path='/queryDetail/:queryId' component={GenericQueryDetail} />
                             {/* <Route exact path='/user/:userId' component={UserDetail} /> */}
                             {/* <Route exact path='/vehicle/:vehicleId' component={VehicleDetail} /> */}
 
