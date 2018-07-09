@@ -118,6 +118,7 @@ export const GetUserDetail = (userObject) => {
 
         return currentUser;
     } catch (err) {
+        console.log('err');
         return userObject;
     }
 };

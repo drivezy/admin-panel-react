@@ -58,7 +58,7 @@ export default class TableSettings extends Component {
     }
 
     userDataFetched = (data) => {
-        let formConfigurator = data.hasRole && data.hasRole['form-configurator'];
+        let formConfigurator = data.hasRole && data.hasRole('form-configurator');
         // for (var i in data.access_object.roleIdentifiers) {
         //     if (data.access_object.roleIdentifiers[i] == 'form-configurator') {
         //         let formConfigurator = data.access_object.roleIdentifiers[i];
