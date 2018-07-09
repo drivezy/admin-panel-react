@@ -10,21 +10,6 @@ import createBrowserHistory from 'history/createBrowserHistory';
  * e.x. ?query=menu_id=5 returns { menu_id: "5" }
  */
 export function GenerateObjectFromUrlParams(searchString) {
-    // let search = '';
-    // if (searchString.includes('?query=')) {
-    //     search = searchString.replace('?query=', '');
-    // }
-    // if (search.charAt(0) == '?') {
-    //     search = search.substring(1);
-    // }
-    // try {
-    //     return search ? JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g, '":"') + '"}',
-    //         function (key, value) { return key === "" ? value : decodeURIComponent(value) }) : {};
-    // } catch (e) {
-    //     console.log(e)
-    //     return {};
-    // }   
-    // console.log((searchString).replace(/(^\?)/, '').split("&").map(function (n) { return n = n.split("="), this[n[0]] = n[1], this }.bind({}))[0]);
     if (searchString) {
         return (searchString).replace(/(^\?)/, '').split("&").map(function (n) { return n = n.split(/=(.+)/), this[n[0]] = n[1], this }.bind({}))[0];
         // return (searchString).replace(/(^\?)/, '').split("&").map(function (n) { return n = n.split("="), this[n[0]] = n[1], this }.bind({}))[0];
@@ -121,7 +106,7 @@ export class Location {
     /**
      * used for navigating to different routes
      * @param  {string} {url}
-     * @param  {string} {method} - used to select method for navigation, can be push, pop, replace
+     * @param  {string} {method} - used to select method for navigation, can be push, goBack (for pop operation), replace
      */
     static navigate({ url, method = 'push' }) {
         const { history: History } = this.historyFetchMethod();

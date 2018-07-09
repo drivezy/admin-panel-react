@@ -49,11 +49,13 @@ export default class CustomAction extends Component {
         const { genericData, history, callback, source = 'model', menuDetail = {}, parentData = {} } = this.props;
         this.genericData = genericData;
         const data = RemoveStarterFromThePath({ data: listingRow, starter: genericData.starter });
-        
+
 
         if (action.form_id) {
             action.callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : callback) : callback;
             genericData.preDefinedmethods.customForm({ action, listingRow: data, genericData, history, menuDetail, parent: parentData });
+        } else if (typeof genericData.preDefinedmethods[action.identifier] == "function") {
+            genericData.preDefinedmethods[action.identifier]({ action, listingRow: data, genericData, history, source, menuDetail, parent: parentData });
         } else {
             const pageContent = {
                 data,

@@ -208,11 +208,12 @@ export default class GenericListing extends Component {
 
     filterColumn = (column) => {
         let selected;
-        if (column.path.split(".").length == 1) { // for columns which is child of table itself
-            selected = column.name;
-        } else if (column.path.split(".").length == 2) { // for reference columns (for e.g. Created by table in with any menu)
-            selected = column.parentColumn;
+        if (column.path.split(".").length == 2) { // for columns which is child of table itself
+            selected = column.path;
         }
+        // else if (column.path.split(".").length == 3) { // for reference columns (for e.g. Created by table in with any menu)
+        //     selected = column.path;
+        // }
 
         if (typeof this.toggleAdvancedFilter == 'function') {
             this.toggleAdvancedFilter({ single: selected });
@@ -261,6 +262,7 @@ export default class GenericListing extends Component {
     }
 
     render() {
+        const { source: propsSource } = this.props;
         const { localSearch, genericData = {}, pagesOnDisplay, menuDetail = {}, filterContent, currentUser, loading, isTab, source } = this.state;
         const { listing = [], finalColumns = [] } = genericData;
         const { starter } = genericData;
@@ -366,7 +368,7 @@ export default class GenericListing extends Component {
                                                     listing={localSearch.value ? filteredResults : listing}
                                                     callback={this.getListingData}
                                                     menuDetail={menuDetail}
-                                                    source={source}
+                                                    source={propsSource || 'model'}
                                                     filterColumn={this.filterColumn}
                                                 />
                                                 {/* Portlet Table Ends */}
