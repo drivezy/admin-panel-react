@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 
 import QueryForm from './../../Components/Manage-Report/Components/Query-Form/queryForm.component';
 import QueryTable from './../../Components/Manage-Report/Components/Query-Table/queryTable.component';
+import TableSettings from './../../Components/Table-Settings/TableSettings.component';
 
 
 import { GetColumnsForListing, CreateFinalObject } from './../../Utils/query.utils';
@@ -44,13 +45,11 @@ export default class ManageReportDetail extends Component {
             const queryParamsData = result.response;
             let prefName = queryParamsData.short_name + ".list";
 
-            // let preference = [];
-            const preference = GetPreference(prefName);
+            let preference = [];
 
-            // if (preferenceResult.success) {
-            //     preference = result.response;
-            // }
-            // console.log(preference);
+            preference = GetPreference(prefName);
+
+            console.log(preference);
 
             this.setState({ queryParamsData, preference });
 
@@ -117,6 +116,22 @@ export default class ManageReportDetail extends Component {
                         <div className="reporting-query-header">
                             <div className="header-content">
                                 <h6>{queryParamsData.name}</h6>
+
+                                {
+                                    resultData && resultData.columns ?
+                                        <TableSettings
+                                            // source={source}
+                                            onSubmit={this.layoutChanges}
+                                            listName={resultData.listName}
+                                            // layout={resultData.layout}
+                                            columns={resultData.columns}
+                                            // menuId={menuDetail.menuId}
+                                            // userId={currentUser.id}
+                                        />
+                                        :
+                                        null
+                                }
+
                             </div>
                         </div>
                     </div>
@@ -124,7 +139,7 @@ export default class ManageReportDetail extends Component {
                 {
                     queryParamsData.parameters &&
                     <QueryForm payload={queryParamsData.parameters} />
-                
+
                 }
 
                 {

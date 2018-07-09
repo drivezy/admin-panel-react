@@ -9,7 +9,7 @@ import { RECORD_URL } from './../Constants/global.constants';
 let preferences = [];
 
 export const GetPreferences = () => {
-    return Get({ url: 'userPreference', callback: setValues });
+    return Get({ url: 'userPreference?limit=1000', callback: setValues });
 }
 
 export const GetPreference = (preference) => {
