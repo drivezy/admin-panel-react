@@ -13,6 +13,8 @@ import { ExecuteScript } from './injectScript.utils';
 import { Get } from './http.utils';
 
 import { ROUTE_URL, RECORD_URL } from './../Constants/global.constants';
+import { SelectFromOptions } from './common.utils';
+import { GetItem } from './localStorage.utils';
 
 
 export async function ProcessForm({ formContent, scripts, isForm, openModal = true }) {
@@ -37,17 +39,26 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
             formContent.data = response.data;
         }
 
+        const layouts = GetParsedLayoutScript(response.form_layouts);
+        formContent.layouts = layouts; //layouts
+
         if (isForm) {
             formContent.route = response.form.end_point;
             formContent.layout = [];
-            const layouts = GetParsedLayoutScript(response.form_layouts);
+
             if (layouts[0] && layouts[0].column_definition) {
                 formContent.layout = layouts[0];
             }
-            formContent.layouts = layouts; //layouts
             formContent.record = formContent.data;
             formContent.data = GetDataFromDictionary(formContent.dictionary);
             formContent.modelId = response.form.id;
+        }
+
+        // get 
+        // form-layout-{modelId} = layout id
+        const layoutId = GetItem(`form-layout-${formContent.modelId}`);
+        if (layoutId) {
+            formContent.layout = SelectFromOptions(layouts, layoutId, 'id');
         }
 
         if (Array.isArray(scripts)) {
@@ -61,13 +72,21 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
         formContent.data = { ...formContent.data, ...restrictedQuery };
 
         if (openModal) {
-            ModalManager.openModal({
-                headerText: formContent.name,
-                modalBody: () => (<FormCreator payload={formContent} />),
-            });
+            // ModalManager.openModal({
+            //     headerText: formContent.name,
+            //     modalBody: () => (<FormCreator payload={formContent} />),
+            // });
+            OpenModalForm(formContent);
         }
 
     }
+}
+
+export function OpenModalForm(formContent) {
+    ModalManager.openModal({
+        headerText: formContent.name,
+        modalBody: () => (<FormCreator payload={formContent} />),
+    });
 }
 
 function GetDataFromDictionary(dictionary) {

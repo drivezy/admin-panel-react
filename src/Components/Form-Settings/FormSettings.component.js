@@ -25,8 +25,9 @@ export default class FormSettings extends Component {
 
         this.state = {
             modal: false,
+            layoutName: formLayout.name || '',
             selectedColumns: formLayout.column_definition || [],
-            tempSelectedColumns: formLayout.column_definition || [],
+            tempSelectedColumns: Array.isArray(formLayout.column_definition) ? [...formLayout.column_definition] : [],
             columns: this.props.columns,
             list: {},
             activeColumn: {},
@@ -40,7 +41,7 @@ export default class FormSettings extends Component {
     }
 
     userDataFetched = (data) => {
-        let formConfigurator = data.hasRole['form-configurator'];
+        let formConfigurator = data.hasRole('form-configurator');
         // for (var i in data.access_object.roleIdentifiers) {
         //     if (data.access_object.roleIdentifiers[i] == 'form-configurator') {
         //         let formConfigurator = data.access_object.roleIdentifiers[i];
@@ -123,14 +124,25 @@ export default class FormSettings extends Component {
         const { tempSelectedColumns } = this.state;
         tempSelectedColumns.splice(index, 1);
         var end;
-        if (item.split("-")[0] == "e") {
-            end = item.replace("e", "s");
-        } else if (item.split("-")[0] == "s") {
-            end = item.replace("s", "e");
+        if (item.label.split("-")[0] == "e") {
+            end = item.label.replace("e", "s");
+        } else if (item.label.split("-")[0] == "s") {
+            end = item.label.replace("s", "e");
         }
-        var endIndex = tempSelectedColumns.indexOf(end);
-        tempSelectedColumns.splice(endIndex, 1);
-        this.setState({ tempSelectedColumns });
+
+        let endIndex = -1;
+
+        tempSelectedColumns.some((column, key) => {
+            if (column.label == end) {
+                endIndex = key;
+                return true;
+            }
+        })
+        // var endIndex = tempSelectedColumns.indexOf(end);
+        if (endIndex != -1) {
+            tempSelectedColumns.splice(endIndex, 1);
+            this.setState({ tempSelectedColumns });
+        }
     };
 
 
@@ -155,7 +167,7 @@ export default class FormSettings extends Component {
 
     modalWrapper() {
         // const { columns, tempSelectedColumns, selectedColumns, activeColumn, module } = this.state;
-        const { columns, tempSelectedColumns, activeColumn, module, formConfigurator } = this.state;
+        const { columns, tempSelectedColumns, activeColumn, module, formConfigurator, layoutName } = this.state;
 
         const selectedIds = [];
 
@@ -184,7 +196,8 @@ export default class FormSettings extends Component {
             <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="form-settings-modal">
                 <ModalHeader toggle={this.toggleModal}>
                     Configure
-            </ModalHeader>
+                    <input type='text' value={layoutName} onChange={e => this.setState({ layoutName: e.target.value })} />
+                </ModalHeader>
                 <ModalBody>
                     <div className="left">
 
@@ -295,7 +308,7 @@ export default class FormSettings extends Component {
     render() {
         return (
             <div className="form-settings">
-                <Button color="primary" size="sm" onClick={this.toggleModal}>
+                <Button color="secondary" size="sm" onClick={this.toggleModal}>
                     <i className="fa fa-cog"></i>
                 </Button>
 

@@ -36,6 +36,8 @@ import { GetUrlForFormSubmit } from './../../Utils/generic.utils';
 
 import { ROUTE_URL } from './../../Constants/global.constants';
 
+import { SetItem } from './../../Utils/localStorage.utils';
+
 const DisplayFormikState = props => (
     <div style={{ margin: '1rem 0' }}>
         <h3 style={{ fontFamily: 'monospace' }} />
@@ -263,9 +265,8 @@ const formElements = props => {
 
             <div className="modal-actions row justify-content-end">
 
+                {console.log(payload)}
 
-                {/* <SelectBox onChange={props.setFieldValue} value={payload.display_name} field="name" options={payload} /> */}
-                
                 <Button color="secondary" onClick={handleReset}>
                     Clear
                 </Button>
@@ -518,11 +519,22 @@ export default class FormCreator extends Component {
         this.setState({ fileUploads });
     }
 
+    onLayoutChange = (value) => {
+        const { payload } = this.state;
+        //console.log(value);
+        payload.layout = value;
+        this.setState({ payload });
+        SetItem(`form-layout-${payload.modelId}`, value.id);
+    }
+
     render() {
         const { payload, fileUploads } = this.state;
         const { source, modelId } = payload;
         return (
             <div className="form-creator">
+                {
+                    <SelectBox onChange={(value) => this.onLayoutChange(value)} value={payload.layout} field="name" options={payload.layouts} />
+                }
 
                 {
                     payload.dictionary ?
