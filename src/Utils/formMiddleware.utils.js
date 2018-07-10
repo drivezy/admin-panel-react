@@ -44,6 +44,7 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
             if (layouts[0] && layouts[0].column_definition) {
                 formContent.layout = layouts[0];
             }
+            formContent.layouts = layouts; //layouts
             formContent.record = formContent.data;
             formContent.data = GetDataFromDictionary(formContent.dictionary);
             formContent.modelId = response.form.id;
