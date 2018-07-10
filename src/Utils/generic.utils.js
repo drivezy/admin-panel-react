@@ -538,6 +538,7 @@ export function GetPreSelectedMethods() {
             dictionary: genericData.columns,
             relationship: genericData.model,
             layout: genericData.formPreference,
+            layouts: genericData.formPreferences,
             userId: genericData.userId,
             modelId: genericData.modelId,
             route: genericData.url,

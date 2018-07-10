@@ -48,12 +48,14 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
             formContent.data = response.data;
         }
 
-        const layouts = GetParsedLayoutScript(response.form_layouts);
-        formContent.layouts = layouts; //layouts
+        let layouts = formContent.layouts;
 
         if (isForm) {
             formContent.route = response.form.end_point;
             formContent.layout = [];
+
+            layouts = GetParsedLayoutScript(response.form_layouts);
+            formContent.layouts = layouts; //layouts
 
             if (layouts[0] && layouts[0].column_definition) {
                 formContent.layout = layouts[0];
