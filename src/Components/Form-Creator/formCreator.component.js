@@ -531,7 +531,9 @@ export default class FormCreator extends Component {
         return (
             <div className="form-creator">
                 {
-                    <SelectBox isClearable={false} onChange={(value) => this.onLayoutChange(value)} value={payload.layout} field="name" options={payload.layouts} />
+                    <div className="layoutSelect">
+                        <SelectBox isClearable={false} onChange={(value) => this.onLayoutChange(value)} value={payload.layout} field="name" options={payload.layouts} />
+                    </div>
                 }
 
                 {

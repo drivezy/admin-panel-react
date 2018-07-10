@@ -107,7 +107,9 @@
             }
             .list-group-item {
                 &.active {
-                    background: #5bc263;
+                    background: #dff0d8;
+                    border-color: #dff0d8;
+                    color: #105d26;
                 }
             }
         }

@@ -26,6 +26,12 @@
     .padding-top-4 {
         padding-top: 4px;
     }
+    .gray-border-bottom{
+        &:hover{
+            font-size: 105%;
+        }
+    }
+
     .gray-border-bottom:nth-child(4n+1) {
         background: #f9f9f9;
         @include themify($themes) {
