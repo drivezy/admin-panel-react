@@ -5,6 +5,7 @@ import {
     Card, CardBody, Button
 } from 'reactstrap';
 
+
 import { withFormik, Field, Form } from 'formik';
 import Yup from 'yup';
 
@@ -261,13 +262,17 @@ const formElements = props => {
             {/* Uploaded file thumbnails Ends*/}
 
             <div className="modal-actions row justify-content-end">
+
+
+                {/* <SelectBox onChange={props.setFieldValue} value={payload.display_name} field="name" options={payload} /> */}
+                
                 <Button color="secondary" onClick={handleReset}>
                     Clear
                 </Button>
 
-                <button className="btn btn-primary" type="submit">
+                <Button className="btn btn-success" type="submit">
                     Submit
-                </button>
+                </Button>
             </div>
         </Form>
     );
@@ -416,6 +421,12 @@ export default class FormCreator extends Component {
         SubscribeToEvent({ eventName: 'formChanged', callback: this.formUpdated });
     }
 
+    toggle() {
+        this.setState({
+            dropdownOpen: !this.state.dropdownOpen
+        });
+    }
+
     async componentDidMount() {
         const { payload = {} } = this.props;
         const { layout, module } = payload;
@@ -512,6 +523,7 @@ export default class FormCreator extends Component {
         const { source, modelId } = payload;
         return (
             <div className="form-creator">
+
                 {
                     payload.dictionary ?
                         <FormSettings source={source} modelId={modelId} onSubmit={this.layoutChanged} listName={payload.modelName} formLayout={payload.layout} columns={payload.dictionary} />
