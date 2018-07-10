@@ -72,13 +72,21 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
         formContent.data = { ...formContent.data, ...restrictedQuery };
 
         if (openModal) {
-            ModalManager.openModal({
-                headerText: formContent.name,
-                modalBody: () => (<FormCreator payload={formContent} />),
-            });
+            // ModalManager.openModal({
+            //     headerText: formContent.name,
+            //     modalBody: () => (<FormCreator payload={formContent} />),
+            // });
+            OpenModalForm(formContent);
         }
 
     }
+}
+
+export function OpenModalForm(formContent) {
+    ModalManager.openModal({
+        headerText: formContent.name,
+        modalBody: () => (<FormCreator payload={formContent} />),
+    });
 }
 
 function GetDataFromDictionary(dictionary) {
