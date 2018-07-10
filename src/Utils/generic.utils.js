@@ -706,6 +706,9 @@ export function RemoveStarterFromThePath({ data, starter }) {
 }
 
 export function GetParsedLayoutScript(listLayouts) {
+    if(!Array.isArray(listLayouts)) { 
+        return [];
+    }
     return listLayouts.map(layout => {
         // menuDetail.layouts = menuDetail.list_layouts.map(layout => {
         try {
