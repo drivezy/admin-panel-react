@@ -718,10 +718,10 @@ export function GetParsedLayoutScript(listLayouts) {
 
 }
 
-export function GetChangedMethods(newValues, originalValues) {
+export function GetChangedMethods(newValues, originalValues = {}) {
     const data = {};
-    if (IsObjectHaveKeys(originalValues)) {
-        for (let i in originalValues) {
+    if (IsObjectHaveKeys(newValues)) {
+        for (let i in newValues) {
             const newValue = newValues[i];
             const oldValue = originalValues[i];
             if (newValue != oldValue) {
