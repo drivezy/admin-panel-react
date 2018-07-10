@@ -172,51 +172,8 @@ export default class QueryTable extends Component {
                                         // let conditionForSorting = (this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.column_name))) ? (this.state.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down') : ''
                                         return (
                                             <th className="column-header" key={key}>
-                                                {selectedColumn}
-                                                {/* <div className="column-wrapper">
-                                                    <div className="column-title printable">
-                                                        <a onClick={e => this.onSort(e, selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName))}>
-                                                            <span>{selectedColumn.display_name}</span> &nbsp;
-                                                            <i className={`fa ${conditionForSorting}`} />
-                                                        </a>
-                                                    </div>
-                                                    {
-                                                        tableType == "listing" && selectedColumn.path.split('.').length < 3 &&
-                                                        <div className="filter-column">
-                                                            <a onClick={e => this.filterColumn(selectedColumn)}>
-                                                                <i className="fa fa-filter"></i>
-                                                            </a>
-                                                        </div>
-                                                    }
-                                                    {
-                                                        (selectedColumn.path.split('.').length == 1) && (selectedColumn.column_type != 118) &&
-                                                        (
-                                                            tableType == "listing" &&
-                                                            <div className="db-level-sort">
-                                                                {
-                                                                    <Dropdown isOpen={this.state.dropdownOpen[selectedColumn.id]} toggle={() => this.dropdownToggle(selectedColumn)}>
-                                                                        <DropdownToggle tag="span" data-toggle="dropdown" aria-expanded={this.state.dropdownOpen}>
-                                                                            <a className="dropdown-link">
-                                                                                <i className="fa fa-sort-amount-asc"></i>
-                                                                            </a>
-                                                                        </DropdownToggle>
-                                                                        <DropdownMenu>
-                                                                            {
-                                                                                this.sortTypes.map((sort, key) => {
-                                                                                    return (
-                                                                                        <div className="dropdown-item" key={key} onClick={e => this.dropdownSortOnDB(sort, selectedColumn)}>
-                                                                                            <i className={`fa ${sort.icon}`} /> {sort.caption}
-                                                                                        </div>
-                                                                                    )
-                                                                                })
-                                                                            }
-                                                                        </DropdownMenu>
-                                                                    </Dropdown>
-                                                                }
-                                                            </div>
-                                                        )
-                                                    }
-                                                </div> */}
+                                                {selectedColumn.display_name}
+
                                             </th>
                                         )
                                     })
@@ -244,7 +201,7 @@ export default class QueryTable extends Component {
 
                                                     return (
                                                         <td key={key} className=''>
-                                                            {eval('listingRow.' + selectedColumn.path)}
+                                                            {eval('listingRow.' + selectedColumn.column_name)}
                                                         </td>
                                                     )
                                                 })

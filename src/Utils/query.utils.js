@@ -115,3 +115,17 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
     return finalColumnDefinition;
 }
 
+/**
+ * Returns default option for get call params
+ */
+export function GetDefaultOptionsForQuery() {
+    return {
+        includes: '',
+        order: '1,asc',
+        query: '',
+        limit: 20,
+        page: 1,
+        dictionary: false,
+        stats: true
+    };
+}

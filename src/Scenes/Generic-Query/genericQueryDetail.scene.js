@@ -9,9 +9,9 @@ import QueryTable from './../../Components/Query-Report/Query-Table/queryTable.c
 
 import { QueryData } from './../../Utils/query.utils';
 import { GetPreferences } from './../../Utils/preference.utils';
-import { GetDefaultOptions } from './../../Utils/genericListing.utils';
+import { BuildUrlForGetCall } from './../../Utils/common.utils';
 import { Post } from './../../Utils/http.utils';
-import { GetColumnsForListing, CreateFinalColumns } from './../../Utils/query.utils';
+import { GetColumnsForListing, CreateFinalColumns, GetDefaultOptionsForQuery } from './../../Utils/query.utils';
 
 export default class GenericQueryDetail extends Component {
 
@@ -45,10 +45,9 @@ export default class GenericQueryDetail extends Component {
 
             let preferences = await GetPreferences(prefName);
 
-            var preference = preferences.response.filter(function(item){
+            var preference = preferences.response.filter(function (item) {
                 return item.parameter == prefName;
             })
-            // preferences.find(x => x.parameter === prefName);
 
             console.log(preference);
 
@@ -60,9 +59,11 @@ export default class GenericQueryDetail extends Component {
 
     getDataForListing = async () => {
         const { queryParamsData, preference, params } = this.state;
-        let options = GetDefaultOptions;
-        const url = "getReportData";
-        const result = await Post({ url, options, body: { month: "2016-07", query_name: "invoice_details" } });
+        let options = GetDefaultOptionsForQuery();
+
+        const url = BuildUrlForGetCall("getReportData", options);
+
+        const result = await Post({ url, body: { month: "2016-07", query_name: "invoice_details" } });
         if (result.success) {
             const queryListing = result.response;
             this.setState({ queryListing });
@@ -161,7 +162,7 @@ export default class GenericQueryDetail extends Component {
                 <div className="reports-content">
 
                     {
-                         !(queryParamsData.comparable == 0 && queryParamsData.parameters && queryParamsData.parameters.length == 0) &&
+                        !(queryParamsData.comparable == 0 && queryParamsData.parameters && queryParamsData.parameters.length == 0) &&
                         // queryParamsData.parameters &&
                         <QueryDashboardForm
                             // savedDashboard={savedDashboard}
@@ -178,7 +179,7 @@ export default class GenericQueryDetail extends Component {
                         <QueryTable
                             // formContent={formContent}
                             finalColumns={finalColumns}
-                            listing={preference}
+                            listing={resultData.listing}
                             queryTableObj={resultData}
                             queryData={queryParamsData}
                         />
