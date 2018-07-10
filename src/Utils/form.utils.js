@@ -24,7 +24,6 @@ export default class FormUtil {
      * @param  {object} ...event}
      */
     static OnChangeListener({ column, value, ...event }) {
-        console.log('latest value', value);
         if (self.form) {
             self.form.data[column.name] = value;
             const callback = onChangeListeners[column.path];
@@ -173,7 +172,6 @@ export default class FormUtil {
      */
     static setForm(form) {
         self.form = form;
-        console.log(form);
         self.data = { ...self.form.data } || {};
         // self.data = self.form.data || {};
     };

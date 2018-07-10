@@ -102,7 +102,7 @@ export default class ListingPagination extends Component {
         if (startIndex >= 5)                                        //If startIndex is >=5. i.e. current page is >=7 , show ...
             pages.push({ page: '...' });
         else
-            for (let i = 2; i <= startIndex; i++)
+            for (let i = 2; i < startIndex; i++)
                 pages.push({ page: i });
 
         {
@@ -158,7 +158,7 @@ export default class ListingPagination extends Component {
         return (
             <div className="listing-pagination">
                 <Pagination className="sm">
-                    <PaginationItem disabled={previousPage == 0}>
+                    <PaginationItem className="previous-page-go" disabled={previousPage == 0}>
                         <PaginationLink previous onClick={() => this.redirectToPage(previousPage, limit)} />
                     </PaginationItem>
                     {
@@ -171,7 +171,7 @@ export default class ListingPagination extends Component {
                         )
                     }
 
-                    <PaginationItem disabled={nextPage == page_length + 1}>
+                    <PaginationItem className="next-page-go"disabled={nextPage == page_length + 1}>
                         <PaginationLink next onClick={() => this.redirectToPage(nextPage, limit)} />
                     </PaginationItem>
 

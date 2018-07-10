@@ -10,6 +10,13 @@
     }
     .modal-title{
         letter-spacing: 3px;
+        input{
+            margin: 0 30px;
+            border: none;
+            border-bottom: 2px solid #fff;
+            background: none;
+            color: #ffff;
+        }
     }
     .close{
         @include themify($themes){

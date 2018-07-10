@@ -232,7 +232,7 @@ const formElements = props => {
                         if (column && (IsUndefined(column.visibility) || column.visibility)) {
                             return (
                                 <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
-                                    <label htmlFor="exampleInputEmail1">{column.label || column.display_name}</label>
+                                    <label>{column.label || column.display_name}</label>
                                     {elem}
 
                                     {/* Showing Errors when there are errors */}
@@ -264,8 +264,6 @@ const formElements = props => {
             {/* Uploaded file thumbnails Ends*/}
 
             <div className="modal-actions row justify-content-end">
-
-                {console.log(payload)}
 
                 <Button color="secondary" onClick={handleReset}>
                     Clear
@@ -366,7 +364,7 @@ const FormContents = withFormik({
 
         if (props.fileUploads.length) {
             uploadImages(props).then((result) => {
-                console.log(result)
+                //console.log(result)
                 submitGenericForm();
             });
         } else {
@@ -533,7 +531,7 @@ export default class FormCreator extends Component {
         return (
             <div className="form-creator">
                 {
-                    <SelectBox onChange={(value) => this.onLayoutChange(value)} value={payload.layout} field="name" options={payload.layouts} />
+                    <SelectBox isClearable={false} onChange={(value) => this.onLayoutChange(value)} value={payload.layout} field="name" options={payload.layouts} />
                 }
 
                 {
