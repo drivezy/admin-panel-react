@@ -185,7 +185,7 @@ export default class GenericListing extends Component {
                     }
                 }
                 if (f == 0) { // if not overlapping
-                    query = this.urlParams.query + ' AND ' + data.selectedColumn["parent"] + '.id' + method[1] + "'" + data.listingRow[data.starter + '.id'] + "'";
+                    query = this.urlParams.query + ' AND `' + data.selectedColumn["parent"] + '`.id' + method[1] + "'" + data.listingRow[data.starter + '.id'] + "'";
                     Location.search({
                         query: query
                     });
@@ -197,7 +197,7 @@ export default class GenericListing extends Component {
                 }
             } else { // if previous query not present then it will executed
 
-                query = data.selectedColumn["parent"] + '.id' + method[1] + "'" + data.listingRow[data.starter + '.id'] + "'";
+                query = '`' + data.selectedColumn["parent"] + '`.id' + method[1] + "'" + data.listingRow[data.starter + '.id'] + "'";
 
                 this.urlParams.query = query;
 
