@@ -120,26 +120,26 @@ export default class PortletTable extends Component {
 
                 //ascending: reverse off , descending: reverse on
 
-                if (a[prop] == null && b[prop]!=null) {                 //reverse: off- put valued object above null. reverse: on- put valued object below null
+                if (a[prop] == null && b[prop] != null) {                 //reverse: off- put valued object above null. reverse: on- put valued object below null
                     return reverse ? -1 : 1;
                 }
 
-                else if (b[prop] == null && a[prop]!=null) {           //reverse: off- put valued object below null. reverse: on- put valued object above nul
+                else if (b[prop] == null && a[prop] != null) {           //reverse: off- put valued object below null. reverse: on- put valued object above nul
                     return reverse ? 1 : -1;
                 }
 
-                else if (b[prop] == null && a[prop]== null) {           //reverse: off, on - do nothing for both nulls
+                else if (b[prop] == null && a[prop] == null) {           //reverse: off, on - do nothing for both nulls
                     //Do_nothing
                 }
 
                 else if (a[prop] < b[prop]) {                           //Do comparison on the basis of alphabetical order.
-                   return reverse ? 1 : -1;
+                    return reverse ? 1 : -1;
                 }
-                
+
                 else if (a[prop] > b[prop]) {                           //Do comparison on the basis of alphabetical order.
-                    return reverse ? -1 : 1; 
+                    return reverse ? -1 : 1;
                 }
-                
+
             };
         }
 
@@ -193,11 +193,11 @@ export default class PortletTable extends Component {
         if (genericData.nextActions.length) {
             for (let i in genericData.nextActions) {
                 if (genericData.nextActions[i].as_context == 1) {
-                    rightClickOptions = rightClickOptions.concat(rowOptions, genericData.nextActions[i]);
+                    rightClickOptions = rowOptions.concat(genericData.nextActions[i]);
                 }
             }
         } else {
-            rightClickOptions = rightClickOptions.concat(rowOptions, []);
+            rightClickOptions = rowOptions.concat(rowOptions, []);
         }
 
 
@@ -242,7 +242,7 @@ export default class PortletTable extends Component {
                                             {/* DB Level */}
 
                                             {
-                                                (selectedColumn && selectedColumn.path.split('.').length == 2) && (selectedColumn.column_type_id ) &&
+                                                (selectedColumn && selectedColumn.path.split('.').length == 2) && (selectedColumn.column_type_id) &&
                                                 (
                                                     tableType == "listing" &&
                                                     <div className="db-level-sort">
