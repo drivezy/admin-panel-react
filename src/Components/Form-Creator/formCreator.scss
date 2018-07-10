@@ -30,13 +30,14 @@
 }
 
 .form-creator {
+    .layoutSelect{
     .select-box{
         position: absolute;
         z-index: 10;
         width: 17%;
         left: 70%;
         top: 1%;
-    }
+    }}
     .form-settings {
         position: absolute;
         right: 45px;

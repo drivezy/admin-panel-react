@@ -86,6 +86,13 @@
                     }
                 }
             }
+            .list-group-item {
+                &.active {
+                    background: #dff0d8;
+                    border-color: #dff0d8;
+                    color: #105d26;
+                }
+            }
         }
         .controls {
             display: flex;

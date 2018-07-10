@@ -73,7 +73,7 @@ export default class TableSettings extends Component {
         let selectedColumns = this.state.tempSelectedColumns;
 
         // const regexForPickingAfterLastDot = /[^\.]+$/;
-        selectedColumns.unshift({
+        selectedColumns.push({
             headingCollapsed: true, heading: "", object: column.parent, column: column.name, index: column.parent + '.' + column.name
             // headingCollapsed: true, heading: "", object: column.parent, column: column.name, index: column.parent + '.' + column.name
             // headingCollapsed: true, heading: "", object: column.parent.match(regexForPickingAfterLastDot)[0], column: column.name, columnObj: column
@@ -104,6 +104,7 @@ export default class TableSettings extends Component {
         const { tempColumns, columns } = this.state;
         column = columns[column.index];
         tempColumns[column.path] = column;
+        // tempColumns[column.path] = tempColumns.push(column);
     }
 
     toggleColumn = (column) => {
