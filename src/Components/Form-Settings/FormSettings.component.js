@@ -123,14 +123,25 @@ export default class FormSettings extends Component {
         const { tempSelectedColumns } = this.state;
         tempSelectedColumns.splice(index, 1);
         var end;
-        if (item.split("-")[0] == "e") {
-            end = item.replace("e", "s");
-        } else if (item.split("-")[0] == "s") {
-            end = item.replace("s", "e");
+        if (item.label.split("-")[0] == "e") {
+            end = item.label.replace("e", "s");
+        } else if (item.label.split("-")[0] == "s") {
+            end = item.label.replace("s", "e");
         }
-        var endIndex = tempSelectedColumns.indexOf(end);
-        tempSelectedColumns.splice(endIndex, 1);
-        this.setState({ tempSelectedColumns });
+
+        let endIndex = -1;
+
+        tempSelectedColumns.some((column, key) => {
+            if (column.label == end) {
+                endIndex = key;
+                return true;
+            }
+        })
+        // var endIndex = tempSelectedColumns.indexOf(end);
+        if (endIndex != -1) {
+            tempSelectedColumns.splice(endIndex, 1);
+            this.setState({ tempSelectedColumns });
+        }
     };
 
 
