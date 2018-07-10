@@ -5,6 +5,7 @@ import {
     Card, CardBody, Button
 } from 'reactstrap';
 
+
 import { withFormik, Field, Form } from 'formik';
 import Yup from 'yup';
 
@@ -34,6 +35,8 @@ import FormUtils from './../../Utils/form.utils';
 import { GetUrlForFormSubmit } from './../../Utils/generic.utils';
 
 import { ROUTE_URL } from './../../Constants/global.constants';
+
+import { SetItem } from './../../Utils/localStorage.utils';
 
 const DisplayFormikState = props => (
     <div style={{ margin: '1rem 0' }}>
@@ -229,7 +232,7 @@ const formElements = props => {
                         if (column && (IsUndefined(column.visibility) || column.visibility)) {
                             return (
                                 <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
-                                    <label htmlFor="exampleInputEmail1">{column.label || column.display_name}</label>
+                                    <label>{column.label || column.display_name}</label>
                                     {elem}
 
                                     {/* Showing Errors when there are errors */}
@@ -261,13 +264,14 @@ const formElements = props => {
             {/* Uploaded file thumbnails Ends*/}
 
             <div className="modal-actions row justify-content-end">
+
                 <Button color="secondary" onClick={handleReset}>
                     Clear
                 </Button>
 
-                <button className="btn btn-primary" type="submit">
+                <Button className="btn btn-success" type="submit">
                     Submit
-                </button>
+                </Button>
             </div>
         </Form>
     );
@@ -360,7 +364,7 @@ const FormContents = withFormik({
 
         if (props.fileUploads.length) {
             uploadImages(props).then((result) => {
-                console.log(result)
+                //console.log(result)
                 submitGenericForm();
             });
         } else {
@@ -414,6 +418,12 @@ export default class FormCreator extends Component {
 
         this.formUpdated.bind(this);
         SubscribeToEvent({ eventName: 'formChanged', callback: this.formUpdated });
+    }
+
+    toggle() {
+        this.setState({
+            dropdownOpen: !this.state.dropdownOpen
+        });
     }
 
     async componentDidMount() {
@@ -507,11 +517,23 @@ export default class FormCreator extends Component {
         this.setState({ fileUploads });
     }
 
+    onLayoutChange = (value) => {
+        const { payload } = this.state;
+        //console.log(value);
+        payload.layout = value;
+        this.setState({ payload });
+        SetItem(`form-layout-${payload.modelId}`, value.id);
+    }
+
     render() {
         const { payload, fileUploads } = this.state;
         const { source, modelId } = payload;
         return (
             <div className="form-creator">
+                {
+                    <SelectBox isClearable={false} onChange={(value) => this.onLayoutChange(value)} value={payload.layout} field="name" options={payload.layouts} />
+                }
+
                 {
                     payload.dictionary ?
                         <FormSettings source={source} modelId={modelId} onSubmit={this.layoutChanged} listName={payload.modelName} formLayout={payload.layout} columns={payload.dictionary} />
