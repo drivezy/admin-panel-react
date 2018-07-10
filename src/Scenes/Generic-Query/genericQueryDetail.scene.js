@@ -7,6 +7,8 @@ import QueryPredefinedFilter from './../../Components/Query-Report/Query-Predefi
 import QueryDashboardForm from './../../Components/Query-Report/Query-Dashboard-Form/queryDashboardForm.component';
 import QueryTable from './../../Components/Query-Report/Query-Table/queryTable.component';
 
+import ListingPagination from './../../Components/Listing-Pagination/ListingPagination';
+
 import { QueryData } from './../../Utils/query.utils';
 import { GetPreferences } from './../../Utils/preference.utils';
 import { BuildUrlForGetCall } from './../../Utils/common.utils';
@@ -25,7 +27,8 @@ export default class GenericQueryDetail extends Component {
             currentPage: 1,
             params: {},
             columns: [],
-            finalColumns: []
+            finalColumns: [],
+            resultData: {}
         };
     }
 
@@ -73,7 +76,7 @@ export default class GenericQueryDetail extends Component {
             params.dictionary = result.dictionary ? result.dictionary : params.dictionary;
             params.includes = "";
             params.starter = queryParamsData.short_name;
-            let currentPage = params.page;
+            let currentPage = params.page ? params.page : 1;
 
             let tempColumns = GetColumnsForListing(params);
 
@@ -83,33 +86,35 @@ export default class GenericQueryDetail extends Component {
                 finalColumns = CreateFinalColumns(tempColumns, JSON.parse(preference[0].value));
             }
 
-            this.setState({ stats, currentPage, params, columns: tempColumns, finalColumns });
+            this.setState({ stats, currentPage, params, columns: tempColumns, finalColumns, stats });
+
+            this.gatherData(result.response);
 
         }
     }
 
+    gatherData = () => {
+        const { queryListing = {}, queryParamsData = {}, stats, currentPage, params, columns } = this.state;
+        let resultData = {
+            columns: columns,
+            listing: queryListing,
+            selectedColumns: queryParamsData.short_name + ".list",
+            listName: queryParamsData.short_name + ".list",
+            pageName: queryParamsData.name,
+            stats: stats,
+            currentPage: currentPage,
+            dictionary: params.dictionary[params.starter],
+            restrictColumn: "",
+        };
+
+        this.setState({ resultData });
+    }
+
     render() {
 
-        const { queryListing = {}, queryParamsData = {}, stats, currentPage, preference, params, columns, finalColumns } = this.state;
+        const { queryParamsData = {}, preference, columns, finalColumns, resultData, currentPage, stats } = this.state;
 
-        // const { history, match } = this.props;
-
-        let resultData;
-
-        if (params.dictionary) {
-            resultData = {
-                columns: columns,
-                listing: queryListing,
-                selectedColumns: queryParamsData.short_name + ".list",
-                listName: queryParamsData.short_name + ".list",
-                pageName: queryParamsData.name,
-                stats: stats,
-                currentPage: currentPage,
-                dictionary: params.dictionary[params.starter],
-                restrictColumn: ""
-            };
-        }
-
+        const { history, match } = this.props;
 
         return (
             <div className="generic-query">
@@ -174,8 +179,8 @@ export default class GenericQueryDetail extends Component {
                         />
                     }
 
-                    {/* {
-                        resultData &&
+                    {
+                        resultData.listing &&
                         <QueryTable
                             // formContent={formContent}
                             finalColumns={finalColumns}
@@ -183,7 +188,22 @@ export default class GenericQueryDetail extends Component {
                             queryTableObj={resultData}
                             queryData={queryParamsData}
                         />
-                    } */}
+
+
+                    }
+                    {
+                        (resultData.stats) ?
+                            <ListingPagination
+                                history={history}
+                                match={match}
+                                current_page={currentPage}
+                                limit={20}
+                                statsData={stats}
+                            />
+                            : <div className="noListMessage">Looks like no columns are selected , Configure it by pressing the settings icon.</div>
+                    }
+
+
 
                 </div>
 

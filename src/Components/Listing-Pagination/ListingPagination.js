@@ -141,6 +141,7 @@ export default class ListingPagination extends Component {
 
         let pages = [];
 
+        statsData.total = statsData.records ? statsData.records : statsData.total;
 
         if (statsData && statsData.total) {
             var page_length = Math.ceil(statsData.total / statsData.record);
