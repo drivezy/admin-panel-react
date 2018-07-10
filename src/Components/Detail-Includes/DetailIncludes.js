@@ -59,16 +59,21 @@ export default class DetailIncludes extends Component {
         for (let i in tabsArray) {
             const tab = tabsArray[i];
             const { uiActions = [] } = tab;
-            const modelAliasRedirect = {
-                // @TODO add model alias rediect method
-                as_header: true,
-                image: 'fa-outdent',
-                parameter: 'menuDef/:id',
-                active: true,
-                name: 'Redirect Model Alias'
-            };
+            const isAlreadyModalAlias = uiActions.some(uiAction => uiAction.identifier == 'modalAlias');
 
-            tab.uiActions.push(modelAliasRedirect);
+            if (!isAlreadyModalAlias) {
+                const modelAliasRedirect = {
+                    // @TODO add model alias rediect method
+                    as_header: true,
+                    image: 'fa-outdent',
+                    parameter: 'menuDef/:id',
+                    active: true,
+                    identifier: 'modalAlias',
+                    name: 'Redirect Model Alias'
+                };
+
+                tab.uiActions.push(modelAliasRedirect);
+            }
 
             tabs[i] = tab;
             tabs[i].index = i;
