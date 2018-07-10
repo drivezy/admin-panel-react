@@ -440,13 +440,13 @@ export default class FormCreator extends Component {
 
     }
 
-    formUpdated = (form) => {
+    formUpdated = (payload) => {
         setTimeout(() => {
-            const { updateState } = form;
+            const { updateState } = payload;
             if (updateState) {
-                this.setState({ form });
+                this.setState({ payload });
             } else {
-                this.state.form = form;
+                this.state.payload = payload;
             }
         }, 1000);
     }
@@ -468,6 +468,20 @@ export default class FormCreator extends Component {
     layoutChanged = (selectedColumns) => {
         let { payload } = this.state;
         payload.layout = selectedColumns;
+
+        let editedLayout = -1;
+        payload.layouts.some((layout, key) => {
+            if (layout.id == selectedColumns) {
+                editedLayout = key;
+                return true;
+            }
+        });
+
+        if (editedLayout != -1) {
+            payload.layouts[editedLayout] = selectedColumns;
+        } else {
+            payload.layouts.push(selectedColumns);
+        }
 
         payload = ExecuteScript({ formContent: payload, scripts: payload.scripts, context: FormUtils, contextName: 'form' });
         this.setState({ payload });
