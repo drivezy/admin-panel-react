@@ -19,7 +19,7 @@ import { ConfirmUtils } from './confirm-utils/confirm.utils';
 
 
 
-export async function ProcessForm({ formContent, scripts, isForm = true, openModal = true }) {
+export async function ProcessForm({ formContent, scripts, isForm, openModal = true }) {
     const url = GetUrlForFormCreator({ payload: formContent, getDictionary: true, isForm });
     const result = await Get({ url, urlPrefix: isForm ? RECORD_URL : ROUTE_URL });
 
