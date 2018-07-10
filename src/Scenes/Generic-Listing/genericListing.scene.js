@@ -378,8 +378,8 @@ export default class GenericListing extends Component {
                                 }
 
                                 {
-                                    (finalColumns && finalColumns.length) ?
-                                        <ListingPagination history={history} match={match} current_page={genericData.currentPage} limit={genericData.limit} statsData={genericData.stats} /> : <div className="noListMessage">Looks like no columns are selected , Configure it by pressing the settings icon.</div>
+                                    (finalColumns && finalColumns.length ) ?
+                                       ( genericData.stats.total ? <ListingPagination history={history} match={match} current_page={genericData.currentPage} limit={genericData.limit} statsData={genericData.stats} />:null) : <div className="noListMessage">Looks like no columns are selected , Configure it by pressing the settings icon.</div>
                                 }
                                 {/* Listing Pagination Ends */}
                             </div>
