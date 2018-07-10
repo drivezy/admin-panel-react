@@ -25,8 +25,9 @@ export default class FormSettings extends Component {
 
         this.state = {
             modal: false,
+            layoutName: formLayout.name || '',
             selectedColumns: formLayout.column_definition || [],
-            tempSelectedColumns: formLayout.column_definition || [],
+            tempSelectedColumns: Array.isArray(formLayout.column_definition) ? [...formLayout.column_definition] : [],
             columns: this.props.columns,
             list: {},
             activeColumn: {},
@@ -166,7 +167,7 @@ export default class FormSettings extends Component {
 
     modalWrapper() {
         // const { columns, tempSelectedColumns, selectedColumns, activeColumn, module } = this.state;
-        const { columns, tempSelectedColumns, activeColumn, module, formConfigurator } = this.state;
+        const { columns, tempSelectedColumns, activeColumn, module, formConfigurator, layoutName } = this.state;
 
         const selectedIds = [];
 
@@ -195,7 +196,8 @@ export default class FormSettings extends Component {
             <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="form-settings-modal">
                 <ModalHeader toggle={this.toggleModal}>
                     Configure
-            </ModalHeader>
+                    <input type='text' value={layoutName} onChange={e => this.setState({ layoutName: e.target.value })} />
+                </ModalHeader>
                 <ModalBody>
                     <div className="left">
 
