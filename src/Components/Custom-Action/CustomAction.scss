@@ -3,13 +3,14 @@
     .custom-actions {
         .button-element {
             text-transform: capitalize;
+            padding: 5px 8px;
             .action-label {
                 padding-left: 10px;
             }
         }
         .tooltip-element {
             cursor: pointer;
-            padding: 6px 10px;
+            padding: 6px 2px;
             // border-radius: 3px;
             // background: white;
             margin: 0px 1px;

@@ -18,17 +18,18 @@
     }
 }
 
-.modal-actions {
-    .btn-primary {
-        background-color: #496f98 !important;
-    }
-}
-
 .modal-body {
     background: white;
 }
 
 .form-creator {
+    .select-box{
+        position: absolute;
+        z-index: 10;
+        width: 17%;
+        left: 70%;
+        top: 1%;
+    }
     .form-settings {
         position: absolute;
         right: 45px;
