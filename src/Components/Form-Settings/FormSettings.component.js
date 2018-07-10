@@ -9,6 +9,8 @@ import { IsObjectHaveKeys } from './../../Utils/common.utils';
 import { SubscribeToEvent, UnsubscribeEvent } from './../../Utils/stateManager.utils';
 import { changeArrayPosition } from './../../Utils/js.utils';
 
+import Switch from './../Forms/Components/Switch/switch';
+
 import { FormPreferenceEndPoint } from './../../Constants/api.constants';
 
 import { Collapse, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
@@ -150,8 +152,9 @@ export default class FormSettings extends Component {
 
         const { userId, modelId, listName, source } = this.props;
         let { formLayout } = this.props;
-        const { tempSelectedColumns } = this.state;
-        const result = await SetPreference({ userId, source, menuId: modelId, name: listName, selectedColumns: tempSelectedColumns, layout: formLayout, url: FormPreferenceEndPoint, override_all: overRide ? 1 : 0 });
+        const { tempSelectedColumns, layoutName } = this.state;
+        formLayout.name = layoutName;
+        const result = await SetPreference({ userId, source, menuId: modelId, name: listName || layoutName, selectedColumns: tempSelectedColumns, layout: formLayout, url: FormPreferenceEndPoint, override_all: overRide ? 1 : 0 });
         if (result.success) {
             this.setState({ modal: !this.state.modal });
             if (IsObjectHaveKeys(formLayout)) {
@@ -196,84 +199,85 @@ export default class FormSettings extends Component {
             <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="form-settings-modal">
                 <ModalHeader toggle={this.toggleModal}>
                     Configure
-                    <input type='text' value={layoutName} onChange={e => this.setState({ layoutName: e.target.value })} />
+                    <input placeholder="Enter Layout Name" type='text' value={layoutName} onChange={e => this.setState({ layoutName: e.target.value })} />
+                    {/* <Switch name="abc" rows="3" onChange={props.setFieldValue} value={values[column.name]} /> */}
                 </ModalHeader>
-                <ModalBody>
-                    <div className="left">
+                    <ModalBody>
+                        <div className="left">
 
-                        <div className="card" >
-                            <div className="card-body parent-card">
+                            <div className="card" >
+                                <div className="card-body parent-card">
 
-                                <div className="card-top">
-                                    <h6 className="card-title">All Columns</h6>
+                                    <div className="card-top">
+                                        <h6 className="card-title">All Columns</h6>
 
-                                    <div className="input-holder">
-                                        <input type="text" className="search-box" placeholder="Search Columns" />
+                                        <div className="input-holder">
+                                            <input type="text" className="search-box" placeholder="Search Columns" />
+                                        </div>
                                     </div>
+                                    <ListGroup className="parent-group">
+                                        {
+                                            leftColumns.map((entry, key) => (
+                                                <div key={key} className="column-group" onDoubleClick={() => this.addColumn(entry)} >
+                                                    <div className="column-label">
+                                                        {entry.name}
+                                                    </div>
+                                                    <div className="icon-holder">
+                                                        <button className="add-column btn btn-sm btn-light" onClick={() => this.addColumn(entry)} >
+                                                            <i className="fa fa-external-link-square" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                // <ListGroupItem tag="button" onDoubleClick={() => this.addColumn(entry)} key={key}>{entry.column_name}</ListGroupItem>
+                                            ))
+                                        }
+                                    </ListGroup>
                                 </div>
-                                <ListGroup className="parent-group">
-                                    {
-                                        leftColumns.map((entry, key) => (
-                                            <div key={key} className="column-group" onDoubleClick={() => this.addColumn(entry)} >
-                                                <div className="column-label">
-                                                    {entry.name}
-                                                </div>
-                                                <div className="icon-holder">
-                                                    <button className="add-column btn btn-sm btn-light" onClick={() => this.addColumn(entry)} >
-                                                        <i className="fa fa-external-link-square" aria-hidden="true"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            // <ListGroupItem tag="button" onDoubleClick={() => this.addColumn(entry)} key={key}>{entry.column_name}</ListGroupItem>
-                                        ))
-                                    }
-                                </ListGroup>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="controls">
-                        <Button color="primary" size="sm" onClick={this.moveSelectedUp}>
-                            <i className="fa fa-arrow-up"></i>
+                        <div className="controls">
+                            <Button color="primary" size="sm" onClick={this.moveSelectedUp}>
+                                <i className="fa fa-arrow-up"></i>
+                            </Button>
+                            <Button color="primary" size="sm" onClick={this.moveSelectedDown}>
+                                <i className="fa fa-arrow-down"></i>
+                            </Button>
+                            <Button color="primary" size="sm" onClick={this.addSplit}>
+                                Add Split
                         </Button>
-                        <Button color="primary" size="sm" onClick={this.moveSelectedDown}>
-                            <i className="fa fa-arrow-down"></i>
-                        </Button>
-                        <Button color="primary" size="sm" onClick={this.addSplit}>
-                            Add Split
-                        </Button>
-                    </div>
+                        </div>
 
-                    <div className="right">
-                        <div className="card">
-                            <div className="card-body parent-card">
-                                {activeColumn.column ? activeColumn.column.column : null}
-                                <ListGroup className="parent-group">
-                                    {
-                                        tempSelectedColumns.length > 0 &&
-                                        tempSelectedColumns.map((column, index) =>
-                                            ((column.split) ?
-                                                <ListGroupItem tag="button" action key={index} onClick={() => this.selectColumn(column, index)}>
-                                                    <span>---- {column.label} ----</span>
-                                                    <span className="close margin-top-4" data-dismiss="alert" aria-label="Close" onClick={() => this.removeSplit(index, column)}>
-                                                        <i className="fa fa-times"></i>
-                                                    </span>
-                                                </ListGroupItem>
-                                                :
-                                                // Component Manages column props
-                                                <FormColumnSetting
-                                                    removeColumn={this.removeColumn}
-                                                    columns={columns}
-                                                    activeColumn={activeColumn}
-                                                    selectColumn={this.selectColumn}
-                                                    column={column}
-                                                    index={index}
-                                                    key={index} />
-                                                // Column Setting Ends
+                        <div className="right">
+                            <div className="card">
+                                <div className="card-body parent-card">
+                                    {activeColumn.column ? activeColumn.column.column : null}
+                                    <ListGroup className="parent-group">
+                                        {
+                                            tempSelectedColumns.length > 0 &&
+                                            tempSelectedColumns.map((column, index) =>
+                                                ((column.split) ?
+                                                    <ListGroupItem tag="button" action key={index} onClick={() => this.selectColumn(column, index)}>
+                                                        <span>---- {column.label} ----</span>
+                                                        <span className="close margin-top-4" data-dismiss="alert" aria-label="Close" onClick={() => this.removeSplit(index, column)}>
+                                                            <i className="fa fa-times"></i>
+                                                        </span>
+                                                    </ListGroupItem>
+                                                    :
+                                                    // Component Manages column props
+                                                    <FormColumnSetting
+                                                        removeColumn={this.removeColumn}
+                                                        columns={columns}
+                                                        activeColumn={activeColumn}
+                                                        selectColumn={this.selectColumn}
+                                                        column={column}
+                                                        index={index}
+                                                        key={index} />
+                                                    // Column Setting Ends
+                                                )
                                             )
-                                        )
-                                    }
-                                    {/* {
+                                        }
+                                        {/* {
                                         tempSelectedColumns.map((column, index) => (
                                             <div key={index}>
                                                 {typeof column == 'string' ?
@@ -287,36 +291,36 @@ export default class FormSettings extends Component {
                                             </div>
                                         ))
                                     } */}
-                                </ListGroup>
+                                    </ListGroup>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                </ModalBody >
-                <ModalFooter>
-                    {formConfigurator ?
-                        <Button color="primary" onClick={() => this.applyChanges(true)}>Apply For All</Button>
-                        : null
-                    }
-                    <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
-                    <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                </ModalFooter>
+                    </ModalBody >
+                    <ModalFooter>
+                        {formConfigurator ?
+                            <Button color="primary" onClick={() => this.applyChanges(true)}>Apply For All</Button>
+                            : null
+                        }
+                        <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
+                        <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
+                    </ModalFooter>
             </Modal >
-        )
-    }
-
+                )
+            }
+        
     render() {
         return (
             <div className="form-settings">
-                <Button color="secondary" size="sm" onClick={this.toggleModal}>
-                    <i className="fa fa-cog"></i>
-                </Button>
+                    <Button color="secondary" size="sm" onClick={this.toggleModal}>
+                        <i className="fa fa-cog"></i>
+                    </Button>
 
-                {
-                    this.state.modal &&
-                    this.modalWrapper()
-                }
-            </div>
-        )
-    }
-}
+                    {
+                        this.state.modal &&
+                        this.modalWrapper()
+                    }
+                </div>
+                )
+            }
+        }
