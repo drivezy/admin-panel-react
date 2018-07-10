@@ -336,6 +336,15 @@ Non critical css goes here
     }
 }
 
+.btn-primary {
+    @include themify($themes) {
+        // border-color: themed('themeBorder');
+        background: themed('successColor') !important;
+        color: themed('primarylight');
+        border-color: themed('successColor');
+    }
+}
+
 th {
     @include themify($themes) {
         color: themed('table');
