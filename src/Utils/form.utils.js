@@ -173,7 +173,6 @@ export default class FormUtil {
      */
     static setForm(form) {
         self.form = form;
-        console.log(form);
         self.data = { ...self.form.data } || {};
         // self.data = self.form.data || {};
     };

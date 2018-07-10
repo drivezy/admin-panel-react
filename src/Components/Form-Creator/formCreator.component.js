@@ -5,7 +5,6 @@ import {
     Card, CardBody, Button
 } from 'reactstrap';
 
-
 import { withFormik, Field, Form } from 'formik';
 import Yup from 'yup';
 
@@ -35,8 +34,6 @@ import FormUtils from './../../Utils/form.utils';
 import { GetUrlForFormSubmit } from './../../Utils/generic.utils';
 
 import { ROUTE_URL } from './../../Constants/global.constants';
-
-import { SetItem } from './../../Utils/localStorage.utils';
 
 const DisplayFormikState = props => (
     <div style={{ margin: '1rem 0' }}>
@@ -264,16 +261,13 @@ const formElements = props => {
             {/* Uploaded file thumbnails Ends*/}
 
             <div className="modal-actions row justify-content-end">
-
-                {console.log(payload)}
-
                 <Button color="secondary" onClick={handleReset}>
                     Clear
                 </Button>
 
-                <Button className="btn btn-success" type="submit">
+                <button className="btn btn-primary" type="submit">
                     Submit
-                </Button>
+                </button>
             </div>
         </Form>
     );
@@ -422,12 +416,6 @@ export default class FormCreator extends Component {
         SubscribeToEvent({ eventName: 'formChanged', callback: this.formUpdated });
     }
 
-    toggle() {
-        this.setState({
-            dropdownOpen: !this.state.dropdownOpen
-        });
-    }
-
     async componentDidMount() {
         const { payload = {} } = this.props;
         const { layout, module } = payload;
@@ -519,23 +507,11 @@ export default class FormCreator extends Component {
         this.setState({ fileUploads });
     }
 
-    onLayoutChange = (value) => {
-        const { payload } = this.state;
-        //console.log(value);
-        payload.layout = value;
-        this.setState({ payload });
-        SetItem(`form-layout-${payload.modelId}`, value.id);
-    }
-
     render() {
         const { payload, fileUploads } = this.state;
         const { source, modelId } = payload;
         return (
             <div className="form-creator">
-                {
-                    <SelectBox onChange={(value) => this.onLayoutChange(value)} value={payload.layout} field="name" options={payload.layouts} />
-                }
-
                 {
                     payload.dictionary ?
                         <FormSettings source={source} modelId={modelId} onSubmit={this.layoutChanged} listName={payload.modelName} formLayout={payload.layout} columns={payload.dictionary} />

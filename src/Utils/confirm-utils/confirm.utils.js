@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { SSL_OP_NO_QUERY_MTU } from 'constants';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+
 import ModalWrapper from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
 import './confirm-utils.css';
 
@@ -18,6 +20,10 @@ export class ConfirmModalComponent extends Component {
 
     confirm = (callback) => {
         this.setState({ isVisible: false });
+    }
+
+    toggle = () => {
+        this.setState({ isVisible: !this.state.isVisible });
     }
 
     closeModal = () => {
@@ -46,12 +52,21 @@ export class ConfirmModalComponent extends Component {
         const { isVisible, message, callback } = this.state;
         return (
             <div>
-                <ModalWrapper
+                <Modal size="md" isOpen={isVisible} toggle={this.toggleModal} className="form-settings-modal">
+                    <ModalHeader toggle={this.toggleModal}>
+                        Confirm
+                    </ModalHeader>
+                    <ModalBody>
+                        {this.modalData({ message: this.state.message, callback: this.state.callback })}
+                    </ModalBody>
+                </Modal>
+                {/* <ModalWrapper
                     size='md'
                     isVisible={isVisible}
-                    modalBody={() => this.modalData({ message: this.state.message, callback: this.state.callback })}
+                    modalBody={<this.modalData message={this.state.message} callback={this.state.callback} />}
+                    // modalBody={() => this.modalData({ message: this.state.message, callback: this.state.callback })}
                     headerText="Confirm"
-                />
+                /> */}
             </div>
         )
     }
