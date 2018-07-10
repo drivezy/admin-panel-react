@@ -2,24 +2,28 @@
 .listing-pagination {
     padding: 10px;
     display: flex;
-    justify-content:space-between;
-
+    justify-content: space-between;
     .pagination-record {
         margin-top: 10px;
     }
     .page-redirect-number {
         margin-left: 25px;
-        .select-box{ 
+        .select-box {
             min-width: 100px;
         }
     }
     @include themify($themes) {
         background: themed('bodyBackground');
     }
-    .page-item > a {
-        // height: 38px;
+    .page-item>a {
+        height: 100%;
+        border-color: #cccccc;
     }
-    .highlighted-page > a { 
+    .next-page-go>a {
+        border-bottom-right-radius: 0.25rem;
+        border-top-right-radius: 0.25rem;
+    }
+    .highlighted-page>a {
         background: $primaryThemeDark !important;
         color: $onPrimaryThemeDark;
     }
@@ -30,16 +34,14 @@
     }
 }
 
-.listing-pagination {
- 
-}
+.listing-pagination {}
 
-.drivezy-drivezy-theme { 
+.drivezy-drivezy-theme {
     .listing-pagination {
-        .page-item > a {
+        .page-item>a {
             height: 38px;
         }
-        .highlighted-page > a { 
+        .highlighted-page>a {
             background: $primaryThemeDrivezy !important;
             color: $onPrimaryThemeDrivezy;
         }
