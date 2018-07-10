@@ -43,9 +43,12 @@ export default class GenericQueryDetail extends Component {
 
             let prefName = queryParamsData.short_name + ".list";
 
-            let preference = [];
+            let preferences = await GetPreferences(prefName);
 
-            preference = GetPreferences(prefName);
+            var preference = preferences.response.filter(function(item){
+                return item.parameter == prefName;
+            })
+            // preferences.find(x => x.parameter === prefName);
 
             console.log(preference);
 
@@ -175,7 +178,7 @@ export default class GenericQueryDetail extends Component {
                         <QueryTable
                             // formContent={formContent}
                             finalColumns={finalColumns}
-                            preference={preference}
+                            listing={preference}
                             queryTableObj={resultData}
                             queryData={queryParamsData}
                         />

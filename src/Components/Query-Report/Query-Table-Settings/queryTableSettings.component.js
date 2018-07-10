@@ -1,28 +1,3 @@
-// import React, { Component } from 'react';
-
-// import './queryTableSettings.css';
-
-// export default class QueryTableSettings extends Component {
-
-//     constructor(props) {
-//         super(props);
-//         this.state = {
-//             filters: this.props.filters,
-//             finalColumns: this.props.finalColumns,
-//             listingObject: this.props.listingObject
-//         }
-//     }
-
-//     render() {
-
-//         const { filters, finalColumns, listingObject } = this.props;
-
-//         return (
-//             <div></div>
-//         )
-//     }
-// }
-
 import React, { Component } from 'react';
 import './queryTableSettings.css';
 import _ from 'lodash';
@@ -31,11 +6,9 @@ import { SetPreference } from './../../../Utils/preference.utils';
 
 import { changeArrayPosition } from './../../../Utils/js.utils';
 
-import { Collapse, Card, CardBody, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Collapse, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-// import Switch from './../../Components/Forms/Components/Switch/switch';
-// import ColumnSetting from './Components/ColumnSetting/columnSetting.component';
-// import ColumnSetting from './../Components/Column-Setting/columnSetting.component';
+import QueryColumnSetting from './../Query-Column-Setting/queryColumnSetting.component';
 
 export default class QueryTableSettings extends Component {
 
@@ -130,8 +103,11 @@ export default class QueryTableSettings extends Component {
 
         for (var value of tempSelectedColumns) {
             if (typeof value != 'string') {
-                selectedIds.push(parseInt(value.column.split('.').pop()));
+                selectedIds.push(value.column);
             }
+            // if (typeof value != 'string') {
+            //     selectedIds.push(parseInt(value.value.column.split('.').pop()));
+            // }
         }
 
         const leftColumns = _.groupBy(columns, 'parent');
@@ -233,9 +209,9 @@ export default class QueryTableSettings extends Component {
                                                 <ListGroupItem tag="button" action key={index}>
                                                     ---- {column} ----
                                         </ListGroupItem>
-                                                : null
+                                                : 
                                                 // Component Manages column props
-                                                // <ColumnSetting removeColumn={this.removeColumn} columns={columns} activeColumn={activeColumn} selectColumn={this.selectColumn} column={column} index={index} key={index} />
+                                                <QueryColumnSetting removeColumn={this.removeColumn} columns={columns} activeColumn={activeColumn} selectColumn={this.selectColumn} column={column} index={index} key={index} />
                                                 // Column Setting Ends
                                             )
                                         })
