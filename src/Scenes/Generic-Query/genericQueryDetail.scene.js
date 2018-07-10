@@ -173,7 +173,7 @@ export default class GenericQueryDetail extends Component {
                         />
                     }
 
-                    {
+                    {/* {
                         resultData &&
                         <QueryTable
                             // formContent={formContent}
@@ -182,7 +182,7 @@ export default class GenericQueryDetail extends Component {
                             queryTableObj={resultData}
                             queryData={queryParamsData}
                         />
-                    }
+                    } */}
 
                 </div>
 

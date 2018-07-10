@@ -59,14 +59,14 @@ export default class QueryColumnSetting extends Component {
 
         return (
             <div className={`column-setting ${activeColumn.column == column.column ? 'active' : ''}`} >
-                <div className="column-label">
+                {/* <div className="column-label">
                     <div className="item-label" onClick={() => this.props.selectColumn(column, this.props.index)} onDoubleClick={() => this.props.removeColumn(column)} >
                         {column.columnTitle ? column.columnTitle : columns[column.column].column_name}
                     </div>
                     <div className="column-toggle" onClick={this.toggleSetting}>
                         <i className={`fa ${column.expanded ? ' fa-chevron-down' : ' fa-chevron-right'}`}></i>
                     </div>
-                </div>
+                </div> */}
 
                 {/* // Expanded Column Configuration */}
                 <Collapse isOpen={column.expanded} className="column-configuration">
