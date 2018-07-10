@@ -15,16 +15,25 @@ import { Get } from './http.utils';
 import { ROUTE_URL, RECORD_URL } from './../Constants/global.constants';
 import { SelectFromOptions } from './common.utils';
 import { GetItem } from './localStorage.utils';
+import { ConfirmUtils } from './confirm-utils/confirm.utils';
 
 
-export async function ProcessForm({ formContent, scripts, isForm, openModal = true }) {
 
+export async function ProcessForm({ formContent, scripts, isForm = true, openModal = true }) {
     const url = GetUrlForFormCreator({ payload: formContent, getDictionary: true, isForm });
-    console.log(url, ROUTE_URL);
     const result = await Get({ url, urlPrefix: isForm ? RECORD_URL : ROUTE_URL });
+
 
     if (result.success) {
         const { response } = result;
+
+        // response.form = {
+        //     form_type_id: 2,
+        //     message: 'Testing alert',
+        //     submitCallback: { script: 'alert("reaching")' },
+        //     cancelCallback: { script: 'console.log("cancelled")' }
+        // }
+
         const { client_scripts: scripts } = response;
 
         formContent.scripts = scripts;
@@ -52,6 +61,12 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
             formContent.record = formContent.data;
             formContent.data = GetDataFromDictionary(formContent.dictionary);
             formContent.modelId = response.form.id;
+
+            if (response.form.form_type_id == 2) {
+                const { message, submitCallback } = response.form;
+                ConfirmUtils.confirmModal({ message, callback: () => ExecuteScript({ formContent, scripts: [submitCallback], context: FormUtils, contextName: 'form' }) })
+                return;
+            }
         }
 
         // get 
@@ -80,6 +95,10 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
         }
 
     }
+}
+
+function executeFormScript({ submitCallback, cancelCallback }) {
+
 }
 
 export function OpenModalForm(formContent) {
