@@ -73,7 +73,7 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
         // form-layout-{modelId} = layout id
         const layoutId = GetItem(`form-layout-${formContent.modelId}`);
         if (layoutId) {
-            formContent.layout = SelectFromOptions(layouts, layoutId, 'id');
+            formContent.layout = SelectFromOptions(layouts, layoutId, 'id') || {};
         }
 
         if (Array.isArray(scripts)) {

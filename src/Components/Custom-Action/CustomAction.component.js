@@ -86,7 +86,7 @@ export default class CustomAction extends Component {
     }
 
     render() {
-        const { actions = [], listingRow = [], genericData = {}, placement = 'as_context', position } = this.props;
+        const { actions = [], listingRow = [], genericData = {}, placement = 'as_record', position } = this.props;
         return (
             <div className="custom-actions flex">
                 {
