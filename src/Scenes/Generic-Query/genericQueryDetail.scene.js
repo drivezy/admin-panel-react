@@ -79,7 +79,7 @@ export default class GenericQueryDetail extends Component {
             let finalColumns;
 
             if (preference) {
-                finalColumns = CreateFinalColumns(tempColumns, preference);
+                finalColumns = CreateFinalColumns(tempColumns, JSON.parse(preference[0].value));
             }
 
             this.setState({ stats, currentPage, params, columns: tempColumns, finalColumns });
