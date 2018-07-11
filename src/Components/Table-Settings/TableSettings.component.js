@@ -241,6 +241,7 @@ export default class TableSettings extends Component {
 
         //console.log(showSplitFlag);
 
+        const tempSelectedColumnsArray = Object.values(tempSelectedColumns);
         for (let value of tempSelectedColumns) {
             if (typeof value != 'string') {
                 selectedIds.push(value.column);
@@ -259,9 +260,13 @@ export default class TableSettings extends Component {
 
 
         for (let key of columnKeys) {
-            leftColumns[key] = leftColumns[key].filter((column) => (
-                selectedIds.indexOf(column.name) == -1
-            ));
+            leftColumns[key] = leftColumns[key].filter((column) => {
+                console.log(column, selectedIds);
+                const index = selectedIds.indexOf(column.name);
+                console.log(((index == -1) || (tempSelectedColumnsArray[index].object != column.parent)), column.name);
+                return ((index == -1) || (tempSelectedColumnsArray[index].object != column.parent));
+                // return selectedIds.indexOf(column.name) == -1
+            });
         }
         return (
             <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="table-settings">
