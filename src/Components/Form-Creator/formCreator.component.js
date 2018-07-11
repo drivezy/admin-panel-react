@@ -106,6 +106,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
             name={column.name}
             render={({ field /* _form */ }) => (
                 <SelectBox name={column.name}
+                    isClearable={false}
                     placeholder={`Enter ${column.display_name}`}
                     onChange={(value, event) => {
                         FormUtils.OnChangeListener({ column, value, ...event });
