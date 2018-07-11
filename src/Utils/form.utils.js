@@ -121,7 +121,7 @@ export default class FormUtil {
 
     // static 
 
-    static setquery(column, queryParams) {
+    static setQuery(column, queryParams) {
         const dict = self.form.dictionary[column];
 
         if (dict && dict.reference_model) {
