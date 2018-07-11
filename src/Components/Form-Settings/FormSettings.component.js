@@ -306,13 +306,13 @@ export default class FormSettings extends Component {
                 <ModalFooter>
                     <div className="leftButtons">
                         {formConfigurator ?
-                            <Button color="primary" onClick={() => this.applyChanges(true)}>Apply For All</Button>
+                            <button className="btn applyForAllButton" onClick={() => this.applyChanges(true)}>Apply For All</button>
                             : null
                         }
                     </div>
                     <div className="rightButtons">
                         <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
-                        <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
+                        <button className="btn btn-danger" onClick={this.toggleModal}>Cancel</button>
                     </div>
                 </ModalFooter>
             </Modal >

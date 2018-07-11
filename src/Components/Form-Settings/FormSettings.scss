@@ -1,3 +1,4 @@
+@import 'Assets/Global-Shared/theme.scss';
 .form-settings-modal {
     .modal-header {
         padding: 10px 20px;
@@ -106,6 +107,12 @@
         justify-content: none;
         .leftButtons{
             flex: 1;
+            .applyForAllButton{
+                @include themify($themes){
+                    background: themed('warningColor');
+                    color: themed('primaryLight');
+                }
+            }
         }
     }
     // .modal-body {

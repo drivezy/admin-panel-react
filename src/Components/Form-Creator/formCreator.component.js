@@ -261,7 +261,7 @@ const formElements = props => {
                             )
                         }
                     })
-                : <div>Looks like no columns are selected , Configure it by pressing the settings icon.</div> }
+                : <div className="message">Looks like no columns are selected , Configure it by pressing the settings icon.</div> }
             </div>
 
             {/* Uploaded file thumbnails */}
@@ -277,6 +277,10 @@ const formElements = props => {
             <div className="modal-actions row justify-content-end">
 
                 <button className="btn btn-danger" onClick={handleReset}>
+                    Reset
+                </button>
+
+                <button className="btn btn-primary">
                     Cancel
                 </button>
 
