@@ -84,7 +84,7 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
 
         const restrictedQuery = ParseRestrictedQuery(formContent.menu.restricted_query);
         for (let i in restrictedQuery) {
-            formContent = FormUtils.setDisabled(i, true, formContent);
+            formContent = FormUtils.setVisible(i, false, formContent);
         }
         formContent.data = { ...formContent.data, ...restrictedQuery };
 

@@ -73,13 +73,15 @@ export default class ListingSearch extends React.Component {
                     this.state.referenceColumnValue = { data: query[0] };
                 }
             }
-        } else if (searchDetail && searchDetail.name) {
+        }
+        else if (searchDetail) {
+            // else if (searchDetail && searchDetail.name) {
             selectedColumn = SelectFromOptions(dictionary, searchDetail.name, 'name');
             this.state.activeColumn = selectedColumn;
         }
 
         //@To be deleted after sometime
-    //   else if (localSearch && localSearch.value) {
+        //   else if (localSearch && localSearch.value) {
         //             // let { query } = this.state;
         //             // query = localSearch.value;
         //             // this.setState({ query });
@@ -215,9 +217,11 @@ export default class ListingSearch extends React.Component {
                 {
                     <div className="listing-search-tool">
                         <div className="listing-select-tool">
-                            <SelectBox label="display_name" onChange={(data) => {
-                                this.filterChange(data)
-                            }} value={selectedColumn} options={dictionary} placeholder='Column' />
+                            <SelectBox label="display_name"
+                                isClearable={false}
+                                onChange={(data) => {
+                                    this.filterChange(data)
+                                }} value={selectedColumn} options={dictionary} placeholder='Column' />
                         </div>
                         <div className="listing-input-tool">
                             {
