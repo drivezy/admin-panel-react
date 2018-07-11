@@ -1,7 +1,7 @@
 @import 'Assets/Global-Shared/theme.scss';
 .form-settings-modal {
     .modal-header {
-        padding: 10px 20px;
+        padding: 12px 20px;
     }
     .modal-body {
         background: whitesmoke;
@@ -102,6 +102,9 @@
                 margin: 4px;
             }
         }
+    }
+    .form-settings{
+
     }
     .modal-footer{
         justify-content: none;
