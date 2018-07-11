@@ -71,6 +71,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
             name={column.name}
             render={({ field /* _form */ }) => (
                 <input name={column.name} className="form-control" rows="3"
+                    placeholder={`Enter ${column.display_name}`}
                     onChange={(event, ...args) => {
                         FormUtils.OnChangeListener({ column, value: event.target.value, ...event });
                         props.handleChange(event, args);
@@ -86,7 +87,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         160: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <textarea name={column.name} className="form-control" rows="3" onChange={({ ...args }) => { FormUtils.OnChangeListener(args); props.handleChange(args); }} value={values[column.name]}></textarea>
+                <textarea name={column.name} placeholder={`Enter ${column.display_name}`} className="form-control" rows="3" onChange={({ ...args }) => { FormUtils.OnChangeListener(args); props.handleChange(args); }} value={values[column.name]}></textarea>
             )}
         />,
         // TextArea Ends
@@ -95,7 +96,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         119: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <Switch name={column.name} rows="3" onChange={props.setFieldValue} value={values[column.name]} />
+                <Switch name={column.name} rows="3" placeholder={`Enter ${column.display_name}`} onChange={props.setFieldValue} value={values[column.name]} />
             )}
         />,
         // Switch Ends
@@ -104,10 +105,35 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         5: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <SelectBox name={column.name} onChange={props.setFieldValue} value={values[column.name]} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                <SelectBox name={column.name}
+                    placeholder={`Enter ${column.display_name}`}
+                    onChange={(value, event) => {
+                        FormUtils.OnChangeListener({ column, value, ...event });
+                        props.setFieldValue(event, value);
+                    }}
+                    value={values[column.name].id}
+                    field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                // <SelectBox name={column.name} onChange={props.setFieldValue} value={values[column.name]} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
             )}
         />,
         // Boolean Ends
+
+        // Reference Begins
+        6: <Field
+            name={column.name}
+            render={({ field /* _form */ }) => (
+                <ReferenceInput column={column} name={column.name}
+                    placeholder={`Enter ${column.display_name}`}
+                    // onChange={props.setFieldValue}
+                    onChange={(value, event) => {
+                        FormUtils.OnChangeListener({ column, value, ...event });
+                        props.setFieldValue(event, value);
+                    }}
+                    // onChange={({ ...args }) => { FormUtils.OnChangeListener(args); props.setFieldValue(args); }}
+                    model={values[column.name]} />
+            )}
+        />,
+        // Reference Ends
 
         // List Select with options from api
         7: <Field
@@ -131,7 +157,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         3: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <DatePicker single={true} name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
+                <DatePicker single={true} placeholder={`Enter ${column.display_name}`} name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
             )}
         />,
         // DatePicker Ends
@@ -140,7 +166,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         4: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <DatePicker single={true} timePicker={true} name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
+                <DatePicker single={true} placeholder={`Enter ${column.display_name}`} timePicker={true} name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
             )}
         />,
         // Single Datepicker Ends
@@ -150,26 +176,10 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         746: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <TimePicker name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
+                <TimePicker name={column.name} placeholder={`Enter ${column.display_name}`} onChange={props.setFieldValue} value={values[column.name]} />
             )}
         />,
         // Time Picker Ends
-
-        // Reference Begins
-        6: <Field
-            name={column.name}
-            render={({ field /* _form */ }) => (
-                <ReferenceInput column={column} name={column.name}
-                    // onChange={props.setFieldValue}
-                    onChange={(value, event) => {
-                        FormUtils.OnChangeListener({ column, value, ...event });
-                        props.setFieldValue(event, value);
-                    }}
-                    // onChange={({ ...args }) => { FormUtils.OnChangeListener(args); props.setFieldValue(args); }}
-                    model={values[column.name]} />
-            )}
-        />,
-        // Reference Ends
 
         // Script Input
         411: <ScriptInput value={values[column.name]} columns={props.payload.dictionary} payload={props.payload} column={column} name={column.name} onChange={props.setFieldValue} model={values[column.index]} />,
