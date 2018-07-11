@@ -154,13 +154,13 @@ export default class FormSettings extends Component {
 
     applyChanges = async (overRide = false) => {
 
-        const { userId, modelId, listName, source } = this.props;
+        const { userId, sourceId, listName, source } = this.props;
         let { formLayout } = this.props;
         const { tempSelectedColumns, layoutName } = this.state;
         if (IsObjectHaveKeys(formLayout)) {
             formLayout.name = layoutName;
         }
-        const result = await SetPreference({ userId, source, menuId: modelId, name: listName || layoutName, selectedColumns: tempSelectedColumns, layout: formLayout, url: FormPreferenceEndPoint, override_all: overRide ? 1 : 0 });
+        const result = await SetPreference({ userId, source, menuId: sourceId, name: listName || layoutName, selectedColumns: tempSelectedColumns, layout: formLayout, url: FormPreferenceEndPoint, override_all: overRide ? 1 : 0 });
         if (result.success) {
             this.setState({ modal: !this.state.modal });
             if (IsObjectHaveKeys(formLayout)) {

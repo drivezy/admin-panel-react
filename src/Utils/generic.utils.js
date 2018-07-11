@@ -546,6 +546,7 @@ export function GetPreSelectedMethods() {
             layouts: genericData.formPreferences,
             userId: genericData.userId,
             modelId: genericData.modelId,
+            modelAliasId: genericData.modelAliasId,
             route: genericData.url,
             name: method + ' ' + genericData.starter,
         };

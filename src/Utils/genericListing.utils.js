@@ -14,7 +14,7 @@ let tempQuery; // used to decide if stats is to be fetched from server
 * url and menu detail, fetch data and passes them further to the components
 * to show listing data
 */
-export const GetListingRecord = async ({ configuration, queryString = {}, callback, data, currentUser = {}, index }) => {
+export const GetListingRecord = async ({ configuration, queryString = {}, callback, data, currentUser = {}, index, isTab }) => {
     const params = Initialization(configuration, queryString);
     // const this = {};
     this.currentUser = currentUser;
@@ -107,7 +107,7 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
 
     // const result = await Get({ url: configuration.url, body: options });
     const url = BuildUrlForGetCall(configuration.url, options);
-    return Get({ url, callback: PrepareObjectForListing, extraParams: { callback, page: options.page, limit: options.limit, data, configuration, params, index, currentUser }, persist: true, urlPrefix: ROUTE_URL });
+    return Get({ url, callback: PrepareObjectForListing, extraParams: { callback, page: options.page, limit: options.limit, data, configuration, params, index, currentUser, isTab }, persist: true, urlPrefix: ROUTE_URL });
 }
 
 
@@ -117,7 +117,7 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
  * @param  {object} {extraParams}
  */
 function PrepareObjectForListing(result, { extraParams }) {
-    const { callback, page, limit, data, configuration, params, index, currentUser } = extraParams;
+    const { callback, page, limit, data, configuration, params, index, currentUser, isTab } = extraParams;
     if (result.success && result.response) {
 
         const { data: apiData, dictionary, relationship, stats, request_identifier } = result.response;
@@ -148,6 +148,11 @@ function PrepareObjectForListing(result, { extraParams }) {
         const model = params.relationship[base];
         const modelName = model.name.toLowerCase();
 
+        let modelAliasId;
+        if (isTab) {
+            modelAliasId = configuration.menuId;
+        }
+
         let formPreference = {};
         const formPreferences = GetParsedLayoutScript(configuration.form_layouts);
         if (formPreferences) {
@@ -174,6 +179,7 @@ function PrepareObjectForListing(result, { extraParams }) {
             pageName: configuration.pageName,
             starter: base,
             model,
+            modelAliasId,
             // state_name: configuration.listName,
             // listName: configuration.listName + ".list",
             includes: configuration.includes,

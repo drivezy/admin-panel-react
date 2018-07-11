@@ -98,8 +98,8 @@ export default class GenericListing extends Component {
 
     getListingData = () => {
         // this.setState({loading:})
-        const { menuDetail, genericData, queryString, currentUser } = this.state;
-        GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser });
+        const { menuDetail, genericData, queryString, currentUser, isTab } = this.state;
+        GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser, isTab });
     }
 
     dataFetched = ({ genericData, filterContent }) => {

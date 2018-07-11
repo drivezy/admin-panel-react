@@ -227,41 +227,41 @@ const formElements = props => {
             <div className="form-row">
                 {
                     (column_definition.length) ?
-                    column_definition.map((preference, key) => {
+                        column_definition.map((preference, key) => {
 
-                        let elem, column;
+                            let elem, column;
 
-                        // If it is not a split
-                        if (!preference.split) {
-                            column = payload.dictionary[preference.index];
+                            // If it is not a split
+                            if (!preference.split) {
+                                column = payload.dictionary[preference.index];
 
-                            elem = inputElement({ props, values, column, shouldColumnSplited, key });
+                                elem = inputElement({ props, values, column, shouldColumnSplited, key });
 
-                        } else {
-                            shouldColumnSplited = preference.label.includes('s-split-') ? true : preference.label.includes('e-split-') ? false : shouldColumnSplited;
-                        }
-                        if (column && (IsUndefined(column.visibility) || column.visibility)) {
-                            return (
-                                <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
-                                    <label>{column.label || column.display_name}</label>
-                                    {elem}
+                            } else {
+                                shouldColumnSplited = preference.label.includes('s-split-') ? true : preference.label.includes('e-split-') ? false : shouldColumnSplited;
+                            }
+                            if (column && (IsUndefined(column.visibility) || column.visibility)) {
+                                return (
+                                    <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
+                                        <label>{column.label || column.display_name}</label>
+                                        {elem}
 
-                                    {/* Showing Errors when there are errors */}
-                                    {
-                                        errors[column.column_name] && touched[column.column_name] ?
-                                            <small id="emailHelp" className="form-text text-danger">
-                                                {errors[column.column_name]}
-                                            </small>
-                                            :
-                                            null
-                                    }
+                                        {/* Showing Errors when there are errors */}
+                                        {
+                                            errors[column.column_name] && touched[column.column_name] ?
+                                                <small id="emailHelp" className="form-text text-danger">
+                                                    {errors[column.column_name]}
+                                                </small>
+                                                :
+                                                null
+                                        }
 
-                                    {/* Errors Ends */}
-                                </div>
-                            )
-                        }
-                    })
-                : <div className="message">Looks like no columns are selected , Configure it by pressing the settings icon.</div> }
+                                        {/* Errors Ends */}
+                                    </div>
+                                )
+                            }
+                        })
+                        : <div className="message">Looks like no columns are selected , Configure it by pressing the settings icon.</div>}
             </div>
 
             {/* Uploaded file thumbnails */}
@@ -556,7 +556,7 @@ export default class FormCreator extends Component {
 
     render() {
         const { payload, fileUploads } = this.state;
-        const { source, modelId } = payload;
+        const { source, modelId, modelAliasId } = payload;
         return (
             <div className="form-creator">
                 {
@@ -567,7 +567,8 @@ export default class FormCreator extends Component {
 
                 {
                     payload.dictionary ?
-                        <FormSettings source={source} modelId={modelId} onSubmit={this.layoutChanged} listName={payload.modelName} formLayout={payload.layout} columns={payload.dictionary} />
+                        <FormSettings source={source} sourceId={modelAliasId || modelId} onSubmit={this.layoutChanged} listName={payload.modelName} formLayout={payload.layout} columns={payload.dictionary} />
+                        // <FormSettings source={source} modelId={modelId} onSubmit={this.layoutChanged} listName={payload.modelName} formLayout={payload.layout} columns={payload.dictionary} />
                         :
                         null
                 }
