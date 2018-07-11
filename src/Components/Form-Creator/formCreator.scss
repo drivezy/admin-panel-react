@@ -53,6 +53,9 @@
                 border-radius: 3px;
                 margin-bottom: 15px;
                 padding: 10px;
+                .message{
+                    padding: 20px;
+                }
             }
         }
     }
@@ -70,10 +73,13 @@
             border-radius: 3px;
             border: 1px solid #c7c7c7;
             padding: 7px 10px;
-            color: #757575;
+            color: #000000;
             &:focus {
                 box-shadow: none;
                 border-bottom: 1px solid #964d4d66;
+            }
+            &::placeholder{
+                color: #757575;
             }
         }
     }

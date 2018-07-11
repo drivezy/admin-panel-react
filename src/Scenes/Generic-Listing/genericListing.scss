@@ -34,8 +34,8 @@
                 @include themify($themes) {
                     &.btn {
                         border: none; // background: black!important;
-                        background: themed('refreshButtonBackground') !important;
-                        color: themed('refreshButton') !important;
+                        background: themed('failColor') !important;
+                        color: themed('primaryColor') !important;
                     }
                 }
             }
@@ -43,8 +43,9 @@
                 margin: 0px 4px;
                 &.refresh-button {
                     @include themify($themes) {
-                        background: themed('refreshButtonBackground');
-                        color: themed('refreshButton');
+                        border: none; // background: black!important;
+                        background: themed('failColor') !important;
+                        color: themed('primaryColor') !important;
                     }
                 }
             }

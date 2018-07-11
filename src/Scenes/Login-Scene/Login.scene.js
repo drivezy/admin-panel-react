@@ -106,7 +106,7 @@ export default class LoginScene extends Component {
                                 <input autoComplete="off" onChange={(e) => this.setState({ password: e.target.value })} className="form-control" type={this.state.showPassword ? 'text' : 'password'} id="exampleInputPassword1" placeholder="Password" />
                             </FormGroup>
                             <FormGroup className="button">
-                                <Button onClick={(event) => { event.preventDefault(); this.validateCredentials({ username: this.state.username, password: this.state.password }) }} className="btn btn-success btn-block">Login</Button>
+                                <button onClick={(event) => { event.preventDefault(); this.validateCredentials({ username: this.state.username, password: this.state.password }) }} className="btn btn-success btn-block">Login</button>
                             </FormGroup>
                             <div className="row">
                                 <div className="col-sm-6">
