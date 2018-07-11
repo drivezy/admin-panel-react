@@ -280,7 +280,7 @@ const formElements = props => {
                     Reset
                 </button>
 
-                <button className="btn btn-primary">
+                <button className="btn btn-warning">
                     Cancel
                 </button>
 

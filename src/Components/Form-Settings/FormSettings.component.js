@@ -322,9 +322,9 @@ export default class FormSettings extends Component {
     render() {
         return (
             <div className="form-settings">
-                <Button color="secondary" size="sm" onClick={this.toggleModal}>
-                    <i className="fa fa-cog"></i>
-                </Button>
+                <button className="btn btn-danger btn-sm" onClick={this.toggleModal}>
+                <i class="fa fa-cogs"></i>
+                </button>
 
                 {
                     this.state.modal &&
