@@ -127,7 +127,8 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
                     placeholder={`Enter ${column.display_name}`}
                     // onChange={props.setFieldValue}
                     onChange={(value, event) => {
-                        FormUtils.OnChangeListener({ column, value, ...event });
+                        const valId = typeof value == 'object' ? value.id : value;
+                        FormUtils.OnChangeListener({ column, value: valId, ...event });
                         props.setFieldValue(event, value);
                     }}
                     // onChange={({ ...args }) => { FormUtils.OnChangeListener(args); props.setFieldValue(args); }}
@@ -549,7 +550,7 @@ export default class FormCreator extends Component {
 
     onLayoutChange = (value) => {
         const { payload } = this.state;
-        if(value){
+        if (value) {
             payload.layout = value;
             this.setState({ payload });
             SetItem(`form-layout-${payload.modelId}`, value.id);

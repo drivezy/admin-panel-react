@@ -323,7 +323,7 @@ export default class FormSettings extends Component {
         return (
             <div className="form-settings">
                 <button className="btn btn-danger btn-sm" onClick={this.toggleModal}>
-                <i class="fa fa-cogs"></i>
+                <i className="fa fa-cogs"></i>
                 </button>
 
                 {
