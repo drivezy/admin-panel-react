@@ -268,9 +268,9 @@ export default class TableSettings extends Component {
 
         for (let key of columnKeys) {
             leftColumns[key] = leftColumns[key].filter((column) => {
-                console.log(column, selectedIds);
+                // console.log(column, selectedIds);
                 const index = selectedIds.indexOf(column.name);
-                console.log(((index == -1) || (tempSelectedColumnsArray[index].object != column.parent)), column.name);
+                // console.log(((index == -1) || (tempSelectedColumnsArray[index].object != column.parent)), column.name);
                 return ((index == -1) || (tempSelectedColumnsArray[index].object != column.parent));
                 // return selectedIds.indexOf(column.name) == -1
             });
@@ -317,7 +317,7 @@ export default class TableSettings extends Component {
 
                                                                 <div key={key} className="column-group" onDoubleClick={() => this.addColumn(entry)} >
                                                                     <div className="column-label">
-                                                                        {entry.name}
+                                                                        {entry.display_name}
                                                                     </div>
                                                                     <div className="icon-holder">
                                                                         <button className="add-column btn btn-sm btn-light" onClick={() => this.addColumn(entry)} >
@@ -414,8 +414,8 @@ export default class TableSettings extends Component {
                         }
                     </div>
                     <div className="rightButtons">
+                         <button className="btn btn-danger" onClick={this.toggleModal}>Cancel</button>
                         <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
-                        <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
                     </div>
                 </ModalFooter>
             </Modal >
@@ -425,9 +425,9 @@ export default class TableSettings extends Component {
     render() {
         return (
             <div className="table-settings">
-                <Button className="settings-button" size="sm" onClick={this.toggleModal}>
-                    <i className="fa fa-cog"></i>
-                </Button>
+                <button className="btn settings-button btn-sm" onClick={this.toggleModal}>
+                    <i className="fa fa-bars"></i>
+                </button>
 
                 {
                     this.state.modal &&

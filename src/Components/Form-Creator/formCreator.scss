@@ -31,13 +31,14 @@
 
 .form-creator {
     .layoutSelect{
-    .select-box{
-        position: absolute;
-        z-index: 10;
-        width: 17%;
-        left: 70%;
-        top: 4px;
-    }}
+        .select-box{
+            position: absolute;
+            z-index: 10;
+            width: 17%;
+            left: 70%;
+            top: 4px;
+        }
+    }
     .form-settings {
         position: absolute;
         right: 45px;
@@ -60,7 +61,7 @@
         }
     }
     .form-group {
-        padding: 0px 40px 0px 40px;
+        padding: 3px 30px 3px 30px;
         label {
             font-weight: bold;
             font-weight: bold;

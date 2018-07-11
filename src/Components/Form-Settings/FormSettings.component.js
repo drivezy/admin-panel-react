@@ -311,8 +311,9 @@ export default class FormSettings extends Component {
                         }
                     </div>
                     <div className="rightButtons">
-                        <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
                         <button className="btn btn-danger" onClick={this.toggleModal}>Cancel</button>
+                        <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
+                        
                     </div>
                 </ModalFooter>
             </Modal >
@@ -322,8 +323,8 @@ export default class FormSettings extends Component {
     render() {
         return (
             <div className="form-settings">
-                <button className="btn btn-danger btn-sm" onClick={this.toggleModal}>
-                <i className="fa fa-cogs"></i>
+                <button className="btn btn-sm" onClick={this.toggleModal}>
+                    <i class="fa fa-cogs"></i>
                 </button>
 
                 {
