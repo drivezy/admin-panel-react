@@ -94,7 +94,14 @@ export default class TableSettings extends Component {
     removeColumn = (column) => {
         let selectedColumns = this.state.tempSelectedColumns;
 
-        selectedColumns = selectedColumns.filter((entry) => (entry.column != column.column));
+        selectedColumns = selectedColumns.filter((entry) => {
+            console.log(column, entry);
+            const isSameName = entry.column != column.column;
+            if(isSameName) {
+                return true;
+            }
+            return (column.object != entry.object);
+        });
 
         this.setState({ tempSelectedColumns: selectedColumns })
         this.addColumnToLeft(column);
