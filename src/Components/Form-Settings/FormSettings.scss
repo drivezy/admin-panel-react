@@ -102,6 +102,12 @@
             }
         }
     }
+    .modal-footer{
+        justify-content: none;
+        .leftButtons{
+            flex: 1;
+        }
+    }
     // .modal-body {
     //     // background: yellow;
     //     display: flex;

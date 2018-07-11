@@ -224,6 +224,7 @@ $themes: (
                 lightBorder: #e8e8e8,
                 backgroundLight: #ebeef0,
                 // Sidebar Styling
+                darkColor: #000000,
                 primaryDark: #303e4c,
                 onPrimaryDark: #5c7084,
                 secondaryDark: #35485b,
@@ -231,6 +232,9 @@ $themes: (
                 hoverBackground: #334658,
                 //
                 successColor: #27ae60,
+                failColor: #E01A4F,
+                warningColor: #ED7D3A,
+                infoColor: #30C5FF,
                 // Table
                 backgroundLightTable: #f9f9f9,
                 // Body

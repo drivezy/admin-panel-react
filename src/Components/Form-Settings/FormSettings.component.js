@@ -157,7 +157,7 @@ export default class FormSettings extends Component {
         const { userId, modelId, listName, source } = this.props;
         let { formLayout } = this.props;
         const { tempSelectedColumns, layoutName } = this.state;
-        if(IsObjectHaveKeys(formLayout)) {
+        if (IsObjectHaveKeys(formLayout)) {
             formLayout.name = layoutName;
         }
         const result = await SetPreference({ userId, source, menuId: modelId, name: listName || layoutName, selectedColumns: tempSelectedColumns, layout: formLayout, url: FormPreferenceEndPoint, override_all: overRide ? 1 : 0 });
@@ -304,12 +304,16 @@ export default class FormSettings extends Component {
 
                 </ModalBody >
                 <ModalFooter>
-                    {formConfigurator ?
-                        <Button color="primary" onClick={() => this.applyChanges(true)}>Apply For All</Button>
-                        : null
-                    }
-                    <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
-                    <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
+                    <div className="leftButtons">
+                        {formConfigurator ?
+                            <Button color="primary" onClick={() => this.applyChanges(true)}>Apply For All</Button>
+                            : null
+                        }
+                    </div>
+                    <div className="rightButtons">
+                        <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
+                        <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
+                    </div>
                 </ModalFooter>
             </Modal >
         )
