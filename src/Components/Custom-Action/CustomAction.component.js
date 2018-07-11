@@ -92,6 +92,9 @@ export default class CustomAction extends Component {
                 {
                     actions.map((action, key) => {
 
+                        if(!action) { 
+                            return null;
+                        }
                         if (action[placement]) {
                             // if (action.placement_id == placement || true) {
                             const html =

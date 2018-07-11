@@ -307,7 +307,7 @@ export function RegisterMethod(methodArr) {
        
         const methodObj = methodArr[i];
 
-        if(!methodArr) { 
+        if(!methodObj) { 
             return;
         }
         if (methodObj.definition && typeof methodObj.definition == 'object' && methodObj.definition.script) {
