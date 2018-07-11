@@ -304,10 +304,12 @@ export function ConvertDependencyInjectionToArgs(dependencies) {
 export function RegisterMethod(methodArr) {
     const methods = {};
     for (var i in methodArr) {
+       
+        const methodObj = methodArr[i];
+
         if(!methodArr) { 
             return;
         }
-        const methodObj = methodArr[i];
         if (methodObj.definition && typeof methodObj.definition == 'object' && methodObj.definition.script) {
             if (methodObj.dependency) {
                 methods[methodObj.name] = new Function("callback", methodObj.dependency, methodObj.definition.script);
