@@ -276,7 +276,7 @@ const formElements = props => {
 
             <div className="modal-actions row justify-content-end">
 
-                <button className="btn btn-danger" onClick={handleReset}>
+                <button className="btn btn-warning" onClick={handleReset}>
                     Reset
                 </button>
 
@@ -548,10 +548,11 @@ export default class FormCreator extends Component {
 
     onLayoutChange = (value) => {
         const { payload } = this.state;
-        //console.log(value);
-        payload.layout = value;
-        this.setState({ payload });
-        SetItem(`form-layout-${payload.modelId}`, value.id);
+        if(value){
+            payload.layout = value;
+            this.setState({ payload });
+            SetItem(`form-layout-${payload.modelId}`, value.id);
+        }
     }
 
     render() {

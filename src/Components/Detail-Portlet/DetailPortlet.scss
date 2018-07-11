@@ -1,6 +1,6 @@
 @import 'Assets/Global-Shared/theme.scss';
 .detail-portlet {
-    margin: 4px;
+    margin: 15px 4px;
     .card {
         overflow: hidden;
         @include themify($themes) {
@@ -28,7 +28,7 @@
     }
     .gray-border-bottom{
         &:hover{
-            font-size: 105%;
+             background-color: #e8e8e8 !important;
         }
     }
 
