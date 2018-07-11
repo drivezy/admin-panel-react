@@ -68,11 +68,11 @@ export default class ColumnSetting extends Component {
     }
 
     columnNameChange = (event) => {
-        let { column } = this.state;
+        let { tempColumn } = this.state;
 
-        column.columnTitle = event.target.value;
+        tempColumn.columnTitle = event.target.value;
 
-        this.setState({ column });
+        this.setState({ tempColumn });
     }
 
     columnUpdate = (event) => {
@@ -133,8 +133,9 @@ export default class ColumnSetting extends Component {
 
                                 <div className="row">
                                     <div className="col">
-                                        <button type="button" onClick={() => this.columnCollapse()} className="btn btn-secondary">Close</button>
-                                        <button type="button" onClick={() => this.columnCollapse(true)} className="btn btn-secondary">Save</button>
+                                        <button type="button" onClick={() => this.columnCollapse(false)} className="btn btn-warning">Close</button>
+                                        &nbsp;&nbsp;
+                                        <button type="button" onClick={() => this.columnCollapse(true)} className="btn btn-danger">Save</button>
                                     </div>
                                 </div>
                             </form>
