@@ -103,9 +103,9 @@
             }
         }
     }
-    .form-settings{}
+    .form-settings{
 
-    }
+    }}
     .modal-footer{
         justify-content: none;
         .leftButtons{
@@ -118,24 +118,3 @@
             }
         }
     }
-    // .modal-body {
-    //     // background: yellow;
-    //     display: flex;
-    //     justify-content: space-between;
-    //     .left {
-    //         flex-basis: 30%;
-    //     }
-    //     .right {
-    //         max-height: 70vh;
-    //         overflow-y: scroll;
-    //         flex-basis: 30%;
-    //     }
-    //     .controls {
-    //         display: flex;
-    //         flex-direction: column;
-    //         button {
-    //             margin: 4px;
-    //         }
-    //     }
-    // }
-}
