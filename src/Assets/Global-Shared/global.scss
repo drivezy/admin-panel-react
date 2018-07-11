@@ -339,9 +339,9 @@ Non critical css goes here
 .btn-primary {
     @include themify($themes) {
         // border-color: themed('themeBorder');
-        background: themed('infoColor') !important;
+        background: themed('successColor') !important;
         color: themed('primarylight');
-        border-color: themed('infoColor');
+        border-color: themed('successColor');
     }
 }
 
