@@ -246,7 +246,9 @@ export default class GenericListing extends Component {
         genericData.layout = layout;
         if (layout && layout.column_definition) {
             genericData.finalColumns = CreateFinalColumns(genericData.columns, layout.column_definition, genericData.relationship);
-            this.setState({ genericData });
+            // this.setState({ genericData });
+            this.state.genericData = genericData;
+            this.getListingData();
         }
     }
 
