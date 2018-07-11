@@ -195,7 +195,7 @@ export default class TableSettings extends Component {
     searchColumn = (event) => {
         const { tempColumns } = this.state;
         const searchedColumns = {};
-        
+
         for (var i in tempColumns) {
             if (tempColumns[i].name.toString().toLowerCase().indexOf(event.target.value) != -1) {
                 searchedColumns[i] = tempColumns[i];
@@ -275,7 +275,7 @@ export default class TableSettings extends Component {
                             <div className="card-body parent-card">
 
                                 <div className="card-top">
-                                    <h6 className="card-title">All Columns({leftColumns.menu?leftColumns.menu.length:0})</h6>
+                                    <h6 className="card-title">All Columns({leftColumns.menu ? leftColumns.menu.length : 0})</h6>
 
                                     <div className="input-holder">
                                         <input type="text" onChange={event => this.searchColumn(event)} className="search-box" placeholder="Search Columns" />
@@ -395,10 +395,12 @@ export default class TableSettings extends Component {
 
                 </ModalBody>
                 <ModalFooter>
-                    {formConfigurator ?
-                        <Button color="primary" onClick={() => this.applyChanges(true)}>Apply For All</Button>
-                        : null
-                    }
+                    <div className="leftButtons">
+                        {formConfigurator ?
+                            <Button color="primary" onClick={() => this.applyChanges(true)}>Apply For All</Button>
+                            : null
+                        }
+                    </div>
                     <div className="rightButtons">
                         <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
                         <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>

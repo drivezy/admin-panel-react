@@ -226,6 +226,7 @@ const formElements = props => {
         <Form role="form" name="genericForm" >
             <div className="form-row">
                 {
+                    (column_definition.length) ?
                     column_definition.map((preference, key) => {
 
                         let elem, column;
@@ -260,7 +261,7 @@ const formElements = props => {
                             )
                         }
                     })
-                }
+                : <div className="message">Looks like no columns are selected , Configure it by pressing the settings icon.</div> }
             </div>
 
             {/* Uploaded file thumbnails */}
@@ -275,13 +276,17 @@ const formElements = props => {
 
             <div className="modal-actions row justify-content-end">
 
-                <Button color="secondary" onClick={handleReset}>
-                    Clear
-                </Button>
+                <button className="btn btn-danger" onClick={handleReset}>
+                    Reset
+                </button>
 
-                <Button className="btn btn-success" type="submit">
+                {/* <button className="btn btn-primary">
+                    Cancel
+                </button> */}
+
+                <button className="btn btn-success" type="submit">
                     Submit
-                </Button>
+                </button>
             </div>
         </Form>
     );

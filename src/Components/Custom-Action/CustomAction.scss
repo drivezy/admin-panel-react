@@ -11,9 +11,12 @@
         .tooltip-element {
             cursor: pointer;
             padding: 6px 2px;
+            border: 1px solid #cacaca;
+            border-radius: 2px;
+            color: #7d7d7d;
             // border-radius: 3px;
             // background: white;
-            margin: 0px 1px;
+            margin: 0px 6px;
             // border: 1px solid #e0e0e0;
             // border: 1px solid #b7b7b7;
             &:hover {
