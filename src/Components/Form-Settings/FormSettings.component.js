@@ -27,7 +27,7 @@ export default class FormSettings extends Component {
 
         this.state = {
             modal: false,
-            layoutName: formLayout.name || '',
+            layoutName: formLayout.name || 'Default',
             selectedColumns: formLayout.column_definition || [],
             tempSelectedColumns: Array.isArray(formLayout.column_definition) ? [...formLayout.column_definition] : [],
             columns: this.props.columns,
@@ -42,6 +42,12 @@ export default class FormSettings extends Component {
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
     }
 
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        const formLayout = nextProps.formLayout || {};
+        this.state.layoutName = formLayout.name || 'Default';
+        this.state.selectedColumns = formLayout.column_definition || [];
+    }
+
     userDataFetched = (data) => {
         let formConfigurator = data.hasRole('form-configurator');
         // for (var i in data.access_object.roleIdentifiers) {
@@ -51,9 +57,6 @@ export default class FormSettings extends Component {
         //     }
         // }
         this.setState({ formConfigurator });
-    }
-
-    unsafe_componentwillreceiveprops(nextProps) {
     }
 
     toggleModal = () => {

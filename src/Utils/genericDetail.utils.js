@@ -1,5 +1,5 @@
 import { IsUndefinedOrNull, BuildUrlForGetCall, IsObjectHaveKeys } from './common.utils';
-import { CreateFinalColumns, GetPreSelectedMethods, RegisterMethod, GetColumnsForListing, ConvertMenuDetailForGenericPage } from './generic.utils';
+import { CreateFinalColumns, GetPreSelectedMethods, RegisterMethod, GetColumnsForListing, ConvertMenuDetailForGenericPage, GetParsedLayoutScript } from './generic.utils';
 import { Get } from './http.utils';
 
 import { ROUTE_URL } from './../Constants/global.constants';
@@ -119,12 +119,15 @@ export function GetDataForPortlet({ portletDetail, genericDetailObject, portletD
     const model = obj.model = relationship[obj.starter];
     obj.nextActions = [...obj.model.actions, ...genericDetailObject.uiActions];
     obj.model = model;
-    const formPreference = model.form_layouts[0] || {};
+    const formPreferences = GetParsedLayoutScript(model.form_layouts);
+
+    const formPreference = formPreferences[0] || {};
     if (IsObjectHaveKeys(formPreference) && typeof formPreference.column_definition == 'string') {
         formPreference.column_definition = JSON.parse(formPreference.column_definition);
     }
 
     obj.formPreference = formPreference;
+    obj.formPreferences = formPreferences;
 
     return obj;
 }

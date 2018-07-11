@@ -538,6 +538,7 @@ export function GetPreSelectedMethods() {
             dictionary: genericData.columns,
             relationship: genericData.model,
             layout: genericData.formPreference,
+            layouts: genericData.formPreferences,
             userId: genericData.userId,
             modelId: genericData.modelId,
             route: genericData.url,
@@ -705,6 +706,9 @@ export function RemoveStarterFromThePath({ data, starter }) {
 }
 
 export function GetParsedLayoutScript(listLayouts) {
+    if(!Array.isArray(listLayouts)) { 
+        return [];
+    }
     return listLayouts.map(layout => {
         // menuDetail.layouts = menuDetail.list_layouts.map(layout => {
         try {

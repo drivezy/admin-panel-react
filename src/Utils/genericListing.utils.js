@@ -3,6 +3,7 @@ import { IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall, TrimQueryStri
 import { GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, GetSelectedColumnDefinition } from './generic.utils';
 
 import { Get } from './http.utils';
+import { GetParsedLayoutScript } from './generic.utils';
 
 import { ROUTE_URL } from './../Constants/global.constants';
 
@@ -148,8 +149,9 @@ function PrepareObjectForListing(result, { extraParams }) {
         const modelName = model.name.toLowerCase();
 
         let formPreference = {};
-        if (configuration.form_layouts) {
-            formPreference = configuration.form_layouts[0] || {};
+        const formPreferences = GetParsedLayoutScript(configuration.form_layouts);
+        if (formPreferences) {
+            formPreference = formPreferences[0] || {};
         } else {
             formPreference = model.form_layouts[0] || {};
         }
@@ -184,6 +186,7 @@ function PrepareObjectForListing(result, { extraParams }) {
             nextActions: [...model.actions, ...configuration.uiActions],
             // nextActions: model.actions,
             formPreference,
+            formPreferences,
             url: configuration.url,
             // formPreference: configuration.preference[modelName + ".form"] ? JSON.parse(configuration.preference[modelName + ".form"]) : null,
             // modelName: configuration.model.name.toLowerCase() + ".form",
