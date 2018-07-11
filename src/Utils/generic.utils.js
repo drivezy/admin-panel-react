@@ -542,7 +542,7 @@ export function GetPreSelectedMethods() {
             userId: genericData.userId,
             modelId: genericData.modelId,
             route: genericData.url,
-            name: method + genericData.starter,
+            name: method + ' ' + genericData.starter,
         };
     }
     return methods;
