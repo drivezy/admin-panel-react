@@ -105,15 +105,23 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         5: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <SelectBox name={column.name}
-                    isClearable={false}
-                    placeholder={`Enter ${column.display_name}`}
-                    onChange={(value, event) => {
-                        FormUtils.OnChangeListener({ column, value, ...event });
-                        props.setFieldValue(event, value);
-                    }}
-                    value={values[column.name].id}
-                    field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                // <SelectBox name={column.name}
+                //     isClearable={false}
+                //     placeholder={`Enter ${column.display_name}`}
+                //     onChange={(value, event) => {
+                //         FormUtils.OnChangeListener({ column, value, ...event });
+                //         props.setFieldValue(event, value);
+                //     }}
+                //     value={values[column.name].id}
+                //     field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                <div>
+                    <button className="btn btn-success btn-sm" onClick={(value, event) => {
+                        // FormUtils.OnChangeListener({ column, value, ...event });
+                        // props.setFieldValue(event, value);
+                    }}>True</button>
+                    &nbsp;&nbsp;
+                    <button className="btn btn-danger btn-sm">False</button>
+                </div>
                 // <SelectBox name={column.name} onChange={props.setFieldValue} value={values[column.name]} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
             )}
         />,
