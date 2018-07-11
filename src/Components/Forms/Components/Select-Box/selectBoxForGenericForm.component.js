@@ -110,7 +110,14 @@ export default class SelectBox extends Component {
         // For first time match the id with provided value to preselect the field 
         if (input) {
 
-            const url = async + '?query=' + this.state.field + ' LIKE \'%' + input + '%\'';
+            let url = async;
+            // const url = async + '?query=' + this.state.field + ' LIKE \'%' + input + '%\'';
+
+            if (url.includes('query')) {
+                url = url + ' and ' + this.state.field + ' LIKE \'%' + input + '%\'';
+            } else {
+                url = url + '?query=' + this.state.field + ' LIKE \'%' + input + '%\'';
+            }
 
             const result = await Get({ url: url, urlPrefix: GLOBAL.ROUTE_URL });
 
@@ -128,7 +135,14 @@ export default class SelectBox extends Component {
 
         } else {
             if (this.props.value) {
-                let preloadUrl = async + '?query=' + this.state.key + '=' + this.props.value
+                let preloadUrl = async + '?query=' + this.state.key + '=' + this.props.value;
+                // let preloadUrl = async + '?query=' + this.state.key + '=' + this.props.value
+
+                if (preloadUrl.includes('query')) {
+                    preloadUrl = preloadUrl + ' and ' + this.state.field + '=' + input;
+                } else {
+                    preloadUrl = preloadUrl + '?query=' + this.state.field + '=' + input;
+                }
 
                 const result = await Get({ url: preloadUrl, urlPrefix: GLOBAL.ROUTE_URL });
 
@@ -153,8 +167,8 @@ export default class SelectBox extends Component {
         let elem;
 
         let param = {};
-        if(IsObjectHaveKeys(value)){
-            param.value=value;
+        if (IsObjectHaveKeys(value)) {
+            param.value = value;
         }
 
         // value = (typeof value != 'object' || IsObjectHaveKeys(value)) ? value : undefined;
