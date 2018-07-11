@@ -2,12 +2,14 @@
 .table-settings {
     .settings-button {
         background: transparent;
+        margin-right: 5px;
         &.btn {
             @include themify($themes) {
                 // background: transparent;
-                background: themed('settingsButtonBackground');
-                color: themed('settingsButton') ;// border-color: themed('settingsButton');
-                border:none;
+                background: themed('backgroundLight');
+                color: themed('onPrimaryDark') ;// border-color: themed('settingsButton');
+                border: 1px solid;
+                border-color: themed('borderLight');
             }
         }
     }

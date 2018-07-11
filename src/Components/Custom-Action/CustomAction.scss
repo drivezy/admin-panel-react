@@ -11,9 +11,13 @@
         .tooltip-element {
             cursor: pointer;
             padding: 6px 2px;
-            border: 1px solid #cacaca;
             border-radius: 2px;
-            color: #7d7d7d;
+            @include themify($themes) {
+                background: themed('backgroundLight');
+                color: themed('onPrimaryDark') ;// border-color: themed('settingsButton');
+                border: 1px solid;
+                border-color: themed('borderLight');
+            }
             // border-radius: 3px;
             // background: white;
             margin: 0px 6px;

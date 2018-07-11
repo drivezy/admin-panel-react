@@ -321,9 +321,9 @@ export default class GenericListing extends Component {
                                     :
                                     null
                             }
-                            <Button className="refresh-button" size="sm" onClick={() => { this.refreshPage() }}>
+                            <button className="refresh-button btn btn-sm"onClick={() => { this.refreshPage() }}>
                                 <i className="fa fa-refresh"></i>
-                            </Button>
+                            </button>
                             {
                                 menuDetail && menuDetail.layouts && menuDetail.layouts.length > 0 ?
                                     <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} layouts={menuDetail.layouts} history={history} match={match} />
