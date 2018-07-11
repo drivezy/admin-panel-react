@@ -756,7 +756,12 @@ export function ParseRestrictedQuery(queryString) {
 
         query = query.replace(MATCH_PARENT_PATH, '').replace(MATCH_WHITESPACE, '');
         query = query.split('=');
-        parsedQuery[query[0]] = query[1];
+        let value = query[1];
+
+        if(typeof value == 'string')  {
+            value = value.replace(/'/g, '');
+        }
+        parsedQuery[query[0]] = value;
         // parsedQuery.push(query)
 
     });

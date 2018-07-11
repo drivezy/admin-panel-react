@@ -35,6 +35,7 @@ import FormUtils from './../../Utils/form.utils';
 import { GetUrlForFormSubmit } from './../../Utils/generic.utils';
 
 import { ROUTE_URL } from './../../Constants/global.constants';
+import COLUMN_TYPE from './../../Constants/columnType.constants';
 
 import { SetItem } from './../../Utils/localStorage.utils';
 
@@ -62,12 +63,12 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // Static Ends
 
         // Number
-        2: <Field autoComplete="off" className="form-control" type="number" name={column.name} placeholder={`Enter ${column.display_name}`} />,
+        [COLUMN_TYPE.NUMBER]: <Field autoComplete="off" className="form-control" type="number" name={column.name} placeholder={`Enter ${column.display_name}`} />,
         // Number Ends
 
         // 108: <Field disabled={column.disabled} id={column.name} onChange={({ ...args }) => FormUtils.OnChangeListener(args)} name={column.name} className={`form-control ${props.errors[column.index] && props.touched[column.index] ? 'is-invalid' : ''}`} type="text" placeholder={`Enter ${column.name}`} />,
 
-        1: <Field
+        [COLUMN_TYPE.STRING]: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
                 <input name={column.name} className="form-control" rows="3"
@@ -82,6 +83,56 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
             )}
         />,
         // Text Ends
+
+        // Boolean Select
+        [COLUMN_TYPE.BOOLEAN]: <Field
+            name={column.name}
+            render={({ field /* _form */ }) => (
+                <SelectBox name={column.name}
+                    isClearable={false}
+                    placeholder={`Enter ${column.display_name}`}
+                    onChange={(value, event) => {
+                        FormUtils.OnChangeListener({ column, value, ...event });
+                        props.setFieldValue(event, value);
+                    }}
+                    value={values[column.name].id}
+                    field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                // <SelectBox name={column.name} onChange={props.setFieldValue} value={values[column.name]} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+            )}
+        />,
+        // Boolean Ends
+
+        // Reference Begins
+        [COLUMN_TYPE.REFERENCE]: <Field
+            name={column.name}
+            render={({ field /* _form */ }) => (
+                <ReferenceInput column={column} name={column.name}
+                    placeholder={`Enter ${column.display_name}`}
+                    // onChange={props.setFieldValue}
+                    onChange={(value, event) => {
+                        const valId = typeof value == 'object' ? value.id : value;
+                        FormUtils.OnChangeListener({ column, value: valId, ...event });
+                        props.setFieldValue(event, value);
+                    }}
+                    // onChange={({ ...args }) => { FormUtils.OnChangeListener(args); props.setFieldValue(args); }}
+                    model={values[column.name]} />
+            )}
+        />,
+        // Reference Ends
+
+
+        // Script Input
+        [COLUMN_TYPE.SCRIPT]: <ScriptInput
+            value={values[column.name]} columns={props.payload.dictionary} payload={props.payload} column={column} name={column.name}
+            // onChange={props.setFieldValue}
+            onChange={(value, ...args) => {
+                FormUtils.OnChangeListener({ column, value });
+                // props.handleChange(value);
+                props.setFieldValue(column.name, value)
+            }}
+            model={values[column.index]}
+        />,
+        // Script Input Ends
 
         // TextArea Begins
         160: <Field
@@ -100,42 +151,6 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
             )}
         />,
         // Switch Ends
-
-        // Boolean Select
-        5: <Field
-            name={column.name}
-            render={({ field /* _form */ }) => (
-                <SelectBox name={column.name}
-                    isClearable={false}
-                    placeholder={`Enter ${column.display_name}`}
-                    onChange={(value, event) => {
-                        FormUtils.OnChangeListener({ column, value, ...event });
-                        props.setFieldValue(event, value);
-                    }}
-                    value={values[column.name].id}
-                    field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
-                // <SelectBox name={column.name} onChange={props.setFieldValue} value={values[column.name]} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
-            )}
-        />,
-        // Boolean Ends
-
-        // Reference Begins
-        6: <Field
-            name={column.name}
-            render={({ field /* _form */ }) => (
-                <ReferenceInput column={column} name={column.name}
-                    placeholder={`Enter ${column.display_name}`}
-                    // onChange={props.setFieldValue}
-                    onChange={(value, event) => {
-                        const valId = typeof value == 'object' ? value.id : value;
-                        FormUtils.OnChangeListener({ column, value: valId, ...event });
-                        props.setFieldValue(event, value);
-                    }}
-                    // onChange={({ ...args }) => { FormUtils.OnChangeListener(args); props.setFieldValue(args); }}
-                    model={values[column.name]} />
-            )}
-        />,
-        // Reference Ends
 
         // List Select with options from api
         7: <Field
@@ -156,7 +171,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // List Ends
 
         // DatePicker
-        3: <Field
+        [COLUMN_TYPE.DATE]: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
                 <DatePicker single={true} placeholder={`Enter ${column.display_name}`} name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
@@ -165,7 +180,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // DatePicker Ends
 
         // Single DatePicker with Timepicker 
-        4: <Field
+        [COLUMN_TYPE.DATETIME]: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
                 <DatePicker single={true} placeholder={`Enter ${column.display_name}`} timePicker={true} name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
@@ -182,10 +197,6 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
             )}
         />,
         // Time Picker Ends
-
-        // Script Input
-        411: <ScriptInput value={values[column.name]} columns={props.payload.dictionary} payload={props.payload} column={column} name={column.name} onChange={props.setFieldValue} model={values[column.index]} />,
-        // Script Input Ends
 
         684: 'serialize',
 
@@ -394,7 +405,11 @@ const FormContents = withFormik({
             const Method = payload.method == 'edit' ? Put : Post;
 
             const originalValues = FormUtils.getOriginalData();
-            const body = GetChangedMethods(newValues, originalValues);
+            let body = GetChangedMethods(newValues, originalValues);
+            if (IsObjectHaveKeys(payload.restrictedQuery)) {
+                body = { ...body, ...payload.restrictedQuery };
+            }
+
             const result = await Method({ url, body, urlPrefix: ROUTE_URL });
             if (result.success) {
                 props.onSubmit();
