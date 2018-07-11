@@ -91,7 +91,16 @@ export default class SelectBox extends Component {
 
         // For first time match the id with provided value to preselect the field 
         if (input) {
-            const url = async + '?query=' + queryField + ' LIKE \'%' + input + '%\'';
+            let url = async;
+            // const url = async + '?query=' + queryField + ' LIKE \'%' + input + '%\'';
+
+            if (url.includes('query')) {
+                url = url + ' and ' + queryField + '= LIKE \'%' + input + '%\'';
+            } else {
+                url = url + '?query=' + queryField + '= LIKE \'%' + input + '%\'';
+            }
+
+
             const result = await Get({ url: url, urlPrefix: 'https://newadminapi.justride.in/' });
             if (result.success) {
 
