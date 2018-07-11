@@ -87,7 +87,7 @@ export default class ColumnSetting extends Component {
         const { columnTitle, route, filter } = column;
         console.log(columns);
         return (
-            <div className={`column-setting ${activeColumn.column == column.column ? 'active' : ''}`} >
+            <div className={`column-setting ${activeColumn.column == column.column && activeColumn.object == column.object ? 'active' : ''}`} >
                 <div className="column-label">
                     <div className="item-label" onClick={() => this.props.selectColumn(column, this.props.index)} onDoubleClick={() => this.props.removeColumn(column)} >
                         {column.columnTitle ? column.columnTitle : columns[column.index].display_name}

@@ -577,7 +577,7 @@ export async function GetPreference(paramName) {
 export function RowTemplate({ selectedColumn, listingRow, path = 'path' }) {
     if (selectedColumn.column_type_id == COLUMN_TYPE.BOOLEAN) {
         // return eval('listingRow.' + selectedColumn.path) ? 'Yes' : 'No';
-        return listingRow[selectedColumn.path] ? 'Yes' : 'No';
+        return listingRow[selectedColumn.path] ? <div className="green">Yes</div> : <div className="red">No</div>;
     } else if (selectedColumn.route) {
         let id;
         if (selectedColumn[path].split('.')[1]) {
