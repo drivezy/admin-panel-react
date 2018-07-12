@@ -2,11 +2,10 @@
 .table-settings {
     .settings-button {
         background: transparent;
-        margin-right: 5px;
         &.btn {
             @include themify($themes) {
                 // background: transparent;
-                background: themed('backgroundLight');
+                background: themed('primaryLight');
                 color: themed('onPrimaryDark') ;// border-color: themed('settingsButton');
                 border: 1px solid;
                 border-color: themed('borderLight');
@@ -21,6 +20,7 @@
         padding: 10px 20px;
     }
     .modal-body {
+        padding: 25px 20px 25px 20px;
         background: whitesmoke;
         display: flex;
         justify-content: space-between;
@@ -93,6 +93,11 @@
             }
         }
         .right {
+                .table-settings{
+                    .setting-button{
+                        font-size: .865rem !important;
+                    }
+            }
             ul {
                 min-height: 45px;
             }

@@ -215,7 +215,7 @@ export default class FormSettings extends Component {
                             <div className="card-body parent-card">
 
                                 <div className="card-top">
-                                    <h6 className="card-title">All Columns</h6>
+                                    <h6 className="card-title">All Columns({leftColumns.length ? leftColumns.length : 0})</h6>
 
                                     <div className="input-holder">
                                         <input type="text" className="search-box" placeholder="Search Columns" />
@@ -226,7 +226,7 @@ export default class FormSettings extends Component {
                                         leftColumns.map((entry, key) => (
                                             <div key={key} className="column-group" onDoubleClick={() => this.addColumn(entry)} >
                                                 <div className="column-label">
-                                                    {entry.name}
+                                                    {entry.display_name}
                                                 </div>
                                                 <div className="icon-holder">
                                                     <button className="add-column btn btn-sm btn-light" onClick={() => this.addColumn(entry)} >
@@ -243,13 +243,13 @@ export default class FormSettings extends Component {
                     </div>
 
                     <div className="controls">
-                        <Button color="primary" size="sm" onClick={this.moveSelectedUp}>
+                        <Button color="info" size="sm" onClick={this.moveSelectedUp}>
                             <i className="fa fa-arrow-up"></i>
                         </Button>
-                        <Button color="primary" size="sm" onClick={this.moveSelectedDown}>
+                        <Button color="info" size="sm" onClick={this.moveSelectedDown}>
                             <i className="fa fa-arrow-down"></i>
                         </Button>
-                        <Button color="primary" size="sm" onClick={this.addSplit}>
+                        <Button color="secondary" size="sm" onClick={this.addSplit}>
                             Add Split
                         </Button>
                     </div>
@@ -306,7 +306,7 @@ export default class FormSettings extends Component {
                 <ModalFooter>
                     <div className="leftButtons">
                         {formConfigurator ?
-                            <button className="btn applyForAllButton" onClick={() => this.applyChanges(true)}>Apply For All</button>
+                            <button className="btn btn-warning applyForAllButton" onClick={() => this.applyChanges(true)}>Apply For All</button>
                             : null
                         }
                     </div>
@@ -324,7 +324,7 @@ export default class FormSettings extends Component {
         return (
             <div className="form-settings">
                 <button className="btn btn-sm" onClick={this.toggleModal}>
-                    <i class="fa fa-cogs"></i>
+                    <i className="fa fa-cogs"></i>
                 </button>
 
                 {

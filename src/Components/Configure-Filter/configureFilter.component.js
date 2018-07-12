@@ -812,9 +812,14 @@ export default class ConfigureDynamicFilter extends Component {
         return (
             <Collapse isOpen={!isCollapsed}>
                 <div className="configure-filter-container">
-                    <div className="generic-sub-header">
-                        <div className="flex">
+                    <div className="generic-sub-header flex">
+                        <div className="sub-heading">
                             Create Filter:
+                        </div>
+                        <div className="closeBtn">
+                            <span className="btn btn-info btn-sm" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
+                                <i class="fa fa-times"></i>
+                            </span>
                         </div>
                     </div>
 
@@ -924,11 +929,11 @@ export default class ConfigureDynamicFilter extends Component {
                             </div>
                             <div className="footer-actions">
                                 <div className="actions">
-                                    <button className="btn btn-danger" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
+                                    <button className="btn btn-info" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
                                         Close
                                     </button>
                                     <button className="btn btn-success" onClick={this.submit} style={{ margin: '8px' }}>
-                                        Go
+                                        Save
                                     </button>
                                 </div>
                             </div>
