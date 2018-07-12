@@ -136,7 +136,7 @@ export class Spotlight extends Component {
         let matches = [];
 
         if (searchText) {
-            menus.forEach((module) => {
+            menus.modules.forEach((module) => {
                 module.menus.forEach((menu) => {
                     if (menu.name.toLowerCase().indexOf(searchText) != -1) {
                         matches.push(menu);
