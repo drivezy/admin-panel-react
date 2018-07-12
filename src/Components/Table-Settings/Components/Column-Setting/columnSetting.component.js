@@ -45,11 +45,11 @@ export default class ColumnSetting extends Component {
             selectedColumnUpdate(tempColumn,index);
             //this.setState({ column: tempColumn, tempColumn });
         }
-        else {
-            tempColumn = column;
-            tempColumn.expanded = column.expanded = expanded;
-            this.setState({ tempColumn });
-        }
+        // else {
+        //     tempColumn = column;
+        //     tempColumn.expanded = column.expanded = expanded;
+        //     this.setState({ tempColumn });
+        // }
     }
 
     toggleSetting = () => {
@@ -85,7 +85,7 @@ export default class ColumnSetting extends Component {
         const { tempColumn: column = {} } = this.state;
         const { columns, activeColumn } = this.props;
         const { columnTitle, route, filter } = column;
-        console.log(columns);
+        //console.log(columns);
         return (
             <div className={`column-setting ${activeColumn.column == column.column && activeColumn.object == column.object ? 'active' : ''}`} >
                 <div className="column-label">
@@ -134,9 +134,9 @@ export default class ColumnSetting extends Component {
 
                                 <div className="row">
                                     <div className="col">
-                                        <button type="button" onClick={() => this.columnCollapse(false)} className="btn btn-warning">Close</button>
-                                        &nbsp;&nbsp;
-                                        <button type="button" onClick={() => this.columnCollapse(true)} className="btn btn-danger">Save</button>
+                                        {/* <button type="button" onClick={() => this.columnCollapse(false)} className="btn btn-warning">Close</button>
+                                        &nbsp;&nbsp; */}
+                                        <button type="button" onClick={() => this.columnCollapse(true)} className="btn btn-success">Save</button>
                                     </div>
                                 </div>
                             </form>
