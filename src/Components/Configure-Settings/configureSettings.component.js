@@ -16,8 +16,6 @@ import { SetItem } from './../../Utils/localStorage.utils';
 import $ from 'jquery';
 import ThemeUtil from './../../Utils/theme.utils';
 
-
-
 const SpotlightTab = (keys) =>
 
     <Row className="spot-light" id='spotlight' ref={this.spotlightCompRef}>
@@ -28,6 +26,8 @@ const SpotlightTab = (keys) =>
                     Spotlight helps you quickly access different menus in Panel . You can also search cars, vehicles, booking
                     , cities and quickly navigate to the page by pressing enter
                 </CardText>
+
+                
                 
                 <div className="custom-actions flex">
                 {
@@ -58,9 +58,6 @@ const SpotlightTab = (keys) =>
            
         </Col>
     </Row>
-
-
-
 
 export default class ConfugreSettings extends Component {
 
@@ -110,6 +107,10 @@ export default class ConfugreSettings extends Component {
         ModalManager.closeModal();
     }
 
+    displayKeys = (keys) => {
+        console.log(keys);
+    }
+
     addKeyListener = () => {
 
         const tempKey = [];
@@ -152,23 +153,23 @@ export default class ConfugreSettings extends Component {
 
             setTimeout( () => {
                  if (this.state.keys.length < 2) {
-                    tempKey.push({
+                    // tempKey.push({
+                    //     key: event.key,
+                    //     keyCode: event.keyCode
+                    // });
+
+                    const tempKey = {
                         key: event.key,
                         keyCode: event.keyCode
-                    });
+                    };
                     
                    // this.setState({ keys : tempKey })
                    const { keys} = this.state;
                    keys.push(tempKey);
                    this.setState({keys});
                     // this.state.keys.push(tempKey);
-                    // if( this.state.keys.length == 2)
-                        for(var i=0;i<2;i++){
-                            for (var j=0;j<2;j++){
-                                console.log(this.state.keys[j][i].key);
-                            }
-                        }
-                            // console.log(this.state.keys);
+                    if( this.state.keys.length == 2)
+                        console.log(this.state.keys);
                  }
                 
             });
@@ -178,6 +179,7 @@ export default class ConfugreSettings extends Component {
 
         render() {
             const { activeTab, selectedTheme, selectedSpacing, _handleEscKey, keys } = this.state;
+            
             return (
                 <div className="configure-settings">
                     <ModalBody >
@@ -253,6 +255,22 @@ export default class ConfugreSettings extends Component {
                             <TabPane tabId="2" >
 
                                 <SpotlightTab />
+                                
+                                <div className="display-keys-card">
+                                {
+                                   (keys.length == 2) &&
+                                   keys.map((value,key)=>
+
+                                    <span key={key} className="display-keys">
+                                        {console.log(value)}
+                                        {value.key}
+                                    </span> 
+
+                                )
+                                    
+                                //    this.displayKeys(keys)
+                                }
+                                </div>
                                  
                             </TabPane>
                         </TabContent>

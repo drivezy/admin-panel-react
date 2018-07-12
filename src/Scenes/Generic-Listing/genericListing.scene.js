@@ -100,6 +100,8 @@ export default class GenericListing extends Component {
         // this.setState({loading:})
         const { menuDetail, genericData, queryString, currentUser, isTab } = this.state;
         GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser, isTab });
+
+        console.log("Listing data working")
     }
 
     dataFetched = ({ genericData, filterContent }) => {
@@ -221,11 +223,11 @@ export default class GenericListing extends Component {
     };
 
     keyMap = {
-        moveUp: 'shift+r',
+        refresh: 'meta+r',
     }
 
     handlers = {
-        'moveUp': (event) => this.getListingData()
+        'refresh': (event) => this.refreshPage(event)
     }
 
     toggleAdvancedFilter = (payload = {}) => {
@@ -252,7 +254,8 @@ export default class GenericListing extends Component {
         }
     }
 
-    refreshPage() {
+    refreshPage(event) {
+        event.preventDefault();
         this.getListingData();
     }
 
