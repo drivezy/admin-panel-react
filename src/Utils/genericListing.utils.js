@@ -1,6 +1,6 @@
 
 import { IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall, TrimQueryString, IsObjectHaveKeys } from './common.utils';
-import { GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, GetSelectedColumnDefinition } from './generic.utils';
+import { GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, ParseRestrictedQuery } from './generic.utils';
 
 import { Get } from './http.utils';
 import { GetParsedLayoutScript } from './generic.utils';
@@ -138,6 +138,17 @@ function PrepareObjectForListing(result, { extraParams }) {
 
         params.dictionary = dictionary && Object.keys(dictionary).length ? dictionary : data.dictionary;
         params.relationship = relationship && Object.keys(relationship).length ? relationship : data.relationship;
+
+        const restrictedQuery = ParseRestrictedQuery(configuration.restricted_query);
+        if (IsObjectHaveKeys(restrictedQuery)) {
+            let baseDictionary = params.dictionary[base];
+            const restrictedColumns = Object.keys(restrictedQuery);
+            baseDictionary = baseDictionary.filter(column => column && restrictedColumns.indexOf(column.name) == -1);
+
+            params.dictionary[base] = baseDictionary;
+        }
+
+
 
         // if (relationship && typeof Object.keys(relationship).length) {
         //     params.relationship = relationship;
