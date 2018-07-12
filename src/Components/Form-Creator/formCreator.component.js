@@ -39,6 +39,10 @@ import COLUMN_TYPE from './../../Constants/columnType.constants';
 
 import { SetItem } from './../../Utils/localStorage.utils';
 
+import RightClick from './../../Components/Right-Click/rightClick.component';
+import { CopyToClipBoard } from './../../Utils/common.utils';
+import ToastUtils from './../../Utils/toast.utils';
+
 const DisplayFormikState = props => (
     <div style={{ margin: '1rem 0' }}>
         <h3 style={{ fontFamily: 'monospace' }} />
@@ -242,7 +246,8 @@ const formElements = props => {
         handleBlur,
         handleSubmit,
         handleReset,
-        setFieldValue
+        setFieldValue,
+        headerOptions
     } = props;
 
     const { payload } = props;
@@ -272,9 +277,10 @@ const formElements = props => {
                                 shouldColumnSplited = preference.label.includes('s-split-') ? true : preference.label.includes('e-split-') ? false : shouldColumnSplited;
                             }
                             if (column && (IsUndefined(column.visibility) || column.visibility)) {
+                                const html = <label>{column.label || column.display_name}</label>
                                 return (
                                     <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
-                                        <label>{column.label || column.display_name}</label>
+                                        <RightClick html={html} key={key} renderTag="div" className='generic-form-label' rowOptions={props.headerOptions} column={column} />
                                         {elem}
 
                                         {/* Showing Errors when there are errors */}
@@ -458,6 +464,19 @@ const FormContents = withFormik({
 })(formElements);
 
 export default class FormCreator extends Component {
+    
+    headerOptions = [{
+        id: 0,
+        name: "Copy Column Name",
+        icon: 'fa-copy',
+        subMenu: false,
+        onClick: (data) => {
+            let prop = data.column.name;
+            CopyToClipBoard(prop);
+            ToastUtils.success({ description: "Column name " + data.column.name + " has been copied", title: 'Column Name' });
+        }
+    }];
+
     constructor(props) {
         super(props);
 
@@ -612,7 +631,7 @@ export default class FormCreator extends Component {
                     {
                         payload.layout ?
                             <CardBody>
-                                <FormContents fileUploads={fileUploads} removeImage={this.removeImage} onFileUpload={this.pushFiles} onFileRemove={this.removeFile} onSubmit={this.formSubmitted.bind(this)} payload={payload} />
+                                <FormContents fileUploads={fileUploads} removeImage={this.removeImage} onFileUpload={this.pushFiles} onFileRemove={this.removeFile} onSubmit={this.formSubmitted.bind(this)} payload={payload} headerOptions={this.headerOptions} />
                             </CardBody>
                             :
                             null
