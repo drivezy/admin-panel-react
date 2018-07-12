@@ -141,6 +141,7 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
     // const selectedColumns = GetSelectedColumnDefinition(layout);
     for (const i in selectedColumns) {
         const selected = selectedColumns[i];
+        // console.log(selected.label);
         if (!selected.split) {
             const dict = columns[selected.index];
             if (dict) {
@@ -165,9 +166,12 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
                 //     }
                 // }
             }
-        } else {
+        } else if(selected.label=='seperator'){
+            finalColumnDefinition[i] = { ...selected, isSplit: false }
+            splitEnabled = false;
+        }
+        else{
             finalColumnDefinition[i] = { ...selected, isSplit: true }
-
             splitEnabled = !splitEnabled;
 
         };
@@ -181,6 +185,7 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
         }
 
     }
+    // console.log(finalColumnDefinition);
     return finalColumnDefinition;
 }
 

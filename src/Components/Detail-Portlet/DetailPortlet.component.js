@@ -65,7 +65,8 @@ export default class DetailPortlet extends Component {
                     <CardBody>
                         <Row>
                             {
-                                finalColumns.filter((entry) => !entry.isSplit).map((selectedColumn, key) => {
+                                finalColumns.filter((entry) => (!entry.isSplit) || (entry.label == 'seperator')).map((selectedColumn, key) => {
+                                    
                                     const html =
                                         <div className="detail-entry" >
                                             <Col>
@@ -81,7 +82,7 @@ export default class DetailPortlet extends Component {
 
                                     return (
                                         selectedColumn &&
-                                        <Col className="gray-border-bottom padding-bottom-4 padding-top-4" key={key} xs={selectedColumn.split ? '6' : '12'}>
+                                        <Col className="gray-border-bottom padding-bottom-4 padding-top-4" key={key} xs={((selectedColumn.split) && (selectedColumn.label !== 'seperator')) ? '6' : '12'}>
                                             <RightClick key={key} renderTag="div" rowOptions={this.rowOptions} html={html} listingRow={listingRow} selectedColumn={selectedColumn} starter={starter}></RightClick>
                                         </Col>
                                     )

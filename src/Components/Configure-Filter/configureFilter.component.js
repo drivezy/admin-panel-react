@@ -818,7 +818,7 @@ export default class ConfigureDynamicFilter extends Component {
                         </div>
                         <div className="closeBtn">
                             <span className="btn btn-info btn-sm" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
-                                <i class="fa fa-times"></i>
+                                <i className="fa fa-times"></i>
                             </span>
                         </div>
                     </div>
