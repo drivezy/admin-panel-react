@@ -16,6 +16,7 @@ import { SetItem } from './../../Utils/localStorage.utils';
 import $ from 'jquery';
 import ThemeUtil from './../../Utils/theme.utils';
 import { SetUserPreference } from './../../Utils/userPreference.utils';
+import { Spotlight } from './../../Components/Spotlight-Search/spotlightSearch.component';
 
 const SpotlightTab = (keys) =>
 
@@ -48,6 +49,8 @@ export default class ConfugreSettings extends Component {
         }
     }
 
+
+
     componentDidMount()  {
         // document.getElementById('spotlight').addEventListener("keydown", () => {
         //     console.log("Test successful");
@@ -71,9 +74,12 @@ export default class ConfugreSettings extends Component {
         console.log(this.state.keys);
 
 
-        const result = await SetUserPreference('spotlightkeys',this.state.keys)
+        const result = await SetUserPreference('spotlight',this.state.keys)
 
         console.log(result);
+
+        <Spotlight/>
+
     }
 
     selectTheme = (theme) => {
@@ -105,7 +111,7 @@ export default class ConfugreSettings extends Component {
 
     toggle = (tab) => {
         if (tab == 2) {
-            // this.spotlightCompRef.current.focus()  
+            // this.spotlightCompRef.current ? this.spotlightCompRef.current.focus() : '' 
 
             this.addKeyListener();
         }
@@ -149,7 +155,10 @@ export default class ConfugreSettings extends Component {
                    this.setState({keys});
                     // this.state.keys.push(tempKey);
                     if( this.state.keys.length == 2)
+                    { 
                         console.log(this.state.keys);
+                        
+                    }
                  }
                 
             });

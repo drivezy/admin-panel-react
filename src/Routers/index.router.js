@@ -38,8 +38,8 @@ export default class IndexRouter extends Component {
 
 
     keyMap = {
-        moveUp: 'shift+b',
-        spotlight: 'shift+f'
+        moveUp: 'Shift+B',
+       
     }
 
     handlers = {

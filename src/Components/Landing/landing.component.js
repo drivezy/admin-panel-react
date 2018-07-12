@@ -21,6 +21,7 @@ import TicketDetail from './../../Scenes/Ticket-Detail/ticketDetail.scene';
 import RosterTimeline from './../../Scenes/Roster-Timeline/rosterTimeline.scene';
 
 import LoadAsyncComponent from './../../Async/async';
+import SettingsUtil from './../../Utils/settings.utils';
 
 import './landing.component.css';
 
@@ -37,6 +38,7 @@ export default class LandingApp extends Component {
 
         this.loadedComponent = [];
     }
+
 
     componentDidUpdate = (prevProps) => {
         if (prevProps.menus != this.props.menus) {
