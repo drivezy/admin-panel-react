@@ -136,7 +136,7 @@ export default class GenericDetail extends Component {
             modelId: portlet.model && portlet.model.id,
             methods: portlet.methods,
             preDefinedmethods: portlet.preDefinedmethods,
-            modelClass: portlet.modelClass
+            modelHash: portlet.modelHash
         };
 
         const html =
