@@ -120,7 +120,7 @@ function PrepareObjectForListing(result, { extraParams }) {
     const { callback, page, limit, data, configuration, params, index, currentUser, isTab } = extraParams;
     if (result.success && result.response) {
 
-        const { data: apiData, dictionary, relationship, stats, request_identifier } = result.response;
+        const { data: apiData, dictionary, relationship, stats, request_identifier, model_class: modelClass } = result.response;
         let { base } = result.response;
         base = base || data.starter;
         // if (columns && columns.length === 0) {
@@ -213,7 +213,8 @@ function PrepareObjectForListing(result, { extraParams }) {
             userId: currentUser ? currentUser.id : null,
             menuId: configuration.menuId,
             modelId: model.id,
-            request_identifier
+            request_identifier,
+            modelClass
             // userFilter: configuration.userFilter,
             // scopes: data.scopes,
             // restrictColumn: configuration.restrictColumnFilter,
