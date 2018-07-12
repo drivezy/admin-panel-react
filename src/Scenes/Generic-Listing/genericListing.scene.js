@@ -101,7 +101,7 @@ export default class GenericListing extends Component {
         const { menuDetail, genericData, queryString, currentUser, isTab } = this.state;
         GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser, isTab });
 
-        console.log("Listing data working")
+    
     }
 
     dataFetched = ({ genericData, filterContent }) => {
@@ -223,11 +223,11 @@ export default class GenericListing extends Component {
     };
 
     keyMap = {
-        refresh: 'meta+r',
+        refresh: 'meta+r',          //Introducing Command + R buttons
     }
 
     handlers = {
-        'refresh': (event) => this.refreshPage(event)
+        'refresh': (event) => this.refreshPage(event)   // RefreshPage function contains the function to be refreshed
     }
 
     toggleAdvancedFilter = (payload = {}) => {
@@ -447,7 +447,7 @@ export default class GenericListing extends Component {
             icon: 'fa-chart-line',
             subMenu: true,
             onClick: (data, operator) => {
-                console.log(data, operator);
+              
                 this.openAggregationResult(operator.name.toLowerCase(), operator.name + ' of ' + data.selectedColumn.display_name + ' equals : ', data)
             }, disabled: (data) => {
                 return (data.selectedColumn.path.split('.').length != 1)

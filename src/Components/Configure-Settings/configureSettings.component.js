@@ -15,6 +15,7 @@ import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import { SetItem } from './../../Utils/localStorage.utils';
 import $ from 'jquery';
 import ThemeUtil from './../../Utils/theme.utils';
+import { SetUserPreference } from './../../Utils/userPreference.utils';
 
 const SpotlightTab = (keys) =>
 
@@ -26,33 +27,6 @@ const SpotlightTab = (keys) =>
                     Spotlight helps you quickly access different menus in Panel . You can also search cars, vehicles, booking
                     , cities and quickly navigate to the page by pressing enter
                 </CardText>
-
-                
-                
-                <div className="custom-actions flex">
-                {
-                    keys.length&&
-                    keys.map((value, key) => {
-                        console.log(value, key);
-                    })
-                }
-            </div >
-                {/* <div class="col-md-6 col-md-offset-3">
-                                <span>
-                                    <div class="col-md-5">
-                                        <span>{this.state.keys[0].key}</span>
-                                    </div>
-                                    <div class="col-md-2" ng-if="!$last">
-                                        <strong style="display:inline;">+</strong>
-                                    </div>
-                                </span>
-                </div>
-                 */}
-                
-                {
-                    this.keys ? 
-                    console.log(this.keys) : null
-                }
 
             </Card>
            
@@ -85,7 +59,7 @@ export default class ConfugreSettings extends Component {
 
     spacing = ThemeUtil.getSpacings();
     
-    applyChanges = () => {
+    applyChanges = async () => {
         const { selectedTheme, selectedSpacing } = this.state;
 
         ThemeUtil.setTheme(selectedTheme);
@@ -93,6 +67,13 @@ export default class ConfugreSettings extends Component {
         ThemeUtil.setSpacing(selectedSpacing);
 
         ModalManager.closeModal();
+
+        console.log(this.state.keys);
+
+
+        const result = await SetUserPreference('spotlightkeys',this.state.keys)
+
+        console.log(result);
     }
 
     selectTheme = (theme) => {
@@ -141,7 +122,6 @@ export default class ConfugreSettings extends Component {
         }
 
     }
-
 
 
     keyboardListener = (event) => {
@@ -261,10 +241,16 @@ export default class ConfugreSettings extends Component {
                                    (keys.length == 2) &&
                                    keys.map((value,key)=>
 
+                                   <div>
                                     <span key={key} className="display-keys">
                                         {console.log(value)}
                                         {value.key}
                                     </span> 
+
+                                    {key==0 &&
+                                    <span> +
+                                    </span>}
+                                    </div>
 
                                 )
                                     

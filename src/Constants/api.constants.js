@@ -22,4 +22,6 @@ export const ListPreference = 'listPreference';
 export const FormPreferenceEndPoint = 'formPreference';
 
 export const FormDetailEndPoint = 'formDetails';
+
+export const UserPreferenceEndPoint = 'userPreference';
 /** Private routes ends here */
