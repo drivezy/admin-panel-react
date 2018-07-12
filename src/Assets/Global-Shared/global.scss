@@ -20,6 +20,10 @@ body {
     position: relative;
 }
 
+.inline {
+    display: inline;
+}
+
 .flex {
     display: table;
     /* IE < 10, Opera *Presto* Desktop (Now dead) */
@@ -325,7 +329,6 @@ Non critical css goes here
         }
     }
 }
-
 
 .btn-secondary {
     @include themify($themes) {
