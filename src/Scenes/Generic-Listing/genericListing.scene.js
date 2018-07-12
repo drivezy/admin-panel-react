@@ -27,6 +27,8 @@ import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } fr
 import { GetListingRecord } from './../../Utils/genericListing.utils';
 import { SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent } from './../../Utils/stateManager.utils';
 
+import { InjectMessage } from './../../Utils/inject-method/injectScript.utils'
+
 export default class GenericListing extends Component {
     filterContent = {};
     urlParams = Location.search();
@@ -103,6 +105,7 @@ export default class GenericListing extends Component {
     }
 
     dataFetched = ({ genericData, filterContent }) => {
+        InjectMessage("Dheeraj", "success", 10000);
         const { propageGenericDataToParent, index } = this.props;
 
         this.setState({ genericData, filterContent, loading: false });
@@ -309,10 +312,10 @@ export default class GenericListing extends Component {
                         </div>
                         <div className="header-actions">
                             <CustomAction position="header" source={isTab ? source : undefined} parentData={parentData} menuDetail={menuDetail} history={history} genericData={genericData} actions={genericData.nextActions} placement={'as_header'} />
-                            <button className="refresh-button btn btn-sm"onClick={() => { this.refreshPage() }}>
+                            <button className="refresh-button btn btn-sm" onClick={() => { this.refreshPage() }}>
                                 <i className="fa fa-refresh"></i>
                             </button>
-                            
+
                             {
                                 genericData.columns ?
                                     <TableSettings
@@ -327,7 +330,7 @@ export default class GenericListing extends Component {
                                     :
                                     null
                             }
-                            
+
                             {
                                 menuDetail && menuDetail.layouts && menuDetail.layouts.length > 0 ?
                                     <PredefinedFilter onFilterUpdate={this.predefinedFiltersUpdated} layouts={menuDetail.layouts} history={history} match={match} />
@@ -382,8 +385,8 @@ export default class GenericListing extends Component {
                                 }
 
                                 {
-                                    (finalColumns && finalColumns.length ) ?
-                                       ( genericData.stats.total ? <ListingPagination history={history} match={match} current_page={genericData.currentPage} limit={genericData.limit} statsData={genericData.stats} />:null) : <div className="noListMessage">Looks like no columns are selected , Configure it by pressing the settings icon.</div>
+                                    (finalColumns && finalColumns.length) ?
+                                        (genericData.stats.total ? <ListingPagination history={history} match={match} current_page={genericData.currentPage} limit={genericData.limit} statsData={genericData.stats} /> : null) : <div className="noListMessage">Looks like no columns are selected , Configure it by pressing the settings icon.</div>
                                 }
                                 {/* Listing Pagination Ends */}
                             </div>

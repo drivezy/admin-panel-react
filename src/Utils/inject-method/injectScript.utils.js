@@ -1,4 +1,5 @@
-
+import './injectScript.utils.css';
+import $ from 'jquery';
 /**
  * Executes script in the context of data
  * @param  {object} {data
@@ -62,6 +63,38 @@ export function InjectError(script, message) {
     crossSymbol.classList.add("close");
     crossSymbol.innerHTML = "&times;";
     errorElemenet.appendChild(crossSymbol);
+
+    pageContent.insertBefore(errorElemenet, pageContent.firstChild);
+};
+
+/**
+* appends error message if found any error while executing scripts
+* @param  {object} script
+* @param  {string} message - text message to be displayed
+*/
+export function InjectMessage(message, type, time = 4000) {
+    var pageContent = document.getElementById('parent-admin-element'); // main page element
+    var errorElemenet = document.createElement("div"); // new error element to be injected at top
+    errorElemenet.classList.add("alert");
+    if (type === "success") {
+        errorElemenet.classList.add("alert-success");
+    }
+    if (type === "error") {
+        errorElemenet.classList.add("alert-danger");
+    }
+    if (type === "info") {
+        errorElemenet.classList.add("alert-info");
+    }
+    if (type === "warning") {
+        errorElemenet.classList.add("alert-warning");
+    }
+    errorElemenet.innerHTML = "<strong>" + message + " </strong>";
+
+    window.setTimeout(function () {
+        $(".alert").fadeTo(500, 0).slideUp(500, function () {
+            $(this).remove();
+        });
+    }, time);
 
     pageContent.insertBefore(errorElemenet, pageContent.firstChild);
 };
