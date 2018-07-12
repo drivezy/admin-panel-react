@@ -312,6 +312,7 @@ export default class GenericListing extends Component {
                             <button className="refresh-button btn btn-sm"onClick={() => { this.refreshPage() }}>
                                 <i className="fa fa-refresh"></i>
                             </button>
+                            
                             {
                                 genericData.columns ?
                                     <TableSettings

@@ -5,6 +5,10 @@ import { AceEditor } from 'react-ace'
 
 import { Collapse, Card, CardBody, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
+import { Delete } from './../../../../Utils/http.utils';
+
+import { RECORD_URL } from './../../../../Constants/global.constants';
+
 // Custom Components
 import CodeEditor from './../../../Code-Editor/codeEditor.component';
 
@@ -28,14 +32,22 @@ export default class ScriptInput extends Component {
     toggleModal = () => {
     }
 
-    deleteScript = () => {
+    deleteScript = async () => {
         console.log('deleted');
+
+        const url = 'systemScript/' + this.state.value;
+        const result = await Delete({ url, urlPrefix: RECORD_URL });
+        if (result.success) {
+            this.props.onSubmit(null, {});
+        }
 
     }
 
     render() {
 
         const { payload, column, columns, value } = this.state;
+
+        const { onChange } = this.props;
 
         return (
             <div className="script-input">
@@ -70,17 +82,23 @@ export default class ScriptInput extends Component {
                             <div className="col">
                                 {
                                     value ?
-                                        <CodeEditor column={column} payload={payload} onSubmit={this.onSubmit} scriptId={value} />
+                                        <CodeEditor column={column} payload={payload} onSubmit={onChange} scriptId={value} />
                                         // <CodeEditor onSubmit={this.onSubmit} buttonComponent={() => (<button onClick={() => this.editScript(value)} className="btn btn-secondary">Edit Script</button>)} scriptId={value} />
                                         :
-                                        <CodeEditor column={column} payload={payload} onSubmit={this.onSubmit} scriptId={value} />
+                                        <CodeEditor column={column} payload={payload} onSubmit={onChange} scriptId={value} />
                                     // <CodeEditor onSubmit={this.onSubmit} buttonComponent={() => (<button onClick={() => this.addScript(value)} className="btn btn-secondary">Add Script</button>)} />
                                 }
                             </div>
                             <div className="col">
-                                <button className="btn btn-secondary" onClick={this.deleteScript}>
-                                    Remove Script
-                                </button>
+                                {
+                                    value ?
+                                        <button className="btn btn-secondary" onClick={this.deleteScript}>
+                                            Remove Script
+                                        </button>
+                                        :
+                                        null
+                                }
+
                             </div>
                         </div>
                 }
