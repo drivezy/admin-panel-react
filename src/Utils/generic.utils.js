@@ -104,6 +104,8 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
             selectedColumn.model_id = columns[i][j].model_id
             selectedColumn.name = columns[i][j].name;
             selectedColumn.visibility = columns[i][j].visibility;
+            selectedColumn.required = columns[i][j].required;
+            selectedColumn.nullable = columns[i][j].nullable;
             selectedColumn.reference_model = columns[i][j].reference_model;
             selectedColumn.display_name = columns[i][j].display_name;
 
@@ -549,6 +551,7 @@ export function GetPreSelectedMethods() {
             modelAliasId: genericData.modelAliasId,
             route: genericData.url,
             name: method + ' ' + genericData.starter,
+            modelHash: genericData.modelHash
         };
     }
     return methods;
@@ -756,7 +759,12 @@ export function ParseRestrictedQuery(queryString) {
 
         query = query.replace(MATCH_PARENT_PATH, '').replace(MATCH_WHITESPACE, '');
         query = query.split('=');
-        parsedQuery[query[0]] = query[1];
+        let value = query[1];
+
+        if(typeof value == 'string')  {
+            value = value.replace(/'/g, '');
+        }
+        parsedQuery[query[0]] = value;
         // parsedQuery.push(query)
 
     });

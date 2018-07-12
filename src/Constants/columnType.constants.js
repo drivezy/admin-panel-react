@@ -7,5 +7,6 @@ export default {
     REFERENCE: 6,
     SELECT: 7,
     LIST: 8,
-    SERIALIZABLE: 9
+    SERIALIZABLE: 9,
+    SCRIPT: 10
 };

@@ -1,6 +1,6 @@
 
 import { IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall, TrimQueryString, IsObjectHaveKeys } from './common.utils';
-import { GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, GetSelectedColumnDefinition } from './generic.utils';
+import { GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, ParseRestrictedQuery } from './generic.utils';
 
 import { Get } from './http.utils';
 import { GetParsedLayoutScript } from './generic.utils';
@@ -120,7 +120,7 @@ function PrepareObjectForListing(result, { extraParams }) {
     const { callback, page, limit, data, configuration, params, index, currentUser, isTab } = extraParams;
     if (result.success && result.response) {
 
-        const { data: apiData, dictionary, relationship, stats, request_identifier } = result.response;
+        const { data: apiData, dictionary, relationship, stats, request_identifier, model_hash: modelHash } = result.response;
         let { base } = result.response;
         base = base || data.starter;
         // if (columns && columns.length === 0) {
@@ -138,6 +138,17 @@ function PrepareObjectForListing(result, { extraParams }) {
 
         params.dictionary = dictionary && Object.keys(dictionary).length ? dictionary : data.dictionary;
         params.relationship = relationship && Object.keys(relationship).length ? relationship : data.relationship;
+
+        const restrictedQuery = ParseRestrictedQuery(configuration.restricted_query);
+        if (IsObjectHaveKeys(restrictedQuery)) {
+            let baseDictionary = params.dictionary[base];
+            const restrictedColumns = Object.keys(restrictedQuery);
+            baseDictionary = baseDictionary.filter(column => column && restrictedColumns.indexOf(column.name) == -1);
+
+            params.dictionary[base] = baseDictionary;
+        }
+
+
 
         // if (relationship && typeof Object.keys(relationship).length) {
         //     params.relationship = relationship;
@@ -202,7 +213,8 @@ function PrepareObjectForListing(result, { extraParams }) {
             userId: currentUser ? currentUser.id : null,
             menuId: configuration.menuId,
             modelId: model.id,
-            request_identifier
+            request_identifier,
+            modelHash
             // userFilter: configuration.userFilter,
             // scopes: data.scopes,
             // restrictColumn: configuration.restrictColumnFilter,

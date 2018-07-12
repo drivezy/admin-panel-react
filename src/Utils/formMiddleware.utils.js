@@ -78,15 +78,17 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
             formContent.layout = SelectFromOptions(layouts, layoutId, 'id') || {};
         }
 
-        if (Array.isArray(scripts)) {
-            formContent = ExecuteScript({ formContent, scripts, context: FormUtils, contextName: 'form' });
-        }
 
         const restrictedQuery = ParseRestrictedQuery(formContent.menu.restricted_query);
         for (let i in restrictedQuery) {
             formContent = FormUtils.setVisible(i, false, formContent);
         }
         formContent.data = { ...formContent.data, ...restrictedQuery };
+        formContent.restrictedQuery = restrictedQuery;
+        
+        if (Array.isArray(scripts)) {
+            formContent = ExecuteScript({ formContent, scripts, context: FormUtils, contextName: 'form' });
+        }
 
         if (openModal) {
             // ModalManager.openModal({
