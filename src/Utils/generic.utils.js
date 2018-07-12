@@ -551,7 +551,7 @@ export function GetPreSelectedMethods() {
             modelAliasId: genericData.modelAliasId,
             route: genericData.url,
             name: method + ' ' + genericData.starter,
-            modelClass: genericData.modelClass
+            modelHash: genericData.modelHash
         };
     }
     return methods;

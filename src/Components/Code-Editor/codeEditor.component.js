@@ -175,7 +175,7 @@ export default class CodeEditor extends Component {
             var params = {
                 name: name + ' Script',
                 description: name + " Script for " + '',
-                source_type: payload.modelClass,
+                source_type: payload.modelHash,
                 // source_type: 'Drivezy\\LaravelRecordManager\\Models\\ModelRelationship',
                 // source_type: name,
                 source_id: payload.data.id,
