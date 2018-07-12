@@ -45,6 +45,23 @@ import ToastUtils from './../../Utils/toast.utils';
 
 const booleanOptions = [{ name: "True", id: 1 }, { name: "False", id: 0 }];
 
+
+const submitGenericForm = async ({ payload, newValues, onSubmit }) => {
+    const url = GetUrlForFormSubmit({ payload });
+    const Method = payload.method == 'edit' ? Put : Post;
+
+    const originalValues = FormUtils.getOriginalData();
+    let body = GetChangedMethods(newValues, originalValues);
+    if (IsObjectHaveKeys(payload.restrictedQuery)) {
+        body = { ...body, ...payload.restrictedQuery };
+    }
+
+    const result = await Method({ url, body, urlPrefix: ROUTE_URL });
+    if (result.success && onSubmit) {
+        onSubmit();
+    }
+}
+
 const DisplayFormikState = props => (
     <div style={{ margin: '1rem 0' }}>
         <h3 style={{ fontFamily: 'monospace' }} />
@@ -151,9 +168,12 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
             value={values[column.name]} columns={props.payload.dictionary} payload={props.payload} column={column} name={column.name}
             // onChange={props.setFieldValue}
             onChange={(value, ...args) => {
+                const { payload } = props;
                 FormUtils.OnChangeListener({ column, value });
                 // props.handleChange(value);
                 props.setFieldValue(column.name, value)
+
+                submitGenericForm({ payload, newValues: { [column.name]: value } });
             }}
             model={values[column.index]}
         />,
@@ -381,7 +401,7 @@ const FormContents = withFormik({
                 return;
             }
             const column = dictionary[columnDefinition.index];
-            if(column.required) { 
+            if (column.required) {
                 da[column.name] = Yup.string().required(column.display_name + ' is required.');
             }
         });
@@ -415,7 +435,7 @@ const FormContents = withFormik({
 
     handleSubmit: async (values, { props, setSubmitting }) => {
 
-        const { payload } = props;
+        const { payload, onSubmit } = props;
 
         // Check this code shubham , 
         // Modifying the data according to backend requiremend 
@@ -433,28 +453,28 @@ const FormContents = withFormik({
         if (props.fileUploads.length) {
             uploadImages(props).then((result) => {
                 //console.log(result)
-                submitGenericForm();
+                submitGenericForm({ payload, newValues, onSubmit });
             });
         } else {
-            submitGenericForm();
+            submitGenericForm({ payload, newValues, onSubmit });
         }
 
 
-        async function submitGenericForm() {
-            const url = GetUrlForFormSubmit({ payload });
-            const Method = payload.method == 'edit' ? Put : Post;
+        // async function submitGenericForm() {
+        //     const url = GetUrlForFormSubmit({ payload });
+        //     const Method = payload.method == 'edit' ? Put : Post;
 
-            const originalValues = FormUtils.getOriginalData();
-            let body = GetChangedMethods(newValues, originalValues);
-            if (IsObjectHaveKeys(payload.restrictedQuery)) {
-                body = { ...body, ...payload.restrictedQuery };
-            }
+        //     const originalValues = FormUtils.getOriginalData();
+        //     let body = GetChangedMethods(newValues, originalValues);
+        //     if (IsObjectHaveKeys(payload.restrictedQuery)) {
+        //         body = { ...body, ...payload.restrictedQuery };
+        //     }
 
-            const result = await Method({ url, body, urlPrefix: ROUTE_URL });
-            if (result.success) {
-                props.onSubmit();
-            }
-        }
+        //     const result = await Method({ url, body, urlPrefix: ROUTE_URL });
+        //     if (result.success) {
+        //         props.onSubmit();
+        //     }
+        // }
 
         function uploadImages() {
             return Promise.all(props.fileUploads.map((entry) => {
