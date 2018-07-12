@@ -29,7 +29,7 @@ import FormSettings from './../Form-Settings/FormSettings.component';
 import ScriptInput from './../Forms/Components/Script-Input/scriptInput.component';
 
 import { SubscribeToEvent } from './../../Utils/stateManager.utils';
-import { ExecuteScript } from './../../Utils/injectScript.utils';
+import { ExecuteScript } from './../../Utils/inject-method/injectScript.utils';
 
 import FormUtils from './../../Utils/form.utils';
 import { GetUrlForFormSubmit } from './../../Utils/generic.utils';
