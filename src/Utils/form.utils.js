@@ -58,10 +58,40 @@ export default class FormUtil {
      * @param  {string} column - column name
      * @param  {boolean} visibility
      */
-    static setVisible(column, visibility) {
-        self.form.dictionary[column].visibility = visibility;
+    static setVisible(column, visibility, form = self.form) {
+        // self.form.dictionary[column].visibility = visibility;
+        const columnObj = form.dictionary[column];
+
+        if (!columnObj) {
+            return form;
+        }
+
+        form.dictionary[column].visibility = visibility;
+
+        self.form = form;
+        FormUtil.updateForm(false);
+        return form;
     };
 
+    /**
+     * disables particular form element
+     * for e.g. form.setDisabled('description', true) - make description field disabled
+     * @param  {string} column - column name
+     * @param  {boolean} value -true if disabled, false if enabled
+     */
+    static setDisabled(column, value = true, form = self.form) {
+        const columnObj = form.dictionary[column];
+
+        if (!columnObj) {
+            return form;
+        }
+
+        form.dictionary[column].disabled = value;
+
+        self.form = form;
+        FormUtil.updateForm(false);
+        return form;
+    }
 
     /**
      * returns value of the provided column
@@ -91,7 +121,7 @@ export default class FormUtil {
 
     // static 
 
-    static setquery(column, queryParams) {
+    static setQuery(column, queryParams) {
         const dict = self.form.dictionary[column];
 
         if (dict && dict.reference_model) {
@@ -134,26 +164,6 @@ export default class FormUtil {
         // this.updateForm();
     };
 
-
-    /**
-     * disables particular form element
-     * for e.g. form.setDisabled('description', true) - make description field disabled
-     * @param  {string} column - column name
-     * @param  {boolean} value -true if disabled, false if enabled
-     */
-    static setDisabled(column, value = true, form = self.form) {
-        const columnObj = form.dictionary[column];
-
-        if (!columnObj) {
-            return form;
-        }
-
-        form.dictionary[column].disabled = value;
-
-        self.form = form;
-        FormUtil.updateForm(false);
-        return form;
-    }
 
     /**
      * makes field required

@@ -11,9 +11,16 @@
         .tooltip-element {
             cursor: pointer;
             padding: 6px 2px;
+            border-radius: 2px;
+            @include themify($themes) {
+                background: themed('backgroundLight');
+                color: themed('onPrimaryDark') ;// border-color: themed('settingsButton');
+                border: 1px solid;
+                border-color: themed('borderLight');
+            }
             // border-radius: 3px;
             // background: white;
-            margin: 0px 1px;
+            margin: 0px 6px;
             // border: 1px solid #e0e0e0;
             // border: 1px solid #b7b7b7;
             &:hover {

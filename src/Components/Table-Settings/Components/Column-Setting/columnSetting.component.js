@@ -68,11 +68,11 @@ export default class ColumnSetting extends Component {
     }
 
     columnNameChange = (event) => {
-        let { column } = this.state;
+        let { tempColumn } = this.state;
 
-        column.columnTitle = event.target.value;
+        tempColumn.columnTitle = event.target.value;
 
-        this.setState({ column });
+        this.setState({ tempColumn });
     }
 
     columnUpdate = (event) => {
@@ -85,11 +85,12 @@ export default class ColumnSetting extends Component {
         const { tempColumn: column = {} } = this.state;
         const { columns, activeColumn } = this.props;
         const { columnTitle, route, filter } = column;
+        console.log(columns);
         return (
-            <div className={`column-setting ${activeColumn.column == column.column ? 'active' : ''}`} >
+            <div className={`column-setting ${activeColumn.column == column.column && activeColumn.object == column.object ? 'active' : ''}`} >
                 <div className="column-label">
                     <div className="item-label" onClick={() => this.props.selectColumn(column, this.props.index)} onDoubleClick={() => this.props.removeColumn(column)} >
-                        {column.columnTitle ? column.columnTitle : columns[column.index].name}
+                        {column.columnTitle ? column.columnTitle : columns[column.index].display_name}
                     </div>
                     <div className="column-toggle" onClick={() => this.props.removeColumn(column)}>
                         <i className={`fa fa-trash`}></i>
@@ -133,8 +134,9 @@ export default class ColumnSetting extends Component {
 
                                 <div className="row">
                                     <div className="col">
-                                        <button type="button" onClick={() => this.columnCollapse()} className="btn btn-secondary">Close</button>
-                                        <button type="button" onClick={() => this.columnCollapse(true)} className="btn btn-secondary">Save</button>
+                                        <button type="button" onClick={() => this.columnCollapse(false)} className="btn btn-warning">Close</button>
+                                        &nbsp;&nbsp;
+                                        <button type="button" onClick={() => this.columnCollapse(true)} className="btn btn-danger">Save</button>
                                     </div>
                                 </div>
                             </form>

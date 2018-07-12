@@ -94,7 +94,14 @@ export default class TableSettings extends Component {
     removeColumn = (column) => {
         let selectedColumns = this.state.tempSelectedColumns;
 
-        selectedColumns = selectedColumns.filter((entry) => (entry.column != column.column));
+        selectedColumns = selectedColumns.filter((entry) => {
+            console.log(column, entry);
+            const isSameName = entry.column != column.column;
+            if(isSameName) {
+                return true;
+            }
+            return (column.object != entry.object);
+        });
 
         this.setState({ tempSelectedColumns: selectedColumns })
         this.addColumnToLeft(column);
@@ -195,7 +202,7 @@ export default class TableSettings extends Component {
     searchColumn = (event) => {
         const { tempColumns } = this.state;
         const searchedColumns = {};
-        
+
         for (var i in tempColumns) {
             if (tempColumns[i].name.toString().toLowerCase().indexOf(event.target.value) != -1) {
                 searchedColumns[i] = tempColumns[i];
@@ -241,6 +248,7 @@ export default class TableSettings extends Component {
 
         //console.log(showSplitFlag);
 
+        const tempSelectedColumnsArray = Object.values(tempSelectedColumns);
         for (let value of tempSelectedColumns) {
             if (typeof value != 'string') {
                 selectedIds.push(value.column);
@@ -259,9 +267,13 @@ export default class TableSettings extends Component {
 
 
         for (let key of columnKeys) {
-            leftColumns[key] = leftColumns[key].filter((column) => (
-                selectedIds.indexOf(column.name) == -1
-            ));
+            leftColumns[key] = leftColumns[key].filter((column) => {
+                // console.log(column, selectedIds);
+                const index = selectedIds.indexOf(column.name);
+                // console.log(((index == -1) || (tempSelectedColumnsArray[index].object != column.parent)), column.name);
+                return ((index == -1) || (tempSelectedColumnsArray[index].object != column.parent));
+                // return selectedIds.indexOf(column.name) == -1
+            });
         }
         return (
             <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="table-settings">
@@ -275,7 +287,7 @@ export default class TableSettings extends Component {
                             <div className="card-body parent-card">
 
                                 <div className="card-top">
-                                    <h6 className="card-title">All Columns({leftColumns.menu?leftColumns.menu.length:0})</h6>
+                                    <h6 className="card-title">All Columns({leftColumns.menu ? leftColumns.menu.length : 0})</h6>
 
                                     <div className="input-holder">
                                         <input type="text" onChange={event => this.searchColumn(event)} className="search-box" placeholder="Search Columns" />
@@ -305,7 +317,7 @@ export default class TableSettings extends Component {
 
                                                                 <div key={key} className="column-group" onDoubleClick={() => this.addColumn(entry)} >
                                                                     <div className="column-label">
-                                                                        {entry.name}
+                                                                        {entry.display_name}
                                                                     </div>
                                                                     <div className="icon-holder">
                                                                         <button className="add-column btn btn-sm btn-light" onClick={() => this.addColumn(entry)} >
@@ -395,13 +407,15 @@ export default class TableSettings extends Component {
 
                 </ModalBody>
                 <ModalFooter>
-                    {formConfigurator ?
-                        <Button color="primary" onClick={() => this.applyChanges(true)}>Apply For All</Button>
-                        : null
-                    }
+                    <div className="leftButtons">
+                        {formConfigurator ?
+                            <Button color="primary" onClick={() => this.applyChanges(true)}>Apply For All</Button>
+                            : null
+                        }
+                    </div>
                     <div className="rightButtons">
+                         <button className="btn btn-danger" onClick={this.toggleModal}>Cancel</button>
                         <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
-                        <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
                     </div>
                 </ModalFooter>
             </Modal >
@@ -411,9 +425,9 @@ export default class TableSettings extends Component {
     render() {
         return (
             <div className="table-settings">
-                <Button className="settings-button" size="sm" onClick={this.toggleModal}>
-                    <i className="fa fa-cog"></i>
-                </Button>
+                <button className="btn settings-button btn-sm" onClick={this.toggleModal}>
+                    <i className="fa fa-bars"></i>
+                </button>
 
                 {
                     this.state.modal &&

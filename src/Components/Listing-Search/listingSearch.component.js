@@ -9,7 +9,7 @@ import { SubscribeToEvent, UnsubscribeEvent } from './../../Utils/stateManager.u
 import './listingSearch.component.css'
 import GLOBAL from './../../Constants/global.constants';
 
-import { SelectFromOptions, IsUndefined } from './../../Utils/common.utils';
+import { SelectFromOptions, IsUndefined, IsObjectHaveKeys } from './../../Utils/common.utils';
 import { Location } from './../../Utils/location.utils';
 import { GetTime, TimeOperation } from './../../Utils/time.utils';
 import { Get } from './../../Utils/http.utils';
@@ -23,11 +23,12 @@ export default class ListingSearch extends React.Component {
 
     constructor(props) {
         super(props);
+        const { dictionary = [] } = props;
         this.state = {
-            selectedColumn: {},
+            selectedColumn: dictionary[0] || {},
             referenceColumnValue: {},
             query: '',
-            activeColumn: 0
+            activeColumn: dictionary[0] || {}
         };
     }
 
@@ -73,13 +74,15 @@ export default class ListingSearch extends React.Component {
                     this.state.referenceColumnValue = { data: query[0] };
                 }
             }
-        } else if (searchDetail && searchDetail.name) {
+        }
+        // else if (searchDetail) {
+        else if (searchDetail && searchDetail.name) {
             selectedColumn = SelectFromOptions(dictionary, searchDetail.name, 'name');
             this.state.activeColumn = selectedColumn;
         }
 
         //@To be deleted after sometime
-    //   else if (localSearch && localSearch.value) {
+        //   else if (localSearch && localSearch.value) {
         //             // let { query } = this.state;
         //             // query = localSearch.value;
         //             // this.setState({ query });
@@ -91,7 +94,9 @@ export default class ListingSearch extends React.Component {
         //             this.state.query = localSearch.value
         //         }}
 
-        this.setState({ selectedColumn });
+        if (IsObjectHaveKeys(selectedColumn)) {
+            this.setState({ selectedColumn });
+        }
     }
 
     /**
@@ -215,9 +220,11 @@ export default class ListingSearch extends React.Component {
                 {
                     <div className="listing-search-tool">
                         <div className="listing-select-tool">
-                            <SelectBox label="display_name" onChange={(data) => {
-                                this.filterChange(data)
-                            }} value={selectedColumn} options={dictionary} placeholder='Column' />
+                            <SelectBox label="display_name"
+                                isClearable={false}
+                                onChange={(data) => {
+                                    this.filterChange(data)
+                                }} value={selectedColumn} options={dictionary} placeholder='Column' />
                         </div>
                         <div className="listing-input-tool">
                             {

@@ -96,7 +96,7 @@ export default class ConfigureDynamicFilter extends Component {
                 this.resetColumns();
             }
             // // @TODO because of async call in prepopulate, existing query gets overrided by this method, to prevent that calling after 1s
-            setTimeout(() => this.assignSelectedFilterColumn({ single }), 1000); // checks if filter column is passed, prepopulate that column
+            setTimeout(() => this.assignSelectedFilterColumn({ single }), 500); // checks if filter column is passed, prepopulate that column
 
             // this.assignSelectedFilterColumn({ single })
         }

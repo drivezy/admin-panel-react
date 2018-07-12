@@ -154,13 +154,13 @@ export default class FormSettings extends Component {
 
     applyChanges = async (overRide = false) => {
 
-        const { userId, modelId, listName, source } = this.props;
+        const { userId, sourceId, listName, source } = this.props;
         let { formLayout } = this.props;
         const { tempSelectedColumns, layoutName } = this.state;
-        if(IsObjectHaveKeys(formLayout)) {
+        if (IsObjectHaveKeys(formLayout)) {
             formLayout.name = layoutName;
         }
-        const result = await SetPreference({ userId, source, menuId: modelId, name: listName || layoutName, selectedColumns: tempSelectedColumns, layout: formLayout, url: FormPreferenceEndPoint, override_all: overRide ? 1 : 0 });
+        const result = await SetPreference({ userId, source, menuId: sourceId, name: listName || layoutName, selectedColumns: tempSelectedColumns, layout: formLayout, url: FormPreferenceEndPoint, override_all: overRide ? 1 : 0 });
         if (result.success) {
             this.setState({ modal: !this.state.modal });
             if (IsObjectHaveKeys(formLayout)) {
@@ -304,12 +304,17 @@ export default class FormSettings extends Component {
 
                 </ModalBody >
                 <ModalFooter>
-                    {formConfigurator ?
-                        <Button color="primary" onClick={() => this.applyChanges(true)}>Apply For All</Button>
-                        : null
-                    }
-                    <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
-                    <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
+                    <div className="leftButtons">
+                        {formConfigurator ?
+                            <button className="btn applyForAllButton" onClick={() => this.applyChanges(true)}>Apply For All</button>
+                            : null
+                        }
+                    </div>
+                    <div className="rightButtons">
+                        <button className="btn btn-danger" onClick={this.toggleModal}>Cancel</button>
+                        <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
+                        
+                    </div>
                 </ModalFooter>
             </Modal >
         )
@@ -318,9 +323,9 @@ export default class FormSettings extends Component {
     render() {
         return (
             <div className="form-settings">
-                <Button color="secondary" size="sm" onClick={this.toggleModal}>
-                    <i className="fa fa-cog"></i>
-                </Button>
+                <button className="btn btn-sm" onClick={this.toggleModal}>
+                    <i className="fa fa-cogs"></i>
+                </button>
 
                 {
                     this.state.modal &&

@@ -304,7 +304,12 @@ export function ConvertDependencyInjectionToArgs(dependencies) {
 export function RegisterMethod(methodArr) {
     const methods = {};
     for (var i in methodArr) {
+       
         const methodObj = methodArr[i];
+
+        if(!methodObj) { 
+            return;
+        }
         if (methodObj.definition && typeof methodObj.definition == 'object' && methodObj.definition.script) {
             if (methodObj.dependency) {
                 methods[methodObj.name] = new Function("callback", methodObj.dependency, methodObj.definition.script);
@@ -541,8 +546,9 @@ export function GetPreSelectedMethods() {
             layouts: genericData.formPreferences,
             userId: genericData.userId,
             modelId: genericData.modelId,
+            modelAliasId: genericData.modelAliasId,
             route: genericData.url,
-            name: method + genericData.starter,
+            name: method + ' ' + genericData.starter,
         };
     }
     return methods;
@@ -569,9 +575,9 @@ export async function GetPreference(paramName) {
  * @param  {string} path='path'}
  */
 export function RowTemplate({ selectedColumn, listingRow, path = 'path' }) {
-    if (selectedColumn.column_type == COLUMN_TYPE.BOOLEAN) {
+    if (selectedColumn.column_type_id == COLUMN_TYPE.BOOLEAN) {
         // return eval('listingRow.' + selectedColumn.path) ? 'Yes' : 'No';
-        return listingRow[selectedColumn.path] ? 'Yes' : 'No';
+        return listingRow[selectedColumn.path] ? <div className="green">Yes</div> : <div className="red">No</div>;
     } else if (selectedColumn.route) {
         let id;
         if (selectedColumn[path].split('.')[1]) {
@@ -750,7 +756,12 @@ export function ParseRestrictedQuery(queryString) {
 
         query = query.replace(MATCH_PARENT_PATH, '').replace(MATCH_WHITESPACE, '');
         query = query.split('=');
-        parsedQuery[query[0]] = query[1];
+        let value = query[1];
+
+        if(typeof value == 'string')  {
+            value = value.replace(/'/g, '');
+        }
+        parsedQuery[query[0]] = value;
         // parsedQuery.push(query)
 
     });

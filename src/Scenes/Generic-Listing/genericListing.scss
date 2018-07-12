@@ -11,7 +11,7 @@
     .page-bar {
         // margin: -8px;
         // height: 70px;
-        height: 60px;
+        height: 50px;
         display: flex;
         justify-content: space-between; // width: 95%;
         padding: 4px 8px; // border-bottom: 1px solid;
@@ -32,22 +32,29 @@
             align-items: center;
             .refresh-button {
                 @include themify($themes) {
-                    &.btn {
-                        border: none; // background: black!important;
-                        background: themed('refreshButtonBackground') !important;
-                        color: themed('refreshButton') !important;
-                    }
+                    background: themed('backgroundLight');
+                    color: themed('onPrimaryDark') ;// border-color: themed('settingsButton');
+                    border: 1px solid;
+                    border-color: themed('borderLight');
                 }
+                // @include themify($themes) {
+                //     &.btn {
+                //         border: none; // background: black!important;
+                //         background: themed('failColor') !important;
+                //         color: themed('primaryColor') !important;
+                //     }
+                // }
             }
-            .btn {
-                margin: 0px 4px;
-                &.refresh-button {
-                    @include themify($themes) {
-                        background: themed('refreshButtonBackground');
-                        color: themed('refreshButton');
-                    }
-                }
-            }
+            // .btn {
+            //     margin: 0px 4px;
+            //     &.refresh-button {
+            //         @include themify($themes) {
+            //             border: none; // background: black!important;
+            //             background: themed('failColor') !important;
+            //             color: themed('primaryColor') !important;
+            //         }
+            //     }
+            // }
             .btn-group {
                 margin: 0px 2px;
             }
