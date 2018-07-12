@@ -68,20 +68,35 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
 
         // 108: <Field disabled={column.disabled} id={column.name} onChange={({ ...args }) => FormUtils.OnChangeListener(args)} name={column.name} className={`form-control ${props.errors[column.index] && props.touched[column.index] ? 'is-invalid' : ''}`} type="text" placeholder={`Enter ${column.name}`} />,
 
-        [COLUMN_TYPE.STRING]: <Field
-            name={column.name}
-            render={({ field /* _form */ }) => (
-                <input name={column.name} className="form-control" rows="3"
-                    placeholder={`Enter ${column.display_name}`}
-                    onChange={(event, ...args) => {
-                        FormUtils.OnChangeListener({ column, value: event.target.value, ...event });
-                        props.handleChange(event, args);
-                    }}
-                    autoComplete="off"
-                    value={values[column.name]}
-                />
-            )}
+        // [COLUMN_TYPE.STRING]: <Field
+        //     name={column.name}
+        //     onBlur={props.handleBlur}
+        //     render={({ field /* _form */ }) => (
+        //         <input name={column.name} className="form-control" rows="3"
+        //             placeholder={`Enter ${column.display_name}`}
+        //             onChange={(event, ...args) => {
+        //                 FormUtils.OnChangeListener({ column, value: event.target.value, ...event });
+        //                 // props.handleChange(event, args);
+        //                 props.setFieldValue(column.name, event.target.value)
+        //             }}
+        //             autoComplete="off"
+        //             value={values[column.name]}
+        //         />
+        //     )}
+        // />,
+
+        [COLUMN_TYPE.STRING]: <input id={column.name} name={column.name} className="form-control" rows="3"
+            placeholder={`Enter ${column.display_name}`}
+            onBlur={(e) => { console.log(e); props.handleBlur(e) }}
+            onChange={(event, ...args) => {
+                FormUtils.OnChangeListener({ column, value: event.target.value, ...event });
+                // props.handleChange(event, args);
+                props.setFieldValue(column.name, event.target.value)
+            }}
+            autoComplete="off"
+            value={values[column.name]}
         />,
+
         // Text Ends
 
         // Boolean Select
@@ -92,7 +107,10 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
                     isClearable={false}
                     placeholder={`Enter ${column.display_name}`}
                     onChange={(value, event) => {
-                        FormUtils.OnChangeListener({ column, value, ...event });
+                        // props.setFieldError(column.name, 'sahi nhi ye');
+                        // props.setFieldTouched(column.name, true, true);
+                        const valId = typeof value == 'object' ? value.id : value;
+                        FormUtils.OnChangeListener({ column, value: valId, ...event });
                         props.setFieldValue(event, value);
                     }}
                     value={values[column.name].id}
@@ -261,9 +279,9 @@ const formElements = props => {
 
                                         {/* Showing Errors when there are errors */}
                                         {
-                                            errors[column.column_name] && touched[column.column_name] ?
+                                            errors[column.name] && touched[column.name] ?
                                                 <small id="emailHelp" className="form-text text-danger">
-                                                    {errors[column.column_name]}
+                                                    {errors[column.name]}
                                                 </small>
                                                 :
                                                 null
@@ -346,8 +364,8 @@ const FormContents = withFormik({
         const { dictionary } = props.payload;
 
         fields.forEach((column) => {
-            if (dictionary[column].mandatory) {
-                da[dictionary[column].column_name] = Yup.string().required(dictionary[column].display_name + ' is required.');
+            if (dictionary[column].required) {
+                da[dictionary[column].name] = Yup.string().required(dictionary[column].display_name + ' is required.');
             }
         });
 
