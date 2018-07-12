@@ -105,7 +105,6 @@ export default class GenericListing extends Component {
     }
 
     dataFetched = ({ genericData, filterContent }) => {
-        InjectMessage("Dheeraj", "success", 10000);
         const { propageGenericDataToParent, index } = this.props;
 
         this.setState({ genericData, filterContent, loading: false });
