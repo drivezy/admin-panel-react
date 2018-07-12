@@ -46,7 +46,7 @@ export default class RightClick extends Component {
                     <span className={`base-class ${html ? 'is-active' : ''}`} >{html || '.'}</span>
                 </ContextMenuTrigger>,
 
-                <ContextMenu key={2} id={identifier}>
+                <ContextMenu key={2} id={identifier} className={`${className == 'generic-form-label' ? 'generic-form' : ''}`}>
                     {
                         rowOptions.map((rowOption, key) => {
                             if (rowOption.as_context) {
