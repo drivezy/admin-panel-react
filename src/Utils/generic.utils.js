@@ -104,6 +104,8 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
             selectedColumn.model_id = columns[i][j].model_id
             selectedColumn.name = columns[i][j].name;
             selectedColumn.visibility = columns[i][j].visibility;
+            selectedColumn.required = columns[i][j].required;
+            selectedColumn.nullable = columns[i][j].nullable;
             selectedColumn.reference_model = columns[i][j].reference_model;
             selectedColumn.display_name = columns[i][j].display_name;
 

@@ -11,7 +11,7 @@ import Yup from 'yup';
 
 import { Upload, Post, Put, Get } from './../../Utils/http.utils';
 import { GetChangedMethods } from './../../Utils/generic.utils';
-import { IsObjectHaveKeys, IsUndefined } from './../../Utils/common.utils';
+import { IsObjectHaveKeys, IsUndefined, SelectFromOptions } from './../../Utils/common.utils';
 
 //  import SelectBox from './../Forms/Components/Select-Box/selectBox';
 
@@ -43,6 +43,8 @@ import RightClick from './../../Components/Right-Click/rightClick.component';
 import { CopyToClipBoard } from './../../Utils/common.utils';
 import ToastUtils from './../../Utils/toast.utils';
 
+const booleanOptions = [{ name: "True", id: 1 }, { name: "False", id: 0 }];
+
 const DisplayFormikState = props => (
     <div style={{ margin: '1rem 0' }}>
         <h3 style={{ fontFamily: 'monospace' }} />
@@ -72,20 +74,35 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
 
         // 108: <Field disabled={column.disabled} id={column.name} onChange={({ ...args }) => FormUtils.OnChangeListener(args)} name={column.name} className={`form-control ${props.errors[column.index] && props.touched[column.index] ? 'is-invalid' : ''}`} type="text" placeholder={`Enter ${column.name}`} />,
 
-        [COLUMN_TYPE.STRING]: <Field
-            name={column.name}
-            render={({ field /* _form */ }) => (
-                <input name={column.name} className="form-control" rows="3"
-                    placeholder={`Enter ${column.display_name}`}
-                    onChange={(event, ...args) => {
-                        FormUtils.OnChangeListener({ column, value: event.target.value, ...event });
-                        props.handleChange(event, args);
-                    }}
-                    autoComplete="off"
-                    value={values[column.name]}
-                />
-            )}
+        // [COLUMN_TYPE.STRING]: <Field
+        //     name={column.name}
+        //     onBlur={props.handleBlur}
+        //     render={({ field /* _form */ }) => (
+        //         <input name={column.name} className="form-control" rows="3"
+        //             placeholder={`Enter ${column.display_name}`}
+        //             onChange={(event, ...args) => {
+        //                 FormUtils.OnChangeListener({ column, value: event.target.value, ...event });
+        //                 // props.handleChange(event, args);
+        //                 props.setFieldValue(column.name, event.target.value)
+        //             }}
+        //             autoComplete="off"
+        //             value={values[column.name]}
+        //         />
+        //     )}
+        // />,
+
+        [COLUMN_TYPE.STRING]: <input id={column.name} name={column.name} className="form-control" rows="3"
+            placeholder={`Enter ${column.display_name}`}
+            onBlur={(e) => { console.log(e); props.handleBlur(e) }}
+            onChange={(event, ...args) => {
+                FormUtils.OnChangeListener({ column, value: event.target.value, ...event });
+                // props.handleChange(event, args);
+                props.setFieldValue(column.name, event.target.value)
+            }}
+            autoComplete="off"
+            value={values[column.name]}
         />,
+
         // Text Ends
 
         // Boolean Select
@@ -93,14 +110,17 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
             name={column.name}
             render={({ field /* _form */ }) => (
                 <SelectBox name={column.name}
-                    isClearable={false}
                     placeholder={`Enter ${column.display_name}`}
+                    isClearable={!column.required}
                     onChange={(value, event) => {
-                        FormUtils.OnChangeListener({ column, value, ...event });
+                        // props.setFieldError(column.name, 'sahi nhi ye');
+                        // props.setFieldTouched(column.name, true, true);
+                        const valId = value && typeof value == 'object' ? value.id : value;
+                        FormUtils.OnChangeListener({ column, value: valId, ...event });
                         props.setFieldValue(event, value);
                     }}
-                    value={values[column.name].id}
-                    field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                    value={values[column.name]}
+                    field="name" options={booleanOptions} />
                 // <SelectBox name={column.name} onChange={props.setFieldValue} value={values[column.name]} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
             )}
         />,
@@ -113,8 +133,9 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
                 <ReferenceInput column={column} name={column.name}
                     placeholder={`Enter ${column.display_name}`}
                     // onChange={props.setFieldValue}
+                    isClearable={!column.required}
                     onChange={(value, event) => {
-                        const valId = typeof value == 'object' ? value.id : value;
+                        const valId = value && typeof value == 'object' ? value.id : value;
                         FormUtils.OnChangeListener({ column, value: valId, ...event });
                         props.setFieldValue(event, value);
                     }}
@@ -138,24 +159,6 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         />,
         // Script Input Ends
 
-        // TextArea Begins
-        160: <Field
-            name={column.name}
-            render={({ field /* _form */ }) => (
-                <textarea name={column.name} placeholder={`Enter ${column.display_name}`} className="form-control" rows="3" onChange={({ ...args }) => { FormUtils.OnChangeListener(args); props.handleChange(args); }} value={values[column.name]}></textarea>
-            )}
-        />,
-        // TextArea Ends
-
-        // Switch Begins
-        119: <Field
-            name={column.name}
-            render={({ field /* _form */ }) => (
-                <Switch name={column.name} rows="3" placeholder={`Enter ${column.display_name}`} onChange={props.setFieldValue} value={values[column.name]} />
-            )}
-        />,
-        // Switch Ends
-
         // List Select with options from api
         7: <Field
             name={column.name}
@@ -164,15 +167,6 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
             )}
         />,
         // List Select Ends
-
-        // List Multi Select
-        465: <Field
-            name={column.name}
-            render={({ field /* _form */ }) => (
-                <ListSelect multi={true} column={column} name={column.name} onChange={props.setFieldValue} model={values[column.name]} />
-            )}
-        />,
-        // List Ends
 
         // DatePicker
         [COLUMN_TYPE.DATE]: <Field
@@ -192,6 +186,32 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         />,
         // Single Datepicker Ends
 
+        // TextArea Begins
+        160: <Field
+            name={column.name}
+            render={({ field /* _form */ }) => (
+                <textarea name={column.name} placeholder={`Enter ${column.display_name}`} className="form-control" rows="3" onChange={({ ...args }) => { FormUtils.OnChangeListener(args); props.handleChange(args); }} value={values[column.name]}></textarea>
+            )}
+        />,
+        // TextArea Ends
+
+        // Switch Begins
+        119: <Field
+            name={column.name}
+            render={({ field /* _form */ }) => (
+                <Switch name={column.name} rows="3" placeholder={`Enter ${column.display_name}`} onChange={props.setFieldValue} value={values[column.name]} />
+            )}
+        />,
+        // Switch Ends
+
+        // List Multi Select
+        465: <Field
+            name={column.name}
+            render={({ field /* _form */ }) => (
+                <ListSelect multi={true} column={column} name={column.name} onChange={props.setFieldValue} model={values[column.name]} />
+            )}
+        />,
+        // List Ends
 
         // Time Picker
         746: <Field
@@ -267,9 +287,9 @@ const formElements = props => {
 
                                         {/* Showing Errors when there are errors */}
                                         {
-                                            errors[column.column_name] && touched[column.column_name] ?
+                                            errors[column.name] && touched[column.name] ?
                                                 <small id="emailHelp" className="form-text text-danger">
-                                                    {errors[column.column_name]}
+                                                    {errors[column.name]}
                                                 </small>
                                                 :
                                                 null
@@ -303,7 +323,7 @@ const formElements = props => {
                     Cancel
                 </button> */}
 
-                <button className="btn btn-success" type="submit">
+                <button className="btn btn-success" disabled={isSubmitting} type="submit">
                     Submit
                 </button>
             </div>
@@ -326,6 +346,11 @@ const FormContents = withFormik({
                 let column = payload.dictionary[preference.index];
                 response[column.name] = payload.data[column.name] || '';
 
+                if (column.column_type_id == COLUMN_TYPE.BOOLEAN) {
+                    const val = SelectFromOptions(booleanOptions, payload.data[column.name], 'id');
+                    response[column.name] = val;
+                }
+
                 // if (column.reference_model) {
                 //     const url = column.reference_model.route_name;
                 //     const result = await Get({ url: url + '?query=id=' + payload.data[column.name], urlPrefix: ROUTE_URL  });
@@ -347,18 +372,27 @@ const FormContents = withFormik({
 
         let da = {}
 
-        let fields = Object.keys(props.payload.dictionary);
+        // let fields = Object.keys(props.payload.dictionary);
 
         const { dictionary } = props.payload;
-
-        fields.forEach((column) => {
-            if (dictionary[column].mandatory) {
-                da[dictionary[column].column_name] = Yup.string().required(dictionary[column].display_name + ' is required.');
+        const columns = IsObjectHaveKeys(props.payload.layout) ? props.payload.layout.column_definition : [];
+        columns.forEach((columnDefinition, key) => {
+            if (columnDefinition.split) {
+                return;
+            }
+            const column = dictionary[columnDefinition.index];
+            if(column.required) { 
+                da[column.name] = Yup.string().required(column.display_name + ' is required.');
             }
         });
 
-        return Yup.object().shape(da);
+        // fields.forEach((column) => {
+        //     if (dictionary[column].required) {
+        //         da[dictionary[column].name] = Yup.string().required(dictionary[column].display_name + ' is required.');
+        //     }
+        // });
 
+        return Yup.object().shape(da);
         // return Yup.object().shape({
         //     friends: Yup.array()
         //         .of(
@@ -446,7 +480,7 @@ const FormContents = withFormik({
 })(formElements);
 
 export default class FormCreator extends Component {
-    
+
     headerOptions = [{
         id: 0,
         name: "Copy Column Name",
