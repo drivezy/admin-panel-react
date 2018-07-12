@@ -27,6 +27,7 @@ import ImageUpload from './../Forms/Components/Image-Upload/imageUpload.componen
 // import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from 'constants';
 import FormSettings from './../Form-Settings/FormSettings.component';
 import ScriptInput from './../Forms/Components/Script-Input/scriptInput.component';
+import FormInput from './../Forms/Components/Form-Type/formType.component';
 
 import { SubscribeToEvent } from './../../Utils/stateManager.utils';
 import { ExecuteScript } from './../../Utils/injectScript.utils';
@@ -178,6 +179,30 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
             model={values[column.index]}
         />,
         // Script Input Ends
+
+        // Form Input
+        [COLUMN_TYPE.FORM]: <FormInput
+            sourceId={values[column.name]} columns={props.payload.dictionary} payload={props.payload} column={column} name={column.name}
+            type={COLUMN_TYPE.FORM}
+
+            // onChange={props.setFieldValue}
+            onChange={(value, closeModal) => {
+
+                if (closeModal) {
+                    props.onSubmit();
+                    return;
+                }
+                const { payload } = props;
+
+                FormUtils.OnChangeListener({ column, value });
+                // props.handleChange(value);
+                props.setFieldValue(column.name, value)
+
+                submitGenericForm({ payload, newValues: { [column.name]: value } });
+            }}
+            model={values[column.index]}
+        />,
+        // Form Input Ends
 
         // List Select with options from api
         7: <Field

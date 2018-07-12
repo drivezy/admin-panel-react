@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import './scriptInput.component.css';
 import _ from 'lodash';
-import { AceEditor } from 'react-ace'
+import { AceEditor } from 'react-ace';
 
 import { Collapse, Card, CardBody, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import { Delete } from './../../../../Utils/http.utils';
 
-import { RECORD_URL } from './../../../../Constants/global.constants';
+import { COLUMN_TYPE } from './../../../../Constants/columnType.constants';
 
 // Custom Components
 import CodeEditor from './../../../Code-Editor/codeEditor.component';
@@ -36,12 +36,6 @@ export default class ScriptInput extends Component {
     deleteScript = async () => {
         console.log('deleted');
         this.props.onChange(null, {});
-        // const url = 'systemScript/' + this.state.value;
-        // const result = await Delete({ url, urlPrefix: RECORD_URL });
-        // if (result.success) {
-        //     this.props.onSubmit(null, {});
-        // }
-
     }
 
     render() {
