@@ -103,8 +103,13 @@ export default class TableSettings extends Component {
             return (column.object != entry.object);
         });
 
-        this.setState({ tempSelectedColumns: selectedColumns })
-        this.addColumnToLeft(column);
+        this.setState({ tempSelectedColumns: selectedColumns });
+
+        if(column.separator){
+            return;
+        } 
+        else 
+            this.addColumnToLeft(column);
     }
 
     addColumnToLeft(column) {
