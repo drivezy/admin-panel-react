@@ -95,7 +95,7 @@ export default class TableSettings extends Component {
         let selectedColumns = this.state.tempSelectedColumns;
 
         selectedColumns = selectedColumns.filter((entry) => {
-            console.log(column, entry);
+            //console.log(column, entry);
             const isSameName = entry.column != column.column;
             if(isSameName) {
                 return true;
@@ -280,8 +280,6 @@ export default class TableSettings extends Component {
                 // return selectedIds.indexOf(column.name) == -1
             });
         }
-
-        console.log(leftColumns);
 
         return (
             <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="table-settings">
