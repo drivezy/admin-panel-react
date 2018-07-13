@@ -203,6 +203,15 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
             model={values[column.index]}
         />,
         // Form Input Ends
+        
+        // Image Upload
+        [COLUMN_TYPE.UPLOAD]: <Field
+            name={column.name}
+            render={({ field /* _form */ }) => (
+                <ImageUpload name={column.name} onRemove={props.onFileRemove} onSelect={props.onFileUpload} />
+            )}
+        />,
+        // Image Upload Ends
 
         // List Select with options from api
         7: <Field
@@ -269,14 +278,6 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
 
         684: 'serialize',
 
-        // Image Upload
-        708: <Field
-            name={column.name}
-            render={({ field /* _form */ }) => (
-                <ImageUpload name={column.name} onRemove={props.onFileRemove} onSelect={props.onFileUpload} />
-            )}
-        />,
-        // Image Upload Ends
     }
 
     return elements[column.column_type_id] || elements[108];
