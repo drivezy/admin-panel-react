@@ -192,7 +192,7 @@ export default class PortletTable extends Component {
 
         if (genericData.nextActions.length) {
             for (let i in genericData.nextActions) {
-                if (genericData.nextActions[i].as_context == 1) {
+                if (genericData.nextActions[i] && genericData.nextActions[i].as_context == 1) {
                     rightClickOptions = rowOptions.concat(genericData.nextActions[i]);
                 }
             }

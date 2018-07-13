@@ -1,6 +1,6 @@
 
 import { IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall, TrimQueryString, IsObjectHaveKeys } from './common.utils';
-import { GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, GetSelectedColumnDefinition } from './generic.utils';
+import { GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, ParseRestrictedQuery } from './generic.utils';
 
 import { Get } from './http.utils';
 import { GetParsedLayoutScript } from './generic.utils';
@@ -14,7 +14,7 @@ let tempQuery; // used to decide if stats is to be fetched from server
 * url and menu detail, fetch data and passes them further to the components
 * to show listing data
 */
-export const GetListingRecord = async ({ configuration, queryString = {}, callback, data, currentUser = {}, index }) => {
+export const GetListingRecord = async ({ configuration, queryString = {}, callback, data, currentUser = {}, index, isTab }) => {
     const params = Initialization(configuration, queryString);
     // const this = {};
     this.currentUser = currentUser;
@@ -107,7 +107,7 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
 
     // const result = await Get({ url: configuration.url, body: options });
     const url = BuildUrlForGetCall(configuration.url, options);
-    return Get({ url, callback: PrepareObjectForListing, extraParams: { callback, page: options.page, limit: options.limit, data, configuration, params, index, currentUser }, persist: true, urlPrefix: ROUTE_URL });
+    return Get({ url, callback: PrepareObjectForListing, extraParams: { callback, page: options.page, limit: options.limit, data, configuration, params, index, currentUser, isTab }, persist: true, urlPrefix: ROUTE_URL });
 }
 
 
@@ -117,10 +117,10 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
  * @param  {object} {extraParams}
  */
 function PrepareObjectForListing(result, { extraParams }) {
-    const { callback, page, limit, data, configuration, params, index, currentUser } = extraParams;
+    const { callback, page, limit, data, configuration, params, index, currentUser, isTab } = extraParams;
     if (result.success && result.response) {
 
-        const { data: apiData, dictionary, relationship, stats, request_identifier } = result.response;
+        const { data: apiData, dictionary, relationship, stats, request_identifier, model_hash: modelHash } = result.response;
         let { base } = result.response;
         base = base || data.starter;
         // if (columns && columns.length === 0) {
@@ -139,6 +139,17 @@ function PrepareObjectForListing(result, { extraParams }) {
         params.dictionary = dictionary && Object.keys(dictionary).length ? dictionary : data.dictionary;
         params.relationship = relationship && Object.keys(relationship).length ? relationship : data.relationship;
 
+        const restrictedQuery = ParseRestrictedQuery(configuration.restricted_query);
+        if (IsObjectHaveKeys(restrictedQuery)) {
+            let baseDictionary = params.dictionary[base];
+            const restrictedColumns = Object.keys(restrictedQuery);
+            baseDictionary = baseDictionary.filter(column => column && restrictedColumns.indexOf(column.name) == -1);
+
+            params.dictionary[base] = baseDictionary;
+        }
+
+
+
         // if (relationship && typeof Object.keys(relationship).length) {
         //     params.relationship = relationship;
         // }
@@ -147,6 +158,11 @@ function PrepareObjectForListing(result, { extraParams }) {
 
         const model = params.relationship[base];
         const modelName = model.name.toLowerCase();
+
+        let modelAliasId;
+        if (isTab) {
+            modelAliasId = configuration.menuId;
+        }
 
         let formPreference = {};
         const formPreferences = GetParsedLayoutScript(configuration.form_layouts);
@@ -174,6 +190,7 @@ function PrepareObjectForListing(result, { extraParams }) {
             pageName: configuration.pageName,
             starter: base,
             model,
+            modelAliasId,
             // state_name: configuration.listName,
             // listName: configuration.listName + ".list",
             includes: configuration.includes,
@@ -196,7 +213,8 @@ function PrepareObjectForListing(result, { extraParams }) {
             userId: currentUser ? currentUser.id : null,
             menuId: configuration.menuId,
             modelId: model.id,
-            request_identifier
+            request_identifier,
+            modelHash
             // userFilter: configuration.userFilter,
             // scopes: data.scopes,
             // restrictColumn: configuration.restrictColumnFilter,

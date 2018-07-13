@@ -5,11 +5,12 @@
     padding: 15px 30px;
     color: #1b242ec7;
     @include themify($themes){
-        background: themed('secondaryDark');
+        background: themed('darkHeader');
         color: themed('secondaryLight');
     }
     .modal-title{
-        letter-spacing: 3px;
+        letter-spacing: 2px;
+        color: #3fb187;
         input{
             margin: 0 30px;
             border: none;
@@ -31,28 +32,37 @@
 
 .form-creator {
     .layoutSelect{
-    .select-box{
-        position: absolute;
-        z-index: 10;
-        width: 17%;
-        left: 70%;
-        top: 1%;
-    }}
+        .select-box{
+            position: absolute;
+            z-index: 10;
+            width: 17%;
+            left: 70%;
+            top: 16px;
+            .css-1aya2g8{
+                background-color: #1f2533;
+            }
+            span{
+                color: #fff;
+            }
+        }
+    }
     .form-settings {
         position: absolute;
         right: 45px;
-        top: 5px;
+        top: 20px;
     } // background: black;
     .card {
         border: none;
         .card-body {
             background-color: #e6e6e6;
+            padding: 2rem;
+            padding-bottom: 1rem;
             // padding: 0px 15px;
             .form-row{
                 background-color: #fff;
                 border-radius: 3px;
-                margin-bottom: 15px;
-                padding: 10px;
+                margin-bottom: 25px;
+                padding: 25px;
                 .message{
                     padding: 20px;
                 }
@@ -60,7 +70,7 @@
         }
     }
     .form-group {
-        padding: 0px 40px 0px 40px;
+        padding: 3px 30px 3px 30px;
         label {
             font-weight: bold;
             font-weight: bold;
@@ -74,6 +84,7 @@
             border: 1px solid #c7c7c7;
             padding: 7px 10px;
             color: #000000;
+            background: #fafafa;
             &:focus {
                 box-shadow: none;
                 border-bottom: 1px solid #964d4d66;

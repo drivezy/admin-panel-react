@@ -11,7 +11,7 @@ import Yup from 'yup';
 
 import { Upload, Post, Put, Get } from './../../Utils/http.utils';
 import { GetChangedMethods } from './../../Utils/generic.utils';
-import { IsObjectHaveKeys, IsUndefined } from './../../Utils/common.utils';
+import { IsObjectHaveKeys, IsUndefined, SelectFromOptions } from './../../Utils/common.utils';
 
 //  import SelectBox from './../Forms/Components/Select-Box/selectBox';
 
@@ -27,16 +27,41 @@ import ImageUpload from './../Forms/Components/Image-Upload/imageUpload.componen
 // import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from 'constants';
 import FormSettings from './../Form-Settings/FormSettings.component';
 import ScriptInput from './../Forms/Components/Script-Input/scriptInput.component';
+import FormInput from './../Forms/Components/Form-Type/formType.component';
 
 import { SubscribeToEvent } from './../../Utils/stateManager.utils';
-import { ExecuteScript } from './../../Utils/injectScript.utils';
+import { ExecuteScript } from './../../Utils/inject-method/injectScript.utils';
 
 import FormUtils from './../../Utils/form.utils';
 import { GetUrlForFormSubmit } from './../../Utils/generic.utils';
 
 import { ROUTE_URL } from './../../Constants/global.constants';
+import COLUMN_TYPE from './../../Constants/columnType.constants';
 
 import { SetItem } from './../../Utils/localStorage.utils';
+
+import RightClick from './../../Components/Right-Click/rightClick.component';
+import { CopyToClipBoard } from './../../Utils/common.utils';
+import ToastUtils from './../../Utils/toast.utils';
+
+const booleanOptions = [{ name: "True", id: 1 }, { name: "False", id: 0 }];
+
+
+const submitGenericForm = async ({ payload, newValues, onSubmit }) => {
+    const url = GetUrlForFormSubmit({ payload });
+    const Method = payload.method == 'edit' ? Put : Post;
+
+    const originalValues = FormUtils.getOriginalData();
+    let body = GetChangedMethods(newValues, originalValues);
+    if (IsObjectHaveKeys(payload.restrictedQuery)) {
+        body = { ...body, ...payload.restrictedQuery };
+    }
+
+    const result = await Method({ url, body, urlPrefix: ROUTE_URL });
+    if (result.success && onSubmit) {
+        onSubmit();
+    }
+}
 
 const DisplayFormikState = props => (
     <div style={{ margin: '1rem 0' }}>
@@ -62,26 +87,149 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // Static Ends
 
         // Number
-        2: <Field autoComplete="off" className="form-control" type="number" name={column.name} placeholder={`Enter ${column.display_name}`} />,
+        [COLUMN_TYPE.NUMBER]: <Field autoComplete="off" className="form-control" type="number" name={column.name} placeholder={`Enter ${column.display_name}`} />,
         // Number Ends
 
         // 108: <Field disabled={column.disabled} id={column.name} onChange={({ ...args }) => FormUtils.OnChangeListener(args)} name={column.name} className={`form-control ${props.errors[column.index] && props.touched[column.index] ? 'is-invalid' : ''}`} type="text" placeholder={`Enter ${column.name}`} />,
 
-        1: <Field
+        // [COLUMN_TYPE.STRING]: <Field
+        //     name={column.name}
+        //     onBlur={props.handleBlur}
+        //     render={({ field /* _form */ }) => (
+        //         <input name={column.name} className="form-control" rows="3"
+        //             placeholder={`Enter ${column.display_name}`}
+        //             onChange={(event, ...args) => {
+        //                 FormUtils.OnChangeListener({ column, value: event.target.value, ...event });
+        //                 // props.handleChange(event, args);
+        //                 props.setFieldValue(column.name, event.target.value)
+        //             }}
+        //             autoComplete="off"
+        //             value={values[column.name]}
+        //         />
+        //     )}
+        // />,
+
+        [COLUMN_TYPE.STRING]: <input id={column.name} name={column.name} className="form-control" rows="3"
+            placeholder={`Enter ${column.display_name}`}
+            onBlur={(e) => { console.log(e); props.handleBlur(e) }}
+            onChange={(event, ...args) => {
+                FormUtils.OnChangeListener({ column, value: event.target.value, ...event });
+                // props.handleChange(event, args);
+                props.setFieldValue(column.name, event.target.value)
+            }}
+            autoComplete="off"
+            value={values[column.name]}
+        />,
+
+        // Text Ends
+
+        // Boolean Select
+        [COLUMN_TYPE.BOOLEAN]: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <input name={column.name} className="form-control" rows="3"
+                <SelectBox name={column.name}
                     placeholder={`Enter ${column.display_name}`}
-                    onChange={(event, ...args) => {
-                        FormUtils.OnChangeListener({ column, value: event.target.value, ...event });
-                        props.handleChange(event, args);
+                    isClearable={!column.required}
+                    onChange={(value, event) => {
+                        // props.setFieldError(column.name, 'sahi nhi ye');
+                        // props.setFieldTouched(column.name, true, true);
+                        const valId = value && typeof value == 'object' ? value.id : value;
+                        FormUtils.OnChangeListener({ column, value: valId, ...event });
+                        props.setFieldValue(event, value);
                     }}
-                    autoComplete="off"
                     value={values[column.name]}
-                />
+                    field="name" options={booleanOptions} />
+                // <SelectBox name={column.name} onChange={props.setFieldValue} value={values[column.name]} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
             )}
         />,
-        // Text Ends
+        // Boolean Ends
+
+        // Reference Begins
+        [COLUMN_TYPE.REFERENCE]: <Field
+            name={column.name}
+            render={({ field /* _form */ }) => (
+                <ReferenceInput column={column} name={column.name}
+                    placeholder={`Enter ${column.display_name}`}
+                    // onChange={props.setFieldValue}
+                    isClearable={!column.required}
+                    onChange={(value, event) => {
+                        const valId = value && typeof value == 'object' ? value.id : value;
+                        FormUtils.OnChangeListener({ column, value: valId, ...event });
+                        props.setFieldValue(event, value);
+                    }}
+                    // onChange={({ ...args }) => { FormUtils.OnChangeListener(args); props.setFieldValue(args); }}
+                    model={values[column.name]} />
+            )}
+        />,
+        // Reference Ends
+
+
+        // Script Input
+        [COLUMN_TYPE.SCRIPT]: <ScriptInput
+            value={values[column.name]} columns={props.payload.dictionary} payload={props.payload} column={column} name={column.name}
+            // onChange={props.setFieldValue}
+            onChange={(value, ...args) => {
+                const { payload } = props;
+                FormUtils.OnChangeListener({ column, value });
+                // props.handleChange(value);
+                props.setFieldValue(column.name, value)
+
+                submitGenericForm({ payload, newValues: { [column.name]: value } });
+            }}
+            model={values[column.index]}
+        />,
+        // Script Input Ends
+
+        // Form Input
+        [COLUMN_TYPE.FORM]: <FormInput
+            sourceId={values[column.name]} columns={props.payload.dictionary} payload={props.payload} column={column} name={column.name}
+            type={COLUMN_TYPE.FORM}
+
+            // onChange={props.setFieldValue}
+            onChange={(value, closeModal) => {
+
+                if (closeModal) {
+                    props.onSubmit();
+                    return;
+                }
+                const { payload } = props;
+
+                FormUtils.OnChangeListener({ column, value });
+                // props.handleChange(value);
+                props.setFieldValue(column.name, value)
+
+                submitGenericForm({ payload, newValues: { [column.name]: value } });
+            }}
+            model={values[column.index]}
+        />,
+        // Form Input Ends
+
+        // List Select with options from api
+        7: <Field
+            name={column.name}
+            render={({ field /* _form */ }) => (
+                <ListSelect column={column} name={column.name} onChange={props.setFieldValue} model={values[column.name]} />
+            )}
+        />,
+        // List Select Ends
+
+        // DatePicker
+        [COLUMN_TYPE.DATE]: <Field
+            name={column.name}
+            render={({ field /* _form */ }) => (
+                <DatePicker single={true} placeholder={`Enter ${column.display_name}`} name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
+            )}
+        />,
+        // DatePicker Ends
+
+        // Single DatePicker with Timepicker 
+        [COLUMN_TYPE.DATETIME]: <Field
+            name={column.name}
+            render={({ field /* _form */ }) => (
+                <DatePicker single={true} placeholder={`Enter ${column.display_name}`} timePicker={true} name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
+            )}
+        />,
+        // Single Datepicker Ends
 
         // TextArea Begins
         160: <Field
@@ -101,49 +249,6 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         />,
         // Switch Ends
 
-        // Boolean Select
-        5: <Field
-            name={column.name}
-            render={({ field /* _form */ }) => (
-                <SelectBox name={column.name}
-                    placeholder={`Enter ${column.display_name}`}
-                    onChange={(value, event) => {
-                        FormUtils.OnChangeListener({ column, value, ...event });
-                        props.setFieldValue(event, value);
-                    }}
-                    value={values[column.name].id}
-                    field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
-                // <SelectBox name={column.name} onChange={props.setFieldValue} value={values[column.name]} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
-            )}
-        />,
-        // Boolean Ends
-
-        // Reference Begins
-        6: <Field
-            name={column.name}
-            render={({ field /* _form */ }) => (
-                <ReferenceInput column={column} name={column.name}
-                    placeholder={`Enter ${column.display_name}`}
-                    // onChange={props.setFieldValue}
-                    onChange={(value, event) => {
-                        FormUtils.OnChangeListener({ column, value, ...event });
-                        props.setFieldValue(event, value);
-                    }}
-                    // onChange={({ ...args }) => { FormUtils.OnChangeListener(args); props.setFieldValue(args); }}
-                    model={values[column.name]} />
-            )}
-        />,
-        // Reference Ends
-
-        // List Select with options from api
-        7: <Field
-            name={column.name}
-            render={({ field /* _form */ }) => (
-                <ListSelect column={column} name={column.name} onChange={props.setFieldValue} model={values[column.name]} />
-            )}
-        />,
-        // List Select Ends
-
         // List Multi Select
         465: <Field
             name={column.name}
@@ -153,25 +258,6 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         />,
         // List Ends
 
-        // DatePicker
-        3: <Field
-            name={column.name}
-            render={({ field /* _form */ }) => (
-                <DatePicker single={true} placeholder={`Enter ${column.display_name}`} name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
-            )}
-        />,
-        // DatePicker Ends
-
-        // Single DatePicker with Timepicker 
-        4: <Field
-            name={column.name}
-            render={({ field /* _form */ }) => (
-                <DatePicker single={true} placeholder={`Enter ${column.display_name}`} timePicker={true} name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
-            )}
-        />,
-        // Single Datepicker Ends
-
-
         // Time Picker
         746: <Field
             name={column.name}
@@ -180,10 +266,6 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
             )}
         />,
         // Time Picker Ends
-
-        // Script Input
-        411: <ScriptInput value={values[column.name]} columns={props.payload.dictionary} payload={props.payload} column={column} name={column.name} onChange={props.setFieldValue} model={values[column.index]} />,
-        // Script Input Ends
 
         684: 'serialize',
 
@@ -211,7 +293,8 @@ const formElements = props => {
         handleBlur,
         handleSubmit,
         handleReset,
-        setFieldValue
+        setFieldValue,
+        headerOptions
     } = props;
 
     const { payload } = props;
@@ -227,41 +310,42 @@ const formElements = props => {
             <div className="form-row">
                 {
                     (column_definition.length) ?
-                    column_definition.map((preference, key) => {
+                        column_definition.map((preference, key) => {
 
-                        let elem, column;
+                            let elem, column;
 
-                        // If it is not a split
-                        if (!preference.split) {
-                            column = payload.dictionary[preference.index];
+                            // If it is not a split
+                            if (!preference.split) {
+                                column = payload.dictionary[preference.index];
 
-                            elem = inputElement({ props, values, column, shouldColumnSplited, key });
+                                elem = inputElement({ props, values, column, shouldColumnSplited, key });
 
-                        } else {
-                            shouldColumnSplited = preference.label.includes('s-split-') ? true : preference.label.includes('e-split-') ? false : shouldColumnSplited;
-                        }
-                        if (column && (IsUndefined(column.visibility) || column.visibility)) {
-                            return (
-                                <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
-                                    <label>{column.label || column.display_name}</label>
-                                    {elem}
+                            } else {
+                                shouldColumnSplited = preference.label.includes('s-split-') ? true : preference.label.includes('e-split-') ? false : shouldColumnSplited;
+                            }
+                            if (column && (IsUndefined(column.visibility) || column.visibility)) {
+                                const html = <label>{column.label || column.display_name}</label>
+                                return (
+                                    <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
+                                        <RightClick html={html} key={key} renderTag="div" className='generic-form-label' rowOptions={props.headerOptions} column={column} />
+                                        {elem}
 
-                                    {/* Showing Errors when there are errors */}
-                                    {
-                                        errors[column.column_name] && touched[column.column_name] ?
-                                            <small id="emailHelp" className="form-text text-danger">
-                                                {errors[column.column_name]}
-                                            </small>
-                                            :
-                                            null
-                                    }
+                                        {/* Showing Errors when there are errors */}
+                                        {
+                                            errors[column.name] && touched[column.name] ?
+                                                <small id="emailHelp" className="form-text text-danger">
+                                                    {errors[column.name]}
+                                                </small>
+                                                :
+                                                null
+                                        }
 
-                                    {/* Errors Ends */}
-                                </div>
-                            )
-                        }
-                    })
-                : <div className="message">Looks like no columns are selected , Configure it by pressing the settings icon.</div> }
+                                        {/* Errors Ends */}
+                                    </div>
+                                )
+                            }
+                        })
+                        : <div className="message">Looks like no columns are selected , Configure it by pressing the settings icon.</div>}
             </div>
 
             {/* Uploaded file thumbnails */}
@@ -276,7 +360,7 @@ const formElements = props => {
 
             <div className="modal-actions row justify-content-end">
 
-                <button className="btn btn-danger" onClick={handleReset}>
+                <button className="btn btn-warning" onClick={handleReset}>
                     Reset
                 </button>
 
@@ -284,7 +368,7 @@ const formElements = props => {
                     Cancel
                 </button> */}
 
-                <button className="btn btn-success" type="submit">
+                <button className="btn btn-success" disabled={isSubmitting} type="submit">
                     Submit
                 </button>
             </div>
@@ -307,6 +391,11 @@ const FormContents = withFormik({
                 let column = payload.dictionary[preference.index];
                 response[column.name] = payload.data[column.name] || '';
 
+                if (column.column_type_id == COLUMN_TYPE.BOOLEAN) {
+                    const val = SelectFromOptions(booleanOptions, payload.data[column.name], 'id');
+                    response[column.name] = val;
+                }
+
                 // if (column.reference_model) {
                 //     const url = column.reference_model.route_name;
                 //     const result = await Get({ url: url + '?query=id=' + payload.data[column.name], urlPrefix: ROUTE_URL  });
@@ -328,18 +417,27 @@ const FormContents = withFormik({
 
         let da = {}
 
-        let fields = Object.keys(props.payload.dictionary);
+        // let fields = Object.keys(props.payload.dictionary);
 
         const { dictionary } = props.payload;
-
-        fields.forEach((column) => {
-            if (dictionary[column].mandatory) {
-                da[dictionary[column].column_name] = Yup.string().required(dictionary[column].display_name + ' is required.');
+        const columns = IsObjectHaveKeys(props.payload.layout) ? props.payload.layout.column_definition : [];
+        columns.forEach((columnDefinition, key) => {
+            if (columnDefinition.split) {
+                return;
+            }
+            const column = dictionary[columnDefinition.index];
+            if (column.required) {
+                da[column.name] = Yup.string().required(column.display_name + ' is required.');
             }
         });
 
-        return Yup.object().shape(da);
+        // fields.forEach((column) => {
+        //     if (dictionary[column].required) {
+        //         da[dictionary[column].name] = Yup.string().required(dictionary[column].display_name + ' is required.');
+        //     }
+        // });
 
+        return Yup.object().shape(da);
         // return Yup.object().shape({
         //     friends: Yup.array()
         //         .of(
@@ -362,7 +460,7 @@ const FormContents = withFormik({
 
     handleSubmit: async (values, { props, setSubmitting }) => {
 
-        const { payload } = props;
+        const { payload, onSubmit } = props;
 
         // Check this code shubham , 
         // Modifying the data according to backend requiremend 
@@ -380,24 +478,28 @@ const FormContents = withFormik({
         if (props.fileUploads.length) {
             uploadImages(props).then((result) => {
                 //console.log(result)
-                submitGenericForm();
+                submitGenericForm({ payload, newValues, onSubmit });
             });
         } else {
-            submitGenericForm();
+            submitGenericForm({ payload, newValues, onSubmit });
         }
 
 
-        async function submitGenericForm() {
-            const url = GetUrlForFormSubmit({ payload });
-            const Method = payload.method == 'edit' ? Put : Post;
+        // async function submitGenericForm() {
+        //     const url = GetUrlForFormSubmit({ payload });
+        //     const Method = payload.method == 'edit' ? Put : Post;
 
-            const originalValues = FormUtils.getOriginalData();
-            const body = GetChangedMethods(newValues, originalValues);
-            const result = await Method({ url, body, urlPrefix: ROUTE_URL });
-            if (result.success) {
-                props.onSubmit();
-            }
-        }
+        //     const originalValues = FormUtils.getOriginalData();
+        //     let body = GetChangedMethods(newValues, originalValues);
+        //     if (IsObjectHaveKeys(payload.restrictedQuery)) {
+        //         body = { ...body, ...payload.restrictedQuery };
+        //     }
+
+        //     const result = await Method({ url, body, urlPrefix: ROUTE_URL });
+        //     if (result.success) {
+        //         props.onSubmit();
+        //     }
+        // }
 
         function uploadImages() {
             return Promise.all(props.fileUploads.map((entry) => {
@@ -423,6 +525,19 @@ const FormContents = withFormik({
 })(formElements);
 
 export default class FormCreator extends Component {
+
+    headerOptions = [{
+        id: 0,
+        name: "Copy Column Name",
+        icon: 'fa-copy',
+        subMenu: false,
+        onClick: (data) => {
+            let prop = data.column.name;
+            CopyToClipBoard(prop);
+            ToastUtils.success({ description: "Column name " + data.column.name + " has been copied", title: 'Column Name' });
+        }
+    }];
+
     constructor(props) {
         super(props);
 
@@ -548,15 +663,16 @@ export default class FormCreator extends Component {
 
     onLayoutChange = (value) => {
         const { payload } = this.state;
-        //console.log(value);
-        payload.layout = value;
-        this.setState({ payload });
-        SetItem(`form-layout-${payload.modelId}`, value.id);
+        if (value) {
+            payload.layout = value;
+            this.setState({ payload });
+            SetItem(`form-layout-${payload.modelId}`, value.id);
+        }
     }
 
     render() {
         const { payload, fileUploads } = this.state;
-        const { source, modelId } = payload;
+        const { source, modelId, modelAliasId } = payload;
         return (
             <div className="form-creator">
                 {
@@ -567,7 +683,8 @@ export default class FormCreator extends Component {
 
                 {
                     payload.dictionary ?
-                        <FormSettings source={source} modelId={modelId} onSubmit={this.layoutChanged} listName={payload.modelName} formLayout={payload.layout} columns={payload.dictionary} />
+                        <FormSettings source={source} sourceId={modelAliasId || modelId} onSubmit={this.layoutChanged} listName={payload.modelName} formLayout={payload.layout} columns={payload.dictionary} />
+                        // <FormSettings source={source} modelId={modelId} onSubmit={this.layoutChanged} listName={payload.modelName} formLayout={payload.layout} columns={payload.dictionary} />
                         :
                         null
                 }
@@ -575,7 +692,7 @@ export default class FormCreator extends Component {
                     {
                         payload.layout ?
                             <CardBody>
-                                <FormContents fileUploads={fileUploads} removeImage={this.removeImage} onFileUpload={this.pushFiles} onFileRemove={this.removeFile} onSubmit={this.formSubmitted.bind(this)} payload={payload} />
+                                <FormContents fileUploads={fileUploads} removeImage={this.removeImage} onFileUpload={this.pushFiles} onFileRemove={this.removeFile} onSubmit={this.formSubmitted.bind(this)} payload={payload} headerOptions={this.headerOptions} />
                             </CardBody>
                             :
                             null
