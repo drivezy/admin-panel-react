@@ -110,6 +110,10 @@ export function Delete(obj) {
     return ApiCall(params);
 }
 
+export function TrackEvent(data) {
+    return Post( 'https://analytics.justride.in/analytics' , data );
+}
+
 /**
 * Upload file implementation
 * All upload calls are made through this method

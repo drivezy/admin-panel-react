@@ -27,8 +27,6 @@ import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } fr
 import { GetListingRecord } from './../../Utils/genericListing.utils';
 import { SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent } from './../../Utils/stateManager.utils';
 
-import { InjectMessage } from './../../Utils/inject-method/injectScript.utils'
-
 export default class GenericListing extends Component {
     filterContent = {};
     urlParams = Location.search();
