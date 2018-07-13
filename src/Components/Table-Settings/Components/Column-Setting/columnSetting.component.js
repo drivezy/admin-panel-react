@@ -37,12 +37,12 @@ export default class ColumnSetting extends Component {
 
     columnCollapse = (isSave = false) => {
         let { tempColumn, column } = this.state;
-        const { selectedColumnUpdate,index } = this.props;
+        const { selectedColumnUpdate, index } = this.props;
         const expanded = !tempColumn.expanded;
         if (isSave) {
             column = tempColumn;
             tempColumn.expanded = column.expanded = expanded;
-            selectedColumnUpdate(tempColumn,index);
+            selectedColumnUpdate(tempColumn, index);
             //this.setState({ column: tempColumn, tempColumn });
         }
         // else {
@@ -75,6 +75,14 @@ export default class ColumnSetting extends Component {
         this.setState({ tempColumn });
     }
 
+    separatorNameChange = (event) => {
+        let { tempColumn } = this.state;
+
+        tempColumn.label = event.target.value;
+
+        this.setState({ tempColumn });
+    }
+
     columnUpdate = (event) => {
         event.preventDefault();
         // console.log()
@@ -88,13 +96,25 @@ export default class ColumnSetting extends Component {
         //console.log(columns);
         return (
             <div className={`column-setting ${activeColumn.column == column.column && activeColumn.object == column.object ? 'active' : ''}`} >
+
                 <div className="column-label">
                     <div className="item-label" onClick={() => this.props.selectColumn(column, this.props.index)} onDoubleClick={() => this.props.removeColumn(column)} >
-                        {column.columnTitle ? column.columnTitle : columns[column.index].display_name}
+                        {
+                            column.separator ?
+                                <span>{"------" + column.label + "-------" }</span>
+                                :
+                                <span>{column.columnTitle ? column.columnTitle : columns[column.index].display_name}</span>
+                        }
                     </div>
-                    <div className="column-toggle" onClick={() => this.props.removeColumn(column)}>
-                        <i className={`fa fa-trash`}></i>
-                    </div>
+                    {
+                        column.separator ?
+                            null
+                            :
+                            <div className="column-toggle" onClick={() => this.props.removeColumn(column)}>
+                                <i className={`fa fa-trash`}></i>
+                            </div>
+                    }
+
                     <div className="column-toggle" onClick={this.toggleSetting}>
                         <i className={`fa ${column.expanded ? ' fa-chevron-down' : ' fa-chevron-right'}`}></i>
                     </div>
@@ -105,32 +125,45 @@ export default class ColumnSetting extends Component {
                     <Card>
                         <CardBody>
                             <form onSubmit={this.columnUpdate}>
-                                <div className="form-group">
-                                    <label htmlFor="exampleInputEmail1">Column Header</label>
-                                    <input value={columnTitle} onChange={this.columnNameChange} type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Column Name" />
-                                </div>
 
-                                <div className="form-group">
-                                    <label htmlFor="exampleInputEmail1">
-                                        Hyperlink
-                                    </label>
-                                    <Switch name="route" onChange={this.updateColumnHyperlink} value={route} />
-                                </div>
 
-                                <div className="form-group">
-                                    <label htmlFor="exampleInputEmail1">
-                                        Filter
-                                    </label>
-                                    <SelectBox
-                                        onChange={(filter) => {
-                                            column.filter = filter;
-                                            this.setState({ tempColumn: column });
-                                        }}
-                                        value={filter}
-                                        options={filterArr}
-                                        placeholder='Filter'
-                                    />
-                                </div>
+                                {
+                                    column.separator ?
+                                        <div>
+                                            <div className="form-group">
+                                                <label htmlFor="exampleInputEmail1">Column Header</label>
+                                                <input value={columnTitle} onChange={this.separatorNameChange} type="text" className="form-control" placeholder="Enter Column Name" />
+                                            </div>
+                                        </div>
+                                        :
+                                        <div>
+                                            <div className="form-group">
+                                                <label htmlFor="exampleInputEmail1">Column Header</label>
+                                                <input value={columnTitle} onChange={this.columnNameChange} type="text" className="form-control" placeholder="Enter Column Name" />
+                                            </div>
+                                            <div className="form-group">
+                                                <label htmlFor="exampleInputEmail1">
+                                                    Hyperlink
+                                                </label>
+                                                <Switch name="route" onChange={this.updateColumnHyperlink} value={route} />
+                                            </div>
+
+                                            <div className="form-group">
+                                                <label htmlFor="exampleInputEmail1">
+                                                    Filter
+                                                </label>
+                                                <SelectBox
+                                                    onChange={(filter) => {
+                                                        column.filter = filter;
+                                                        this.setState({ tempColumn: column });
+                                                    }}
+                                                    value={filter}
+                                                    options={filterArr}
+                                                    placeholder='Filter'
+                                                />
+                                            </div>
+                                        </div>
+                                }
 
                                 <div className="row">
                                     <div className="col">
