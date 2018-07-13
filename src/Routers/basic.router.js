@@ -73,7 +73,7 @@ export default class BasicRoute extends Component {
 
                 <ModalWrapper ref={(elem) => ModalManager.registerModal(elem)} />
                 <ConfirmModalComponent ref={(elem) => ConfirmUtils.RegisterConfirm(elem)} />
-                <Spotlight ref={(elem) => SettingsUtil.registerModal(elem)} />
+                {/* <Spotlight ref={(elem) => SettingsUtil.registerModal(elem)} /> */}
             </div>
         )
     }

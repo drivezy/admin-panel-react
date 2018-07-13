@@ -16,11 +16,12 @@ import { SetItem } from './../../Utils/localStorage.utils';
 import $ from 'jquery';
 import ThemeUtil from './../../Utils/theme.utils';
 import { SetUserPreference } from './../../Utils/userPreference.utils';
+import SettingsUtil from './../../Utils/settings.utils';
 import { Spotlight } from './../../Components/Spotlight-Search/spotlightSearch.component';
 
 const SpotlightTab = (keys) =>
 
-    <Row className="spot-light" id='spotlight' ref={this.spotlightCompRef}>
+    <Row className="spot-light" id='spotlight' >
         <Col sm="12">
             <Card body className="tab-card">
                 <CardTitle>Configure Keys</CardTitle>
@@ -30,7 +31,7 @@ const SpotlightTab = (keys) =>
                 </CardText>
 
             </Card>
-           
+
         </Col>
     </Row>
 
@@ -45,26 +46,35 @@ export default class ConfugreSettings extends Component {
             selectedSpacing: ThemeUtil.getCurrentSpacing(),
             selectedTheme: ThemeUtil.getCurrentTheme(),
             keys: []
-            
+
         }
     }
 
-
-
-    componentDidMount()  {
+    componentDidMount() {
         // document.getElementById('spotlight').addEventListener("keydown", () => {
         //     console.log("Test successful");
         // });
-    
+
     }
+
+    componentDidUpdate() {
+        this.spotlightCompRef.current ? this.spotlightCompRef.current.focus() : ''
+    }
+
+    // focusSpotlight() {
+    //     // Explicitly focus the text input using the raw DOM API
+    //     // Note: we're accessing "current" to get the DOM node
+    //     this.spotlightCompRef.current.focus();
+    //   }
+
 
     themes = ThemeUtil.getThemes();
 
     spacing = ThemeUtil.getSpacings();
-    
+
     applyChanges = async () => {
         const { selectedTheme, selectedSpacing } = this.state;
-
+      
         ThemeUtil.setTheme(selectedTheme);
 
         ThemeUtil.setSpacing(selectedSpacing);
@@ -73,12 +83,12 @@ export default class ConfugreSettings extends Component {
 
         console.log(this.state.keys);
 
+        // this.focusSpotlight();
+        const result = await SetUserPreference('spotlight', this.state.keys)
 
-        const result = await SetUserPreference('spotlight',this.state.keys)
+        let value = 1
 
         console.log(result);
-
-        <Spotlight/>
 
     }
 
@@ -99,19 +109,18 @@ export default class ConfugreSettings extends Component {
     }
 
     addKeyListener = () => {
-
         const tempKey = [];
-        document.addEventListener('keydown' , e => { this.keyboardListener(e);  })
+        document.addEventListener('keydown', e => { this.keyboardListener(e); })
     }
 
     removeKeyListener = () => {
-        document.removeEventListener('keydown' , e => console.log(e))
+        document.removeEventListener('keydown', e => console.log(e))
     }
 
 
     toggle = (tab) => {
         if (tab == 2) {
-            // this.spotlightCompRef.current ? this.spotlightCompRef.current.focus() : '' 
+
 
             this.addKeyListener();
         }
@@ -131,45 +140,45 @@ export default class ConfugreSettings extends Component {
 
 
     keyboardListener = (event) => {
-        
-            // let keys = [];
-            let tempKey = [];
-        
-            event.preventDefault();
 
-            setTimeout( () => {
-                 if (this.state.keys.length < 2) {
-                    // tempKey.push({
-                    //     key: event.key,
-                    //     keyCode: event.keyCode
-                    // });
+        // let keys = [];
+        let tempKey = [];
 
-                    const tempKey = {
-                        key: event.key,
-                        keyCode: event.keyCode
-                    };
-                    
-                   // this.setState({ keys : tempKey })
-                   const { keys} = this.state;
-                   keys.push(tempKey);
-                   this.setState({keys});
-                    // this.state.keys.push(tempKey);
-                    if( this.state.keys.length == 2)
-                    { 
-                        console.log(this.state.keys);
-                        
-                    }
-                 }
-                
-            });
-           
-            
-        }
+        event.preventDefault();
 
-        render() {
-            const { activeTab, selectedTheme, selectedSpacing, _handleEscKey, keys } = this.state;
-            
-            return (
+        setTimeout(() => {
+            if (this.state.keys.length < 2) {
+                // tempKey.push({
+                //     key: event.key,
+                //     keyCode: event.keyCode
+                // });
+
+                const tempKey = {
+                    key: event.key,
+                    keyCode: event.keyCode
+                };
+
+                // this.setState({ keys : tempKey })
+                const { keys } = this.state;
+                keys.push(tempKey);
+                this.setState({ keys });
+                // this.state.keys.push(tempKey);
+                if (this.state.keys.length == 2) {
+                    console.log(this.state.keys);
+
+                }
+            }
+
+        });
+
+
+    }
+
+    render() {
+        const { activeTab, selectedTheme, selectedSpacing, _handleEscKey, keys } = this.state;
+
+        return (
+            <HotKeys focused={true} attach={window} keyMap={this.keys} handlers={this.handlers}>
                 <div className="configure-settings">
                     <ModalBody >
                         <Nav tabs>
@@ -192,8 +201,8 @@ export default class ConfugreSettings extends Component {
                                             <CardTitle>Choose Theme</CardTitle>
                                             <CardText>
                                                 Select one of the below themes for your panel.
-    
-    
+
+
                                         </CardText>
 
                                             <div className="themes">
@@ -244,29 +253,29 @@ export default class ConfugreSettings extends Component {
                             <TabPane tabId="2" >
 
                                 <SpotlightTab />
-                                
+
                                 <div className="display-keys-card">
-                                {
-                                   (keys.length == 2) &&
-                                   keys.map((value,key)=>
+                                    {
+                                        (keys.length == 2) &&
+                                        keys.map((value, key) =>
 
-                                   <div>
-                                    <span key={key} className="display-keys">
-                                        {console.log(value)}
-                                        {value.key}
-                                    </span> 
+                                            <div>
+                                                <span key={key} className="display-keys">
+                                                    {console.log(value)}
+                                                    {value.key}
+                                                </span>
 
-                                    {key==0 &&
-                                    <span> +
+                                                {key == 0 &&
+                                                    <span> +
                                     </span>}
-                                    </div>
+                                            </div>
 
-                                )
-                                    
-                                //    this.displayKeys(keys)
-                                }
+                                        )
+
+                                        //    this.displayKeys(keys)
+                                    }
                                 </div>
-                                 
+
                             </TabPane>
                         </TabContent>
 
@@ -278,9 +287,15 @@ export default class ConfugreSettings extends Component {
                         </div>
                     </ModalFooter>
                 </div >
-            )
-        }
+             
+              {
+                  <Spotlight ref={ (elem) => SettingsUtil.registerModal(elem) } />
+              }
+
+            </HotKeys>
+        )
     }
+}
 
 
 

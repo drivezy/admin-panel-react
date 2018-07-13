@@ -40,7 +40,7 @@ export class Spotlight extends Component {
 
     keyboardHandlers = {
         // 'moveUp': (event) => { this.traverse(0) },
-        // 'moveDown': (event) => { this.traverse(1) },
+        // 'moveDown': (event) => { this.traverse(1) },se
         // 'enter': (event) => { this.onSelect(event) }
     }
 
@@ -199,7 +199,7 @@ export class Spotlight extends Component {
             </HotKeys>
         )
     }
-}
+}                                                                                                                                                       
 
 
 

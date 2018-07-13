@@ -14,6 +14,8 @@ import { PreserveState } from './../Utils/preserveUrl.utils';
 import { GetMenusFromApi } from './../Utils/menu.utils';
 import LoadAsync from './../Utils/loadAsyncScripts.utils';
 import { Location } from './../Utils/location.utils';
+import { Spotlight } from '../Components/Spotlight-Search/spotlightSearch.component';
+
 
 
 // import { GetProperties } from './../Utils/openProperty.utils';
@@ -31,6 +33,7 @@ export default class IndexRouter extends Component {
         this.state = {
             sideNavExpanded: true,
             menuFetched: true,
+            elem: true
         }
         // props.GetCities();
         Location.getHistoryMethod(this.getRouterProps); // pass methods, so that location utils can get history object
@@ -38,8 +41,7 @@ export default class IndexRouter extends Component {
 
 
     keyMap = {
-        moveUp: 'Shift+B',
-       
+        moveUp: 'Shift+b',
     }
 
     handlers = {
@@ -109,7 +111,7 @@ export default class IndexRouter extends Component {
                 <HotKeys focused={true} attach={window} keyMap={this.keyMap} handlers={this.handlers}>
                     <div className="app-container">
                         {/* Landing Is the Basic Layout that builds the routes and the layout */}
-                        <Landing match={match} menus={menus} history={history}/>
+                        <Landing match={match} menus={menus} history={history} />
                         {/* Landing Ends */}
                     </div>
                 </HotKeys>
