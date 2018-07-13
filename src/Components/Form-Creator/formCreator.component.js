@@ -203,15 +203,6 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
             model={values[column.index]}
         />,
         // Form Input Ends
-        
-        // Image Upload
-        [COLUMN_TYPE.UPLOAD]: <Field
-            name={column.name}
-            render={({ field /* _form */ }) => (
-                <ImageUpload name={column.name} onRemove={props.onFileRemove} onSelect={props.onFileUpload} />
-            )}
-        />,
-        // Image Upload Ends
 
         // List Select with options from api
         7: <Field
@@ -239,6 +230,20 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
             )}
         />,
         // Single Datepicker Ends
+
+        // Image Upload
+        [COLUMN_TYPE.UPLOAD]: <Field
+            name={column.name}
+            render={({ field /* _form */ }) => (
+                <ImageUpload name={column.name} onRemove={props.onFileRemove}
+                    onSelect={(column, name) => {
+                        console.log(column, name);
+                        props.onFileUpload(column, name);
+                    }}
+                />
+            )}
+        />,
+        // Image Upload Ends
 
         // TextArea Begins
         160: <Field
@@ -506,7 +511,7 @@ const FormContents = withFormik({
             return Promise.all(props.fileUploads.map((entry) => {
                 return Upload('uploadFile', entry).then((result) => {
 
-                    values[entry.column] = result.response;
+                    newValues[entry.column] = result.response;
 
                     return result;
 
