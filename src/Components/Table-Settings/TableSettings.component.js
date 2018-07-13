@@ -97,7 +97,7 @@ export default class TableSettings extends Component {
         selectedColumns = selectedColumns.filter((entry) => {
             //console.log(column, entry);
             const isSameName = entry.column != column.column;
-            if(isSameName) {
+            if (isSameName) {
                 return true;
             }
             return (column.object != entry.object);
@@ -152,7 +152,8 @@ export default class TableSettings extends Component {
 
     addHSplit = () => {
         const { tempSelectedColumns } = this.state;
-        tempSelectedColumns.push({ split: true, label: "seperator", headingCollapsed: true, heading: "" });
+        let ext = Math.floor(Math.random() * 1000);
+        tempSelectedColumns.push({ split: true, label: "seperator", headingCollapsed: true, heading: "", separator: true, column: 'seperator' + ext});
         this.setState({ tempSelectedColumns });
     }
 
@@ -160,26 +161,29 @@ export default class TableSettings extends Component {
         const { tempSelectedColumns } = this.state;
         tempSelectedColumns.splice(index, 1);
         let end;
-        if(item.label.split("-")[0] == "seperator"){
+        if (item.label.split("-")[0] == "seperator") {
+            
+        }
+        else if (item.separator){
             return tempSelectedColumns;
         }
         else {
-        if (item.label.split("-")[0] == "s") {
-            end = item.label.replace("s", "e");
-        } else if (item.label.split("-")[0] == "e") {
-            end = item.label.replace("e", "s");
-        }
-
-        let endIndex;
-
-        for (let i in tempSelectedColumns) {
-            if (tempSelectedColumns[i].label == end) {
-                endIndex = i;
+            if (item.label.split("-")[0] == "s") {
+                end = item.label.replace("s", "e");
+            } else if (item.label.split("-")[0] == "e") {
+                end = item.label.replace("e", "s");
             }
-        }
 
-        tempSelectedColumns.splice(endIndex, 1);
-        return tempSelectedColumns;
+            let endIndex;
+
+            for (let i in tempSelectedColumns) {
+                if (tempSelectedColumns[i].label == end) {
+                    endIndex = i;
+                }
+            }
+
+            tempSelectedColumns.splice(endIndex, 1);
+            return tempSelectedColumns;
         }
     };
 
@@ -357,13 +361,13 @@ export default class TableSettings extends Component {
 
                         {
                             showSplitFlag == true &&
-                            <Button color="secondary" size="sm" onClick={this.addSplit}>
-                                Add Split
+                            <Button color="secondary" size="sm" className="split" onClick={this.addSplit}>
+                                V-Split
                             </Button>
                         }
                         {
                             showSplitFlag == true &&
-                            <Button color="secondary" size="sm" onClick={this.addHSplit}>
+                            <Button color="secondary" size="sm" className="split" onClick={this.addHSplit}>
                                 H-Split
                             </Button>
                         }
@@ -381,13 +385,15 @@ export default class TableSettings extends Component {
                                 <ListGroup className="parent-group">
                                     {
                                         tempSelectedColumns.map((column, index) =>
-                                            ((column.split) ?
-                                                <ListGroupItem className={`${activeColumn.position === index && 'active'}`} tag="button" action key={index} onClick={() => this.selectColumn(column, index)}>
-                                                    ---- {column.label} ----
+                                            ((column.split) && (!column.separator)?
+                                                <div key={index}>
+                                                    <ListGroupItem className={`${activeColumn.position === index && 'active'}`} tag="button" action key={index} onClick={() => this.selectColumn(column, index)}>
+                                                        ---- {column.label} ----
                                                     <span className="close margin-top-4" data-dismiss="alert" aria-label="Close" onClick={() => this.removeSplit(index, column)}>
-                                                        <i className="fa fa-times"></i>
-                                                    </span>
-                                                </ListGroupItem>
+                                                            <i className="fa fa-times"></i>
+                                                        </span>
+                                                    </ListGroupItem>
+                                                </div>
                                                 :
                                                 // Component Manages column props
                                                 <ColumnSetting
@@ -414,13 +420,13 @@ export default class TableSettings extends Component {
                 </ModalBody>
                 <ModalFooter>
                     <div className="leftButtons">
-                         {formConfigurator ?
+                        {formConfigurator ?
                             <button className="btn btn-warning applyForAllButton" onClick={() => this.applyChanges(true)}>Apply For All</button>
                             : null
                         }
                     </div>
                     <div className="rightButtons">
-                         <button className="btn btn-danger" onClick={this.toggleModal}>Cancel</button>
+                        <button className="btn btn-danger" onClick={this.toggleModal}>Cancel</button>
                         <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
                     </div>
                 </ModalFooter>
