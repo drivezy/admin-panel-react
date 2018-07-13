@@ -364,19 +364,21 @@ const formElements = props => {
             </div> */}
             {/* Uploaded file thumbnails Ends*/}
 
-            <div className="modal-actions row justify-content-end">
+            <div className="modal-footer">
+                <div className="modal-actions row justify-content-end">
 
-                <button className="btn btn-warning" onClick={handleReset}>
-                    Reset
-                </button>
+                    <button className="btn btn-warning" onClick={handleReset}>
+                        Reset
+                    </button>
 
-                {/* <button className="btn btn-primary">
-                    Cancel
-                </button> */}
+                    {/* <button className="btn btn-primary">
+                        Cancel
+                    </button> */}
 
-                <button className="btn btn-success" disabled={isSubmitting} type="submit">
-                    Submit
-                </button>
+                    <button className="btn btn-success" disabled={isSubmitting} type="submit">
+                        Submit
+                    </button>
+                </div>
             </div>
         </Form>
     );
