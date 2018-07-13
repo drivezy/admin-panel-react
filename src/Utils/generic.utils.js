@@ -143,7 +143,6 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
     // const selectedColumns = GetSelectedColumnDefinition(layout);
     for (const i in selectedColumns) {
         const selected = selectedColumns[i];
-        // console.log(selected.label);
         if (!selected.split) {
             const dict = columns[selected.index];
             if (dict) {
@@ -168,7 +167,7 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
                 //     }
                 // }
             }
-        } else if (selected.label == 'seperator') {
+        } else if(selected.separator){
             finalColumnDefinition[i] = { ...selected, isSplit: false }
             splitEnabled = false;
         }
