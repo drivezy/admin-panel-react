@@ -8,5 +8,7 @@ export default {
     SELECT: 7,
     LIST: 8,
     SERIALIZABLE: 9,
-    SCRIPT: 10
+    SCRIPT: 10,
+    FORM: 11,
+    UPLOAD: 12
 };

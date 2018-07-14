@@ -9,7 +9,7 @@ import FormCreator from './../Components/Form-Creator/formCreator.component';
 
 import FormUtils from './form.utils';
 import { GetUrlForFormCreator, GetColumnsForListing, GetParsedLayoutScript, ParseRestrictedQuery } from './generic.utils';
-import { ExecuteScript } from './injectScript.utils';
+import { ExecuteScript } from './inject-method/injectScript.utils';
 import { Get } from './http.utils';
 
 import { ROUTE_URL, RECORD_URL } from './../Constants/global.constants';

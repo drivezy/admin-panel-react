@@ -2,6 +2,7 @@
 .generic-listing-container {
     .noListMessage {
         padding: 10px;
+        background-color: #fff;
     } // font-size: 12px;
     // padding: 15px;
     .header {
@@ -11,7 +12,7 @@
     .page-bar {
         // margin: -8px;
         // height: 70px;
-        height: 50px;
+        height: 40px;
         display: flex;
         justify-content: space-between; // width: 95%;
         padding: 4px 8px; // border-bottom: 1px solid;
@@ -31,9 +32,10 @@
             display: flex;
             align-items: center;
             .refresh-button {
+                font-size: .865rem !important;
                 @include themify($themes) {
-                    background: themed('backgroundLight');
-                    color: themed('onPrimaryDark') ;// border-color: themed('settingsButton');
+                    background: themed('primaryLight');
+                    color: themed('successColor') ;// border-color: themed('settingsButton');
                     border: 1px solid;
                     border-color: themed('borderLight');
                 }

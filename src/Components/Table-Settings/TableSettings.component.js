@@ -95,16 +95,21 @@ export default class TableSettings extends Component {
         let selectedColumns = this.state.tempSelectedColumns;
 
         selectedColumns = selectedColumns.filter((entry) => {
-            console.log(column, entry);
+            //console.log(column, entry);
             const isSameName = entry.column != column.column;
-            if(isSameName) {
+            if (isSameName) {
                 return true;
             }
             return (column.object != entry.object);
         });
 
-        this.setState({ tempSelectedColumns: selectedColumns })
-        this.addColumnToLeft(column);
+        this.setState({ tempSelectedColumns: selectedColumns });
+
+        if(column.separator){
+            return;
+        } 
+        else 
+            this.addColumnToLeft(column);
     }
 
     addColumnToLeft(column) {
@@ -152,7 +157,8 @@ export default class TableSettings extends Component {
 
     addHSplit = () => {
         const { tempSelectedColumns } = this.state;
-        tempSelectedColumns.push({ split: true, label: "seperator", headingCollapsed: true, heading: "" });
+        let ext = Math.floor(Math.random() * 1000);
+        tempSelectedColumns.push({ split: true, label: "seperator", headingCollapsed: true, heading: "", separator: true, column: 'seperator' + ext});
         this.setState({ tempSelectedColumns });
     }
 
@@ -160,22 +166,30 @@ export default class TableSettings extends Component {
         const { tempSelectedColumns } = this.state;
         tempSelectedColumns.splice(index, 1);
         let end;
-        if (item.label.split("-")[0] == "s") {
-            end = item.label.replace("s", "e");
-        } else if (item.label.split("-")[0] == "e") {
-            end = item.label.replace("e", "s");
+        if (item.label.split("-")[0] == "seperator") {
+            
         }
-
-        let endIndex;
-
-        for (let i in tempSelectedColumns) {
-            if (tempSelectedColumns[i].label == end) {
-                endIndex = i;
+        else if (item.separator){
+            return tempSelectedColumns;
+        }
+        else {
+            if (item.label.split("-")[0] == "s") {
+                end = item.label.replace("s", "e");
+            } else if (item.label.split("-")[0] == "e") {
+                end = item.label.replace("e", "s");
             }
-        }
 
-        tempSelectedColumns.splice(endIndex, 1);
-        return tempSelectedColumns;
+            let endIndex;
+
+            for (let i in tempSelectedColumns) {
+                if (tempSelectedColumns[i].label == end) {
+                    endIndex = i;
+                }
+            }
+
+            tempSelectedColumns.splice(endIndex, 1);
+            return tempSelectedColumns;
+        }
     };
 
     // applyChangesToAll = async () => {
@@ -275,11 +289,12 @@ export default class TableSettings extends Component {
                 // return selectedIds.indexOf(column.name) == -1
             });
         }
+
         return (
             <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="table-settings">
                 <ModalHeader toggle={this.toggleModal}>
                     Configure
-            </ModalHeader>
+                </ModalHeader>
                 <ModalBody>
                     <div className="left">
 
@@ -287,7 +302,7 @@ export default class TableSettings extends Component {
                             <div className="card-body parent-card">
 
                                 <div className="card-top">
-                                    <h6 className="card-title">All Columns({leftColumns.menu ? leftColumns.menu.length : 0})</h6>
+                                    <h6 className="card-title">All Columns({leftColumns.length ? leftColumns.length : 0})</h6>
 
                                     <div className="input-holder">
                                         <input type="text" onChange={event => this.searchColumn(event)} className="search-box" placeholder="Search Columns" />
@@ -341,23 +356,23 @@ export default class TableSettings extends Component {
                     </div>
 
                     <div className="controls">
-                        <Button color="primary" size="sm" onClick={this.moveSelectedUp}>
+                        <Button color="info" size="sm" onClick={this.moveSelectedUp}>
                             <i className="fa fa-arrow-up"></i>
                         </Button>
 
-                        <Button color="primary" size="sm" onClick={this.moveSelectedDown}>
+                        <Button color="info" size="sm" onClick={this.moveSelectedDown}>
                             <i className="fa fa-arrow-down"></i>
                         </Button>
 
                         {
                             showSplitFlag == true &&
-                            <Button color="primary" size="sm" onClick={this.addSplit}>
-                                Add Split
+                            <Button color="secondary" size="sm" className="split" onClick={this.addSplit}>
+                                V-Split
                             </Button>
                         }
                         {
                             showSplitFlag == true &&
-                            <Button color="primary" size="sm" onClick={this.addHSplit}>
+                            <Button color="secondary" size="sm" className="split" onClick={this.addHSplit}>
                                 H-Split
                             </Button>
                         }
@@ -375,13 +390,15 @@ export default class TableSettings extends Component {
                                 <ListGroup className="parent-group">
                                     {
                                         tempSelectedColumns.map((column, index) =>
-                                            ((column.split) ?
-                                                <ListGroupItem className={`${activeColumn.position === index && 'active'}`} tag="button" action key={index} onClick={() => this.selectColumn(column, index)}>
-                                                    ---- {column.label} ----
+                                            ((column.split) && (!column.separator)?
+                                                <div key={index}>
+                                                    <ListGroupItem className={`${activeColumn.position === index && 'active'}`} tag="button" action key={index} onClick={() => this.selectColumn(column, index)}>
+                                                        ---- {column.label} ----
                                                     <span className="close margin-top-4" data-dismiss="alert" aria-label="Close" onClick={() => this.removeSplit(index, column)}>
-                                                        <i className="fa fa-times"></i>
-                                                    </span>
-                                                </ListGroupItem>
+                                                            <i className="fa fa-times"></i>
+                                                        </span>
+                                                    </ListGroupItem>
+                                                </div>
                                                 :
                                                 // Component Manages column props
                                                 <ColumnSetting
@@ -409,12 +426,12 @@ export default class TableSettings extends Component {
                 <ModalFooter>
                     <div className="leftButtons">
                         {formConfigurator ?
-                            <Button color="primary" onClick={() => this.applyChanges(true)}>Apply For All</Button>
+                            <button className="btn btn-warning applyForAllButton" onClick={() => this.applyChanges(true)}>Apply For All</button>
                             : null
                         }
                     </div>
                     <div className="rightButtons">
-                         <button className="btn btn-danger" onClick={this.toggleModal}>Cancel</button>
+                        <button className="btn btn-danger" onClick={this.toggleModal}>Cancel</button>
                         <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
                     </div>
                 </ModalFooter>
