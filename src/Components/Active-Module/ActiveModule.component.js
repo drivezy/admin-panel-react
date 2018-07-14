@@ -13,7 +13,8 @@ export default class ActiveModule extends Component {
         this.state = {
             collapsed: props.collapsed || true,
             menus: [],
-            menuName: ''
+            menuName: '',
+            module: ''
         }
 
         this.toggledMenu = this.toggledMenu.bind(this);
@@ -31,7 +32,8 @@ export default class ActiveModule extends Component {
     }
 
     toggledMenu = (module) => {
-        this.setState({ menus: module.menus, collapsed: false });
+        console.log(module);
+        this.setState({ module: module, menus: module.menus, collapsed: false });
     }
 
     toggleMenus() {
@@ -46,7 +48,7 @@ export default class ActiveModule extends Component {
     }
 
     render() {
-        const { menuName, menus } = this.state;
+        const { menuName, menus, module } = this.state;
 
         return (
             <div className="active-module">
@@ -68,7 +70,7 @@ export default class ActiveModule extends Component {
                             menus.length != 0 ?
                                 <div className="panel menus">
                                     <div className="panel-heading">
-                                        Menus
+                                        {module.name}
                                     </div>
                                     <div className="panel-body">
                                         {
