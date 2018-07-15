@@ -6,9 +6,9 @@ import QueryTableSettings from './../../Components/Query-Report/Query-Table-Sett
 import QueryPredefinedFilter from './../../Components/Query-Report/Query-Predefined-Filter/queryPredefinedFilter.component';
 import QueryDashboardForm from './../../Components/Query-Report/Query-Dashboard-Form/queryDashboardForm.component';
 import QueryTable from './../../Components/Query-Report/Query-Table/queryTable.component';
-
+import { Get } from './../../Utils/http.utils';
 import ListingPagination from './../../Components/Listing-Pagination/ListingPagination';
-
+import { GetUrlParams, Location } from './../../Utils/location.utils';
 import { QueryData } from './../../Utils/query.utils';
 import { GetPreferences } from './../../Utils/preference.utils';
 import { BuildUrlForGetCall } from './../../Utils/common.utils';
@@ -20,13 +20,14 @@ export default class GenericQueryDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            ...GetUrlParams(this.props),
             queryParamsData: {},
             queryListing: {},
             preference: {},
             stats: {},
-            currentPage: 1,
-            params: {},
             columns: [],
+            currentPage: 1,
+            limit: 20,
             finalColumns: [],
             resultData: {}
         };
@@ -34,6 +35,13 @@ export default class GenericQueryDetail extends Component {
 
     componentDidMount() {
         this.getQueryParamsData();
+    }
+
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        const newProps = GetUrlParams(nextProps);
+        this.state.params = newProps.params;
+        this.state.queryString = newProps.queryString;
+        this.setState({currentPage: this.state.queryString.page ? this.state.queryString.page : 1 , limit: this.state.queryString.limit ? this.state.queryString.limit : 20})
     }
 
     getQueryParamsData = async () => {
@@ -76,7 +84,7 @@ export default class GenericQueryDetail extends Component {
             params.dictionary = result.dictionary ? result.dictionary : params.dictionary;
             params.includes = "";
             params.starter = queryParamsData.short_name;
-            let currentPage = params.page ? params.page : 1;
+        
 
             let tempColumns = GetColumnsForListing(params);
 
@@ -86,11 +94,18 @@ export default class GenericQueryDetail extends Component {
                 finalColumns = CreateFinalColumns(tempColumns, JSON.parse(preference[0].value));
             }
 
-            this.setState({ stats, currentPage, params, columns: tempColumns, finalColumns, stats });
+            this.setState({ stats,  params, columns: tempColumns, finalColumns, stats });
 
             this.gatherData(result.response);
 
+            // return Get({ url, queryString: { page } });
+            console.log(GetUrlParams(this.props));
+           
+
+            
         }
+
+
     }
 
     gatherData = () => {
@@ -196,8 +211,8 @@ export default class GenericQueryDetail extends Component {
                             <ListingPagination
                                 history={history}
                                 match={match}
-                                current_page={currentPage}
-                                limit={20}
+                                current_page={this.state.currentPage}
+                                limit={this.state.limit}
                                 statsData={stats}
                             />
                             : <div className="noListMessage">Looks like no columns are selected , Configure it by pressing the settings icon.</div>
