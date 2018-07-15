@@ -112,14 +112,17 @@ export default class GenericDetail extends Component {
 
         if (layout && layout.column_definition) {
             portlet.finalColumns = CreateFinalColumns(portlet.portletColumns, layout.column_definition, portlet.relationship);
-            this.setState({ portlet, menuDetail });
+            // this.setState({ portlet, menuDetail });
+            this.state.portlet = portlet;
+            this.state.menuDetail = menuDetail;
+            this.getDetailRecord();
         }
     }
 
     render() {
         const { history, location, match } = this.props;
         const { menuDetail = {}, portlet = {}, tabDetail = {}, currentUser = {}, parentData } = this.state;
-        const { finalColumns = [], data = {}, formPreference = {}, starter, formPreferences= [] } = portlet;
+        const { finalColumns = [], data = {}, formPreference = {}, starter, formPreferences = [] } = portlet;
 
         const genericDataForCustomColumn = {
             formPreference,
@@ -132,7 +135,8 @@ export default class GenericDetail extends Component {
             model: portlet.model,
             modelId: portlet.model && portlet.model.id,
             methods: portlet.methods,
-            preDefinedmethods: portlet.preDefinedmethods
+            preDefinedmethods: portlet.preDefinedmethods,
+            modelHash: portlet.modelHash
         };
 
         const html =

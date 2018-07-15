@@ -104,6 +104,8 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
             selectedColumn.model_id = columns[i][j].model_id
             selectedColumn.name = columns[i][j].name;
             selectedColumn.visibility = columns[i][j].visibility;
+            selectedColumn.required = columns[i][j].required;
+            selectedColumn.nullable = columns[i][j].nullable;
             selectedColumn.reference_model = columns[i][j].reference_model;
             selectedColumn.display_name = columns[i][j].display_name;
 
@@ -141,6 +143,7 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
     // const selectedColumns = GetSelectedColumnDefinition(layout);
     for (const i in selectedColumns) {
         const selected = selectedColumns[i];
+        // console.log(selected.label);
         if (!selected.split) {
             const dict = columns[selected.index];
             if (dict) {
@@ -165,9 +168,12 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
                 //     }
                 // }
             }
-        } else {
+        } else if(selected.label=='seperator'){
+            finalColumnDefinition[i] = { ...selected, isSplit: false }
+            splitEnabled = false;
+        }
+        else{
             finalColumnDefinition[i] = { ...selected, isSplit: true }
-
             splitEnabled = !splitEnabled;
 
         };
@@ -181,6 +187,7 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
         }
 
     }
+    // console.log(finalColumnDefinition);
     return finalColumnDefinition;
 }
 
@@ -304,7 +311,12 @@ export function ConvertDependencyInjectionToArgs(dependencies) {
 export function RegisterMethod(methodArr) {
     const methods = {};
     for (var i in methodArr) {
+       
         const methodObj = methodArr[i];
+
+        if(!methodObj) { 
+            return;
+        }
         if (methodObj.definition && typeof methodObj.definition == 'object' && methodObj.definition.script) {
             if (methodObj.dependency) {
                 methods[methodObj.name] = new Function("callback", methodObj.dependency, methodObj.definition.script);
@@ -541,8 +553,10 @@ export function GetPreSelectedMethods() {
             layouts: genericData.formPreferences,
             userId: genericData.userId,
             modelId: genericData.modelId,
+            modelAliasId: genericData.modelAliasId,
             route: genericData.url,
             name: method + ' ' + genericData.starter,
+            modelHash: genericData.modelHash
         };
     }
     return methods;
@@ -569,9 +583,9 @@ export async function GetPreference(paramName) {
  * @param  {string} path='path'}
  */
 export function RowTemplate({ selectedColumn, listingRow, path = 'path' }) {
-    if (selectedColumn.column_type == COLUMN_TYPE.BOOLEAN) {
+    if (selectedColumn.column_type_id == COLUMN_TYPE.BOOLEAN) {
         // return eval('listingRow.' + selectedColumn.path) ? 'Yes' : 'No';
-        return listingRow[selectedColumn.path] ? 'Yes' : 'No';
+        return listingRow[selectedColumn.path] ? <div className="green">Yes</div> : <div className="red">No</div>;
     } else if (selectedColumn.route) {
         let id;
         if (selectedColumn[path].split('.')[1]) {
@@ -724,6 +738,9 @@ export function GetParsedLayoutScript(listLayouts) {
 
 export function GetChangedMethods(newValues, originalValues = {}) {
     const data = {};
+    if(!IsObjectHaveKeys(originalValues)) { 
+        return newValues;
+    }
     if (IsObjectHaveKeys(newValues)) {
         for (let i in newValues) {
             const newValue = newValues[i];
@@ -750,7 +767,12 @@ export function ParseRestrictedQuery(queryString) {
 
         query = query.replace(MATCH_PARENT_PATH, '').replace(MATCH_WHITESPACE, '');
         query = query.split('=');
-        parsedQuery[query[0]] = query[1];
+        let value = query[1];
+
+        if(typeof value == 'string')  {
+            value = value.replace(/'/g, '');
+        }
+        parsedQuery[query[0]] = value;
         // parsedQuery.push(query)
 
     });

@@ -10,9 +10,9 @@ import React, { Component } from 'react';
 import brace from 'brace';
 import AceEditor from 'react-ace';
 
-import { Button } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-import SelectBox from './../Forms/Components/Select-Box/selectBox';
+import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import { SelectFromOptions } from './../../Utils/common.utils';
 import { Get, Post, Put } from './../../Utils/http.utils';
 
@@ -23,6 +23,7 @@ import 'brace/theme/monokai';
 import './codeEditor.css';
 
 import ModalWrapper from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
+import { RECORD_URL } from './../../Constants/global.constants';
 
 const MODES = [{ id: 1, value: 'javascript', name: 'Javascript' }, { id: 2, name: 'PHP', value: 'php' }, { id: 3, name: 'CSS', value: 'css' }, { id: 4, name: 'SQL', value: 'sql' }];
 export default class CodeEditor extends Component {
@@ -38,8 +39,13 @@ export default class CodeEditor extends Component {
         }
     }
 
+    UNSAFE_componentWillReceivePropscomponentWillReceiveProps(nextProps) {
+        this.setState({ value: nextProps.value || '' });
+    }
+
     onChange = (newValue) => {
         this.setState({ value: newValue });
+
     }
 
     editorComponent = () => {
@@ -109,21 +115,42 @@ export default class CodeEditor extends Component {
         )
     }
 
+    toggleModal = () => {
+        this.setState({ isVisible: !this.state.isVisible });
+        // this.setState({ modal: !this.state.modal, activeColumn: {} })
+    }
+
     modalElement = () => {
         const { isVisible } = this.state;
         return (
-            <ModalWrapper
-                className='modal-xl'
-                isVisible={isVisible}
-                modalBody={this.editorComponent}
-                modalHeader={this.modalHeader}
-                modalFooter={this.modalFooter}
-            />
-        );
+            <Modal className='modal-xl' isOpen={isVisible} toggle={this.toggleModal}>
+                <ModalHeader toggle={this.toggleModal}>
+                    {this.modalHeader()}
+                </ModalHeader>
+
+                <ModalBody>
+                    {this.editorComponent()}
+                </ModalBody>
+
+                <ModalFooter>
+                    {this.modalFooter()}
+                </ModalFooter>
+
+            </Modal>
+        )
+        // return (
+        //     <ModalWrapper
+        //         className='modal-xl'
+        //         isVisible={isVisible}
+        //         modalBody={this.editorComponent}
+        //         modalHeader={this.modalHeader}
+        //         modalFooter={this.modalFooter}
+        //     />
+        // );
     }
 
     loadScript = async (scriptId) => {
-        const result = await Get({ url: 'systemScript/' + scriptId });
+        const result = await Get({ url: 'systemScript/' + scriptId, urlPrefix: RECORD_URL });
         if (result.success) {
             this.setState({ scriptId: scriptId, isVisible: true, value: result.response.script || '' });
         }
@@ -147,20 +174,25 @@ export default class CodeEditor extends Component {
             const { payload, column } = this.props;
 
             // Assign the name to the
-            const name = payload.dataModel.related_model ? payload.dataModel.related_model.name : payload.dataModel.name;
+            const name = payload.relationship.related_model ? payload.relationship.related_model.name : payload.relationship.name;
 
             var params = {
                 name: name + ' Script',
                 description: name + " Script for " + '',
-                source_type: name,
-                source_id: payload.listingRow.id,
+                source_type: payload.modelHash,
+                // source_type: 'Drivezy\\LaravelRecordManager\\Models\\ModelRelationship',
+                // source_type: name,
+                source_id: payload.data.id,
                 source_column: column.name
             }
 
-            const result = await Post({ url: 'systemScript', body: params })
+            const result = await Post({ url: 'systemScript', body: params, urlPrefix: RECORD_URL });
 
             if (result.success) {
-                this.loadScript(result.response.id);
+
+                this.props.onSubmit(result.response.id, {});
+                this.setState({ scriptId: result.response.id });
+                // this.loadScript(result.response.id);
             }
         }
     }
@@ -178,26 +210,26 @@ export default class CodeEditor extends Component {
         // }
 
         // Assign the name to the
-        const name = payload.dataModel.related_model ? payload.dataModel.related_model.name : payload.dataModel.name;
+        const name = payload.relationship.related_model ? payload.relationship.related_model.name : payload.relationship.name;
 
         var params = {
             name: name + ' Script',
             script: this.state.value,
             description: name + " Script for " + '',
             source_type: name,
-            source_id: payload.listingRow.id,
+            source_id: payload.data.id,
             source_column: column.name
         }
 
         if (this.state.scriptId) {
 
-            const result = await Put({ url: 'systemScript/' + this.state.scriptId, body: params })
+            const result = await Put({ url: 'systemScript/' + this.state.scriptId, body: params, urlPrefix: RECORD_URL })
             if (result.success) {
                 this.setState({ isVisible: false });
             }
         } else {
 
-            const result = await Post({ url: 'systemScript', body: params })
+            const result = await Post({ url: 'systemScript', body: params, urlPrefix: RECORD_URL })
             if (result.success) {
                 this.setState({ isVisible: false });
 
@@ -209,13 +241,27 @@ export default class CodeEditor extends Component {
         const { buttonComponent } = this.props;
         return (
             <div>
-                {
-                    buttonComponent ? // @TODO trigger component can be sent from parent component, as of now its not fully functional
-                        // buttonComponent()
-                        <Button onClick={(e) => this.openEditor(e)} color="danger">Edit Script</Button>
-                        :
-                        <Button onClick={(e) => this.openEditor(e)} color="primary">{this.state.value ? 'Edit' : 'Add'} Script</Button>
-                }
+                <div className="col inline">
+                    {
+                        buttonComponent ? // @TODO trigger component can be sent from parent component, as of now its not fully functional
+                            // buttonComponent()
+                            <Button onClick={(e) => this.openEditor(e)} color="danger">Edit Script</Button>
+                            :
+                            <Button onClick={(e) => this.openEditor(e)} color="primary">{this.state.scriptId ? 'Edit' : 'Add'} Script</Button>
+                    }
+                </div>
+
+                <div className="col inline">
+                    {
+                        this.state.scriptId ?
+                            <button className="btn btn-secondary" onClick={() => { this.setState({ scriptId: null }); this.props.onSubmit(null, {})}}>
+                                Remove Script
+                            </button>
+                            :
+                            null
+                    }
+
+                </div>
 
                 {this.modalElement()}
             </div>

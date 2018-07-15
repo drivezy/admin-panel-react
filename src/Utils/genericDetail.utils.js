@@ -90,6 +90,8 @@ function PrepareObjectForDetailPage(result, { extraParams }) {
 export function GetDataForPortlet({ portletDetail, genericDetailObject, portletData }) {
     var obj = {};
     obj.data = portletDetail.data;
+
+    obj.modelHash = portletDetail.model_hash;
     // obj.base = portletDetail.base;
 
     let { relationship, dictionary } = portletDetail;

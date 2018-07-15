@@ -1,7 +1,7 @@
 @import 'Assets/Global-Shared/theme.scss';
 .form-settings-modal {
     .modal-header {
-        padding: 10px 20px;
+        padding: 12px 20px;
     }
     .modal-body {
         background: whitesmoke;
@@ -103,6 +103,7 @@
             }
         }
     }
+    }
     .modal-footer{
         justify-content: none;
         .leftButtons{
@@ -115,24 +116,12 @@
             }
         }
     }
-    // .modal-body {
-    //     // background: yellow;
-    //     display: flex;
-    //     justify-content: space-between;
-    //     .left {
-    //         flex-basis: 30%;
-    //     }
-    //     .right {
-    //         max-height: 70vh;
-    //         overflow-y: scroll;
-    //         flex-basis: 30%;
-    //     }
-    //     .controls {
-    //         display: flex;
-    //         flex-direction: column;
-    //         button {
-    //             margin: 4px;
-    //         }
-    //     }
-    // }
-}
+
+    .form-settings{
+        .btn{
+            @include themify($themes){
+                background: themed('darkHeader');
+                color: themed('primaryLight');
+            }
+        }
+    }
