@@ -78,7 +78,7 @@ export default class SecurityRule extends Component {
         }
     }
 
-    saveRule = async () => {
+    saveRule = async (scriptId) => {
         const { rule, selectedColumn } = this.state;
         let { filter_condition, name } = rule;
         let url = SecurityRuleEndPoint + rule.id;
@@ -91,8 +91,13 @@ export default class SecurityRule extends Component {
             name = name.split('.')[0];
         }
 
-        const body = {
-            filter_condition, name
+        let body;
+        if (scriptId) {
+            body = { script_id: scriptId };
+        } else {
+            body = {
+                filter_condition, name
+            }
         }
         const result = await Put({ url, body, urlPrefix: ROUTE_URL });
         if (result.success) {
@@ -220,7 +225,7 @@ export default class SecurityRule extends Component {
                                             value={scriptObj.id}
                                             payload={scriptPayload}
                                             column={{ name: 'script' }}
-                                            onChange={this.scriptOnChange}
+                                            onChange={this.saveRule}
                                         />
                                     </div>
                                 }

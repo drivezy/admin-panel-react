@@ -6,7 +6,8 @@ import { GetUrlParams, Location } from './../../Utils/location.utils';
 
 import { BuildUrlForGetCall, IsObjectHaveKeys } from './../../Utils/common.utils';
 import { Get, Put, Post } from './../../Utils/http.utils';
-import { GetColumnDetail } from './../../Utils/panel.utils';
+import { GetColumnDetail, ExtractColumnName } from './../../Utils/panel.utils';
+import ToastNotifications from '../../Utils/toast.utils';
 
 import { ClientScriptEndPoint } from './../../Constants/api.constants';
 import { ROUTE_URL } from './../../Constants/global.constants';
@@ -31,6 +32,10 @@ export default class ClientScript extends Component {
         let url = ClientScriptEndPoint + id;
         url = BuildUrlForGetCall(url, apiParams);
         const result = await Get({ url, urlPrefix: ROUTE_URL });
+        this.clientDataFetched(result);
+    }
+
+    clientDataFetched = (result) => {
         if (result.success && result.response) {
             const { response } = result;
             // this.setState({ rule: response });
@@ -43,18 +48,54 @@ export default class ClientScript extends Component {
             };
             this.state.clientScript = response;
             this.state.scriptPayload = scriptPayload;
-            this.setState({ scriptPayload });
-            // this.getColumnDetail();
+            // this.setState({ scriptPayload });
+            this.getColumnDetail();
         }
     }
 
+
+    saveClientScript = async (scriptId) => {
+        const { clientScript, selectedColumn } = this.state;
+        let { active, description, name } = clientScript;
+        let url = ClientScriptEndPoint + clientScript.id;
+
+        if (IsObjectHaveKeys(selectedColumn)) {
+            const columnName = selectedColumn.name;
+            name = name.split('.')[0];
+            name += `.${columnName}`;
+        } else {
+            name = name.split('.')[0];
+        }
+
+        let body;
+
+        if (scriptId) {
+            body = { script_id: scriptId };
+        } else {
+            body = {
+                description, name, active
+            }
+        }
+        const result = await Put({ url, body, urlPrefix: ROUTE_URL });
+        if (result.success) {
+            ToastNotifications.success({ title: 'Successfully updated' });
+            this.clientDataFetched(result);
+        }
+    }
+
+
     getColumnDetail = async () => {
         const { clientScript } = this.state;
-        const { source_type: sourceType, source_id: sourceId } = clientScript;
+        const { source_type: sourceType, source_id: sourceId, name } = clientScript;
         const result = await GetColumnDetail({ sourceType, sourceId });
         if (result.success) {
             const { response } = result;
-            this.setState({ columns: response });
+            const selectedColumn = ExtractColumnName(name, result.response);
+            if (IsObjectHaveKeys(selectedColumn)) {
+                clientScript.name = clientScript.name.replace('.' + selectedColumn.name, '');
+            }
+
+            this.setState({ columns: response, clientScript, selectedColumn });
         }
     }
 
@@ -62,9 +103,15 @@ export default class ClientScript extends Component {
         console.log(value);
     }
 
+    setRuleValue = (value, field) => {
+        const { clientScript } = this.state;
+        clientScript[field] = value;
+        this.setState({ clientScript });
+    }
+
     render() {
         console.log(this.state);
-        const { scriptPayload = {}, clientScript } = this.state;
+        const { scriptPayload = {}, clientScript, columns, selectedColumn } = this.state;
         const { name = '', script: scriptObj = {} } = clientScript;
         const { script = '', } = scriptObj;
         const { selectedOption } = this.state;
@@ -87,7 +134,7 @@ export default class ClientScript extends Component {
                                 </div>
                                 <div className="columnInput inputField">
                                     <label>Column</label>
-                                    <SelectBox isClearable={false} name="form-field-name" onChange={this.handleChange} value={name} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                                    <SelectBox name="form-field-name" onChange={value => this.setState({ selectedColumn: value })} value={selectedColumn} field="name" options={columns} />
                                 </div>
                             </div>
                         </div>
@@ -99,7 +146,12 @@ export default class ClientScript extends Component {
                                 </div>
                                 <div className="activeInput inputField">
                                     <label>Active</label>
-                                    <input type="checkbox" name="active" value="true"></input>
+                                    <input type="checkbox"
+                                        name="active"
+                                        value={clientScript.active ? true : false}
+                                        checked={clientScript.active ? true : false}
+                                        onChange={e => this.setRuleValue(e.target.value, 'active')}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -108,11 +160,17 @@ export default class ClientScript extends Component {
                             <div className='form-group'>
                                 <div className="descriptionInput">
                                     <label>Description</label>
-                                    <textarea rows="3" className="description" />
+                                    <textarea
+                                        placeholder='enter description'
+                                        rows="3"
+                                        value={clientScript.description}
+                                        onChange={e => this.setRuleValue(e.target.value, 'description')}
+                                        className="description"
+                                    />
                                 </div>
                             </div>
                         </div>
-                        
+
 
                         <div className='form-row'>
                             <div className='form-group'>
@@ -126,21 +184,21 @@ export default class ClientScript extends Component {
                                             value={scriptObj.id}
                                             payload={scriptPayload}
                                             column={{ name: 'script' }}
-                                            onChange={this.scriptOnChange}
+                                            onChange={this.saveClientScript}
                                         />
                                     </div>
                                 }
                             </div>
                         </div>
-                        <div className="actions">
-                            <button className="btn btn-info" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
-                                Cancel
-                                    </button>
-                            <button className="btn btn-success" onClick={this.submit} style={{ margin: '8px' }}>
-                                Save
-                                    </button>
-                        </div>
                     </form>
+                    <div className="actions">
+                        <button className="btn btn-info" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
+                            Cancel
+                                    </button>
+                        <button className="btn btn-success" onClick={this.saveClientScript} style={{ margin: '8px' }}>
+                            Save
+                        </button>
+                    </div>
                 </div>
             </div>
 
