@@ -7,6 +7,7 @@ import { SecurityRuleEndPoint, ColumnsEndPoint } from './../../Constants/api.con
 import { ROUTE_URL } from './../../Constants/global.constants';
 
 import SelectBox from './../../Components/Forms/Components/Select-Box/selectBoxForGenericForm.component';
+import AceEditor from 'react-ace';
 
 import './securityRule.scene.css';
 
@@ -80,22 +81,55 @@ export default class SecurityRule extends Component {
                                 </div>
                             </div>
                         </div>
+
                         <div className='form-row'>
                             <div className='form-group-body'>
                                 <div className="filterCondition">
                                     <label>Filter Condition</label>
-                                    <input className='form-control' value={name} placeholder="Enter Filter Condition"/>
+                                    <input className='form-control' value={name} placeholder="Enter Filter Condition" />
                                 </div>
-                                <div className="columnInput">
-                                    <label>Column</label>
-                                    <SelectBox name="form-field-name" onChange={this.handleChange} value={selectedOption} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                                <br />
+                                <div className="scriptInput">
+                                    <label>Script</label>
+                                    <AceEditor
+                                        // mode={mode.value}
+                                        theme="monokai"
+                                        name="Drivezy-Code-editor"
+                                        width='100%'
+                                        height='85vh'
+                                        // onLoad={this.onLoad}
+                                        onChange={this.onChange}
+                                        fontSize={14}
+                                        showPrintMargin={true}
+                                        showGutter={true}
+                                        highlightActiveLine={true}
+                                        // value={value}
+                                        setOptions={{
+                                            enableBasicAutocompletion: true,
+                                            enableLiveAutocompletion: true,
+                                            enableSnippets: false,
+                                            showLineNumbers: true,
+                                            tabSize: 2,
+                                        }}
+                                    />
+                                </div>
+                                <br />
+                                <div className="Roles">
+                                    <label>Roles</label>
                                 </div>
                             </div>
+                        </div>
+                        <div className="actions">
+                            <button className="btn btn-info" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
+                                Cancel
+                                    </button>
+                            <button className="btn btn-success" onClick={this.submit} style={{ margin: '8px' }}>
+                                Save
+                                    </button>
                         </div>
                     </form>
                 </div>
             </div>
-
         )
     }
 }

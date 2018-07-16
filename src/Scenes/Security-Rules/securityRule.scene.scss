@@ -1,13 +1,19 @@
 .body{
     padding: 50px;
-    background-color: #333;
+    .form-row{
+        justify-content: center;
+    }
+    #Drivezy-Code-editor{
+        height: 50vh !important;
+    }
     .form-group {
-    padding: 3px 30px 3px 30px;
+    padding:30px;
+    padding: 30px;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    width: 100%;
-    background: #555;
+    width: 90%;
     label {
         font-weight: bold;
         font-weight: bold;
@@ -42,8 +48,12 @@
     }
 }
     .form-group-body{
-        padding: 3px 30px 3px 30px;
-    width: 100%;
-    background: #555;
+        padding: 0px 100px 30px 100px;
+        width: 100%;
+    }
+    .actions{
+        width: 93%;
+        display: flex;
+        justify-content: flex-end;
     }
 }
