@@ -86,11 +86,7 @@ export default class SecurityRule extends Component {
                             <div className='form-group-body'>
                                 <div className="filterCondition">
                                     <label>Filter Condition</label>
-<<<<<<< HEAD
-                                    <input className='form-control' value={name} placeholder="Enter Filter Condition" />
-=======
                                     <input className='form-control' placeholder="Enter Filter Condition" />
->>>>>>> 1f4ef2bdb9e9501dac6a184d3246dd1b32984906
                                 </div>
                                 <br />
                                 <div className="scriptInput">
