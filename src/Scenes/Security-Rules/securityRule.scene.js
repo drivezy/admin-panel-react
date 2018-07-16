@@ -8,6 +8,7 @@ import { ROUTE_URL } from './../../Constants/global.constants';
 
 import SelectBox from './../../Components/Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import AceEditor from 'react-ace';
+import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 
 import './securityRule.scene.css';
 
@@ -86,7 +87,7 @@ export default class SecurityRule extends Component {
                             <div className='form-group-body'>
                                 <div className="filterCondition">
                                     <label>Filter Condition</label>
-                                    <input className='form-control' value={name} placeholder="Enter Filter Condition" />
+                                    <input className='form-control' placeholder="Enter Filter Condition" />
                                 </div>
                                 <br />
                                 <div className="scriptInput">
@@ -116,6 +117,22 @@ export default class SecurityRule extends Component {
                                 <br />
                                 <div className="Roles">
                                     <label>Roles</label>
+                                    <br />
+                                    <button className="btn btn-sm btn-secondary" onClick={(e) => {
+                                        e.preventDefault();
+                                        ModalManager.openModal({
+                                            headerText: 'Roles',
+                                            modalBody: () => <div>
+                                                <SelectBox
+                                                    onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'selectValue' })}
+                                                    value={selectedOption}
+                                                    field="Name"
+                                                    placeholder="Select Roles"
+                                                    getOptions={(input) => this.getInputRecord({ input, parentIndex, childIndex })}
+                                                />
+                                            </div>
+                                        })
+                                    }}><i className="fa fa-plus"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -129,7 +146,7 @@ export default class SecurityRule extends Component {
                         </div>
                     </form>
                 </div>
-            </div>
+            </div >
         )
     }
 }
