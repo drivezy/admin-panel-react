@@ -11,6 +11,8 @@ import { GetColumnDetail } from './../../Utils/panel.utils';
 import { ClientScriptEndPoint } from './../../Constants/api.constants';
 import { ROUTE_URL } from './../../Constants/global.constants';
 
+import './client-script.scene.css';
+
 export default class ClientScript extends Component {
     constructor(props) {
         super(props);
@@ -76,39 +78,65 @@ export default class ClientScript extends Component {
                 </div> */}
 
                 <div className='body'>
-                    <form name='securityRule'>
+                    <form name='securityRule' className="clientScript">
                         <div className='form-row'>
                             <div className='form-group'>
-                                <div className="nameInput">
+                                <div className="nameInput inputField">
                                     <label>Name</label>
                                     <input className='form-control' value={name} disabled />
                                 </div>
-                                <div className="columnInput">
+                                <div className="columnInput inputField">
                                     <label>Column</label>
-                                    <SelectBox name="form-field-name" onChange={this.handleChange} value={selectedOption} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                                    <SelectBox isClearable={false} name="form-field-name" onChange={this.handleChange} value={selectedOption} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
                                 </div>
                             </div>
                         </div>
                         <div className='form-row'>
-                            <div className='form-group-body'>
+                            <div className='form-group'>
+                                <div className="typeInput inputField">
+                                    <label>Type</label>
+                                    <input className='form-control' />
+                                </div>
+                                <div className="activeInput inputField">
+                                    <label>Active</label>
+                                    <input type="checkbox" name="active" value="true"></input>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className='form-row'>
+                            <div className='form-group'>
+                                <div className="descriptionInput">
+                                    <label>Description</label>
+                                    <textarea rows="3" className="description" />
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                        <div className='form-row'>
+                            <div className='form-group'>
                                 {
                                     IsObjectHaveKeys(scriptPayload) &&
                                     <div className="filterCondition">
                                         <label>Script</label>
-                                        <ScriptInput
+                                        {/* <ScriptInput
                                             value={scriptObj.id}
                                             payload={scriptPayload}
                                             column={{ name: 'script' }}
                                             onChange={this.scriptOnChange}
-                                        />
+                                        /> */}
                                     </div>
                                 }
-
-                                <div className="columnInput">
-                                    <label>Column</label>
-                                    <SelectBox name="form-field-name" onChange={this.handleChange} value={selectedOption} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
-                                </div>
                             </div>
+                        </div>
+                        <div className="actions">
+                            <button className="btn btn-info" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
+                                Cancel
+                                    </button>
+                            <button className="btn btn-success" onClick={this.submit} style={{ margin: '8px' }}>
+                                Save
+                                    </button>
                         </div>
                     </form>
                 </div>
