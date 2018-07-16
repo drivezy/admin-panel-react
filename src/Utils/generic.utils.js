@@ -364,7 +364,7 @@ export function GetPreSelectedMethods() {
     }
 
 
-    methods.redirect = ({ action, listingRow, history, genericData }) => {
+    methods.redirectGeneric = ({ action, listingRow, history, genericData }) => {
         let url = CreateUrl({ url: action.parameter, obj: listingRow });
         // var urlParams;
         // var userQuery = 0;
