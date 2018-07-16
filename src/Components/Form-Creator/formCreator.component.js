@@ -166,7 +166,9 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
 
         // Script Input
         [COLUMN_TYPE.SCRIPT]: <ScriptInput
-            value={values[column.name]} columns={props.payload.dictionary} payload={props.payload} column={column} name={column.name}
+            value={values[column.name]} 
+            // columns={props.payload.dictionary}
+             payload={props.payload} column={column} name={column.name}
             // onChange={props.setFieldValue}
             onChange={(value, ...args) => {
                 const { payload } = props;
@@ -176,7 +178,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
 
                 submitGenericForm({ payload, newValues: { [column.name]: value } });
             }}
-            model={values[column.index]}
+            // model={values[column.index]}
         />,
         // Script Input Ends
 
