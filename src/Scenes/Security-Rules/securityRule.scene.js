@@ -5,6 +5,8 @@ import { Get, Put } from './../../Utils/http.utils';
 import { SecurityRuleEndPoint } from './../../Constants/api.constants';
 import { ROUTE_URL } from './../../Constants/global.constants';
 
+import SelectBox from './../../Components/Forms/Components/Select-Box/selectBoxForGenericForm.component';
+
 import './securityRule.scene.css';
 
 export default class SecurityRule extends Component {
@@ -18,7 +20,7 @@ export default class SecurityRule extends Component {
 
     }
 
-    componentDidMount() { 
+    componentDidMount() {
         this.getSecurityDetail();
     }
 
@@ -36,6 +38,7 @@ export default class SecurityRule extends Component {
         console.log(this.state);
         const { name = '', script: scriptObj = {} } = this.state.rule;
         const { script } = scriptObj;
+        const { selectedOption } = this.state;
 
         return (
             <div className='security-rule-container'>
@@ -49,9 +52,26 @@ export default class SecurityRule extends Component {
                     <form name='securityRule'>
                         <div className='form-row'>
                             <div className='form-group'>
-                                <label>Name</label>
-
-                                <input className='form-control' value={name} disabled />
+                                <div className="nameInput">
+                                    <label>Name</label>
+                                    <input className='form-control' value={name} disabled />
+                                </div>
+                                <div className="columnInput">
+                                    <label>Column</label>
+                                    <SelectBox name="form-field-name" onChange={this.handleChange} value={selectedOption} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className='form-row'>
+                            <div className='form-group-body'>
+                                <div className="filterCondition">
+                                    <label>Filter Condition</label>
+                                    <input className='form-control' value={name} placeholder="Enter Filter Condition"/>
+                                </div>
+                                <div className="columnInput">
+                                    <label>Column</label>
+                                    <SelectBox name="form-field-name" onChange={this.handleChange} value={selectedOption} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                                </div>
                             </div>
                         </div>
                     </form>

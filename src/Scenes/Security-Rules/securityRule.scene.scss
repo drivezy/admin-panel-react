@@ -1,5 +1,13 @@
-.form-group {
+.body{
+    padding: 50px;
+    background-color: #333;
+    .form-group {
     padding: 3px 30px 3px 30px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    background: #555;
     label {
         font-weight: bold;
         font-weight: bold;
@@ -21,5 +29,21 @@
         &::placeholder{
             color: #757575;
         }
+    }
+    .form-group{
+        .nameInput{
+            width: 10%;
+            float: left;
+        }
+        .columnInput{
+            float: right;
+            width: 15%;
+        }
+    }
+}
+    .form-group-body{
+        padding: 3px 30px 3px 30px;
+    width: 100%;
+    background: #555;
     }
 }
