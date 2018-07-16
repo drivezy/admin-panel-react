@@ -68,7 +68,7 @@ export default class SecurityRule extends Component {
                 </div> */}
 
                 <div className='body'>
-                    <form name='securityRule'>
+                    <form name='securityRule' className="securityRule">
                         <div className='form-row'>
                             <div className='form-group'>
                                 <div className="nameInput">
