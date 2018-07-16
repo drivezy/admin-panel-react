@@ -11,7 +11,7 @@ import { GetColumnDetail } from './../../Utils/panel.utils';
 import { ClientScriptEndPoint } from './../../Constants/api.constants';
 import { ROUTE_URL } from './../../Constants/global.constants';
 
-import './client-script.scene.css';
+import './clientScript.scene.css';
 
 export default class ClientScript extends Component {
     constructor(props) {
