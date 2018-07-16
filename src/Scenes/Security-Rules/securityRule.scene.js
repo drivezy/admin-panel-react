@@ -112,7 +112,13 @@ export default class SecurityRule extends Component {
         }
         const { id: roleId } = role;
 
-        await Post({ url: 'api/record/roleAssignment', body: { source_id, source_type, role_id: roleId }, urlPrefix: ROUTE_URL });
+        const result = await Post({ url: 'api/record/roleAssignment', body: { source_id, source_type, role_id: roleId }, urlPrefix: ROUTE_URL });
+        if (result.success) {
+            rule.roles.push(result.response);
+            this.setState({ rule });
+            ToastNotifications.success({ title: 'Successfully added role' });
+            ModalManager.closeModal();
+        }
     }
 
     setRuleValue = (value, field) => {
