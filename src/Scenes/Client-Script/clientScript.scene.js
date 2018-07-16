@@ -120,14 +120,54 @@ export default class ClientScript extends Component {
                                     IsObjectHaveKeys(scriptPayload) &&
                                     <div className="filterCondition col">
                                         <label>Script</label>
-                                        <ScriptInput
-                                            inline
-                                            script={scriptObj.script}
-                                            value={scriptObj.id}
-                                            payload={scriptPayload}
-                                            column={{ name: 'script' }}
-                                            onChange={this.scriptOnChange}
-                                        />
+                                        <div className="script-wrapper">
+                                            <div className="script-controls">
+                                                <button className="control-group btn btn-sm scriptAction">
+                                                    <i class="fa fa-save"></i>
+                                                </button>
+                                                <button className="control-group btn btn-sm scriptAction">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                                <button className="control-group btn btn-sm scriptAction">
+                                                    <i class="fa fa-align-left"></i>
+                                                </button>
+                                                <button className="control-group btn btn-sm scriptAction">
+                                                    <i class="fa fa-align-center"></i>
+                                                </button>
+                                                <button className="control-group btn btn-sm scriptAction">
+                                                    <i class="fa fa-align-right"></i>
+                                                </button>
+                                                <button className="control-group btn btn-sm scriptAction">
+                                                    <i class="fa fa-align-justify"></i>
+                                                </button>
+                                                <button className="control-group btn btn-sm scriptAction">
+                                                    <i class="fa fa-question-circle"></i>
+                                                </button>
+                                                <button className="control-group btn btn-sm scriptAction">
+                                                    <i class="fa fa-bug"></i>
+                                                </button>
+                                                <button className="control-group btn btn-sm scriptAction">
+                                                    <i class="fa fa-search-minus"></i>
+                                                </button>
+                                                <button className="control-group btn btn-sm scriptAction">
+                                                    <i class="fa fa-search-plus"></i>
+                                                </button>
+                                                <button className="control-group btn btn-sm scriptAction">
+                                                    <i class="fa fa-comment"></i>
+                                                </button>
+                                                <button className="control-group btn btn-sm scriptAction">
+                                                    <i class="fa fa-download"></i>
+                                                </button>
+                                            </div>
+                                            <ScriptInput
+                                                inline
+                                                script={scriptObj.script}
+                                                value={scriptObj.id}
+                                                payload={scriptPayload}
+                                                column={{ name: 'script' }}
+                                                onChange={this.scriptOnChange}
+                                            />
+                                        </div>
                                     </div>
                                 }
                             </div>
