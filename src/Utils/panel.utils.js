@@ -1,4 +1,4 @@
-import { BuildUrlForGetCall } from './common.utils';
+import { BuildUrlForGetCall, SelectFromOptions } from './common.utils';
 import { Get } from './http.utils';
 
 import { ColumnsEndPoint } from './../Constants/api.constants';
@@ -10,4 +10,17 @@ export function GetColumnDetail({ sourceId, sourceType }) {
     const url = BuildUrlForGetCall(ColumnsEndPoint, apiParams);
     return Get({ url, urlPrefix: ROUTE_URL });
 
+}
+
+export function ExtractColumnName(name, columns) {
+    if (!name) {
+        return '';
+    }
+
+    const splittedNames = name.split('.');
+    const columnName = splittedNames[1];
+    if (columnName) {
+        return SelectFromOptions(columns,columnName, 'name');
+    }
+    return {};
 }
