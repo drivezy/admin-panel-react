@@ -77,7 +77,6 @@ export default class ModalWrapper extends Component {
                                     :
                                     modal.headerText ?
                                         <ModalHeader toggle={() => {
-                                            console.log(modal, key);
                                             this.closeModal(modal, key)
 
 
