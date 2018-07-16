@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { GetUrlParams, Location } from './../../Utils/location.utils';
 import { Get, Put } from './../../Utils/http.utils';
+import { BuildUrlForGetCall } from '../../Utils/common.utils';
 
-import { SecurityRuleEndPoint } from './../../Constants/api.constants';
+import { SecurityRuleEndPoint, ColumnsEndPoint } from './../../Constants/api.constants';
 import { ROUTE_URL } from './../../Constants/global.constants';
 
 import './securityRule.scene.css';
@@ -18,17 +19,34 @@ export default class SecurityRule extends Component {
 
     }
 
-    componentDidMount() { 
+    componentDidMount() {
         this.getSecurityDetail();
     }
 
     getSecurityDetail = async () => {
         const { id } = this.state.params;
-        const url = SecurityRuleEndPoint + id;
+        const apiParams = { includes: 'roles,script' };
+
+        let url = SecurityRuleEndPoint + id;
+        url = BuildUrlForGetCall(url, apiParams);
         const result = await Get({ url, urlPrefix: ROUTE_URL });
         if (result.success && result.response) {
             const { response } = result;
-            this.setState({ rule: response });
+            // this.setState({ rule: response });
+            this.state.rule = response;
+            this.getColumnDetail();
+        }
+    }
+
+    getColumnDetail = async () => {
+        const { rule } = this.state;
+        const { source_type: sourceType, source_id: sourceId } = rule;
+        const apiParams = { query: `source_type='${sourceType}' and source_id=${sourceId}` }
+        const url = BuildUrlForGetCall(ColumnsEndPoint, apiParams);
+        const result = await Get({ url, urlPrefix: ROUTE_URL });
+        if (result.success) {
+            const { response } = result;
+            this.setState({ columns: response });
         }
     }
 
