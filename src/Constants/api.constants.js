@@ -22,4 +22,6 @@ export const ListPreference = 'listPreference';
 export const FormPreferenceEndPoint = 'formPreference';
 
 export const FormDetailEndPoint = 'formDetails';
+
+export const SecurityRuleEndPoint = 'api/record/securityRule/';
 /** Private routes ends here */
