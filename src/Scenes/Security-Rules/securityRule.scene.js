@@ -182,13 +182,14 @@ export default class SecurityRule extends Component {
                     <form name='securityRule' className="clientScript">
                         <div className='form-row'>
                             <div className='form-group'>
-                                <div className="nameInput inputField">
+                                <div className="nameInput inputField col">
                                     <label>Name</label>
-                                    <input className='form-control' value={name} disabled />
+                                    <input className='form-control' value={name} onChange={() => { }} disabled />
                                 </div>
-                                <div className="columnInput inputField">
+                                <div className="columnInput inputField col">
                                     <label>Column</label>
-                                    <SelectBox isClearable={false} name="form-field-name" onChange={this.handleChange} value={name} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                                    <SelectBox name="form-field-name" onChange={value => this.setState({ selectedColumn: value })} value={selectedColumn} field="name" options={columns} />
+
                                 </div>
                             </div>
                         </div>
@@ -196,24 +197,31 @@ export default class SecurityRule extends Component {
                             <div className='form-group'>
                                 <div className="descriptionInput">
                                     <label>Filter Condition</label>
-                                    <input className='form-control' />
+                                    <input className='form-control'
+                                        value={rule.filter_condition}
+                                        onChange={e => this.setRuleValue(e.target.value, 'filter_condition')}
+                                        placeholder="Enter Filter Condition"
+                                    />
+
                                 </div>
                             </div>
                         </div>
-                        
+
 
                         <div className='form-row'>
                             <div className='form-group'>
                                 {
                                     IsObjectHaveKeys(scriptPayload) &&
-                                    <div className="filterCondition">
+                                    <div className="filterCondition col">
                                         <label>Script</label>
-                                        {/* <ScriptInput
+                                        <ScriptInput
+                                            inline
+                                            script={scriptObj.script}
                                             value={scriptObj.id}
                                             payload={scriptPayload}
                                             column={{ name: 'script' }}
                                             onChange={this.scriptOnChange}
-                                        /> */}
+                                        />
                                     </div>
                                 }
                             </div>
@@ -223,40 +231,60 @@ export default class SecurityRule extends Component {
                             <div className='form-group'>
                                 <div className="roles">
                                     <label>Roles</label>
-                                    {
-                                        rule.roles ? 
-                                        <div className="roles-body">
-                                        {
-                                            rule.roles.map((role, key) => (
-                                                
-                                                    <span className="role" key={key}>
-                                                        <span className="role-name">
-                                                            {role.id}
-                                                        </span>
-                                                        <span>
-                                                            <i className="fa fa-times" aria-hidden="true"></i>
-                                                        </span>
-                                                    </span>
+                                    <br />
+                                    <button className="btn btn-sm btn-secondary" onClick={(e) => {
+                                        e.preventDefault();
+                                        ModalManager.openModal({
+                                            headerText: 'Roles',
+                                            modalBody: this.renderAddRoleComponent
+                                            // modalBody: () => <div>
+                                            //     {/* <SelectBox
+                                            //         onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'selectValue' })}
+                                            //         value={selectedOption}
+                                            //         field="Name"
+                                            //         placeholder="Select Roles"
+                                            //         getOptions={(input) => this.getInputRecord({ input, parentIndex, childIndex })}
+                                            //     /> */}
+                                            // </div>
+                                        })
+                                    }}>
+                                        <i className="fa fa-plus"></i>
+                                    </button>
 
-                                            ))
-                                        }
-                                        </div> : <div>Loading Roles</div>
+                                    {
+                                        rule.roles ?
+                                            <div className="roles-body">
+                                                {
+                                                    rule.roles.map((role, key) => (
+
+                                                        <span className="role" key={key}>
+                                                            <span className="role-name">
+                                                                {role.id}
+                                                            </span>
+                                                            <span>
+                                                                <i className="fa fa-times" aria-hidden="true"></i>
+                                                            </span>
+                                                        </span>
+
+                                                    ))
+                                                }
+                                            </div> : <div>Loading Roles</div>
                                     }
                                     {console.log(rule.roles)}
-                                    
+
                                 </div>
                             </div>
                         </div>
 
-                        <div className="actions">
-                            <button className="btn btn-info" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
-                                Cancel
-                                    </button>
-                            <button className="btn btn-success" onClick={this.submit} style={{ margin: '8px' }}>
-                                Save
-                                    </button>
-                        </div>
                     </form>
+                    <div className="actions">
+                        <button className="btn btn-info" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
+                            Cancel
+                                    </button>
+                        <button className="btn btn-success" onClick={this.saveRule} style={{ margin: '8px' }}>
+                            Save
+                                    </button>
+                    </div>
                 </div>
             </div>
 
