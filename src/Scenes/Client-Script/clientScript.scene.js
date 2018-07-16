@@ -87,7 +87,7 @@ export default class ClientScript extends Component {
                                 </div>
                                 <div className="columnInput inputField">
                                     <label>Column</label>
-                                    <SelectBox isClearable={false} name="form-field-name" onChange={this.handleChange} value={selectedOption} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                                    <SelectBox isClearable={false} name="form-field-name" onChange={this.handleChange} value={name} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
                                 </div>
                             </div>
                         </div>
