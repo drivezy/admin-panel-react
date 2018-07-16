@@ -36,7 +36,7 @@ export default class ClientScript extends Component {
             // this.setState({ rule: response });
 
             const scriptPayload = {
-                // method: 'edit',
+                method: 'edit',
                 relationship: { name: response.name },
                 modelHash: response.source_type,
                 data: { id: response.id }
@@ -118,14 +118,16 @@ export default class ClientScript extends Component {
                             <div className='form-group'>
                                 {
                                     IsObjectHaveKeys(scriptPayload) &&
-                                    <div className="filterCondition">
+                                    <div className="filterCondition col">
                                         <label>Script</label>
-                                        {/* <ScriptInput
+                                        <ScriptInput
+                                            inline
+                                            script={scriptObj.script}
                                             value={scriptObj.id}
                                             payload={scriptPayload}
                                             column={{ name: 'script' }}
                                             onChange={this.scriptOnChange}
-                                        /> */}
+                                        />
                                     </div>
                                 }
                             </div>

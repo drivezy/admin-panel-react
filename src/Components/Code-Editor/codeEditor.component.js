@@ -34,9 +34,11 @@ export default class CodeEditor extends Component {
         this.state = {
             isModalVisible: true,
             mode,
-            value: props.value || '',
-            scriptId: props.scriptId || ''
+            value: props.script || '',
+            scriptId: props.scriptId || '',
         }
+
+
     }
 
     UNSAFE_componentWillReceivePropscomponentWillReceiveProps(nextProps) {
@@ -201,7 +203,6 @@ export default class CodeEditor extends Component {
     onSubmit = async () => {
 
         const { payload, column } = this.props;
-
         // const params = {
         //     script: this.state.value,
         //     script_type: '',
@@ -238,32 +239,42 @@ export default class CodeEditor extends Component {
     }
 
     render() {
-        const { buttonComponent } = this.props;
+        const { buttonComponent, column, payload, inline } = this.props;
         return (
             <div>
-                <div className="col inline">
-                    {
-                        buttonComponent ? // @TODO trigger component can be sent from parent component, as of now its not fully functional
-                            // buttonComponent()
-                            <Button onClick={(e) => this.openEditor(e)} color="danger">Edit Script</Button>
-                            :
-                            <Button onClick={(e) => this.openEditor(e)} color="primary">{this.state.scriptId ? 'Edit' : 'Add'} Script</Button>
-                    }
-                </div>
+                {
+                    inline ?
+                        <div>
+                            {this.editorComponent()}
+                        </div>
+                        :
+                        <div>
+                            <div className="col inline">
+                                {
+                                    buttonComponent ? // @TODO trigger component can be sent from parent component, as of now its not fully functional
+                                        // buttonComponent()
+                                        <Button onClick={(e) => this.openEditor(e)} color="danger">Edit Script</Button>
+                                        :
+                                        <Button onClick={(e) => this.openEditor(e)} color="primary">{this.state.scriptId ? 'Edit' : 'Add'} Script</Button>
+                                }
+                            </div>
 
-                <div className="col inline">
-                    {
-                        this.state.scriptId ?
-                            <button className="btn btn-secondary" onClick={() => { this.setState({ scriptId: null }); this.props.onSubmit(null, {})}}>
-                                Remove Script
-                            </button>
-                            :
-                            null
-                    }
+                            <div className="col inline">
+                                {
+                                    this.state.scriptId ?
+                                        <button className="btn btn-secondary" onClick={() => { this.setState({ scriptId: null }); this.props.onSubmit(null, {}) }}>
+                                            Remove Script
+                                </button>
+                                        :
+                                        null
+                                }
 
-                </div>
+                            </div>
 
-                {this.modalElement()}
+                            {this.modalElement()}
+                        </div>
+                }
+
             </div>
         )
     }
