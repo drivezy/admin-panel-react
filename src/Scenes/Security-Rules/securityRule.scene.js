@@ -122,13 +122,13 @@ export default class SecurityRule extends Component {
                                         ModalManager.openModal({
                                             headerText: 'Roles',
                                             modalBody: () => <div>
-                                                <SelectBox
+                                                {/* <SelectBox
                                                     onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'selectValue' })}
                                                     value={selectedOption}
                                                     field="Name"
                                                     placeholder="Select Roles"
                                                     getOptions={(input) => this.getInputRecord({ input, parentIndex, childIndex })}
-                                                />
+                                                /> */}
                                             </div>
                                         })
                                     }}><i className="fa fa-plus"></i></button>

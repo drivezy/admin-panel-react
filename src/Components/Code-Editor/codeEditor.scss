@@ -19,7 +19,6 @@
                 // background-color: #1f2533;
                 background-color: #1f2633;
                 color: #fff;
-                z-index: 20;
             }
         }
         span{
@@ -33,5 +32,7 @@
     }
     .mode-selection {
         flex-basis: 15%;
+        position: relative;
+        z-index: 10;
     }
 }
