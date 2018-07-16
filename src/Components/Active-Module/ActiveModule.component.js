@@ -32,7 +32,6 @@ export default class ActiveModule extends Component {
     }
 
     toggledMenu = (module) => {
-        console.log(module);
         this.setState({ module: module, menus: module.menus, collapsed: false });
     }
 
@@ -76,7 +75,12 @@ export default class ActiveModule extends Component {
                                         {
                                             menus.map((menu, key) => (
                                                 (menu.visible == 1) && (<Link onClick={() => this.clickedValue(menu)} to={'/' + menu.url} className="menu-list" key={key}>
-                                                    {menu.name}
+                                                    <span className="menu-icon">
+                                                        <i className={`menu-icon fa ${menu.image ? menu.image : 'fa-flickr'}`}></i>
+                                                    </span>
+                                                    <div className="item-label `${visible ? 'menu-visible' : 'menu-hide'}`">
+                                                        {menu.name}
+                                                    </div>
                                                 </Link>)
                                             ))
                                         }

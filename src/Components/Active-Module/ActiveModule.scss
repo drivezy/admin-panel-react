@@ -102,6 +102,10 @@
                 }
                 .panel-body {
                     padding: 5px;
+                    .menu-icon{
+                        float: left;
+                        padding: 1px 5px 0 0;
+                    }
                     .menu-list {
                         display: block;
                         cursor: pointer;

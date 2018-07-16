@@ -140,22 +140,25 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
 export function CreateFinalColumns(columns, selectedColumns, relationship) {
     const finalColumnDefinition = [];
     let splitEnabled = false;
-    let defaultColumns = false;
+    // let defaultColumns = false;
+    console.log(columns);
+    console.log(selectedColumns);
+
     // const selectedColumns = GetSelectedColumnDefinition(layout);
 
-    if (selectedColumns.length == 0) {
-            for (const i in columns) {
-                selectedColumns.push({
-                    object: columns[i].parent, column: columns[i].name, headingCollapsed: true, heading: "", index: i
-                });
-                if(selectedColumns.length <6 ){
-                    continue;
-                }
-                else
-                 break;
-            }
-        defaultColumns = true;
-    }
+    // if (selectedColumns.length == 0) {
+    //         for (const i in columns) {
+    //             selectedColumns.push({
+    //                 object: columns[i].parent, column: columns[i].name, headingCollapsed: true, heading: "", index: i
+    //             });
+    //             if(selectedColumns.length <6 ){
+    //                 continue;
+    //             }
+    //             else
+    //              break;
+    //         }
+    //     defaultColumns = true;
+    // }
     
     for (const i in selectedColumns) {
         const selected = selectedColumns[i];
@@ -169,7 +172,7 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
                 // if (selected.filter) {
                 finalColumnDefinition[i].filter = selected.filter;
                 // }
-                finalColumnDefinition[i].defaultLayout = defaultColumns;
+                // finalColumnDefinition[i].defaultLayout = defaultColumns;
 
                 const relationIndex = dict.parent;
 
