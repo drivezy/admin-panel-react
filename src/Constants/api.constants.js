@@ -24,4 +24,5 @@ export const FormPreferenceEndPoint = 'formPreference';
 export const FormDetailEndPoint = 'formDetails';
 
 export const SecurityRuleEndPoint = 'api/record/securityRule/';
+export const ColumnsEndPoint = 'api/record/column';
 /** Private routes ends here */
