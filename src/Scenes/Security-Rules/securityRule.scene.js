@@ -8,6 +8,8 @@ import { SecurityRuleEndPoint } from './../../Constants/api.constants';
 import { ROUTE_URL } from './../../Constants/global.constants';
 
 import SelectBox from './../../Components/Forms/Components/Select-Box/selectBoxForGenericForm.component';
+import AceEditor from 'react-ace';
+import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 
 import './securityRule.scene.css';
 
@@ -66,7 +68,7 @@ export default class SecurityRule extends Component {
                 </div> */}
 
                 <div className='body'>
-                    <form name='securityRule'>
+                    <form name='securityRule' className="securityRule">
                         <div className='form-row'>
                             <div className='form-group'>
                                 <div className="nameInput">
@@ -79,22 +81,75 @@ export default class SecurityRule extends Component {
                                 </div>
                             </div>
                         </div>
+
                         <div className='form-row'>
                             <div className='form-group-body'>
                                 <div className="filterCondition">
                                     <label>Filter Condition</label>
+<<<<<<< HEAD
                                     <input className='form-control' value={name} placeholder="Enter Filter Condition" />
+=======
+                                    <input className='form-control' placeholder="Enter Filter Condition" />
+>>>>>>> 1f4ef2bdb9e9501dac6a184d3246dd1b32984906
                                 </div>
-                                <div className="columnInput">
-                                    <label>Column</label>
-                                    <SelectBox name="form-field-name" onChange={this.handleChange} value={selectedOption} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                                <br />
+                                <div className="scriptInput">
+                                    <label>Script</label>
+                                    <AceEditor
+                                        // mode={mode.value}
+                                        theme="monokai"
+                                        name="Drivezy-Code-editor"
+                                        width='100%'
+                                        height='85vh'
+                                        // onLoad={this.onLoad}
+                                        onChange={this.onChange}
+                                        fontSize={14}
+                                        showPrintMargin={true}
+                                        showGutter={true}
+                                        highlightActiveLine={true}
+                                        // value={value}
+                                        setOptions={{
+                                            enableBasicAutocompletion: true,
+                                            enableLiveAutocompletion: true,
+                                            enableSnippets: false,
+                                            showLineNumbers: true,
+                                            tabSize: 2,
+                                        }}
+                                    />
+                                </div>
+                                <br />
+                                <div className="Roles">
+                                    <label>Roles</label>
+                                    <br />
+                                    <button className="btn btn-sm btn-secondary" onClick={(e) => {
+                                        e.preventDefault();
+                                        ModalManager.openModal({
+                                            headerText: 'Roles',
+                                            modalBody: () => <div>
+                                                <SelectBox
+                                                    onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'selectValue' })}
+                                                    value={selectedOption}
+                                                    field="Name"
+                                                    placeholder="Select Roles"
+                                                    getOptions={(input) => this.getInputRecord({ input, parentIndex, childIndex })}
+                                                />
+                                            </div>
+                                        })
+                                    }}><i className="fa fa-plus"></i></button>
                                 </div>
                             </div>
                         </div>
+                        <div className="actions">
+                            <button className="btn btn-info" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
+                                Cancel
+                                    </button>
+                            <button className="btn btn-success" onClick={this.submit} style={{ margin: '8px' }}>
+                                Save
+                                    </button>
+                        </div>
                     </form>
                 </div>
-            </div>
-
+            </div >
         )
     }
 }
