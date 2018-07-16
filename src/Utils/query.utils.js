@@ -113,6 +113,7 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
     }
 
     return finalColumnDefinition;
+    
 }
 
 /**

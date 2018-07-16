@@ -11,7 +11,7 @@ import ListingPagination from './../../Components/Listing-Pagination/ListingPagi
 import { GetUrlParams, Location } from './../../Utils/location.utils';
 import { QueryData } from './../../Utils/query.utils';
 import { GetPreferences } from './../../Utils/preference.utils';
-import { BuildUrlForGetCall } from './../../Utils/common.utils';
+import { BuildUrlForGetCall, IsObjectHaveKeys } from './../../Utils/common.utils';
 import { Post } from './../../Utils/http.utils';
 import { GetColumnsForListing, CreateFinalColumns, GetDefaultOptionsForQuery } from './../../Utils/query.utils';
 
@@ -37,14 +37,20 @@ export default class GenericQueryDetail extends Component {
         this.getQueryParamsData();
     }
 
+
     UNSAFE_componentWillReceiveProps(nextProps) {
-        const newProps = GetUrlParams(nextProps);
-        this.state.params = newProps.params;
-        this.state.queryString = newProps.queryString;
-        this.setState({currentPage: this.state.queryString.page ? this.state.queryString.page : 1 , limit: this.state.queryString.limit ? this.state.queryString.limit : 20})
+        if (IsObjectHaveKeys(this.state.queryParamsData)) {
+
+
+            const newProps = GetUrlParams(nextProps);
+            this.state.params = newProps.params;
+            this.state.queryString = newProps.queryString;
+            this.setState({ currentPage: this.state.queryString.page ? this.state.queryString.page : 1, limit: this.state.queryString.limit ? this.state.queryString.limit : 20 })
+            this.getDataForListing();
+        }
     }
 
-    getQueryParamsData = async () => {
+    getQueryParamsData = async () => {              //Get all the data 
         const { queryId } = this.props.match.params;
         const result = await QueryData(queryId);
         if (result.success) {
@@ -62,6 +68,7 @@ export default class GenericQueryDetail extends Component {
 
             console.log(preference);
 
+            this.setState(preference);
             this.setState({ queryParamsData, preference });
 
             this.getDataForListing();
@@ -70,7 +77,9 @@ export default class GenericQueryDetail extends Component {
 
     getDataForListing = async () => {
         const { queryParamsData, preference, params } = this.state;
-        let options = GetDefaultOptionsForQuery();
+
+        // let options = GetDefaultOptionsForQuery();
+        let options = { includes: '', order: '1,asc', query: '', limit: this.state.limit, page: this.state.currentPage, dictionary: false, stats: true }
 
         const url = BuildUrlForGetCall("getReportData", options);
 
@@ -84,7 +93,7 @@ export default class GenericQueryDetail extends Component {
             params.dictionary = result.dictionary ? result.dictionary : params.dictionary;
             params.includes = "";
             params.starter = queryParamsData.short_name;
-        
+
 
             let tempColumns = GetColumnsForListing(params);
 
@@ -94,18 +103,14 @@ export default class GenericQueryDetail extends Component {
                 finalColumns = CreateFinalColumns(tempColumns, JSON.parse(preference[0].value));
             }
 
-            this.setState({ stats,  params, columns: tempColumns, finalColumns, stats });
+            this.setState({ stats, params, columns: tempColumns, finalColumns, stats });
 
             this.gatherData(result.response);
 
             // return Get({ url, queryString: { page } });
             console.log(GetUrlParams(this.props));
-           
 
-            
         }
-
-
     }
 
     gatherData = () => {
@@ -217,9 +222,6 @@ export default class GenericQueryDetail extends Component {
                             />
                             : <div className="noListMessage">Looks like no columns are selected , Configure it by pressing the settings icon.</div>
                     }
-
-
-
                 </div>
 
             </div>
