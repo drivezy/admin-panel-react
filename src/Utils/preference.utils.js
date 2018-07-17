@@ -66,7 +66,11 @@ function setValues(values) {
     preferences = values.response;
 }
 
-
+/**
+ * Returns model hash value against given source and vice versa when reverse is true
+ * @param  {string} source
+ * @param  {boolean} reverse=false
+ */
 export function GetSourceMorphMap(source, reverse = false) {
     let sourceMorph = {
         menu: 'db8a887c48306740a6baa49e7b73b8ae',
