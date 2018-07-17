@@ -64,7 +64,7 @@ export default class SecurityRule extends Component {
         const { rule, selectedColumn } = this.state;
         const { source_type: sourceType, source_id: sourceId, name } = rule;
 
-        if(selectedColumn) { 
+        if (selectedColumn) {
             return;
         }
         const result = await GetColumnDetail({ sourceType, sourceId });
@@ -111,6 +111,7 @@ export default class SecurityRule extends Component {
         const result = await Put({ url, body, urlPrefix: ROUTE_URL });
         if (result.success) {
             ToastNotifications.success({ title: 'Successfully updated' });
+            Location.back();
             this.ruleDataFetched(result);
         }
 

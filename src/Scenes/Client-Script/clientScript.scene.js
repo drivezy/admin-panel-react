@@ -85,6 +85,7 @@ export default class ClientScript extends Component {
         const result = await Put({ url, body, urlPrefix: ROUTE_URL });
         if (result.success) {
             ToastNotifications.success({ title: 'Successfully updated' });
+            Location.back();
             this.clientDataFetched(result);
         }
     }
