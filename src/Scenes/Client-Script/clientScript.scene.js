@@ -178,14 +178,16 @@ export default class ClientScript extends Component {
                                     IsObjectHaveKeys(scriptPayload) &&
                                     <div className="filterCondition col">
                                         <label>Script</label>
-                                        <ScriptInput
-                                            inline
-                                            script={scriptObj.script}
-                                            value={scriptObj.id}
-                                            payload={scriptPayload}
-                                            column={{ name: 'script' }}
-                                            onChange={this.saveClientScript}
-                                        />
+                                        <div className="script-wrapper">
+                                            <ScriptInput
+                                                inline
+                                                script={scriptObj.script}
+                                                value={scriptObj.id}
+                                                payload={scriptPayload}
+                                                column={{ name: 'script' }}
+                                                onChange={this.scriptOnChange}
+                                            />
+                                        </div>
                                     </div>
                                 }
                             </div>
