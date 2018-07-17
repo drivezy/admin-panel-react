@@ -66,6 +66,9 @@ export default class Sidenav extends Component {
                             {/* <span className="logo-container">
                                 <img src={require('./../../Assets/images/logo-main.png')} />
                             </span> */}
+                            <span className="logo-container">
+                                <img src={require('./../../Assets/images/logo-main.png')} />
+                            </span>
                             <span className="toggle-icon" onClick={() => this.toggleNav()}>
                                 <i className={`fa ${visible ? 'fa-chevron-left' : 'fa-chevron-down'}`}></i>
                             </span>
