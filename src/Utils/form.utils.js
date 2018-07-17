@@ -1,5 +1,6 @@
 import { IsObjectHaveKeys, BuildUrlForGetCall, IsUndefined } from './common.utils';
 import { StoreEvent } from './stateManager.utils';
+import { Get, Post, Delete, Put } from './http.utils';
 
 let self = {};
 let onChangeListeners = {};
@@ -32,6 +33,14 @@ export default class FormUtil {
             }
         }
 
+    }
+
+    static httpCall({ url, callback, extraParams, method = 'get', urlPrefix }) {
+        const methods = {
+            get: Get, post: Post, put: Put, delete: Delete
+        };
+
+        methods[method]({ url, callback, extraParams, urlPrefix });
     }
 
     // /**

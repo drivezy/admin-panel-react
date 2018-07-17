@@ -21,6 +21,9 @@
     }
     &.collapsed {
         width: 40px;
+        .logo-container{
+            display: none;
+        }
         .sidebar-menus {
             .menus {
                 // margin-top: 8px;

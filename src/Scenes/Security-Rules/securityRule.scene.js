@@ -7,7 +7,7 @@ import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 
 import ToastNotifications from '../../Utils/toast.utils';
 import { GetUrlParams, Location } from './../../Utils/location.utils';
-import { Get, Put, Post } from './../../Utils/http.utils';
+import { Get, Put, Post, Delete } from './../../Utils/http.utils';
 import { BuildUrlForGetCall, IsObjectHaveKeys } from '../../Utils/common.utils';
 import { GetColumnDetail, ExtractColumnName } from './../../Utils/panel.utils';
 
@@ -34,7 +34,7 @@ export default class SecurityRule extends Component {
 
     getSecurityDetail = async () => {
         const { id } = this.state.params;
-        const apiParams = { includes: 'roles,script' };
+        const apiParams = { includes: 'roles.role,script' };
 
         let url = SecurityRuleEndPoint + id;
         url = BuildUrlForGetCall(url, apiParams);
@@ -117,6 +117,21 @@ export default class SecurityRule extends Component {
 
     }
 
+    removeRole = async (id) => {
+        const { role, rule } = this.state;
+        const { source_id, source_type } = rule;
+
+        const result = await Delete({ url: `api/record/roleAssignment/${id}`, urlPrefix: ROUTE_URL });
+        if (result.success) {
+            ToastNotifications.success({ title: 'Successfully deleted role' });
+            if (!(Array.isArray(rule.roles) && rule.roles.length)) {
+                return;
+            }
+            rule.roles = rule.roles.filter(role => id != role.id);
+            this.setState({ rule });
+        }
+    }
+
     setRole = async () => {
         const { role, rule } = this.state;
         const { source_id, source_type } = rule;
@@ -197,14 +212,13 @@ export default class SecurityRule extends Component {
                     <form name='securityRule' className="clientScript">
                         <div className='form-row'>
                             <div className='form-group'>
-                                <div className="nameInput inputField col">
+                                <div className="nameInput inputField">
                                     <label>Name</label>
-                                    <input className='form-control' value={name} onChange={() => { }} disabled />
+                                    <input className='form-control' value={name} disabled />
                                 </div>
-                                <div className="columnInput inputField col">
+                                <div className="columnInput inputField">
                                     <label>Column</label>
                                     <SelectBox name="form-field-name" onChange={value => this.setState({ selectedColumn: value })} value={selectedColumn} field="name" options={columns} />
-
                                 </div>
                             </div>
                         </div>
@@ -212,11 +226,18 @@ export default class SecurityRule extends Component {
                             <div className='form-group'>
                                 <div className="descriptionInput">
                                     <label>Filter Condition</label>
-                                    <input className='form-control'
+                                    <textarea
+                                        placeholder='Enter Filter Condition'
+                                        rows="3"
+                                        value={rule.filter_condition}
+                                        onChange={e => this.setRuleValue(e.target.value, 'filter_condition')}
+                                        className="description"
+                                    />
+                                    {/* <input className='form-control'
                                         value={rule.filter_condition}
                                         onChange={e => this.setRuleValue(e.target.value, 'filter_condition')}
                                         placeholder="Enter Filter Condition"
-                                    />
+                                    /> */}
 
                                 </div>
                             </div>
@@ -245,26 +266,28 @@ export default class SecurityRule extends Component {
                         <div className='form-row'>
                             <div className='form-group'>
                                 <div className="roles">
-                                    <label>Roles</label>
-                                    <br />
-                                    <button className="btn btn-sm btn-secondary" onClick={(e) => {
-                                        e.preventDefault();
-                                        ModalManager.openModal({
-                                            headerText: 'Roles',
-                                            modalBody: this.renderAddRoleComponent
-                                            // modalBody: () => <div>
-                                            //     {/* <SelectBox
-                                            //         onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'selectValue' })}
-                                            //         value={selectedOption}
-                                            //         field="Name"
-                                            //         placeholder="Select Roles"
-                                            //         getOptions={(input) => this.getInputRecord({ input, parentIndex, childIndex })}
-                                            //     /> */}
-                                            // </div>
-                                        })
-                                    }}>
-                                        <i className="fa fa-plus"></i>
-                                    </button>
+                                    <div className="roles-header">
+                                        <label>Roles</label>
+                                        <br />
+                                        <button className="btn btn-sm btn-secondary" onClick={(e) => {
+                                            e.preventDefault();
+                                            ModalManager.openModal({
+                                                headerText: 'Roles',
+                                                modalBody: this.renderAddRoleComponent
+                                                // modalBody: () => <div>
+                                                //     {/* <SelectBox
+                                                //         onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'selectValue' })}
+                                                //         value={selectedOption}
+                                                //         field="Name"
+                                                //         placeholder="Select Roles"
+                                                //         getOptions={(input) => this.getInputRecord({ input, parentIndex, childIndex })}
+                                                //     /> */}
+                                                // </div>
+                                            })
+                                        }}>
+                                            <i className="fa fa-plus"></i>
+                                        </button>
+                                    </div>
 
                                     {
                                         rule.roles ?
@@ -272,14 +295,17 @@ export default class SecurityRule extends Component {
                                                 {
                                                     rule.roles.map((role, key) => (
 
-                                                        <span className="role" key={key}>
-                                                            <span className="role-name">
+                                                        <div className="role" key={key}>
+                                                            <div className="role-name">
                                                                 {role.id}
-                                                            </span>
-                                                            <span>
-                                                                <i className="fa fa-times" aria-hidden="true"></i>
-                                                            </span>
-                                                        </span>
+                                                            </div>
+                                                            <div className="role-action">
+                                                                <button className="btn btn-sm" onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    this.removeRole(role.id)
+                                                                }}><i className="fa fa-times" aria-hidden="true"></i></button>
+                                                            </div>
+                                                        </div>
 
                                                     ))
                                                 }
