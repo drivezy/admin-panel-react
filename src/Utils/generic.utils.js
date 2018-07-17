@@ -159,7 +159,7 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
     //         }
     //     defaultColumns = true;
     // }
-    
+
     for (const i in selectedColumns) {
         const selected = selectedColumns[i];
         if (!selected.split) {
@@ -370,7 +370,8 @@ export function GetPreSelectedMethods() {
         // var userQuery = 0;
 
         url = createQueryUrl(url, genericData.restrictQuery, genericData);
-        history.push(url);
+        // history.push(url);
+        Location.navigate({ url });
         // if (angular.isDefined(event)) {
         //     if (event.metaKey || event.ctrlKey) {
         //         window.open("#/" + url, "_blank");
