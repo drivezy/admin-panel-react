@@ -72,6 +72,12 @@ export default class ClientScript extends Component {
         if (scriptId) {
             body = { script_id: scriptId };
         } else {
+
+            const inlineScriptButton = document.getElementById('submit-script-inline');
+            if (inlineScriptButton && !inlineScriptButton.disabled) {
+                inlineScriptButton.click();
+            }
+
             body = {
                 description, name, active
             }
@@ -79,14 +85,18 @@ export default class ClientScript extends Component {
         const result = await Put({ url, body, urlPrefix: ROUTE_URL });
         if (result.success) {
             ToastNotifications.success({ title: 'Successfully updated' });
+            Location.back();
             this.clientDataFetched(result);
         }
     }
 
 
     getColumnDetail = async () => {
-        const { clientScript } = this.state;
+        const { clientScript, selectedColumn } = this.state;
         const { source_type: sourceType, source_id: sourceId, name } = clientScript;
+        if(selectedColumn) { 
+            return;
+        }
         const result = await GetColumnDetail({ sourceType, sourceId });
         if (result.success) {
             const { response } = result;
@@ -197,7 +207,7 @@ export default class ClientScript extends Component {
                         <button className="btn btn-info" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
                             Cancel
                                     </button>
-                        <button className="btn btn-success" onClick={this.saveClientScript} style={{ margin: '8px' }}>
+                        <button className="btn btn-success" onClick={() => this.saveClientScript()} style={{ margin: '8px' }}>
                             Save
                         </button>
                     </div>

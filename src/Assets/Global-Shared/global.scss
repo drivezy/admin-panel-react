@@ -51,6 +51,11 @@ body {
     flex-direction: row;
 }
 
+.reverse-row {
+    @extend .flex;
+    flex-direction: row-reverse;;
+}
+
 .center-flex {
     @extend .flex;
     justify-content: center;

@@ -29,6 +29,9 @@ import { RECORD_URL } from './../../Constants/global.constants';
 const maxFontSize = 16;
 const minFontSize = 10;
 const SCRIPT_FONT_SIZE = 'SCRIPT_FONT_SIZE';
+const DEFAULT_FONT_SIZE = 14;
+
+let tempScript = ''; // used to keep track, if script has been changed
 
 const MODES = [{ id: 1, value: 'javascript', name: 'Javascript' }, { id: 2, name: 'PHP', value: 'php' }, { id: 3, name: 'CSS', value: 'css' }, { id: 4, name: 'SQL', value: 'sql' }];
 export default class CodeEditor extends Component {
@@ -36,12 +39,14 @@ export default class CodeEditor extends Component {
         super(props);
 
         const mode = SelectFromOptions(MODES, props.mode, 'value');
+        tempScript = props.script;
+
         this.state = {
             isModalVisible: true,
             mode,
             value: props.script || '',
             scriptId: props.scriptId || '',
-            fontSize: GetItem(SCRIPT_FONT_SIZE) || 14
+            fontSize: GetItem(SCRIPT_FONT_SIZE) || DEFAULT_FONT_SIZE
         }
     }
 
@@ -230,12 +235,14 @@ export default class CodeEditor extends Component {
 
             const result = await Put({ url: 'systemScript/' + this.state.scriptId, body: params, urlPrefix: RECORD_URL })
             if (result.success) {
+                tempScript = this.state.value;
                 this.setState({ isVisible: false });
             }
         } else {
 
             const result = await Post({ url: 'systemScript', body: params, urlPrefix: RECORD_URL })
             if (result.success) {
+                tempScript = this.state.value;
                 this.setState({ isVisible: false });
 
             }
@@ -243,18 +250,25 @@ export default class CodeEditor extends Component {
     }
 
     render() {
-        const { buttonComponent, column, payload, inline } = this.props;
+        const { buttonComponent, column, inline } = this.props;
+        const { fontSize, value: script, mode } = this.state;
+
         return (
             <div>
                 {
                     inline ?
                         <div>
-                            <div className="script-controls">
-                                <Button className="btn btn-sm scriptAction">
-                                    <i className="fa fa-save"></i>
+                            <div className="script-controls flex">
+                                <Button
+                                    id='submit-script-inline'
+                                    onClick={this.onSubmit}
+                                    disabled={tempScript == script}
+                                    className="btn btn-sm scriptAction">
+                                    <i class="fa fa-save"></i>
                                 </Button>
 
                                 <Button
+                                    disabled={fontSize >= maxFontSize}
                                     onClick={() => {
                                         let { fontSize } = this.state;
                                         fontSize = fontSize >= maxFontSize ? maxFontSize : fontSize + 1;
@@ -267,6 +281,7 @@ export default class CodeEditor extends Component {
                                 </Button>
 
                                 <Button
+                                    disabled={fontSize <= minFontSize}
                                     onClick={() => {
                                         let { fontSize } = this.state;
                                         fontSize = fontSize <= minFontSize ? minFontSize : fontSize - 1;
@@ -277,34 +292,17 @@ export default class CodeEditor extends Component {
                                 >
                                     <i className="fa fa-search-minus"></i>
                                 </Button>
-
-                                {/* <button className="btn btn-sm scriptAction">
-                                    <i className="fa fa-edit"></i>
-                                </button>
-                                <button className="btn btn-sm scriptAction">
-                                    <i className="fa fa-align-left"></i>
-                                </button>
-                                <button className="btn btn-sm scriptAction">
-                                    <i className="fa fa-align-center"></i>
-                                </button>
-                                <button className="btn btn-sm scriptAction">
-                                    <i className="fa fa-align-right"></i>
-                                </button>
-                                <button className="btn btn-sm scriptAction">
-                                    <i className="fa fa-align-justify"></i>
-                                </button>
-                                <button className="btn btn-sm scriptAction">
-                                    <i className="fa fa-question-circle"></i>
-                                </button>
-                                <button className="btn btn-sm scriptAction">
-                                    <i className="fa fa-bug"></i>
-                                </button>
-                                <button className="btn btn-sm scriptAction">
-                                    <i className="fa fa-comment"></i>
-                                </button>
-                                <button className="btn btn-sm scriptAction">
-                                    <i className="fa fa-download"></i>
-                                </button> */}
+                                
+                                <div className='code-editor-mode'>
+                                <SelectBox
+                                    onChange={(data) => this.setState({ mode: data })}
+                                    value={mode}
+                                    options={MODES}
+                                    placeholder="Mode"
+                                    field='name'
+                                    menuPlacement={'top'}
+                                />
+                                </div>
                             </div>
                             {this.editorComponent()}
                         </div>
