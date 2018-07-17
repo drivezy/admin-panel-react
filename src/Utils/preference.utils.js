@@ -67,13 +67,17 @@ function setValues(values) {
 }
 
 
-function GetSourceMorphMap(source) {
-    const sourceMorph = {
+export function GetSourceMorphMap(source, reverse = false) {
+    let sourceMorph = {
         menu: 'db8a887c48306740a6baa49e7b73b8ae',
         model: '07b76506c43824b152745fe7df768486',
         modelAlias: '2f7de4d415673d4da9ae054931189828',
         form: '5a46c74518b74fbe7d911758970f4950'
     };
+
+    if (reverse) {
+        sourceMorph = swap(sourceMorph);
+    }
     // const sourceMorph = {
     //     menu: 'Drivezy\\LaravelAdmin\\Models\\Menu',
     //     model: 'Drivezy\\LaravelRecordManager\\Models\\DataModel',
@@ -81,4 +85,17 @@ function GetSourceMorphMap(source) {
     //     form: 'Drivezy\\LaravelRecordManager\\Models\\CustomForm'
     // };
     return sourceMorph[source];
+}
+
+/**
+ * Reverse keys with value
+ * for e.g. swap({A : 1, B : 2, C : 3, D : 4}) = {1 : A, 2 : B, 3 : C, 4 : D}
+ * @param  {Object} json
+ */
+function swap(json) {
+    var ret = {};
+    for (var key in json) {
+        ret[json[key]] = key;
+    }
+    return ret;
 }
