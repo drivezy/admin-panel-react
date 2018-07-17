@@ -97,6 +97,7 @@ export default class CodeEditor extends Component {
                 <div className='select-box-container flex'>
                     <div sm={2} className='mode-selection'>
                         <SelectBox
+                        isClearable={false}
                             onChange={(data) => this.setState({ mode: data })}
                             value={mode}
                             options={MODES}
@@ -264,7 +265,7 @@ export default class CodeEditor extends Component {
                                     onClick={this.onSubmit}
                                     disabled={tempScript == script}
                                     className="btn btn-sm scriptAction">
-                                    <i class="fa fa-save"></i>
+                                    <i className="fa fa-save"></i>
                                 </Button>
 
                                 <Button
@@ -297,6 +298,7 @@ export default class CodeEditor extends Component {
                                 <SelectBox
                                     onChange={(data) => this.setState({ mode: data })}
                                     value={mode}
+                                    isClearable={false}
                                     options={MODES}
                                     placeholder="Mode"
                                     field='name'

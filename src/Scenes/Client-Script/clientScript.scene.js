@@ -8,18 +8,22 @@ import { BuildUrlForGetCall, IsObjectHaveKeys } from './../../Utils/common.utils
 import { Get, Put, Post } from './../../Utils/http.utils';
 import { GetColumnDetail, ExtractColumnName } from './../../Utils/panel.utils';
 import ToastNotifications from '../../Utils/toast.utils';
+import { GetSourceMorphMap } from './../../Utils/preference.utils';
 
 import { ClientScriptEndPoint } from './../../Constants/api.constants';
 import { ROUTE_URL } from './../../Constants/global.constants';
 
 import './clientScript.scene.css';
 
+const HideColumnsWhenSource = ['menu'];
+
 export default class ClientScript extends Component {
     constructor(props) {
         super(props);
         this.state = {
             ...GetUrlParams(this.props), // params, queryString
-            clientScript: {}
+            clientScript: {},
+            shouldColumnVisible: true
         };
 
         this.getClientScript();
@@ -39,6 +43,11 @@ export default class ClientScript extends Component {
         if (result.success && result.response) {
             const { response } = result;
             // this.setState({ rule: response });
+
+            const sourceType = GetSourceMorphMap(response.source_type, true);
+            if (HideColumnsWhenSource.indexOf(sourceType) != -1) {
+                this.state.shouldColumnVisible = true;
+            }
 
             const scriptPayload = {
                 method: 'edit',
@@ -94,7 +103,7 @@ export default class ClientScript extends Component {
     getColumnDetail = async () => {
         const { clientScript, selectedColumn } = this.state;
         const { source_type: sourceType, source_id: sourceId, name } = clientScript;
-        if(selectedColumn) { 
+        if (selectedColumn) {
             return;
         }
         const result = await GetColumnDetail({ sourceType, sourceId });
