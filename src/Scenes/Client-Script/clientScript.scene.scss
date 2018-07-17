@@ -34,7 +34,6 @@
         justify-content: flex-end;
         padding-bottom: 20px;
     }
-
 .description{
     width: 100%;
     padding: 7px;
@@ -42,4 +41,8 @@
     border-width: 1px;
     border-color: #ced4db;
 }
+}
+
+input[type=checkbox]{
+    width: 15px;
 }

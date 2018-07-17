@@ -112,4 +112,14 @@ export class Location {
         const { history: History } = this.historyFetchMethod();
         History[method](url);
     }
+
+    static back() {
+        if (window.history.length > 2) {
+            // if history is not empty, go back:
+            this.navigate({ method: 'goBack' });
+        } else {
+            // go home:
+            this.navigate({ method: 'push', url: '/' });
+        }
+    }
 }
