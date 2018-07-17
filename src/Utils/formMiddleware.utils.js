@@ -17,8 +17,6 @@ import { SelectFromOptions } from './common.utils';
 import { GetItem } from './localStorage.utils';
 import { ConfirmUtils } from './confirm-utils/confirm.utils';
 
-
-
 export async function ProcessForm({ formContent, scripts, isForm, openModal = true }) {
     const url = GetUrlForFormCreator({ payload: formContent, getDictionary: true, isForm });
     const result = await Get({ url, urlPrefix: isForm ? RECORD_URL : ROUTE_URL });
@@ -99,10 +97,6 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
         }
 
     }
-}
-
-function executeFormScript({ submitCallback, cancelCallback }) {
-
 }
 
 export function OpenModalForm(formContent) {
