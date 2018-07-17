@@ -277,7 +277,7 @@ export default class CodeEditor extends Component {
                                     }}
                                     className="btn btn-sm scriptAction"
                                 >
-                                    <i class="fa fa-search-plus"></i>
+                                    <i className="fa fa-search-plus"></i>
                                 </Button>
 
                                 <Button
@@ -290,7 +290,7 @@ export default class CodeEditor extends Component {
                                     }}
                                     className="btn btn-sm scriptAction"
                                 >
-                                    <i class="fa fa-search-minus"></i>
+                                    <i className="fa fa-search-minus"></i>
                                 </Button>
                                 
                                 <div className='code-editor-mode'>
