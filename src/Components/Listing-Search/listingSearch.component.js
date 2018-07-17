@@ -111,7 +111,7 @@ export default class ListingSearch extends React.Component {
         })
 
         this.setState({ activeColumn: select });
-        console.log(this.state.activeColumn);
+        // console.log(this.state.activeColumn);
     }
 
     /**
@@ -174,7 +174,7 @@ export default class ListingSearch extends React.Component {
         const paramProps = {
             history: this.props.history, match: this.props.match
         };
-
+        this.setState({ query: event.target.value });
         query += this.state.activeColumn.name + ' like "%25' + event.target.value + '%25"';
         urlParams.search = query;
         Location.search(urlParams, { props: paramProps });
@@ -195,13 +195,8 @@ export default class ListingSearch extends React.Component {
 
     searchLocally = ({ event }) => {
         let selectedColumn = this.state.activeColumn;
-        console.log(event);
-        console.log(selectedColumn)
-        // this.callFunction(event);
         this.props.onEdit(selectedColumn, event.target.value);
-
         this.setState({ query: event.target.value });
-
         // this.
     }
 
