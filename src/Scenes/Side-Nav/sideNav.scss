@@ -117,7 +117,7 @@
                         @include themify($themes) {
                             // border-radius: themed('menuLinkBorder');
                             background: themed('hoverBackground');
-                            color: themed('primaryLight'); // border-left: themed('sideBorder');
+                            color: themed('secondaryColor'); // border-left: themed('sideBorder');
                             // border-right: 1px solid themed('linkHover');
                         }
                     }
