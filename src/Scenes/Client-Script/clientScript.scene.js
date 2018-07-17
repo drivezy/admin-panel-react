@@ -8,22 +8,18 @@ import { BuildUrlForGetCall, IsObjectHaveKeys } from './../../Utils/common.utils
 import { Get, Put, Post } from './../../Utils/http.utils';
 import { GetColumnDetail, ExtractColumnName } from './../../Utils/panel.utils';
 import ToastNotifications from '../../Utils/toast.utils';
-import { GetSourceMorphMap } from './../../Utils/preference.utils';
 
 import { ClientScriptEndPoint } from './../../Constants/api.constants';
 import { ROUTE_URL } from './../../Constants/global.constants';
 
 import './clientScript.scene.css';
 
-const HideColumnsWhenSource = ['menu'];
-
 export default class ClientScript extends Component {
     constructor(props) {
         super(props);
         this.state = {
             ...GetUrlParams(this.props), // params, queryString
-            clientScript: {},
-            shouldColumnVisible: true
+            clientScript: {}
         };
 
         this.getClientScript();
@@ -43,11 +39,6 @@ export default class ClientScript extends Component {
         if (result.success && result.response) {
             const { response } = result;
             // this.setState({ rule: response });
-
-            const sourceType = GetSourceMorphMap(response.source_type, true);
-            if (HideColumnsWhenSource.indexOf(sourceType) != -1) {
-                this.state.shouldColumnVisible = true;
-            }
 
             const scriptPayload = {
                 method: 'edit',
@@ -130,7 +121,7 @@ export default class ClientScript extends Component {
 
     render() {
         // console.log(this.state);
-        const { scriptPayload = {}, clientScript, columns, selectedColumn, shouldColumnVisible } = this.state;
+        const { scriptPayload = {}, clientScript, columns, selectedColumn } = this.state;
         const { name = '', script: scriptObj = {} } = clientScript;
         const { script = '', } = scriptObj;
         const { selectedOption } = this.state;
@@ -151,14 +142,10 @@ export default class ClientScript extends Component {
                                     <label>Name</label>
                                     <input className='form-control' value={name} disabled />
                                 </div>
-                                {
-                                    shouldColumnVisible ?
-                                        <div className="columnInput inputField">
-                                            <label>Column</label>
-                                            <SelectBox name="form-field-name" onChange={value => this.setState({ selectedColumn: value })} value={selectedColumn} field="name" options={columns} />
-                                        </div>
-                                        : null
-                                }
+                                <div className="columnInput inputField">
+                                    <label>Column</label>
+                                    <SelectBox name="form-field-name" onChange={value => this.setState({ selectedColumn: value })} value={selectedColumn} field="name" options={columns} />
+                                </div>
                             </div>
                         </div>
                         <div className='form-row'>
@@ -169,12 +156,16 @@ export default class ClientScript extends Component {
                                 </div>
                                 <div className="activeInput inputField">
                                     <label>Active</label>
-                                    <input type="checkbox"
-                                        name="active"
-                                        value={clientScript.active ? 0 : 1}
-                                        checked={clientScript.active ? 1 : 0}
-                                        onChange={e => this.setRuleValue(e.target.value == '1' ? 1 : 0, 'active')}
-                                    />
+                                    <div class="pretty p-default p-thick p-pulse p-bigger">
+                                        <input type="checkbox"
+                                            value={clientScript.active ? 0 : 1}
+                                            checked={clientScript.active ? 1 : 0}
+                                            onChange={e => this.setRuleValue(e.target.value == '1' ? 1 : 0, 'active')}
+                                        />
+                                        <div class="state p-success-o">
+                                            <label>&nbsp;</label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
