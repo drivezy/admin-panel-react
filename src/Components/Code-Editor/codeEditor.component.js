@@ -251,7 +251,7 @@ export default class CodeEditor extends Component {
                         <div>
                             <div className="script-controls">
                                 <Button className="btn btn-sm scriptAction">
-                                    <i class="fa fa-save"></i>
+                                    <i className="fa fa-save"></i>
                                 </Button>
 
                                 <Button
@@ -263,7 +263,7 @@ export default class CodeEditor extends Component {
                                     }}
                                     className="btn btn-sm scriptAction"
                                 >
-                                    <i class="fa fa-search-plus"></i>
+                                    <i className="fa fa-search-plus"></i>
                                 </Button>
 
                                 <Button
@@ -275,35 +275,35 @@ export default class CodeEditor extends Component {
                                     }}
                                     className="btn btn-sm scriptAction"
                                 >
-                                    <i class="fa fa-search-minus"></i>
+                                    <i className="fa fa-search-minus"></i>
                                 </Button>
 
                                 {/* <button className="btn btn-sm scriptAction">
-                                    <i class="fa fa-edit"></i>
+                                    <i className="fa fa-edit"></i>
                                 </button>
                                 <button className="btn btn-sm scriptAction">
-                                    <i class="fa fa-align-left"></i>
+                                    <i className="fa fa-align-left"></i>
                                 </button>
                                 <button className="btn btn-sm scriptAction">
-                                    <i class="fa fa-align-center"></i>
+                                    <i className="fa fa-align-center"></i>
                                 </button>
                                 <button className="btn btn-sm scriptAction">
-                                    <i class="fa fa-align-right"></i>
+                                    <i className="fa fa-align-right"></i>
                                 </button>
                                 <button className="btn btn-sm scriptAction">
-                                    <i class="fa fa-align-justify"></i>
+                                    <i className="fa fa-align-justify"></i>
                                 </button>
                                 <button className="btn btn-sm scriptAction">
-                                    <i class="fa fa-question-circle"></i>
+                                    <i className="fa fa-question-circle"></i>
                                 </button>
                                 <button className="btn btn-sm scriptAction">
-                                    <i class="fa fa-bug"></i>
+                                    <i className="fa fa-bug"></i>
                                 </button>
                                 <button className="btn btn-sm scriptAction">
-                                    <i class="fa fa-comment"></i>
+                                    <i className="fa fa-comment"></i>
                                 </button>
                                 <button className="btn btn-sm scriptAction">
-                                    <i class="fa fa-download"></i>
+                                    <i className="fa fa-download"></i>
                                 </button> */}
                             </div>
                             {this.editorComponent()}

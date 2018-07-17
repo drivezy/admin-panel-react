@@ -110,7 +110,7 @@ export default class ClientScript extends Component {
     }
 
     render() {
-        console.log(this.state);
+        // console.log(this.state);
         const { scriptPayload = {}, clientScript, columns, selectedColumn } = this.state;
         const { name = '', script: scriptObj = {} } = clientScript;
         const { script = '', } = scriptObj;
@@ -148,9 +148,9 @@ export default class ClientScript extends Component {
                                     <label>Active</label>
                                     <input type="checkbox"
                                         name="active"
-                                        value={clientScript.active ? true : false}
-                                        checked={clientScript.active ? true : false}
-                                        onChange={e => this.setRuleValue(e.target.value, 'active')}
+                                        value={clientScript.active ? 0 : 1}
+                                        checked={clientScript.active ? 1 : 0}
+                                        onChange={e => this.setRuleValue(e.target.value == '1' ? 1 : 0, 'active')}
                                     />
                                 </div>
                             </div>
