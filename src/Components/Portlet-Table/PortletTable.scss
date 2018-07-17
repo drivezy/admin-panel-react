@@ -214,7 +214,7 @@
                         // &:hover {
                         //     background-color: #f3f5f7;
                         // }
-                    &:nth-child(2n){
+                    &:nth-child(even){
                         @include themify($themes){
                         background-color: themed('backgroundLightTable');
                         }
