@@ -61,9 +61,12 @@ export default class SecurityRule extends Component {
     }
 
     getColumnDetail = async () => {
-        const { rule } = this.state;
+        const { rule, selectedColumn } = this.state;
         const { source_type: sourceType, source_id: sourceId, name } = rule;
 
+        if(selectedColumn) { 
+            return;
+        }
         const result = await GetColumnDetail({ sourceType, sourceId });
 
 
@@ -95,6 +98,12 @@ export default class SecurityRule extends Component {
         if (scriptId) {
             body = { script_id: scriptId };
         } else {
+
+            const inlineScriptButton = document.getElementById('submit-script-inline');
+            if (inlineScriptButton && !inlineScriptButton.disabled) {
+                inlineScriptButton.click();
+            }
+
             body = {
                 filter_condition, name
             }
@@ -275,7 +284,6 @@ export default class SecurityRule extends Component {
                                                 }
                                             </div> : <div>Loading Roles</div>
                                     }
-                                    {console.log(rule.roles)}
 
                                 </div>
                             </div>
@@ -286,7 +294,7 @@ export default class SecurityRule extends Component {
                         <button className="btn btn-info" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
                             Cancel
                                     </button>
-                        <button className="btn btn-success" onClick={this.saveRule} style={{ margin: '8px' }}>
+                        <button className="btn btn-success" onClick={() => this.saveRule()} style={{ margin: '8px' }}>
                             Save
                                     </button>
                     </div>

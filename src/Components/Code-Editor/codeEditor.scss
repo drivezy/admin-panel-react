@@ -1,3 +1,5 @@
+// @import "./../../../node_modules/react-select/scss/default";
+
 .ace_print-margin {
     visibility: hidden !important;
 }
@@ -12,16 +14,16 @@
     .code-title {
         // flex-basis: 10%;
     }
-    .select-box{
+    .select-box {
         min-width: 180px !important;
-        div:nth-child(n){
-            div:nth-child(n) { 
+        div:nth-child(n) {
+            div:nth-child(n) {
                 // background-color: #1f2533;
                 background-color: #1f2633;
                 color: #fff;
             }
         }
-        span{
+        span {
             color: #fff;
         }
     }
@@ -35,4 +37,14 @@
         position: relative;
         z-index: 10;
     }
+
+   
 }
+.script-controls { 
+    padding: 5px 0;
+}
+.code-editor-mode { 
+    min-width: 150px;
+    margin-top: -4px;
+}
+
