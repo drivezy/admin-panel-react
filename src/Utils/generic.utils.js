@@ -141,9 +141,6 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
     const finalColumnDefinition = [];
     let splitEnabled = false;
     // let defaultColumns = false;
-    console.log(columns);
-    console.log(selectedColumns);
-
     // const selectedColumns = GetSelectedColumnDefinition(layout);
 
     // if (selectedColumns.length == 0) {
