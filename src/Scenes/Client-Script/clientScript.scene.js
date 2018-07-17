@@ -130,7 +130,7 @@ export default class ClientScript extends Component {
 
     render() {
         // console.log(this.state);
-        const { scriptPayload = {}, clientScript, columns, selectedColumn } = this.state;
+        const { scriptPayload = {}, clientScript, columns, selectedColumn, shouldColumnVisible } = this.state;
         const { name = '', script: scriptObj = {} } = clientScript;
         const { script = '', } = scriptObj;
         const { selectedOption } = this.state;
@@ -151,10 +151,14 @@ export default class ClientScript extends Component {
                                     <label>Name</label>
                                     <input className='form-control' value={name} disabled />
                                 </div>
-                                <div className="columnInput inputField">
-                                    <label>Column</label>
-                                    <SelectBox name="form-field-name" onChange={value => this.setState({ selectedColumn: value })} value={selectedColumn} field="name" options={columns} />
-                                </div>
+                                {
+                                    shouldColumnVisible ?
+                                        <div className="columnInput inputField">
+                                            <label>Column</label>
+                                            <SelectBox name="form-field-name" onChange={value => this.setState({ selectedColumn: value })} value={selectedColumn} field="name" options={columns} />
+                                        </div>
+                                        : null
+                                }
                             </div>
                         </div>
                         <div className='form-row'>
