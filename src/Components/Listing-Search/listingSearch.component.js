@@ -174,9 +174,9 @@ export default class ListingSearch extends React.Component {
         const paramProps = {
             history: this.props.history, match: this.props.match
         };
-        this.setState({ query: event.target.value });
         query += this.state.activeColumn.name + ' like "%25' + event.target.value + '%25"';
         urlParams.search = query;
+        this.setState({ query: event.target.value });
         Location.search(urlParams, { props: paramProps });
     }
 
