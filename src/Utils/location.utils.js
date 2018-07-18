@@ -80,7 +80,7 @@ export class Location {
             }
         });
 
-        urlParams = reset ? { ...{}, finalObj } : { ...urlParams, ...finalObj };
+        urlParams = reset ? { ...{}, ...finalObj } : { ...urlParams, ...finalObj };
 
         if (!Object.keys(urlParams).length || (!Object.keys(finalObj).length)) {
             History.push(location.pathname);
