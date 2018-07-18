@@ -128,7 +128,6 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
             name={column.name}
             render={({ field /* _form */ }) => (
                 <div className="button-group">
-                    {console.log(values[column.name])} 
                     <button className={`btn btn-sm btn-${values[column.name] ? `success` : `default`}`}
                         onClick={(e) => {
                             e.preventDefault();
