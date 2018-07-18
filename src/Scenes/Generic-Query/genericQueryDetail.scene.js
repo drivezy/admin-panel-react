@@ -52,6 +52,7 @@ export default class GenericQueryDetail extends Component {
             // this.setState({ queryParamsData });
             this.state.queryParamsData = queryParamsData;
             this.setState({ finalColumns });
+            // this.getDataForListing();
         }
     }
 
@@ -175,11 +176,12 @@ export default class GenericQueryDetail extends Component {
 
                                 resultData && finalColumns && resultData.listName && resultData.columns && preference &&
                                 <QueryTableSettings
-                                    finalColumns={finalColumns}
+                                    
                                     listName={resultData.listName}
                                     columns={resultData.columns}
                                     selectedColumns={preference}
                                     onSubmit={this.layoutChanges}
+                                    preference={this.state.preference}
 
                                 />
                             }

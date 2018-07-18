@@ -237,6 +237,7 @@ export default class TableSettings extends Component {
         // const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
 
         if (result.success) {
+            console.log(result);
             this.setState({ modal: !this.state.modal });
             if (IsObjectHaveKeys(layout)) {
                 layout.column_definition = tempSelectedColumns;
