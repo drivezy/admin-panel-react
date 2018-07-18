@@ -127,19 +127,37 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         [COLUMN_TYPE.BOOLEAN]: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <SelectBox name={column.name}
-                    placeholder={`Enter ${column.display_name}`}
-                    isClearable={!column.required}
-                    onChange={(value, event) => {
-                        // props.setFieldError(column.name, 'sahi nhi ye');
-                        // props.setFieldTouched(column.name, true, true);
-                        const valId = value && typeof value == 'object' ? value.id : value;
-                        FormUtils.OnChangeListener({ column, value: valId, ...event });
-                        props.setFieldValue(event, value);
-                    }}
-                    value={values[column.name]}
-                    field="name" options={booleanOptions} />
-                // <SelectBox name={column.name} onChange={props.setFieldValue} value={values[column.name]} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                <div className="button-group">
+                    <button className={`btn btn-sm btn-${values[column.name] ? `success` : `default`}`}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            FormUtils.OnChangeListener({ column, value: true });
+                            props.setFieldValue(column.name, true);
+                        }
+                        }>True</button>
+
+                    &nbsp;&nbsp;
+
+                    <button className={`btn btn-sm btn-${values[column.name] ? "default" : "danger"}`}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            FormUtils.OnChangeListener({ column, value: false });
+                            props.setFieldValue(column.name, false);
+                        }
+                        }>False</button>
+                </div>
+                // <SelectBox name={column.name}
+                //     placeholder={`Enter ${column.display_name}`}
+                //     isClearable={!column.required}
+                //     onChange={(value, event) => {
+                //         // props.setFieldError(column.name, 'sahi nhi ye');
+                //         // props.setFieldTouched(column.name, true, true);
+                //         const valId = value && typeof value == 'object' ? value.id : value;
+                //         FormUtils.OnChangeListener({ column, value: valId, ...event });
+                //         props.setFieldValue(event, value);
+                //     }}
+                //     value={values[column.name]}
+                //     field="name" options={booleanOptions} />
             )}
         />,
         // Boolean Ends
@@ -166,9 +184,9 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
 
         // Script Input
         [COLUMN_TYPE.SCRIPT]: <ScriptInput
-            value={values[column.name]} 
+            value={values[column.name]}
             // columns={props.payload.dictionary}
-             payload={props.payload} column={column} name={column.name}
+            payload={props.payload} column={column} name={column.name}
             // onChange={props.setFieldValue}
             onChange={(value, ...args) => {
                 const { payload } = props;
@@ -178,7 +196,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
 
                 submitGenericForm({ payload, newValues: { [column.name]: value } });
             }}
-            // model={values[column.index]}
+        // model={values[column.index]}
         />,
         // Script Input Ends
 
@@ -401,10 +419,10 @@ const FormContents = withFormik({
                 let column = payload.dictionary[preference.index];
                 response[column.name] = payload.data[column.name] || '';
 
-                if (column.column_type_id == COLUMN_TYPE.BOOLEAN) {
-                    const val = SelectFromOptions(booleanOptions, payload.data[column.name], 'id');
-                    response[column.name] = val;
-                }
+                // if (column.column_type_id == COLUMN_TYPE.BOOLEAN) {
+                //     const val = SelectFromOptions(booleanOptions, payload.data[column.name], 'id');
+                //     response[column.name] = val;
+                // }
 
                 // if (column.reference_model) {
                 //     const url = column.reference_model.route_name;
