@@ -51,7 +51,7 @@ export default class PredefinedFilter extends React.Component {
                     urlParams.layout = null;
                     this.setUrlProps(urlParams);
                 }
-                ToastNotifications.success('Records has been deleted');
+                ToastNotifications.success({title: 'Records has been deleted'});
             }
         }
     }
