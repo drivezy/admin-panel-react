@@ -73,7 +73,7 @@ export default class QueryColumnSetting extends Component {
                     <Card>
                         <CardBody>
                             <form onSubmit={this.columnUpdate}>
-                                <div className="form-group">
+                                <div className="form-group">\
                                     <label htmlFor="exampleInputEmail1">Column Header</label>
                                     <input value={columnTitle} onChange={this.columnNameChange} type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Column Name" />
                                 </div>

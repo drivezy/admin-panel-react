@@ -45,15 +45,6 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
             }).replace(/^_/, '').replace(starter, '').replace('.', '');
             columns[i][j].parent = i;
 
-            const relationIndex = columns[i][j].parent;
-            if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex)) {
-                if (relationship[relationIndex].hasOwnProperty('related_model')) {
-                    columns[i][j].reference_route = relationship[relationIndex].related_model.state_name;
-                    columns[i][j].parentColumn = relationship[relationIndex].related_column ? relationship[relationIndex].related_column.column_name : null;
-                } else if (relationship[relationIndex].state_name) {
-                    columns[i][j].reference_route = relationship[relationIndex].state_name;
-                }
-            }
             selectedColumns[`${columns[i][j].parent}.${columns[i][j].id}`] = columns[i][j];
             // selectedColumns[columns[i][j].id] = columns[i][j];
         }
