@@ -1,5 +1,6 @@
-import { Get } from './../Utils/http.utils';
+import { Get,Post } from './../Utils/http.utils';
 import { IsUndefinedOrNull } from './../Utils/common.utils';
+import { RECORD_URL } from './../Constants/global.constants';
 
 export function QueryData(queryId) {
     return Get({ url: "reportingQuery/" + queryId + "?includes=parameters.referenced_model,parameters.param_type,user_filter,actions.definition,user_view.group_filter,assets" });
@@ -62,6 +63,29 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
 }
 
 /**
+ * accepts source_type = JRAPP, source_id (menuId), user_id, name = default, query = null, column_definition
+ * @param  {} key
+ * @param  {} value
+ * @param  {} override_all
+ */
+   export function SetPreference({ parameter, selectedColumns, override_all }) {
+    // const source_type = GetSourceMorphMap(source);
+
+    // const methods = { Post, Put };
+    // let method = 'Post';
+
+    const body = {
+        // query,
+        parameter,
+        value: JSON.stringify(selectedColumns)
+    };
+
+
+    //return methods[method]({ url, body, urlPrefix: RECORD_URL });
+    return Post({ url: 'userPreference', body: body });
+}
+
+/**
  * returns final list of selected columns to be shown on each car for each row
  * Takes columns list being prepared by 'GetColumnsForListing' method, preference list and relationship
  * same as TableFactory.createFinalObject
@@ -69,28 +93,31 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
  * @param  {object} selectedColumns
  * @param  {object} relationship
  */
-export function CreateFinalColumns(columns, selectedColumns, relationship) {
+export function CreateFinalColumns(columns, selectedColumns) {
     const finalColumnDefinition = [];
-    let splitEnabled = false;
+   
 
     for (const i in selectedColumns) {
         const selected = selectedColumns[i];
         if (typeof (selected) == "object") {
-            const dict = columns[selected.column];
+            const value = selected.object+'.'+selected.id;
+            const dict = columns[value];
             if (dict) {
                 finalColumnDefinition[i] = dict;
                 finalColumnDefinition[i].route = selected.route ? selected.route : false;
                 finalColumnDefinition[i].display_name = selected.columnTitle ? selected.columnTitle : finalColumnDefinition[i].display_name;
-                finalColumnDefinition[i].split = splitEnabled;
                 if (selected.filter) {
                     finalColumnDefinition[i].filter = selected.filter;
                 }
 
+                // @Relation not required for query managing
                 // const relationIndex                  = dict.parent.split('.');
-                const relationIndex = dict.parent;
-                if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && relationship[relationIndex].hasOwnProperty('related_model')) {
-                    finalColumnDefinition[i].reference_route = relationship[relationIndex].related_model.state_name;
-                }
+                // const relationIndex = dict.parent;
+                // if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && relationship[relationIndex].hasOwnProperty('related_model')) {
+                //     finalColumnDefinition[i].reference_route = relationship[relationIndex].related_model.state_name;
+                // }
+
+
                 // if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex)) {
                 //     if (relationship[relationIndex].hasOwnProperty('related_model')) {
                 //         finalColumnDefinition[i].reference_route = relationship[relationIndex].related_model.state_name;
@@ -103,12 +130,7 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
             finalColumnDefinition[i] = {
                 column_name: selected, column_type: null
             };
-            splitEnabled = !splitEnabled;
-        }
 
-        // if it is a seperator
-        if (selected.column_name == "seperator") {
-            finalColumnDefinition[i] = selected;
         }
     }
 

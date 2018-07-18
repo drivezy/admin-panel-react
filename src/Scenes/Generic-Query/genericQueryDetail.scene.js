@@ -14,6 +14,7 @@ import { GetPreferences } from './../../Utils/preference.utils';
 import { BuildUrlForGetCall, IsObjectHaveKeys } from './../../Utils/common.utils';
 import { Post } from './../../Utils/http.utils';
 import { GetColumnsForListing, CreateFinalColumns, GetDefaultOptionsForQuery } from './../../Utils/query.utils';
+import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 
 export default class GenericQueryDetail extends Component {
 
@@ -29,6 +30,7 @@ export default class GenericQueryDetail extends Component {
             currentPage: 1,
             limit: 20,
             finalColumns: [],
+            isTab:null,
             resultData: {}
         };
     }
@@ -37,6 +39,20 @@ export default class GenericQueryDetail extends Component {
         this.getQueryParamsData();
     }
 
+    refreshPage() {
+        this.getDataForListing();
+    }
+
+    layoutChanges = (layout) => {
+        let { queryParamsData } = this.state;
+        queryParamsData.layout = layout;
+        if (layout && layout.column_definition) {
+            queryParamsData.finalColumns = CreateFinalColumns(queryParamsData.parameters, layout.column_definitionp);
+            // this.setState({ queryParamsData });
+            this.state.queryParamsData = queryParamsData;
+            this.getDataForListing();
+        }
+    }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (IsObjectHaveKeys(this.state.queryParamsData)) {
@@ -99,8 +115,10 @@ export default class GenericQueryDetail extends Component {
 
             let finalColumns;
 
-            if (preference) {
+
+            if (preference.length) {
                 finalColumns = CreateFinalColumns(tempColumns, JSON.parse(preference[0].value));
+                console.log(finalColumns);
             }
 
             this.setState({ stats, params, columns: tempColumns, finalColumns, stats });
@@ -132,10 +150,10 @@ export default class GenericQueryDetail extends Component {
 
     render() {
 
-        const { queryParamsData = {}, preference, columns, finalColumns, resultData, currentPage, stats } = this.state;
+        const { queryParamsData = {}, preference, columns, finalColumns, resultData, currentPage, stats, isTab } = this.state;
 
-        const { history, match } = this.props;
-
+        const { history, match, parentData } = this.props;
+        
         return (
             <div className="generic-query">
                 <div className="page-bar">
@@ -150,16 +168,20 @@ export default class GenericQueryDetail extends Component {
                     <div className="listing-tools right">
                         <div className="portlet-tools">
 
+                            
                             {
-                                resultData &&
+                                resultData && finalColumns && resultData.listName && resultData.columns && preference &&
                                 <QueryTableSettings
                                     finalColumns={finalColumns}
                                     listName={resultData.listName}
                                     columns={resultData.columns}
                                     selectedColumns={preference}
+                                    onSubmit={this.layoutChanges}
                                 />
                             }
-
+                            <button className="refresh-button btn btn-sm" onClick={() => { this.refreshPage() }}>
+                                <i className="fa fa-refresh"></i>
+                            </button>
                             {
                                 resultData && queryParamsData.user_filter &&
                                 <QueryPredefinedFilter

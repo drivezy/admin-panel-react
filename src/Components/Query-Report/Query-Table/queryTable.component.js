@@ -168,6 +168,7 @@ export default class QueryTable extends Component {
                                 <th>
                                 </th>
                                 {
+                                    finalColumns &&
                                     finalColumns.map((selectedColumn, key) => {
                                         // let conditionForSorting = (this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.column_name))) ? (this.state.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down') : ''
                                         return (
@@ -192,7 +193,8 @@ export default class QueryTable extends Component {
                                             </td>
 
                                             {
-                                                finalColumns.map((selectedColumn, key) => {
+                                                 finalColumns &&
+                                                 finalColumns.map((selectedColumn, key) => {
                                                     // const html =
                                                     //     rowTemplate ?
                                                     //         rowTemplate({ listingRow, selectedColumn })
