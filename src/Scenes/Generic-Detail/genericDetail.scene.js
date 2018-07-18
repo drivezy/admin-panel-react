@@ -32,7 +32,8 @@ export default class GenericDetail extends Component {
             portlet: {},
             tabs: {},
             tabsPreference: {},
-            parentData: {}
+            parentData: {},
+            loading: true
         };
 
         this.currentUrl = this.getHref();
@@ -97,7 +98,7 @@ export default class GenericDetail extends Component {
     dataFetched = ({ tabDetail, portlet }) => {
         tabDetail.refreshContent = this.getDetailRecord;
         const parentData = RemoveStarterFromThePath({ data: portlet.data, starter: portlet.starter });
-        this.setState({ portlet, tabDetail, parentData });
+        this.setState({ portlet, tabDetail, parentData, loading: false });
     }
 
     getColumn = (preference, dictionary) => {
@@ -121,7 +122,7 @@ export default class GenericDetail extends Component {
 
     render() {
         const { history, location, match } = this.props;
-        const { menuDetail = {}, portlet = {}, tabDetail = {}, currentUser = {}, parentData } = this.state;
+        const { menuDetail = {}, portlet = {}, tabDetail = {}, currentUser = {}, parentData, loading } = this.state;
         const { finalColumns = [], data = {}, formPreference = {}, starter, formPreferences = [] } = portlet;
 
         const genericDataForCustomColumn = {
@@ -172,15 +173,26 @@ export default class GenericDetail extends Component {
 
                 <div className="detail-content">
                     {
-                        finalColumns.length ?
-                            <DetailPortlet listingRow={data} finalColumns={finalColumns} starter={starter} />
-                            : null
-                    }
+                        loading ?
+                            <div className="loading-text">
+                                <h6>
+                                    Loading content
+                                </h6>
+                            </div> :
+                            <div>
+                    
+                                {
+                                    finalColumns.length ?
+                                        <DetailPortlet listingRow={data} finalColumns={finalColumns} starter={starter} />
+                                        : <div className="noListMessage">Looks like no columns are selected , Configure it by pressing the settings icon.</div>
+                                }
 
-                    {
-                        tabDetail && tabDetail.tabs ?
-                            <DetailIncludes tabs={tabDetail.tabs} parentData={parentData} callback={this.getDetailRecord} currentUser={currentUser} location={location} match={match} />
-                            : null
+                                {
+                                    tabDetail && tabDetail.tabs ?
+                                        <DetailIncludes tabs={tabDetail.tabs} parentData={parentData} callback={this.getDetailRecord} currentUser={currentUser} location={location} match={match} />
+                                        : null
+                                }
+                            </div>
                     }
                 </div>
             </div>
