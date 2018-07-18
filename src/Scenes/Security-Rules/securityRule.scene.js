@@ -197,8 +197,9 @@ export default class SecurityRule extends Component {
 
     render() {
         const { columns, rule, selectedColumn, scriptPayload } = this.state;
-        const { name = '', script: scriptObj = {} } = rule;
-        const { script } = scriptObj;
+        const { name = '' } = rule;
+        const scriptObj = rule.script || {};
+        const { script = '' } = scriptObj;
 
         return (
             <div className='security-rule-container'>
@@ -229,7 +230,7 @@ export default class SecurityRule extends Component {
                                     <textarea
                                         placeholder='Enter Filter Condition'
                                         rows="3"
-                                        value={rule.filter_condition}
+                                        value={rule.filter_condition || ''}
                                         onChange={e => this.setRuleValue(e.target.value, 'filter_condition')}
                                         className="description"
                                     />

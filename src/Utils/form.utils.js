@@ -1,6 +1,10 @@
 import { IsObjectHaveKeys, BuildUrlForGetCall, IsUndefined } from './common.utils';
 import { StoreEvent } from './stateManager.utils';
+import { GetSourceMorphMap } from './preference.utils';
 import { Get, Post, Delete, Put } from './http.utils';
+import { ROUTE_URL } from './../Constants/global.constants';
+import { Location } from './location.utils';
+import { CreateUrl } from './generic.utils';
 
 let self = {};
 let onChangeListeners = {};
@@ -14,6 +18,10 @@ export default class FormUtil {
      */
     static onChange({ column, callback }) {
         onChangeListeners[column] = callback;
+    }
+
+    static getSourceHash(source) {
+        return GetSourceMorphMap(source);
     }
 
     /**
@@ -35,12 +43,12 @@ export default class FormUtil {
 
     }
 
-    static httpCall({ url, callback, extraParams, method = 'get', urlPrefix }) {
+    static httpCall({ url, body, callback, extraParams, method = 'get', urlPrefix = ROUTE_URL }) {
         const methods = {
             get: Get, post: Post, put: Put, delete: Delete
         };
 
-        methods[method]({ url, callback, extraParams, urlPrefix });
+        methods[method]({ url, body, callback, extraParams, urlPrefix });
     }
 
     // /**
@@ -149,7 +157,7 @@ export default class FormUtil {
     }
 
     static getParentValue(column) {
-        return self.form.parent[column];
+        return column ? self.form.parent[column] : self.form.parent;
     }
 
     /**
@@ -173,6 +181,11 @@ export default class FormUtil {
         // this.updateForm();
     };
 
+    static redirect(url) {
+        // static redirect({ action, listingRow, history, genericData }) {
+        url = CreateUrl({ url, obj: self.form.data });
+        Location.navigate({ url });
+    }
 
     /**
      * makes field required
