@@ -30,13 +30,14 @@ export default class GenericQueryDetail extends Component {
             currentPage: 1,
             limit: 20,
             finalColumns: [],
-            isTab:null,
+            isTab: null,
             resultData: {}
         };
     }
 
     componentDidMount() {
         this.getQueryParamsData();
+        console.log(this.state)
     }
 
     refreshPage() {
@@ -44,13 +45,13 @@ export default class GenericQueryDetail extends Component {
     }
 
     layoutChanges = (layout) => {
-        let { queryParamsData } = this.state;
+        let { queryParamsData, columns } = this.state;
         queryParamsData.layout = layout;
         if (layout && layout.column_definition) {
-            queryParamsData.finalColumns = CreateFinalColumns(queryParamsData.parameters, layout.column_definitionp);
+            const finalColumns = CreateFinalColumns(columns, layout.column_definition);
             // this.setState({ queryParamsData });
             this.state.queryParamsData = queryParamsData;
-            this.getDataForListing();
+            this.setState({ finalColumns });
         }
     }
 
@@ -153,7 +154,8 @@ export default class GenericQueryDetail extends Component {
         const { queryParamsData = {}, preference, columns, finalColumns, resultData, currentPage, stats, isTab } = this.state;
 
         const { history, match, parentData } = this.props;
-        
+
+        console.log(preference);
         return (
             <div className="generic-query">
                 <div className="page-bar">
@@ -168,8 +170,9 @@ export default class GenericQueryDetail extends Component {
                     <div className="listing-tools right">
                         <div className="portlet-tools">
 
-                            
+
                             {
+
                                 resultData && finalColumns && resultData.listName && resultData.columns && preference &&
                                 <QueryTableSettings
                                     finalColumns={finalColumns}
@@ -177,6 +180,7 @@ export default class GenericQueryDetail extends Component {
                                     columns={resultData.columns}
                                     selectedColumns={preference}
                                     onSubmit={this.layoutChanges}
+
                                 />
                             }
                             <button className="refresh-button btn btn-sm" onClick={() => { this.refreshPage() }}>

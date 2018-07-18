@@ -102,11 +102,13 @@ export default class QueryTableSettings extends Component {
         // this.setState({ tempColumns: JSON.parse(co) });
         this.setState({ tempColumns: { ...this.state.columns } });
         //SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
+        
     }
 
 
     toggleModal = () => {
         this.setState({ modal: !this.state.modal, activeColumn: {}, tempSelectedColumns: IsObjectHaveKeys(this.props.layout) ? this.props.layout.column_definition : [] })
+        
     }
 
     expandAll = () => {
@@ -136,21 +138,34 @@ export default class QueryTableSettings extends Component {
         this.setState({ formConfigurator });
     }
 
+
+
     addColumn = (column) => {
 
-        let selectedColumns = this.state.tempSelectedColumns;
+
+        let tempSelectedColumns = this.state.tempSelectedColumns;
         const { tempColumns } = this.state
 
         // const regexForPickingAfterLastDot = /[^\.]+$/;
-        selectedColumns.push({
+
+
+        // this.props.finalColumns.map((column, key) =>
+        //     tempSelectedColumns.push({
+        //         headingCollapsed: true, heading: "", id: column.id, object: column.parent, column: column.column_name, index: column.parent + '.' + column.column_name
+        //     })
+
+        // )
+
+        tempSelectedColumns.push({
             headingCollapsed: true, heading: "", id: column.id, object: column.parent, column: column.column_name, index: column.parent + '.' + column.column_name
             // headingCollapsed: true, heading: "", object: column.parent, column: column.name, index: column.parent + '.' + column.name
             // headingCollapsed: true, heading: "", object: column.parent.match(regexForPickingAfterLastDot)[0], column: column.name, columnObj: column
             // column: column.parent + "." + column.id, headingCollapsed: true, heading: ""
         });
 
-        this.setState({ tempSelectedColumns: selectedColumns })
+        this.setState({ tempSelectedColumns: tempSelectedColumns })
         console.log(this.state.tempSelectedColumns);
+        console.log(this.props.finalColumns);
         // this.setState({ tempSelectedColumns: selectedColumns })
 
         //this.removeColumnFromLeft(column);
@@ -227,47 +242,6 @@ export default class QueryTableSettings extends Component {
         this.setState({ tempSelectedColumns: result.array, activeColumn: activeColumn });
     }
 
-    addSplit = () => {
-        const { tempSelectedColumns } = this.state;
-        let ext = Math.floor(Math.random() * 1000);
-        tempSelectedColumns.push({ split: true, label: "s-split-" + ext });
-
-        tempSelectedColumns.push({ split: true, label: "e-split-" + ext })
-        this.setState({ tempSelectedColumns });
-    }
-
-    addHSplit = () => {
-        const { tempSelectedColumns } = this.state;
-        tempSelectedColumns.push({ split: true, label: "seperator", headingCollapsed: true, heading: "" });
-        this.setState({ tempSelectedColumns });
-    }
-
-    removeSplit = (index, item) => {
-        const { tempSelectedColumns } = this.state;
-        tempSelectedColumns.splice(index, 1);
-        let end;
-        if (item.label.split("-")[0] == "seperator") {
-            return tempSelectedColumns;
-        }
-        else {
-            if (item.label.split("-")[0] == "s") {
-                end = item.label.replace("s", "e");
-            } else if (item.label.split("-")[0] == "e") {
-                end = item.label.replace("e", "s");
-            }
-
-            let endIndex;
-
-            for (let i in tempSelectedColumns) {
-                if (tempSelectedColumns[i].label == end) {
-                    endIndex = i;
-                }
-            }
-
-            tempSelectedColumns.splice(endIndex, 1);
-            return tempSelectedColumns;
-        }
-    };
 
     // applyChangesToAll = async () => {
     //     const { userId, menuId, listName, source } = this.props;
@@ -308,10 +282,10 @@ export default class QueryTableSettings extends Component {
     applyChanges = async (overRide) => {
         const { listName } = this.props;
         const { tempSelectedColumns } = this.state;
-        let layout;
+        let layout=this.state.layout;
         const result = await SetPreference({ parameter: listName, selectedColumns: this.state.tempSelectedColumns, override_all: overRide ? 1 : 0 });
 
-
+        console.log(result);
         if (result.success) {
             this.setState({ modal: !this.state.modal });
             if (IsObjectHaveKeys(layout)) {
@@ -331,9 +305,27 @@ export default class QueryTableSettings extends Component {
         this.setState({ tempSelectedColumns });
     }
 
+    updateSelectedColumns = () => {
+        const { finalColumns } = this.props
+        const { tempSelectedColumns } = this.state
+
+
+        finalColumns.map((column, key) =>
+            tempSelectedColumns.push({
+                headingCollapsed: true, heading: "", id: column.id, object: column.parent, column: column.column_name, index: column.parent + '.' + column.column_name
+            })
+        )
+
+
+        console.log(finalColumns);
+        console.log(tempSelectedColumns)
+    }
+
 
     modalWrapper() {
         const { columns, tempSelectedColumns, activeColumn, tempColumns } = this.state;
+
+       // this.updateSelectedColumns();
 
         const selectedIds = [];
 
@@ -358,6 +350,7 @@ export default class QueryTableSettings extends Component {
         }
         return (
             <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="table-settings">
+                
                 <ModalHeader toggle={this.toggleModal}>
                     Configure
             </ModalHeader>
@@ -394,6 +387,7 @@ export default class QueryTableSettings extends Component {
 
                                                     <ListGroup className="inner-columns">
                                                         {
+
                                                             leftColumns[column].map((entry, key) => (
 
                                                                 <div key={key} className="column-group" onDoubleClick={() => this.addColumn(entry)} >
@@ -447,7 +441,9 @@ export default class QueryTableSettings extends Component {
                                 </div>
 
                                 <ListGroup className="parent-group">
+
                                     {
+
                                         tempSelectedColumns.map((column, index) =>
                                             // Component Manages column props
                                             <QueryColumnSetting removeColumn={this.removeColumn} columns={columns} activeColumn={activeColumn} selectColumn={this.selectColumn} column={column} index={index} key={index} />
