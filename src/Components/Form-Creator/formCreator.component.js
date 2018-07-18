@@ -141,7 +141,6 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
 
                     <button className={`btn btn-sm btn-${values[column.name] ? "default" : "danger"}`}
                         onClick={(e) => {
-                            console.log(e);
                             e.preventDefault();
                             FormUtils.OnChangeListener({ column, value: false });
                             props.setFieldValue(column.name, false);
