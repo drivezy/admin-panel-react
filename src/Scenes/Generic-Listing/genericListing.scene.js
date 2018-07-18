@@ -244,12 +244,14 @@ export default class GenericListing extends Component {
     }
 
     layoutChanges = (layout) => {
-        let { genericData } = this.state;
+        let { genericData, menuDetail } = this.state;
         genericData.layout = layout;
+        menuDetail.layout = layout;
         if (layout && layout.column_definition) {
             genericData.finalColumns = CreateFinalColumns(genericData.columns, layout.column_definition, genericData.relationship);
             // this.setState({ genericData });
             this.state.genericData = genericData;
+            this.state.menuDetail = menuDetail;
             this.getListingData();
         }
     }
@@ -310,7 +312,7 @@ export default class GenericListing extends Component {
                             </div>
                         </div>
                         <div className="header-actions">
-                            <CustomAction position="header" source={isTab ? source : undefined} parentData={parentData} menuDetail={menuDetail} history={history} genericData={genericData} actions={genericData.nextActions} placement={'as_header'} />
+                            <CustomAction position="header" source={isTab ? source : undefined} callback={this.getListingData} parentData={parentData} menuDetail={menuDetail} history={history} genericData={genericData} actions={genericData.nextActions} placement={'as_header'} />
                             <button className="refresh-button btn btn-sm" onClick={() => { this.refreshPage() }}>
                                 <i className="fa fa-refresh"></i>
                             </button>
@@ -382,6 +384,8 @@ export default class GenericListing extends Component {
                                             </CardBody>
                                         </Card> : null
                                 }
+
+                                {/* { (finalColumns[0].defaultLayout) ? <div className="noColumnMessage">No columns were selected, displaying default columns</div> : null} */}
 
                                 {
                                     (finalColumns && finalColumns.length) ?

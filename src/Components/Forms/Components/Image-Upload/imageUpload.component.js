@@ -35,11 +35,7 @@ export default class imageUpload extends Component {
         }
     }
 
-    componentWillReceiveProps = (nextProps) => {
-    }
-
     render() {
-
         const { file } = this.state;
 
         return (

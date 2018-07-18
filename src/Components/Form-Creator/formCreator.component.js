@@ -166,7 +166,9 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
 
         // Script Input
         [COLUMN_TYPE.SCRIPT]: <ScriptInput
-            value={values[column.name]} columns={props.payload.dictionary} payload={props.payload} column={column} name={column.name}
+            value={values[column.name]} 
+            // columns={props.payload.dictionary}
+             payload={props.payload} column={column} name={column.name}
             // onChange={props.setFieldValue}
             onChange={(value, ...args) => {
                 const { payload } = props;
@@ -176,7 +178,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
 
                 submitGenericForm({ payload, newValues: { [column.name]: value } });
             }}
-            model={values[column.index]}
+            // model={values[column.index]}
         />,
         // Script Input Ends
 
@@ -231,6 +233,20 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         />,
         // Single Datepicker Ends
 
+        // Image Upload
+        [COLUMN_TYPE.UPLOAD]: <Field
+            name={column.name}
+            render={({ field /* _form */ }) => (
+                <ImageUpload name={column.name} onRemove={props.onFileRemove}
+                    onSelect={(column, name) => {
+                        console.log(column, name);
+                        props.onFileUpload(column, name);
+                    }}
+                />
+            )}
+        />,
+        // Image Upload Ends
+
         // TextArea Begins
         160: <Field
             name={column.name}
@@ -269,14 +285,6 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
 
         684: 'serialize',
 
-        // Image Upload
-        708: <Field
-            name={column.name}
-            render={({ field /* _form */ }) => (
-                <ImageUpload name={column.name} onRemove={props.onFileRemove} onSelect={props.onFileUpload} />
-            )}
-        />,
-        // Image Upload Ends
     }
 
     return elements[column.column_type_id] || elements[108];
@@ -358,19 +366,21 @@ const formElements = props => {
             </div> */}
             {/* Uploaded file thumbnails Ends*/}
 
-            <div className="modal-actions row justify-content-end">
+            <div className="modal-footer">
+                <div className="modal-actions row justify-content-end">
 
-                <button className="btn btn-warning" onClick={handleReset}>
-                    Reset
-                </button>
+                    <button className="btn btn-warning" onClick={handleReset}>
+                        Reset
+                    </button>
 
-                {/* <button className="btn btn-primary">
-                    Cancel
-                </button> */}
+                    {/* <button className="btn btn-primary">
+                        Cancel
+                    </button> */}
 
-                <button className="btn btn-success" disabled={isSubmitting} type="submit">
-                    Submit
-                </button>
+                    <button className="btn btn-success" disabled={isSubmitting} type="submit">
+                        Submit
+                    </button>
+                </div>
             </div>
         </Form>
     );
@@ -505,7 +515,7 @@ const FormContents = withFormik({
             return Promise.all(props.fileUploads.map((entry) => {
                 return Upload('uploadFile', entry).then((result) => {
 
-                    values[entry.column] = result.response;
+                    newValues[entry.column] = result.response;
 
                     return result;
 

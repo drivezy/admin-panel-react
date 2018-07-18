@@ -161,7 +161,7 @@ export default class SelectBox extends Component {
     }
 
     render() {
-        const { async, getOptions, isClearable = true } = this.props;
+        const { async, getOptions, isClearable = true, menuPlacement = 'auto' } = this.props;
         const { options, field, key } = this.state;
         let { value } = this.state;
         let elem;
@@ -184,6 +184,7 @@ export default class SelectBox extends Component {
                 multi={this.props.multi}
                 getOptionLabel={(context, inputValue) => <span>{context[field]}</span>}
                 getOptionValue={(context, inputValue) => <span>{context[key]}</span>}
+                menuPlacement={menuPlacement}
             />
         } else if (getOptions) {
             elem = <Async
@@ -197,6 +198,7 @@ export default class SelectBox extends Component {
                 multi={this.props.multi}
                 getOptionLabel={(context, inputValue) => <span>{context[field]}</span>}
                 getOptionValue={(context, inputValue) => <span>{context[key]}</span>}
+                menuPlacement={menuPlacement}
             />
         } else {
             elem = <Select
@@ -210,7 +212,7 @@ export default class SelectBox extends Component {
                 isClearable={isClearable}
                 getOptionLabel={(context, inputValue) => <span>{context[field]}</span>}
                 getOptionValue={(context, inputValue) => <span>{context[key]}</span>}
-                menuPlacement="auto"
+                menuPlacement={menuPlacement}
             />
         }
 

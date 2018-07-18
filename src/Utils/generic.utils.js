@@ -8,10 +8,6 @@ import { ConfirmUtils } from './confirm-utils/confirm.utils';
 import { ProcessForm } from './formMiddleware.utils';
 
 import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
-import { GetMenuDetailEndPoint, FormDetailEndPoint } from './../Constants/api.constants';
-import { RECORD_URL } from './../Constants/global.constants';
-import { MATCH_PARENT_PATH, MATCH_WHITESPACE } from './../Constants/regex.constants';
-import COLUMN_TYPE from './../Constants/columnType.constants';
 
 // import FormCreator from './../Components/Form-Creator/formCreator.component'
 import PortletTable from '../Components/Portlet-Table/PortletTable.component';
@@ -22,6 +18,10 @@ import ParseComponent from './../Components/Generic-Column-Filters/parseComponen
 import TableWrapper from './../Components/Table-Wrapper/tableWrapper.component';
 import PreferenceSetting from './../Components/Preference-Setting/preferenceSetting.component';
 
+import { GetMenuDetailEndPoint, FormDetailEndPoint } from './../Constants/api.constants';
+import { ROUTE_URL, RECORD_URL } from './../Constants/global.constants';
+import { MATCH_PARENT_PATH, MATCH_WHITESPACE } from './../Constants/regex.constants';
+import COLUMN_TYPE from './../Constants/columnType.constants';
 
 /**
  * Fetches Menu detail to render generic page
@@ -140,10 +140,25 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
 export function CreateFinalColumns(columns, selectedColumns, relationship) {
     const finalColumnDefinition = [];
     let splitEnabled = false;
+    // let defaultColumns = false;
     // const selectedColumns = GetSelectedColumnDefinition(layout);
+
+    // if (selectedColumns.length == 0) {
+    //         for (const i in columns) {
+    //             selectedColumns.push({
+    //                 object: columns[i].parent, column: columns[i].name, headingCollapsed: true, heading: "", index: i
+    //             });
+    //             if(selectedColumns.length <6 ){
+    //                 continue;
+    //             }
+    //             else
+    //              break;
+    //         }
+    //     defaultColumns = true;
+    // }
+
     for (const i in selectedColumns) {
         const selected = selectedColumns[i];
-        // console.log(selected.label);
         if (!selected.split) {
             const dict = columns[selected.index];
             if (dict) {
@@ -154,6 +169,7 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
                 // if (selected.filter) {
                 finalColumnDefinition[i].filter = selected.filter;
                 // }
+                // finalColumnDefinition[i].defaultLayout = defaultColumns;
 
                 const relationIndex = dict.parent;
 
@@ -168,11 +184,11 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
                 //     }
                 // }
             }
-        } else if(selected.label=='seperator'){
+        } else if (selected.separator) {
             finalColumnDefinition[i] = { ...selected, isSplit: false }
             splitEnabled = false;
         }
-        else{
+        else {
             finalColumnDefinition[i] = { ...selected, isSplit: true }
             splitEnabled = !splitEnabled;
 
@@ -187,7 +203,6 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
         }
 
     }
-    // console.log(finalColumnDefinition);
     return finalColumnDefinition;
 }
 
@@ -311,10 +326,10 @@ export function ConvertDependencyInjectionToArgs(dependencies) {
 export function RegisterMethod(methodArr) {
     const methods = {};
     for (var i in methodArr) {
-       
+
         const methodObj = methodArr[i];
 
-        if(!methodObj) { 
+        if (!methodObj) {
             return;
         }
         if (methodObj.definition && typeof methodObj.definition == 'object' && methodObj.definition.script) {
@@ -346,13 +361,14 @@ export function GetPreSelectedMethods() {
     }
 
 
-    methods.redirect = ({ action, listingRow, history, genericData }) => {
+    methods.redirectGeneric = ({ action, listingRow, history, genericData }) => {
         let url = CreateUrl({ url: action.parameter, obj: listingRow });
         // var urlParams;
         // var userQuery = 0;
 
         url = createQueryUrl(url, genericData.restrictQuery, genericData);
-        history.push(url);
+        // history.push(url);
+        Location.navigate({ url });
         // if (angular.isDefined(event)) {
         //     if (event.metaKey || event.ctrlKey) {
         //         window.open("#/" + url, "_blank");
@@ -490,10 +506,10 @@ export function GetPreSelectedMethods() {
         const deletekey = IsUndefinedOrNull(action.redirectValueName) ? listingRow.id : listingRow[action.redirectValueName];
 
         const method = async () => {
-            const result = await Delete({ url: `${genericData.module}/${deletekey}` });
+            const result = await Delete({ url: `${genericData.url}/${deletekey}`, urlPrefix: ROUTE_URL });
             if (result.success) {
                 action.callback();
-                ToastNotifications.success('Records has been deleted');
+                ToastNotifications.success({ title: 'Records has been deleted' });
             }
         }
 
@@ -720,7 +736,7 @@ export function RemoveStarterFromThePath({ data, starter }) {
 }
 
 export function GetParsedLayoutScript(listLayouts) {
-    if(!Array.isArray(listLayouts)) { 
+    if (!Array.isArray(listLayouts)) {
         return [];
     }
     return listLayouts.map(layout => {
@@ -738,7 +754,7 @@ export function GetParsedLayoutScript(listLayouts) {
 
 export function GetChangedMethods(newValues, originalValues = {}) {
     const data = {};
-    if(!IsObjectHaveKeys(originalValues)) { 
+    if (!IsObjectHaveKeys(originalValues)) {
         return newValues;
     }
     if (IsObjectHaveKeys(newValues)) {
@@ -769,7 +785,7 @@ export function ParseRestrictedQuery(queryString) {
         query = query.split('=');
         let value = query[1];
 
-        if(typeof value == 'string')  {
+        if (typeof value == 'string') {
             value = value.replace(/'/g, '');
         }
         parsedQuery[query[0]] = value;

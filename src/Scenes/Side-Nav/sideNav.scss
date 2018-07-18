@@ -21,6 +21,9 @@
     }
     &.collapsed {
         width: 40px;
+        .logo-container{
+            display: none;
+        }
         .sidebar-menus {
             .menus {
                 // margin-top: 8px;
@@ -114,7 +117,7 @@
                         @include themify($themes) {
                             // border-radius: themed('menuLinkBorder');
                             background: themed('hoverBackground');
-                            color: themed('primaryLight'); // border-left: themed('sideBorder');
+                            color: themed('secondaryColor'); // border-left: themed('sideBorder');
                             // border-right: 1px solid themed('linkHover');
                         }
                     }

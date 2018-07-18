@@ -66,9 +66,9 @@ export default class DetailIncludes extends Component {
                     // @TODO add model alias rediect method
                     as_header: true,
                     image: 'fa-outdent',
-                    parameter: 'menuDef/:id',
+                    parameter: '/modelAlias/' + tab.menuId,
                     active: true,
-                    identifier: 'modalAlias',
+                    identifier: 'redirectGeneric',
                     name: 'Redirect Model Alias'
                 };
 

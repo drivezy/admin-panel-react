@@ -2,6 +2,7 @@
 
 import { Get, Post } from './http.utils';
 import { ArrayToObject } from './common.utils';
+import _ from 'lodash';
 
 import { GetMenusEndPoint } from './../Constants/api.constants';
 import { RECORD_URL } from './../Constants/global.constants';
@@ -23,14 +24,16 @@ export const GetMenusFromApi = async () => {
             return [];
         }
 
-        modules.forEach(module => {
+        let activeModules = _.sortBy( modules, 'display_order' );
+
+        activeModules.forEach(module => {
             const { menus } = module;
             module.menus.map(menu =>
                 menu.component = paths[menu.page_id]
             );
         })
 
-        return modules;
+        return activeModules;
     }
 }
 
