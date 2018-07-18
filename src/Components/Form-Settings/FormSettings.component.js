@@ -202,7 +202,7 @@ export default class FormSettings extends Component {
         }
 
         return (
-            <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="form-settings-modal">
+            <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="form-settings-modal" id="modal-container">
                 <ModalHeader toggle={this.toggleModal}>
                     Configure
                     <input placeholder="Enter Layout Name" type='text' value={layoutName} onChange={e => this.setState({ layoutName: e.target.value })} />

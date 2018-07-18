@@ -1,4 +1,7 @@
 @import 'Assets/Global-Shared/theme.scss';
+#modal-container{
+    min-width: 1024px;;
+}
 .form-settings-modal {
     .modal-header {
         padding: 12px 20px;
