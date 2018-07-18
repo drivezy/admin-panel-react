@@ -59,7 +59,7 @@ export default class DetailIncludes extends Component {
         for (let i in tabsArray) {
             const tab = tabsArray[i];
             const { uiActions = [] } = tab;
-            const isAlreadyModalAlias = uiActions.some(uiAction => uiAction.identifier == 'modalAlias');
+            const isAlreadyModalAlias = uiActions.some(uiAction => uiAction.identifier == 'redirectGeneric');
 
             if (!isAlreadyModalAlias) {
                 const modelAliasRedirect = {
