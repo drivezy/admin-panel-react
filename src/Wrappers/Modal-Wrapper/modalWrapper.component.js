@@ -67,7 +67,7 @@ export default class ModalWrapper extends Component {
                             console.log(modal, key);
                             this.closeModal(modal, key)
                         }
-                        } className={this.props.className} backdrop={this.state.backdrop}>
+                        } className={modal.className} backdrop={this.state.backdrop}>
                             {
                                 modal.modalHeader ?
                                     <ModalHeader toggle={() => {
