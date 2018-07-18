@@ -20,7 +20,7 @@ import { HotKeys } from 'react-hotkeys';
 import { CopyToClipBoard } from './../../Utils/common.utils';
 import ToastUtils from './../../Utils/toast.utils';
 import { Get } from './../../Utils/http.utils';
-import { BuildUrlForGetCall } from './../../Utils/common.utils';
+import { BuildUrlForGetCall, SelectFromOptions } from './../../Utils/common.utils';
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
 import { GetUrlParams, Location } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
@@ -239,6 +239,8 @@ export default class GenericListing extends Component {
     predefinedFiltersUpdated = (latyouts) => {
         const { genericData } = this.state;
         genericData.layouts = latyouts;
+        const layoutId = genericData.layout ? genericData.layout.id : null;
+        genericData.layout = SelectFromOptions(genericData.layouts, layoutId, 'id') || [];
         // this.setState({ genericData });
         this.state.genericData = genericData;
     }

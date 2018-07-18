@@ -220,7 +220,7 @@ export function ConvertMenuDetailForGenericPage(menuDetail) {
     menuDetail.layouts = GetParsedLayoutScript(layouts);
 
     const layout = layouts.length ? layouts[0] : null; // @TODO for now taking 0th element as default layout, change later 
-    menuDetail.layouts = menuDetail.layouts.filter(layout => layout && layout.name && layout.query && layout.name != 'default');
+    // menuDetail.layouts = menuDetail.layouts.filter(layout => layout && layout.name && layout.query && layout.name != 'default');
 
     delete menuDetail.list_layouts;
 
