@@ -10,6 +10,7 @@
                 margin-bottom: 0px;
                 thead {
                     border-top: none;
+                    // background-color: #e2e2e2;
                     @supports (-webkit-appearance: none) {
                         tr {
                             position: relative;
@@ -218,6 +219,9 @@
                         @include themify($themes){
                         background-color: themed('backgroundLightTable');
                         }
+                    }
+                    &:hover{
+                        background-color: #d6d6d6 !important;
                     }
                     }
                 }
