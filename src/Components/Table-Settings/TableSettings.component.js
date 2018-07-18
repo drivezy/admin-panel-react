@@ -291,7 +291,7 @@ export default class TableSettings extends Component {
         }
 
         return (
-            <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="table-settings"  id="modal-container">
+            <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="table-settings">
                 <ModalHeader toggle={this.toggleModal}>
                     Configure
                 </ModalHeader>
