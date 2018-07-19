@@ -65,16 +65,36 @@
             display: flex;
             background: #dcdcdc7a;
             min-height: 45px;
-            height: 45px;
+            //height : 45px;
             border: 1px solid #d6d6d6;
             margin: 3px;
             .header-content {
                 margin: 5px;
                 display: -ms-flexbox;
-                display: flex;
-                justify-content: space-between;
+                display: flex; //  justify-content: space-between;
                 align-items: center;
-                flex-basis: 100%;
+                flex-basis: 20%;
+            }
+            .metrics-container {
+                float: left;
+                position: relative;
+                align-content: center;
+                .metrics-wrapper {
+                    position: absolute;
+                    .metrics {
+                        //position: absolute;
+                        float: left;
+                        display: flex;
+                    }
+
+                    .active-filters {
+                        
+                        .form-groups {
+                            display:flex;
+                            flex-direction: column;
+                        }
+                    }
+                }
             }
         }
     }
