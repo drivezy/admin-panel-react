@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 
+import { GetUrlParams, Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
+
 import ScriptInput from './../../Components/Forms/Components/Script-Input/scriptInput.component';
 import SelectBox from './../../Components/Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import ReferenceInput from './../../Components/Forms/Components/Reference-Input/referenceInput';
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 
-import ToastNotifications from '../../Utils/toast.utils';
-import { GetUrlParams, Location } from 'drivezy-web-utils/build/Utils';
 import { Get, Put, Post, Delete } from './../../Utils/http.utils';
 import { BuildUrlForGetCall, IsObjectHaveKeys } from '../../Utils/common.utils';
 import { GetColumnDetail, ExtractColumnName } from './../../Utils/panel.utils';

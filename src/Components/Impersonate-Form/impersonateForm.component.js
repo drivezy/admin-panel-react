@@ -3,11 +3,13 @@ import React, { Component } from 'react';
 import {
     Card, CardBody, Row, Col
 } from 'reactstrap';
+
+import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
+
 import { Get, Post } from './../../Utils/http.utils';
 import SelectBox from './../../Components/Forms/Components/Select-Box/selectBox';
 import { BuildUrlForGetCall, IsUndefined } from './../../Utils/common.utils';
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
-import ToastNotifications from '../../Utils/toast.utils';
 import './impersonateForm.css';
 
 
@@ -48,7 +50,7 @@ export default class ImpersonateFrom extends Component {
         const result = await Post({ url: 'impersonateUser/' + userObject.selectValue.id });
         if (result.success) {
             ModalManager.closeModal({ impersonatedUser: result.response });
-            ToastNotifications.success("You are now impersonating " + result.response.display_name)
+            ToastNotifications.success({ title: "You are now impersonating " + result.response.display_name });
             window.location.reload(true);
         }
     }
