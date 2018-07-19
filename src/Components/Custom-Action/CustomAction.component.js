@@ -17,6 +17,7 @@ import { CreateUrl, ConvertDependencyInjectionToArgs, RemoveStarterFromThePath }
 
 import CustomTooltip from '../Custom-Tooltip/customTooltip.component';
 
+var sortJsonArray = require('sort-json-array');
 
 let customMethods = {};
 
@@ -90,10 +91,13 @@ export default class CustomAction extends Component {
         return (
             <div className="custom-actions flex">
                 {
-                    actions.map((action, key) => {
-
+                    (sortJsonArray(actions, 'display_order')).map((action, key) => {
                         if(!action) { 
                             return null;
+                        }
+                        if(action.display_order == '1')
+                        {
+                            console.log(actions);
                         }
                         if (action[placement]) {
                             // if (action.placement_id == placement || true) {
