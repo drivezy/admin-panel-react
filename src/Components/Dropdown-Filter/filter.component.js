@@ -96,7 +96,7 @@ export default class PredefinedFilter extends React.Component {
                     Filter
                     </DropdownToggle>
                 <DropdownMenu className="dropdown-menu custom-click pull-right menu-operations" right>
-                    {
+                    {   layouts && 
                         layouts.length > 1 ?
                             <div>
                                 <div className="form-group has-feedback">

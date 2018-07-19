@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 
 import './genericQueryDetail.scene.css';
 import QueryHeader from './../../Components/Query-Report/Query-Header/queryHeader.component';
-import DynamicFilter from './../../Components/Dropdown-Filter/filter.component';
+import DynamicFilter from './../../Components/Dynamic-Filter/dynamicFilter.component';
 import QueryTableSettings from './../../Components/Query-Report/Query-Table-Settings/queryTableSettings.component';
 import QueryPredefinedFilter from './../../Components/Query-Report/Query-Predefined-Filter/queryPredefinedFilter.component';
+import QueryConfigureDynamicFilter from './../../Components/Query-Report/Query-Configure-Filter/queryConfigureFilter.component';
 import QueryDashboardForm from './../../Components/Query-Report/Query-Dashboard-Form/queryDashboardForm.component';
 import QueryTable from './../../Components/Query-Report/Query-Table/queryTable.component';
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
@@ -17,6 +18,7 @@ import { BuildUrlForGetCall, IsObjectHaveKeys } from './../../Utils/common.utils
 import { Post } from './../../Utils/http.utils';
 import { GetColumnsForListing, CreateFinalColumns, GetDefaultOptionsForQuery } from './../../Utils/query.utils';
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
+
 
 import ListingSearch from './../../Components/Listing-Search/listingSearch.component';
 import { SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent } from './../../Utils/stateManager.utils';
@@ -44,13 +46,21 @@ export default class GenericQueryDetail extends Component {
             filterContent: null,
             isCollapsed: false,
             arrowstate: 'show',
-            arrow: 'down'
+            arrow: 'down',
+            loading: true
         };
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
 
-    componentDidMount() {
+    componentDidMount = async () => {
         this.getQueryParamsData();
+        const result = await Get({ url: 'userPreference', parameter: "invoice_details.list" });
+        result.response[18].column_definition = JSON.parse(result.response[18].value);
+        console.log(result.response[18]);
+        const layout = result.response[18];
+        this.setState({ layout: layout });
+        console.log(this.state.layout);
+
     }
 
     refreshPage() {
@@ -65,7 +75,9 @@ export default class GenericQueryDetail extends Component {
             // this.setState({ queryParamsData });
             this.state.queryParamsData = queryParamsData;
             this.setState({ finalColumns });
+            console.log(layout)
             // this.getDataForListing();
+            this.setState({ layout });
         }
     }
 
@@ -82,13 +94,13 @@ export default class GenericQueryDetail extends Component {
     }
 
     userDataArrived = (user) => {
-        const { menuDetail, queryParamsData } = this.props;
+        const { menuDetail, queryParamsData } = this.state;
         this.state.currentUser = user;
 
         if (queryParamsData) {
             this.state.filterContent = queryParamsData.filterContent;
             this.state.menuDetail = menuDetail;
-            this.state.loading = false;
+            // this.state.loading = false;
             return;
         } else if (menuDetail) {
             this.state.menuDetail = menuDetail;
@@ -105,12 +117,12 @@ export default class GenericQueryDetail extends Component {
         if (result.success) {
             let queryParamsData = result.response;
             console.log(queryParamsData);
-            this.setState({ queryParamsData });
+            this.setState({queryParamsData});
 
             let prefName = queryParamsData.short_name + ".list";
-
+            console.log(queryParamsData);
             let preferences = await GetPreferences(prefName);
-
+            console.log(this.state.queryParamsData);
             var preference = preferences.response.filter(function (item) {
                 return item.parameter == prefName;
             })
@@ -118,7 +130,7 @@ export default class GenericQueryDetail extends Component {
             console.log(preference);
 
             this.setState(preference);
-            this.setState({ queryParamsData, preference });
+            // this.setState(queryParamsData);
 
             this.getDataForListing();
         }
@@ -177,18 +189,25 @@ export default class GenericQueryDetail extends Component {
             dictionary: params.dictionary[params.starter],
             restrictColumn: "",
         };
-
+        this.state.loading = false;
         this.setState({ resultData });
     }
 
-    toggleMenu = (arrowstate, arrow) => {
+    // toggleMenu = (arrowstate, arrow) => {
+    //     const { isCollapsed } = this.state;
+    //     this.setState({ isCollapsed: !isCollapsed });
+    //     if (arrowstate == 'show')
+    //         this.setState({ arrowstate: 'hide', arrow: 'up' });
+    //     else
+    //         this.setState({ arrowstate: 'show', arrow: 'down' });
+    //     // StoreEvent({ eventName: 'ToggleAdvancedFilter', data: { isCollapsed: !isCollapsed, ...payload } });
+    // }
+
+    toggleAdvancedFilter = (payload) => {
         const { isCollapsed } = this.state;
         this.setState({ isCollapsed: !isCollapsed });
-        if (arrowstate == 'show')
-            this.setState({ arrowstate: 'hide', arrow: 'up' });
-        else
-            this.setState({ arrowstate: 'show', arrow: 'down' });
-        // StoreEvent({ eventName: 'ToggleAdvancedFilter', data: { isCollapsed: !isCollapsed, ...payload } });
+        StoreEvent({ eventName: 'ToggleAdvancedFilter', data: { isCollapsed: !isCollapsed, ...payload } });
+
     }
 
     addFilter = () => {
@@ -211,16 +230,19 @@ export default class GenericQueryDetail extends Component {
 
     render() {
 
-        const { localSearch, arrowstate, arrow, queryParamsData = {}, preference, columns, params, finalColumns, resultData, currentPage, stats, isTab } = this.state;
+        const { localSearch, arrowstate, arrow, queryParamsData = {}, preference, columns, params, finalColumns, resultData, currentPage, stats, isTab, layout, loading } = this.state;
 
         const { history, match, parentData } = this.props;
 
         let filteredResults = [];
 
+        let filterContent = {};
+
+
         // if (localSearch.value) {
         //     filteredResults = listing.filter(entry => entry[starter + '.' + localSearch.field] && (entry[starter + '.' + localSearch.field].toString().toLowerCase().indexOf(localSearch.value) != -1));
         // }
-        console.log(preference);
+        console.log(this.state.layout);
         return (
             <div className="generic-query">
                 <div className="page-bar">
@@ -230,22 +252,23 @@ export default class GenericQueryDetail extends Component {
                         </div>
                         <div className="dynamic-filter-wrapper">
 
-                            {/* {
-                                filterContent && filterContent.dictionary &&
+                            {
+                                params && params.dictionary
+                                &&
                                 <DynamicFilter
-                                    toggleAdvancedFilter={this.toggleAdvancedFilter}
-                                    menuUpdatedCallback={this.predefinedFiltersUpdated}
-                                    selectedColumns={genericData.layout ? genericData.layout.column_definition : null}
-                                    menuId={menuDetail.menuId}
-                                    currentUser={currentUser}
-                                    dictionary={filterContent.dictionary}
-                                    layouts={menuDetail.layouts}
-                                    restrictedQuery={menuDetail.restricted_query}
-                                    restrictedColumn={menuDetail.restrictColumnFilter}
-                                    history={history}
-                                    match={match}
+                                    toggleAdvancedFilter={this.toggleAdvancedFilter}    //@Done
+                                    //menuUpdatedCallback={this.predefinedFiltersUpdated}
+                                    selectedColumns={this.state.layout ? this.state.layout.column_definition : null} //@Done
+                                    menuId={this.props.menuId}  //@Done
+                                    currentUser={this.state.layout.user_id} //@Done
+                                    dictionary={params.dictionary.invoice_details}   //@done
+                                    layouts={this.layout}   //@Done
+                                    // restrictedQuery={menuDetail.restricted_query}
+                                    // restrictedColumn={menuDetail.restrictColumnFilter}
+                                    history={history}   //@Done
+                                    match={match}   //@Done
                                 />
-                            } */}
+                            }
                         </div>
                     </div>
                     <div className="listing-tools right">
@@ -284,6 +307,28 @@ export default class GenericQueryDetail extends Component {
                     </div>
 
                 </div>
+
+                <div className="configure-filter-wrapper">
+                    {!loading ?
+                        <div>
+                            {/* {console.log(params.dictionary.invoice_details)}
+                            {this.setState.filterContent = params.dictionary}
+                            {console.log(filterContent)} */}
+
+                            {filterContent &&
+                                <QueryConfigureDynamicFilter
+                                    history={history}
+                                    match={match}
+                                //    filters={genericData.userFilter} //@Todo Check the data required. And designthe function
+                                //    content={filterContent}   //@Todo --dittoo--
+                                      dictionary={params.dictionary.invoice_details}
+                                      layout={layout}
+                                
+                                />}
+                        </div>
+                        : <div>Loading</div>}
+                </div>
+
                 <div className="query-details">
                     <div className="query-header">
                         <div className="header-content">
@@ -297,13 +342,6 @@ export default class GenericQueryDetail extends Component {
                                     <button className="metrics cursor-pointer" onClick={() => this.toggleMenu(arrowstate, arrow)}>
                                         <i className={`fa fa-arrow-${arrow}`}>&nbsp;{arrowstate} metrics</i>
                                     </button>
-
-                                    {/* {
-                                        this.state.isCollapsed &&
-                                        <div className="active-filters">
-                                            <button className="btn btn-lg btn-primary"><i className="fa fa-plus"></i></button>
-                                        </div>
-                                    } */}
                                 </div>
                             }
                         </div>
@@ -312,9 +350,9 @@ export default class GenericQueryDetail extends Component {
                     {
                         this.state.isCollapsed &&
                         <div className="active-filters-container">
-                            <div className="active-filters">
+                            {/* <div className="active-filters">
                                 <button className="btn btn-lg btn-primary" onClick={(e) => { e.preventDefault(); this.addFilter(); }}><i className="fa fa-plus"></i></button>
-                            </div>
+                            </div> */}
                         </div>
                     }
                 </div>

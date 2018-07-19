@@ -341,9 +341,9 @@ export default class QueryTableSettings extends Component {
                 response.column_definition = JSON.parse(response.value);
                 layout = response;
             }
+            
             this.props.onSubmit(layout);
         }
-
 
     }
 
