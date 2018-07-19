@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@atlaskit/flag": "^8.1.4",
     "@atlaskit/tooltip": "^10.3.1",
     "add": "^2.0.6",
     "bootstrap": "^4.0.0",
     "bootstrap-daterangepicker": "^3.0.1",
+    "drivezy-web-utils": "0.0.3",
     "formik": "^0.11.11",
     "imageviewer": "^1.0.0",
     "jquery": "^3.3.1",
@@ -28,7 +28,6 @@
     "react-select": "^2.0.0-beta.6",
     "react-viewer": "^2.5.0",
     "reactstrap": "^5.0.0-beta.3",
-    "styled-components": "^3.3.3",
     "yarn": "^1.7.0",
     "yup": "^0.24.1"
   },

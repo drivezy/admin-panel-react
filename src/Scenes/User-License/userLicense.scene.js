@@ -1,26 +1,22 @@
 import React, { Component } from 'react';
-import './userLicense.scene.css';
-
-import Viewer from 'react-viewer';
-import 'react-viewer/dist/index.css';
-
 import {
     Card, CardHeader, CardBody
 } from 'reactstrap';
 
+import Viewer from 'react-viewer';
+import 'react-viewer/dist/index.css';
 import classNames from 'classnames';
 
-import { Get, Put, Delete } from './../../Utils/http.utils';
-import { GetDefaultOptions } from './../../Utils/genericListing.utils';
-import ToastNotifications from './../../Utils/toast.utils';
-import { ConfirmUtils } from './../../Utils/confirm-utils/confirm.utils';
+import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
 import UserLicenseForm from './../../Components/User-License-Form/userLicenseForm.component';
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import RejectLicenseForm from './../../Components/Reject-License-Form/rejectLiceneseForm.component';
 
-
-
+import { Get, Put, Delete } from './../../Utils/http.utils';
+import { GetDefaultOptions } from './../../Utils/genericListing.utils';
+import { ConfirmUtils } from './../../Utils/confirm-utils/confirm.utils';
+import './userLicense.scene.css';
 
 export default class UserLicense extends Component {
     container: HTMLDivElement;
@@ -117,7 +113,7 @@ export default class UserLicense extends Component {
             if (result.success) {
                 images[currentIndex].reviewed = true;
 
-                ToastNotifications.success('License is Accepted');
+                ToastNotifications.success({ title: 'License is Accepted' });
             }
         }
         ConfirmUtils.confirmModal({ message: "Are you sure you want to accept license?", callback: method });
@@ -144,7 +140,7 @@ export default class UserLicense extends Component {
         const method = async () => {
             const result = await Delete({ url: "userLicense/" + images[currentIndex].id });
             if (result.success) {
-                ToastNotifications.success('License is Deleted!');
+                ToastNotifications.success({ title: 'License is Deleted!' });
                 this.getLicense();
             }
         }
