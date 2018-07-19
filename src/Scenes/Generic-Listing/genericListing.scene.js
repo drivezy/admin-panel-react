@@ -6,6 +6,10 @@ import {
     Card, CardBody, Button
 } from 'reactstrap';
 
+import { HotKeys } from 'react-hotkeys';
+
+import { GetUrlParams, Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
+
 import DynamicFilter from './../../Components/Dynamic-Filter/dynamicFilter.component';
 import ConfigureDynamicFilter from './../../Components/Configure-Filter/configureFilter.component';
 import ListingPagination from './../../Components/Listing-Pagination/ListingPagination';
@@ -15,11 +19,7 @@ import CustomAction from './../../Components/Custom-Action/CustomAction.componen
 import PredefinedFilter from './../../Components/Dropdown-Filter/filter.component';
 import ListingSearch from './../../Components/Listing-Search/listingSearch.component';
 
-import { HotKeys } from 'react-hotkeys';
-import { GetUrlParams, Location } from 'drivezy-web-utils/build/Utils';
-
 import { CopyToClipBoard } from './../../Utils/common.utils';
-import ToastUtils from './../../Utils/toast.utils';
 import { Get } from './../../Utils/http.utils';
 import { BuildUrlForGetCall, SelectFromOptions } from './../../Utils/common.utils';
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
@@ -126,7 +126,7 @@ export default class GenericListing extends Component {
         const result = await Get({ url });
 
         if (result.success) {
-            ToastUtils.success({ description: result.response, title: caption });
+            ToastNotifications.success({ description: result.response, title: caption });
         }
     }
 
@@ -413,7 +413,7 @@ export default class GenericListing extends Component {
             onClick: (data) => {
                 let id = data.listingRow[data.starter + '.id'];
                 CopyToClipBoard(id);
-                ToastUtils.success({ description: "Id - " + id + " has been copied", title: 'Copy Id' });
+                ToastNotifications.success({ description: "Id - " + id + " has been copied", title: 'Copy Id' });
             },
             disabled: false
         }, { subMenu: null }, {

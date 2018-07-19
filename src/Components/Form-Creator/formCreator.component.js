@@ -9,9 +9,11 @@ import {
 import { withFormik, Field, Form } from 'formik';
 import Yup from 'yup';
 
+import { SetItem , ToastNotifications} from 'drivezy-web-utils/build/Utils';
+
 import { Upload, Post, Put, Get } from './../../Utils/http.utils';
 import { GetChangedMethods } from './../../Utils/generic.utils';
-import { IsObjectHaveKeys, IsUndefined, SelectFromOptions } from './../../Utils/common.utils';
+import { IsObjectHaveKeys, IsUndefined } from './../../Utils/common.utils';
 
 //  import SelectBox from './../Forms/Components/Select-Box/selectBox';
 
@@ -38,11 +40,8 @@ import { GetUrlForFormSubmit } from './../../Utils/generic.utils';
 import { ROUTE_URL } from './../../Constants/global.constants';
 import COLUMN_TYPE from './../../Constants/columnType.constants';
 
-import { SetItem } from 'drivezy-web-utils/build/Utils';
-
 import RightClick from './../../Components/Right-Click/rightClick.component';
 import { CopyToClipBoard } from './../../Utils/common.utils';
-import ToastUtils from './../../Utils/toast.utils';
 
 const booleanOptions = [{ name: "True", id: 1 }, { name: "False", id: 0 }];
 
@@ -562,7 +561,7 @@ export default class FormCreator extends Component {
         onClick: (data) => {
             let prop = data.column.name;
             CopyToClipBoard(prop);
-            ToastUtils.success({ description: "Column name " + data.column.name + " has been copied", title: 'Column Name' });
+            ToastNotifications.success({ description: "Column name " + data.column.name + " has been copied", title: 'Column Name' });
         }
     }];
 

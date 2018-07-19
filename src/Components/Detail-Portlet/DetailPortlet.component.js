@@ -8,7 +8,7 @@ import {
 import RightClick from './../../Components/Right-Click/rightClick.component';
 
 import { CopyToClipBoard } from './../../Utils/common.utils';
-import ToastUtils from './../../Utils/toast.utils';
+import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
 import { RowTemplate } from './../../Utils/generic.utils';
 
 export default class DetailPortlet extends Component {
@@ -30,7 +30,7 @@ export default class DetailPortlet extends Component {
         onClick: (data) => {
             let prop = data.selectedColumn.name;
             CopyToClipBoard(prop);
-            ToastUtils.success({ description: "Column name " + data.selectedColumn.name + " has been copied", title: 'Column Name' });
+            ToastNotifications.success({ description: "Column name " + data.selectedColumn.name + " has been copied", title: 'Column Name' });
         }
     }, {
         id: 0,
@@ -40,7 +40,7 @@ export default class DetailPortlet extends Component {
         onClick: (data) => {
             let prop = data.listingRow[data.selectedColumn.path];
             CopyToClipBoard(prop);
-            ToastUtils.success({ description: "Property of " + data.selectedColumn.path + " has been copied", title: "Copy " + data.selectedColumn.path });
+            ToastNotifications.success({ description: "Property of " + data.selectedColumn.path + " has been copied", title: "Copy " + data.selectedColumn.path });
         }
     }, {
         id: 1,
@@ -50,7 +50,7 @@ export default class DetailPortlet extends Component {
         onClick: (data) => {
             let id = data.listingRow[data.starter + '.id'];
             CopyToClipBoard(id);
-            ToastUtils.success({ description: "Id - " + id + " has been copied", title: 'Copy Id' });
+            ToastNotifications.success({ description: "Id - " + id + " has been copied", title: 'Copy Id' });
         }
     }];
 
@@ -79,7 +79,7 @@ export default class DetailPortlet extends Component {
                                             </Col>
                                         </div>
 
-                                    const seperatorHtml = 
+                                    const seperatorHtml =
                                         <div className="seperator">
                                             <strong> {selectedColumn.label} </strong>
                                         </div>
@@ -88,8 +88,8 @@ export default class DetailPortlet extends Component {
                                         selectedColumn &&
                                         <Col className="gray-border-bottom padding-bottom-4 padding-top-4" key={key} xs={((selectedColumn.split) && (!selectedColumn.separator)) ? '6' : '12'}>
                                             <RightClick key={key} renderTag="div" rowOptions={this.rowOptions} html={
-                                                 (!selectedColumn.separator) ? html : seperatorHtml
-                                                } listingRow={listingRow} selectedColumn={selectedColumn} starter={starter}></RightClick>
+                                                (!selectedColumn.separator) ? html : seperatorHtml
+                                            } listingRow={listingRow} selectedColumn={selectedColumn} starter={starter}></RightClick>
                                         </Col>
                                     )
                                 })

@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
-import './Signup.scene.css';
-import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle, Button, Form, FormGroup, Label, Input } from 'reactstrap';
-import GLOBAL from './../../Constants/global.constants';
-import Yup from "yup";
-import classnames from "classnames";
-import { withFormik } from 'formik';
-
-
 import {
   Redirect
 } from 'react-router-dom';
 
-import { Post, Get } from './../../Utils/http.utils';
-import { Location } from 'drivezy-web-utils/build/Utils';
-import ToastNotifications from '../../Utils/toast.utils';
+import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
+
+import { Card, CardBody, Label } from 'reactstrap';
+import Yup from "yup";
+import classnames from "classnames";
+import { withFormik } from 'formik';
+
+import { Post } from './../../Utils/http.utils';
+
+import GLOBAL from './../../Constants/global.constants';
+
+import './Signup.scene.css';
+
 
 
 const formikEnhancer = withFormik({
