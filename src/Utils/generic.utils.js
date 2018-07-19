@@ -22,7 +22,7 @@ import PreferenceSetting from './../Components/Preference-Setting/preferenceSett
 
 import { GetMenuDetailEndPoint, FormDetailEndPoint } from './../Constants/api.constants';
 import { ROUTE_URL, RECORD_URL } from './../Constants/global.constants';
-import { MATCH_PARENT_PATH, MATCH_WHITESPACE } from './../Constants/regex.constants';
+import { MATCH_PARENT_PATH, MATCH_START_END_PARANTHESIS, MATCH_WHITESPACE } from './../Constants/regex.constants';
 import COLUMN_TYPE from './../Constants/columnType.constants';
 
 /**
@@ -777,22 +777,28 @@ export function ParseRestrictedQuery(queryString) {
     if (!queryString) {
         return parsedQuery;
     }
-    const queries = queryString.split(' and ');
-    queries.forEach(query => {
-        if (!query) {
-            return;
-        }
+    let queries = queryString.split(' and ');
+    queries.forEach(orQuery => {
+        
+        orQuery = orQuery.replace(MATCH_START_END_PARANTHESIS, ''); 
+        const queryArr = orQuery.split(' or ');
+        queryArr.forEach(query => {
+            if (!query) {
+                return;
+            }
 
-        query = query.replace(MATCH_PARENT_PATH, '').replace(MATCH_WHITESPACE, '');
-        query = query.split('=');
-        let value = query[1];
+            query = query.replace(MATCH_PARENT_PATH, '').replace(MATCH_WHITESPACE, '');
+            query = query.split('=');
+            let value = query[1];
 
-        if (typeof value == 'string') {
-            value = value.replace(/'/g, '');
-        }
-        parsedQuery[query[0]] = value;
-        // parsedQuery.push(query)
+            if (typeof value == 'string') {
+                value = value.replace(/'/g, '');
+            }
+            parsedQuery[query[0]] = value;
+            // parsedQuery.push(query)
 
-    });
+        });
+    })
+
     return parsedQuery;
 }
