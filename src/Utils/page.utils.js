@@ -1,6 +1,6 @@
-import { Location } from 'drivezy-web-utils/build/Utils';
+import { Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
 import { CreateUrl } from './generic.utils';
-import ToastNotifications from './toast.utils';
+
 import { Get, Post, Delete, Put } from './http.utils';
 
 let self = {};
@@ -40,7 +40,7 @@ export default class Pageutil {
     }
 
     static alert(message) {
-        ToastNotifications.success(message);
+        ToastNotifications.success({ title: message });
     }
 
     static getMenuDetail() {

@@ -36,7 +36,7 @@ export function SetPreference({ userId, menuId, name = 'default', selectedColumn
     }
 
     if (!source_type) {
-        alert('Please provide valid source for setting preference'); // @TODO replace with ToastUtils
+        alert('Please provide valid source for setting preference'); // @TODO replace with ToastNotifications
     }
 
     if (IsObjectHaveKeys(layout)) {

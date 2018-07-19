@@ -1,21 +1,16 @@
 import React, { Component } from 'react';
 
-import { Location } from 'drivezy-web-utils/build/Utils';
+import { Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
 import { Get } from './http.utils';
-import { IsUndefinedOrNull, BuildUrlForGetCall, IsObjectHaveKeys } from './common.utils';
-import ToastNotifications from './toast.utils';
 import { Delete } from './http.utils';
+import { IsUndefinedOrNull, BuildUrlForGetCall, IsObjectHaveKeys } from './common.utils';
 import { ConfirmUtils } from './confirm-utils/confirm.utils';
 import { ProcessForm } from './formMiddleware.utils';
 
 import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 
-// import FormCreator from './../Components/Form-Creator/formCreator.component'
-import PortletTable from '../Components/Portlet-Table/PortletTable.component';
-
 import ParseComponent from './../Components/Generic-Column-Filters/parseComponent.component';
-// import LoadAsyncComponent from './../Async/async';
 
 import TableWrapper from './../Components/Table-Wrapper/tableWrapper.component';
 import PreferenceSetting from './../Components/Preference-Setting/preferenceSetting.component';

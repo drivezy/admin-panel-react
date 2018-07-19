@@ -1,4 +1,5 @@
-import Toast from './../Utils/toast.utils';
+import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
+
 import Validity from './../Utils/validity.utils';
 import { Get, Post } from './../Utils/http.utils';
 import { GenerateLoginOTP } from './../Constants/api.constants';
@@ -11,7 +12,7 @@ export async function CheckUsername({ username, history }) {
     const userNameValid = Validity.check({ type: ['mobile', 'email'], value: username, anyTrue: true });
     let message = '';
     if (!userNameValid.success) {
-        Toast.error('Username is not valid');
+        ToastNotifications.error({ title: 'Username is not valid' });
         return;
     }
     const result = await Post({ url: GenerateLoginOTP, body: { username }, hideMessage: true });
@@ -38,7 +39,7 @@ export async function CheckUsername({ username, history }) {
             break;
     }
 
-    Toast.error(message);
+    ToastNotifications.error({ title: message });
 }
 
 /**
@@ -51,7 +52,7 @@ export async function Login(username, password, history, nextScene) {
     const passwordValid = Validity.check({ type: ['required'], value: password, anyTrue: true });
     if (!userNameValid.success || !passwordValid.success) {
         const message = !userNameValid.success ? 'Username is not valid' : 'Password cant be left blank';
-        Toast.error(message);
+        ToastNotifications.error({ title: message });
         return;
     }
     const result = await Post({ url: LoginEndPoint, body: { username, password } });
@@ -82,13 +83,13 @@ export async function Register(name, email, password, rePassword, history) {
     const emailValid = Validity.check({ type: ['email'], value: email, anyTrue: true });
     const passwordValid = Validity.check({ type: ['required'], value: password, anyTrue: true });
     if (password != rePassword) {
-        Toast.error('password doesn\'t match');
+        ToastNotifications.error({ title: 'password doesn\'t match' });
         return;
     }
     if (!(nameValid.success && emailValid.success && passwordValid.success)) {
         // if Name is not valid, show name error, else if email is not valid, show mail error, else show password error
         const message = !nameValid.success ? 'Please fill valid name' : (!emailValid.success ? 'Please fill valid email' : 'Please enter Password');
-        Toast.error(message);
+        ToastNotifications.error({ title: message });
         return;
     }
 
@@ -99,7 +100,7 @@ export async function Register(name, email, password, rePassword, history) {
         /**
         * result.reason is their insted of result.response
         */
-        Toast.error(result.reason);
+        ToastNotifications.error({ title: result.reason });
     }
 }
 
@@ -120,7 +121,7 @@ export async function OnOtpSubmit({ method, endpoint, mobile, history, otp, next
     const token = otp;
     const otpValidity = Validity.check({ type: 'otp', value: token });
     if (!otpValidity.success) {
-        Toast.error(otpValidity.error);
+        ToastNotifications.error({ title: otpValidity.error });
     }
     endpoint = endpoint || ValidateLoginOTP;
     const paramsDetail = {
