@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 
 import './genericQueryDetail.scene.css';
-
+import QueryHeader from './../../Components/Query-Report/Query-Header/queryHeader.component';
+import DynamicFilter from './../../Components/Dropdown-Filter/filter.component';
 import QueryTableSettings from './../../Components/Query-Report/Query-Table-Settings/queryTableSettings.component';
 import QueryPredefinedFilter from './../../Components/Query-Report/Query-Predefined-Filter/queryPredefinedFilter.component';
 import QueryDashboardForm from './../../Components/Query-Report/Query-Dashboard-Form/queryDashboardForm.component';
@@ -178,6 +179,12 @@ export default class GenericQueryDetail extends Component {
         this.setState({ resultData });
     }
 
+    toggleMenu = (payload = {}) => {
+        const { isCollapsed } = this.state;
+        this.setState({ isCollapsed: !isCollapsed });
+        StoreEvent({ eventName: 'ToggleAdvancedFilter', data: { isCollapsed: !isCollapsed, ...payload } });
+    }
+
     /**
      * Maintain localSearch for locally searching on type 
      */
@@ -202,10 +209,26 @@ export default class GenericQueryDetail extends Component {
                 <div className="page-bar">
                     <div className="listing-tools left">
                         <div className="search-box-wrapper">
-                            <ListingSearch localSearch={localSearch} onEdit={this.filterLocally} searchQuery={this.urlParams.search} dictionary={params.dictionary}/>
+                            <ListingSearch localSearch={localSearch} onEdit={this.filterLocally} searchQuery={this.urlParams.search} dictionary={params.dictionary} />
                         </div>
                         <div className="dynamic-filter-wrapper">
 
+                            {/* {
+                                filterContent && filterContent.dictionary &&
+                                <DynamicFilter
+                                    toggleAdvancedFilter={this.toggleAdvancedFilter}
+                                    menuUpdatedCallback={this.predefinedFiltersUpdated}
+                                    selectedColumns={genericData.layout ? genericData.layout.column_definition : null}
+                                    menuId={menuDetail.menuId}
+                                    currentUser={currentUser}
+                                    dictionary={filterContent.dictionary}
+                                    layouts={menuDetail.layouts}
+                                    restrictedQuery={menuDetail.restricted_query}
+                                    restrictedColumn={menuDetail.restrictColumnFilter}
+                                    history={history}
+                                    match={match}
+                                />
+                            } */}
                         </div>
                     </div>
                     <div className="listing-tools right">
@@ -216,7 +239,7 @@ export default class GenericQueryDetail extends Component {
 
                                 resultData && finalColumns && resultData.listName && resultData.columns && preference &&
                                 <QueryTableSettings
-                                    
+
                                     listName={resultData.listName}
                                     columns={resultData.columns}
                                     selectedColumns={preference}
@@ -247,8 +270,34 @@ export default class GenericQueryDetail extends Component {
                 <div className="query-details">
                     <div className="query-header">
                         <div className="header-content">
-                            <h6>{queryParamsData.name}</h6>
+                            {
+                                <div> {queryParamsData.name} </div>
+                            }
                         </div>
+                        <div className="metrics-container">
+                            {
+                                <div className="metrics-wrapper">
+                                    <button className="metrics cursor-pointer" onClick={() => this.toggleMenu()}>
+                                        Advanced
+                                    </button>
+
+                                    {this.state.isCollapsed &&
+                                        <div className="active-filters">
+                                            <ul className="form-groups">
+                                                <li className="list-item">ABC</li>
+                                                <li className="list-item">XYZ</li>
+                                                <li className="list-item">ABC</li>
+                                                <li className="list-item">XYZ</li>
+                                                <li className="list-item">ABC</li>
+                                                <li className="list-item">XYZ</li>
+                                            </ul>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+
+
                     </div>
                 </div>
 
