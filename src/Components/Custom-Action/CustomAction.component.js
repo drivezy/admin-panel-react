@@ -95,10 +95,6 @@ export default class CustomAction extends Component {
                         if(!action) { 
                             return null;
                         }
-                        if(action.display_order == '1')
-                        {
-                            console.log(actions);
-                        }
                         if (action[placement]) {
                             // if (action.placement_id == placement || true) {
                             const html =
