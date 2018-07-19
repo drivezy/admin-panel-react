@@ -193,8 +193,8 @@ export default class QueryTable extends Component {
                                             </td>
 
                                             {
-                                                 finalColumns &&
-                                                 finalColumns.map((selectedColumn, key) => {
+                                                finalColumns &&
+                                                finalColumns.map((selectedColumn, key) => {
                                                     // const html =
                                                     //     rowTemplate ?
                                                     //         rowTemplate({ listingRow, selectedColumn })
@@ -234,6 +234,8 @@ export default class QueryTable extends Component {
                                 listing.map((listingRow, rowKey) => (
                                     <tr className="table-row" key={rowKey}>
                                         <td className="action-column">
+                                            <i className="fa fa-pencil" aria-hidden="true" onClick={() => console.log("working")}></i>
+                                            
                                         </td>
                                     </tr>
                                 ))

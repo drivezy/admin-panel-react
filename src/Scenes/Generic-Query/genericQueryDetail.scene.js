@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import './genericQueryDetail.scene.css';
+import QueryHeader from './../../Components/Query-Report/Query-Header/queryHeader.component';
 
 import QueryTableSettings from './../../Components/Query-Report/Query-Table-Settings/queryTableSettings.component';
 import QueryPredefinedFilter from './../../Components/Query-Report/Query-Predefined-Filter/queryPredefinedFilter.component';
@@ -216,7 +217,7 @@ export default class GenericQueryDetail extends Component {
 
                                 resultData && finalColumns && resultData.listName && resultData.columns && preference &&
                                 <QueryTableSettings
-                                    
+
                                     listName={resultData.listName}
                                     columns={resultData.columns}
                                     selectedColumns={preference}
@@ -247,7 +248,13 @@ export default class GenericQueryDetail extends Component {
                 <div className="query-details">
                     <div className="query-header">
                         <div className="header-content">
-                            <h6>{queryParamsData.name}</h6>
+                            {
+                                <div> {queryParamsData.name} </div>
+                            }
+                            {
+                                
+                            }
+
                         </div>
                     </div>
                 </div>
