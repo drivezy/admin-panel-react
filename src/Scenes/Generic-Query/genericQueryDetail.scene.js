@@ -16,7 +16,13 @@ import { Post } from './../../Utils/http.utils';
 import { GetColumnsForListing, CreateFinalColumns, GetDefaultOptionsForQuery } from './../../Utils/query.utils';
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 
+import ListingSearch from './../../Components/Listing-Search/listingSearch.component';
+import { SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent } from './../../Utils/stateManager.utils';
+
+
 export default class GenericQueryDetail extends Component {
+    filterContent = {};
+    urlParams = Location.search();
 
     constructor(props) {
         super(props);
@@ -31,8 +37,12 @@ export default class GenericQueryDetail extends Component {
             limit: 20,
             finalColumns: [],
             isTab: null,
-            resultData: {}
+            resultData: {},
+            localSearch: {},
+            filterContent: null,
+            isCollapsed: true
         };
+        SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
 
     componentDidMount() {
@@ -65,6 +75,24 @@ export default class GenericQueryDetail extends Component {
             this.state.queryString = newProps.queryString;
             this.setState({ currentPage: this.state.queryString.page ? this.state.queryString.page : 1, limit: this.state.queryString.limit ? this.state.queryString.limit : 20 })
             this.getDataForListing();
+        }
+    }
+
+    userDataArrived = (user) => {
+        const { menuDetail, queryParamsData } = this.props;
+        this.state.currentUser = user;
+
+        if (queryParamsData) {
+            this.state.filterContent = queryParamsData.filterContent;
+            this.state.menuDetail = menuDetail;
+            this.state.loading = false;
+            return;
+        } else if (menuDetail) {
+            this.state.menuDetail = menuDetail;
+            // this.setState({ menuDetail });
+            this.getDataForListing();
+        } else {
+            this.getQueryParamsData();
         }
     }
 
@@ -129,7 +157,7 @@ export default class GenericQueryDetail extends Component {
 
             // return Get({ url, queryString: { page } });
             console.log(GetUrlParams(this.props));
-
+            console.log(queryParamsData);
         }
     }
 
@@ -150,19 +178,31 @@ export default class GenericQueryDetail extends Component {
         this.setState({ resultData });
     }
 
+    /**
+     * Maintain localSearch for locally searching on type 
+     */
+    filterLocally = (column, value) => {
+        this.setState({ localSearch: { field: column ? column.name : '', value: value ? value : null } });
+    }
+
     render() {
 
-        const { queryParamsData = {}, preference, columns, finalColumns, resultData, currentPage, stats, isTab } = this.state;
+        const { localSearch, queryParamsData = {}, preference, columns, params, finalColumns, resultData, currentPage, stats, isTab } = this.state;
 
         const { history, match, parentData } = this.props;
 
+        let filteredResults = [];
+
+        // if (localSearch.value) {
+        //     filteredResults = listing.filter(entry => entry[starter + '.' + localSearch.field] && (entry[starter + '.' + localSearch.field].toString().toLowerCase().indexOf(localSearch.value) != -1));
+        // }
         console.log(preference);
         return (
             <div className="generic-query">
                 <div className="page-bar">
                     <div className="listing-tools left">
                         <div className="search-box-wrapper">
-
+                            <ListingSearch localSearch={localSearch} onEdit={this.filterLocally} searchQuery={this.urlParams.search} dictionary={params.dictionary}/>
                         </div>
                         <div className="dynamic-filter-wrapper">
 
