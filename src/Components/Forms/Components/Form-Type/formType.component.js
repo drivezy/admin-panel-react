@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { Button } from 'reactstrap';
 import { Post } from './../../../../Utils/http.utils';
-import { Location } from './../../../../Utils/location.utils';
+import { Location } from 'drivezy-web-utils/build/Utils';
 import { RECORD_URL } from './../../../../Constants/global.constants';
 
 export default class FormType extends Component {

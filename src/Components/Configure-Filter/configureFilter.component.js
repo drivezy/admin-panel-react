@@ -11,7 +11,7 @@ import { SelectFromOptions, BuildUrlForGetCall, IsUndefinedOrNull, IsUndefined }
 import { RawStringQueryToObject, RemoveLastWord, GetSelectedColumn } from './../../Utils/dynamicFilter.utils';
 import { Get } from './../../Utils/http.utils';
 import { GetTime, TimeOperation } from './../../Utils/time.utils';
-import { Location } from './../../Utils/location.utils';
+import { Location } from 'drivezy-web-utils/build/Utils';
 
 import GLOBAL from './../../Constants/global.constants';
 import COLUMN_TYPE from './../../Constants/columnType.constants';

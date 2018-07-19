@@ -16,18 +16,16 @@ import PredefinedFilter from './../../Components/Dropdown-Filter/filter.componen
 import ListingSearch from './../../Components/Listing-Search/listingSearch.component';
 
 import { HotKeys } from 'react-hotkeys';
+import { GetUrlParams, Location } from 'drivezy-web-utils/build/Utils';
 
 import { CopyToClipBoard } from './../../Utils/common.utils';
 import ToastUtils from './../../Utils/toast.utils';
 import { Get } from './../../Utils/http.utils';
 import { BuildUrlForGetCall, SelectFromOptions } from './../../Utils/common.utils';
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
-import { GetUrlParams, Location } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
 import { GetListingRecord } from './../../Utils/genericListing.utils';
 import { SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent } from './../../Utils/stateManager.utils';
-
-import { InjectMessage } from './../../Utils/inject-method/injectScript.utils'
 
 export default class GenericListing extends Component {
     filterContent = {};

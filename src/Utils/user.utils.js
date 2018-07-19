@@ -8,7 +8,7 @@ import { StoreEvent } from './stateManager.utils';
  * All user related utility methods
  ***********************************/
 
-import { GetItem } from './localStorage.utils';
+import { GetItem } from 'drivezy-web-utils/build/Utils';
 
 import { LoginCheckEndPoint } from './../Constants/api.constants';
 

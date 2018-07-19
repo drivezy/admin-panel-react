@@ -12,7 +12,7 @@ import { CreateFinalColumns } from './../../Utils/generic.utils';
 import { CopyToClipBoard } from './../../Utils/common.utils';
 import ToastNotifications from './../../Utils/toast.utils';
 
-import { Location } from './../../Utils/location.utils';
+import { Location } from 'drivezy-web-utils/build/Utils';
 
 
 import './DetailIncludes.css';

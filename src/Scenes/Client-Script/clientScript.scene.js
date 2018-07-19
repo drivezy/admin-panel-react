@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import SelectBox from './../../Components/Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import ScriptInput from './../../Components/Forms/Components/Script-Input/scriptInput.component';
 
-import { GetUrlParams, Location } from './../../Utils/location.utils';
+import { GetUrlParams, Location } from 'drivezy-web-utils/build/Utils';
 
 import { BuildUrlForGetCall, IsObjectHaveKeys } from './../../Utils/common.utils';
 import { Get, Put, Post } from './../../Utils/http.utils';

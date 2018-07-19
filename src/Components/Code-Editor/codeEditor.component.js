@@ -15,7 +15,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import { SelectFromOptions } from './../../Utils/common.utils';
 import { Get, Post, Put } from './../../Utils/http.utils';
-import { GetItem, SetItem } from './../../Utils/localStorage.utils';
+import { GetItem, SetItem } from 'drivezy-web-utils/build/Utils';
 
 import 'brace/mode/php';
 import 'brace/mode/javascript';

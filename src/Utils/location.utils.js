@@ -2,7 +2,6 @@
  * Implements Location service same as angular have
  *************************************************/
 // import History from './history.utils';
-import createBrowserHistory from 'history/createBrowserHistory';
 
 /**
  * takes search string and converts to corresponding object
