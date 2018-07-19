@@ -14,7 +14,7 @@ import { Get } from './http.utils';
 
 import { ROUTE_URL, RECORD_URL } from './../Constants/global.constants';
 import { SelectFromOptions } from './common.utils';
-import { GetItem } from './localStorage.utils';
+import { GetItem } from 'drivezy-web-utils/build/Utils';
 import { ConfirmUtils } from './confirm-utils/confirm.utils';
 
 export async function ProcessForm({ formContent, scripts, isForm, openModal = true }) {

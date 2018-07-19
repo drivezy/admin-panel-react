@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
-import { Location } from './../../Utils/location.utils';
+import { IsUndefined } from './../../Utils/common.utils';
+import { Location } from 'drivezy-web-utils/build/Utils';
 import ToastNotifications from './../../Utils/toast.utils';
-import { Delete } from './../../Utils/http.utils';
-import { IsUndefined } from '../../Utils/common.utils';
 import { DeletePreference } from './../../Utils/preference.utils';
-
-import { MenuFilterEndPoint } from './../../Constants/api.constants';
 
 import './filter.component.css';
 

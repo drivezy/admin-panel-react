@@ -3,7 +3,7 @@ import { StoreEvent } from './stateManager.utils';
 import { GetSourceMorphMap } from './preference.utils';
 import { Get, Post, Delete, Put } from './http.utils';
 import { ROUTE_URL } from './../Constants/global.constants';
-import { Location } from './location.utils';
+import { Location } from 'drivezy-web-utils/build/Utils';
 import { CreateUrl } from './generic.utils';
 
 let self = {};

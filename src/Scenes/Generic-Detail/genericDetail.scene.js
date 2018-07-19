@@ -7,6 +7,8 @@ import {
     Row, Col, TabContent, TabPane, Nav, NavItem, NavLink, Table
 } from 'reactstrap';
 
+import { GetUrlParams, Location } from 'drivezy-web-utils/build/Utils';
+
 import { StoreEvent, SubscribeToEvent, UnsubscribeEvent } from './../../Utils/stateManager.utils';
 
 import DetailPortlet from './../../Components/Detail-Portlet/DetailPortlet.component';
@@ -16,7 +18,6 @@ import CustomAction from './../../Components/Custom-Action/CustomAction.componen
 import RightClick from './../../Components/Right-Click/rightClick.component';
 
 import { RemoveStarterFromThePath } from './../../Utils/generic.utils';
-import { GetUrlParams, Location } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
 import { GetDetailRecord } from './../../Utils/genericDetail.utils';
 import { createFinalObject } from './../../Utils/table.utils';

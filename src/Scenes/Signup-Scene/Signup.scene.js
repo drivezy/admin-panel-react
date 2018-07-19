@@ -12,7 +12,7 @@ import {
 } from 'react-router-dom';
 
 import { Post, Get } from './../../Utils/http.utils';
-import { Location } from './../../Utils/location.utils';
+import { Location } from 'drivezy-web-utils/build/Utils';
 import ToastNotifications from '../../Utils/toast.utils';
 
 

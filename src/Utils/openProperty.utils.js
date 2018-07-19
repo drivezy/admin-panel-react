@@ -1,7 +1,7 @@
-import { Get } from './../Utils/http.utils';
-import { SetItem, GetItem } from './../Utils/localStorage.utils';
-import { SetCookie, GetCookie } from './../Utils/cookie.utils';
-import { ArrayToObject } from './../Utils/common.utils';
+import { Get } from './http.utils';
+import { SetItem, GetItem } from 'drivezy-web-utils/build/Utils';
+import { SetCookie, GetCookie } from 'drivezy-web-utils/build/Utils';
+import { ArrayToObject } from './common.utils';
 
 import { OpenPropertiesEndPoint } from './../Constants/api.constants';
 

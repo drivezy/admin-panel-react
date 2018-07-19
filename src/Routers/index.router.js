@@ -13,7 +13,8 @@ import SettingsUtil from './../Utils/settings.utils';
 import { PreserveState } from './../Utils/preserveUrl.utils';
 import { GetMenusFromApi } from './../Utils/menu.utils';
 import LoadAsync from './../Utils/loadAsyncScripts.utils';
-import { Location } from './../Utils/location.utils';
+import { Location } from 'drivezy-web-utils/build/Utils';
+// import { Location } from './../Utils/location.utils';
 
 
 // import { GetProperties } from './../Utils/openProperty.utils';
@@ -33,6 +34,7 @@ export default class IndexRouter extends Component {
             menuFetched: true,
         }
         // props.GetCities();
+        // console.log(Location);
         Location.getHistoryMethod(this.getRouterProps); // pass methods, so that location utils can get history object
     }
 

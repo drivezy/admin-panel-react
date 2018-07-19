@@ -3,7 +3,7 @@
  * Also based on Internet connectivity, can save api call which require less attention and invoke them later 
  * Supports app working even when device is not connected any network
  ******************************************************************************************************************/
-import { SetItem, SetNonVolatileItem, GetItem } from './localStorage.utils';
+import { SetItem, SetNonVolatileItem, GetItem } from 'drivezy-web-utils/build/Utils';
 import { IsEqualObject } from './common.utils';
 
 /**

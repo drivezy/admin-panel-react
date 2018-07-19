@@ -6,7 +6,7 @@ import './listingSearch.component.css'
 import GLOBAL from './../../Constants/global.constants';
 
 import { SelectFromOptions, IsObjectHaveKeys } from './../../Utils/common.utils';
-import { Location } from './../../Utils/location.utils';
+import { Location } from 'drivezy-web-utils/build/Utils';
 import { Get } from './../../Utils/http.utils';
 import { BuildUrlForGetCall } from './../../Utils/common.utils';
 

@@ -7,7 +7,7 @@
 
 // To learn more about the benefits of this model, read https://goo.gl/KwvDNy.
 // This link also includes instructions on opting out of this behavior.
-import { SetItem } from './Utils/localStorage.utils';
+import { SetItem } from 'drivezy-web-utils/build/Utils';
 
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||

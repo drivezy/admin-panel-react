@@ -1,4 +1,4 @@
-import { Location } from './location.utils';
+import { Location } from 'drivezy-web-utils/build/Utils';
 import { CreateUrl } from './generic.utils';
 import ToastNotifications from './toast.utils';
 import { Get, Post, Delete, Put } from './http.utils';

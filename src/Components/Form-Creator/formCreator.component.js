@@ -38,7 +38,7 @@ import { GetUrlForFormSubmit } from './../../Utils/generic.utils';
 import { ROUTE_URL } from './../../Constants/global.constants';
 import COLUMN_TYPE from './../../Constants/columnType.constants';
 
-import { SetItem } from './../../Utils/localStorage.utils';
+import { SetItem } from 'drivezy-web-utils/build/Utils';
 
 import RightClick from './../../Components/Right-Click/rightClick.component';
 import { CopyToClipBoard } from './../../Utils/common.utils';

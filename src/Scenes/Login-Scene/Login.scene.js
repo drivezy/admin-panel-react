@@ -3,7 +3,7 @@ import './Login.scene.css';
 import { Card, CardBody, Button, Form, FormGroup, Label } from 'reactstrap';
 
 import { SubscribeToEvent } from './../../Utils/stateManager.utils';
-import { Location } from './../../Utils/location.utils';
+import { Location } from 'drivezy-web-utils/build/Utils';
 
 import GLOBAL from './../../Constants/global.constants';
 
