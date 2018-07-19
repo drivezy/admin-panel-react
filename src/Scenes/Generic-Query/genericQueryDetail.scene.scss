@@ -60,27 +60,45 @@
             }
         }
     }
+
+    .active-filters-container{
+        background: #dce3e6 !important;
+        .btn{
+            margin: 5px;
+            background-color: #fff !important;
+            color: #555;
+            border-color: #fff;
+            padding: 20px 30px;
+        }
+    }
     .query-details {
         .query-header {
+            
             display: flex;
             background: #dcdcdc7a;
             min-height: 45px;
             //height : 45px;
             border: 1px solid #d6d6d6;
-            margin: 3px;
+            margin: 0px;
+            padding: 8px;
             .header-content {
                 margin: 5px;
                 display: -ms-flexbox;
-                display: flex; //  justify-content: space-between;
+                // display: flex; //  justify-content: space-between;
                 align-items: center;
-                flex-basis: 20%;
+                flex-basis: 10%;
+                position: relative;
+                .content-name{
+                    position: absolute;
+                    float: left;
+                }
             }
             .metrics-container {
-                float: left;
+                float: right;
                 position: relative;
                 align-content: center;
                 .metrics-wrapper {
-                    position: absolute;
+                    position: relative;
                     .metrics {
                         //position: absolute;
                         float: left;
@@ -88,7 +106,8 @@
                     }
 
                     .active-filters {
-                        
+                        background-color: #e2e4e6 !important;
+                    }
                         .form-groups {
                             display:flex;
                             flex-direction: column;
@@ -98,4 +117,3 @@
             }
         }
     }
-}

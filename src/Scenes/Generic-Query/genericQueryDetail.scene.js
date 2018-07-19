@@ -7,6 +7,7 @@ import QueryTableSettings from './../../Components/Query-Report/Query-Table-Sett
 import QueryPredefinedFilter from './../../Components/Query-Report/Query-Predefined-Filter/queryPredefinedFilter.component';
 import QueryDashboardForm from './../../Components/Query-Report/Query-Dashboard-Form/queryDashboardForm.component';
 import QueryTable from './../../Components/Query-Report/Query-Table/queryTable.component';
+import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import { Get } from './../../Utils/http.utils';
 import ListingPagination from './../../Components/Listing-Pagination/ListingPagination';
 import { GetUrlParams, Location } from './../../Utils/location.utils';
@@ -41,14 +42,15 @@ export default class GenericQueryDetail extends Component {
             resultData: {},
             localSearch: {},
             filterContent: null,
-            isCollapsed: true
+            isCollapsed: false,
+            arrowstate: 'show',
+            arrow: 'down'
         };
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
 
     componentDidMount() {
         this.getQueryParamsData();
-        console.log(this.state)
     }
 
     refreshPage() {
@@ -179,10 +181,25 @@ export default class GenericQueryDetail extends Component {
         this.setState({ resultData });
     }
 
-    toggleMenu = (payload = {}) => {
+    toggleMenu = (arrowstate, arrow) => {
         const { isCollapsed } = this.state;
         this.setState({ isCollapsed: !isCollapsed });
-        StoreEvent({ eventName: 'ToggleAdvancedFilter', data: { isCollapsed: !isCollapsed, ...payload } });
+        if (arrowstate == 'show')
+            this.setState({ arrowstate: 'hide', arrow: 'up' });
+        else
+            this.setState({ arrowstate: 'show', arrow: 'down' });
+        // StoreEvent({ eventName: 'ToggleAdvancedFilter', data: { isCollapsed: !isCollapsed, ...payload } });
+    }
+
+    addFilter = () => {
+        ModalManager.openModal({
+            headerText: 'Input Form',
+            modalBody: () => (
+                <div className="metrics-form">
+                    Form content
+                </div>
+            ),
+        });
     }
 
     /**
@@ -194,7 +211,7 @@ export default class GenericQueryDetail extends Component {
 
     render() {
 
-        const { localSearch, queryParamsData = {}, preference, columns, params, finalColumns, resultData, currentPage, stats, isTab } = this.state;
+        const { localSearch, arrowstate, arrow, queryParamsData = {}, preference, columns, params, finalColumns, resultData, currentPage, stats, isTab } = this.state;
 
         const { history, match, parentData } = this.props;
 
@@ -271,34 +288,35 @@ export default class GenericQueryDetail extends Component {
                     <div className="query-header">
                         <div className="header-content">
                             {
-                                <div> {queryParamsData.name} </div>
+                                <div className="content-name"> {queryParamsData.name} </div>
                             }
                         </div>
                         <div className="metrics-container">
                             {
                                 <div className="metrics-wrapper">
-                                    <button className="metrics cursor-pointer" onClick={() => this.toggleMenu()}>
-                                        Advanced
+                                    <button className="metrics cursor-pointer" onClick={() => this.toggleMenu(arrowstate, arrow)}>
+                                        <i className={`fa fa-arrow-${arrow}`}>&nbsp;{arrowstate} metrics</i>
                                     </button>
 
-                                    {this.state.isCollapsed &&
+                                    {/* {
+                                        this.state.isCollapsed &&
                                         <div className="active-filters">
-                                            <ul className="form-groups">
-                                                <li className="list-item">ABC</li>
-                                                <li className="list-item">XYZ</li>
-                                                <li className="list-item">ABC</li>
-                                                <li className="list-item">XYZ</li>
-                                                <li className="list-item">ABC</li>
-                                                <li className="list-item">XYZ</li>
-                                            </ul>
+                                            <button className="btn btn-lg btn-primary"><i className="fa fa-plus"></i></button>
                                         </div>
-                                    }
+                                    } */}
                                 </div>
                             }
                         </div>
 
-
                     </div>
+                    {
+                        this.state.isCollapsed &&
+                        <div className="active-filters-container">
+                            <div className="active-filters">
+                                <button className="btn btn-lg btn-primary" onClick={(e) => { e.preventDefault(); this.addFilter(); }}><i className="fa fa-plus"></i></button>
+                            </div>
+                        </div>
+                    }
                 </div>
 
                 <div className="reports-content">
