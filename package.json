@@ -12,7 +12,6 @@
     "imageviewer": "^1.0.0",
     "jquery": "^3.3.1",
     "moment": "^2.22.2",
-    "npm": "^6.2.0",
     "prop-types": "^15.6.1",
     "rc-switch": "^1.6.0",
     "rc-time-picker": "^3.3.1",
