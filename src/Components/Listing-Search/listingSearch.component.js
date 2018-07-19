@@ -1,24 +1,18 @@
 import React, { Component } from 'react';
-import { Collapse, Button, CardBody, Card } from 'reactstrap';
-
 import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 // import SelectBox from './../Forms/Components/Select-Box/selectBox';
-
-import { SubscribeToEvent, UnsubscribeEvent } from './../../Utils/stateManager.utils';
 
 import './listingSearch.component.css'
 import GLOBAL from './../../Constants/global.constants';
 
-import { SelectFromOptions, IsUndefined, IsObjectHaveKeys } from './../../Utils/common.utils';
+import { SelectFromOptions, IsObjectHaveKeys } from './../../Utils/common.utils';
 import { Location } from './../../Utils/location.utils';
-import { GetTime, TimeOperation } from './../../Utils/time.utils';
 import { Get } from './../../Utils/http.utils';
 import { BuildUrlForGetCall } from './../../Utils/common.utils';
-import DatePicker from './../Forms/Components/Date-Picker/datePicker';
 
 //let activeColumn = {};
 
-export default class ListingSearch extends React.Component {
+export default class ListingSearch extends Component {
     urlParams = Location.search();
 
     constructor(props) {
@@ -46,7 +40,7 @@ export default class ListingSearch extends React.Component {
      * extracts query from string and assing value
      */
     initialize = async (props) => {
-        const { dictionary, searchQuery, searchDetail, localSearch } = props;
+        const { dictionary, searchQuery, searchDetail } = props;
         let selectedColumn;
 
 
@@ -173,11 +167,15 @@ export default class ListingSearch extends React.Component {
         const paramProps = {
             history: this.props.history, match: this.props.match
         };
-        
-        query += this.state.activeColumn.name + ' like "%25' + event.target.value + '%25"';
-        urlParams.search = query;
+
+        if (event.target.value) {
+            query += this.state.activeColumn.name + ' like "%25' + event.target.value + '%25"';
+            urlParams.search = query;
+        } else {
+            delete urlParams.search
+        }
         this.setState({ query: event.target.value });
-        Location.search(urlParams, { props: paramProps });
+        Location.search(urlParams, { reset: true });
     }
 
     /**

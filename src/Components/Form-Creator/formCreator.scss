@@ -1,4 +1,7 @@
 @import 'Assets/Global-Shared/theme.scss';
+.generic-form-container{
+    min-width: 70% !important;
+}
 
 .modal-header {
     border-bottom: none;
@@ -36,7 +39,7 @@
             position: absolute;
             z-index: 10;
             width: 17%;
-            left: 565px;
+            left: 72%;
             top: 16px;
             div:nth-child(n){
                 div:nth-child(n) { 

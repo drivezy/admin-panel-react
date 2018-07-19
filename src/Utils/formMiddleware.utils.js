@@ -102,6 +102,7 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
 
 export function OpenModalForm(formContent) {
     ModalManager.openModal({
+        className: 'generic-form-container',
         headerText: formContent.name,
         modalBody: () => (<FormCreator payload={formContent} />),
     });
