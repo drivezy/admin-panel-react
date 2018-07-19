@@ -246,7 +246,7 @@ export default class QueryTable extends Component {
         } else {
             renderItem = (
                 <div className='no-data-to-show'>
-                    No Data to show
+                    No Data to show right now
                 </div>
             )
         }
