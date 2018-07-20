@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import './rosterTimeline.scene.css';
 
 import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
-
-import { Get, Post } from './../../Utils/http.utils';
+import { Get, Post } from 'common-js-util';
 
 import RosterContent from './../../Components/Roster-Content/rosterContent.component';
 import SelectBox from './../../Components/Forms/Components/Select-Box/selectBox';

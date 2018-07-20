@@ -3,9 +3,8 @@ import SelectBox from './../../Components/Forms/Components/Select-Box/selectBoxF
 import ScriptInput from './../../Components/Forms/Components/Script-Input/scriptInput.component';
 
 import { GetUrlParams, Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
+import { Get, Put, BuildUrlForGetCall, IsObjectHaveKeys  } from 'common-js-util';
 
-import { BuildUrlForGetCall, IsObjectHaveKeys } from './../../Utils/common.utils';
-import { Get, Put, Post } from './../../Utils/http.utils';
 import { GetColumnDetail, ExtractColumnName } from './../../Utils/panel.utils';
 
 import { ClientScriptEndPoint } from './../../Constants/api.constants';

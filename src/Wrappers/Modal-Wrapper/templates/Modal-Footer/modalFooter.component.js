@@ -1,19 +1,6 @@
 import React, { Component } from 'react';
 import './modalFooter.component.css';
 
-import {
-    Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Button,
-    Container,
-    Row, Col,
-    ModalHeader
-} from 'reactstrap';
-
-import { withFormik, Field, Form } from 'formik';
-import Yup from 'yup';
-
-// import { Post, Put } from './../../Utils/http.utils';
-
 export default class ModalFooter extends Component {
     constructor(props) {
         super(props);

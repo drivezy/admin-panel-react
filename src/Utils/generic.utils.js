@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import { Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
-import { Get } from './http.utils';
-import { Delete } from './http.utils';
-import { IsUndefinedOrNull, BuildUrlForGetCall, IsObjectHaveKeys } from './common.utils';
+import { Get, Delete, IsUndefinedOrNull, BuildUrlForGetCall, IsObjectHaveKeys } from 'common-js-util';
+
 import { ConfirmUtils } from './confirm-utils/confirm.utils';
 import { ProcessForm } from './formMiddleware.utils';
 
@@ -774,8 +773,8 @@ export function ParseRestrictedQuery(queryString) {
     }
     let queries = queryString.split(' and ');
     queries.forEach(orQuery => {
-        
-        orQuery = orQuery.replace(MATCH_START_END_PARANTHESIS, ''); 
+
+        orQuery = orQuery.replace(MATCH_START_END_PARANTHESIS, '');
         const queryArr = orQuery.split(' or ');
         queryArr.forEach(query => {
             if (!query) {

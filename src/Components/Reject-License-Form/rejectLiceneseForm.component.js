@@ -4,7 +4,8 @@ import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
 import { ModalBody } from 'reactstrap';
 import { withFormik, Field } from 'formik';
-import { Put } from './../../Utils/http.utils';
+import { Put } from 'common-js-util';
+
 import SelectBox from './../Forms/Components/Select-Box/selectBox';
 import { GetLookupValues } from './../../Utils/lookup.utils';
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';

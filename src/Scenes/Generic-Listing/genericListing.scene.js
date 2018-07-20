@@ -3,12 +3,12 @@ import React, { Component } from 'react';
 import './genericListing.css';
 
 import {
-    Card, CardBody, Button
+    Card, CardBody
 } from 'reactstrap';
 
 import { HotKeys } from 'react-hotkeys';
 
-import { Get } from 'common-js-util';
+import { Get, SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent, BuildUrlForGetCall, SelectFromOptions, CopyToClipBoard  } from 'common-js-util';
 import { GetUrlParams, Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
 import DynamicFilter from './../../Components/Dynamic-Filter/dynamicFilter.component';
@@ -20,13 +20,9 @@ import CustomAction from './../../Components/Custom-Action/CustomAction.componen
 import PredefinedFilter from './../../Components/Dropdown-Filter/filter.component';
 import ListingSearch from './../../Components/Listing-Search/listingSearch.component';
 
-import { CopyToClipBoard } from './../../Utils/common.utils';
-
-import { BuildUrlForGetCall, SelectFromOptions } from './../../Utils/common.utils';
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
 import { GetListingRecord } from './../../Utils/genericListing.utils';
-import { SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent } from './../../Utils/stateManager.utils';
 
 export default class GenericListing extends Component {
     filterContent = {};

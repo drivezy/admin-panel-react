@@ -4,9 +4,7 @@ import {
     Card, CardBody, CardHeader
 } from 'reactstrap';
 
-
-
-import { Get } from './../../Utils/http.utils';
+import { Get } from 'common-js-util';
 
 import './ticketDetail.scene.css';
 

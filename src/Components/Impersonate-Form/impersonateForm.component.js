@@ -1,12 +1,12 @@
 // Higher Order Component
 import React, { Component } from 'react';
 import {
-    Card, CardBody, Row, Col
+    Card, CardBody,
 } from 'reactstrap';
 
 import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
+import { Get, Post } from 'common-js-util';
 
-import { Get, Post } from './../../Utils/http.utils';
 import SelectBox from './../../Components/Forms/Components/Select-Box/selectBox';
 import { BuildUrlForGetCall, IsUndefined } from './../../Utils/common.utils';
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';

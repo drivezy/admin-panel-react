@@ -3,12 +3,7 @@ import './scriptInput.component.css';
 import _ from 'lodash';
 import { AceEditor } from 'react-ace';
 
-import { Collapse, Card, CardBody, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-
-import { Delete } from './../../../../Utils/http.utils';
-import { SelectFromOptions } from './../../../../Utils/common.utils';
-
-import { COLUMN_TYPE } from './../../../../Constants/columnType.constants';
+import { SelectFromOptions } from 'common-js-util';
 
 // Custom Components
 import CodeEditor from './../../../Code-Editor/codeEditor.component';

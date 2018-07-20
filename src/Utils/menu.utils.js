@@ -1,7 +1,5 @@
 
-
-import { Get, Post } from './http.utils';
-import { ArrayToObject } from './common.utils';
+import { ArrayToObject, Get, Post } from 'common-js-util';
 import _ from 'lodash';
 
 import { GetMenusEndPoint } from './../Constants/api.constants';
