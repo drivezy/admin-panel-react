@@ -28,6 +28,8 @@
     "react-select": "^2.0.0-beta.6",
     "react-viewer": "^2.5.0",
     "reactstrap": "^5.0.0-beta.3",
+    "sort-json-array": "^0.1.7",
+    "styled-components": "^3.3.3",
     "yarn": "^1.7.0",
     "yup": "^0.24.1"
   },
