@@ -7,8 +7,7 @@ import GLOBAL from './../Constants/global.constants';
 import { GetFireToken } from './user.utils';
 import { IsUndefined, CheckInternet } from './common.utils';
 import { StoreEvent, SubscribeToEvent, IsEventAvailable } from './stateManager.utils';
-import { LoaderUtils } from './loader.utils';
-import {ToastNotifications} from 'drivezy-web-utils/build/Utils';
+import { ToastNotifications, LoaderUtils } from 'drivezy-web-utils/build/Utils';
 
 const defautlHeaders = {
     'Content-Type': 'application/json;charset=UTF-8',
