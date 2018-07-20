@@ -5,8 +5,7 @@
  * and route is changed, next time whenever completed booking will be opened will have same url
  */
 
-import { Location } from './location.utils';
-import { SetItem, GetItem } from './localStorage.utils';
+import { SetItem, GetItem, Location } from 'drivezy-web-utils/build/Utils';
 
 let currentState = { ...window.location };
 

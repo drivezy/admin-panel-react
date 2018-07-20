@@ -60,8 +60,8 @@ export function isMobile() {
  * @param  {string} key (optional)
  */
 // Array.prototype.ArrayToObject = function (key) {
-export function ArrayToObject(key) {
-    const array = this;
+export function ArrayToObject(array, key) {
+    // const array = this;
     const obj = {};
 
     array.forEach((element, index) => {
@@ -94,6 +94,21 @@ export function IsEqualObject(object, otherObject) {
 }
 
 /**
+ * query params in generic utils methods have by default ' and ' prefix
+ * this method remove that prefix 
+ * Used Before making api call, 
+ * @param  {object} options
+ */
+export function TrimQueryString(options) {
+    if (options.query && typeof options.query == 'string') {
+        options.query = options.query.replace(/^ and /, '');
+    } else {
+        delete options.query;
+    }
+    return options;
+}
+
+/**
  * Accepts various params as object and prepare url for get call
  * @param  {string} url
  * @param  {object} params
@@ -102,7 +117,18 @@ export function BuildUrlForGetCall(url, params) {
     let newUrl = url + "?";
     for (const i in params) {
         const value = params[i];
-        newUrl += i + "=" + value + "&";
+        if (value) {
+            newUrl += i + "=" + value + "&";
+        }
     };
     return newUrl.slice(0, -1);
+}
+
+/**
+ * Returns true if object is having keys
+ * false if object is empty 
+ * @param  {Object} obj
+ */
+export function IsObjectHaveKeys(obj) {
+    return obj && typeof obj == 'object' && Object.keys(obj).length;
 }

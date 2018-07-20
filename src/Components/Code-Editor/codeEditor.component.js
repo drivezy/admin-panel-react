@@ -10,11 +10,12 @@ import React, { Component } from 'react';
 import brace from 'brace';
 import AceEditor from 'react-ace';
 
-import { Button } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-import SelectBox from './../Forms/Components/Select-Box/selectBox';
+import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import { SelectFromOptions } from './../../Utils/common.utils';
 import { Get, Post, Put } from './../../Utils/http.utils';
+import { GetItem, SetItem } from 'drivezy-web-utils/build/Utils';
 
 import 'brace/mode/php';
 import 'brace/mode/javascript';
@@ -23,6 +24,14 @@ import 'brace/theme/monokai';
 import './codeEditor.css';
 
 import ModalWrapper from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
+import { RECORD_URL } from './../../Constants/global.constants';
+
+const maxFontSize = 16;
+const minFontSize = 10;
+const SCRIPT_FONT_SIZE = 'SCRIPT_FONT_SIZE';
+const DEFAULT_FONT_SIZE = 14;
+
+let tempScript = ''; // used to keep track, if script has been changed
 
 const MODES = [{ id: 1, value: 'javascript', name: 'Javascript' }, { id: 2, name: 'PHP', value: 'php' }, { id: 3, name: 'CSS', value: 'css' }, { id: 4, name: 'SQL', value: 'sql' }];
 export default class CodeEditor extends Component {
@@ -30,42 +39,99 @@ export default class CodeEditor extends Component {
         super(props);
 
         const mode = SelectFromOptions(MODES, props.mode, 'value');
+        tempScript = props.script;
+
         this.state = {
             isModalVisible: true,
             mode,
-            value: props.value || '',
-            scriptId: props.scriptId || ''
+            value: props.script || '',
+            scriptId: props.scriptId || '',
+            fontSize: GetItem(SCRIPT_FONT_SIZE) || DEFAULT_FONT_SIZE
         }
+    }
+
+    UNSAFE_componentWillReceivePropscomponentWillReceiveProps(nextProps) {
+        this.setState({ value: nextProps.value || '' });
     }
 
     onChange = (newValue) => {
         this.setState({ value: newValue });
+
     }
 
     editorComponent = () => {
-        const { mode, value } = this.state;
+        const { mode, value, fontSize } = this.state;
         return (
-            <AceEditor
-                mode={mode.value}
-                theme="monokai"
-                name="Drivezy-Code-editor"
-                width='100%'
-                height='85vh'
-                // onLoad={this.onLoad}
-                onChange={this.onChange}
-                fontSize={14}
-                showPrintMargin={true}
-                showGutter={true}
-                highlightActiveLine={true}
-                value={value}
-                setOptions={{
-                    enableBasicAutocompletion: true,
-                    enableLiveAutocompletion: true,
-                    enableSnippets: false,
-                    showLineNumbers: true,
-                    tabSize: 2,
-                }}
-            />
+            <div>
+                   <div className="script-controls flex">
+                                <Button
+                                    id='submit-script-inline'
+                                    onClick={this.onSubmit}
+                                    // disabled={tempScript == script}
+                                    className="btn btn-sm scriptAction">
+                                    <i className="fa fa-save"></i>
+                                </Button>
+
+                                <Button
+                                    disabled={fontSize >= maxFontSize}
+                                    onClick={() => {
+                                        let { fontSize } = this.state;
+                                        fontSize = fontSize >= maxFontSize ? maxFontSize : fontSize + 1;
+                                        SetItem(SCRIPT_FONT_SIZE, fontSize);
+                                        this.setState({ fontSize });
+                                    }}
+                                    className="btn btn-sm scriptAction"
+                                >
+                                    <i className="fa fa-search-plus"></i>
+                                </Button>
+
+                                <Button
+                                    disabled={fontSize <= minFontSize}
+                                    onClick={() => {
+                                        let { fontSize } = this.state;
+                                        fontSize = fontSize <= minFontSize ? minFontSize : fontSize - 1;
+                                        SetItem(SCRIPT_FONT_SIZE, fontSize);
+                                        this.setState({ fontSize });
+                                    }}
+                                    className="btn btn-sm scriptAction"
+                                >
+                                    <i className="fa fa-search-minus"></i>
+                                </Button>
+
+                                <div className='code-editor-mode'>
+                                    <SelectBox
+                                        onChange={(data) => this.setState({ mode: data })}
+                                        value={mode}
+                                        isClearable={false}
+                                        options={MODES}
+                                        placeholder="Mode"
+                                        field='name'
+                                        menuPlacement={'top'}
+                                    />
+                                </div>
+                            </div>
+                <AceEditor
+                    mode={mode.value}
+                    theme="monokai"
+                    name="Drivezy-Code-editor"
+                    width='100%'
+                    height='85vh'
+                    // onLoad={this.onLoad}
+                    onChange={this.onChange}
+                    fontSize={fontSize}
+                    showPrintMargin={true}
+                    showGutter={true}
+                    highlightActiveLine={true}
+                    value={value}
+                    setOptions={{
+                        enableBasicAutocompletion: true,
+                        enableLiveAutocompletion: true,
+                        enableSnippets: false,
+                        showLineNumbers: true,
+                        tabSize: 2,
+                    }}
+                />
+            </div>
         )
     }
 
@@ -75,18 +141,6 @@ export default class CodeEditor extends Component {
             <div className='flex code-editor-header'>
                 <div className='code-title'>
                     Code editor
-                </div>
-
-                <div className='select-box-container flex'>
-                    <div sm={2} className='mode-selection'>
-                        <SelectBox
-                            onChange={(data) => this.setState({ mode: data })}
-                            value={mode}
-                            options={MODES}
-                            placeholder="Mode"
-                            field='name'
-                        />
-                    </div>
                 </div>
             </div>
         )
@@ -109,21 +163,42 @@ export default class CodeEditor extends Component {
         )
     }
 
+    toggleModal = () => {
+        this.setState({ isVisible: !this.state.isVisible });
+        // this.setState({ modal: !this.state.modal, activeColumn: {} })
+    }
+
     modalElement = () => {
         const { isVisible } = this.state;
         return (
-            <ModalWrapper
-                className='modal-xl'
-                isVisible={isVisible}
-                modalBody={this.editorComponent}
-                modalHeader={this.modalHeader}
-                modalFooter={this.modalFooter}
-            />
-        );
+            <Modal className='modal-xl' isOpen={isVisible} toggle={this.toggleModal}>
+                <ModalHeader toggle={this.toggleModal}>
+                    {this.modalHeader()}
+                </ModalHeader>
+
+                <ModalBody>
+                    {this.editorComponent()}
+                </ModalBody>
+
+                <ModalFooter>
+                    {this.modalFooter()}
+                </ModalFooter>
+
+            </Modal>
+        )
+        // return (
+        //     <ModalWrapper
+        //         className='modal-xl'
+        //         isVisible={isVisible}
+        //         modalBody={this.editorComponent}
+        //         modalHeader={this.modalHeader}
+        //         modalFooter={this.modalFooter}
+        //     />
+        // );
     }
 
     loadScript = async (scriptId) => {
-        const result = await Get({ url: 'systemScript/' + scriptId });
+        const result = await Get({ url: 'systemScript/' + scriptId, urlPrefix: RECORD_URL });
         if (result.success) {
             this.setState({ scriptId: scriptId, isVisible: true, value: result.response.script || '' });
         }
@@ -147,20 +222,25 @@ export default class CodeEditor extends Component {
             const { payload, column } = this.props;
 
             // Assign the name to the
-            const name = payload.dataModel.related_model ? payload.dataModel.related_model.name : payload.dataModel.name;
+            const name = payload.relationship.related_model ? payload.relationship.related_model.name : payload.relationship.name;
 
             var params = {
                 name: name + ' Script',
                 description: name + " Script for " + '',
-                source_type: name,
-                source_id: payload.listingRow.id,
-                source_column: column.column_name
+                source_type: payload.modelHash,
+                // source_type: 'Drivezy\\LaravelRecordManager\\Models\\ModelRelationship',
+                // source_type: name,
+                source_id: payload.data.id,
+                source_column: column.name
             }
 
-            const result = await Post({ url: 'systemScript', body: params })
+            const result = await Post({ url: 'systemScript', body: params, urlPrefix: RECORD_URL });
 
             if (result.success) {
-                this.loadScript(result.response.id);
+
+                this.props.onSubmit(result.response.id, {});
+                this.setState({ scriptId: result.response.id });
+                // this.loadScript(result.response.id);
             }
         }
     }
@@ -169,7 +249,6 @@ export default class CodeEditor extends Component {
     onSubmit = async () => {
 
         const { payload, column } = this.props;
-
         // const params = {
         //     script: this.state.value,
         //     script_type: '',
@@ -178,27 +257,29 @@ export default class CodeEditor extends Component {
         // }
 
         // Assign the name to the
-        const name = payload.dataModel.related_model ? payload.dataModel.related_model.name : payload.dataModel.name;
+        const name = payload.relationship.related_model ? payload.relationship.related_model.name : payload.relationship.name;
 
         var params = {
             name: name + ' Script',
             script: this.state.value,
             description: name + " Script for " + '',
             source_type: name,
-            source_id: payload.listingRow.id,
-            source_column: column.column_name
+            source_id: payload.data.id,
+            source_column: column.name
         }
 
         if (this.state.scriptId) {
 
-            const result = await Put({ url: 'systemScript/' + this.state.scriptId, body: params })
+            const result = await Put({ url: 'systemScript/' + this.state.scriptId, body: params, urlPrefix: RECORD_URL })
             if (result.success) {
+                tempScript = this.state.value;
                 this.setState({ isVisible: false });
             }
         } else {
 
-            const result = await Post({ url: 'systemScript', body: params })
+            const result = await Post({ url: 'systemScript', body: params, urlPrefix: RECORD_URL })
             if (result.success) {
+                tempScript = this.state.value;
                 this.setState({ isVisible: false });
 
             }
@@ -206,18 +287,44 @@ export default class CodeEditor extends Component {
     }
 
     render() {
-        const { buttonComponent } = this.props;
+        const { buttonComponent, column, inline } = this.props;
+        const { fontSize, value: script, mode } = this.state;
+
         return (
             <div>
                 {
-                    buttonComponent ? // @TODO trigger component can be sent from parent component, as of now its not fully functional
-                        // buttonComponent()
-                        <Button onClick={(e) => this.openEditor(e)} color="danger">Edit Script</Button>
+                    inline ?
+                        <div>
+                            {this.editorComponent()}
+                        </div>
                         :
-                        <Button onClick={(e) => this.openEditor(e)} color="primary">{this.state.value ? 'Edit' : 'Add'} Script</Button>
+                        <div>
+                            <div className="col inline">
+                                {
+                                    buttonComponent ? // @TODO trigger component can be sent from parent component, as of now its not fully functional
+                                        // buttonComponent()
+                                        <Button onClick={(e) => this.openEditor(e)} color="danger">Edit Script</Button>
+                                        :
+                                        <Button onClick={(e) => this.openEditor(e)} color="primary">{this.state.scriptId ? 'Edit' : 'Add'} Script</Button>
+                                }
+                            </div>
+
+                            <div className="col inline">
+                                {
+                                    this.state.scriptId ?
+                                        <button className="btn btn-secondary" onClick={() => { this.setState({ scriptId: null }); this.props.onSubmit(null, {}) }}>
+                                            Remove Script
+                                </button>
+                                        :
+                                        null
+                                }
+
+                            </div>
+
+                            {this.modalElement()}
+                        </div>
                 }
 
-                {this.modalElement()}
             </div>
         )
     }

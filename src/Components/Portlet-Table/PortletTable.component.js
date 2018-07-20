@@ -2,16 +2,17 @@ import React, { Component } from 'react';
 import './PortletTable.css';
 
 import {
-    Table, Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
+    Table, Dropdown, DropdownToggle, DropdownMenu
 } from 'reactstrap';
+
+import { Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 import RightClick from './../../Components/Right-Click/rightClick.component';
 
 import { RowTemplate } from './../../Utils/generic.utils';
-import { Location } from './../../Utils/location.utils';
 
+import { CopyToClipBoard } from './../../Utils/common.utils';
 
 export default class PortletTable extends Component {
 
@@ -29,6 +30,18 @@ export default class PortletTable extends Component {
         type: 'desc'
     }];
 
+    headerOptions = [{
+        id: 0,
+        name: "Copy Column Name",
+        icon: 'fa-copy',
+        subMenu: false,
+        onClick: (data) => {
+            let prop = data.selectedColumn.name;
+            CopyToClipBoard(prop);
+            ToastNotifications.success({ description: "Column name " + data.selectedColumn.name + " has been copied", title: 'Column Name' });
+        }
+    }];
+
     constructor(props) {
         super(props);
 
@@ -37,12 +50,13 @@ export default class PortletTable extends Component {
             listing: this.props.listing,
             genericData: this.props.genericData,
             sortKey: '',
-            reverse: false,
+            reverse: true,
             dropdownOpen: {},
+            filterColumn: this.props.filterColumn
         };
     }
 
-    unsafe_componentwillreceiveprops(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.setState({
             finalColumns: nextProps.finalColumns,
             listing: nextProps.listing,
@@ -60,7 +74,6 @@ export default class PortletTable extends Component {
         var oldresize = window.onresize;
 
         window.onresize = (e) => {
-            // console.log(e);
             var event = window.event || e;
             if (typeof (oldresize) === 'function' && !oldresize.call(window, event)) {
                 return false;
@@ -92,21 +105,41 @@ export default class PortletTable extends Component {
     dropdownToggle = (column) => {
         let dropdownOpen = this.state.dropdownOpen;
 
-        dropdownOpen[column.id] = !dropdownOpen[column.id]
+        dropdownOpen[column.name] = !dropdownOpen[column.name]
 
         this.setState({
             dropdownOpen
         });
     }
 
-    onSort = (event, sortKey) => {
+    onSort = (sortKey) => {
         const listing = this.state.listing;
 
         function generateSortFn(prop, reverse) {
             return function (a, b) {
-                if (eval('a.' + prop) < eval('b.' + prop)) return reverse ? 1 : -1;
-                if (eval('a.' + prop) > eval('b.' + prop)) return reverse ? -1 : 1;
-                return 0;
+
+                //ascending: reverse off , descending: reverse on
+
+                if (a[prop] == null && b[prop] != null) {                 //reverse: off- put valued object above null. reverse: on- put valued object below null
+                    return reverse ? -1 : 1;
+                }
+
+                else if (b[prop] == null && a[prop] != null) {           //reverse: off- put valued object below null. reverse: on- put valued object above nul
+                    return reverse ? 1 : -1;
+                }
+
+                else if (b[prop] == null && a[prop] == null) {           //reverse: off, on - do nothing for both nulls
+                    //Do_nothing
+                }
+
+                else if (a[prop] < b[prop]) {                           //Do comparison on the basis of alphabetical order.
+                    return reverse ? 1 : -1;
+                }
+
+                else if (a[prop] > b[prop]) {                           //Do comparison on the basis of alphabetical order.
+                    return reverse ? -1 : 1;
+                }
+
             };
         }
 
@@ -132,7 +165,7 @@ export default class PortletTable extends Component {
 
         const urlParams = this.urlParams;
 
-        urlParams.order = column.path;
+        urlParams.order = column.name;
         urlParams.sort = sort.type;
         Location.search(urlParams, { props: paramProps });
 
@@ -143,16 +176,30 @@ export default class PortletTable extends Component {
         }
 
         this.setState({
-            sortKey: column.path,
+            sortKey: column.name,
         })
 
         this.dropdownToggle(column);
     };
 
     render() {
-        const { genericData, finalColumns, listing } = this.state;
+        const { genericData, finalColumns, listing, filterColumn } = this.state;
 
-        const { history, match, menuDetail, rowTemplate, callback, tableType, rowOptions } = this.props;
+        const { history, match, menuDetail, rowTemplate, callback, tableType, rowOptions, source = 'model', parentData } = this.props;
+
+
+        let rightClickOptions = [];
+
+        if (genericData.nextActions.length) {
+            for (let i in genericData.nextActions) {
+                if (genericData.nextActions[i] && genericData.nextActions[i].as_context == 1) {
+                    rightClickOptions = rowOptions.concat(genericData.nextActions[i]);
+                }
+            }
+        } else {
+            rightClickOptions = rowOptions.concat(rowOptions, []);
+        }
+
 
         // As soon as rendering is done adjust the width according to action columns
         setTimeout(() => this.adjustWidth());
@@ -164,68 +211,66 @@ export default class PortletTable extends Component {
 
                 {/* Contents Table */}
                 <div className="table-content">
-                    <Table striped className="sortable">
+                    <Table className="sortable">
                         <thead>
                             <tr>
                                 <th>
                                 </th>
                                 {
                                     finalColumns.map((selectedColumn, key) => {
-                                        let conditionForSorting = (this.state.sortKey === (selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.column_name))) ? (this.state.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down') : ''
-                                        return (
-                                            <th className="column-header" key={key}>
-                                                {/* Column Wrapper */}
-                                                <div className="column-wrapper">
-                                                    {/* Column Title */}
-                                                    <div className="column-title printable">
-                                                        <a onClick={e => this.onSort(e, selectedColumn.column_type != 118 ? (selectedColumn.path) : (selectedColumn.headerName))}>
-                                                            <span>{selectedColumn.display_name}</span> &nbsp;
-                                                            <i className={`fa ${conditionForSorting}`} />
-                                                        </a>
-                                                    </div>
-                                                    {/* Column Title Ends */}
+                                        let conditionForSorting = (this.state.sortKey === selectedColumn.name) ? (this.state.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down') : ''
+                                        const html = <div className="column-wrapper">
+                                            {/* Column Title */}
+                                            <div className="column-title printable">
+                                                <a onClick={() => this.onSort(selectedColumn.column_type_id ? (selectedColumn.path) : (selectedColumn.headerName))}>
+                                                    <span>{selectedColumn.display_name}</span> &nbsp;
+                                                <i className={`fa ${conditionForSorting}`} />
+                                                </a>
+                                            </div>
+                                            {/* Column Title Ends */}
 
-                                                    {/* Filter Column */}
-                                                    {
-                                                        tableType == "listing" && selectedColumn.path.split('.').length < 3 &&
-                                                        <div className="filter-column">
-                                                            <a onClick={e => this.filterColumn(selectedColumn)}>
-                                                                <i className="fa fa-filter"></i>
-                                                            </a>
-                                                        </div>
-                                                    }
-                                                    {/* Filter Ends */}
-                                                    {/* DB Level */}
-
-                                                    {
-                                                        (selectedColumn.path.split('.').length == 1) && (selectedColumn.column_type != 118) &&
-                                                        (
-                                                            tableType == "listing" &&
-                                                            <div className="db-level-sort">
-                                                                {
-                                                                    <Dropdown isOpen={this.state.dropdownOpen[selectedColumn.id]} toggle={() => this.dropdownToggle(selectedColumn)}>
-                                                                        <DropdownToggle tag="span" data-toggle="dropdown" aria-expanded={this.state.dropdownOpen}>
-                                                                            <a className="dropdown-link">
-                                                                                <i className="fa fa-sort-amount-asc"></i>
-                                                                            </a>
-                                                                        </DropdownToggle>
-                                                                        <DropdownMenu>
-                                                                            {
-                                                                                this.sortTypes.map((sort, key) => {
-                                                                                    return (
-                                                                                        <div className="dropdown-item" key={key} onClick={e => this.dropdownSortOnDB(sort, selectedColumn)}>
-                                                                                            <i className={`fa ${sort.icon}`} /> {sort.caption}
-                                                                                        </div>
-                                                                                    )
-                                                                                })
-                                                                            }
-                                                                        </DropdownMenu>
-                                                                    </Dropdown>
-                                                                }
-                                                            </div>
-                                                        )
-                                                    }
+                                            {/* Filter Column */}
+                                            {
+                                                tableType == "listing" && selectedColumn && selectedColumn.path &&
+                                                <div className="filter-column">
+                                                    <a onClick={e => filterColumn(selectedColumn)}>
+                                                        <i className="fa fa-filter"></i>
+                                                    </a>
                                                 </div>
+                                            }
+                                            {/* Filter Ends */}
+                                            {/* DB Level */}
+
+                                            {
+                                                (selectedColumn && selectedColumn.path.split('.').length == 2) && (selectedColumn.column_type_id) &&
+                                                (
+                                                    tableType == "listing" &&
+                                                    <div className="db-level-sort">
+                                                        {
+                                                            <Dropdown isOpen={this.state.dropdownOpen[selectedColumn.name]} toggle={() => this.dropdownToggle(selectedColumn)}>
+                                                                <DropdownToggle tag="span" data-toggle="dropdown" aria-expanded={this.state.dropdownOpen}>
+                                                                    <a className="dropdown-link">
+                                                                        <i className="fa fa-sort-amount-asc"></i>
+                                                                    </a>
+                                                                </DropdownToggle>
+                                                                <DropdownMenu>
+                                                                    {
+                                                                        this.sortTypes.map((sort, key) =>
+                                                                            <div className="dropdown-item" key={key} onClick={e => this.dropdownSortOnDB(sort, selectedColumn)}>
+                                                                                <i className={`fa ${sort.icon}`} /> {sort.caption}
+                                                                            </div>
+                                                                        )
+                                                                    }
+                                                                </DropdownMenu>
+                                                            </Dropdown>
+                                                        }
+                                                    </div>
+                                                )
+                                            }
+                                        </div>
+                                        return (
+                                            <th key={key} className=''>
+                                                <RightClick html={html} history={history} match={match} key={key} renderTag="div" className='generic-table-td' rowOptions={this.headerOptions} selectedColumn={selectedColumn} menuDetail={menuDetail} starter={genericData.starter} />
                                             </th>
                                         )
                                     })
@@ -234,35 +279,35 @@ export default class PortletTable extends Component {
                         </thead>
                         <tbody>
                             {
-                                listing.map((listingRow, rowKey) => {
-
-                                    return (
-                                        <tr className="table-row" key={rowKey}>
-
-                                            <td className="row-key">
-                                                {rowKey + 1}
-                                            </td>
-
-                                            {
-                                                finalColumns.map((selectedColumn, key) => {
-                                                    const html =
-                                                        rowTemplate ?
-                                                            rowTemplate({ listingRow, selectedColumn })
-                                                            :
-                                                            RowTemplate({ listingRow, selectedColumn });
-
-                                                    return (
-                                                        <td key={key} className=''>
-                                                            <RightClick html={html} history={history} match={match} key={key} renderTag="div" className='generic-table-td' rowOptions={rowOptions} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail} />
-                                                        </td>
-                                                    )
-                                                })
-                                            }
+                                listing.map((listingRow, rowKey) =>
 
 
-                                        </tr>
-                                    )
-                                })
+                                    <tr className="table-row" key={rowKey}>
+
+                                        <td className="row-key">
+                                            {rowKey + 1}
+                                        </td>
+
+                                        {
+                                            finalColumns.map((selectedColumn, key) => {
+                                                const html =
+                                                    rowTemplate ?
+                                                        rowTemplate({ listingRow, selectedColumn })
+                                                        :
+                                                        RowTemplate({ listingRow, selectedColumn });
+
+                                                return (
+                                                    <td key={key} className=''>
+                                                        <RightClick html={html} history={history} match={match} key={key} renderTag="div" className='generic-table-td' rowOptions={rightClickOptions} listingRow={listingRow} selectedColumn={selectedColumn} menuDetail={menuDetail} starter={genericData.starter} callback={callback} source={source} genericData={genericData} />
+                                                    </td>
+                                                )
+                                            })
+                                        }
+
+
+                                    </tr>
+
+                                )
                             }
                         </tbody>
                     </Table>
@@ -284,7 +329,7 @@ export default class PortletTable extends Component {
                                 listing.map((listingRow, rowKey) => (
                                     <tr className="table-row" key={rowKey}>
                                         <td className="action-column">
-                                            <CustomAction history={history} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} placement={167} callback={callback} />
+                                            <CustomAction parentData={parentData} menuDetail={menuDetail} history={history} source={source} genericData={genericData} actions={genericData.nextActions} listingRow={listingRow} callback={callback} />
                                         </td>
                                     </tr>
                                 ))

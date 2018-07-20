@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+
+import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
+
 import './preferenceSetting.css';
 import ViewJson from './../../Components/View-Json/viewJson.component';
 import CustomTooltip from './../../Components/Custom-Tooltip/customTooltip.component';
 import { SetPreference, DeletePreference } from './../../Utils/preference.utils';
-import ToastNotifications from './../../Utils/toast.utils';
 
 export default class PreferenceSetting extends Component {
     constructor(props) {
@@ -17,7 +19,7 @@ export default class PreferenceSetting extends Component {
         if (window.confirm('Are you sure you want to override ' + parameter + ' for all?')) {
             const result = await SetPreference(parameter, data);
             if (result.success) {
-                ToastNotifications.success(parameter + " has been overriden.");
+                ToastNotifications.success({ title: parameter + " has been overriden." });
                 let listing = this.state.listing;
                 listing[parameter] = result.response.value
                 this.setState({ listing });
@@ -36,7 +38,7 @@ export default class PreferenceSetting extends Component {
         if (window.confirm(message)) {
             const result = await DeletePreference(parameter, forAll);
             if (result.success) {
-                ToastNotifications.success(parameter + " has been deleted.");
+                ToastNotifications.success({ title: parameter + " has been deleted." });
                 let listing = this.state.listing;
 
                 delete listing[parameter];

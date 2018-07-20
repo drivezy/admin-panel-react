@@ -1,32 +1,37 @@
+@import 'Assets/Global-Shared/theme.scss';
 .generic-detail-container {
-        .header {
+    .header {
         display: flex;
         justify-content: space-between;
-        background: #dcdcdc7a;
+        // background: #dcdcdc7a;
         height: 40px;
         padding: 0px 4px;
         border-bottom: 1px solid #ccc9c9;
+        background: whitesmoke;
+        // margin: -8px;
         .left {}
         .right {
+            margin-right: 15px;
             display: flex;
             align-items: center;
-          
-            .table-settings {
-                .btn {
-                    padding: 5px 9px;
-                    margin: 0px 5px;
-                }
-            }
+            @include themify($themes) {
+                color: themed('secondaryColor');
+            } // .table-settings {
+            //     .btn {
+            //         padding: 1px 5px;
+            //         margin: 0px 5px;
+            //     }
+            // }
         }
     }
-}
     .detail-content {
-        margin: 8px;
-    }
-    .detail-entry {
-        padding: 4px 0px;
+        // margin-top: 14px;
     }
     .nav-item {
         cursor: pointer;
     }
-
+    .noListMessage {
+        padding: 10px;
+        background-color: #fff;
+    } 
+}

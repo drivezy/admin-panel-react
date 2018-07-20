@@ -1,29 +1,31 @@
 @import 'Assets/Global-Shared/theme.scss';
-
 .detail-includes {
+    margin: 4px;
     .card-body {
-        @include themify($themes){
-            background-color: themed('detailsBackground');
-            color: themed('whiteColor');
+        padding: 0px;
+        @include themify($themes) {
+            // background-color: themed('detailsBackground');
+            color: themed('textSecondary');
         }
-        padding: 6px 8px;
-        .nav{
-            &.nav-tabs{
-                li.nav-item{
-                    .nav-link{
+        .nav {
+            &.nav-tabs {
+                height: 45px;
+                li.nav-item {
+                    .nav-link {
                         border-radius: 0px;
                         border: none;
-                        &.active{
+                        padding: 12px;
+                        &.active {
                             border-bottom: 2px solid #1b62ab;
-                            @include themify($themes){
-                                background-color: themed('lightColor');
-                                border-bottom: themed('noBorder');
+                            @include themify($themes) {
+                                // background-color: themed('hoverColor');
+                                border-color: themed('themeBorder');
                             }
                         }
-                        &:hover{
-                            @include themify($themes){
-                                background-color: themed('lightColor');
-                                color: themed('darkThemeDark');
+                        &:hover {
+                            @include themify($themes) {
+                                background-color: themed('hoverColor');
+                                color: themed('darkColor');
                             }
                         }
                     }
@@ -37,40 +39,23 @@
         padding: 2px;
         position: absolute;
         right: 0px;
-        top: -36px;
+        top: -35px;
         .btn {
             margin-right: 3px;
+            padding: 1px 5px;
+            margin: 0px 5px;
+            color: white;
         }
         .custom-actions {
             .tooltip-element {
                 cursor: pointer;
                 padding: 7px 10px;
-                border-radius: 3px;
-                // background: #4f6070;
+                // border-radius: 3px; // background: #4f6070;
                 // color: white;
-                margin: 0px 2px;
-                // &:hover {
+                margin: 0px 2px; // &:hover {
                 //     background: #4a6a88;
                 // }
             }
         }
-    }
-}
-
-.drivezy-light-theme { 
-    .search-button > button.btn {
-        color: $primaryThemeLight;
-    }
-}
-
-.drivezy-dark-theme { 
-    .search-button > button.btn {
-        color: $primaryThemeDark;
-    }
-}
-
-.drivezy-drivezy-theme { 
-    .search-button > button.btn {
-        color: $primaryThemeDrivezy;
     }
 }

@@ -4,8 +4,10 @@ import {
     Route, Switch, Redirect
 } from 'react-router-dom';
 
+import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
+import { ToastContainer } from 'drivezy-web-utils/build/Components';
 
-import { ToastContainer } from 'react-toastify';
+// import { ToastContainer } from 'react-toastify';
 
 /** Router */
 import PrivateRoute from './privateRoute.router';
@@ -14,19 +16,22 @@ import IndexRouter from './index.router';
 
 /** Scenes */
 import LoginScene from './../Scenes/Login-Scene/Login.scene';
+import SignupScene from './../Scenes/Signup-Scene/Signup.scene';
 /** Scenes End*/
 
 /** Components */
 import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 import ModalWrapper from './../Wrappers/Modal-Wrapper/modalWrapper.component';
 import { Spotlight } from './../Components/Spotlight-Search/spotlightSearch.component';
+// import ToastContainer from './../Components/Toast-Container/toastContainer.component';
 /** Component Ends */
 
 /** Util */
 import SettingsUtil from './../Utils/settings.utils';
+import { LoginCheck } from './../Utils/user.utils';
 import { SubscribeToEvent } from './../Utils/stateManager.utils';
-import { LoaderComponent, LoaderUtils } from './../Utils/loader.utils';
 import { ConfirmModalComponent, ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
+
 /** Util Ends*/
 
 
@@ -41,10 +46,16 @@ export default class BasicRoute extends Component {
 
     componentDidMount() {
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
+
+        LoginCheck();
     }
 
     userDataFetched = (data) => {
-        this.setState({ loggedUser: data });
+        if (data.id) {
+            this.state.loggedUser = data;
+        } else {
+            this.setState({ loggedUser: data });
+        }
     }
 
     render() {
@@ -53,13 +64,16 @@ export default class BasicRoute extends Component {
             <div id='parent-admin-element'>
                 <Router>
                     <Switch>
+                        <Route path="/signup" component={SignupScene} />
                         <Route path="/login" component={LoginScene} />
                         <PrivateRoute path="/" loggedUser={loggedUser} component={IndexRouter} />
                     </Switch>
                 </Router>
-                <ToastContainer />
+                <ToastContainer ref={(elem) => { ToastNotifications.register(elem); }} />
+
+
+
                 <ModalWrapper ref={(elem) => ModalManager.registerModal(elem)} />
-                <LoaderComponent ref={(elem) => LoaderUtils.RegisterLoader(elem)} />
                 <ConfirmModalComponent ref={(elem) => ConfirmUtils.RegisterConfirm(elem)} />
                 <Spotlight ref={(elem) => SettingsUtil.registerModal(elem)} />
             </div>

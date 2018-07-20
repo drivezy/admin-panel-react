@@ -1,9 +1,4 @@
 import React, { Component } from 'react';
-import {
-    BrowserRouter as Router,
-    Route, Switch, Redirect
-} from 'react-router-dom';
-
 import { HotKeys } from 'react-hotkeys';
 
 
@@ -12,13 +7,14 @@ import Landing from './../Components/Landing/landing.component';
 /** Component Ends */
 
 /** Utils */
-import { LoginCheck } from './../Utils/user.utils';
+// import { LoginCheck } from './../Utils/user.utils';
 import { GetPreferences } from './../Utils/preference.utils';
 import SettingsUtil from './../Utils/settings.utils';
 import { PreserveState } from './../Utils/preserveUrl.utils';
 import { GetMenusFromApi } from './../Utils/menu.utils';
 import LoadAsync from './../Utils/loadAsyncScripts.utils';
-import { Location } from './../Utils/location.utils';
+import { Location } from 'drivezy-web-utils/build/Utils';
+// import { Location } from './../Utils/location.utils';
 
 
 // import { GetProperties } from './../Utils/openProperty.utils';
@@ -38,6 +34,7 @@ export default class IndexRouter extends Component {
             menuFetched: true,
         }
         // props.GetCities();
+        // console.log(Location);
         Location.getHistoryMethod(this.getRouterProps); // pass methods, so that location utils can get history object
     }
 
@@ -61,6 +58,7 @@ export default class IndexRouter extends Component {
         // const locationChanged = nextProps.location !== this.props.location;
     }
 
+
     async componentDidMount() {
         LoadAsync.loadStyleSheetGlobal();
         // GetProperties();
@@ -74,13 +72,15 @@ export default class IndexRouter extends Component {
             }
         });
 
-        const result = await GetMenusFromApi();
-        if (result.success) {
-            this.menus = result.response;
-            this.setState({ menuFetched: true });
-        }
+        // const result = await GetMenusFromApi();
+        // if (result.success) {
+        //     this.menus = result.response;
+        //     this.setState({ menuFetched: true });
+        // }
+        this.menus = await GetMenusFromApi();
+        this.setState({ menuFetched: true });
 
-        LoginCheck();
+        // LoginCheck();
 
         // Load the preferences
         const preference = await GetPreferences();
@@ -102,21 +102,19 @@ export default class IndexRouter extends Component {
     getRouterProps = () => ({ history: this.props.history });
 
     render() {
-        const { match } = this.props; // match.path = '/'
+        const { match, history } = this.props; // match.path = '/'
         const menus = this.menus || [];
 
         return (
             <div>
                 <HotKeys focused={true} attach={window} keyMap={this.keyMap} handlers={this.handlers}>
                     <div className="app-container">
-                        {
-                            menus && menus.length &&
-                            <Landing match={match} menus={menus} />
-                        }
+                        {/* Landing Is the Basic Layout that builds the routes and the layout */}
+                        <Landing match={match} menus={menus} history={history}/>
+                        {/* Landing Ends */}
                     </div>
                 </HotKeys>
             </div>
-
         )
     }
 }

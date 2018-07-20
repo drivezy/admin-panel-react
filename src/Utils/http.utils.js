@@ -8,7 +8,7 @@ import { GetFireToken } from './user.utils';
 import { IsUndefined, CheckInternet } from './common.utils';
 import { StoreEvent, SubscribeToEvent, IsEventAvailable } from './stateManager.utils';
 import { LoaderUtils } from './loader.utils';
-import ToastUtils from './toast.utils';
+import {ToastNotifications} from 'drivezy-web-utils/build/Utils';
 
 const defautlHeaders = {
     'Content-Type': 'application/json;charset=UTF-8',
@@ -211,6 +211,7 @@ function ApiCall({ url, method, headers, body, resolve = defaultResolve, reject 
             return resolve(response, hideMessage, hideLoader, { url, body, persist, callback, extraParams });
         })
         .catch((error) => {
+            console.error(error);
             return reject(error, hideMessage, hideLoader, { url, body, persist, callback, extraParams });
         });
 }
@@ -285,7 +286,8 @@ function defaultResolve(response, hideMessage, hideLoader, { persist, url, body,
     } else if (!hideMessage && response && typeof response == 'object' && (typeof response.response == 'string' || typeof response.reason == 'string')) {
         const type = response.success ? 'success' : 'error';
         // @TODO show message -response.response
-        ToastUtils[type](response.response || response.reason);
+        // ToastNotifications.success({ message: 'etas' });
+        ToastNotifications[type]({ title: response.reason || response.response });
     }
     if (persist && !CheckInternet()) {
         StoreEvent({ eventName: url, data: response, objParams: body, isMemoryStore: true });
@@ -324,7 +326,7 @@ function defaultReject(response, hideMessage, hideLoader, { url, body }) {
             message = 'Internal server error';
         }
         if (message) {
-            ToastUtils.error(message);
+            ToastNotifications.error({ title: message });
         }
     }
     return response;

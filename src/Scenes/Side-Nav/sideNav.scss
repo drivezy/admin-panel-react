@@ -10,20 +10,27 @@
     transition: 0.1s;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid;
+    // border-right: 1px solid;
+    // @include themify($themes) {
+    //     background: themed('sideBackground');
+    //     border-color: themed('sidenavBorder');
+    //     color: themed('navLinkColor');
+    // }
     @include themify($themes) {
-        background: themed('sideBackground');
-        border-color: themed('sidebarBorder');
-        color: themed('textColorWhite');
+        background: themed('secondaryDark');
     }
     &.collapsed {
         width: 40px;
+        .logo-container{
+            display: none;
+        }
         .sidebar-menus {
             .menus {
-                margin-top: 8px;
+                // margin-top: 8px;
                 padding: 0px;
                 .menu-item {
                     .menu-label {
+                        border-radius: 0px;
                         padding: 8px 12px;
                     }
                 }
@@ -41,8 +48,9 @@
             justify-content: space-between;
             border-bottom: 1px solid;
             @include themify($themes) {
-                background: themed('darkBackground');
-                border-color: themed('darkBackground');
+                background: themed('primaryDark');
+                border-color: themed('primaryDark');
+                color: themed('onPrimaryDark');
             }
             span.logo-container {
                 padding: 5px 20px;
@@ -59,9 +67,7 @@
                     font-size: 16px;
                     padding: 10px; // color: #5c7084;
                 }
-                &:hover{
-
-                }
+                &:hover {}
             }
         }
         .sidebar-toggle {}
@@ -69,8 +75,16 @@
     .sidebar-menus {
         display: flex;
         flex-direction: column;
+        height: 100vh;
+        border-right: 1px solid;
+        @include themify($themes){
+            border-color: themed('secondaryDark')
+        }
         .menus {
             // background: #35485b;
+            @include themify($themes){
+                background: themed('secondaryDark');
+            }
             padding: 8px 10px;
             .menu-item {
                 .menu-label {
@@ -84,8 +98,8 @@
                     height: 40px;
                     border-radius: 2px;
                     @include themify($themes) {
-                        color: themed('menuIcon');
-                        border-radius: themed('noBorder');
+                        color: themed('onSecondaryDark');
+                        border-radius: themed('themeBorder');
                     }
                     .menu-icon {
                         width: 30px;
@@ -101,9 +115,10 @@
                     }
                     &:hover {
                         @include themify($themes) {
-                            background: themed('lightColor');
-                            color: themed('darkThemeDark');
-                            border-left: themed('sideBorder');
+                            // border-radius: themed('menuLinkBorder');
+                            background: themed('hoverBackground');
+                            color: themed('secondaryColor'); // border-left: themed('sideBorder');
+                            // border-right: 1px solid themed('linkHover');
                         }
                     }
                 }

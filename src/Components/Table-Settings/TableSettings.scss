@@ -1,8 +1,26 @@
+@import 'Assets/Global-Shared/theme.scss';
 .table-settings {
+    .settings-button {
+        background: transparent;
+        &.btn {
+            @include themify($themes) {
+                // background: transparent;
+                background: themed('primaryLight');
+                color: themed('onPrimaryDark') ;// border-color: themed('settingsButton');
+                border: 1px solid;
+                border-color: themed('borderLight');
+            }
+        }
+    }
+    .setting-button {
+        padding: 4px 8px;
+    }
+    
     .modal-header {
         padding: 10px 20px;
     }
     .modal-body {
+        padding: 25px 20px 25px 20px;
         background: whitesmoke;
         display: flex;
         justify-content: space-between;
@@ -27,7 +45,7 @@
                     margin-bottom: 0px;
                     color: #395167;
                 }
-                .list-group.parent-group {
+                .list-group .parent-group {
                     padding: 10px 15px;
                 }
             }
@@ -75,6 +93,14 @@
             }
         }
         .right {
+                .table-settings{
+                    .setting-button{
+                        font-size: .865rem !important;
+                    }
+            }
+            ul {
+                min-height: 45px;
+            }
             max-height: 70vh;
             overflow-y: scroll;
             flex-basis: 40%;
@@ -86,6 +112,13 @@
                     }
                 }
             }
+            .list-group-item {
+                &.active {
+                    background: #dff0d8;
+                    border-color: #dff0d8;
+                    color: #105d26;
+                }
+            }
         }
         .controls {
             display: flex;
@@ -93,6 +126,17 @@
             button {
                 margin: 4px;
             }
+            .split{
+                background: #138c9e !important;
+                border-color: #138c9e !important;
+            }
+        }
+    }
+    .modal-footer {
+        justify-content: none;
+        .rightButtons {
+            width: 100%;
+            text-align: right;
         }
     }
 }

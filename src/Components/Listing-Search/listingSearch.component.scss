@@ -1,19 +1,22 @@
+@import 'Assets/Global-Shared/theme.scss';
 .listing-search-container {
     .listing-search-tool {
         display: flex;
         .listing-select-tool {
-            width: 310px;
+            width: 245px;
             .selectbox {
                 width: 150px;
             }
         }
         .listing-input-tool {
-            width: 300px;
-            margin-left: 2px;
+            width: 245px;
+            margin-left: 10px;
             .input-select {
                 height: 36px;
                 font-size: 12px;
-                background-color: #ffffd9;
+                @include themify($themes) {
+                    background: themed('secondaryLight');
+                }
             }
         }
     }

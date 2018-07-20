@@ -5,7 +5,7 @@
         flex-grow: 1;
         width: calc(100% - 235px);
         @include themify($themes) {
-            background-color: themed('bodyBackground');
+            // background-color: themed('bodyBackground');
         }
         &.sidenav-open {
             margin-left: 180px;
@@ -14,7 +14,7 @@
             margin-left: 40px;
         }
         .landing-body{
-            margin: 8px;
+            // margin: 8px;
         }
     }
 }

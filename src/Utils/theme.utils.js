@@ -1,8 +1,9 @@
-import { SetItem, GetItem } from './localStorage.utils';
+import $ from 'jquery';
+import { SetItem, GetItem } from 'drivezy-web-utils/build/Utils';
 
 let themes = [
     { theme: 'light', name: 'Light', class: 'light' },
-    { theme: 'dark', name: 'Dark', class: 'dark' },
+    // { theme: 'dark', name: 'Dark', class: 'dark' },
     { theme: 'drivezy', name: 'Drivezy', class: 'drivezy' }
 ];
 
@@ -25,15 +26,16 @@ export default class ThemeUtil {
 
     static setTheme(theme) {
         SetItem('CURRENT_THEME', theme);
-        const div = document.getElementById('parent-admin-element');
+        // const div = document.getElementsByTagName('body');
+        const div = $('html');
 
         themes.forEach((themeDetail, key) => {
             if (themeDetail.theme != theme.theme) {
-                div.classList.remove('theme-' + themeDetail.theme);
+                div.removeClass('theme-' + themeDetail.theme);
                 return;
             }
 
-            div.classList.add('theme-' + theme.theme);
+            div.addClass('theme-' + theme.theme);
         });
     }
 

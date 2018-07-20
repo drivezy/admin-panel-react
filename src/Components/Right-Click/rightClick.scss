@@ -72,8 +72,22 @@
     }
 }
 
+.generic-form {
+    top: 28px !important;
+    left: 40px !important;
+    position: absolute !important;
+}
+
 .react-contextmenu-item:hover {
     color: white;
     text-decoration: none;
     background-color: #5bc0de;
+}
+
+.base-class {
+    opacity: 0;
+}
+
+.is-active {
+    opacity: 1;
 }

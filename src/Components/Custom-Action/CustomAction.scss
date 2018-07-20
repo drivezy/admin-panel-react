@@ -2,20 +2,28 @@
 .header-actions {
     .custom-actions {
         .button-element {
-            @include themify($themes){
-                color: themed('textColorWhite');
-            } 
             text-transform: capitalize;
+            padding: 5px 8px;
             .action-label {
                 padding-left: 10px;
             }
         }
+        .tooltip-element:first-child{
+            margin-left: 5px;
+        }
         .tooltip-element {
             cursor: pointer;
-            padding: 6px 10px;
+            padding: 6px 2px;
+            border-radius: 2px;
+            @include themify($themes) {
+                background: themed('primaryLight');
+                color: themed('onPrimaryDark') ;// border-color: themed('settingsButton');
+                border: 1px solid;
+                border-color: themed('borderLight');
+            }
             // border-radius: 3px;
             // background: white;
-            margin: 0px 1px;
+             margin: 0px;
             // border: 1px solid #e0e0e0;
             // border: 1px solid #b7b7b7;
             &:hover {

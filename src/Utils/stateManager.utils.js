@@ -3,7 +3,7 @@
  * Also based on Internet connectivity, can save api call which require less attention and invoke them later 
  * Supports app working even when device is not connected any network
  ******************************************************************************************************************/
-import { SetItem, SetNonVolatileItem, GetItem } from './localStorage.utils';
+import { SetItem, SetNonVolatileItem, GetItem } from 'drivezy-web-utils/build/Utils';
 import { IsEqualObject } from './common.utils';
 
 /**
@@ -41,6 +41,15 @@ export function StoreEvent({ eventName, data, objParams, isMemoryStore }) {
         }
         TransmitToAllEvent({ eventName, data, isMemoryStore });
     });
+}
+
+export function DeleteEvent({ eventName, isMemoryStore }) {
+    if (!isMemoryStore) {
+        delete Store[eventName];
+    } else {
+        delete MemoryStore[eventName];
+        SetItem('memoryStore', MemoryStore);
+    }
 }
 
 export function SubscribeToEvent({ eventName, callback, extraParams, objParams, isMemoryStore }) {

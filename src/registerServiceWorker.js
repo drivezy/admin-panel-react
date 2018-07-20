@@ -7,7 +7,7 @@
 
 // To learn more about the benefits of this model, read https://goo.gl/KwvDNy.
 // This link also includes instructions on opting out of this behavior.
-import { SetItem } from './Utils/localStorage.utils';
+import { SetItem } from 'drivezy-web-utils/build/Utils';
 
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
@@ -76,14 +76,15 @@ function registerValidSW(swUrl) {
       return navigator.serviceWorker.ready;
     }).then(function (reg) {
       // console.log('Service Worker is ready :^)', reg);
-      reg.pushManager.subscribe({
-        userVisibleOnly: true
-      }).then(function (sub) {
-        var reg = /https:\/\/android\.googleapis\.com\/gcm\/send\//g;
-        var token = sub.endpoint.replace(reg, '');
-        SetItem('FIRE_TOKEN', token);
-        localStorage.token = token;
-      });
+      // @TODO disabling for now, uncomment later
+      // reg.pushManager.subscribe({
+      //   userVisibleOnly: true
+      // }).then(function (sub) {
+      //   var reg = /https:\/\/android\.googleapis\.com\/gcm\/send\//g;
+      //   var token = sub.endpoint.replace(reg, '');
+      //   SetItem('FIRE_TOKEN', token);
+      //   localStorage.token = token;
+      // });
     })
     .catch(error => {
       console.error('Error during service worker registration:', error);

@@ -1,176 +1,130 @@
 import React, { Component } from 'react';
-import './DetailIncludes.css';
-
-import CustomAction from './../Custom-Action/CustomAction.component';
-import { CreateInclusions, GetColumnsForListing, CreateFinalColumns, RegisterMethod } from './../../Utils/generic.utils';
-import { GetColumnsForDetail } from './../../Utils/genericDetail.utils';
-import TableSettings from './../../Components/Table-Settings/TableSettings.component';
-import { Location } from './../../Utils/location.utils';
-
 import {
-    Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Button,
-    Container,
-    Row, Col
+    Card, CardBody,
+    TabContent, TabPane, Nav, NavItem, NavLink
 } from 'reactstrap';
 
+import TableSettings from './../../Components/Table-Settings/TableSettings.component';
+import GenericListing from './../../Scenes/Generic-Listing/genericListing.scene';
+
+import { CreateFinalColumns } from './../../Utils/generic.utils';
+
 import { CopyToClipBoard } from './../../Utils/common.utils';
-import ToastNotifications from './../../Utils/toast.utils';
 
-import { TabContent, TabPane, Nav, NavItem, NavLink, Table } from 'reactstrap';
+import { Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
-import PortletTable from './../../Components/Portlet-Table/PortletTable.component';
+
+import './DetailIncludes.css';
 
 let shouldComponentWillReceivePropsRun = true;
-export default class DetailPortlet extends Component {
+export default class DetailIncludes extends Component {
     constructor(props) {
         super(props);
+        const tabs = this.getProcessedTab(props.tabs);
+
+        const hash = window.location.hash.replace('#', '');
+        const includesArr = Object.keys(tabs);
+        let activeTab = includesArr.indexOf(hash); // match if default open tab is there on the url
+        activeTab = activeTab == -1 ? 0 : activeTab;
+        if (!hash) {
+            // window.location.hash = includesArr[0];
+            Location.navigate({ url: '#' + includesArr[0], method: 'replace' })
+        }
+
         this.state = {
-            tabs: this.props.tabs,
+            tabs,
             tabContent: [],
-            activeTab: 0
+            activeTab: activeTab,
+            tabsGenericData: {}
         }
     }
-
-    rowOptions = [{
-        id: 0,
-        name: "Copy Row Id",
-        icon: 'fa-copy',
-        subMenu: false,
-        onClick: (data) => {
-            let id = data.listingRow.id;
-            CopyToClipBoard(id);
-            ToastNotifications.success("Id - " + id + " has been copied");
-        }
-    }];
 
     componentDidMount() {
-        this.buildTabData(this.props);
+        this.buildTabData(this.props); // iterate through tabs and fetch data
     }
 
-    unsafe_componentwillreceiveprops(nextProps) {
+
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (shouldComponentWillReceivePropsRun) { // when setting hash to the url, prevents componentWillReceiveProps from executing again
             // this.setState({ tabs: nextProps.tabs });
-            this.state.tabs = nextProps.tabs;
+            this.state.tabs = this.getProcessedTab(nextProps.tabs);
             this.buildTabData(nextProps);
         }
         shouldComponentWillReceivePropsRun = true;
     }
 
-    /**
-     * splits includes on comma and iterates through them to add extra properties to each tab
-     * @param  {object} props 
-     */
-    buildTabData = (props) => {
-        // 
-        const data = props.tabs;
-        const hash = window.location.hash;
+    getProcessedTab(tabsArray) {
+        const tabs = {};
+        for (let i in tabsArray) {
+            const tab = tabsArray[i];
+            const { uiActions = [] } = tab;
+            const isAlreadyModalAlias = uiActions.some(uiAction => uiAction.identifier == 'redirectGeneric');
 
-        // this.resolve = [];
-        const includes = data.includes.split(",");
+            if (!isAlreadyModalAlias) {
+                const modelAliasRedirect = {
+                    // @TODO add model alias rediect method
+                    as_header: true,
+                    image: 'fa-outdent',
+                    parameter: '/modelAlias/' + tab.menuId,
+                    active: true,
+                    identifier: 'redirectGeneric',
+                    name: 'Redirect Model Alias'
+                };
 
-        this.preferences = {};
-        this.state.tabContent = [];
-        for (const i in includes) {
-            const tab = {};
-            const inclusions = includes[i].split(".");
-            const index = data.starter + "." + inclusions[0];
-            const relationship = data.relationship[index];
-            const configure = data.dictionary[index];
-
-            tab.listName = index + ".list";
-            tab.modelName = index + ".form"; // earlier formName in old panel
-            // tab.formName = index + ".form"; // earlier formName in old panel
-
-            tab.relationship = relationship;
-            tab.dataModel = relationship.related_model; // new entry
-            if (relationship.related_model && relationship.related_model.route_name) {
-                tab.module = relationship.related_model.route_name.replace('api/admin/', '');
+                tab.uiActions.push(modelAliasRedirect);
             }
 
-            tab.name = relationship.alias_name;
-            tab.image = relationship.image;
-            tab.path = relationship.route_name;
-
-            tab.index = index; // earlier index in old panel
-            if (hash.includes(index)) {
-                this.state.activeTab = parseInt(i);
-            }
-            // index == 
-            tab.identifier = inclusions[0];
-            tab.preference = "";
-            tab.fixedParams = data.fixedParams;
-            tab.refreshContent = data.refreshContent; //  function to refresh whole detail content
-            tab.scripts = [];
-
-            // this.formPreferences = []; // @TODO seems useless, remove line after sometime, 
-
-            // check if there are other includes of the same identifier
-            let finalIncludes = includes[i];
-            for (const j in includes) {
-                if (includes[i] != includes[j]) {
-                    if (includes[j].split(".")[0] == inclusions[0]) {
-                        finalIncludes += "," + includes[j];
-                        delete includes[j];
-                    }
-                }
-            }
-
-            const params = {
-                includes: CreateInclusions(finalIncludes), starter: data.starter, dictionary: {}
-            };
-
-            const dictionary = params.includes.split(",");
-            for (const k in dictionary) {
-                const dicIndex = data.starter + "." + dictionary[k];
-                params.dictionary[dicIndex] = data.dictionary[dicIndex];
-            }
-            params.relationship = data.relationship;
-
-            // list of columns of all included models, used to configure view columns
-            const par = JSON.parse(JSON.stringify(params));
-            // const par = { ...{}, ...params };
-            tab.columns = GetColumnsForDetail(par);
-            // tab.columns = GetColumnsForListing(params);
-            // tab.columns = MenuService.getColumns(params);
-
-            params.includes = inclusions[0];
-            params.dictionary = {};
-            params.dictionary[index] = configure;
-            params.excludeStarter = 1;
-
-            // list of columns only related to particular model, used to configure generic forms
-            tab.configure = GetColumnsForListing({ ...params });
-
-            relationship.actions.map((action) => (
-                action.callback = tab.refreshContent
-            ));
-
-            tab.nextActions = relationship.actions; // generic actions (can be predefined or custom ones)
-            tab.preDefinedmethods = data.preDefinedmethods;
-            tab.methods = RegisterMethod(tab.nextActions);
-
-            // @TODO script incjection is disabled as of now
-            // var scripts = InjectScriptFactory.returnMatchingScripts({
-            //     preference: index, scripts: this.responseArray.scripts, searchConstraint: "startsWith"
-            // });
-            // Array.prototype.push.apply(tab.scripts, scripts);
-
-            this.preferences[tab.identifier] = relationship.preferences[tab.listName] ? JSON.parse(relationship.preferences[tab.listName]) : null;
-
-            // preference for form of particular tab
-            tab.formPreference = relationship.preferences[tab.modelName] ? JSON.parse(relationship.preferences[tab.modelName]) : null;
-
-            tab.selectedColumns = this.preferences[tab.identifier];
-            // list of selected column preference
-            tab.finalColumns = CreateFinalColumns(tab.columns, this.preferences[tab.identifier], params.relationship);
-            this.state.tabContent.push(tab);
+            tabs[i] = tab;
+            tabs[i].index = i;
         }
 
-        const tabContent = this.state.tabContent;
-        this.setState({ tabContent });
-        // this.setState({})
+        return tabs;
     }
+
+    /**
+     * Iterate through each tab, 
+     * Makes api call for individual tab and callback
+     * @param {object} props
+     * @memberof DetailIncludes
+     */
+    buildTabData = async (props) => {
+        // @TODO get Active tab and load that first
+        const hash = window.location.hash.replace('#', '');
+
+        const { tabs = {}, currentUser } = props;
+        const { tabContent } = this.state;
+
+        const includesArr = Object.keys(tabs);
+        const tabsArr = Object.values(tabs);
+
+        let activeTab = includesArr.indexOf(hash); // match if default open tab is there on the url
+        activeTab = activeTab == -1 ? 0 : activeTab;
+
+        const tab = tabsArr[activeTab];
+        // await GetListingRecord({ configuration: tab, callback: this.updateTabContent, data: tabContent[activeTab] || {}, currentUser, index: activeTab })
+        this.state.activeTab = activeTab;
+
+        // tabsArr.forEach((tab, key) => {
+        //     if (activeTab != key) {
+        //         GetListingRecord({ configuration: tab, callback: this.updateTabContent, data: tabContent[key] || {}, currentUser, index: key })
+        //     }
+        // })
+    }
+
+    /**
+     * callback on arrival of data for individual tab
+     * also gets index to keeps track of tab
+     * @param  {object} {genericData
+     * @param  {int} index}
+     */
+    // updateTabContent = ({ genericData: tabDetail, index }) => {
+    //     const { tabContent, tabs } = this.state;
+    //     const tabsIndices = Object.keys(tabs);
+    //     tabDetail.modelId = tabDetail.menuId;
+    //     tabContent[index] = tabDetail;
+    //     tabContent[index].index = tabsIndices[index];
+    //     this.setState({ tabContent });
+    // }
 
     /**
      * Change tab selection
@@ -189,27 +143,33 @@ export default class DetailPortlet extends Component {
         }
     }
 
-    layoutChanges = (selectedColumns) => {
+    /**
+     * Being triggered on layout change 
+     * @param  {object} layout
+     */
+    layoutChanges = (layout) => {
         let { tabContent, activeTab } = this.state;
-        tabContent[activeTab].selectedColumns = selectedColumns;
-        tabContent[activeTab].finalColumns = CreateFinalColumns(tabContent[activeTab].columns, selectedColumns, tabContent[activeTab].relationship);
+        tabContent[activeTab].layout = layout;
+        tabContent[activeTab].finalColumns = CreateFinalColumns(tabContent[activeTab].columns, layout.column_definition, tabContent[activeTab].relationship);
         this.setState({ tabContent });
     }
 
-    rowTemplate({ listingRow, selectedColumn }) {
-        let val;
-        try {
-            val = eval('listingRow.' + selectedColumn.path);
-        } catch (e) {
-            val = '';
-        }
-        return (<span>{val}</span>);
+    /**
+     * Saves generic data of tab to avoid extra call
+     * @param  {} genericData
+     * @param  {} index
+     */
+    storeTabGenericData = (genericData, index) => {
+        const { tabsGenericData } = this.state;
+        tabsGenericData[index] = genericData;
+        this.state.tabsGenericData = tabsGenericData;
     }
 
     render() {
-        const { tabs, tabContent, activeTab } = this.state;
-        const { history = {}, callback } = this.props;
+        const { tabs, tabContent, activeTab, tabsGenericData } = this.state;
+        const { history = {}, callback, currentUser, location, match, parentData } = this.props;
         const arr = [];
+        const tabsArr = Object.values(tabs);
         // Object.keys(tabs.data).map((tab)=>(
 
         // ))
@@ -220,13 +180,13 @@ export default class DetailPortlet extends Component {
                     <div className='generic-tabs-container'>
                         <Nav tabs>
                             {
-                                tabContent.length ?
-                                    tabContent.map((tab, key) => (
+                                tabsArr.length ?
+                                    tabsArr.map((tab, key) => (
                                         <NavItem key={key} >
                                             <NavLink
                                                 className={`${activeTab === key ? 'active' : ''}`}
                                                 onClick={() => { this.toggle(key, tab); }}>
-                                                <i className="fa fa-bars"></i> {tab.relationship.display_name}
+                                                <i className="fa fa-bars"></i> {tab.pageName}
                                             </NavLink>
                                         </NavItem>
                                     ))
@@ -235,40 +195,54 @@ export default class DetailPortlet extends Component {
                         </Nav>
                         <TabContent activeTab={activeTab}>
                             {
-                                tabContent.length ?
-                                    tabContent.map((tab, key) => {
+                                tabsArr.length ?
+                                    tabsArr.map((tab, key) => {
                                         if (activeTab == key) {
                                             return (
                                                 <TabPane className='relative' key={key} tabId={key}>
                                                     {/* Building the table iterating through the row to display tab content */}
                                                     <div className='table-header'>
-                                                        <div className='btn-group header-actions'>
-                                                            <CustomAction history={history} genericData={tab} actions={tab.nextActions} placement={168} callback={callback} />
+                                                        {/* <div className='btn-group header-actions'>
+                                                            <CustomAction history={history} source='modelAlias' genericData={tab} actions={tab.nextActions} placement={'as_header'} parentData={parentData} callback={callback} source='modelAlias' />
                                                         </div>
 
-                                                        <a className="btn btn-secondary btn-sm" onClick={() => Location.navigate({ url: `/modelAliasDetail/${tab.relationship.id}` })}>
+                                                        <a className="btn btn-secondary btn-sm" onClick={() => Location.navigate({ url: `/modelAliasDetail/${tab.relationship[tab.starter].id}` })}>
                                                             <i className="fa fa-outdent" uib-tooltip="Redirect to Model Alias detail"></i>
-                                                        </a>
+                                                        </a> */}
                                                         {
                                                             tab.columns && tab.finalColumns ?
                                                                 <TableSettings
+                                                                    source='modelAlias'
                                                                     onSubmit={this.layoutChanges}
                                                                     listName={tab.listName}
-                                                                    selectedColumns={tab.selectedColumns}
+                                                                    layout={tab.layout}
                                                                     columns={tab.columns}
+                                                                    menuId={tabsArr[key].menuId}
+                                                                    userId={currentUser.id}
+                                                                    source='modelAlias'
                                                                 />
                                                                 :
                                                                 null
                                                         }
                                                     </div>
 
-                                                    <PortletTable
+                                                    {/* <PortletTable
                                                         finalColumns={tab.finalColumns}
-                                                        listing={tabs.data[tab.index]}
-                                                        rowTemplate={this.rowTemplate}
-                                                        genericData={tabContent[key]}
+                                                        listing={tab.listing}
+                                                        genericData={tab}
                                                         callback={tab.refreshContent}
                                                         rowOptions={this.rowOptions}
+                                                        source='modelAlias'
+                                                    /> */}
+                                                    <GenericListing
+                                                        parentData={parentData}
+                                                        menuDetail={tab}
+                                                        source='modelAlias'
+                                                        location={location}
+                                                        match={match}
+                                                        genericData={tabsGenericData[key]}
+                                                        propageGenericDataToParent={this.storeTabGenericData}
+                                                        index={key}
                                                     />
                                                 </TabPane>
                                             )
@@ -282,4 +256,17 @@ export default class DetailPortlet extends Component {
 
         )
     }
+
+    rowOptions = [{
+        id: 0,
+        name: "Copy Row Id",
+        icon: 'fa-copy',
+        subMenu: false,
+        onClick: (data) => {
+            // let id = data.listingRow.id;
+            let id = data.listingRow[data.starter + '.id'];
+            CopyToClipBoard(id);
+            ToastNotifications.success("Id - " + id + " has been copied");
+        }
+    }];
 }

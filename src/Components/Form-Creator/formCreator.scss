@@ -1,12 +1,31 @@
+@import 'Assets/Global-Shared/theme.scss';
+.generic-form-container{
+    min-width: 70% !important;
+}
+
 .modal-header {
     border-bottom: none;
     padding: 15px 30px;
     color: #1b242ec7;
-}
-
-.modal-actions {
-    .btn-primary {
-        background-color: #496f98;
+    @include themify($themes){
+        background: themed('darkHeader');
+        color: themed('secondaryLight');
+    }
+    .modal-title{
+        letter-spacing: 2px;
+        color: #3fb187;
+        input{
+            margin: 0 30px;
+            border: none;
+            border-bottom: 2px solid #fff;
+            background: none;
+            color: #ffff;
+        }
+    }
+    .close{
+        @include themify($themes){
+            color: themed('secondaryLight');
+        }
     }
 }
 
@@ -15,38 +34,95 @@
 }
 
 .form-creator {
+    .layoutSelect{
+        .select-box{
+            position: absolute;
+            z-index: 10;
+            width: 17%;
+            left: 72%;
+            top: 16px;
+            div:nth-child(n){
+                div:nth-child(n) { 
+                    // background-color: #1f2533;
+                    @include themify($themes) {
+                        color: themed('onSelectbox');
+                        background-color: themed('selectbox');
+                    }
+                    z-index: 20;
+                }
+            }
+            div:nth-child(3){
+                div:nth-child(n){
+                    &:hover{
+                        background-color: #60baf9;
+                    }
+                    span:first-child{
+                        color: #fff;
+                        &:hover{
+                            color: #000;
+                        }
+                    }
+                }
+            }
+            span{
+                margin-left: 3px;
+            }
+        }
+    }
     .form-settings {
         position: absolute;
         right: 45px;
-        top: 5px;
+        top: 20px;
     } // background: black;
     .card {
         border: none;
         .card-body {
+            background-color: #f5f5f5;
+            padding: 0px;
             // padding: 0px 15px;
+            .form-row{
+                background-color: #fff;
+                border-radius: 3px;
+                margin: 15px;
+                padding: 10px;
+                .message{
+                    padding: 20px;
+                }
+            }
         }
     }
     .form-group {
+        padding: 3px 30px 3px 30px;
         label {
             font-weight: bold;
             font-weight: bold;
             font-size: 12px;
-            color: #330a0a9c;
+            color: #000;
         }
         input.form-control {
+            font-size: .8rem;
             border: none;
-            border-radius: 0px;
-            border-bottom: 1px solid #c7c7c7;
-            padding: 5px 0px;
+            border-radius: 3px;
+            border: 1px solid #c7c7c7;
+            padding: 7px 10px;
+            color: #000000;
+            background: #fafafa;
             &:focus {
                 box-shadow: none;
                 border-bottom: 1px solid #964d4d66;
             }
+            &::placeholder{
+                color: #757575;
+            }
         }
     }
-    .modal-actions {
-        button {
-            margin: 0 5px;
+    .modal-footer{
+        padding-right: 25px;
+        background-color: #fff;
+        .modal-actions {
+            button {
+                margin: 0 5px;
+            }
         }
     }
     .file-uploads {

@@ -6,14 +6,9 @@ import {
     CardTitle, CardSubtitle, Button, ModalBody, ModalFooter,
     TabContent, TabPane, Nav, NavItem, NavLink, Row, Col
 } from 'reactstrap';
-import { HotKeys } from 'react-hotkeys';
-
-import { Mousetrap } from 'react-hotkeys';
 
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
-import { SetItem } from './../../Utils/localStorage.utils';
 import ThemeUtil from './../../Utils/theme.utils';
-
 
 
 const SpotlightTab = () =>
@@ -168,7 +163,7 @@ export default class ConfugreSettings extends Component {
                 </ModalBody>
                 <ModalFooter>
                     <div>
-                        <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+                        <Button color="secondary" onClick={this.closeModal}>Cancel</Button>
                         <Button color="primary" onClick={() => this.applyChanges()}>Apply Changes</Button>
                     </div>
                 </ModalFooter>

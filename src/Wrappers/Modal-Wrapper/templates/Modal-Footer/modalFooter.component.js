@@ -31,7 +31,7 @@ export default class ModalFooter extends Component {
         const { payload } = this.props;
 
         return (
-            <div className="modal-footerf">
+            <div className="modal-footer">
                 {/* <div className="row justify-content-">
                     <div className="left">
 

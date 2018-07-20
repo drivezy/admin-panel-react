@@ -8,7 +8,9 @@ import { StoreEvent } from './stateManager.utils';
  * All user related utility methods
  ***********************************/
 
-import { GetItem } from './localStorage.utils';
+import { GetItem } from 'drivezy-web-utils/build/Utils';
+
+import { LoginCheckEndPoint } from './../Constants/api.constants';
 
 
 let CurrentUser = {};
@@ -27,9 +29,10 @@ export const GetFireToken = async () => {
 };
 
 export const LoginCheck = async () => {
-    const result = await Get({ urlPrefix: GLOBAL.ROUTE_URL, url: 'loginCheck' });
+    const result = await Get({ urlPrefix: GLOBAL.ROUTE_URL, url: LoginCheckEndPoint });
     let loggedUser = {};
     if (result.success) {
+        // loggedUser = result.response;
         loggedUser = GetUserDetail(result.response);
         CurrentUser = result.response;
     }
@@ -62,35 +65,23 @@ export const GetUserDetail = (userObject) => {
             oauth_token: userObject.oauth_token,
             calling_number: userObject.calling_number
         };
-        // Takes role name and return true and false if user has same role
+
         const hasRole = function (roleName) {
-            if (currentUser.isSuperAdmin) {
-                return true;
-            }
-            if (currentUser.roles.indexOf(roleName) == -1) {
-                return false;
-            } else {
-                return true;
-            }
+            // super user should always get access to all the resources in the system
+            return currentUser.roles.indexOf('super-admin') != -1 || currentUser.roles.indexOf(1) != -1 || currentUser.roleIdentifiers.indexOf(roleName) != -1 || currentUser.roleIdentifiers.indexOf(roleName) != -1;
         };
 
         const hasAbsoluteRole = function (roleName) {
-            if (currentUser.roles.indexOf(roleName) == -1) {
-                return false;
-            } else {
-                return true;
-            }
+            return currentUser.roles.indexOf(roleName) != -1 || currentUser.roleIdentifiers.indexOf(roleName) != -1;
         };
 
         const hasPermission = function (permissionName) {
-            if (currentUser.isSuperAdmin) {
-                return true;
-            }
-            if (currentUser.permissions.indexOf(permissionName) == -1) {
-                return false;
-            } else {
-                return true;
-            }
+            // super user should always get access to all the resources in the system
+            return currentUser.permissions.indexOf('super-admin') != -1 || currentUser.permissions.indexOf(1) != -1 || currentUser.permissionIdentifiers.indexOf(permissionName) != -1 || currentUser.permissionIdentifiers.indexOf(permissionName) != -1;
+        };
+
+        const hasAbsolutePermission = function (permissionName) {
+            return currentUser.permissions.indexOf(permissionName) != -1 || currentUser.permissionIdentifiers.indexOf(permissionName) != -1;
         };
 
         if (userObject.parent_user) {
@@ -100,24 +91,34 @@ export const GetUserDetail = (userObject) => {
 
         currentUser.roles = [];
         currentUser.permissions = [];
+        currentUser.roleIdentifiers = [];
+        currentUser.permissionIdentifiers = [];
         currentUser.hasRole = hasRole;
+        currentUser.hasPermission = hasPermission;
         currentUser.hasAbsoluteRole = hasAbsoluteRole;
+        currentUser.hasAbsolutePermission = hasAbsolutePermission;
 
-        for (var i in userObject.roles) {
-            currentUser.roles.push(userObject.roles[i].role.identifier);
+        for (let i in userObject.access_object.roles) {
+            currentUser.roles.push(userObject.access_object.roles[i]);
         }
 
-        for (var j in userObject.permissions) {
-            if (userObject.permissions[j] && userObject.permissions[j]) {
-                var permission = userObject.permissions[j].name;
-                currentUser.permissions.push(permission);
-            }
+        for (let j in userObject.access_object.permissions) {
+            currentUser.permissions.push(userObject.access_object.permissions[j]);
         }
-        currentUser.isSuperAdmin = hasRole("super_admin");
-        currentUser.isAdmin = hasRole("admin");
+
+        for (let i in userObject.access_object.roleIdentifiers) {
+            currentUser.roleIdentifiers.push(userObject.access_object.roleIdentifiers[i]);
+        }
+
+        for (let j in userObject.access_object.permissionIdentifiers) {
+            currentUser.permissionIdentifiers.push(userObject.access_object.permissionIdentifiers[j]);
+        }
+        // currentUser.isSuperAdmin = hasRole("super_admin");
+        // currentUser.isAdmin = hasRole("admin");
 
         return currentUser;
     } catch (err) {
+        console.log('err');
         return userObject;
     }
 };

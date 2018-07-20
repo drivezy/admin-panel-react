@@ -1,0 +1,88 @@
+.security-rule-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .body{
+        width: 80%;
+        background: #fff;
+        margin: 30px;
+    .clientScript{
+        background-color: #fff;
+        padding: 50px 0;
+    }
+    .form-row{
+    justify-content: center;
+    .form-group{
+        width: 90%;
+        justify-content: space-between;
+        display: flex;
+        .inputField{
+            width: 40%;
+            display: flex;
+            align-items: center;
+        }
+        label{
+            float: left;
+            min-width: 100px;
+            display: flex;
+        }
+        .descriptionInput{
+            width: 97%;
+            display: flex;
+        }
+        .col .inline{
+            padding: 0;
+        }
+        .filterCondition{
+            padding: 0;
+        }
+    }
+    .roles{
+        width: 100%;
+        border: 1px solid #d8d8d8;
+        border-radius: 5px 5px 0 0;
+        .roles-header{
+            display: flex;
+            justify-content: space-between;
+            background: #eceef0;
+            width: 100%;
+            padding: 15px;
+            align-items: center;
+            border-bottom: 1px solid #d8d8d8;
+            border-radius: 5px 5px 0 0;
+        }
+        .roles-body{
+            width: 100%;
+            .role{
+                padding: 10px 20px;                
+            }
+            .role:nth-child(even){
+                background: #f1f2f3;
+            }
+            .role:nth-child(odd){
+                background: #fff;
+            }
+            .role-name{
+                float: left;
+            }
+            .role-action{
+                text-align: right;
+            }
+        }
+    }
+    }
+    .actions{
+        width: 96%;
+        display: flex;
+        justify-content: flex-end;
+        padding-bottom: 20px;
+    }
+
+.description{
+    width: 100%;
+    padding: 7px;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #ced4db;
+}
+}}

@@ -1,3 +1,7 @@
+// @import "./../../../node_modules/react-select/scss/default";
+.modal-body{
+    padding-top: 7px !important;
+}
 .ace_print-margin {
     visibility: hidden !important;
 }
@@ -12,6 +16,19 @@
     .code-title {
         // flex-basis: 10%;
     }
+    .select-box {
+        min-width: 180px !important;
+        div:nth-child(n) {
+            div:nth-child(n) {
+                // background-color: #1f2533;
+                background-color: #1f2633;
+                color: #fff;
+            }
+        }
+        span {
+            color: #fff;
+        }
+    }
     .select-box-container {
         font-size: 14px;
         flex-basis: 90%;
@@ -19,5 +36,21 @@
     }
     .mode-selection {
         flex-basis: 15%;
+        position: relative;
+        z-index: 10;
     }
 }
+
+.scriptAction{
+    background: #dbdfe2;
+    border-radius: 0px;
+    margin: 0px 5px 5px 0px;
+}
+.script-controls { 
+    padding: 5px 0;
+}
+.code-editor-mode { 
+    min-width: 150px;
+    margin-top: -4px;
+}
+

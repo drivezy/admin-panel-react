@@ -1,13 +1,31 @@
 @import 'Assets/Global-Shared/theme.scss';
-.detail-portlet{
-    .card{
-        @include themify($themes){
-            background-color: themed('detailBackgroundCard');
+.detail-portlet {
+    
+    margin: 15px 4px;
+    .card {
+        overflow: hidden;
+        @include themify($themes) {
+            // background-color: themed('detailBackgroundCard');
+            color: themed('textSecondary');
+        }
+        .card-body {
+            padding: 0px;
         }
     }
-    margin: 4px 0px;
+    // margin: 4px 0px;
+    .detail-entry {
+        padding: 4px 0px;
+        display: flex;
+    }
+    .seperator{
+        text-align: center;
+        background: #d2e3f1;
+        padding: 0px !important;
+    }
+
     .pull-right {
         float: right;
+        font-size: 90%;
     }
     .padding-bottom-4 {
         padding-bottom: 4px;
@@ -15,21 +33,28 @@
     .padding-top-4 {
         padding-top: 4px;
     }
+    .gray-border-bottom{
+        border-right: 1px solid #d6d6d6;
+        &:hover{
+             background-color: #e8e8e8 !important;
+        }
+    }
+
     .gray-border-bottom:nth-child(4n+1) {
         background: #f9f9f9;
-        @include themify($themes){
+        @include themify($themes) {
             background-color: themed('menuTableBackground');
-            color: themed('whiteColor');
-            border: themed('menuBorder');
+            color: themed('textSecondary');
+            border: themed('borderBottom');
             border-radius: themed('menuBorderRadius');
         }
     }
     .gray-border-bottom:nth-child(4n) {
         background: #f9f9f9;
-        @include themify($themes){
+        @include themify($themes) {
             background-color: themed('menuTableBackground');
-            color: themed('whiteColor');
-            border: themed('menuBorder');
+            color: themed('textSecondary');
+            border: themed('borderBottom');
             border-radius: themed('menuBorderRadius');
         }
     }
