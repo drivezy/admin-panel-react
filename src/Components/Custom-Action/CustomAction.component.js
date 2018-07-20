@@ -16,6 +16,7 @@ import { CreateUrl, ConvertDependencyInjectionToArgs, RemoveStarterFromThePath }
 
 import CustomTooltip from '../Custom-Tooltip/customTooltip.component';
 
+var sortJsonArray = require('sort-json-array');
 
 let customMethods = {};
 
@@ -53,10 +54,7 @@ export default class CustomAction extends Component {
         if (action.form_id) {
             action.callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : callback) : callback;
             genericData.preDefinedmethods.customForm({ action, listingRow: data, genericData, history, menuDetail, parent: parentData });
-        } else if (typeof genericData.preDefinedmethods[action.identifier] == "function") {
-            action.callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : callback) : callback;
-            genericData.preDefinedmethods[action.identifier]({ action, listingRow: data, genericData, history, source, menuDetail, parent: parentData });
-        } else {
+        } else if (action.execution_script) {
             const pageContent = {
                 data,
                 parent: parentData,
@@ -64,6 +62,11 @@ export default class CustomAction extends Component {
             }
             ProcessPage({ pageContent });
             // script evaluation goes here
+        } else if (typeof genericData.preDefinedmethods[action.identifier] == "function") {
+            action.callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : callback) : callback;
+            genericData.preDefinedmethods[action.identifier]({ action, listingRow: data, genericData, history, source, menuDetail, parent: parentData });
+        } else {
+            alert("The ui action " + action.id + " is not configued properly");
         }
         // if (genericData.methods && typeof genericData.methods[action.name] == "function") {
         //     // var callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : customMethods[action.callback]) : listing.callbackFunction.function;
@@ -89,8 +92,7 @@ export default class CustomAction extends Component {
         return (
             <div className="custom-actions flex">
                 {
-                    actions.map((action, key) => {
-
+                    (sortJsonArray(actions, 'display_order')).map((action, key) => {
                         if(!action) { 
                             return null;
                         }

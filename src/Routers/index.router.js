@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { HotKeys } from 'react-hotkeys';
 
+import { Location, PreserveState } from 'drivezy-web-utils/build/Utils';
 
 /** Component */
 import Landing from './../Components/Landing/landing.component';
@@ -10,14 +11,8 @@ import Landing from './../Components/Landing/landing.component';
 // import { LoginCheck } from './../Utils/user.utils';
 import { GetPreferences } from './../Utils/preference.utils';
 import SettingsUtil from './../Utils/settings.utils';
-import { PreserveState } from './../Utils/preserveUrl.utils';
 import { GetMenusFromApi } from './../Utils/menu.utils';
 import LoadAsync from './../Utils/loadAsyncScripts.utils';
-import { Location } from 'drivezy-web-utils/build/Utils';
-// import { Location } from './../Utils/location.utils';
-
-
-// import { GetProperties } from './../Utils/openProperty.utils';
 
 
 /** 
