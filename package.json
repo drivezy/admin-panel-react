@@ -7,6 +7,7 @@
     "add": "^2.0.6",
     "bootstrap": "^4.0.0",
     "bootstrap-daterangepicker": "^3.0.1",
+    "common-js-util": "^0.1.4",
     "drivezy-web-utils": "0.0.3",
     "formik": "^0.11.11",
     "imageviewer": "^1.0.0",
