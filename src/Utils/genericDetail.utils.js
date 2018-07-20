@@ -1,7 +1,7 @@
 import { IsUndefinedOrNull, BuildUrlForGetCall, IsObjectHaveKeys } from './common.utils';
-import { CreateFinalColumns, GetPreSelectedMethods, RegisterMethod, GetColumnsForListing, ConvertMenuDetailForGenericPage, GetParsedLayoutScript } from './generic.utils';
-import { Get } from './http.utils';
+import { Get } from 'common-js-util';
 
+import { CreateFinalColumns, GetPreSelectedMethods, RegisterMethod, GetColumnsForListing, ConvertMenuDetailForGenericPage, GetParsedLayoutScript } from './generic.utils';
 import { ROUTE_URL } from './../Constants/global.constants';
 
 /**

@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import {
-    Card, CardHeader, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Button, Row, Col, Progress, Nav, NavItem, NavLink, TabContent, TabPane
+    Card, 
 } from 'reactstrap';
-import { Link } from 'react-router-dom';
 
+import { Get } from 'common-js-util';
 
-import { Get } from './../../Utils/http.utils';
-import './userCard.component.css';
 import UserLicenseCard from '../User-License-Card/userLicenseCard.component';
+import './userCard.component.css';
 
 export default class UserCard extends Component {
 

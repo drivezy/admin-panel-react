@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 
 import { withFormik, Field } from 'formik';
-import { Put } from './../../Utils/http.utils';
+import { Put } from 'common-js-util';
 import SelectBox from './../Forms/Components/Select-Box/selectBox';
 import './userLicenseForm.component.css'
 // Our inner form component which receives our form's state and updater methods as props

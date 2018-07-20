@@ -1,12 +1,9 @@
 
 
-import { Get, Post, Put, Delete } from './http.utils';
-import { IsObjectHaveKeys } from './common.utils';
+import { Get, Post, Put, Delete, IsObjectHaveKeys } from 'common-js-util';
 
 import { ListPreference } from './../Constants/api.constants';
 import { RECORD_URL } from './../Constants/global.constants';
-
-let preferences = [];
 
 export const GetPreferences = () => {
     return Get({ url: 'userPreference', callback: setValues });
@@ -63,7 +60,7 @@ export function DeletePreference({ layout }) {
 // }
 
 function setValues(values) {
-    preferences = values.response;
+    // preferences = values.response;
 }
 
 /**

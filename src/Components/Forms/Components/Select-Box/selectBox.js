@@ -8,9 +8,7 @@ import Select, { Async } from 'react-select';
 import AsyncSelect from 'react-select/lib/Async';
 // import 'react-select/dist/react-select.css';
 
-import { Get } from './../../../../Utils/http.utils';
-import { IsObjectHaveKeys } from './../../../../Utils/common.utils';
-
+import { Get, IsObjectHaveKeys } from 'common-js-util';
 
 export default class SelectBox extends Component {
     constructor(props) {

@@ -1,7 +1,7 @@
+import { Get, Post, Delete, Put } from 'common-js-util';
 import { Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
-import { CreateUrl } from './generic.utils';
 
-import { Get, Post, Delete, Put } from './http.utils';
+import { CreateUrl } from './generic.utils';
 
 let self = {};
 

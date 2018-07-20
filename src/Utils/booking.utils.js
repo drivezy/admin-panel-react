@@ -1,4 +1,4 @@
-import { Get } from './../Utils/http.utils';
+import { Get } from 'common-js-util';
 import moment from 'moment';
 
 export function Booking(bookingId) {

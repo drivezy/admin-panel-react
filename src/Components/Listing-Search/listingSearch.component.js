@@ -2,13 +2,11 @@ import React, { Component } from 'react';
 import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 // import SelectBox from './../Forms/Components/Select-Box/selectBox';
 
+import { Location } from 'drivezy-web-utils/build/Utils';
+import { Get, BuildUrlForGetCall, SelectFromOptions, IsObjectHaveKeys } from 'common-js-util';
+
 import './listingSearch.component.css'
 import GLOBAL from './../../Constants/global.constants';
-
-import { SelectFromOptions, IsObjectHaveKeys } from './../../Utils/common.utils';
-import { Location } from 'drivezy-web-utils/build/Utils';
-import { Get } from './../../Utils/http.utils';
-import { BuildUrlForGetCall } from './../../Utils/common.utils';
 
 //let activeColumn = {};
 

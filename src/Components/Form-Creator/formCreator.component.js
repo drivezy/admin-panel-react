@@ -10,10 +10,9 @@ import { withFormik, Field, Form } from 'formik';
 import Yup from 'yup';
 
 import { SetItem , ToastNotifications} from 'drivezy-web-utils/build/Utils';
+import { Upload, Post, Put, SubscribeToEvent, IsObjectHaveKeys, IsUndefined } from 'common-js-util';
 
-import { Upload, Post, Put, Get } from './../../Utils/http.utils';
 import { GetChangedMethods } from './../../Utils/generic.utils';
-import { IsObjectHaveKeys, IsUndefined } from './../../Utils/common.utils';
 
 //  import SelectBox from './../Forms/Components/Select-Box/selectBox';
 
@@ -31,7 +30,6 @@ import FormSettings from './../Form-Settings/FormSettings.component';
 import ScriptInput from './../Forms/Components/Script-Input/scriptInput.component';
 import FormInput from './../Forms/Components/Form-Type/formType.component';
 
-import { SubscribeToEvent } from './../../Utils/stateManager.utils';
 import { ExecuteScript } from './../../Utils/inject-method/injectScript.utils';
 
 import FormUtils from './../../Utils/form.utils';

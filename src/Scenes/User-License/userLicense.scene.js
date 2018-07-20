@@ -3,18 +3,18 @@ import './userLicense.scene.css';
 
 import UserLicenseCard from './../../Components/User-License-Card/userLicenseCard.component';
 import {
-    Card, CardHeader, CardBody, Row, Col, Button
+    Card, CardHeader, CardBody
 } from 'reactstrap';
 
-import Viewer from 'react-viewer';
+
 import 'react-viewer/dist/index.css';
 import classNames from 'classnames';
 
-import { Get, Put, Delete } from './../../Utils/http.utils';
+import { Get, Put, Delete, BuildUrlForGetCall } from 'common-js-util';
+import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
+
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
-import ToastNotifications from './../../Utils/toast.utils';
 import { ConfirmUtils } from './../../Utils/confirm-utils/confirm.utils';
-import { BuildUrlForGetCall } from './../../Utils/common.utils';
 
 
 import UserLicenseForm from './../../Components/User-License-Form/userLicenseForm.component';
@@ -171,7 +171,7 @@ export default class UserLicense extends Component {
     }
 
     sample = () => {
-        console.log ('abcdesfghijklmnopqrstuve=wcz');
+        console.log('abcdesfghijklmnopqrstuve=wcz');
     }
 
     acceptL = () => {
@@ -188,7 +188,7 @@ export default class UserLicense extends Component {
     }
 
     rejectL = () => {
-        const { images  = [], currentIndex } = this.state;
+        const { images = [], currentIndex } = this.state;
 
         const rejectdData = {
             approved: 0,
@@ -293,10 +293,10 @@ export default class UserLicense extends Component {
                         {
                             userObj.id &&
                             <CardBody>
-                                <UserLicenseCard userData={userObj} flag={1} acceptL={this.acceptL} rejectL={this.rejectL} deleteL={this.deleteL}/>
+                                <UserLicenseCard userData={userObj} flag={1} acceptL={this.acceptL} rejectL={this.rejectL} deleteL={this.deleteL} />
                                 <div className="detected-text-label">Detected Text</div>
                                 <div className="detected-text-data">{detectedText} </div>
-                              
+
                             </CardBody>
                         }
                     </Card>

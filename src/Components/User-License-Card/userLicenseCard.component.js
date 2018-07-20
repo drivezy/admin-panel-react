@@ -1,25 +1,17 @@
 import React, { Component } from 'react';
 import {
-    Card, CardImg, Row, Col, Button
+    Card, Button
 } from 'reactstrap';
 
-import { Get } from './../../Utils/http.utils';
-import { Link } from 'react-router-dom';
-
-import { Put, Delete } from './../../Utils/http.utils';
-import { GetDefaultOptions } from './../../Utils/genericListing.utils';
-import ToastNotifications from './../../Utils/toast.utils';
-import { ConfirmUtils } from './../../Utils/confirm-utils/confirm.utils';
-import { BuildUrlForGetCall } from './../../Utils/common.utils';
-
-
-import 'react-viewer/dist/index.css';
-
+import { Get } from 'common-js-util';
 
 import './userLicenseCard.component.css';
 import classNames from 'classnames';
-
 import ImageViewer from './../../Components/Image-Viewer/imageViewer.component.js';
+
+import 'react-viewer/dist/index.css';
+import './userLicenseCard.component.css';
+import 'react-viewer/dist/index.css';
 
 export default class UserLicenseCard extends Component {
     container = HTMLDivElement;

@@ -3,13 +3,9 @@
 import React, { Component } from 'react';
 
 import Select, { Async } from 'react-select';
-// import 'react-select/dist/react-select.css';
-// import Async from 'react-select';
-import GLOBAL from './../../../../Constants/global.constants';
+import { Get, IsObjectHaveKeys } from 'common-js-util';
 
-import { IsObjectHaveKeys } from './../../../../Utils/common.utils';
-import { Get } from './../../../../Utils/http.utils';
-import { callbackify } from 'util';
+import GLOBAL from './../../../../Constants/global.constants';
 
 export default class SelectBox extends Component {
     constructor(props) {

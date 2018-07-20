@@ -1,5 +1,4 @@
-import { BuildUrlForGetCall, SelectFromOptions } from './common.utils';
-import { Get } from './http.utils';
+import { BuildUrlForGetCall, SelectFromOptions, Get } from 'common-js-util';
 
 import { ColumnsEndPoint } from './../Constants/api.constants';
 import { ROUTE_URL } from './../Constants/global.constants';
