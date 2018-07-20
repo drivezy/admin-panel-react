@@ -1,19 +1,15 @@
 import React, { Component } from 'react';
 import {
-    Card, CardImg, Row, Col
+    Card
 } from 'reactstrap';
 
-import { Get } from './../../Utils/http.utils';
-import { Link } from 'react-router-dom';
+import { Get } from 'common-js-util';
 
-import Viewer from 'react-viewer';
-import 'react-viewer/dist/index.css';
-
-
-import './userLicenseCard.component.css';
 import classNames from 'classnames';
-
 import ImageViewer from './../../Components/Image-Viewer/imageViewer.component.js';
+
+import 'react-viewer/dist/index.css';
+import './userLicenseCard.component.css';
 
 export default class UserLicenseCard extends Component {
     container = HTMLDivElement;

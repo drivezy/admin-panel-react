@@ -7,15 +7,15 @@ import React from 'react';
 import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 import FormCreator from './../Components/Form-Creator/formCreator.component';
 
+import { Get, SelectFromOptions } from 'common-js-util';
+import { GetItem } from 'drivezy-web-utils/build/Utils';
+
 import FormUtils from './form.utils';
 import { GetUrlForFormCreator, GetColumnsForListing, GetParsedLayoutScript, ParseRestrictedQuery } from './generic.utils';
 import { ExecuteScript } from './inject-method/injectScript.utils';
-import { Get } from './http.utils';
+import { ConfirmUtils } from './confirm-utils/confirm.utils';
 
 import { ROUTE_URL, RECORD_URL } from './../Constants/global.constants';
-import { SelectFromOptions } from './common.utils';
-import { GetItem } from 'drivezy-web-utils/build/Utils';
-import { ConfirmUtils } from './confirm-utils/confirm.utils';
 
 export async function ProcessForm({ formContent, scripts, isForm, openModal = true }) {
     const url = GetUrlForFormCreator({ payload: formContent, getDictionary: true, isForm });

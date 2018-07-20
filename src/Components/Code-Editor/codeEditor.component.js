@@ -12,9 +12,7 @@ import AceEditor from 'react-ace';
 
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
-import { SelectFromOptions } from './../../Utils/common.utils';
-import { Get, Post, Put } from './../../Utils/http.utils';
+import { Get, Post, Put, SelectFromOptions } from 'common-js-util';
 import { GetItem, SetItem } from 'drivezy-web-utils/build/Utils';
 
 import 'brace/mode/php';
@@ -23,6 +21,7 @@ import 'brace/mode/sql';
 import 'brace/theme/monokai';
 import './codeEditor.css';
 
+import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import ModalWrapper from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
 import { RECORD_URL } from './../../Constants/global.constants';
 

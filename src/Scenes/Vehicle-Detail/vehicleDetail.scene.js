@@ -1,19 +1,15 @@
 import React, { Component } from 'react';
 import {
-    Card, CardHeader, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Button, Row, Col, Progress, Nav, NavItem, NavLink, TabContent, TabPane
+    Card, Nav, NavItem, NavLink, TabContent, TabPane
 } from 'reactstrap';
 import classnames from 'classnames';
 
-import GLOBAL from './../../Constants/global.constants';
-import { Get } from './../../Utils/http.utils';
+import { Get } from 'common-js-util';
 
 import TableWrapper from './../../Components/Table-Wrapper/tableWrapper.component';
 import VehicleCard from './../../Components/Vehicle-Card/vehicleCard.component';
 
-
 import './vehicleDetail.scene.css';
-
 
 export default class VehicleDetail extends Component {
 
@@ -162,7 +158,7 @@ export default class VehicleDetail extends Component {
         if (vehicleDetail.id) {
             return (
                 <div className="vehicle-detail">
-                    <br/>
+                    <br />
                     <div className="vehicle-card-content">
                         <VehicleCard vehicle={vehicleDetail} />
                     </div>

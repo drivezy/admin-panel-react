@@ -8,12 +8,12 @@ import 'react-viewer/dist/index.css';
 import classNames from 'classnames';
 
 import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
+import { Get, Put, Delete } from 'common-js-util';
 
 import UserLicenseForm from './../../Components/User-License-Form/userLicenseForm.component';
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import RejectLicenseForm from './../../Components/Reject-License-Form/rejectLiceneseForm.component';
 
-import { Get, Put, Delete } from './../../Utils/http.utils';
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
 import { ConfirmUtils } from './../../Utils/confirm-utils/confirm.utils';
 import './userLicense.scene.css';

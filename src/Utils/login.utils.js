@@ -1,11 +1,10 @@
 import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
+import { Get, Post } from 'common-js-util';
 
 import Validity from './../Utils/validity.utils';
-import { Get, Post } from './../Utils/http.utils';
-import { GenerateLoginOTP } from './../Constants/api.constants';
-import { LoginEndPoint, SignupEndPoint, ValidateLoginOTP } from './../Constants/api.constants';
-
 import { LoginCheck } from './../Actions/user.action';
+
+import { LoginEndPoint, SignupEndPoint, ValidateLoginOTP, GenerateLoginOTP } from './../Constants/api.constants';
 import Store from './../index.store';
 
 export async function CheckUsername({ username, history }) {

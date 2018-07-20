@@ -3,10 +3,10 @@ import React, { Component } from 'react';
 import './FormSettings.css';
 import _ from 'lodash';
 
+import { SubscribeToEvent, IsObjectHaveKeys } from 'common-js-util';
+
 import { SetPreference } from './../../Utils/preference.utils';
 
-import { IsObjectHaveKeys } from './../../Utils/common.utils';
-import { SubscribeToEvent, UnsubscribeEvent } from './../../Utils/stateManager.utils';
 import { changeArrayPosition } from './../../Utils/js.utils';
 
 import Switch from './../Forms/Components/Switch/switch';
@@ -313,7 +313,7 @@ export default class FormSettings extends Component {
                     <div className="rightButtons">
                         <button className="btn btn-danger" onClick={this.toggleModal}>Cancel</button>
                         <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
-                        
+
                     </div>
                 </ModalFooter>
             </Modal >

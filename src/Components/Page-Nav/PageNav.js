@@ -4,11 +4,9 @@ import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reac
 import { Redirect } from 'react-router-dom';
 
 import { ToastNotifications, LoaderComponent, LoaderUtils  } from 'drivezy-web-utils/build/Utils';
+import { SubscribeToEvent, Get, Post } from 'common-js-util';
 
 import GLOBAL from './../../Constants/global.constants';
-
-import { SubscribeToEvent } from './../../Utils/stateManager.utils';
-import { Get, Post } from './../../Utils/http.utils';
 
 import SettingsUtil from './../../Utils/settings.utils';
 import ThemeUtil from './../../Utils/theme.utils';

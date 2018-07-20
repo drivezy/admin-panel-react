@@ -9,6 +9,8 @@ import { ToastContainer } from 'drivezy-web-utils/build/Components';
 
 // import { ToastContainer } from 'react-toastify';
 
+import { SubscribeToEvent } from 'common-js-util';
+
 /** Router */
 import PrivateRoute from './privateRoute.router';
 import IndexRouter from './index.router';
@@ -29,7 +31,6 @@ import { Spotlight } from './../Components/Spotlight-Search/spotlightSearch.comp
 /** Util */
 import SettingsUtil from './../Utils/settings.utils';
 import { LoginCheck } from './../Utils/user.utils';
-import { SubscribeToEvent } from './../Utils/stateManager.utils';
 import { ConfirmModalComponent, ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
 
 /** Util Ends*/

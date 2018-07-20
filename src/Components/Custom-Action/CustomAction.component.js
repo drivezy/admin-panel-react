@@ -6,7 +6,6 @@ import { ProcessPage } from './../../Utils/pageMiddleware.utils';
 
 import { CreateUrl, ConvertDependencyInjectionToArgs, RemoveStarterFromThePath } from './../../Utils/generic.utils';
 // import { IsUndefinedOrNull } from './../../Utils/common.utils';
-// import { Delete } from './../../Utils/http.utils';
 
 // import FormCreator from './../Form-Creator/formCreator.component';
 

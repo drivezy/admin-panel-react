@@ -10,7 +10,7 @@ import Yup from "yup";
 import classnames from "classnames";
 import { withFormik } from 'formik';
 
-import { Post } from './../../Utils/http.utils';
+import { Post } from 'common-js-util';
 
 import GLOBAL from './../../Constants/global.constants';
 

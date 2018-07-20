@@ -2,13 +2,12 @@
 // Refer https://github.com/skratchdot/react-bootstrap-daterangepicker
 
 import React, { Component } from 'react';
+import { Get } from 'common-js-util';
 
 import GLOBAL from './../../../../Constants/global.constants';
 
 import SelectBox from './../Select-Box/selectBoxForGenericForm.component';
 import './listSelect.css';
-
-import { Get } from './../../../../Utils/http.utils';
 
 export default class ListSelect extends Component {
 
@@ -42,7 +41,7 @@ export default class ListSelect extends Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.column) {
             this.loadOptions(nextProps.column);
         }
