@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 
+import { GetUrlParams, Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
+
 import ScriptInput from './../../Components/Forms/Components/Script-Input/scriptInput.component';
 import SelectBox from './../../Components/Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import ReferenceInput from './../../Components/Forms/Components/Reference-Input/referenceInput';
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 
-import ToastNotifications from '../../Utils/toast.utils';
-import { GetUrlParams, Location } from './../../Utils/location.utils';
-import { Get, Put, Post } from './../../Utils/http.utils';
+import { Get, Put, Post, Delete } from './../../Utils/http.utils';
 import { BuildUrlForGetCall, IsObjectHaveKeys } from '../../Utils/common.utils';
 import { GetColumnDetail, ExtractColumnName } from './../../Utils/panel.utils';
 
@@ -34,7 +34,7 @@ export default class SecurityRule extends Component {
 
     getSecurityDetail = async () => {
         const { id } = this.state.params;
-        const apiParams = { includes: 'roles,script' };
+        const apiParams = { includes: 'roles.role,script' };
 
         let url = SecurityRuleEndPoint + id;
         url = BuildUrlForGetCall(url, apiParams);
@@ -61,9 +61,12 @@ export default class SecurityRule extends Component {
     }
 
     getColumnDetail = async () => {
-        const { rule } = this.state;
+        const { rule, selectedColumn } = this.state;
         const { source_type: sourceType, source_id: sourceId, name } = rule;
 
+        if (selectedColumn) {
+            return;
+        }
         const result = await GetColumnDetail({ sourceType, sourceId });
 
 
@@ -95,6 +98,12 @@ export default class SecurityRule extends Component {
         if (scriptId) {
             body = { script_id: scriptId };
         } else {
+
+            const inlineScriptButton = document.getElementById('submit-script-inline');
+            if (inlineScriptButton && !inlineScriptButton.disabled) {
+                inlineScriptButton.click();
+            }
+
             body = {
                 filter_condition, name
             }
@@ -102,9 +111,25 @@ export default class SecurityRule extends Component {
         const result = await Put({ url, body, urlPrefix: ROUTE_URL });
         if (result.success) {
             ToastNotifications.success({ title: 'Successfully updated' });
+            Location.back();
             this.ruleDataFetched(result);
         }
 
+    }
+
+    removeRole = async (id) => {
+        const { role, rule } = this.state;
+        const { source_id, source_type } = rule;
+
+        const result = await Delete({ url: `api/record/roleAssignment/${id}`, urlPrefix: ROUTE_URL });
+        if (result.success) {
+            ToastNotifications.success({ title: 'Successfully deleted role' });
+            if (!(Array.isArray(rule.roles) && rule.roles.length)) {
+                return;
+            }
+            rule.roles = rule.roles.filter(role => id != role.id);
+            this.setState({ rule });
+        }
     }
 
     setRole = async () => {
@@ -172,8 +197,9 @@ export default class SecurityRule extends Component {
 
     render() {
         const { columns, rule, selectedColumn, scriptPayload } = this.state;
-        const { name = '', script: scriptObj = {} } = rule;
-        const { script } = scriptObj;
+        const { name = '' } = rule;
+        const scriptObj = rule.script || {};
+        const { script = '' } = scriptObj;
 
         return (
             <div className='security-rule-container'>
@@ -187,14 +213,13 @@ export default class SecurityRule extends Component {
                     <form name='securityRule' className="clientScript">
                         <div className='form-row'>
                             <div className='form-group'>
-                                <div className="nameInput inputField col">
+                                <div className="nameInput inputField">
                                     <label>Name</label>
-                                    <input className='form-control' value={name} onChange={() => { }} disabled />
+                                    <input className='form-control' value={name} disabled />
                                 </div>
-                                <div className="columnInput inputField col">
+                                <div className="columnInput inputField">
                                     <label>Column</label>
                                     <SelectBox name="form-field-name" onChange={value => this.setState({ selectedColumn: value })} value={selectedColumn} field="name" options={columns} />
-
                                 </div>
                             </div>
                         </div>
@@ -202,11 +227,18 @@ export default class SecurityRule extends Component {
                             <div className='form-group'>
                                 <div className="descriptionInput">
                                     <label>Filter Condition</label>
-                                    <input className='form-control'
+                                    <textarea
+                                        placeholder='Enter Filter Condition'
+                                        rows="3"
+                                        value={rule.filter_condition || ''}
+                                        onChange={e => this.setRuleValue(e.target.value, 'filter_condition')}
+                                        className="description"
+                                    />
+                                    {/* <input className='form-control'
                                         value={rule.filter_condition}
                                         onChange={e => this.setRuleValue(e.target.value, 'filter_condition')}
                                         placeholder="Enter Filter Condition"
-                                    />
+                                    /> */}
 
                                 </div>
                             </div>
@@ -235,26 +267,28 @@ export default class SecurityRule extends Component {
                         <div className='form-row'>
                             <div className='form-group'>
                                 <div className="roles">
-                                    <label>Roles</label>
-                                    <br />
-                                    <button className="btn btn-sm btn-secondary" onClick={(e) => {
-                                        e.preventDefault();
-                                        ModalManager.openModal({
-                                            headerText: 'Roles',
-                                            modalBody: this.renderAddRoleComponent
-                                            // modalBody: () => <div>
-                                            //     {/* <SelectBox
-                                            //         onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'selectValue' })}
-                                            //         value={selectedOption}
-                                            //         field="Name"
-                                            //         placeholder="Select Roles"
-                                            //         getOptions={(input) => this.getInputRecord({ input, parentIndex, childIndex })}
-                                            //     /> */}
-                                            // </div>
-                                        })
-                                    }}>
-                                        <i className="fa fa-plus"></i>
-                                    </button>
+                                    <div className="roles-header">
+                                        <label>Roles</label>
+                                        <br />
+                                        <button className="btn btn-sm btn-secondary" onClick={(e) => {
+                                            e.preventDefault();
+                                            ModalManager.openModal({
+                                                headerText: 'Roles',
+                                                modalBody: this.renderAddRoleComponent
+                                                // modalBody: () => <div>
+                                                //     {/* <SelectBox
+                                                //         onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex, attr: 'selectValue' })}
+                                                //         value={selectedOption}
+                                                //         field="Name"
+                                                //         placeholder="Select Roles"
+                                                //         getOptions={(input) => this.getInputRecord({ input, parentIndex, childIndex })}
+                                                //     /> */}
+                                                // </div>
+                                            })
+                                        }}>
+                                            <i className="fa fa-plus"></i>
+                                        </button>
+                                    </div>
 
                                     {
                                         rule.roles ?
@@ -262,20 +296,22 @@ export default class SecurityRule extends Component {
                                                 {
                                                     rule.roles.map((role, key) => (
 
-                                                        <span className="role" key={key}>
-                                                            <span className="role-name">
+                                                        <div className="role" key={key}>
+                                                            <div className="role-name">
                                                                 {role.id}
-                                                            </span>
-                                                            <span>
-                                                                <i className="fa fa-times" aria-hidden="true"></i>
-                                                            </span>
-                                                        </span>
+                                                            </div>
+                                                            <div className="role-action">
+                                                                <button className="btn btn-sm" onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    this.removeRole(role.id)
+                                                                }}><i className="fa fa-times" aria-hidden="true"></i></button>
+                                                            </div>
+                                                        </div>
 
                                                     ))
                                                 }
                                             </div> : <div>Loading Roles</div>
                                     }
-                                    {console.log(rule.roles)}
 
                                 </div>
                             </div>
@@ -286,7 +322,7 @@ export default class SecurityRule extends Component {
                         <button className="btn btn-info" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
                             Cancel
                                     </button>
-                        <button className="btn btn-success" onClick={this.saveRule} style={{ margin: '8px' }}>
+                        <button className="btn btn-success" onClick={() => this.saveRule()} style={{ margin: '8px' }}>
                             Save
                                     </button>
                     </div>

@@ -10,9 +10,8 @@ import GenericListing from './../../Scenes/Generic-Listing/genericListing.scene'
 import { CreateFinalColumns } from './../../Utils/generic.utils';
 
 import { CopyToClipBoard } from './../../Utils/common.utils';
-import ToastNotifications from './../../Utils/toast.utils';
 
-import { Location } from './../../Utils/location.utils';
+import { Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
 
 import './DetailIncludes.css';
@@ -59,16 +58,16 @@ export default class DetailIncludes extends Component {
         for (let i in tabsArray) {
             const tab = tabsArray[i];
             const { uiActions = [] } = tab;
-            const isAlreadyModalAlias = uiActions.some(uiAction => uiAction.identifier == 'modalAlias');
+            const isAlreadyModalAlias = uiActions.some(uiAction => uiAction.identifier == 'redirectGeneric');
 
             if (!isAlreadyModalAlias) {
                 const modelAliasRedirect = {
                     // @TODO add model alias rediect method
                     as_header: true,
                     image: 'fa-outdent',
-                    parameter: 'menuDef/:id',
+                    parameter: '/modelAlias/' + tab.menuId,
                     active: true,
-                    identifier: 'modalAlias',
+                    identifier: 'redirectGeneric',
                     name: 'Redirect Model Alias'
                 };
 

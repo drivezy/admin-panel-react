@@ -21,7 +21,8 @@
             display: flex;
         }
         .descriptionInput{
-            width: 100%;
+            width: 97%;
+            display: flex;
         }
         .col .inline{
             padding: 0;
@@ -34,7 +35,6 @@
         justify-content: flex-end;
         padding-bottom: 20px;
     }
-
 .description{
     width: 100%;
     padding: 7px;
@@ -42,4 +42,8 @@
     border-width: 1px;
     border-color: #ced4db;
 }
+}
+
+input[type=checkbox]{
+    width: 17px;
 }

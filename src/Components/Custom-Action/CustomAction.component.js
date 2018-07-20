@@ -7,7 +7,6 @@ import { ProcessPage } from './../../Utils/pageMiddleware.utils';
 import { CreateUrl, ConvertDependencyInjectionToArgs, RemoveStarterFromThePath } from './../../Utils/generic.utils';
 // import { IsUndefinedOrNull } from './../../Utils/common.utils';
 // import { Delete } from './../../Utils/http.utils';
-// import ToastNotifications from './../../Utils/toast.utils';
 
 // import FormCreator from './../Form-Creator/formCreator.component';
 
@@ -17,6 +16,7 @@ import { CreateUrl, ConvertDependencyInjectionToArgs, RemoveStarterFromThePath }
 
 import CustomTooltip from '../Custom-Tooltip/customTooltip.component';
 
+var sortJsonArray = require('sort-json-array');
 
 let customMethods = {};
 
@@ -92,9 +92,8 @@ export default class CustomAction extends Component {
         return (
             <div className="custom-actions flex">
                 {
-                    actions.map((action, key) => {
-
-                        if (!action) {
+                    (sortJsonArray(actions, 'display_order')).map((action, key) => {
+                        if(!action) { 
                             return null;
                         }
                         if (action[placement]) {

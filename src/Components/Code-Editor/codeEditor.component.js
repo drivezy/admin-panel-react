@@ -15,6 +15,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import { SelectFromOptions } from './../../Utils/common.utils';
 import { Get, Post, Put } from './../../Utils/http.utils';
+import { GetItem, SetItem } from 'drivezy-web-utils/build/Utils';
 
 import 'brace/mode/php';
 import 'brace/mode/javascript';
@@ -25,20 +26,28 @@ import './codeEditor.css';
 import ModalWrapper from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
 import { RECORD_URL } from './../../Constants/global.constants';
 
+const maxFontSize = 16;
+const minFontSize = 10;
+const SCRIPT_FONT_SIZE = 'SCRIPT_FONT_SIZE';
+const DEFAULT_FONT_SIZE = 14;
+
+let tempScript = ''; // used to keep track, if script has been changed
+
 const MODES = [{ id: 1, value: 'javascript', name: 'Javascript' }, { id: 2, name: 'PHP', value: 'php' }, { id: 3, name: 'CSS', value: 'css' }, { id: 4, name: 'SQL', value: 'sql' }];
 export default class CodeEditor extends Component {
     constructor(props) {
         super(props);
 
         const mode = SelectFromOptions(MODES, props.mode, 'value');
+        tempScript = props.script;
+
         this.state = {
             isModalVisible: true,
             mode,
             value: props.script || '',
             scriptId: props.scriptId || '',
+            fontSize: GetItem(SCRIPT_FONT_SIZE) || DEFAULT_FONT_SIZE
         }
-
-
     }
 
     UNSAFE_componentWillReceivePropscomponentWillReceiveProps(nextProps) {
@@ -51,29 +60,78 @@ export default class CodeEditor extends Component {
     }
 
     editorComponent = () => {
-        const { mode, value } = this.state;
+        const { mode, value, fontSize } = this.state;
         return (
-            <AceEditor
-                mode={mode.value}
-                theme="monokai"
-                name="Drivezy-Code-editor"
-                width='100%'
-                height='85vh'
-                // onLoad={this.onLoad}
-                onChange={this.onChange}
-                fontSize={14}
-                showPrintMargin={true}
-                showGutter={true}
-                highlightActiveLine={true}
-                value={value}
-                setOptions={{
-                    enableBasicAutocompletion: true,
-                    enableLiveAutocompletion: true,
-                    enableSnippets: false,
-                    showLineNumbers: true,
-                    tabSize: 2,
-                }}
-            />
+            <div>
+                   <div className="script-controls flex">
+                                <Button
+                                    id='submit-script-inline'
+                                    onClick={this.onSubmit}
+                                    // disabled={tempScript == script}
+                                    className="btn btn-sm scriptAction">
+                                    <i className="fa fa-save"></i>
+                                </Button>
+
+                                <Button
+                                    disabled={fontSize >= maxFontSize}
+                                    onClick={() => {
+                                        let { fontSize } = this.state;
+                                        fontSize = fontSize >= maxFontSize ? maxFontSize : fontSize + 1;
+                                        SetItem(SCRIPT_FONT_SIZE, fontSize);
+                                        this.setState({ fontSize });
+                                    }}
+                                    className="btn btn-sm scriptAction"
+                                >
+                                    <i className="fa fa-search-plus"></i>
+                                </Button>
+
+                                <Button
+                                    disabled={fontSize <= minFontSize}
+                                    onClick={() => {
+                                        let { fontSize } = this.state;
+                                        fontSize = fontSize <= minFontSize ? minFontSize : fontSize - 1;
+                                        SetItem(SCRIPT_FONT_SIZE, fontSize);
+                                        this.setState({ fontSize });
+                                    }}
+                                    className="btn btn-sm scriptAction"
+                                >
+                                    <i className="fa fa-search-minus"></i>
+                                </Button>
+
+                                <div className='code-editor-mode'>
+                                    <SelectBox
+                                        onChange={(data) => this.setState({ mode: data })}
+                                        value={mode}
+                                        isClearable={false}
+                                        options={MODES}
+                                        placeholder="Mode"
+                                        field='name'
+                                        menuPlacement={'top'}
+                                    />
+                                </div>
+                            </div>
+                <AceEditor
+                    mode={mode.value}
+                    theme="monokai"
+                    name="Drivezy-Code-editor"
+                    width='100%'
+                    height='85vh'
+                    // onLoad={this.onLoad}
+                    onChange={this.onChange}
+                    fontSize={fontSize}
+                    showPrintMargin={true}
+                    showGutter={true}
+                    highlightActiveLine={true}
+                    value={value}
+                    setOptions={{
+                        enableBasicAutocompletion: true,
+                        enableLiveAutocompletion: true,
+                        enableSnippets: false,
+                        showLineNumbers: true,
+                        tabSize: 2,
+                    }}
+                />
+            </div>
         )
     }
 
@@ -83,18 +141,6 @@ export default class CodeEditor extends Component {
             <div className='flex code-editor-header'>
                 <div className='code-title'>
                     Code editor
-                </div>
-
-                <div className='select-box-container flex'>
-                    <div sm={2} className='mode-selection'>
-                        <SelectBox
-                            onChange={(data) => this.setState({ mode: data })}
-                            value={mode}
-                            options={MODES}
-                            placeholder="Mode"
-                            field='name'
-                        />
-                    </div>
                 </div>
             </div>
         )
@@ -226,12 +272,14 @@ export default class CodeEditor extends Component {
 
             const result = await Put({ url: 'systemScript/' + this.state.scriptId, body: params, urlPrefix: RECORD_URL })
             if (result.success) {
+                tempScript = this.state.value;
                 this.setState({ isVisible: false });
             }
         } else {
 
             const result = await Post({ url: 'systemScript', body: params, urlPrefix: RECORD_URL })
             if (result.success) {
+                tempScript = this.state.value;
                 this.setState({ isVisible: false });
 
             }
@@ -239,7 +287,9 @@ export default class CodeEditor extends Component {
     }
 
     render() {
-        const { buttonComponent, column, payload, inline } = this.props;
+        const { buttonComponent, column, inline } = this.props;
+        const { fontSize, value: script, mode } = this.state;
+
         return (
             <div>
                 {

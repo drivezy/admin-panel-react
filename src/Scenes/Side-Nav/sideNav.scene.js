@@ -63,9 +63,9 @@ export default class Sidenav extends Component {
                 <div id="mySidenav" className={`sidebar-wrapper ${visible ? 'expanded' : 'collapsed'}`}>
                     <div className="sidebar-logo">
                         <div className="logo-image">
-                            {/* <span className="logo-container">
+                            <span className="logo-container">
                                 <img src={require('./../../Assets/images/logo-main.png')} />
-                            </span> */}
+                            </span>
                             <span className="toggle-icon" onClick={() => this.toggleNav()}>
                                 <i className={`fa ${visible ? 'fa-chevron-left' : 'fa-chevron-down'}`}></i>
                             </span>

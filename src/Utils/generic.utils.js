@@ -1,26 +1,23 @@
 import React, { Component } from 'react';
+
+import { Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
+
 import { Get } from './http.utils';
-import { IsUndefinedOrNull, BuildUrlForGetCall, IsObjectHaveKeys } from './common.utils';
-import ToastNotifications from './toast.utils';
 import { Delete } from './http.utils';
-import { Location } from './location.utils';
+import { IsUndefinedOrNull, BuildUrlForGetCall, IsObjectHaveKeys } from './common.utils';
 import { ConfirmUtils } from './confirm-utils/confirm.utils';
 import { ProcessForm } from './formMiddleware.utils';
 
 import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 
-// import FormCreator from './../Components/Form-Creator/formCreator.component'
-import PortletTable from '../Components/Portlet-Table/PortletTable.component';
-
 import ParseComponent from './../Components/Generic-Column-Filters/parseComponent.component';
-// import LoadAsyncComponent from './../Async/async';
 
 import TableWrapper from './../Components/Table-Wrapper/tableWrapper.component';
 import PreferenceSetting from './../Components/Preference-Setting/preferenceSetting.component';
 
 import { GetMenuDetailEndPoint, FormDetailEndPoint } from './../Constants/api.constants';
 import { ROUTE_URL, RECORD_URL } from './../Constants/global.constants';
-import { MATCH_PARENT_PATH, MATCH_WHITESPACE } from './../Constants/regex.constants';
+import { MATCH_PARENT_PATH, MATCH_START_END_PARANTHESIS, MATCH_WHITESPACE } from './../Constants/regex.constants';
 import COLUMN_TYPE from './../Constants/columnType.constants';
 
 /**
@@ -141,9 +138,6 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
     const finalColumnDefinition = [];
     let splitEnabled = false;
     // let defaultColumns = false;
-    console.log(columns);
-    console.log(selectedColumns);
-
     // const selectedColumns = GetSelectedColumnDefinition(layout);
 
     // if (selectedColumns.length == 0) {
@@ -159,7 +153,7 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
     //         }
     //     defaultColumns = true;
     // }
-    
+
     for (const i in selectedColumns) {
         const selected = selectedColumns[i];
         if (!selected.split) {
@@ -223,7 +217,7 @@ export function ConvertMenuDetailForGenericPage(menuDetail) {
     menuDetail.layouts = GetParsedLayoutScript(layouts);
 
     const layout = layouts.length ? layouts[0] : null; // @TODO for now taking 0th element as default layout, change later 
-    menuDetail.layouts = menuDetail.layouts.filter(layout => layout && layout.name && layout.query && layout.name != 'default');
+    // menuDetail.layouts = menuDetail.layouts.filter(layout => layout && layout.name && layout.query && layout.name != 'default');
 
     delete menuDetail.list_layouts;
 
@@ -370,7 +364,8 @@ export function GetPreSelectedMethods() {
         // var userQuery = 0;
 
         url = createQueryUrl(url, genericData.restrictQuery, genericData);
-        history.push(url);
+        // history.push(url);
+        Location.navigate({ url });
         // if (angular.isDefined(event)) {
         //     if (event.metaKey || event.ctrlKey) {
         //         window.open("#/" + url, "_blank");
@@ -777,22 +772,28 @@ export function ParseRestrictedQuery(queryString) {
     if (!queryString) {
         return parsedQuery;
     }
-    const queries = queryString.split(' and ');
-    queries.forEach(query => {
-        if (!query) {
-            return;
-        }
+    let queries = queryString.split(' and ');
+    queries.forEach(orQuery => {
+        
+        orQuery = orQuery.replace(MATCH_START_END_PARANTHESIS, ''); 
+        const queryArr = orQuery.split(' or ');
+        queryArr.forEach(query => {
+            if (!query) {
+                return;
+            }
 
-        query = query.replace(MATCH_PARENT_PATH, '').replace(MATCH_WHITESPACE, '');
-        query = query.split('=');
-        let value = query[1];
+            query = query.replace(MATCH_PARENT_PATH, '').replace(MATCH_WHITESPACE, '');
+            query = query.split('=');
+            let value = query[1];
 
-        if (typeof value == 'string') {
-            value = value.replace(/'/g, '');
-        }
-        parsedQuery[query[0]] = value;
-        // parsedQuery.push(query)
+            if (typeof value == 'string') {
+                value = value.replace(/'/g, '');
+            }
+            parsedQuery[query[0]] = value;
+            // parsedQuery.push(query)
 
-    });
+        });
+    })
+
     return parsedQuery;
 }

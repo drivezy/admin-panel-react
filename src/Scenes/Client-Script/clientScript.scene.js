@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import SelectBox from './../../Components/Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import ScriptInput from './../../Components/Forms/Components/Script-Input/scriptInput.component';
 
-import { GetUrlParams, Location } from './../../Utils/location.utils';
+import { GetUrlParams, Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
 import { BuildUrlForGetCall, IsObjectHaveKeys } from './../../Utils/common.utils';
 import { Get, Put, Post } from './../../Utils/http.utils';
 import { GetColumnDetail, ExtractColumnName } from './../../Utils/panel.utils';
-import ToastNotifications from '../../Utils/toast.utils';
 
 import { ClientScriptEndPoint } from './../../Constants/api.constants';
 import { ROUTE_URL } from './../../Constants/global.constants';
@@ -72,6 +71,12 @@ export default class ClientScript extends Component {
         if (scriptId) {
             body = { script_id: scriptId };
         } else {
+
+            const inlineScriptButton = document.getElementById('submit-script-inline');
+            if (inlineScriptButton && !inlineScriptButton.disabled) {
+                inlineScriptButton.click();
+            }
+
             body = {
                 description, name, active
             }
@@ -79,14 +84,18 @@ export default class ClientScript extends Component {
         const result = await Put({ url, body, urlPrefix: ROUTE_URL });
         if (result.success) {
             ToastNotifications.success({ title: 'Successfully updated' });
+            Location.back();
             this.clientDataFetched(result);
         }
     }
 
 
     getColumnDetail = async () => {
-        const { clientScript } = this.state;
+        const { clientScript, selectedColumn } = this.state;
         const { source_type: sourceType, source_id: sourceId, name } = clientScript;
+        if (selectedColumn) {
+            return;
+        }
         const result = await GetColumnDetail({ sourceType, sourceId });
         if (result.success) {
             const { response } = result;
@@ -110,7 +119,7 @@ export default class ClientScript extends Component {
     }
 
     render() {
-        console.log(this.state);
+        // console.log(this.state);
         const { scriptPayload = {}, clientScript, columns, selectedColumn } = this.state;
         const { name = '', script: scriptObj = {} } = clientScript;
         const { script = '', } = scriptObj;
@@ -146,12 +155,16 @@ export default class ClientScript extends Component {
                                 </div>
                                 <div className="activeInput inputField">
                                     <label>Active</label>
-                                    <input type="checkbox"
-                                        name="active"
-                                        value={clientScript.active ? true : false}
-                                        checked={clientScript.active ? true : false}
-                                        onChange={e => this.setRuleValue(e.target.value, 'active')}
-                                    />
+                                    <div class="pretty p-default p-thick p-pulse p-bigger">
+                                        <input type="checkbox"
+                                            value={clientScript.active ? 0 : 1}
+                                            checked={clientScript.active ? 1 : 0}
+                                            onChange={e => this.setRuleValue(e.target.value == '1' ? 1 : 0, 'active')}
+                                        />
+                                        <div class="state p-success-o">
+                                            <label>&nbsp;</label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -178,14 +191,16 @@ export default class ClientScript extends Component {
                                     IsObjectHaveKeys(scriptPayload) &&
                                     <div className="filterCondition col">
                                         <label>Script</label>
-                                        <ScriptInput
-                                            inline
-                                            script={scriptObj.script}
-                                            value={scriptObj.id}
-                                            payload={scriptPayload}
-                                            column={{ name: 'script' }}
-                                            onChange={this.saveClientScript}
-                                        />
+                                        <div className="script-wrapper">
+                                            <ScriptInput
+                                                inline
+                                                script={scriptObj.script}
+                                                value={scriptObj.id}
+                                                payload={scriptPayload}
+                                                column={{ name: 'script' }}
+                                                onChange={this.scriptOnChange}
+                                            />
+                                        </div>
                                     </div>
                                 }
                             </div>
@@ -195,7 +210,7 @@ export default class ClientScript extends Component {
                         <button className="btn btn-info" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
                             Cancel
                                     </button>
-                        <button className="btn btn-success" onClick={this.saveClientScript} style={{ margin: '8px' }}>
+                        <button className="btn btn-success" onClick={() => this.saveClientScript()} style={{ margin: '8px' }}>
                             Save
                         </button>
                     </div>
