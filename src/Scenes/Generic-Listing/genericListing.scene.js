@@ -8,6 +8,7 @@ import {
 
 import { HotKeys } from 'react-hotkeys';
 
+import { Get } from 'common-js-util';
 import { GetUrlParams, Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
 import DynamicFilter from './../../Components/Dynamic-Filter/dynamicFilter.component';
@@ -20,7 +21,7 @@ import PredefinedFilter from './../../Components/Dropdown-Filter/filter.componen
 import ListingSearch from './../../Components/Listing-Search/listingSearch.component';
 
 import { CopyToClipBoard } from './../../Utils/common.utils';
-import { Get } from './../../Utils/http.utils';
+
 import { BuildUrlForGetCall, SelectFromOptions } from './../../Utils/common.utils';
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
