@@ -4,7 +4,7 @@ import {
     Route, Switch, Redirect
 } from 'react-router-dom';
 
-import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
+import { ToastNotifications, Location } from 'drivezy-web-utils/build/Utils';
 import { ToastContainer } from 'drivezy-web-utils/build/Components';
 
 // import { ToastContainer } from 'react-toastify';
