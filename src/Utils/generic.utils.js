@@ -209,8 +209,8 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
  * @param  {object} menuDetail
  */
 export function ConvertMenuDetailForGenericPage(menuDetail) {
-    if (menuDetail.default_order) {
-        var splits = menuDetail.default_order.split(",");
+    if (menuDetail.order_definition) {
+        var splits = menuDetail.order_definition.split(",");
     }
 
     let layouts = menuDetail.list_layouts || menuDetail.layouts;
@@ -234,8 +234,8 @@ export function ConvertMenuDetailForGenericPage(menuDetail) {
         url: menuDetail.route,
         restricted_query: menuDetail.restricted_query,
         restrictColumnFilter: menuDetail.restricted_column,
-        order: menuDetail.default_order ? splits[0].trim() : "id",
-        sort: menuDetail.default_order ? splits[1].trim() : "desc",
+        order: menuDetail.order_definition ? splits[0].trim() : "id",
+        sort: menuDetail.order_definition ? splits[1].trim() : "desc",
         menuId: menuDetail.id,
         layouts: menuDetail.layouts,
         form_layouts: menuDetail.form_layouts,
