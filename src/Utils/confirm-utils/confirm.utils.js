@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { SSL_OP_NO_QUERY_MTU } from 'constants';
-import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 
-import ModalWrapper from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
 import './confirm-utils.css';
 
 export class ConfirmModalComponent extends Component {
@@ -49,7 +47,7 @@ export class ConfirmModalComponent extends Component {
     }
 
     render() {
-        const { isVisible, message, callback } = this.state;
+        const { isVisible } = this.state;
         return (
             <div>
                 <Modal size="md" isOpen={isVisible} toggle={this.toggleModal} className="form-settings-modal">

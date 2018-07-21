@@ -1,8 +1,7 @@
 
 import React, { Component } from 'react';
 
-import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
-// import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
+import {ModalManager} from 'drivezy-web-utils/build/Utils';
 import ConfigureSettings from './../Components/Configure-Settings/configureSettings.component';
 
 export default class SettingsUtil {

@@ -1,9 +1,10 @@
 // Higher Order Component
 import React, { Component } from 'react';
+
 import { withFormik, Field } from 'formik';
 import { Put } from 'common-js-util';
 import SelectBox from './../Forms/Components/Select-Box/selectBox';
-
+import './userLicenseForm.component.css'
 // Our inner form component which receives our form's state and updater methods as props
 const InnerForm = ({
     values,
@@ -13,27 +14,30 @@ const InnerForm = ({
     handleBlur,
     handleSubmit,
     isSubmitting,
-    setFieldValue
+    setFieldValue,
+
 }) => (
         <form onSubmit={handleSubmit}>
             <div className="form-group">
-                <label className="">First Name<span className="text-red">*</span></label>
-                <input type="text" name="first_name" className="form-control" value={values.first_name} onChange={handleChange} />
+                <label className="name">First Name<span className="text-red">*</span></label>
+                <input type="text" name="first_name" placeholder="First Name" className="form-control" value={values.first_name} onChange={handleChange} />
+            </div>
+
+            <div className="form-group">
+                <label className="name">Last Name</label>
+                <input type="text" name="last_name" placeholder="Last Name" className="form-control" value={values.last_name} onChange={handleChange} />
             </div>
             <div className="form-group">
-                <label className="">Last Name</label>
-                <input type="text" name="last_name" className="form-control" value={values.last_name} onChange={handleChange} />
-            </div>
-            <div className="form-group">
-                <label className="">Date Of Birth<span className="text-red">*</span></label>
-                <input type="text" name="dob" className="form-control" value={values.dob} onChange={handleChange} />
+                <label className="name">Date Of Birth<span className="text-red">*</span></label>
+                <input type="text" name="dob" placeholder="yyyy-mm-dd" className="form-control" value={values.dob} onChange={handleChange} />
                 {
                     values.detectedDob.map((dob, key) => {
                         return (
                             <small className="detected-items" key={key}>Detected DoB:
-                                <span className="item" ng-click="userLicense.copySuggested(dob,'dob')">{dob}
-                                    <span ng-show="!$last" className="list-comma">, </span>
+                                <span className="item" onClick={() => setFieldValue('dob', dob)}>{dob}
+
                                 </span>
+                                <br />
                             </small>
                         );
                     })
@@ -41,39 +45,68 @@ const InnerForm = ({
             </div>
 
             <div className="form-group">
-                <label className="control-label">Gender</label>
+                <label className="name">Gender</label>
                 <Field
                     name='gender'
                     render={({ field /* _form */ }) => (
-                        <SelectBox valueKey="value" field="label" name='gender' onChange={(selected) => { setFieldValue('gender', selected.value) }} value={values.gender} options={[{ value: "male", label: "Male" }, { value: "female", label: "Female" }, { value: "others", label: "Others" }]} />
+                        <SelectBox valueKey="value" field="label" name='gender' placeholder={'Gender'} onChange={(selected) => { setFieldValue('gender', selected ? selected.value : values.gender) }} value={values.gender} options={[{ value: "male", label: "Male" }, { value: "female", label: "Female" }, { value: "others", label: "Others" }]} />
                     )}
                 />
             </div>
 
             <div className="form-group">
-                <label className="">Email</label>
-                <input type="text" name="email" className="form-control" value={values.email} onChange={handleChange} />
+                <label className="name">Email</label>
+                <input type="text" name="email" placeholder="Email" className="form-control" value={values.email} onChange={handleChange} />
             </div>
             <div className="form-group">
-                <label className="">Mobile</label>
-                <input type="text" name="mobile" className="form-control" value={values.mobile} onChange={handleChange} />
+                <label className="name">Mobile</label>
+                <input type="text" name="mobile" placeholder="Mobile" className="form-control" value={values.mobile} onChange={handleChange} />
             </div>
             <div className="form-group">
-                <label className="">License Number</label>
-                <input type="text" name="license_number" className="form-control" value={values.license_number} onChange={handleChange} />
+                <label className="name">License Number</label>
+                <input type="text" name="license_number" placeholder="Licence Number" className="form-control" value={values.license_number} onChange={handleChange} />
                 {
+                    (values.detectedLicense) &&
                     values.detectedLicense.map((license, key) => {
                         return (
-                            <small className="detected-items" key={key}>Detected DoB:
-                                <span className="item" ng-click="userLicense.copySuggested(dob,'dob')">{license}
-                                    <span ng-show="!$last" className="list-comma">, </span>
+
+                            <small className="detected-items" key={key}>Detected License Number:
+
+                                <span className="item" onClick={() => setFieldValue('license_number', license)}>{license}
                                 </span>
+                                <br />
                             </small>
                         );
+
+
+                        console.log(license);
+
                     })
                 }
 
             </div>
+
+            <div className="type-licenses-group">
+                <label className="name">Type of License<span className="text-red">*</span></label>
+                <div className="licenses-checkbox">
+                    <div>
+                        <span> <input type="checkbox" name="license_validated_for_4_wheeler" placeholder="Is License validated for 4 wheeler" value={values.license_validated_for_4_wheeler} checked={values.license_validated_for_4_wheeler} onChange={handleChange} /></span>
+                        <span className="tick-name">4 Wheeler </span>
+                    </div>
+                    <div>
+                        <span> <input type="checkbox" name="license_validated_for_two_wheeler" placeholder="Is License validated for 2 wheeler" value={values.license_validated_for_two_wheeler} checked={values.license_validated_for_two_wheeler} onChange={handleChange} /></span>
+                        <span className="tick-name">2 Wheeler with Gear  </span>
+                    </div>
+                    <div>
+                        <span> <input type="checkbox" name="license_validated_for_two_wheeler_gearless" placeholder="Is License validated for 2 wheeler gearless" value={values.license_validated_for_two_wheeler_gearless} checked={values.license_validated_for_two_wheeler_gearless} onChange={handleChange} /></span>
+                        <span className="tick-name">2 Wheeler without Gear </span>
+                    </div>
+
+                </div>
+            </div>
+
+
+
             <div className="form-group">
                 <div className="margin-top-5" id="buttonWidth">
                     <button className="btn btn-primary pull-right button-blue" type="submit" disabled={isSubmitting}>
@@ -94,11 +127,15 @@ const LicenseForm = withFormik({
         return {
             first_name: userContent.first_name || '',
             last_name: userContent.last_name || '',
+
             email: userContent.email || '',
             mobile: userContent.mobile || '',
             gender: userContent.gender || '',
             dob: userContent.dob || '',
             license_number: userContent.license_number || '',
+            license_validated_for_4_wheeler: userContent.license_validated_for_4_wheeler == 1 ? true : false || '',
+            license_validated_for_two_wheeler: userContent.license_validated_for_two_wheeler || '',
+            license_validated_for_two_wheeler_gearless: userContent.license_validated_for_two_wheeler_gearless || '',
             detectedDob: detectedDob,
             detectedLicense: detectedLicense,
             detectedText: detectedText,
@@ -158,11 +195,17 @@ const LicenseForm = withFormik({
                 dob: values.dob,
                 email: values.email,
                 mobile: values.mobile,
-                gender: values.gender
+                gender: values.gender,
+                license_validated_for_4_wheeler: values.license_validated_for_4_wheeler,
+                license_validated_for_two_wheeler: values.license_validated_for_two_wheeler,
+                license_validated_for_two_wheeler_gearless: values.license_validated_for_two_wheeler_gearless,
+                display_name: values.first_name +' '+values.last_name
+
             }
         });
     },
 })(InnerForm);
+
 
 
 export default class UserLicenseForm extends Component {
@@ -175,13 +218,15 @@ export default class UserLicenseForm extends Component {
             detectedLicense: this.props.detectedLicense,
             detectedText: this.props.detectedText,
             detectedExpiryDate: this.props.detectedExpiryDate
+
         }
     }
+
 
     render() {
         const { userContent, detectedDob, detectedLicense, detectedText, detectedExpiryDate } = this.state;
         return (
-            <div>
+            <div className="license-form">
                 <LicenseForm userContent={userContent} detectedDob={detectedDob} detectedLicense={detectedLicense} detectedText={detectedText} detectedExpiryDate={detectedExpiryDate} />
             </div>
         )

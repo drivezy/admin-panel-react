@@ -41,29 +41,24 @@ export default class UserCard extends Component {
         return (
             <div className="user-card card">
 
-                <UserLicenseCard userData={userData} />
+                <UserLicenseCard userData={userData} flag={0}/>
 
                 <Card>
 
-                    <div className="user-photo">
-                        {
-                            userData.photograph ?
-                                <img src={`${userData.photograph}`} alt="" />
-                                : <img className="dummy-image" src={require('./../../Assets/images/photograph.png')} alt="" />
-                        }
+                    <div className="user-photo-and-user-name">
 
-                    </div>
-                    <div className="details list-group-item">
-
-                        <div className="text-field"><i className="fa fa-user" aria-hidden="true"></i>
-                            Name
-                        </div>
-
-                        <div className="data-field">
+                        <div className="user-name">
                             {userData.display_name}
                         </div>
-                    </div>
 
+                        <div className="user-photo">
+                            {
+                                userData.photograph ?
+                                    <img src={`${userData.photograph}`} alt="" />
+                                    : <img className="dummy-image" src={require('./../../Assets/images/photograph.png')} alt="" />
+                            }
+                        </div>
+                    </div>
 
                     <div className="details list-group-item">
 

@@ -6,7 +6,7 @@ import {
 import './bookingPreRide.css';
 import { Link } from 'react-router-dom';
 
-import { BookingPickupDate, BookingPickupTime, BookingDropDate, BookingDropTime } from './../../../../Utils/booking.utils';
+import { BookingPickupDate, BookingPickupTime, BookingDropDate, BookingDropTime, TotalDuration } from './../../../../Utils/booking.utils';
 import CustomTooltip from '../../../Custom-Tooltip/customTooltip.component';
 
 export default class BookingPreRide extends Component {
@@ -26,39 +26,41 @@ export default class BookingPreRide extends Component {
         let bookingPickupTime = BookingPickupTime(bookingPreRideData.pickup_time);
         let bookingDropDate = BookingDropDate(bookingPreRideData.drop_time);
         let bookingDropTime = BookingDropTime(bookingPreRideData.drop_time);
+        let duration = TotalDuration(bookingPreRideData.drop_time, bookingPreRideData.pickup_time);
 
         if (bookingPreRideData.coupon) {
             couponDescription = bookingPreRideData.coupon.campaign.cashback ? 'Campaign Discription:' + bookingPreRideData.coupon.campaign.description : 'Campaign Discription:' + bookingPreRideData.coupon.campaign.description + ' | ' + (bookingPreRideData.coupon.description ? "Coupon Description:" + bookingPreRideData.coupon.description : " ") + "Discount Amount:" + bookingPreRideData.coupon_discount;
         }
 
-        let theClassName=
+        let theClassName =
             (bookingPreRideData.status.id === 8 ? "booking-status-cancelled"
-            :
-            (bookingPreRideData.status.id === 7 ? "booking-status-complete"
                 :
-                (bookingPreRideData.status.id === 6 ? "booking-status-active"
+                (bookingPreRideData.status.id === 7 ? "booking-status-complete"
                     :
-                    (bookingPreRideData.status.id === 5 ? "booking-status-pending"
+                    (bookingPreRideData.status.id === 6 ? "booking-status-active"
                         :
-                        "booking-status-unverified"))));
+                        (bookingPreRideData.status.id === 5 ? "booking-status-pending"
+                            :
+                            (bookingPreRideData.status.id === 0 ? "booking-status-unverified"
+                                : null)))));
 
 
         return (
-        
+
             <Card className="booking-panel-container" >
                 <div className="booking-details">
                     <CardTitle className="heading">
                         <Row className={theClassName}>
                             <Col >
-                                Booking Details
-                                </Col>
+                                <span className="color-black">Booking Details</span>
+                            </Col>
 
                             {
                                 (bookingPreRideData && bookingPreRideData.status) ?
                                     <Col>
-                                        <div  className="booking-status-verified"
-                                            //className={theClassName}
-                                            >{bookingPreRideData.status.value}</div>
+                                        <div className="booking-status-verified"
+                                        //className={theClassName}
+                                        >{bookingPreRideData.status.value}</div>
                                     </Col>
                                     :
                                     <Col >
@@ -95,15 +97,28 @@ export default class BookingPreRide extends Component {
                                     <CustomTooltip placement="top" html={bookingPreRideData.billing_car.name} title="Billing Vehicle"></CustomTooltip>
                                 }
                                 <p>
-                                    {bookingPreRideData.type.value}
-                                    <div>[{bookingPreRideData.fuel_package == null ? bookingPreRideData.with_fuel ? 'withfuel' : 'fuelless' : bookingPreRideData.fuel_package + ' kms Fuel Package'}]</div>
+                                    <span>
+                                        {bookingPreRideData.type.value}
+                                    </span>
+                                </p>
+                                <p>
+                                    <span>
+                                        [{bookingPreRideData.fuel_package == null ? bookingPreRideData.with_fuel ? 'withfuel' : 'fuelless' : bookingPreRideData.fuel_package + ' kms Fuel Package'}]
+                                    </span>
                                 </p>
                             </Col>
-                            <Col sm="3">
-                                {
-                                    bookingPreRideData.coupon_id &&
-                                    <CustomTooltip placement="top" html={bookingPreRideData.coupon.coupon_code} title={couponDescription}></CustomTooltip>
+                            <Col sm="3" >
+                                {bookingPreRideData.coupon_id ?
+                                    <div className="coupon-data">Coupon Info.<br />
+                                        {
+                                            <CustomTooltip placement="top" html={bookingPreRideData.coupon.coupon_code} title={couponDescription}></CustomTooltip>
+                                        }
+
+                                    </div>
+                                    :
+                                    <div className="coupon-data">No Coupon</div>
                                 }
+
                             </Col>
                         </Row>
                         <Row className="booking-detail-date">
@@ -131,7 +146,7 @@ export default class BookingPreRide extends Component {
                                         <i className="fa fa-clock-o" aria-hidden="true"></i>
                                     </div>
                                     <div className="no-padding light-red  font-11" align="center">
-                                        53 Hrs.
+                                        {duration}
                                         </div>
                                 </div>
                             </Col>
@@ -162,7 +177,7 @@ export default class BookingPreRide extends Component {
                     </CardBody>
                 </div>
             </Card>
-        
+
 
         )
     }

@@ -7,6 +7,8 @@ import { BookingPickupDate, BookingPickupTime, BookingDropDate, BookingDropTime,
 import { Link } from 'react-router-dom';
 
 import './bookingRideReturn.css';
+import SummaryCard from '../../../Summary-Card/summaryCard';
+import BookingDetail from '../../../../Scenes/Booking-Detail/bookingDetail.scene';
 
 export default class BookingRideReturn extends Component {
 
@@ -18,6 +20,7 @@ export default class BookingRideReturn extends Component {
     }
 
     render() {
+
         const { bookingRideReturnData = {} } = this.state;
         let totalDuration;
         let totalOdo;
@@ -78,179 +81,190 @@ export default class BookingRideReturn extends Component {
         totalOdo = (kmDifference) + (addPreviousOdo);
 
         return (
+            <div>
 
-            <Card className="trip-panel-container">
-                <div className="trip-details">
-                    {
-                        (bookingRideReturnData && bookingRideReturnData.status && bookingRideReturnData.status.id == 8) ? <CardTitle>Cancellation Details</CardTitle>
-                            :
-                            <CardTitle>Trip Details</CardTitle>
-                    }
-                    {
-                        (bookingRideReturnData && !bookingRideReturnData.status) ?
-                            <CardBody>
-                                <Row className="unvarified-trip-panel">
-                                    <Col sm="12">
-                                        <h5>This booking is not verified yet.</h5>
-                                    </Col>
-                                </Row>
-                            </CardBody>
-                            :
-                            null
-                    }
-                    {
-                        <CardBody>
-                            {
-                                (bookingRideReturnData && bookingRideReturnData.ride_return) ?
-                                    <Row className="trip-gray-border-bottom">
-                                        <Col sm="4">
-                                            <p className="trip-detail-info">{bookingStartDate}</p>
-                                            <p className="trip-detail-info">{bookingStartTime}</p>
-                                            <p className="trip-detail-info">{bookingRideReturnData.ride_return.start_odo_reading}</p>
+
+                <Card className="trip-panel-container">
+                    <div className="trip-details">
+                        {
+                            (bookingRideReturnData && bookingRideReturnData.status && bookingRideReturnData.status.id == 8) ? <div className="trip-card-heading">Cancellation Details</div>
+                                :
+                                <div className="trip-card-heading">Trip Details</div>
+                        }
+                        {
+                            (bookingRideReturnData && !bookingRideReturnData.status) ?
+                                <div className="card-body">
+                                    <Row className="unvarified-trip-panel">
+                                        <Col>
+                                            <h5>This booking is not verified yet.</h5>
                                         </Col>
+                                    </Row>
+                                </div>
+                                :
+                                null
+                        }
+                        {
+                            <CardBody>
+                                {
+                                    (bookingRideReturnData && bookingRideReturnData.ride_return) ?
+                                        <Row className="trip-data">
+                                            <Col>
+                                                <p className="trip-detail-info">{bookingStartDate}</p>
+                                                <p className="trip-detail-info">{bookingStartTime}</p>
+                                                <p className="trip-detail-info">{bookingRideReturnData.ride_return.start_odo_reading}</p>
+                                            </Col>
 
+                                            {
+                                                bookingRideReturnData && bookingRideReturnData.status.id == 7 &&
+                                                <Col>
+                                                    <div className="jr-time-icon">
+                                                        <div className="time-icon " align="center">
+                                                            <i className="fa fa-clock-o" aria-hidden="true"></i>
+                                                        </div>
+                                                        <div className="time-data" align="center">
+                                                            {totalDuration}
+                                                        </div>
+                                                        <div className="odo-icon" align="center">
+                                                            <i className="fa fa-car" aria-hidden="true"></i>
+                                                        </div>
+                                                        <div className="odo-data" align="center">
+                                                            {totalOdo} Kms
+                                                    </div>
+                                                    </div>
+                                                </Col>
+                                            }
+                                            {
+                                                bookingRideReturnData && bookingRideReturnData.status.id == 6 &&
+                                                <Col>
+                                                    <div className="jr-time-icon">
+                                                        <div className="time-icon" align="center">
+                                                            <i className="fa fa-clock-o" aria-hidden="true"></i>
+                                                        </div>
+                                                        <div className="time-data" align="center">
+                                                            {totalDuration}
+                                                        </div>
+                                                        <div className="odo-icon" align="center">
+                                                            <i className="fa fa-car" aria-hidden="true"></i>
+                                                        </div>
+                                                        <div className="odo-data" align="center">
+                                                            __ Kms
+                                                    </div>
+                                                    </div>
+                                                </Col>
+                                            }
+
+                                            {
+                                                bookingRideReturnData && bookingRideReturnData.status.id == 7 &&
+                                                <Col className="ride-end-detail">
+                                                    <p className="trip-detail-info">{bookingEndDate}</p>
+                                                    <p className="trip-detail-info">{bookingEndTime}</p>
+                                                    <p className="trip-detail-info">{bookingRideReturnData.ride_return.end_odo_reading}</p>
+                                                </Col>
+                                            }
+                                            {
+                                                bookingRideReturnData && bookingRideReturnData.status.id == 6 &&
+                                                <Col className="ride-end-detail">
+                                                    <p>Status: In Transit</p>
+                                                </Col>
+                                            }
+                                        </Row>
+                                        :
+                                        <div>
+                                            {
+                                                (bookingRideReturnData.status && bookingRideReturnData.status.id === 8 && bookingRideReturnData.cancellation && bookingRideReturnData.cancellation.type) &&
+                                                <div className="data-cancellation">
+                                                    <Row className="data-cancellation-row">
+                                                        <Col className="data-cancellation-col">
+                                                            <span>Type : </span>
+                                                            <span>{bookingRideReturnData.cancellation.type.name}</span>
+                                                        </Col>
+                                                        <Col className="data-cancellation-col">
+                                                            <span>Time : </span>
+                                                            <span>{bookingRideReturnData.cancellation.updated_at}</span>
+                                                        </Col>
+                                                    </Row>
+                                                    <Row className="data-cancellation-row">
+                                                        <Col className="data-cancellation-col">
+                                                            <span>Cancelled By : </span>
+                                                            <span>{bookingRideReturnData.cancellation.created_user.display_name}</span>
+                                                        </Col>
+                                                    </Row>
+                                                    <Row className="data-cancellation-row">
+                                                        <Col className="data-cancellation-col">
+                                                            <span>Note : </span>
+                                                            <span>{bookingRideReturnData.cancellation.cancellation_note}</span>
+                                                        </Col>
+                                                    </Row>
+                                                </div>
+                                            }
+                                            {
+                                                (bookingRideReturnData && bookingRideReturnData.status && bookingRideReturnData.status.id === 5) &&
+                                                <div className="confirm-trip-info">
+                                                    <Row>
+                                                        <h4>  Trip not yet started </h4>
+                                                    </Row>
+                                                </div>
+                                            }
+                                        </div>
+                                }
+                                <div className="fuel-progress-bar">
+                                    <Row>
                                         {
-                                            bookingRideReturnData && bookingRideReturnData.status.id == 7 &&
-                                            <Col sm="4">
-                                                <div className="jr-time-icon">
-                                                    <div className="no-padding margin-top-12 " align="center">
-                                                        <i className="fa fa-clock-o" aria-hidden="true"></i>
-                                                    </div>
-                                                    <div className="no-padding light-red  font-11" align="center">
-                                                        {totalDuration}
-                                                    </div>
-                                                    <div className="total-odo-info" align="center">
-                                                        <i className="fa fa-car" aria-hidden="true"></i>
-                                                    </div>
-                                                    <div className="total-odo" align="center">
-                                                        {totalOdo} Kms
-                                                    </div>
+                                            bookingRideReturnData && bookingRideReturnData.status && (bookingRideReturnData.status.id == 6 || bookingRideReturnData.status.id == 7) &&
+                                            [
+                                                <Col key={1}>
+                                                    {
+                                                        bookingRideReturnData.ride_return &&
+                                                        <Progress className="fuel-value-bar" itemRef={bookingRideReturnData.ride_return.start_fuel_percentage} barClassName="file-field-list-item__progress-bar" value={bookingRideReturnData.ride_return.start_fuel_percentage}></Progress>
+                                                    }
+                                                    <div className="fuel-value-indicator">{bookingRideReturnData.ride_return.start_fuel_percentage}% Fuel Remaining</div>
+                                                </Col>,
+
+                                                (bookingRideReturnData.status.id == 6) && <Col key={4}></Col>,
+
+                                                (bookingRideReturnData.status.id == 7) &&
+
+                                                <Col key={2}>
+                                                    {
+                                                        (bookingRideReturnData.ride_return &&
+                                                            <Progress className="fuel-value-bar" itemRef={bookingRideReturnData.ride_return.end_fuel_percentage} barClassName="file-field-list-item__progress-bar" value={bookingRideReturnData.ride_return.end_fuel_percentage}></Progress>)
+                                                    }
+                                                    <div className="fuel-value-indicator">{bookingRideReturnData.ride_return.end_fuel_percentage}% Fuel Remaining</div>
+                                                </Col>
+                                            ]
+
+
+                                        }
+
+                                    </Row>
+                                    <Row className="handover-user">
+                                        {
+                                            bookingRideReturnData && bookingRideReturnData.status && (bookingRideReturnData.status.id == 6 || bookingRideReturnData.status.id == 7) &&
+                                            <Col>
+                                                <div className="jr-start-time">
+                                                    <i className="fa fa-key" aria-hidden="true"></i>
+                                                    <Link to={`/user/${bookingRideReturnData.ride_return.handover_user.id}`} className="menu-list">
+                                                        {bookingRideReturnData.ride_return.handover_user.display_name}
+                                                    </Link>
                                                 </div>
                                             </Col>
                                         }
                                         {
-                                            bookingRideReturnData && bookingRideReturnData.status.id == 6 &&
-                                            <Col sm="4">
+                                            bookingRideReturnData && bookingRideReturnData.status && bookingRideReturnData.ride_return && bookingRideReturnData.ride_return.picker_user && (bookingRideReturnData.status.id == 6 || bookingRideReturnData.status.id == 7) &&
+                                            <Col sm="6">
                                                 <div className="jr-time-icon">
-                                                    <div className="no-padding margin-top-12 " align="center">
-                                                        <i className="fa fa-clock-o" aria-hidden="true"></i>
-                                                    </div>
-                                                    <div className="no-padding light-red  font-11" align="center">
-                                                        {totalDuration}
-                                                    </div>
-                                                    <div className="total-odo-info" align="center">
-                                                        <i className="fa fa-car" aria-hidden="true"></i>
-                                                    </div>
-                                                    <div className="total-odo" align="center">
-                                                        _ _ Kms
-                                                    </div>
+                                                    <i className="fa fa-key" aria-hidden="true"></i>
+                                                    <Link to={`/user/${bookingRideReturnData.ride_return.picker_user.id}`} className="menu-list">
+                                                        {bookingRideReturnData.ride_return.picker_user.display_name}
+                                                    </Link>
                                                 </div>
-                                            </Col>
-                                        }
-
-                                        {
-                                            bookingRideReturnData && bookingRideReturnData.status.id == 7 &&
-                                            <Col sm="4" className="ride-end-detail">
-                                                <p className="trip-detail-info">{bookingEndDate}</p>
-                                                <p className="trip-detail-info">{bookingEndTime}</p>
-                                                <p className="trip-detail-info">{bookingRideReturnData.ride_return.end_odo_reading}</p>
-                                            </Col>
-                                        }
-                                        {
-                                            bookingRideReturnData && bookingRideReturnData.status.id == 6 &&
-                                            <Col sm="4" className="ride-end-detail">
-                                                <p>In Transit</p>
                                             </Col>
                                         }
                                     </Row>
-                                    :
-                                    <div>
-                                        {
-                                            (bookingRideReturnData.status && bookingRideReturnData.status.id === 8 && bookingRideReturnData.cancellation && bookingRideReturnData.cancellation.type) &&
-                                            <div>
-                                                <Row>
-                                                    <Col sm="6">
-                                                        <span>Type : </span>
-                                                        <span>{bookingRideReturnData.cancellation.type.name}</span>
-                                                    </Col>
-                                                    <Col sm="6">
-                                                        <span>Time : </span>
-                                                        <span>{bookingRideReturnData.cancellation.updated_at}</span>
-                                                    </Col>
-                                                </Row>
-                                                <Row>
-                                                    <Col sm="12">
-                                                        <span>Cancelled By :</span>
-                                                        <span>{bookingRideReturnData.cancellation.created_user.display_name}</span>
-                                                    </Col>
-                                                </Row>
-                                                <Row>
-                                                    <Col sm="12">
-                                                        <span>Note :</span>
-                                                        <span>{bookingRideReturnData.cancellation.cancellation_note}</span>
-                                                    </Col>
-                                                </Row>
-                                            </div>
-                                        }
-                                        {
-                                            (bookingRideReturnData && bookingRideReturnData.status && bookingRideReturnData.status.id === 5) &&
-                                            <div className="confirm-trip-info">
-                                                <Row>
-                                                    <h4>  Trip not yet started </h4>
-                                                </Row>
-                                            </div>
-                                        }
-                                    </div>
-                            }
-                            <div className="fuel-progress-bar">
-                                <Row className="trip-gray-border-bottom">
-                                    {
-                                        bookingRideReturnData && bookingRideReturnData.status && (bookingRideReturnData.status.id == 6 || bookingRideReturnData.status.id == 7) &&
-                                        [
-                                            <Col key={1} sm="6">
-                                                {
-                                                    bookingRideReturnData.ride_return &&
-                                                    <Progress itemRef={bookingRideReturnData.ride_return.start_fuel_percentage} barClassName="file-field-list-item__progress-bar" value={bookingRideReturnData.ride_return.start_fuel_percentage}>{bookingRideReturnData.ride_return.start_fuel_percentage}%</Progress>
-                                                }
-                                            </Col>,
-                                            <Col key={2} sm="6">
-                                                {
-                                                    bookingRideReturnData.ride_return &&
-                                                    <Progress itemRef={bookingRideReturnData.ride_return.end_fuel_percentage} barClassName="file-field-list-item__progress-bar" value={bookingRideReturnData.ride_return.end_fuel_percentage}>{bookingRideReturnData.ride_return.end_fuel_percentage}%</Progress>
-                                                }
-                                            </Col>
-                                        ]
-                                    }
-
-                                </Row>
-                                <Row className="handover-user">
-                                    {
-                                        bookingRideReturnData && bookingRideReturnData.status && (bookingRideReturnData.status.id == 6 || bookingRideReturnData.status.id == 7) &&
-                                        <Col sm="6">
-                                            <div className="jr-start-time">
-                                                <i className="fa fa-key" aria-hidden="true"></i> 
-                                                <Link to={`/user/${bookingRideReturnData.ride_return.handover_user.id}`} className="menu-list">
-                                                    {bookingRideReturnData.ride_return.handover_user.display_name}
-                                                </Link>
-                                            </div>
-                                        </Col>
-                                    }
-                                    {
-                                        bookingRideReturnData && bookingRideReturnData.status && bookingRideReturnData.ride_return && bookingRideReturnData.ride_return.picker_user && (bookingRideReturnData.status.id == 6 || bookingRideReturnData.status.id == 7) &&
-                                        <Col sm="6">
-                                            <div className="jr-time-icon">
-                                                <i className="fa fa-key" aria-hidden="true"></i> 
-                                                <Link to={`/user/${bookingRideReturnData.ride_return.picker_user.id}`} className="menu-list">
-                                                    {bookingRideReturnData.ride_return.picker_user.display_name}
-                                                </Link>
-                                            </div>
-                                        </Col>
-                                    }
-                                </Row>
-                            </div>
-                        </CardBody>
-                    }
-                    <Row className="ride-return-text">
+                                </div>
+                            </CardBody>
+                        }
+                        {/* <Row className="ride-return-text">
                         {
                             bookingRideReturnData && bookingRideReturnData.is_split_payment == 1 &&
                             <Col sm="3">
@@ -291,8 +305,8 @@ export default class BookingRideReturn extends Component {
                                 </ButtonToolbar>
                             </Col>
                         }
-                    </Row>
-                    <CardBody>
+                    </Row> */}
+                        {/* <CardBody>
                         <Row className="ride-return-text">
                             <Col sm="4">
                                 <p>Amount Paid</p>
@@ -343,9 +357,11 @@ export default class BookingRideReturn extends Component {
 
 
                         </Row>
-                    </CardBody>
-                </div>
-            </Card>
+                    </CardBody> */}
+                    </div>
+                </Card>
+
+            </div>
 
         )
     }
