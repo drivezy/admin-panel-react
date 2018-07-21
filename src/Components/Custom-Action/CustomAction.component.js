@@ -15,8 +15,7 @@ import { CreateUrl, ConvertDependencyInjectionToArgs, RemoveStarterFromThePath }
 // import ModalFooter from './../../Wrappers/Modal-Wrapper/templates/Modal-Footer/modalFooter.component';
 
 import CustomTooltip from '../Custom-Tooltip/customTooltip.component';
-
-var sortJsonArray = require('sort-json-array');
+import _ from 'lodash';
 
 let customMethods = {};
 
@@ -29,7 +28,7 @@ export default class CustomAction extends Component {
         self = this;
         this.state = {
             actions: props.actions,
-            genericData: props.genericData
+            genericData: props.genericData,
         };
     }
 
@@ -87,10 +86,12 @@ export default class CustomAction extends Component {
 
     render() {
         const { actions = [], listingRow = [], genericData = {}, placement = 'as_record', position } = this.props;
+        let sortActions = this.state.actions;
+        sortActions = _.orderBy(actions, 'display_order', 'asc')
         return (
             <div className="custom-actions flex">
                 {
-                    (sortJsonArray(actions, 'display_order')).map((action, key) => {
+                    sortActions.map((action, key) => {
                         if(!action) { 
                             return null;
                         }
