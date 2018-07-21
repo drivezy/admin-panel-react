@@ -6,6 +6,7 @@ import {
 } from 'reactstrap';
 
 
+import  QueryActions  from './../Query-Actions/queryActions.component';
 import { RowTemplate } from './../../../Utils/generic.utils';
 import { Location } from './../../../Utils/location.utils';
 
@@ -67,6 +68,8 @@ export default class QueryTable extends Component {
                 return window.onzoom.call(window, event);
             }
         }
+
+        console.log(this.props.actions)
     }
 
     // According to action width 
@@ -234,7 +237,7 @@ export default class QueryTable extends Component {
                                 listing.map((listingRow, rowKey) => (
                                     <tr className="table-row" key={rowKey}>
                                         <td className="action-column">
-                                            <i className="fa fa-pencil" aria-hidden="true" onClick={() => console.log("working")}></i>
+                                        <QueryActions actions={this.props.queryData.actions}/>
                                             
                                         </td>
                                     </tr>

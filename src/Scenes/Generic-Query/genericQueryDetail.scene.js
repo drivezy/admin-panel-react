@@ -47,7 +47,9 @@ export default class GenericQueryDetail extends Component {
             isCollapsed: false,
             arrowstate: 'show',
             arrow: 'down',
-            loading: true
+            loading: true ,
+            actions: []
+            
         };
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
@@ -122,17 +124,23 @@ export default class GenericQueryDetail extends Component {
             let prefName = queryParamsData.short_name + ".list";
             console.log(queryParamsData);
             let preferences = await GetPreferences(prefName);
-            console.log(this.state.queryParamsData);
+            
             var preference = preferences.response.filter(function (item) {
                 return item.parameter == prefName;
             })
 
-            console.log(preference);
+//            let preference = preferences.response.filter((item) => {return item.parameter == prefName} );
 
-            this.setState(preference);
+            
+
+            
+
+            this.setState({preference: preference});
             // this.setState(queryParamsData);
-
+            console.log(preference);
             this.getDataForListing();
+
+            this.setState({actions: queryParamsData.actions});
         }
     }
 
@@ -315,7 +323,7 @@ export default class GenericQueryDetail extends Component {
                             {this.setState.filterContent = params.dictionary}
                             {console.log(filterContent)} */}
 
-                            {filterContent &&
+                            {/* {filterContent &&
                                 <QueryConfigureDynamicFilter
                                     history={history}
                                     match={match}
@@ -324,7 +332,7 @@ export default class GenericQueryDetail extends Component {
                                       dictionary={params.dictionary.invoice_details}
                                       layout={layout}
                                 
-                                />}
+                                />} */}
                         </div>
                         : <div>Loading</div>}
                 </div>
@@ -373,14 +381,16 @@ export default class GenericQueryDetail extends Component {
                     }
 
                     {
-                        resultData.listing &&
+                        resultData.listing && finalColumns &&
                         <QueryTable
                             // formContent={formContent}
                             finalColumns={finalColumns}
                             listing={resultData.listing}
                             queryTableObj={resultData}
                             queryData={queryParamsData}
+                            actions={this.state.actions}
                         />
+                        
 
 
                     }
