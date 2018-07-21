@@ -9,7 +9,7 @@ import {
 import { withFormik, Field, Form } from 'formik';
 import Yup from 'yup';
 
-import { SetItem , ToastNotifications} from 'drivezy-web-utils/build/Utils';
+import { SetItem, ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
 import { Upload, Post, Put, SubscribeToEvent, IsObjectHaveKeys, IsUndefined } from 'common-js-util';
 
 import { GetChangedMethods } from './../../Utils/generic.utils';
@@ -22,7 +22,6 @@ import DatePicker from './../Forms/Components/Date-Picker/datePicker';
 import TimePicker from './../Forms/Components/Time-Picker/timePicker';
 import ListSelect from './../Forms/Components/List-Select/listSelect';
 import Switch from './../Forms/Components/Switch/switch';
-import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import ImageUpload from './../Forms/Components/Image-Upload/imageUpload.component';
 // import ImageThumbnail from './../Forms/Components/Image-Thumbnail/imageThumbnail.component';
 // import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from 'constants';

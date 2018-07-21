@@ -3,15 +3,13 @@ import './PageNav.css';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Redirect } from 'react-router-dom';
 
-import { ToastNotifications, LoaderComponent, LoaderUtils  } from 'drivezy-web-utils/build/Utils';
+import { ToastNotifications, LoaderComponent, LoaderUtils, ModalManager  } from 'drivezy-web-utils/build/Utils';
 import { SubscribeToEvent, Get, Post } from 'common-js-util';
 
 import GLOBAL from './../../Constants/global.constants';
 
 import SettingsUtil from './../../Utils/settings.utils';
 import ThemeUtil from './../../Utils/theme.utils';
-
-import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import ImpersonateFrom from './../../Components/Impersonate-Form/impersonateForm.component';
 
 import { ConfirmUtils } from './../../Utils/confirm-utils/confirm.utils';
