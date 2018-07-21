@@ -28,7 +28,6 @@ import LoadAsyncComponent from './../../Async/async';
 
 import GLOBAL from './../../Constants/global.constants';
 
-
 import './landing.component.css';
 
 // const GenericListing = LoadAsyncComponent(() => import('./../../Scenes/Generic-Listing/genericListing.scene'));

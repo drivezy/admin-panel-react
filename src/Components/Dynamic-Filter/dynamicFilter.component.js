@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 
 import { Put, IsUndefinedOrNull } from 'common-js-util';
 
-import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
-
-import { Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
+import { Location, ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
 import { CreateQuery } from './../../Utils/dynamicFilter.utils';
 import { SetPreference } from './../../Utils/preference.utils';
 

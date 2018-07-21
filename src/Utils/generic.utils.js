@@ -1,13 +1,11 @@
 import React from 'react';
 
-import { Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
+import { Location, ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
 
 import { Get, Delete, IsUndefinedOrNull, BuildUrlForGetCall, IsObjectHaveKeys } from 'common-js-util';
 
 import { ConfirmUtils } from './confirm-utils/confirm.utils';
 import { ProcessForm } from './formMiddleware.utils';
-
-import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 
 import ParseComponent from './../Components/Generic-Column-Filters/parseComponent.component';
 

@@ -4,12 +4,10 @@ import {
     Card, CardBody,
 } from 'reactstrap';
 
-import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
-import { Get, Post } from 'common-js-util';
+import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
+import { Get, Post, BuildUrlForGetCall, IsUndefined } from 'common-js-util';
 
 import SelectBox from './../../Components/Forms/Components/Select-Box/selectBox';
-import { BuildUrlForGetCall, IsUndefined } from './../../Utils/common.utils';
-import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import './impersonateForm.css';
 
 

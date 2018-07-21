@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import './configureSettings.component.css';
 
 import {
-    Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Button, ModalBody, ModalFooter,
+    Card, CardText,
+    CardTitle, Button, ModalBody, ModalFooter,
     TabContent, TabPane, Nav, NavItem, NavLink, Row, Col
 } from 'reactstrap';
 
-import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
+import { ModalManager } from 'drivezy-web-utils/build/Utils';
 import ThemeUtil from './../../Utils/theme.utils';
 
 

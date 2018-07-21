@@ -4,8 +4,8 @@ import {
     Route, Switch, Redirect
 } from 'react-router-dom';
 
-import { ToastNotifications, Location } from 'drivezy-web-utils/build/Utils';
-import { ToastContainer } from 'drivezy-web-utils/build/Components';
+import { ToastNotifications, Location, ModalManager } from 'drivezy-web-utils/build/Utils';
+import { ToastContainer, ModalWrapper } from 'drivezy-web-utils/build/Components';
 
 // import { ToastContainer } from 'react-toastify';
 
@@ -22,8 +22,10 @@ import SignupScene from './../Scenes/Signup-Scene/Signup.scene';
 /** Scenes End*/
 
 /** Components */
-import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
-import ModalWrapper from './../Wrappers/Modal-Wrapper/modalWrapper.component';
+// import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
+// import ModalWrapper from './../Wrappers/Modal-Wrapper/modalWrapper.component';
+
+
 import { Spotlight } from './../Components/Spotlight-Search/spotlightSearch.component';
 // import ToastContainer from './../Components/Toast-Container/toastContainer.component';
 /** Component Ends */

@@ -1,6 +1,6 @@
 // Higher Order Component
 import React, { Component } from 'react';
-import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
+import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
 
 import { ModalBody } from 'reactstrap';
 import { withFormik, Field } from 'formik';
@@ -8,7 +8,6 @@ import { Put } from 'common-js-util';
 
 import SelectBox from './../Forms/Components/Select-Box/selectBox';
 import { GetLookupValues } from './../../Utils/lookup.utils';
-import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 
 // Our inner form component which receives our form's state and updater methods as props
 const InnerForm = props => {

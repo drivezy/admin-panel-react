@@ -9,7 +9,6 @@ import { CreateUrl, ConvertDependencyInjectionToArgs, RemoveStarterFromThePath }
 
 // import FormCreator from './../Form-Creator/formCreator.component';
 
-// import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 // import ModalHeader from './../../Wrappers/Modal-Wrapper/templates/Modal-Header/modalHeader.component'
 // import ModalFooter from './../../Wrappers/Modal-Wrapper/templates/Modal-Footer/modalFooter.component';
 
