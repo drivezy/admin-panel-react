@@ -28,7 +28,7 @@ export default class CustomAction extends Component {
         self = this;
         this.state = {
             actions: props.actions,
-            genericData: props.genericData,
+            genericData: props.genericData
         };
     }
 
