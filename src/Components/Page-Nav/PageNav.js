@@ -3,7 +3,7 @@ import './PageNav.css';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Redirect } from 'react-router-dom';
 
-import { ToastNotifications, LoaderComponent, LoaderUtils, ModalManager  } from 'drivezy-web-utils/build/Utils';
+import { ToastNotifications, LoaderComponent, LoaderUtils, ModalManager, ConfirmUtils } from 'drivezy-web-utils/build/Utils';
 import { SubscribeToEvent, Get, Post } from 'common-js-util';
 
 import GLOBAL from './../../Constants/global.constants';
@@ -11,8 +11,6 @@ import GLOBAL from './../../Constants/global.constants';
 import SettingsUtil from './../../Utils/settings.utils';
 import ThemeUtil from './../../Utils/theme.utils';
 import ImpersonateFrom from './../../Components/Impersonate-Form/impersonateForm.component';
-
-import { ConfirmUtils } from './../../Utils/confirm-utils/confirm.utils';
 
 export default class PageNav extends Component {
     constructor(props) {
