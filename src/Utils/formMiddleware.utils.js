@@ -7,12 +7,11 @@ import React from 'react';
 import FormCreator from './../Components/Form-Creator/formCreator.component';
 
 import { Get, SelectFromOptions } from 'common-js-util';
-import { GetItem, ModalManager } from 'drivezy-web-utils/build/Utils';
+import { GetItem, ModalManager, ConfirmUtils } from 'drivezy-web-utils/build/Utils';
 
 import FormUtils from './form.utils';
 import { GetUrlForFormCreator, GetColumnsForListing, GetParsedLayoutScript, ParseRestrictedQuery } from './generic.utils';
 import { ExecuteScript } from './inject-method/injectScript.utils';
-import { ConfirmUtils } from './confirm-utils/confirm.utils';
 
 import { ROUTE_URL, RECORD_URL } from './../Constants/global.constants';
 
