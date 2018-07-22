@@ -794,3 +794,12 @@ export function ParseRestrictedQuery(queryString) {
 
     return parsedQuery;
 }
+
+/**
+ * Returns path including parent and column name having parent wrapped within '`'
+ * @param  {Object} column  
+ */
+export function GetPathWithParent(column) {
+    // if (column.path.split('.').length > 2) {
+    return `\`${column.parent}\`.${column.referenced_column ? column.referenced_column : column.name}`;
+}
