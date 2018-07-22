@@ -4,8 +4,8 @@ import {
     Route, Switch, Redirect
 } from 'react-router-dom';
 
-import { ToastNotifications, Location, ModalManager } from 'drivezy-web-utils/build/Utils';
-import { ToastContainer, ModalWrapper } from 'drivezy-web-utils/build/Components';
+import { ToastNotifications, ModalManager, ConfirmUtils } from 'drivezy-web-utils/build/Utils';
+import { ToastContainer, ModalWrapper, ConfirmModal } from 'drivezy-web-utils/build/Components';
 
 // import { ToastContainer } from 'react-toastify';
 
@@ -33,7 +33,6 @@ import { Spotlight } from './../Components/Spotlight-Search/spotlightSearch.comp
 /** Util */
 import SettingsUtil from './../Utils/settings.utils';
 import { LoginCheck } from './../Utils/user.utils';
-import { ConfirmModalComponent, ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
 
 /** Util Ends*/
 
@@ -77,7 +76,7 @@ export default class BasicRoute extends Component {
 
 
                 <ModalWrapper ref={(elem) => ModalManager.registerModal(elem)} />
-                <ConfirmModalComponent ref={(elem) => ConfirmUtils.RegisterConfirm(elem)} />
+                <ConfirmModal ref={(elem) => ConfirmUtils.RegisterConfirm(elem)} />
                 <Spotlight ref={(elem) => SettingsUtil.registerModal(elem)} />
             </div>
         )

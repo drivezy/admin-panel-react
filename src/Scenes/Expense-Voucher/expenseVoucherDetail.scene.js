@@ -5,10 +5,9 @@ import {
     Card, CardHeader, CardBody, Row, Col
 } from 'reactstrap';
 import { Get, Post, Put } from 'common-js-util';
-import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
+import { ToastNotifications, ConfirmUtils } from 'drivezy-web-utils/build/Utils';
 
 import TableWrapper from './../../Components/Table-Wrapper/tableWrapper.component';
-import { ConfirmUtils } from './../../Utils/confirm-utils/confirm.utils';
 
 export default class ExpenseVoucherDetail extends Component {
 
