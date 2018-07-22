@@ -10,6 +10,7 @@ import DatePicker from './../Forms/Components/Date-Picker/datePicker';
 
 import { SelectFromOptions, BuildUrlForGetCall, IsUndefinedOrNull, IsUndefined } from './../../Utils/common.utils';
 import { RawStringQueryToObject, RemoveLastWord, GetSelectedColumn } from './../../Utils/dynamicFilter.utils';
+import { GetPathWithParent } from './../../Utils/generic.utils';
 import { GetTime, TimeOperation } from './../../Utils/time.utils';
 import { Location } from 'drivezy-web-utils/build/Utils';
 
@@ -663,13 +664,13 @@ export default class ConfigureDynamicFilter extends Component {
         this.setState({ isCollapsed: true });
     }
 
-    getPathWithParent(column) {
-        // if (column.path.split('.').length > 2) {
-        return `\`${column.parent}\`.${column.referenced_column ? column.referenced_column : column.name}`;
-    }
+    // getPathWithParent(column) {
+    //     // if (column.path.split('.').length > 2) {
+    //     return `\`${column.parent}\`.${column.referenced_column ? column.referenced_column : column.name}`;
+    // }
 
     getQuery({ column, filter, value, joinMethod }) {
-        let columnString = this.getPathWithParent(column);
+        let columnString = GetPathWithParent(column);
         // } else {
         //     columnString = column.name;
         // }
@@ -691,11 +692,11 @@ export default class ConfigureDynamicFilter extends Component {
                 if (!IsUndefinedOrNull(value.column) && Object.keys(value.column).length) {
                     const joinMethod = value.joinMethod;
                     if (value.filter.includes('IS NULL') || value.filter.includes('IS NOT NULL')) {
-                        query += this.getPathWithParent(value.column) + value.filter + ' AND ';
+                        query += GetPathWithParent(value.column) + value.filter + ' AND ';
                     } else if (value.filter == ' BETWEEN ' || value.filter == ' NOT BETWEEN ') {
                         // query += value.column.name + value.filter + ''' + value.slot.startDate + "' and '" + value.slot.endDate + "'" + joinMethod;
                         // query += `${value.column.name}${value.filter} '${value.slot.startDate}' and '${value.slot.endDate}'${joinMethod}`;
-                        query += `${this.getPathWithParent(value.column)}${value.filter} '${value.inputField}' and '${value.secondInputField}'${joinMethod}`;
+                        query += `${GetPathWithParent(value.column)}${value.filter} '${value.inputField}' and '${value.secondInputField}'${joinMethod}`;
                     } else if (!IsUndefined(value.inputField)) {
                         switch (value.column.column_type_id) {
                             case 7:
