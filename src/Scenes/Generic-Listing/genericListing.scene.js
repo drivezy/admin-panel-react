@@ -8,7 +8,7 @@ import {
 
 import { HotKeys } from 'react-hotkeys';
 
-import { Get, SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent, BuildUrlForGetCall, SelectFromOptions, CopyToClipBoard  } from 'common-js-util';
+import { Get, SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent, BuildUrlForGetCall, SelectFromOptions, CopyToClipBoard } from 'common-js-util';
 import { GetUrlParams, Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
 import DynamicFilter from './../../Components/Dynamic-Filter/dynamicFilter.component';
@@ -21,7 +21,7 @@ import PredefinedFilter from './../../Components/Dropdown-Filter/filter.componen
 import ListingSearch from './../../Components/Listing-Search/listingSearch.component';
 
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
-import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
+import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns, GetPathWithParent } from './../../Utils/generic.utils';
 import { GetListingRecord } from './../../Utils/genericListing.utils';
 
 export default class GenericListing extends Component {
@@ -115,7 +115,7 @@ export default class GenericListing extends Component {
 
     openAggregationResult = async (operator, caption, data) => {
         let options = GetDefaultOptions();
-        options.aggregation_column = data.selectedColumn.name;
+        options.aggregation_column = data.selectedColumn.path;
         options.aggregation_operator = operator;
 
         const url = BuildUrlForGetCall(data.menuDetail.url, options);
@@ -133,7 +133,7 @@ export default class GenericListing extends Component {
         };
 
         let query = '';
-        if (data.selectedColumn.path.split(".").length == 1) { // for columns which is child of table itself
+        if (data.selectedColumn.path.split(".").length == 2) { // for columns which is child of table itself
             if (this.urlParams.query) { // if previous query present then it will executed
                 let a = {};
                 let f = 0;
@@ -148,7 +148,8 @@ export default class GenericListing extends Component {
                 }
                 if (f == 0) { // if not overlappin
 
-                    query = this.urlParams.query + ' AND ' + data.selectedColumn.name + method[0] + "'" + data.listingRow[data.selectedColumn.name] + "'";
+                    query = this.urlParams.query + ' AND ' + GetPathWithParent(data.selectedColumn) + method[0] + "'" + data.listingRow[data.selectedColumn.path] + "'";
+                    // query = this.urlParams.query + ' AND ' + data.selectedColumn.path + method[0] + "'" + data.listingRow[data.selectedColumn.path] + "'";
 
                     this.urlParams.query = query;
                     Location.search(this.urlParams, { props: paramProps });
@@ -161,12 +162,13 @@ export default class GenericListing extends Component {
                 }
             } else { // if previous query not present then it will executed
 
-                query = data.selectedColumn.name + method[0] + "'" + data.listingRow[data.selectedColumn.name] + "'";
+                // query = `\`${data.selectedColumn.parent}\`${data.selectedColumn.name}${method[0]}'${data.listingRow[data.selectedColumn.path]}`;
+                query = GetPathWithParent(data.selectedColumn) + method[0] + "'" + data.listingRow[data.selectedColumn.path] + "'";
 
                 this.urlParams.query = query;
                 Location.search(this.urlParams, { props: paramProps });
             }
-        } else if (data.selectedColumn.path.split(".").length == 2) { // This will executed when showmatching clicked second time
+        } else if (data.selectedColumn.path.split(".").length == 3) { // This will executed when showmatching clicked second time
             let regex = /.([^.]*)$/; // filters out anything before first '.'
             let path = data.selectedColumn.path.replace(regex, "");
             if (this.urlParams.query) { // if previous query present then it will executed
