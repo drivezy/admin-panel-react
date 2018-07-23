@@ -11,7 +11,8 @@ import 'react-viewer/dist/index.css';
 import classNames from 'classnames';
 
 import { Get, Put, Delete, BuildUrlForGetCall } from 'common-js-util';
-import { ToastNotifications, ModalManager, ConfirmUtils } from 'drivezy-web-utils/build/Utils';
+import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
+import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
 

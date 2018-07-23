@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 // import SelectBox from './../Forms/Components/Select-Box/selectBox';
 
-import { Location } from 'drivezy-web-utils/build/Utils';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { Get, BuildUrlForGetCall, SelectFromOptions, IsObjectHaveKeys } from 'common-js-util';
 
 import './listingSearch.component.css'
