@@ -13,7 +13,7 @@ import { GetPreferences } from './../Utils/preference.utils';
 import SettingsUtil from './../Utils/settings.utils';
 import { GetMenusFromApi } from './../Utils/menu.utils';
 import LoadAsync from './../Utils/loadAsyncScripts.utils';
-import { Location } from './../Utils/location.utils';
+// import { Location } from './../Utils/location.utils';
 import { GetUserPreferences } from './../Utils/userPreference.utils';
 import { Spotlight } from '../Components/Spotlight-Search/spotlightSearch.component';
 import { SubscribeToEvent } from './../Utils/stateManager.utils';
