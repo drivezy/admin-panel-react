@@ -14,25 +14,19 @@ import { ConfirmModal } from 'drivezy-web-utils/build/Components/Confirm-Modal-W
 
 import { SubscribeToEvent } from 'common-js-util';
 
-/** Router */
+// /** Router */
 import PrivateRoute from './privateRoute.router';
 import IndexRouter from './index.router';
-/** Router ends */
+// /** Router ends */
 
-/** Scenes */
+// /** Scenes */
 import LoginScene from './../Scenes/Login-Scene/Login.scene';
 
 
 import SignupScene from './../Scenes/Signup-Scene/Signup.scene';
-/** Scenes End*/
-
-/** Components */
-// import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
-// import ModalWrapper from './../Wrappers/Modal-Wrapper/modalWrapper.component';
-
+// /** Scenes End*/
 
 import { Spotlight } from './../Components/Spotlight-Search/spotlightSearch.component';
-// import ToastContainer from './../Components/Toast-Container/toastContainer.component';
 /** Component Ends */
 
 /** Util */
@@ -56,7 +50,6 @@ export default class BasicRoute extends Component {
 
     componentDidMount() {
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
-        
         // setTimeout(() => ConfirmUtils.confirmModal({ message: "Are you sure you want to request approval?", callback: () => console.log('hit') }), 2000);
         LoginCheck();
 
