@@ -4,8 +4,12 @@ import {
     Route, Switch, Redirect
 } from 'react-router-dom';
 
+import { ToastNotifications, ModalManager, ConfirmUtils } from 'drivezy-web-utils/build/Utils';
+import { ToastContainer, ModalWrapper, ConfirmModal } from 'drivezy-web-utils/build/Components';
 
 // import { ToastContainer } from 'react-toastify';
+
+import { SubscribeToEvent } from 'common-js-util';
 
 /** Router */
 import PrivateRoute from './privateRoute.router';
@@ -18,18 +22,18 @@ import SignupScene from './../Scenes/Signup-Scene/Signup.scene';
 /** Scenes End*/
 
 /** Components */
-import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
-import ModalWrapper from './../Wrappers/Modal-Wrapper/modalWrapper.component';
+// import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
+// import ModalWrapper from './../Wrappers/Modal-Wrapper/modalWrapper.component';
+
+
 import { Spotlight } from './../Components/Spotlight-Search/spotlightSearch.component';
-import ToastContainer from './../Components/Toast-Container/toastContainer.component';
+// import ToastContainer from './../Components/Toast-Container/toastContainer.component';
 /** Component Ends */
 
 /** Util */
 import SettingsUtil from './../Utils/settings.utils';
 import { LoginCheck } from './../Utils/user.utils';
-import { SubscribeToEvent } from './../Utils/stateManager.utils';
-import { ConfirmModalComponent, ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
-import ToastUtils from './../Utils/toast.utils';
+
 /** Util Ends*/
 
 
@@ -73,13 +77,13 @@ export default class BasicRoute extends Component {
                         <PrivateRoute path="/" loggedUser={loggedUser} component={IndexRouter} />
                     </Switch>
                 </Router>
-                <ToastContainer ref={(elem) => { ToastUtils.register(elem); }} />
+                <ToastContainer ref={(elem) => { ToastNotifications.register(elem); }} />
 
 
 
                 <ModalWrapper ref={(elem) => ModalManager.registerModal(elem)} />
-                <ConfirmModalComponent ref={(elem) => ConfirmUtils.RegisterConfirm(elem)} />
-                {/* <Spotlight ref={(elem) => SettingsUtil.registerModal(elem)} /> */}
+                <ConfirmModal ref={(elem) => ConfirmUtils.RegisterConfirm(elem)} />
+                <Spotlight ref={(elem) => SettingsUtil.registerModal(elem)} />
             </div>
         )
     }

@@ -4,29 +4,54 @@
     .user-license-form {
         margin: 5px;
         width: 30%;
+        .heading {
+            font-size: 14px;
+        }
         .licenseClass {
             margin-top: 50px;
         }
     }
     .licence-viewer{
+        width: 70%;
         flex-grow: 1;
         .card{
+            display: flex;
+            flex-direction: column;
+            .heading{
+                font-size: 14px;
+            }
+
+            .detected-text-label{
+                font-size: 14px;
+                font-weight: 700;
+                margin-top: 24px;
+                margin-bottom: 4px;
+            }
+
             flex-grow: 1;
             .inline-container{
-                height: 70vh;
+                // height: 70vh;
+                flex-basis: 100%;
+
+                .image-viewer{
+                    height: 450px;
+                    .images{
+                        height: 100%;
+                    }
+                }
             }
         }
     }
     .container {
         margin: 5px;
-        min-height: 500px;
+       // min-height: 500px;
         display: flex;
-        flex-wrap: wrap;
+      //  flex-wrap: wrap;
         width: 70%;
         .img-list {
             display: flex;
             margin: 0 auto;
-            flex-wrap: wrap;
+          //  flex-wrap: wrap;
           
             &.hide {
               display: none;

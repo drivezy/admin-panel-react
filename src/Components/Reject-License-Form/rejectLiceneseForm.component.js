@@ -1,12 +1,13 @@
 // Higher Order Component
 import React, { Component } from 'react';
+import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
+
 import { ModalBody } from 'reactstrap';
 import { withFormik, Field } from 'formik';
-import { Put } from './../../Utils/http.utils';
+import { Put } from 'common-js-util';
+
 import SelectBox from './../Forms/Components/Select-Box/selectBox';
 import { GetLookupValues } from './../../Utils/lookup.utils';
-import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
-import ToastNotifications from '../../Utils/toast.utils';
 
 // Our inner form component which receives our form's state and updater methods as props
 const InnerForm = props => {
@@ -138,7 +139,7 @@ export default class RejectLicenseForm extends Component {
     }
 
     onSubmit = () => {
-        ToastNotifications.success("License is Rejected");
+        ToastNotifications.success({ title: "License is Rejected" });
         ModalManager.closeModal();
     }
 

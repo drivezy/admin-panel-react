@@ -4,20 +4,16 @@
  * Finally renders form in modal
  */
 import React from 'react';
-import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
 import FormCreator from './../Components/Form-Creator/formCreator.component';
+
+import { Get, SelectFromOptions } from 'common-js-util';
+import { GetItem, ModalManager, ConfirmUtils } from 'drivezy-web-utils/build/Utils';
 
 import FormUtils from './form.utils';
 import { GetUrlForFormCreator, GetColumnsForListing, GetParsedLayoutScript, ParseRestrictedQuery } from './generic.utils';
 import { ExecuteScript } from './inject-method/injectScript.utils';
-import { Get } from './http.utils';
 
 import { ROUTE_URL, RECORD_URL } from './../Constants/global.constants';
-import { SelectFromOptions } from './common.utils';
-import { GetItem } from './localStorage.utils';
-import { ConfirmUtils } from './confirm-utils/confirm.utils';
-
-
 
 export async function ProcessForm({ formContent, scripts, isForm, openModal = true }) {
     const url = GetUrlForFormCreator({ payload: formContent, getDictionary: true, isForm });
@@ -64,9 +60,10 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
             formContent.data = GetDataFromDictionary(formContent.dictionary);
             formContent.modelId = response.form.id;
 
-            if (response.form.form_type_id == 2) {
-                const { message, submitCallback } = response.form;
-                ConfirmUtils.confirmModal({ message, callback: () => ExecuteScript({ formContent, scripts: [submitCallback], context: FormUtils, contextName: 'form' }) })
+            if (response.form.form_type_id == 53) {
+                const { description: message } = response.form;
+                const submitCallback = response.client_scripts ? response.client_scripts : [];
+                ConfirmUtils.confirmModal({ message, callback: () => ExecuteScript({ formContent, scripts: submitCallback, context: FormUtils, contextName: 'form' }) })
                 return;
             }
         }
@@ -85,7 +82,7 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
         }
         formContent.data = { ...formContent.data, ...restrictedQuery };
         formContent.restrictedQuery = restrictedQuery;
-        
+
         if (Array.isArray(scripts)) {
             formContent = ExecuteScript({ formContent, scripts, context: FormUtils, contextName: 'form' });
         }
@@ -101,12 +98,9 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
     }
 }
 
-function executeFormScript({ submitCallback, cancelCallback }) {
-
-}
-
 export function OpenModalForm(formContent) {
     ModalManager.openModal({
+        className: 'generic-form-container',
         headerText: formContent.name,
         modalBody: () => (<FormCreator payload={formContent} />),
     });

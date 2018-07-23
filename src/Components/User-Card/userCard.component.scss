@@ -35,16 +35,34 @@
         }
     }
    
+    .user-photo-and-user-name {
+        display: flex;
+        flex-direction: row;
 
-    .user-photo{
-        img{
-            width: 41%;
-            margin: 12px;
+        .user-photo{
+
+            flex-basis: 30%;
+            img{
+                float: right;
+                width: 67px;
+                margin-bottom: 5px;
+                margin-right: 50px;
+                margin-top: 5px;
+                height: auto;
+                border: 1px solid #efefef;
+                border-radius: 25%;
+            }
+        }
+
+        .user-name{
+            flex-basis: 70%;
+            vertical-align: middle;
+           // padding-left: 70px;
             float: right;
-            height: auto;
-            border: 1px solid #98765a;
-            border-radius: 17%;
-            padding: 1px;
+            padding-top: 34px;
+            font-size: 17px;
+            text-align: center;
+            color: #25262b91
         }
     }
 }

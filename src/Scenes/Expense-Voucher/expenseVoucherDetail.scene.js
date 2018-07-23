@@ -4,12 +4,10 @@ import './expenseVoucherDetail.scene.css';
 import {
     Card, CardHeader, CardBody, Row, Col
 } from 'reactstrap';
+import { Get, Post, Put } from 'common-js-util';
+import { ToastNotifications, ConfirmUtils } from 'drivezy-web-utils/build/Utils';
 
 import TableWrapper from './../../Components/Table-Wrapper/tableWrapper.component';
-
-import { Get, Post, Put } from './../../Utils/http.utils';
-import ToastNotifications from './../../Utils/toast.utils';
-import { ConfirmUtils } from './../../Utils/confirm-utils/confirm.utils';
 
 export default class ExpenseVoucherDetail extends Component {
 
@@ -44,7 +42,7 @@ export default class ExpenseVoucherDetail extends Component {
             const result = await Put({ url: "expenseVoucher/" + voucher.id, body: { state: 277 } });
             if (result.success) {
                 this.getVoucherDetail();
-                ToastNotifications.success('Expense Status changed to Pending Approval');
+                ToastNotifications.success({ title: 'Expense Status changed to Pending Approval' });
             }
         }
         ConfirmUtils.confirmModal({ message: "Are you sure you want to request approval?", callback: method });
@@ -55,7 +53,7 @@ export default class ExpenseVoucherDetail extends Component {
             const result = await Put({ url: "expenseVoucher/" + voucher.id, body: { state: 278 } });
             if (result.success) {
                 this.getVoucherDetail();
-                ToastNotifications.success('Expense Approved');
+                ToastNotifications.success({ title: 'Expense Approved' });
             }
         }
         ConfirmUtils.confirmModal({ message: "Are you sure you want to approve this expense?", callback: method });
@@ -66,7 +64,7 @@ export default class ExpenseVoucherDetail extends Component {
             const result = await Put({ url: "expenseVoucher/" + voucher.id, body: { state: 312 } });
             if (result.success) {
                 this.getVoucherDetail();
-                ToastNotifications.success('Expense Rejected');
+                ToastNotifications.success({ title: 'Expense Rejected' });
             }
         }
         ConfirmUtils.confirmModal({ message: "Are you sure you want to reject expense?", callback: method });
@@ -77,7 +75,7 @@ export default class ExpenseVoucherDetail extends Component {
             const result = await Put({ url: "expenseVoucher/" + voucher.id, body: { state: 279 } });
             if (result.success) {
                 this.getVoucherDetail();
-                ToastNotifications.success('Invoice Rejected');
+                ToastNotifications.success({ title: 'Invoice Rejected' });
             }
         }
         ConfirmUtils.confirmModal({ message: "Are you sure you want to reject this invoice?", callback: method });
@@ -88,7 +86,7 @@ export default class ExpenseVoucherDetail extends Component {
             const result = await Put({ url: "expenseVoucher/" + voucher.id, body: { state: 1070 } });
             if (result.success) {
                 this.getVoucherDetail();
-                ToastNotifications.success('Expense On Hold');
+                ToastNotifications.success({ title: 'Expense On Hold' });
             }
         }
         ConfirmUtils.confirmModal({ message: "Are you sure you want to on hold this expense?", callback: method });
@@ -99,7 +97,7 @@ export default class ExpenseVoucherDetail extends Component {
             const result = await Post({ url: "authorizeExpense/" + voucher.id });
             if (result.success) {
                 this.getVoucherDetail();
-                ToastNotifications.success('Expense Authorized successfully');
+                ToastNotifications.success({ title: 'Expense Authorized successfully' });
             }
         }
         ConfirmUtils.confirmModal({ message: "Are you sure you want to authorize this expense?", callback: method });
@@ -110,7 +108,7 @@ export default class ExpenseVoucherDetail extends Component {
             const result = await Post({ url: "unAuthorizeExpense/" + voucher.id });
             if (result.success) {
                 this.getVoucherDetail();
-                ToastNotifications.success('Expense Unauthorized successfully');
+                ToastNotifications.success({ title: 'Expense Unauthorized successfully' });
             }
         }
         ConfirmUtils.confirmModal({ message: "Are you sure you want to unauthorize this expense?", callback: method });

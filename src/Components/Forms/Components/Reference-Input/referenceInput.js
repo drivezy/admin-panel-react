@@ -2,18 +2,13 @@
 // Refer https://github.com/skratchdot/react-bootstrap-daterangepicker
 
 import React, { Component } from 'react';
+import { Get } from 'common-js-util';
+
+import SelectBox from './../../Components/Select-Box/selectBoxForGenericForm.component';
 
 import GLOBAL from './../../../../Constants/global.constants';
-
-// import SelectBox from './../../Components/Select-Box/selectBox';
-import SelectBox from './../../Components/Select-Box/selectBoxForGenericForm.component';
-import Typeahead from './../../Components/Typeahead/typeahead.component';
-
-
-// import SelectBox from './../Select-Box/selectBoxForGenericForm.component';
 import './referenceInput.css';
 
-import { Get } from './../../../../Utils/http.utils';
 
 let unmounted = false;
 

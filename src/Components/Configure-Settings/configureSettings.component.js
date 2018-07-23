@@ -3,18 +3,15 @@ import React, { Component } from 'react';
 import './configureSettings.component.css';
 
 import {
-    Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Button, ModalBody, ModalFooter,
+    Card, CardText,
+    CardTitle, Button, ModalBody, ModalFooter,
     TabContent, TabPane, Nav, NavItem, NavLink, Row, Col
 } from 'reactstrap';
+
 import { HotKeys } from 'react-hotkeys';
 
-import { Mousetrap } from 'react-hotkeys';
-
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
-import { SetItem } from './../../Utils/localStorage.utils';
 import { StoreEvent } from './../../Utils/stateManager.utils';
-import $ from 'jquery';
 import ThemeUtil from './../../Utils/theme.utils';
 import { SetUserPreference } from './../../Utils/userPreference.utils';
 import SettingsUtil from './../../Utils/settings.utils';

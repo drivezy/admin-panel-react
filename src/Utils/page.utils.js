@@ -1,6 +1,8 @@
-import { Location } from './location.utils';
+import { Get, Post, Delete, Put } from 'common-js-util';
+import { Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
+
 import { CreateUrl } from './generic.utils';
-import ToastNotifications from './toast.utils';
+
 let self = {};
 
 export default class Pageutil {
@@ -38,10 +40,19 @@ export default class Pageutil {
     }
 
     static alert(message) {
-        ToastNotifications.success(message);
+        ToastNotifications.success({ title: message });
     }
 
     static getMenuDetail() {
         return self.page.menu;
+    }
+
+
+    static httpCall({ url, callback, extraParams, method = 'get', urlPrefix }) {
+        const methods = {
+            get: Get, post: Post, put: Put, delete: Delete
+        };
+
+        methods[method]({ url, callback, extraParams, urlPrefix });
     }
 }

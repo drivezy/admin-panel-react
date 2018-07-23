@@ -5,6 +5,10 @@ import {
 } from 'react-router-dom';
 
 /** Components */
+import { GetItem, SetItem, ToastNotifications, LoaderUtils } from 'drivezy-web-utils/build/Utils';
+
+import { InitializeCommonJs } from 'common-js-util';
+
 import HomeScene from './../../Scenes/Home-Scene/home.scene';
 import GenericListing from './../../Scenes/Generic-Listing/genericListing.scene';
 // import GenericDetail from './../../Scenes/Generic-Detail/genericDetail.scene';
@@ -23,6 +27,8 @@ import RosterTimeline from './../../Scenes/Roster-Timeline/rosterTimeline.scene'
 import LoadAsyncComponent from './../../Async/async';
 import SettingsUtil from './../../Utils/settings.utils';
 
+import GLOBAL from './../../Constants/global.constants';
+
 import './landing.component.css';
 
 // const GenericListing = LoadAsyncComponent(() => import('./../../Scenes/Generic-Listing/genericListing.scene'));
@@ -35,8 +41,13 @@ export default class LandingApp extends Component {
             menus: this.props.menus,
             sideNavExpanded: false
         }
-
         this.loadedComponent = [];
+        InitializeCommonJs({
+            GLOBAL,
+            ToastNotifications,
+            GetItem, SetItem,
+            Loader: LoaderUtils
+        });
     }
 
 

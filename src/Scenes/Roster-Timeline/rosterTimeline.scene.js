@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import './rosterTimeline.scene.css';
 
-import { Get, Post } from './../../Utils/http.utils';
+import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
+import { Get, Post } from 'common-js-util';
 
 import RosterContent from './../../Components/Roster-Content/rosterContent.component';
 import SelectBox from './../../Components/Forms/Components/Select-Box/selectBox';
 import WeekSelector from './../../Components/Week-Selector/weekSelector.component'
 
 import { FetchCities } from './../../Constants/api.constants';
-import ToastNotifications from '../../Utils/toast.utils';
 
 export default class RosterTimeline extends Component {
 
@@ -72,7 +72,7 @@ export default class RosterTimeline extends Component {
         console.log(venue, week);
         const result = await Post({ url: 'createFleetAssignmentRecords', body: { venue_id: venue.id, shift_date: week.shiftDate } });
         if (result.success) {
-            ToastNotifications.success('Loaded Weekly roster!');
+            ToastNotifications.success({ title: 'Loaded Weekly roster!' });
             this.getRosterDetail();
         }
     }
@@ -124,7 +124,7 @@ export default class RosterTimeline extends Component {
 
                 {
                     ready ?
-                        <RosterContent rosterData={rosterData} origin={origin}/>
+                        <RosterContent rosterData={rosterData} origin={origin} />
                         : null
                 }
 

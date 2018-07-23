@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import { Collapse, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import _ from 'lodash';
+import { SubscribeToEvent, IsObjectHaveKeys  } from 'common-js-util';
 
 import { SetPreference } from './../../Utils/preference.utils';
 import { changeArrayPosition } from './../../Utils/js.utils';
-import { IsObjectHaveKeys } from './../../Utils/common.utils';
 
 import ColumnSetting from './Components/Column-Setting/columnSetting.component';
-
-import { SubscribeToEvent, UnsubscribeEvent } from './../../Utils/stateManager.utils';
 
 import './TableSettings.css';
 

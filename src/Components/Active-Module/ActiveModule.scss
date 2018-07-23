@@ -60,14 +60,14 @@
             }
             button.btn {
                 outline: none;
-                padding: 5px 20px;
+                padding: 5px 10px;
                 border: none;
-                background: #2258b9;
+                background: #36475a;
                 font-size: 12px;
                 color: white;
-                border-radius: 2px;
+                border-radius: 15px;
                 &:hover {
-                    background-color: #fff8f8; // background-color: #ebedf0;
+                    background-color: #313e4c; // background-color: #ebedf0;
                 }
             }
         }
@@ -93,7 +93,7 @@
                 }
                 .panel-heading {
                     @include themify($themes) {
-                        color: themed('secondaryColor');
+                        color: themed('secondaryDark');
                         background-color: themed('subMenuHeader')
                     }
                     padding: 5px 8px;
@@ -102,6 +102,10 @@
                 }
                 .panel-body {
                     padding: 5px;
+                    .menu-icon{
+                        float: left;
+                        padding: 1px 5px 0 0;
+                    }
                     .menu-list {
                         display: block;
                         cursor: pointer;
@@ -161,7 +165,7 @@
             }
             &.btn-default {
                 @include themify($themes) {
-                    background: themed('defaultThemeDark');
+                    background: themed('primaryLight');
                     // color: themed('whiteColor');
                 }
             }

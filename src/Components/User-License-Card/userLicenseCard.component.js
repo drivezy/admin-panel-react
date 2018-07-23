@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 import {
-    Card, CardImg, Row, Col
+    Card, Button
 } from 'reactstrap';
 
-import { Get } from './../../Utils/http.utils';
-import { Link } from 'react-router-dom';
-
-import Viewer from 'react-viewer';
-import 'react-viewer/dist/index.css';
-
+import { Get } from 'common-js-util';
 
 import './userLicenseCard.component.css';
 import classNames from 'classnames';
-
 import ImageViewer from './../../Components/Image-Viewer/imageViewer.component.js';
+
+import 'react-viewer/dist/index.css';
+import './userLicenseCard.component.css';
+import 'react-viewer/dist/index.css';
 
 export default class UserLicenseCard extends Component {
     container = HTMLDivElement;
@@ -22,6 +20,11 @@ export default class UserLicenseCard extends Component {
         this.state = {
             mode: 'inline',
             userData: props.userData,
+            flag: props.flag,
+            sample: props.sample,
+            acceptL: props.acceptL,
+            deleteL: props.deleteL,
+            rejectL: props.rejectL,
             promoWallet: 0,
             cashWallet: 0,
             visible: true,
@@ -38,6 +41,7 @@ export default class UserLicenseCard extends Component {
 
     walletAmount = async () => {
         const { userData } = this.state;
+        
         const url = 'wallet?user=' + userData.id
         const result = await Get({ url });
         if (result.success) {
@@ -47,16 +51,19 @@ export default class UserLicenseCard extends Component {
         }
     }
 
-    render() {
-        const { userData = {}, promoWallet, cashWallet, userLicenseImage } = this.state;
 
+
+    render() {
+        const { userData = {}, promoWallet, cashWallet, userLicenseImage, flag } = this.state;
+       // sample = this.props.sample();
         let userLicenseImageArr = [];
 
+        //.filter((image) => image.approved == 1)
 
-
-        userLicenseImageArr = userData.licenses.filter((image) => image.approved == 1).map((image) => {
+        userLicenseImageArr = userData.licenses.map((image) => {
             // if (image.approved == 1) {
             image.src = image.license;
+
             return image;
             // }
         })
@@ -79,11 +86,11 @@ export default class UserLicenseCard extends Component {
                     {
                         userLicenseImageArr.length > 0 ?
                             // <div>
-                                <div className={inlineContainerClass} ref={ref => { this.state.container = ref; }}>
+                            <div className={inlineContainerClass} ref={ref => { this.state.container = ref; }}>
 
-                                    {/* <BewViewer images={userLicenseImage}/> */}
+                                {/* <BewViewer images={userLicenseImage}/> */}
 
-                                    {/* <Viewer
+                                {/* <Viewer
                                         container={this.state.container}
                                         visible={this.state.visible}
                                         images={userLicenseImage}
@@ -91,11 +98,27 @@ export default class UserLicenseCard extends Component {
                                         noClose={true}
                                         zoomable={false}
                                     /> */}
-                                    {/* <div> */}
-                                    <ImageViewer userLicenseImageArr={userLicenseImageArr} />
-                                    {/* </div> */}
+                                {/* <div> */}
+                                <ImageViewer images={userLicenseImageArr} />
+                                {/* </div> */}
+                                {/* <i className="fa fa-plus"></i> */}
 
+
+                                <div>
+
+                                    {flag ?
+                                        <div>
+
+                                            <Button className="accept" onClick={() => this.props.acceptL()}>Accept License</Button>
+                                            <Button className="reject" onClick={() => this.props.rejectL()}>Rejected License</Button>
+                                            <Button className="delete" onClick={() => this.props.deleteL()}>Delete License</Button>
+                                        </div>
+                                        :
+                                        null
+                                    }
                                 </div>
+
+                            </div>
                             // </div>
                             : <img className='dummy-license' src={require('./../../Assets/images/Dummy-License.jpg')} alt="" />
                     }

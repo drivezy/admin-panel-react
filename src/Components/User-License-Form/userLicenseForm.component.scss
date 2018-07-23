@@ -1,0 +1,35 @@
+.license-form {
+    .form-group, .type-licenses-group {
+        .name {
+            color: #000000a3;
+            .text-red {
+                color: red;
+            }
+        }
+
+        .form-control{
+            font-size: 13px;
+            margin-bottom: 14px;
+        }
+    
+        .detected-items {
+            color: #6f6f6f;
+            .item {
+                color: blue;
+            }
+        }
+
+        margin-bottom: 14px;
+    }
+    .type-licenses-group {
+        .licenses-checkbox {
+            display: flex;
+            flex-direction: column;
+
+            .tick-name{
+                padding-left: 2px;
+            }
+ 
+        }
+    }
+}

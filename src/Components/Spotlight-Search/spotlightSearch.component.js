@@ -4,11 +4,10 @@ import './spotlightSearch.component.css';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { HotKeys } from 'react-hotkeys';
 
-import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import TypeaheadComponent from './../Forms/Components/Typeahead/typeahead.component';
 
 import { GetMenus } from './../../Utils/menu.utils';
-import { Location } from './../../Utils/location.utils';
+import { Location } from 'drivezy-web-utils/build/Utils';
 
 let subMenu;
 

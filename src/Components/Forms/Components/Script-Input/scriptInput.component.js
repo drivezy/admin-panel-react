@@ -3,25 +3,26 @@ import './scriptInput.component.css';
 import _ from 'lodash';
 import { AceEditor } from 'react-ace';
 
-import { Collapse, Card, CardBody, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-
-import { Delete } from './../../../../Utils/http.utils';
-
-import { COLUMN_TYPE } from './../../../../Constants/columnType.constants';
+import { SelectFromOptions } from 'common-js-util';
 
 // Custom Components
 import CodeEditor from './../../../Code-Editor/codeEditor.component';
 
+const MODES = [{ id: 1, value: 'javascript', name: 'Javascript' }, { id: 2, name: 'PHP', value: 'php' }, { id: 3, name: 'CSS', value: 'css' }, { id: 4, name: 'SQL', value: 'sql' }];
 export default class ScriptInput extends Component {
 
     constructor(props) {
         super(props);
 
+        const mode = SelectFromOptions(MODES, props.mode, 'value');
         this.state = {
             column: this.props.column,
+            mode,
             payload: this.props.payload,
             value: this.props.value || '',
-            columns: this.props.columns
+            script: props.script,
+            columns: this.props.columns,
+            inline: props.inline
         }
     }
 
@@ -40,29 +41,28 @@ export default class ScriptInput extends Component {
 
     render() {
 
-        const { payload, column, columns, value } = this.state;
-
-        const { onChange } = this.props;
+        const { payload, column, columns, value, script, mode } = this.state;
+        const { onChange, inline } = this.props;
 
         return (
             <div className="script-input">
                 {
 
-                    ((column.name.indexOf('_id') == -1) && (payload.method == 'edit'))
+                    ((column.name.indexOf('_id') == -1) && (payload.method == 'edit') && 1==2)
                         ?
                         <AceEditor
-                            mode={column.name}
+                            mode={mode.value}
                             theme="monokai"
                             name="Drivezy-Code-editor"
                             width='100%'
                             height='85vh'
                             // onLoad={this.onLoad}
-                            // onChange={this.onChange}
+                            onChange={(script) => this.setState({ script })}
                             fontSize={14}
                             showPrintMargin={true}
                             showGutter={true}
                             highlightActiveLine={true}
-                            value={value}
+                            value={script}
                             setOptions={{
                                 enableBasicAutocompletion: true,
                                 enableLiveAutocompletion: true,
@@ -77,10 +77,10 @@ export default class ScriptInput extends Component {
                             <div className="col">
                                 {
                                     value ?
-                                        <CodeEditor column={column} payload={payload} onSubmit={this.onSubmit} scriptId={value} />
+                                        <CodeEditor inline={inline} column={column} payload={payload} onSubmit={this.onSubmit} scriptId={value} script={script} />
                                         // <CodeEditor onSubmit={this.onSubmit} buttonComponent={() => (<button onClick={() => this.editScript(value)} className="btn btn-secondary">Edit Script</button>)} scriptId={value} />
                                         :
-                                        <CodeEditor column={column} payload={payload} onSubmit={this.onSubmit} scriptId={value} />
+                                        <CodeEditor inline={inline} column={column} payload={payload} onSubmit={this.onSubmit} scriptId={value} script={script}/>
                                     // <CodeEditor onSubmit={this.onSubmit} buttonComponent={() => (<button onClick={() => this.addScript(value)} className="btn btn-secondary">Add Script</button>)} />
                                 }
                             </div>

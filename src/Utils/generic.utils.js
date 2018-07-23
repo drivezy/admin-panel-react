@@ -1,26 +1,19 @@
-import React, { Component } from 'react';
-import { Get } from './http.utils';
-import { IsUndefinedOrNull, BuildUrlForGetCall, IsObjectHaveKeys } from './common.utils';
-import ToastNotifications from './toast.utils';
-import { Delete } from './http.utils';
-import { Location } from './location.utils';
-import { ConfirmUtils } from './confirm-utils/confirm.utils';
+import React from 'react';
+
+import { Location, ToastNotifications, ModalManager, ConfirmUtils } from 'drivezy-web-utils/build/Utils';
+
+import { Get, Delete, IsUndefinedOrNull, BuildUrlForGetCall, IsObjectHaveKeys } from 'common-js-util';
+
 import { ProcessForm } from './formMiddleware.utils';
 
-import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
-
-// import FormCreator from './../Components/Form-Creator/formCreator.component'
-import PortletTable from '../Components/Portlet-Table/PortletTable.component';
-
 import ParseComponent from './../Components/Generic-Column-Filters/parseComponent.component';
-// import LoadAsyncComponent from './../Async/async';
 
 import TableWrapper from './../Components/Table-Wrapper/tableWrapper.component';
 import PreferenceSetting from './../Components/Preference-Setting/preferenceSetting.component';
 
 import { GetMenuDetailEndPoint, FormDetailEndPoint } from './../Constants/api.constants';
 import { ROUTE_URL, RECORD_URL } from './../Constants/global.constants';
-import { MATCH_PARENT_PATH, MATCH_WHITESPACE } from './../Constants/regex.constants';
+import { MATCH_PARENT_PATH, MATCH_START_END_PARANTHESIS, MATCH_WHITESPACE } from './../Constants/regex.constants';
 import COLUMN_TYPE from './../Constants/columnType.constants';
 
 /**
@@ -140,7 +133,23 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
 export function CreateFinalColumns(columns, selectedColumns, relationship) {
     const finalColumnDefinition = [];
     let splitEnabled = false;
+    // let defaultColumns = false;
     // const selectedColumns = GetSelectedColumnDefinition(layout);
+
+    // if (selectedColumns.length == 0) {
+    //         for (const i in columns) {
+    //             selectedColumns.push({
+    //                 object: columns[i].parent, column: columns[i].name, headingCollapsed: true, heading: "", index: i
+    //             });
+    //             if(selectedColumns.length <6 ){
+    //                 continue;
+    //             }
+    //             else
+    //              break;
+    //         }
+    //     defaultColumns = true;
+    // }
+
     for (const i in selectedColumns) {
         const selected = selectedColumns[i];
         if (!selected.split) {
@@ -153,6 +162,7 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
                 // if (selected.filter) {
                 finalColumnDefinition[i].filter = selected.filter;
                 // }
+                // finalColumnDefinition[i].defaultLayout = defaultColumns;
 
                 const relationIndex = dict.parent;
 
@@ -167,7 +177,7 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
                 //     }
                 // }
             }
-        } else if(selected.separator){
+        } else if (selected.separator) {
             finalColumnDefinition[i] = { ...selected, isSplit: false }
             splitEnabled = false;
         }
@@ -186,7 +196,6 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
         }
 
     }
-    // console.log(finalColumnDefinition);
     return finalColumnDefinition;
 }
 
@@ -196,15 +205,15 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
  * @param  {object} menuDetail
  */
 export function ConvertMenuDetailForGenericPage(menuDetail) {
-    if (menuDetail.default_order) {
-        var splits = menuDetail.default_order.split(",");
+    if (menuDetail.order_definition) {
+        var splits = menuDetail.order_definition.split(",");
     }
 
     let layouts = menuDetail.list_layouts || menuDetail.layouts;
     menuDetail.layouts = GetParsedLayoutScript(layouts);
 
     const layout = layouts.length ? layouts[0] : null; // @TODO for now taking 0th element as default layout, change later 
-    menuDetail.layouts = menuDetail.layouts.filter(layout => layout && layout.name && layout.query && layout.name != 'default');
+    // menuDetail.layouts = menuDetail.layouts.filter(layout => layout && layout.name && layout.query && layout.name != 'default');
 
     delete menuDetail.list_layouts;
 
@@ -221,8 +230,8 @@ export function ConvertMenuDetailForGenericPage(menuDetail) {
         url: menuDetail.route,
         restricted_query: menuDetail.restricted_query,
         restrictColumnFilter: menuDetail.restricted_column,
-        order: menuDetail.default_order ? splits[0].trim() : "id",
-        sort: menuDetail.default_order ? splits[1].trim() : "desc",
+        order: menuDetail.order_definition ? splits[0].trim() : "id",
+        sort: menuDetail.order_definition ? splits[1].trim() : "desc",
         menuId: menuDetail.id,
         layouts: menuDetail.layouts,
         form_layouts: menuDetail.form_layouts,
@@ -345,13 +354,14 @@ export function GetPreSelectedMethods() {
     }
 
 
-    methods.redirect = ({ action, listingRow, history, genericData }) => {
+    methods.redirectGeneric = ({ action, listingRow, history, genericData }) => {
         let url = CreateUrl({ url: action.parameter, obj: listingRow });
         // var urlParams;
         // var userQuery = 0;
 
         url = createQueryUrl(url, genericData.restrictQuery, genericData);
-        history.push(url);
+        // history.push(url);
+        Location.navigate({ url });
         // if (angular.isDefined(event)) {
         //     if (event.metaKey || event.ctrlKey) {
         //         window.open("#/" + url, "_blank");
@@ -758,22 +768,37 @@ export function ParseRestrictedQuery(queryString) {
     if (!queryString) {
         return parsedQuery;
     }
-    const queries = queryString.split(' and ');
-    queries.forEach(query => {
-        if (!query) {
-            return;
-        }
+    let queries = queryString.split(' and ');
+    queries.forEach(orQuery => {
 
-        query = query.replace(MATCH_PARENT_PATH, '').replace(MATCH_WHITESPACE, '');
-        query = query.split('=');
-        let value = query[1];
+        orQuery = orQuery.replace(MATCH_START_END_PARANTHESIS, '');
+        const queryArr = orQuery.split(' or ');
+        queryArr.forEach(query => {
+            if (!query) {
+                return;
+            }
 
-        if (typeof value == 'string') {
-            value = value.replace(/'/g, '');
-        }
-        parsedQuery[query[0]] = value;
-        // parsedQuery.push(query)
+            query = query.replace(MATCH_PARENT_PATH, '').replace(MATCH_WHITESPACE, '');
+            query = query.split('=');
+            let value = query[1];
 
-    });
+            if (typeof value == 'string') {
+                value = value.replace(/'/g, '');
+            }
+            parsedQuery[query[0]] = value;
+            // parsedQuery.push(query)
+
+        });
+    })
+
     return parsedQuery;
+}
+
+/**
+ * Returns path including parent and column name having parent wrapped within '`'
+ * @param  {Object} column  
+ */
+export function GetPathWithParent(column) {
+    // if (column.path.split('.').length > 2) {
+    return `\`${column.parent}\`.${column.referenced_column ? column.referenced_column : column.name}`;
 }

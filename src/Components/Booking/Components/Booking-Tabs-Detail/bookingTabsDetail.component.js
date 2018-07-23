@@ -16,7 +16,7 @@ export default class BookingTabsDetail extends Component {
         this.state = {
             bookingTabsData: props.bookingTabsData,
             tabContent: [],
-            activeTab: 0
+            activeTab: -1
         };
     }
 
@@ -26,8 +26,21 @@ export default class BookingTabsDetail extends Component {
         });
     }
 
+    setActiveTab(tabContent, activeTab) {
+        tabContent.map((item, key) => {
+            if (item.data.length && activeTab == -1) {
+                activeTab = key;
+            }
+        })
+        return activeTab;
+    }
+
+
+
     render() {
-        const { bookingTabsData = {}, activeTab } = this.state;
+        const { bookingTabsData = {} } = this.state;
+
+        let { activeTab } = this.state;
 
         const tabContent = [
             {
@@ -239,8 +252,149 @@ export default class BookingTabsDetail extends Component {
                     field: "amount",
                     label: "Credit"
                 }]
+            }, {
+                name: 'Collection',
+                data: bookingTabsData.collection,
+                columns: [{
+                    field: "accounthead_id",
+                    label: "Account Head"
+                }, {
+                    field: "billing_date",
+                    label: "Debit"
+                }, {
+                    field: "amount",
+                    label: "Credit"
+                }]
+
+            }, {
+                name: 'Partner Collections',
+                data: bookingTabsData.partner_collections,
+                columns: [{
+                    field: "accounthead_id",
+                    label: "Account Head"
+                }, {
+                    field: "billing_date",
+                    label: "Debit"
+                }, {
+                    field: "amount",
+                    label: "Credit"
+                }, {
+                    field: "partner_tax",
+                    label: "Tax"
+                }]
+            }, {
+                name: 'Invoice',
+                data: bookingTabsData.invoices,
+                columns: [{
+                    field: "invoice_number",
+                    label: "Invoice Number"
+                }, {
+                    field: "invoice_date",
+                    label: "Invoice Date"
+                }, {
+                    field: "amount",
+                    label: "Amount"
+                }, {
+                    field: "created_by",
+                    label: "Created By"
+                }, {
+                    field: "created_at",
+                    label: "Created At"
+                }]
+            },{
+                name: 'Reset Invoice',
+                data: bookingTabsData.reset_invoice,
+                columns: [{
+                    field: "old_amount",
+                    label: "Old Amount"
+                }, {
+                    field: "new_amount",
+                    label: "New Amount"
+                }, {
+                    field: "created_by",
+                    label: "Created By"
+                }, {
+                    field: "created_at",
+                    label: "Created At"
+                }]
+            },{
+                name: 'Booking Checklist',
+                data: bookingTabsData.booking_steps,
+                columns: [{
+                    field: "checklist_step.step_name",
+                    label: "Step Name"
+                }, {
+                    field: "checklist_step.description",
+                    label: "Description"
+                }, {
+                    field: "created_at",
+                    label: "Created At"
+                }, {
+                    field: "completed_at",
+                    label: "Completed At"
+                }]
+            },{
+                name: 'Booking Source',
+                data: bookingTabsData.source,
+                columns: [{
+                    field: "public_address",
+                    label: "Public Address"
+                }, {
+                    field: "private_address",
+                    label: "Private Address"
+                }, {
+                    field: "source",
+                    label: "Source"
+                }, {
+                    field: "browser",
+                    label: "Browser"
+                }]
+            },{
+                name: 'Extension',
+                data: bookingTabsData.extension,
+                columns: [{
+                    field: "id",
+                    label: "Extension ID"
+                }, {
+                    field: "old_drop_time",
+                    label: "Old Time"
+                }, {
+                    field: "new_drop_time",
+                    label: "New Time"
+                }, {
+                    field: "extension_time",
+                    label: "Extended Time"
+                }, {
+                    field: "cost",
+                    label: "Cost"
+                }, {
+                    field: "approved",
+                    label: "Approved"
+                }, {
+                    field: "paid",
+                    label: "Paid"
+                }, {
+                    field: "created_by",
+                    label: "Created By"
+                }, {
+                    field: "created_at",
+                    label: "Created At"
+                },{
+                    field: "deleted_at",
+                    label: "Cancelled Time"
+                },{
+                    field: "user_requested",
+                    label: "User Requested"
+                }]
             }
         ]
+
+        if (tabContent) {
+            activeTab = this.setActiveTab(tabContent, activeTab);
+        }
+
+
+
 
         return (
 
@@ -251,12 +405,15 @@ export default class BookingTabsDetail extends Component {
                             tabContent.map((tab, key) => (
                                 <NavItem key={key}>
                                     {
-                                        tab.data.length > 0 &&
-                                        <NavLink
-                                            className={classnames({ active: activeTab === key ? 'active' : '' })}
-                                            onClick={() => { this.toggle(key, tab); }}>
-                                            <i className="fa fa-bars"></i> {tab.name}
-                                        </NavLink>
+                                        tab.data.length > 0 ?
+                                            <NavLink
+                                                className={classnames({ active: activeTab === key ? 'active' : '' })}
+                                                onClick={() => { this.toggle(key, tab); }}>
+                                                <i className="fa fa-bars"></i> {tab.name}
+                                            </NavLink>
+
+                                            :
+                                            null
                                     }
                                 </NavItem>
                             ))

@@ -1,24 +1,16 @@
 import React, { Component } from 'react';
-import { Collapse, Button, CardBody, Card } from 'reactstrap';
-
 import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 // import SelectBox from './../Forms/Components/Select-Box/selectBox';
 
-import { SubscribeToEvent, UnsubscribeEvent } from './../../Utils/stateManager.utils';
+import { Location } from 'drivezy-web-utils/build/Utils';
+import { Get, BuildUrlForGetCall, SelectFromOptions, IsObjectHaveKeys } from 'common-js-util';
 
 import './listingSearch.component.css'
 import GLOBAL from './../../Constants/global.constants';
 
-import { SelectFromOptions, IsUndefined, IsObjectHaveKeys } from './../../Utils/common.utils';
-import { Location } from './../../Utils/location.utils';
-import { GetTime, TimeOperation } from './../../Utils/time.utils';
-import { Get } from './../../Utils/http.utils';
-import { BuildUrlForGetCall } from './../../Utils/common.utils';
-import DatePicker from './../Forms/Components/Date-Picker/datePicker';
-
 //let activeColumn = {};
 
-export default class ListingSearch extends React.Component {
+export default class ListingSearch extends Component {
     urlParams = Location.search();
 
     constructor(props) {
@@ -46,7 +38,7 @@ export default class ListingSearch extends React.Component {
      * extracts query from string and assing value
      */
     initialize = async (props) => {
-        const { dictionary, searchQuery, searchDetail, localSearch } = props;
+        const { dictionary, searchQuery, searchDetail } = props;
         let selectedColumn;
 
 
@@ -111,7 +103,6 @@ export default class ListingSearch extends React.Component {
         })
 
         this.setState({ activeColumn: select });
-        console.log(this.state.activeColumn);
     }
 
     /**
@@ -175,9 +166,14 @@ export default class ListingSearch extends React.Component {
             history: this.props.history, match: this.props.match
         };
 
-        query += this.state.activeColumn.name + ' like "%25' + event.target.value + '%25"';
-        urlParams.search = query;
-        Location.search(urlParams, { props: paramProps });
+        if (event.target.value) {
+            query += this.state.activeColumn.name + ' like "%25' + event.target.value + '%25"';
+            urlParams.search = query;
+        } else {
+            delete urlParams.search
+        }
+        this.setState({ query: event.target.value });
+        Location.search(urlParams, { reset: true });
     }
 
     /**
@@ -195,13 +191,8 @@ export default class ListingSearch extends React.Component {
 
     searchLocally = ({ event }) => {
         let selectedColumn = this.state.activeColumn;
-        console.log(event);
-        console.log(selectedColumn)
-        // this.callFunction(event);
         this.props.onEdit(selectedColumn, event.target.value);
-
         this.setState({ query: event.target.value });
-
         // this.
     }
 

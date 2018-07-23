@@ -1,9 +1,7 @@
 
-import { IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall, TrimQueryString, IsObjectHaveKeys } from './common.utils';
-import { GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, ParseRestrictedQuery } from './generic.utils';
+import { Get, IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall, TrimQueryString, IsObjectHaveKeys } from 'common-js-util';
 
-import { Get } from './http.utils';
-import { GetParsedLayoutScript } from './generic.utils';
+import { GetParsedLayoutScript, GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, ParseRestrictedQuery } from './generic.utils';
 
 import { ROUTE_URL } from './../Constants/global.constants';
 
@@ -165,12 +163,16 @@ function PrepareObjectForListing(result, { extraParams }) {
         }
 
         let formPreference = {};
-        const formPreferences = GetParsedLayoutScript(configuration.form_layouts);
-        if (formPreferences) {
-            formPreference = formPreferences[0] || {};
+        let formPreferences = [];
+        if (IsObjectHaveKeys(configuration.form_layouts)) {
+            formPreferences = GetParsedLayoutScript(configuration.form_layouts);
+            // formPreference = formPreferences[0] || {};
         } else {
-            formPreference = model.form_layouts[0] || {};
+            formPreferences = GetParsedLayoutScript(model.form_layouts);   
         }
+
+        formPreference = formPreferences[0] || {};
+
         if (IsObjectHaveKeys(formPreference)) {
             if (typeof formPreference.column_definition == 'object') {
                 formPreference.column_definition = formPreference.column_definition;

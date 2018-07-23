@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
-import { Location } from './../../Utils/location.utils';
+import { Location } from 'drivezy-web-utils/build/Utils';
 
 import './ListingPagination.css';
 
@@ -187,7 +187,7 @@ export default class ListingPagination extends Component {
                 {
                     statsData && statsData.total > 0 &&
                     <div className="pagination-record">
-                        Showing {current_page ? ((((current_page) * limit) - limit) + 1) : 0} - {current_page ? ((current_page) * limit) : 0} results from {statsData ? statsData.total : 0} total.
+                        Showing {current_page ? ((((current_page) * limit) - limit) + 1) : 0} - {current_page ? ((current_page) * limit) : 0} results from {statsData ? statsData.total : 0}
                     </div>
                 }
             </div>

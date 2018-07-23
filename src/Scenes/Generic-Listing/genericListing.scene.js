@@ -3,8 +3,13 @@ import React, { Component } from 'react';
 import './genericListing.css';
 
 import {
-    Card, CardBody, Button
+    Card, CardBody
 } from 'reactstrap';
+
+import { HotKeys } from 'react-hotkeys';
+
+import { Get, SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent, BuildUrlForGetCall, SelectFromOptions, CopyToClipBoard } from 'common-js-util';
+import { GetUrlParams, Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
 import DynamicFilter from './../../Components/Dynamic-Filter/dynamicFilter.component';
 import ConfigureDynamicFilter from './../../Components/Configure-Filter/configureFilter.component';
@@ -15,19 +20,9 @@ import CustomAction from './../../Components/Custom-Action/CustomAction.componen
 import PredefinedFilter from './../../Components/Dropdown-Filter/filter.component';
 import ListingSearch from './../../Components/Listing-Search/listingSearch.component';
 
-import { HotKeys } from 'react-hotkeys';
-
-import { CopyToClipBoard } from './../../Utils/common.utils';
-import ToastUtils from './../../Utils/toast.utils';
-import { Get } from './../../Utils/http.utils';
-import { BuildUrlForGetCall } from './../../Utils/common.utils';
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
-import { GetUrlParams, Location } from './../../Utils/location.utils';
-import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
+import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns, GetPathWithParent } from './../../Utils/generic.utils';
 import { GetListingRecord } from './../../Utils/genericListing.utils';
-import { SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent } from './../../Utils/stateManager.utils';
-
-import { InjectMessage } from './../../Utils/inject-method/injectScript.utils'
 
 export default class GenericListing extends Component {
     filterContent = {};
@@ -122,7 +117,7 @@ export default class GenericListing extends Component {
 
     openAggregationResult = async (operator, caption, data) => {
         let options = GetDefaultOptions();
-        options.aggregation_column = data.selectedColumn.name;
+        options.aggregation_column = data.selectedColumn.path;
         options.aggregation_operator = operator;
 
         const url = BuildUrlForGetCall(data.menuDetail.url, options);
@@ -130,7 +125,7 @@ export default class GenericListing extends Component {
         const result = await Get({ url });
 
         if (result.success) {
-            ToastUtils.success({ description: result.response, title: caption });
+            ToastNotifications.success({ description: result.response, title: caption });
         }
     }
 
@@ -140,7 +135,7 @@ export default class GenericListing extends Component {
         };
 
         let query = '';
-        if (data.selectedColumn.path.split(".").length == 1) { // for columns which is child of table itself
+        if (data.selectedColumn.path.split(".").length == 2) { // for columns which is child of table itself
             if (this.urlParams.query) { // if previous query present then it will executed
                 let a = {};
                 let f = 0;
@@ -155,7 +150,8 @@ export default class GenericListing extends Component {
                 }
                 if (f == 0) { // if not overlappin
 
-                    query = this.urlParams.query + ' AND ' + data.selectedColumn.name + method[0] + "'" + data.listingRow[data.selectedColumn.name] + "'";
+                    query = this.urlParams.query + ' AND ' + GetPathWithParent(data.selectedColumn) + method[0] + "'" + data.listingRow[data.selectedColumn.path] + "'";
+                    // query = this.urlParams.query + ' AND ' + data.selectedColumn.path + method[0] + "'" + data.listingRow[data.selectedColumn.path] + "'";
 
                     this.urlParams.query = query;
                     Location.search(this.urlParams, { props: paramProps });
@@ -168,12 +164,13 @@ export default class GenericListing extends Component {
                 }
             } else { // if previous query not present then it will executed
 
-                query = data.selectedColumn.name + method[0] + "'" + data.listingRow[data.selectedColumn.name] + "'";
+                // query = `\`${data.selectedColumn.parent}\`${data.selectedColumn.name}${method[0]}'${data.listingRow[data.selectedColumn.path]}`;
+                query = GetPathWithParent(data.selectedColumn) + method[0] + "'" + data.listingRow[data.selectedColumn.path] + "'";
 
                 this.urlParams.query = query;
                 Location.search(this.urlParams, { props: paramProps });
             }
-        } else if (data.selectedColumn.path.split(".").length == 2) { // This will executed when showmatching clicked second time
+        } else if (data.selectedColumn.path.split(".").length == 3) { // This will executed when showmatching clicked second time
             let regex = /.([^.]*)$/; // filters out anything before first '.'
             let path = data.selectedColumn.path.replace(regex, "");
             if (this.urlParams.query) { // if previous query present then it will executed
@@ -241,17 +238,21 @@ export default class GenericListing extends Component {
     predefinedFiltersUpdated = (latyouts) => {
         const { genericData } = this.state;
         genericData.layouts = latyouts;
+        const layoutId = genericData.layout ? genericData.layout.id : null;
+        genericData.layout = SelectFromOptions(genericData.layouts, layoutId, 'id') || [];
         // this.setState({ genericData });
         this.state.genericData = genericData;
     }
 
     layoutChanges = (layout) => {
-        let { genericData } = this.state;
+        let { genericData, menuDetail } = this.state;
         genericData.layout = layout;
+        menuDetail.layout = layout;
         if (layout && layout.column_definition) {
             genericData.finalColumns = CreateFinalColumns(genericData.columns, layout.column_definition, genericData.relationship);
             // this.setState({ genericData });
             this.state.genericData = genericData;
+            this.state.menuDetail = menuDetail;
             this.getListingData();
         }
     }
@@ -386,6 +387,8 @@ export default class GenericListing extends Component {
                                         </Card> : null
                                 }
 
+                                {/* { (finalColumns[0].defaultLayout) ? <div className="noColumnMessage">No columns were selected, displaying default columns</div> : null} */}
+
                                 {
                                     (finalColumns && finalColumns.length) ?
                                         (genericData.stats.total ? <ListingPagination history={history} match={match} current_page={genericData.currentPage} limit={genericData.limit} statsData={genericData.stats} /> : null) : <div className="noListMessage">Looks like no columns are selected , Configure it by pressing the settings icon.</div>
@@ -412,7 +415,7 @@ export default class GenericListing extends Component {
             onClick: (data) => {
                 let id = data.listingRow[data.starter + '.id'];
                 CopyToClipBoard(id);
-                ToastUtils.success({ description: "Id - " + id + " has been copied", title: 'Copy Id' });
+                ToastNotifications.success({ description: "Id - " + id + " has been copied", title: 'Copy Id' });
             },
             disabled: false
         }, { subMenu: null }, {

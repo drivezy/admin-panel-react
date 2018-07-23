@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import './header.css';
+import { SubscribeToEvent } from 'common-js-util';
 
 import ActiveModule from './../../Components/Active-Module/ActiveModule.component';
 import PageNav from './../../Components/Page-Nav/PageNav';
 
 import RightClick from './../../Components/Right-Click/rightClick.component';
-import { SubscribeToEvent } from './../../Utils/stateManager.utils';
 
 export default class Header extends Component {
     constructor(props) {
