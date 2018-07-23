@@ -14,8 +14,9 @@ import { PreserveState } from './../Utils/preserveUrl.utils';
 import { GetMenusFromApi } from './../Utils/menu.utils';
 import LoadAsync from './../Utils/loadAsyncScripts.utils';
 import { Location } from './../Utils/location.utils';
+import { GetUserPreferences } from './../Utils/userPreference.utils';
 import { Spotlight } from '../Components/Spotlight-Search/spotlightSearch.component';
-
+import { SubscribeToEvent } from './../Utils/stateManager.utils';
 
 
 // import { GetProperties } from './../Utils/openProperty.utils';
@@ -33,7 +34,11 @@ export default class IndexRouter extends Component {
         this.state = {
             sideNavExpanded: true,
             menuFetched: true,
-            elem: true
+            elem: true,
+            keyMap: {
+                moveUp: 'Shift+B',
+                // spotlight: 'meta+f'
+            }
         }
         // props.GetCities();
         Location.getHistoryMethod(this.getRouterProps); // pass methods, so that location utils can get history object
@@ -41,10 +46,11 @@ export default class IndexRouter extends Component {
 
 
     keyMap = {
-        moveUp: 'Shift+b',
+        moveUp: 'Shift+B',
     }
 
     handlers = {
+
         'moveUp': (event) => this.toggleSideNav(this.state.sideNavExpanded),
         'spotlight': (event) => {
             console.log(event);
@@ -84,31 +90,51 @@ export default class IndexRouter extends Component {
         // LoginCheck();
 
         // Load the preferences
-        const preference = await GetPreferences();
+        const preference = await GetUserPreferences();
 
         if (preference.success) {
             this.assignSpotlight(preference.response);
         }
+
+        SubscribeToEvent({ eventName: 'launchSpotlight', callback: this.assignSpotlight.bind(this) })
     }
 
+
+    
+
     assignSpotlight = (preference) => {
-        let spotlight = preference.filter(entry => entry.parameter == "spotlightkeys").pop();
+        let spotlight;
+        if (Array.isArray(preference)) {
+            spotlight = preference.filter(entry => entry.parameter == "spotlightkeys").pop();
+        }
+        else {
+            spotlight = preference.name;
+        }
 
         if (spotlight) {
             let keys = JSON.parse(spotlight.value).map(key => key.key).join('+');
-            this.keyMap['spotlight'] = keys;
+            let { keyMap } = this.state;
+
+            keyMap['spotlight'] = keys;
+
+            this.setState({ keyMap });
+            console.log(this.state.keyMap);
         }
     }
+
+
 
     getRouterProps = () => ({ history: this.props.history });
 
     render() {
         const { match, history } = this.props; // match.path = '/'
         const menus = this.menus || [];
-
+        const { keyMap } = this.state;
+        console.log(keyMap);
+        console.log(this.handlers)
         return (
             <div>
-                <HotKeys focused={true} attach={window} keyMap={this.keyMap} handlers={this.handlers}>
+                <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={this.handlers}>
                     <div className="app-container">
                         {/* Landing Is the Basic Layout that builds the routes and the layout */}
                         <Landing match={match} menus={menus} history={history} />

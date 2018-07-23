@@ -39,13 +39,17 @@ import ToastUtils from './../Utils/toast.utils';
  */
 export default class BasicRoute extends Component {
     state = {
-        loggedUser: {}
+        loggedUser: {},
+
     };
+
+
 
     componentDidMount() {
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
 
         LoginCheck();
+
     }
 
     userDataFetched = (data) => {
@@ -55,6 +59,8 @@ export default class BasicRoute extends Component {
             this.setState({ loggedUser: data });
         }
     }
+
+
 
     render() {
         const { loggedUser } = this.state;
