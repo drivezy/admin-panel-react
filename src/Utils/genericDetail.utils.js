@@ -91,7 +91,7 @@ export function GetDataForPortlet({ portletDetail, genericDetailObject, portletD
     var obj = {};
     obj.data = portletDetail.data;
 
-    obj.modelClass = portletDetail.model_class;
+    obj.modelHash = portletDetail.model_hash;
     // obj.base = portletDetail.base;
 
     let { relationship, dictionary } = portletDetail;

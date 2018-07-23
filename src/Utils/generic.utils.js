@@ -8,10 +8,6 @@ import { ConfirmUtils } from './confirm-utils/confirm.utils';
 import { ProcessForm } from './formMiddleware.utils';
 
 import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
-import { GetMenuDetailEndPoint, FormDetailEndPoint } from './../Constants/api.constants';
-import { RECORD_URL } from './../Constants/global.constants';
-import { MATCH_PARENT_PATH, MATCH_WHITESPACE } from './../Constants/regex.constants';
-import COLUMN_TYPE from './../Constants/columnType.constants';
 
 // import FormCreator from './../Components/Form-Creator/formCreator.component'
 import PortletTable from '../Components/Portlet-Table/PortletTable.component';
@@ -22,6 +18,10 @@ import ParseComponent from './../Components/Generic-Column-Filters/parseComponen
 import TableWrapper from './../Components/Table-Wrapper/tableWrapper.component';
 import PreferenceSetting from './../Components/Preference-Setting/preferenceSetting.component';
 
+import { GetMenuDetailEndPoint, FormDetailEndPoint } from './../Constants/api.constants';
+import { ROUTE_URL, RECORD_URL } from './../Constants/global.constants';
+import { MATCH_PARENT_PATH, MATCH_WHITESPACE } from './../Constants/regex.constants';
+import COLUMN_TYPE from './../Constants/columnType.constants';
 
 /**
  * Fetches Menu detail to render generic page
@@ -104,6 +104,8 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
             selectedColumn.model_id = columns[i][j].model_id
             selectedColumn.name = columns[i][j].name;
             selectedColumn.visibility = columns[i][j].visibility;
+            selectedColumn.required = columns[i][j].required;
+            selectedColumn.nullable = columns[i][j].nullable;
             selectedColumn.reference_model = columns[i][j].reference_model;
             selectedColumn.display_name = columns[i][j].display_name;
 
@@ -165,9 +167,12 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
                 //     }
                 // }
             }
-        } else {
+        } else if(selected.separator){
+            finalColumnDefinition[i] = { ...selected, isSplit: false }
+            splitEnabled = false;
+        }
+        else {
             finalColumnDefinition[i] = { ...selected, isSplit: true }
-
             splitEnabled = !splitEnabled;
 
         };
@@ -181,6 +186,7 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
         }
 
     }
+    // console.log(finalColumnDefinition);
     return finalColumnDefinition;
 }
 
@@ -304,10 +310,10 @@ export function ConvertDependencyInjectionToArgs(dependencies) {
 export function RegisterMethod(methodArr) {
     const methods = {};
     for (var i in methodArr) {
-       
+
         const methodObj = methodArr[i];
 
-        if(!methodObj) { 
+        if (!methodObj) {
             return;
         }
         if (methodObj.definition && typeof methodObj.definition == 'object' && methodObj.definition.script) {
@@ -483,10 +489,10 @@ export function GetPreSelectedMethods() {
         const deletekey = IsUndefinedOrNull(action.redirectValueName) ? listingRow.id : listingRow[action.redirectValueName];
 
         const method = async () => {
-            const result = await Delete({ url: `${genericData.module}/${deletekey}` });
+            const result = await Delete({ url: `${genericData.url}/${deletekey}`, urlPrefix: ROUTE_URL });
             if (result.success) {
                 action.callback();
-                ToastNotifications.success('Records has been deleted');
+                ToastNotifications.success({ title: 'Records has been deleted' });
             }
         }
 
@@ -549,7 +555,7 @@ export function GetPreSelectedMethods() {
             modelAliasId: genericData.modelAliasId,
             route: genericData.url,
             name: method + ' ' + genericData.starter,
-            modelClass: genericData.modelClass
+            modelHash: genericData.modelHash
         };
     }
     return methods;
@@ -713,7 +719,7 @@ export function RemoveStarterFromThePath({ data, starter }) {
 }
 
 export function GetParsedLayoutScript(listLayouts) {
-    if(!Array.isArray(listLayouts)) { 
+    if (!Array.isArray(listLayouts)) {
         return [];
     }
     return listLayouts.map(layout => {
@@ -731,6 +737,9 @@ export function GetParsedLayoutScript(listLayouts) {
 
 export function GetChangedMethods(newValues, originalValues = {}) {
     const data = {};
+    if (!IsObjectHaveKeys(originalValues)) {
+        return newValues;
+    }
     if (IsObjectHaveKeys(newValues)) {
         for (let i in newValues) {
             const newValue = newValues[i];
@@ -759,7 +768,7 @@ export function ParseRestrictedQuery(queryString) {
         query = query.split('=');
         let value = query[1];
 
-        if(typeof value == 'string')  {
+        if (typeof value == 'string') {
             value = value.replace(/'/g, '');
         }
         parsedQuery[query[0]] = value;

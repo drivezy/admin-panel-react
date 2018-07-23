@@ -103,9 +103,7 @@
             }
         }
     }
-    .form-settings{
-
-    }}
+    }
     .modal-footer{
         justify-content: none;
         .leftButtons{
@@ -115,6 +113,15 @@
                     background: themed('warningColor');
                     color: themed('primaryLight');
                 }
+            }
+        }
+    }
+
+    .form-settings{
+        .btn{
+            @include themify($themes){
+                background: themed('darkHeader');
+                color: themed('primaryLight');
             }
         }
     }

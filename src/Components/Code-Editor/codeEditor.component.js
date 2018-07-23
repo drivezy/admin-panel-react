@@ -39,9 +39,13 @@ export default class CodeEditor extends Component {
         }
     }
 
+    UNSAFE_componentWillReceivePropscomponentWillReceiveProps(nextProps) {
+        this.setState({ value: nextProps.value || '' });
+    }
+
     onChange = (newValue) => {
         this.setState({ value: newValue });
-        
+
     }
 
     editorComponent = () => {
@@ -175,7 +179,7 @@ export default class CodeEditor extends Component {
             var params = {
                 name: name + ' Script',
                 description: name + " Script for " + '',
-                source_type: payload.modelClass,
+                source_type: payload.modelHash,
                 // source_type: 'Drivezy\\LaravelRecordManager\\Models\\ModelRelationship',
                 // source_type: name,
                 source_id: payload.data.id,
@@ -187,7 +191,8 @@ export default class CodeEditor extends Component {
             if (result.success) {
 
                 this.props.onSubmit(result.response.id, {});
-                this.loadScript(result.response.id);
+                this.setState({ scriptId: result.response.id });
+                // this.loadScript(result.response.id);
             }
         }
     }
@@ -236,13 +241,27 @@ export default class CodeEditor extends Component {
         const { buttonComponent } = this.props;
         return (
             <div>
-                {
-                    buttonComponent ? // @TODO trigger component can be sent from parent component, as of now its not fully functional
-                        // buttonComponent()
-                        <Button onClick={(e) => this.openEditor(e)} color="danger">Edit Script</Button>
-                        :
-                        <Button onClick={(e) => this.openEditor(e)} color="primary">{this.state.scriptId ? 'Edit' : 'Add'} Script</Button>
-                }
+                <div className="col inline">
+                    {
+                        buttonComponent ? // @TODO trigger component can be sent from parent component, as of now its not fully functional
+                            // buttonComponent()
+                            <Button onClick={(e) => this.openEditor(e)} color="danger">Edit Script</Button>
+                            :
+                            <Button onClick={(e) => this.openEditor(e)} color="primary">{this.state.scriptId ? 'Edit' : 'Add'} Script</Button>
+                    }
+                </div>
+
+                <div className="col inline">
+                    {
+                        this.state.scriptId ?
+                            <button className="btn btn-secondary" onClick={() => { this.setState({ scriptId: null }); this.props.onSubmit(null, {})}}>
+                                Remove Script
+                            </button>
+                            :
+                            null
+                    }
+
+                </div>
 
                 {this.modalElement()}
             </div>

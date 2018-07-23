@@ -92,7 +92,7 @@ export default class ReferenceInput extends Component {
     }
     render() {
 
-        const { column } = this.props;
+        const { column, isClearable } = this.props;
         const reference_model = column.reference_model ? column.reference_model : {};
 
         const { url, value } = this.state;
@@ -101,6 +101,7 @@ export default class ReferenceInput extends Component {
             <div className="reference-input">
                 <SelectBox
                     name={this.props.name}
+                    isClearable={isClearable}
                     onChange={this.props.onChange}
                     index="id"
                     field={reference_model.display_column || column.display_column}
