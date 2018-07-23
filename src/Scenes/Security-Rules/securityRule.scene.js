@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 
-import { GetUrlParams, Location, ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
+import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
+import { GetUrlParams, Location } from 'drivezy-web-utils/build/Utils/location.utils';
+
+
 import { Get, Put, Post, Delete, BuildUrlForGetCall, IsObjectHaveKeys } from 'common-js-util';
 
 import ScriptInput from './../../Components/Forms/Components/Script-Input/scriptInput.component';

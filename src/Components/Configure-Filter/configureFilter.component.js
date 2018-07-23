@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Collapse } from 'reactstrap';
 
 import { SubscribeToEvent, UnsubscribeEvent, Get } from 'common-js-util';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 
 import Typeahead from './../Forms/Components/Typeahead/typeahead.component';
 import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
@@ -11,7 +12,6 @@ import DatePicker from './../Forms/Components/Date-Picker/datePicker';
 import { SelectFromOptions, BuildUrlForGetCall, IsUndefinedOrNull, IsUndefined } from './../../Utils/common.utils';
 import { RawStringQueryToObject, RemoveLastWord, GetSelectedColumn } from './../../Utils/dynamicFilter.utils';
 import { GetTime, TimeOperation } from './../../Utils/time.utils';
-import { Location } from 'drivezy-web-utils/build/Utils';
 
 import GLOBAL from './../../Constants/global.constants';
 import COLUMN_TYPE from './../../Constants/columnType.constants';

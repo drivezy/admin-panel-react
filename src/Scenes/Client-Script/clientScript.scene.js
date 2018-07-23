@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import SelectBox from './../../Components/Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import ScriptInput from './../../Components/Forms/Components/Script-Input/scriptInput.component';
 
-import { GetUrlParams, Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
+import {  ToastNotifications } from 'drivezy-web-utils/build/Utils';
+import { GetUrlParams, Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { Get, Put, BuildUrlForGetCall, IsObjectHaveKeys  } from 'common-js-util';
 
 import { GetColumnDetail, ExtractColumnName } from './../../Utils/panel.utils';

@@ -13,7 +13,7 @@ import AceEditor from 'react-ace';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import { Get, Post, Put, SelectFromOptions } from 'common-js-util';
-import { GetItem, SetItem } from 'drivezy-web-utils/build/Utils';
+import { GetItem, SetItem } from 'drivezy-web-utils/build/Utils/localStorage.utils';
 
 import 'brace/mode/php';
 import 'brace/mode/javascript';

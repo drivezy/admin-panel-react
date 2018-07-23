@@ -5,12 +5,12 @@ import {
 } from 'react-router-dom';
 
 /** Components */
-import { GetItem, SetItem, ToastNotifications, LoaderUtils } from 'drivezy-web-utils/build/Utils';
+import { ToastNotifications, LoaderUtils } from 'drivezy-web-utils/build/Utils';
+import { GetItem, SetItem } from 'drivezy-web-utils/build/Utils/localStorage.utils';
 
 import { InitializeCommonJs } from 'common-js-util';
 
 import HomeScene from './../../Scenes/Home-Scene/home.scene';
-import GenericListing from './../../Scenes/Generic-Listing/genericListing.scene';
 // import GenericDetail from './../../Scenes/Generic-Detail/genericDetail.scene';
 import SideNav from './../../Scenes/Side-Nav/sideNav.scene';
 import Header from './../../Scenes/Header/header.scene';
@@ -41,6 +41,11 @@ export default class LandingApp extends Component {
             sideNavExpanded: false
         }
         this.loadedComponent = [];
+        // console.log('tesd');
+
+        // SetItem('test', 1);
+        // console.log(GetItem('test'));
+
         InitializeCommonJs({
             GLOBAL,
             ToastNotifications,

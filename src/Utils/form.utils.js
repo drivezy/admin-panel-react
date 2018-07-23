@@ -1,6 +1,6 @@
 
 import { StoreEvent, Get, Post, Delete, Put, BuildUrlForGetCall, IsUndefined } from 'common-js-util';
-import { Location } from 'drivezy-web-utils/build/Utils';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 
 import { GetSourceMorphMap } from './preference.utils';
 import { ROUTE_URL } from './../Constants/global.constants';

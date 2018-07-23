@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { GetUrlParams, Location } from 'drivezy-web-utils/build/Utils';
+import { GetUrlParams, Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { StoreEvent, SubscribeToEvent, UnsubscribeEvent } from 'common-js-util';
 
 import DetailPortlet from './../../Components/Detail-Portlet/DetailPortlet.component';

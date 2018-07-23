@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { Button } from 'reactstrap';
 import { Post } from 'common-js-util';
-import { Location } from 'drivezy-web-utils/build/Utils';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 
 import { RECORD_URL } from './../../../../Constants/global.constants';
 

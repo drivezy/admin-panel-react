@@ -7,7 +7,7 @@ import { HotKeys } from 'react-hotkeys';
 import TypeaheadComponent from './../Forms/Components/Typeahead/typeahead.component';
 
 import { GetMenus } from './../../Utils/menu.utils';
-import { Location } from 'drivezy-web-utils/build/Utils';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 
 let subMenu;
 
