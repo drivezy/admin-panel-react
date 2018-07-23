@@ -11,7 +11,8 @@ import { CreateFinalColumns } from './../../Utils/generic.utils';
 
 import { CopyToClipBoard } from './../../Utils/common.utils';
 
-import { Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
+import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
 
 import './DetailIncludes.css';

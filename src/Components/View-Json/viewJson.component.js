@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './viewJson.css';
 
-import ModalWrapper from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
+import { ModalWrapper } from 'drivezy-web-utils/build/Components/Modal-Wrapper/modalWrapper.component';
 
 export default class ViewJson extends Component {
     constructor(props) {

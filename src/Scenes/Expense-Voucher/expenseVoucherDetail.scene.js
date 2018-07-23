@@ -5,7 +5,8 @@ import {
     Card, CardHeader, CardBody, Row, Col
 } from 'reactstrap';
 import { Get, Post, Put } from 'common-js-util';
-import { ToastNotifications, ConfirmUtils } from 'drivezy-web-utils/build/Utils';
+import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
+import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 
 import TableWrapper from './../../Components/Table-Wrapper/tableWrapper.component';
 

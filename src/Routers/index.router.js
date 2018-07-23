@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { HotKeys } from 'react-hotkeys';
 
-import { Location, PreserveState } from 'drivezy-web-utils/build/Utils';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
+import { PreserveState } from 'drivezy-web-utils/build/Utils';
 
 /** Component */
 import Landing from './../Components/Landing/landing.component';

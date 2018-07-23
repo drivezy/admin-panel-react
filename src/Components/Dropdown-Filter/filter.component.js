@@ -3,7 +3,7 @@ import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap
 import {ToastNotifications} from 'drivezy-web-utils/build/Utils';
 
 import { IsUndefined } from './../../Utils/common.utils';
-import { Location } from 'drivezy-web-utils/build/Utils';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { DeletePreference } from './../../Utils/preference.utils';
 
 import './filter.component.css';

@@ -5,7 +5,8 @@ import {
     Table, Dropdown, DropdownToggle, DropdownMenu
 } from 'reactstrap';
 
-import { Location, ToastNotifications } from 'drivezy-web-utils/build/Utils';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
+import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 import RightClick from './../../Components/Right-Click/rightClick.component';
