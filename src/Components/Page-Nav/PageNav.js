@@ -3,7 +3,8 @@ import './PageNav.css';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Redirect } from 'react-router-dom';
 
-import { ToastNotifications, LoaderComponent, LoaderUtils, ModalManager, ConfirmUtils } from 'drivezy-web-utils/build/Utils';
+import { ToastNotifications, LoaderComponent, LoaderUtils, ModalManager } from 'drivezy-web-utils/build/Utils';
+import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 import { SubscribeToEvent, Get, Post } from 'common-js-util';
 
 import GLOBAL from './../../Constants/global.constants';

@@ -9,7 +9,8 @@ import {
 import { withFormik, Field, Form } from 'formik';
 import Yup from 'yup';
 
-import { SetItem, ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
+import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
+import { SetItem } from 'drivezy-web-utils/build/Utils/localStorage.utils';
 import { Upload, Post, Put, SubscribeToEvent, IsObjectHaveKeys, IsUndefined } from 'common-js-util';
 
 import { GetChangedMethods } from './../../Utils/generic.utils';

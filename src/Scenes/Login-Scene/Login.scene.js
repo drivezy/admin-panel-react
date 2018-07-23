@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './Login.scene.css';
 import { Card, CardBody, Form, FormGroup, Label } from 'reactstrap';
 
-import { Location } from 'drivezy-web-utils/build/Utils';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { Post, SubscribeToEvent } from 'common-js-util';
 
 import GLOBAL from './../../Constants/global.constants';

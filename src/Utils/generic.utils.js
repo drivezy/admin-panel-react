@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { Location, ToastNotifications, ModalManager, ConfirmUtils } from 'drivezy-web-utils/build/Utils';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
+import {  ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
+import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 
 import { Get, Delete, IsUndefinedOrNull, BuildUrlForGetCall, IsObjectHaveKeys } from 'common-js-util';
 

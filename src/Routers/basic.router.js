@@ -4,8 +4,11 @@ import {
     Route, Switch, Redirect
 } from 'react-router-dom';
 
-import { ToastNotifications, ModalManager, ConfirmUtils } from 'drivezy-web-utils/build/Utils';
-import { ToastContainer, ModalWrapper, ConfirmModal } from 'drivezy-web-utils/build/Components';
+import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
+import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
+import { ToastContainer } from 'drivezy-web-utils/build/Components/Toast-Container/toastContainer.component';
+import { ModalWrapper } from 'drivezy-web-utils/build/Components/Modal-Wrapper/modalWrapper.component';
+import { ConfirmModal } from 'drivezy-web-utils/build/Components/Confirm-Modal-Wrapper/confirm.modal';
 
 // import { ToastContainer } from 'react-toastify';
 
@@ -18,6 +21,8 @@ import IndexRouter from './index.router';
 
 /** Scenes */
 import LoginScene from './../Scenes/Login-Scene/Login.scene';
+
+
 import SignupScene from './../Scenes/Signup-Scene/Signup.scene';
 /** Scenes End*/
 
@@ -48,7 +53,8 @@ export default class BasicRoute extends Component {
 
     componentDidMount() {
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
-
+        
+        // setTimeout(() => ConfirmUtils.confirmModal({ message: "Are you sure you want to request approval?", callback: () => console.log('hit') }), 2000);
         LoginCheck();
     }
 
@@ -72,8 +78,6 @@ export default class BasicRoute extends Component {
                     </Switch>
                 </Router>
                 <ToastContainer ref={(elem) => { ToastNotifications.register(elem); }} />
-
-
 
                 <ModalWrapper ref={(elem) => ModalManager.registerModal(elem)} />
                 <ConfirmModal ref={(elem) => ConfirmUtils.RegisterConfirm(elem)} />
