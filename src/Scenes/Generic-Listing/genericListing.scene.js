@@ -316,7 +316,7 @@ export default class GenericListing extends Component {
                         </div>
                         <div className="header-actions">
                             <CustomAction position="header" source={isTab ? source : undefined} callback={this.getListingData} parentData={parentData} menuDetail={menuDetail} history={history} genericData={genericData} actions={genericData.nextActions} placement={'as_header'} />
-                            <button className="refresh-button btn btn-sm" onClick={() => { this.refreshPage() }}>
+                            <button className="refresh-button btn btn-sm" onClick={(e) => { this.refreshPage(e) }}>
                                 <i className="fa fa-refresh"></i>
                             </button>
 
