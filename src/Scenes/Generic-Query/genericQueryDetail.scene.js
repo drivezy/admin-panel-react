@@ -151,10 +151,10 @@ export default class GenericQueryDetail extends Component {
         if (result.success) {
             const queryListing = result.response;
             this.setState({ queryListing });
-            console.log(result);
+            console.log(result.dictionary.invoice_details);
 
             let stats = result.stats ? result.stats : stats;
-            params.dictionary = result.dictionary ? result.dictionary : params.dictionary;
+            params.dictionary = result.dictionary ? result.dictionary.invoice_details : params.dictionary;
             params.includes = "";
             params.starter = queryParamsData.short_name;
 
