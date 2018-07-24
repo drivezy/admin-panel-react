@@ -8,7 +8,7 @@ import {
 
 import { HotKeys } from 'react-hotkeys';
 
-import { Get, SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent, BuildUrlForGetCall, SelectFromOptions, CopyToClipBoard  } from 'common-js-util';
+import { Get, SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent, BuildUrlForGetCall, SelectFromOptions, CopyToClipBoard } from 'common-js-util';
 import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
 import { GetUrlParams, Location } from 'drivezy-web-utils/build/Utils/location.utils';
 
@@ -46,6 +46,7 @@ export default class GenericListing extends Component {
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
+        this.urlParams = Location.search();
         const newProps = GetUrlParams(nextProps);
         this.state.params = newProps.params;
         this.state.queryString = newProps.queryString;
