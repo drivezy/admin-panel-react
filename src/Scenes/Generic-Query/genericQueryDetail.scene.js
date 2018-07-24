@@ -9,19 +9,18 @@ import QueryConfigureDynamicFilter from './../../Components/Query-Report/Query-C
 import QueryDashboardForm from './../../Components/Query-Report/Query-Dashboard-Form/queryDashboardForm.component';
 import QueryTable from './../../Components/Query-Report/Query-Table/queryTable.component';
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
-import { Get } from './../../Utils/http.utils';
+import { Get, Post } from 'common-js-util';
 import ListingPagination from './../../Components/Listing-Pagination/ListingPagination';
-import { GetUrlParams, Location } from './../../Utils/location.utils';
+import { GetUrlParams, Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { QueryData } from './../../Utils/query.utils';
 import { GetPreferences } from './../../Utils/preference.utils';
 import { BuildUrlForGetCall, IsObjectHaveKeys } from './../../Utils/common.utils';
-import { Post } from './../../Utils/http.utils';
 import { GetColumnsForListing, CreateFinalColumns, GetDefaultOptionsForQuery } from './../../Utils/query.utils';
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 
 
 import ListingSearch from './../../Components/Listing-Search/listingSearch.component';
-import { SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent } from './../../Utils/stateManager.utils';
+import { SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent } from 'common-js-util';
 
 
 export default class GenericQueryDetail extends Component {
@@ -47,9 +46,9 @@ export default class GenericQueryDetail extends Component {
             isCollapsed: false,
             arrowstate: 'show',
             arrow: 'down',
-            loading: true ,
+            loading: true,
             actions: []
-            
+
         };
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
@@ -114,33 +113,29 @@ export default class GenericQueryDetail extends Component {
     }
 
     getQueryParamsData = async () => {              //Get all the data 
-        const { queryId } = this.props.match.params;
-        const result = await QueryData(queryId);
+        const { id } = this.props.match.params;
+        const result = await QueryData(id);
         if (result.success) {
             let queryParamsData = result.response;
             console.log(queryParamsData);
-            this.setState({queryParamsData});
+            this.setState({ queryParamsData });
 
             let prefName = queryParamsData.short_name + ".list";
             console.log(queryParamsData);
             let preferences = await GetPreferences(prefName);
-            
+
             var preference = preferences.response.filter(function (item) {
                 return item.parameter == prefName;
             })
 
-//            let preference = preferences.response.filter((item) => {return item.parameter == prefName} );
+            //            let preference = preferences.response.filter((item) => {return item.parameter == prefName} );
 
-            
-
-            
-
-            this.setState({preference: preference});
+            this.setState({ preference: preference });
             // this.setState(queryParamsData);
             console.log(preference);
             this.getDataForListing();
 
-            this.setState({actions: queryParamsData.actions});
+            this.setState({ actions: queryParamsData.actions });
         }
     }
 
@@ -201,15 +196,15 @@ export default class GenericQueryDetail extends Component {
         this.setState({ resultData });
     }
 
-    // toggleMenu = (arrowstate, arrow) => {
-    //     const { isCollapsed } = this.state;
-    //     this.setState({ isCollapsed: !isCollapsed });
-    //     if (arrowstate == 'show')
-    //         this.setState({ arrowstate: 'hide', arrow: 'up' });
-    //     else
-    //         this.setState({ arrowstate: 'show', arrow: 'down' });
-    //     // StoreEvent({ eventName: 'ToggleAdvancedFilter', data: { isCollapsed: !isCollapsed, ...payload } });
-    // }
+    toggleMenu = (arrowstate, arrow) => {
+        const { isCollapsed } = this.state;
+        this.setState({ isCollapsed: !isCollapsed });
+        if (arrowstate == 'show')
+            this.setState({ arrowstate: 'hide', arrow: 'up' });
+        else
+            this.setState({ arrowstate: 'show', arrow: 'down' });
+        // StoreEvent({ eventName: 'ToggleAdvancedFilter', data: { isCollapsed: !isCollapsed, ...payload } });
+    }
 
     toggleAdvancedFilter = (payload) => {
         const { isCollapsed } = this.state;
@@ -256,7 +251,13 @@ export default class GenericQueryDetail extends Component {
                 <div className="page-bar">
                     <div className="listing-tools left">
                         <div className="search-box-wrapper">
-                            <ListingSearch localSearch={localSearch} onEdit={this.filterLocally} searchQuery={this.urlParams.search} dictionary={params.dictionary} />
+                            <ListingSearch
+                                localSearch={localSearch}
+                                onEdit={this.filterLocally}
+                                // searchDetail={{ name: genericData.model.display_column }}
+                                searchQuery={this.urlParams.search}
+                                dictionary={filterContent.dictionary}
+                            />
                         </div>
                         <div className="dynamic-filter-wrapper">
 
@@ -344,7 +345,7 @@ export default class GenericQueryDetail extends Component {
                                 <div className="content-name"> {queryParamsData.name} </div>
                             }
                         </div>
-                        <div className="metrics-container">
+                        {/* <div className="metrics-container">
                             {
                                 <div className="metrics-wrapper">
                                     <button className="metrics cursor-pointer" onClick={() => this.toggleMenu(arrowstate, arrow)}>
@@ -352,17 +353,17 @@ export default class GenericQueryDetail extends Component {
                                     </button>
                                 </div>
                             }
-                        </div>
+                        </div> */}
 
                     </div>
-                    {
+                    {/* {
                         this.state.isCollapsed &&
                         <div className="active-filters-container">
-                            {/* <div className="active-filters">
+                            <div className="active-filters">
                                 <button className="btn btn-lg btn-primary" onClick={(e) => { e.preventDefault(); this.addFilter(); }}><i className="fa fa-plus"></i></button>
-                            </div> */}
+                            </div>
                         </div>
-                    }
+                    } */}
                 </div>
 
                 <div className="reports-content">
@@ -390,7 +391,7 @@ export default class GenericQueryDetail extends Component {
                             queryData={queryParamsData}
                             actions={this.state.actions}
                         />
-                        
+
 
 
                     }

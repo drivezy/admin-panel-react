@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
 
-import { Location } from './../../../Utils/location.utils';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { IsUndefined } from '../../../Utils/common.utils';
 import { DeletePreference } from './../../../Utils/preference.utils';
 

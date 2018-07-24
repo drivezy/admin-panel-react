@@ -1,4 +1,4 @@
-import { Get,Post } from './../Utils/http.utils';
+import { Get,Post } from 'common-js-util';
 import { IsUndefinedOrNull } from './../Utils/common.utils';
 import { RECORD_URL } from './../Constants/global.constants';
 

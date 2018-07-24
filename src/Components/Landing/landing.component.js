@@ -133,7 +133,7 @@ export default class LandingApp extends Component {
                             <Route exact path='/ticket/:ticketId' component={TicketDetail} />
                             <Route exact path='/rosterTimeline' component={RosterTimeline} />
                             <Route exact path='/' component={HomeScene} />
-                            <Route exact path='/queryDetail/:queryId' component={GenericQueryDetail} />
+                            {/* <Route exact path='/manageReport/:queryId' component={GenericQueryDetail} /> */}
                             {/* <Route exact path='/user/:userId' component={UserDetail} /> */}
                             {/* <Route exact path='/vehicle/:vehicleId' component={VehicleDetail} /> */}
 

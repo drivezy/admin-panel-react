@@ -100,7 +100,7 @@ export default class GenericListing extends Component {
         const { menuDetail, genericData, queryString, currentUser, isTab } = this.state;
         GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser, isTab });
 
-    
+
     }
 
     dataFetched = ({ genericData, filterContent }) => {
@@ -293,7 +293,13 @@ export default class GenericListing extends Component {
                             <div className="generic-listing-search">
                                 {
                                     filterContent && filterContent.dictionary &&
-                                    <ListingSearch localSearch={localSearch} onEdit={this.filterLocally} searchDetail={{ name: genericData.model.display_column }} searchQuery={this.urlParams.search} dictionary={filterContent.dictionary} />
+                                    <ListingSearch
+                                        localSearch={localSearch}
+                                        onEdit={this.filterLocally}
+                                        searchDetail={{ name: genericData.model.display_column }}
+                                        searchQuery={this.urlParams.search}
+                                        dictionary={filterContent.dictionary}
+                                    />
                                 }
                             </div>
                             <div className="search-wrapper">
@@ -456,7 +462,7 @@ export default class GenericListing extends Component {
             icon: 'fa-chart-line',
             subMenu: true,
             onClick: (data, operator) => {
-              
+
                 this.openAggregationResult(operator.name.toLowerCase(), operator.name + ' of ' + data.selectedColumn.display_name + ' equals : ', data)
             }, disabled: (data) => {
                 return (data.selectedColumn.path.split('.').length != 1)
