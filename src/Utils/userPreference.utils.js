@@ -1,7 +1,6 @@
 
 
-import { Get, Post, Put, Delete } from './http.utils';
-import { IsObjectHaveKeys } from './common.utils';
+import { Get, Post, Put, Delete } from 'common-js-util';
 
 import { ListPreference , UserPreferenceEndPoint } from './../Constants/api.constants';
 import { RECORD_URL } from './../Constants/global.constants';
