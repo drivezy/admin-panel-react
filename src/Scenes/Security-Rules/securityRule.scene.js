@@ -144,6 +144,7 @@ export default class SecurityRule extends Component {
         const { id: roleId } = role;
 
         const result = await Post({ url: 'api/record/roleAssignment', body: { source_id, source_type, role_id: roleId }, urlPrefix: ROUTE_URL });
+        console.log(result);
         if (result.success) {
             rule.roles.push(result.response);
             this.setState({ rule });
@@ -208,9 +209,14 @@ export default class SecurityRule extends Component {
                     <div className="search-bar">
                         Security Rule
                     </div>
-                </div> */}
+        </div> */}
 
                 <div className='body'>
+
+                <div className="script-header">
+                    {<h6>Security Rule - {rule.id} </h6>}
+                </div>
+
                     <form name='securityRule' className="security-rule">
                         <div className='form-row'>
                             <div className='form-group'>
