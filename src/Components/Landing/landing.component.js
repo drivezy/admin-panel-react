@@ -42,7 +42,7 @@ export default class LandingApp extends Component {
             sideNavExpanded: false
         }
         this.loadedComponent = [];
-        // console.log('tesd');
+        console.log('testjf');
 
         // SetItem('test', 1);
         // console.log(GetItem('test'));
@@ -91,7 +91,10 @@ export default class LandingApp extends Component {
                                                     this.loadedComponent[parentIndex] = [];
                                                 }
                                                 if (!loadedComponent[parentIndex][index]) {
-                                                    this.loadedComponent[parentIndex][index] = LoadAsyncComponent(() => import(`./../../Scenes${state.component.path}`));
+                                                    // console.log('cehhfbdh');
+                                                    // this.loadedComponent[parentIndex][index] = () => <h1>g</h1>
+                                                    this.loadedComponent[parentIndex][index] = LoadAsyncComponent(state.component.path);
+                                                    // this.loadedComponent[parentIndex][index] = LoadAsyncComponent(() => require(`./../../Scenes${state.component.path}.js`));
                                                 }
                                                 const GenericListing = this.loadedComponent[parentIndex][index];
 
