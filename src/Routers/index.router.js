@@ -3,6 +3,7 @@ import { HotKeys } from 'react-hotkeys';
 
 import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { PreserveState } from 'drivezy-web-utils/build/Utils';
+import { SubscribeToEvent } from 'common-js-util';
 
 /** Component */
 import Landing from './../Components/Landing/landing.component';
@@ -17,7 +18,6 @@ import LoadAsync from './../Utils/loadAsyncScripts.utils';
 // import { Location } from './../Utils/location.utils';
 import { GetUserPreferences } from './../Utils/userPreference.utils';
 import { Spotlight } from '../Components/Spotlight-Search/spotlightSearch.component';
-import { SubscribeToEvent } from './../Utils/stateManager.utils';
 
 
 // import { GetProperties } from './../Utils/openProperty.utils';
