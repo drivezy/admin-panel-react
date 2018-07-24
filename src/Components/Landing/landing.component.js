@@ -42,7 +42,7 @@ export default class LandingApp extends Component {
             sideNavExpanded: false
         }
         this.loadedComponent = [];
-        console.log('testjf');
+        
 
         // SetItem('test', 1);
         // console.log(GetItem('test'));
@@ -126,7 +126,7 @@ export default class LandingApp extends Component {
                             {/* <Route exact path='/booking/:id' component={BookingDetail} /> */}
                             <Route exact path='/voucherDef/:voucherId' component={ExpenseVoucherDetail} />
                             <Route exact path='/userLicense/:userId' component={UserLicense} />
-                            <Spotlight ref={(elem) => SettingsUtil.registerModal(elem)} />
+                            
                             <Route exact path='/ticket/:ticketId' component={TicketDetail} />
                             <Route exact path='/rosterTimeline' component={RosterTimeline} />
                             <Route exact path='/' component={HomeScene} />

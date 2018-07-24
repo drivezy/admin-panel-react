@@ -12,4 +12,5 @@ module.exports = {
     closeModal: function ({ ...args }) {
         this._currentGlobalLoader.closeModal({ ...args });
     }
+    
 }

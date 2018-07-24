@@ -42,7 +42,7 @@ export default class IndexRouter extends Component {
             }
         }
         // props.GetCities();
-        // console.log(Location);
+        
         Location.getHistoryMethod(this.getRouterProps); // pass methods, so that location utils can get history object
     }
 
@@ -55,7 +55,7 @@ export default class IndexRouter extends Component {
 
         'moveUp': (event) => this.toggleSideNav(this.state.sideNavExpanded),
         'spotlight': (event) => {
-            console.log(event);
+            
             SettingsUtil.openSpotlightModal();
         }
     }
@@ -102,7 +102,7 @@ export default class IndexRouter extends Component {
     }
 
 
-    
+
 
     assignSpotlight = (preference) => {
         let spotlight;
@@ -119,8 +119,10 @@ export default class IndexRouter extends Component {
 
             keyMap['spotlight'] = keys;
 
-            this.setState({ keyMap });
-            console.log(this.state.keyMap);
+            // this.setState({ keyMap });
+            this.state.keyMap = keyMap;
+            this.forceUpdate();
+      
         }
     }
 
@@ -132,8 +134,7 @@ export default class IndexRouter extends Component {
         const { match, history } = this.props; // match.path = '/'
         const menus = this.menus || [];
         const { keyMap } = this.state;
-        console.log(keyMap);
-        console.log(this.handlers)
+
         return (
             <div>
                 <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={this.handlers}>

@@ -10,8 +10,9 @@ import {
 
 import { HotKeys } from 'react-hotkeys';
 
-import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
-import { StoreEvent } from './../../Utils/stateManager.utils';
+import { ModalManager } from 'drivezy-web-utils/build/Utils';
+import { StoreEvent } from 'common-js-util';
+
 import ThemeUtil from './../../Utils/theme.utils';
 import { SetUserPreference } from './../../Utils/userPreference.utils';
 import SettingsUtil from './../../Utils/settings.utils';
@@ -72,21 +73,21 @@ export default class ConfugreSettings extends Component {
 
     applyChanges = async () => {
         const { selectedTheme, selectedSpacing } = this.state;
-      
+
         ThemeUtil.setTheme(selectedTheme);
 
         ThemeUtil.setSpacing(selectedSpacing);
 
         ModalManager.closeModal();
 
-        console.log(this.state.keys);
+
 
         // this.focusSpotlight();
         const result = await SetUserPreference('spotlight', this.state.keys)
 
         let value = 1
 
-        console.log(result);
+
 
         StoreEvent({ eventName: 'launchSpotlight', data: { name: result.response } });
 
@@ -163,10 +164,7 @@ export default class ConfugreSettings extends Component {
                 keys.push(tempKey);
                 this.setState({ keys });
                 // this.state.keys.push(tempKey);
-                if (this.state.keys.length == 2) {
-                    console.log(this.state.keys);
 
-                }
             }
 
         });
@@ -259,15 +257,15 @@ export default class ConfugreSettings extends Component {
                                         (keys.length == 2) &&
                                         keys.map((value, key) =>
 
-                                            <div>
+                                            <div key={key}>
                                                 <span key={key} className="display-keys">
-                                                    {console.log(value)}
                                                     {value.key}
                                                 </span>
 
-                                                {key == 0 &&
-                                                    <span> +
-                                    </span>}
+                                                {
+                                                    key == 0 &&
+                                                    <span> + </span>
+                                                }
                                             </div>
 
                                         )
@@ -287,10 +285,10 @@ export default class ConfugreSettings extends Component {
                         </div>
                     </ModalFooter>
                 </div >
-             
-              {
-                  <Spotlight ref={ (elem) => SettingsUtil.registerModal(elem) } />
-              }
+
+                {
+                    <Spotlight ref={(elem) => SettingsUtil.registerModal(elem)} />
+                }
 
             </HotKeys>
         )
