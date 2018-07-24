@@ -1,9 +1,17 @@
-.body{
+.security-rule-container{
+    .script-header{
+        background-color: #ebeef0;
+        h6{
+            margin-bottom: 0rem;
+            padding: 10px 30px;
+        }
+    }
+    background-clip: #fff;}
+    .body{
     .clientScript{
         background-color: #fff;
         padding: 50px 0;
     }
-    padding: 30px;
     .form-row{
     justify-content: center;
     .form-group{
@@ -24,6 +32,9 @@
             width: 97%;
             display: flex;
         }
+        .col{
+            padding: 0;
+        }
         .col .inline{
             padding: 0;
         }
@@ -33,6 +44,7 @@
         width: 96%;
         display: flex;
         justify-content: flex-end;
+
         padding-bottom: 20px;
     }
 .description{
