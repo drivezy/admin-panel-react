@@ -126,7 +126,7 @@ export default class ClientScript extends Component {
         const { selectedOption } = this.state;
 
         return (
-            <div className='security-rule-container container'>
+            <div className='security-rule-container'>
                 {/* <div className="page-bar">
                     <div className="search-bar">
                         Security Rule

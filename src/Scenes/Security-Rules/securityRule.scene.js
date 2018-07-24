@@ -211,7 +211,7 @@ export default class SecurityRule extends Component {
                 </div> */}
 
                 <div className='body'>
-                    <form name='securityRule' className="clientScript">
+                    <form name='securityRule' className="security-rule">
                         <div className='form-row'>
                             <div className='form-group'>
                                 <div className="nameInput inputField">
@@ -250,7 +250,7 @@ export default class SecurityRule extends Component {
                             <div className='form-group'>
                                 {
                                     IsObjectHaveKeys(scriptPayload) &&
-                                    <div className="filterCondition col">
+                                    <div className="scriptInput col">
                                         <label>Script</label>
                                         <ScriptInput
                                             inline
