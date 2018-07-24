@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import { Collapse } from 'reactstrap';
 
+import { SubscribeToEvent, UnsubscribeEvent, Get } from 'common-js-util';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
+
 import Typeahead from './../Forms/Components/Typeahead/typeahead.component';
 import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 // import SelectBox from './../Forms/Components/Select-Box/selectBox';
 import DatePicker from './../Forms/Components/Date-Picker/datePicker';
 
-import { SubscribeToEvent, UnsubscribeEvent } from './../../Utils/stateManager.utils';
 import { SelectFromOptions, BuildUrlForGetCall, IsUndefinedOrNull, IsUndefined } from './../../Utils/common.utils';
 import { RawStringQueryToObject, RemoveLastWord, GetSelectedColumn } from './../../Utils/dynamicFilter.utils';
-import { Get } from './../../Utils/http.utils';
+import { GetPathWithParent } from './../../Utils/generic.utils';
 import { GetTime, TimeOperation } from './../../Utils/time.utils';
-import { Location } from './../../Utils/location.utils';
 
 import GLOBAL from './../../Constants/global.constants';
 import COLUMN_TYPE from './../../Constants/columnType.constants';
@@ -663,13 +664,13 @@ export default class ConfigureDynamicFilter extends Component {
         this.setState({ isCollapsed: true });
     }
 
-    getPathWithParent(column) {
-        // if (column.path.split('.').length > 2) {
-        return `\`${column.parent}\`.${column.referenced_column ? column.referenced_column : column.name}`;
-    }
+    // getPathWithParent(column) {
+    //     // if (column.path.split('.').length > 2) {
+    //     return `\`${column.parent}\`.${column.referenced_column ? column.referenced_column : column.name}`;
+    // }
 
     getQuery({ column, filter, value, joinMethod }) {
-        let columnString = this.getPathWithParent(column);
+        let columnString = GetPathWithParent(column);
         // } else {
         //     columnString = column.name;
         // }
@@ -691,11 +692,11 @@ export default class ConfigureDynamicFilter extends Component {
                 if (!IsUndefinedOrNull(value.column) && Object.keys(value.column).length) {
                     const joinMethod = value.joinMethod;
                     if (value.filter.includes('IS NULL') || value.filter.includes('IS NOT NULL')) {
-                        query += this.getPathWithParent(value.column) + value.filter + ' AND ';
+                        query += GetPathWithParent(value.column) + value.filter + ' AND ';
                     } else if (value.filter == ' BETWEEN ' || value.filter == ' NOT BETWEEN ') {
                         // query += value.column.name + value.filter + ''' + value.slot.startDate + "' and '" + value.slot.endDate + "'" + joinMethod;
                         // query += `${value.column.name}${value.filter} '${value.slot.startDate}' and '${value.slot.endDate}'${joinMethod}`;
-                        query += `${this.getPathWithParent(value.column)}${value.filter} '${value.inputField}' and '${value.secondInputField}'${joinMethod}`;
+                        query += `${GetPathWithParent(value.column)}${value.filter} '${value.inputField}' and '${value.secondInputField}'${joinMethod}`;
                     } else if (!IsUndefined(value.inputField)) {
                         switch (value.column.column_type_id) {
                             case 7:

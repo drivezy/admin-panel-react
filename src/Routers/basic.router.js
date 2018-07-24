@@ -4,32 +4,40 @@ import {
     Route, Switch, Redirect
 } from 'react-router-dom';
 
+import { ToastNotifications, ModalManager, LoaderUtils } from 'drivezy-web-utils/build/Utils';
+import { GetItem, SetItem } from 'drivezy-web-utils/build/Utils/localStorage.utils';
+import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 
+import { ToastContainer } from 'drivezy-web-utils/build/Components/Toast-Container/toastContainer.component';
+import { ModalWrapper } from 'drivezy-web-utils/build/Components/Modal-Wrapper/modalWrapper.component';
+import { ConfirmModal } from 'drivezy-web-utils/build/Components/Confirm-Modal-Wrapper/confirm.modal';
+
+import { InitializeCommonJs } from 'common-js-util';
 // import { ToastContainer } from 'react-toastify';
+import GLOBAL from './../Constants/global.constants';
 
-/** Router */
+
+import { SubscribeToEvent } from 'common-js-util';
+
+// /** Router */
 import PrivateRoute from './privateRoute.router';
 import IndexRouter from './index.router';
-/** Router ends */
+// /** Router ends */
 
-/** Scenes */
+// /** Scenes */
 import LoginScene from './../Scenes/Login-Scene/Login.scene';
-import SignupScene from './../Scenes/Signup-Scene/Signup.scene';
-/** Scenes End*/
 
-/** Components */
-import ModalManager from './../Wrappers/Modal-Wrapper/modalManager';
-import ModalWrapper from './../Wrappers/Modal-Wrapper/modalWrapper.component';
+
+import SignupScene from './../Scenes/Signup-Scene/Signup.scene';
+// /** Scenes End*/
+
 import { Spotlight } from './../Components/Spotlight-Search/spotlightSearch.component';
-import ToastContainer from './../Components/Toast-Container/toastContainer.component';
 /** Component Ends */
 
 /** Util */
 import SettingsUtil from './../Utils/settings.utils';
 import { LoginCheck } from './../Utils/user.utils';
-import { SubscribeToEvent } from './../Utils/stateManager.utils';
-import { ConfirmModalComponent, ConfirmUtils } from './../Utils/confirm-utils/confirm.utils';
-import ToastUtils from './../Utils/toast.utils';
+
 /** Util Ends*/
 
 
@@ -38,14 +46,28 @@ import ToastUtils from './../Utils/toast.utils';
  * Starting Route is the parent level routing definition, 
  */
 export default class BasicRoute extends Component {
+    constructor(props) {
+        super(props);
+        InitializeCommonJs({
+            GLOBAL,
+            ToastNotifications,
+            GetItem, SetItem,
+            Loader: LoaderUtils
+        });
+    }
+
     state = {
-        loggedUser: {}
+        loggedUser: {},
+
     };
+
+
 
     componentDidMount() {
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
-
+        // setTimeout(() => ConfirmUtils.confirmModal({ message: "Are you sure you want to request approval?", callback: () => console.log('hit') }), 2000);
         LoginCheck();
+
     }
 
     userDataFetched = (data) => {
@@ -55,6 +77,8 @@ export default class BasicRoute extends Component {
             this.setState({ loggedUser: data });
         }
     }
+
+
 
     render() {
         const { loggedUser } = this.state;
@@ -67,12 +91,10 @@ export default class BasicRoute extends Component {
                         <PrivateRoute path="/" loggedUser={loggedUser} component={IndexRouter} />
                     </Switch>
                 </Router>
-                <ToastContainer ref={(elem) => { ToastUtils.register(elem); }} />
-
-
+                <ToastContainer ref={(elem) => { ToastNotifications.register(elem); }} />
 
                 <ModalWrapper ref={(elem) => ModalManager.registerModal(elem)} />
-                <ConfirmModalComponent ref={(elem) => ConfirmUtils.RegisterConfirm(elem)} />
+                <ConfirmModal ref={(elem) => ConfirmUtils.RegisterConfirm(elem)} />
                 <Spotlight ref={(elem) => SettingsUtil.registerModal(elem)} />
             </div>
         )

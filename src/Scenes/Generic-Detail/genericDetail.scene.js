@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
 
-import {
-    Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Button,
-    Container,
-    Row, Col, TabContent, TabPane, Nav, NavItem, NavLink, Table
-} from 'reactstrap';
-
-import { StoreEvent, SubscribeToEvent, UnsubscribeEvent } from './../../Utils/stateManager.utils';
+import { GetUrlParams, Location } from 'drivezy-web-utils/build/Utils/location.utils';
+import { StoreEvent, SubscribeToEvent, UnsubscribeEvent } from 'common-js-util';
 
 import DetailPortlet from './../../Components/Detail-Portlet/DetailPortlet.component';
 import DetailIncludes from './../../Components/Detail-Includes/DetailIncludes';
@@ -16,10 +10,8 @@ import CustomAction from './../../Components/Custom-Action/CustomAction.componen
 import RightClick from './../../Components/Right-Click/rightClick.component';
 
 import { RemoveStarterFromThePath } from './../../Utils/generic.utils';
-import { GetUrlParams, Location } from './../../Utils/location.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
 import { GetDetailRecord } from './../../Utils/genericDetail.utils';
-import { createFinalObject } from './../../Utils/table.utils';
 
 import './genericDetail.css';
 

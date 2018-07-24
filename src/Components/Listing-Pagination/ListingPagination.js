@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
-import { Location } from './../../Utils/location.utils';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 
 import './ListingPagination.css';
 

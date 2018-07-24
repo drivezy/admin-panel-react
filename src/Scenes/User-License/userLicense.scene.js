@@ -1,32 +1,33 @@
 import React, { Component } from 'react';
 import './userLicense.scene.css';
 
-import Viewer from 'react-viewer';
-import 'react-viewer/dist/index.css';
-
+import UserLicenseCard from './../../Components/User-License-Card/userLicenseCard.component';
 import {
     Card, CardHeader, CardBody
 } from 'reactstrap';
 
+
+import 'react-viewer/dist/index.css';
 import classNames from 'classnames';
 
-import { Get, Put, Delete } from './../../Utils/http.utils';
+import { Get, Put, Delete, BuildUrlForGetCall } from 'common-js-util';
+import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
+import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
+
 import { GetDefaultOptions } from './../../Utils/genericListing.utils';
-import ToastNotifications from './../../Utils/toast.utils';
-import { ConfirmUtils } from './../../Utils/confirm-utils/confirm.utils';
+
 
 import UserLicenseForm from './../../Components/User-License-Form/userLicenseForm.component';
-import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import RejectLicenseForm from './../../Components/Reject-License-Form/rejectLiceneseForm.component';
 
-
-
+import './userLicense.scene.css';
 
 export default class UserLicense extends Component {
-    container: HTMLDivElement;
+    // container: HTMLDivElement;
     constructor(props) {
         super(props);
         this.state = {
+
             userObj: {},
             images: [],
             visible: true,
@@ -37,26 +38,39 @@ export default class UserLicense extends Component {
             detectedText: [],
             detectedExpiryDate: []
         };
+
+
     }
 
     componentDidMount() {
         this.getUserDetail();
         this.getLicense();
+
+
     }
+
+
 
     getUserDetail = async () => {
         const { userId } = this.props.match.params;
-        const url = 'user/' + userId;
+        const url = 'user/' + userId + '?includes=licenses';
         const result = await Get({ url });
 
         if (result.success) {
             const userObj = result.response;
             this.setState({ userObj });
         }
+
+
     }
 
     updateCurrentIndex = () => {
+        const { userId } = this.props.match.params;
+
         const { images = [], currentIndex } = this.state;
+
+
+
         var newIndex = currentIndex;
         for (var i in images) {
             images[i].visible = false;
@@ -79,35 +93,84 @@ export default class UserLicense extends Component {
 
     getLicense = async () => {
         let options = GetDefaultOptions();
-        const { userId, detectedDob, detectedLicense, detectedText, detectedExpiryDate } = this.props.match.params;
+        const { userId } = this.props.match.params;
+        const { detectedLicense, detectedDob, detectedText, detectedExpiryDate } = this.state;
         options.query += " and user_id=" + userId;
         options.query += " and approved is null and rejection_reason is null";
-        var url = "userLicense";
-        const result = await Get({ url, options });
+        const endpoint = "userLicense";
+        const url = BuildUrlForGetCall(endpoint, options);
+
+        const result = await Get({ url });
+
+        console.log(this.state.userObj);
+
+
         if (result.success) {
-            const images = result.response;
+
+
+            let images = [];
+
+            result.response.map((item, key) => {
+
+                if (item.user_id == userId) {
+                    images.push(item);
+                }
+
+            }
+                // (item.user_id == userId) ? images.push(item) : null
+            )
+
             this.setState({ images });
 
-            for (var i in images) {
-                if (images[i].dob != null) {
-                    detectedDob.push(images[i].dob);
-                }
-                if (images[i].license_number != null) {
-                    detectedLicense.push(images[i].license_number);
+            // for (var i in images) {
+            //     if (images[i].dob != null) {
+            //         detectedDob.push(images[i].dob);
+            //     }
+            //     if (images[i].license_number != null) {
+            //         detectedLicense.push(this.state.images[i].license_number);
+            //     }
+
+            //     if (images[i].text != null) {
+            //         detectedText.push(images[i].text);
+            //         if (images[i].text.search("validity") != -1) {
+            //             var regex = /v\w{7} \d{2,4}(\/|-)\d{2,4}(\/|-)\d{2,4}/i;
+            //             detectedExpiryDate.push(regex[0]);
+            //         }
+            //     }
+            // }
+
+            images.map((item, key) => {
+                if (item.license_number) {
+                    detectedLicense.push(item.license_number);
                 }
 
-                if (images[i].text != null) {
-                    detectedText.push(images[i].text);
-                    if (images[i].text.search("validity") != -1) {
+                if (item.dob) {
+                    detectedDob.push(item.dob);
+                }
+
+                if (item.text) {
+                    detectedText.push(item.text);
+
+                    if (item.text.search("validity") != -1) {
                         var regex = /v\w{7} \d{2,4}(\/|-)\d{2,4}(\/|-)\d{2,4}/i;
                         detectedExpiryDate.push(regex[0]);
+
                     }
                 }
+
+
+
             }
+            );
+
             this.change();
 
             this.updateCurrentIndex();
         }
+    }
+
+    sample = () => {
+        console.log('abcdesfghijklmnopqrstuve=wcz');
     }
 
     acceptL = () => {
@@ -117,14 +180,14 @@ export default class UserLicense extends Component {
             if (result.success) {
                 images[currentIndex].reviewed = true;
 
-                ToastNotifications.success('License is Accepted');
+                ToastNotifications.success({ title: 'License is Accepted' });
             }
         }
         ConfirmUtils.confirmModal({ message: "Are you sure you want to accept license?", callback: method });
     }
 
     rejectL = () => {
-        const { images, currentIndex } = this.state;
+        const { images = [], currentIndex } = this.state;
 
         const rejectdData = {
             approved: 0,
@@ -144,16 +207,19 @@ export default class UserLicense extends Component {
         const method = async () => {
             const result = await Delete({ url: "userLicense/" + images[currentIndex].id });
             if (result.success) {
-                ToastNotifications.success('License is Deleted!');
+                ToastNotifications.success({ title: 'License is Deleted!' });
                 this.getLicense();
             }
         }
         ConfirmUtils.confirmModal({ message: "Are you sure you want to delete license?", callback: method });
     }
 
+
+
     render() {
         const { images = [], userObj = {}, currentIndex, detectedDob, detectedLicense, detectedText, detectedExpiryDate } = this.state;
-
+        // console.log(userData);
+        const flag = 0;
         const licenses = images.map((image) => {
             image.src = image.license;
             return image;
@@ -169,7 +235,7 @@ export default class UserLicense extends Component {
             <div className="user-license">
                 <div className="user-license-form">
                     <Card>
-                        <CardHeader>User Details</CardHeader>
+                        <CardHeader className="heading">User Details</CardHeader>
                         <CardBody>
                             {
                                 userObj.id &&
@@ -180,10 +246,10 @@ export default class UserLicense extends Component {
                 </div>
                 <div className="container licence-viewer">
                     <Card>
-                        <CardHeader>
-                            User Licenses {currentIndex + 1} of {images.length}
+                        <CardHeader className="heading">
+                            User Licenses {currentIndex + 1} of {images.length + 1}
                         </CardHeader>
-                        <CardBody>
+                        {/* <CardBody>
                             <div className={inlineContainerClass} ref={ref => { this.container = ref; }}></div>
                             <Viewer
                                 container={this.container}
@@ -221,7 +287,17 @@ export default class UserLicense extends Component {
                                     ]);
                                 }}
                             />
-                        </CardBody>
+                        </CardBody> */}
+
+                        {
+                            userObj.id &&
+                            <CardBody>
+                                <UserLicenseCard userData={userObj} flag={1} acceptL={this.acceptL} rejectL={this.rejectL} deleteL={this.deleteL} />
+                                <div className="detected-text-label">Detected Text</div>
+                                <div className="detected-text-data">{detectedText} </div>
+
+                            </CardBody>
+                        }
                     </Card>
 
                 </div>

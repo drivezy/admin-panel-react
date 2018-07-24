@@ -1,4 +1,4 @@
-import { Get } from './../Utils/http.utils';
+import { Get } from 'common-js-util';
 import moment from 'moment';
 
 export function Booking(bookingId) {
@@ -26,3 +26,5 @@ export function TotalDuration(updationTime, ActualStartTime) {
     let d = moment.duration(ms);
     return Math.floor(d.asHours()) + "h " + Math.floor(d.minutes()) + "m";
 }
+
+

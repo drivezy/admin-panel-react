@@ -13,7 +13,7 @@ export default function asyncComponent(importComponent) {
         }
 
         async componentDidMount() {
-            const { default: component } = await importComponent();
+            const { default: component } = await import(`./../Scenes/${importComponent}.js`);
 
             this.setState({
                 component: component

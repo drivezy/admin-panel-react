@@ -1,8 +1,7 @@
 /**
  * Utility methods to be used by configureFilter or dynamic components
  */
-import { BuildUrlForGetCall, SelectFromOptions } from './common.utils';
-import { Get } from './http.utils';
+import { Get, BuildUrlForGetCall } from 'common-js-util';
 import { GetTime } from './time.utils';
 import GLOBAL from './../Constants/global.constants';
 import COLUMN_TYPE from './../Constants/columnType.constants';

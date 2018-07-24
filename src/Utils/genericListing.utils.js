@@ -1,9 +1,7 @@
 
-import { IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall, TrimQueryString, IsObjectHaveKeys } from './common.utils';
-import { GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, ParseRestrictedQuery } from './generic.utils';
+import { Get, IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall, TrimQueryString, IsObjectHaveKeys } from 'common-js-util';
 
-import { Get } from './http.utils';
-import { GetParsedLayoutScript } from './generic.utils';
+import { GetParsedLayoutScript, GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, ParseRestrictedQuery } from './generic.utils';
 
 import { ROUTE_URL } from './../Constants/global.constants';
 

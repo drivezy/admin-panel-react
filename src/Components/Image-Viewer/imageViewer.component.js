@@ -12,7 +12,8 @@ export default class ImageViewer extends Component {
         super(props);
 
         this.state = {
-            userLicenseImageArr: props.userLicenseImageArr,
+            images: props.images
+            // toolbar:props.toolbar
 
         }
     }
@@ -23,8 +24,55 @@ export default class ImageViewer extends Component {
 
         $image.viewer({
             inline: true,
+
+            // customToolbar: (toolbars) => {
+            //     const customToolbar = [{
+            //         key: 'test',
+            //         render: <span className="custom-action" onClick={() => { this.acceptL() }}>Accept License</span>,
+            //         onClick: (activeImage) => {
+            //             console.log(activeImage);
+            //         },
+            //     }]
+
+            //     const tools = customToolbar.concat(toolbars);
+            //     return tools.concat([
+            //         {
+            //             key: 'test1',
+            //             render: <span onClick={(e) => this.rejectL()} className="custom-action">Reject License</span>,
+
+            //             onClick: (activeImage) => {
+            //                 console.log(activeImage);
+            //             },
+            //         },
+            //         {
+            //             key: 'test2',
+            //             render: <span onClick={(e) => this.deleteL()} className="custom-action">Delete License</span>,
+
+            //             onClick: (activeImage) => {
+            //                 console.log(activeImage);
+            //             },
+            //         }
+            //     ]);
+            // },
+
+            // toolbar: [{
+            //     key: 'test',
+            //     render: <span className="custom-action" onClick={() => { this.acceptL() }}>Accept License</span>,
+            //     onClick: (activeImage) => {
+            //         console.log(activeImage);
+            //     },
+            // }, {
+            //     key: 'test1',
+            //     render: <span onClick={(e) => this.rejectL()} className="custom-action">Reject License</span>,
+
+            //     onClick: (activeImage) => {
+            //         console.log(activeImage);
+            //     },
+            // }],
+
+
             viewed: function () {
-                $image.viewer('zoomTo', 0.4);
+                // $image.viewer('zoomTo', 0.4);
             }
         });
 
@@ -38,17 +86,19 @@ export default class ImageViewer extends Component {
 
 
     render() {
-        const { userLicenseImageArr } = this.state;
+        const { images } = this.state;
         return (
             <div className="image-viewer">
                 <ul id="images">
                     {
-                        userLicenseImageArr.map((image, key) => (
+                        images.map((image, key) => (
                             <li className="image-content" key={key}><img src={image.license} alt="Picture 1" /></li>
                         ))
                     }
                 </ul>
+
             </div>
+            
         )
     }
 }

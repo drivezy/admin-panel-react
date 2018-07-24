@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { SetItem, GetItem } from './localStorage.utils';
+import { SetItem, GetItem } from 'drivezy-web-utils/build/Utils/localStorage.utils';
 
 let themes = [
     { theme: 'light', name: 'Light', class: 'light' },

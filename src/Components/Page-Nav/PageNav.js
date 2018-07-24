@@ -3,19 +3,15 @@ import './PageNav.css';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Redirect } from 'react-router-dom';
 
-import GLOBAL from './../../Constants/global.constants';
+import { ToastNotifications, LoaderComponent, LoaderUtils, ModalManager } from 'drivezy-web-utils/build/Utils';
+import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
+import { SubscribeToEvent, Get, Post } from 'common-js-util';
 
-import { SubscribeToEvent } from './../../Utils/stateManager.utils';
-import { Get, Post } from './../../Utils/http.utils';
+import GLOBAL from './../../Constants/global.constants';
 
 import SettingsUtil from './../../Utils/settings.utils';
 import ThemeUtil from './../../Utils/theme.utils';
-
-import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import ImpersonateFrom from './../../Components/Impersonate-Form/impersonateForm.component';
-import ToastNotifications from '../../Utils/toast.utils';
-import { ConfirmUtils } from './../../Utils/confirm-utils/confirm.utils';
-import { LoaderComponent, LoaderUtils } from './../../Utils/loader.utils';
 
 export default class PageNav extends Component {
     constructor(props) {
@@ -67,7 +63,7 @@ export default class PageNav extends Component {
         const method = async () => {
             const result = await Post({ urlPrefix: GLOBAL.ROUTE_URL, url: "api/deImpersonateUser" });
             if (result.success) {
-                ToastNotifications.success('User is deimpersonated');
+                ToastNotifications.success({ title: 'User is deimpersonated' });
                 window.location.reload(true);
             }
         }

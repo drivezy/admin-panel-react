@@ -5,8 +5,12 @@ import {
 } from 'react-router-dom';
 
 /** Components */
+// import { ToastNotifications, LoaderUtils } from 'drivezy-web-utils/build/Utils';
+// import { GetItem, SetItem } from 'drivezy-web-utils/build/Utils/localStorage.utils';
+
+// import { InitializeCommonJs } from 'common-js-util';
+
 import HomeScene from './../../Scenes/Home-Scene/home.scene';
-import GenericListing from './../../Scenes/Generic-Listing/genericListing.scene';
 // import GenericDetail from './../../Scenes/Generic-Detail/genericDetail.scene';
 import SideNav from './../../Scenes/Side-Nav/sideNav.scene';
 import Header from './../../Scenes/Header/header.scene';
@@ -16,7 +20,7 @@ import ExpenseVoucherDetail from './../../Scenes/Expense-Voucher/expenseVoucherD
 import UserLicense from './../../Scenes/User-License/userLicense.scene';
 // import VehicleDetail from './../../Scenes/Vehicle-Detail/vehicleDetail.scene';
 
-// import { Spotlight } from './../Components/Spotlight-Search/spotlightSearch.component';
+import { Spotlight } from './../../Components/Spotlight-Search/spotlightSearch.component';
 import TicketDetail from './../../Scenes/Ticket-Detail/ticketDetail.scene';
 import RosterTimeline from './../../Scenes/Roster-Timeline/rosterTimeline.scene';
 
@@ -24,6 +28,9 @@ import GenericQueryDetail from './../../Scenes/Generic-Query/genericQueryDetail.
 import QueryDashboardForm from './../../Components/Query-Report/Query-Dashboard-Form/queryDashboardForm.component'; //remove
 
 import LoadAsyncComponent from './../../Async/async';
+import SettingsUtil from './../../Utils/settings.utils';
+
+import GLOBAL from './../../Constants/global.constants';
 
 import './landing.component.css';
 
@@ -37,9 +44,20 @@ export default class LandingApp extends Component {
             menus: this.props.menus,
             sideNavExpanded: false
         }
-
         this.loadedComponent = [];
+        console.log('testjf');
+
+        // SetItem('test', 1);
+        // console.log(GetItem('test'));
+
+        // InitializeCommonJs({
+        //     GLOBAL,
+        //     ToastNotifications,
+        //     GetItem, SetItem,
+        //     Loader: LoaderUtils
+        // });
     }
+
 
     componentDidUpdate = (prevProps) => {
         if (prevProps.menus != this.props.menus) {
@@ -76,7 +94,10 @@ export default class LandingApp extends Component {
                                                     this.loadedComponent[parentIndex] = [];
                                                 }
                                                 if (!loadedComponent[parentIndex][index]) {
-                                                    this.loadedComponent[parentIndex][index] = LoadAsyncComponent(() => import(`./../../Scenes${state.component.path}`));
+                                                    // console.log('cehhfbdh');
+                                                    // this.loadedComponent[parentIndex][index] = () => <h1>g</h1>
+                                                    this.loadedComponent[parentIndex][index] = LoadAsyncComponent(state.component.path);
+                                                    // this.loadedComponent[parentIndex][index] = LoadAsyncComponent(() => require(`./../../Scenes${state.component.path}.js`));
                                                 }
                                                 const GenericListing = this.loadedComponent[parentIndex][index];
 
@@ -108,7 +129,7 @@ export default class LandingApp extends Component {
                             {/* <Route exact path='/booking/:id' component={BookingDetail} /> */}
                             <Route exact path='/voucherDef/:voucherId' component={ExpenseVoucherDetail} />
                             <Route exact path='/userLicense/:userId' component={UserLicense} />
-                            {/* <Spotlight ref={(elem) => SettingsUtil.registerModal(elem)} /> */}
+                            <Spotlight ref={(elem) => SettingsUtil.registerModal(elem)} />
                             <Route exact path='/ticket/:ticketId' component={TicketDetail} />
                             <Route exact path='/rosterTimeline' component={RosterTimeline} />
                             <Route exact path='/' component={HomeScene} />

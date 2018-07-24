@@ -9,9 +9,11 @@ import {
 import { withFormik, Field, Form } from 'formik';
 import Yup from 'yup';
 
-import { Upload, Post, Put, Get } from './../../Utils/http.utils';
+import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
+import { SetItem } from 'drivezy-web-utils/build/Utils/localStorage.utils';
+import { Upload, Post, Put, SubscribeToEvent, IsObjectHaveKeys, IsUndefined } from 'common-js-util';
+
 import { GetChangedMethods } from './../../Utils/generic.utils';
-import { IsObjectHaveKeys, IsUndefined, SelectFromOptions } from './../../Utils/common.utils';
 
 //  import SelectBox from './../Forms/Components/Select-Box/selectBox';
 
@@ -21,7 +23,6 @@ import DatePicker from './../Forms/Components/Date-Picker/datePicker';
 import TimePicker from './../Forms/Components/Time-Picker/timePicker';
 import ListSelect from './../Forms/Components/List-Select/listSelect';
 import Switch from './../Forms/Components/Switch/switch';
-import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import ImageUpload from './../Forms/Components/Image-Upload/imageUpload.component';
 // import ImageThumbnail from './../Forms/Components/Image-Thumbnail/imageThumbnail.component';
 // import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from 'constants';
@@ -29,7 +30,6 @@ import FormSettings from './../Form-Settings/FormSettings.component';
 import ScriptInput from './../Forms/Components/Script-Input/scriptInput.component';
 import FormInput from './../Forms/Components/Form-Type/formType.component';
 
-import { SubscribeToEvent } from './../../Utils/stateManager.utils';
 import { ExecuteScript } from './../../Utils/inject-method/injectScript.utils';
 
 import FormUtils from './../../Utils/form.utils';
@@ -38,11 +38,8 @@ import { GetUrlForFormSubmit } from './../../Utils/generic.utils';
 import { ROUTE_URL } from './../../Constants/global.constants';
 import COLUMN_TYPE from './../../Constants/columnType.constants';
 
-import { SetItem } from './../../Utils/localStorage.utils';
-
 import RightClick from './../../Components/Right-Click/rightClick.component';
 import { CopyToClipBoard } from './../../Utils/common.utils';
-import ToastUtils from './../../Utils/toast.utils';
 
 const booleanOptions = [{ name: "True", id: 1 }, { name: "False", id: 0 }];
 
@@ -127,19 +124,37 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         [COLUMN_TYPE.BOOLEAN]: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <SelectBox name={column.name}
-                    placeholder={`Enter ${column.display_name}`}
-                    isClearable={!column.required}
-                    onChange={(value, event) => {
-                        // props.setFieldError(column.name, 'sahi nhi ye');
-                        // props.setFieldTouched(column.name, true, true);
-                        const valId = value && typeof value == 'object' ? value.id : value;
-                        FormUtils.OnChangeListener({ column, value: valId, ...event });
-                        props.setFieldValue(event, value);
-                    }}
-                    value={values[column.name]}
-                    field="name" options={booleanOptions} />
-                // <SelectBox name={column.name} onChange={props.setFieldValue} value={values[column.name]} field="name" options={[{ name: "True", id: 1 }, { name: "False", id: 0 }]} />
+                <div className="button-group">
+                    <button className={`btn btn-sm btn-${values[column.name] ? `success` : `default`}`}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            FormUtils.OnChangeListener({ column, value: true });
+                            props.setFieldValue(column.name, true);
+                        }
+                        }>True</button>
+
+                    &nbsp;&nbsp;
+
+                    <button className={`btn btn-sm btn-${values[column.name] ? "default" : "danger"}`}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            FormUtils.OnChangeListener({ column, value: false });
+                            props.setFieldValue(column.name, false);
+                        }
+                        }>False</button>
+                </div>
+                // <SelectBox name={column.name}
+                //     placeholder={`Enter ${column.display_name}`}
+                //     isClearable={!column.required}
+                //     onChange={(value, event) => {
+                //         // props.setFieldError(column.name, 'sahi nhi ye');
+                //         // props.setFieldTouched(column.name, true, true);
+                //         const valId = value && typeof value == 'object' ? value.id : value;
+                //         FormUtils.OnChangeListener({ column, value: valId, ...event });
+                //         props.setFieldValue(event, value);
+                //     }}
+                //     value={values[column.name]}
+                //     field="name" options={booleanOptions} />
             )}
         />,
         // Boolean Ends
@@ -166,9 +181,9 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
 
         // Script Input
         [COLUMN_TYPE.SCRIPT]: <ScriptInput
-            value={values[column.name]} 
+            value={values[column.name]}
             // columns={props.payload.dictionary}
-             payload={props.payload} column={column} name={column.name}
+            payload={props.payload} column={column} name={column.name}
             // onChange={props.setFieldValue}
             onChange={(value, ...args) => {
                 const { payload } = props;
@@ -178,7 +193,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
 
                 submitGenericForm({ payload, newValues: { [column.name]: value } });
             }}
-            // model={values[column.index]}
+        // model={values[column.index]}
         />,
         // Script Input Ends
 
@@ -401,10 +416,10 @@ const FormContents = withFormik({
                 let column = payload.dictionary[preference.index];
                 response[column.name] = payload.data[column.name] || '';
 
-                if (column.column_type_id == COLUMN_TYPE.BOOLEAN) {
-                    const val = SelectFromOptions(booleanOptions, payload.data[column.name], 'id');
-                    response[column.name] = val;
-                }
+                // if (column.column_type_id == COLUMN_TYPE.BOOLEAN) {
+                //     const val = SelectFromOptions(booleanOptions, payload.data[column.name], 'id');
+                //     response[column.name] = val;
+                // }
 
                 // if (column.reference_model) {
                 //     const url = column.reference_model.route_name;
@@ -544,7 +559,7 @@ export default class FormCreator extends Component {
         onClick: (data) => {
             let prop = data.column.name;
             CopyToClipBoard(prop);
-            ToastUtils.success({ description: "Column name " + data.column.name + " has been copied", title: 'Column Name' });
+            ToastNotifications.success({ description: "Column name " + data.column.name + " has been copied", title: 'Column Name' });
         }
     }];
 

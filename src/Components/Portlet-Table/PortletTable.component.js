@@ -2,17 +2,18 @@ import React, { Component } from 'react';
 import './PortletTable.css';
 
 import {
-    Table, Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Dropdown, DropdownToggle, DropdownMenu, DropdownItem
+    Table, Dropdown, DropdownToggle, DropdownMenu
 } from 'reactstrap';
+
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
+import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 import RightClick from './../../Components/Right-Click/rightClick.component';
 
 import { RowTemplate } from './../../Utils/generic.utils';
-import { Location } from './../../Utils/location.utils';
+
 import { CopyToClipBoard } from './../../Utils/common.utils';
-import ToastUtils from './../../Utils/toast.utils';
 
 export default class PortletTable extends Component {
 
@@ -38,7 +39,7 @@ export default class PortletTable extends Component {
         onClick: (data) => {
             let prop = data.selectedColumn.name;
             CopyToClipBoard(prop);
-            ToastUtils.success({ description: "Column name " + data.selectedColumn.name + " has been copied", title: 'Column Name' });
+            ToastNotifications.success({ description: "Column name " + data.selectedColumn.name + " has been copied", title: 'Column Name' });
         }
     }];
 

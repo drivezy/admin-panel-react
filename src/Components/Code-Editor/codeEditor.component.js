@@ -12,10 +12,8 @@ import AceEditor from 'react-ace';
 
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
-import { SelectFromOptions } from './../../Utils/common.utils';
-import { Get, Post, Put } from './../../Utils/http.utils';
-import { GetItem, SetItem } from './../../Utils/localStorage.utils';
+import { Get, Post, Put, SelectFromOptions } from 'common-js-util';
+import { GetItem, SetItem } from 'drivezy-web-utils/build/Utils/localStorage.utils';
 
 import 'brace/mode/php';
 import 'brace/mode/javascript';
@@ -23,6 +21,7 @@ import 'brace/mode/sql';
 import 'brace/theme/monokai';
 import './codeEditor.css';
 
+import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import ModalWrapper from './../../Wrappers/Modal-Wrapper/modalWrapper.component';
 import { RECORD_URL } from './../../Constants/global.constants';
 
@@ -62,27 +61,76 @@ export default class CodeEditor extends Component {
     editorComponent = () => {
         const { mode, value, fontSize } = this.state;
         return (
-            <AceEditor
-                mode={mode.value}
-                theme="monokai"
-                name="Drivezy-Code-editor"
-                width='100%'
-                height='85vh'
-                // onLoad={this.onLoad}
-                onChange={this.onChange}
-                fontSize={fontSize}
-                showPrintMargin={true}
-                showGutter={true}
-                highlightActiveLine={true}
-                value={value}
-                setOptions={{
-                    enableBasicAutocompletion: true,
-                    enableLiveAutocompletion: true,
-                    enableSnippets: false,
-                    showLineNumbers: true,
-                    tabSize: 2,
-                }}
-            />
+            <div>
+                   <div className="script-controls flex">
+                                <Button
+                                    id='submit-script-inline'
+                                    onClick={this.onSubmit}
+                                    // disabled={tempScript == script}
+                                    className="btn btn-sm scriptAction">
+                                    <i className="fa fa-save"></i>
+                                </Button>
+
+                                <Button
+                                    disabled={fontSize >= maxFontSize}
+                                    onClick={() => {
+                                        let { fontSize } = this.state;
+                                        fontSize = fontSize >= maxFontSize ? maxFontSize : fontSize + 1;
+                                        SetItem(SCRIPT_FONT_SIZE, fontSize);
+                                        this.setState({ fontSize });
+                                    }}
+                                    className="btn btn-sm scriptAction"
+                                >
+                                    <i className="fa fa-search-plus"></i>
+                                </Button>
+
+                                <Button
+                                    disabled={fontSize <= minFontSize}
+                                    onClick={() => {
+                                        let { fontSize } = this.state;
+                                        fontSize = fontSize <= minFontSize ? minFontSize : fontSize - 1;
+                                        SetItem(SCRIPT_FONT_SIZE, fontSize);
+                                        this.setState({ fontSize });
+                                    }}
+                                    className="btn btn-sm scriptAction"
+                                >
+                                    <i className="fa fa-search-minus"></i>
+                                </Button>
+
+                                <div className='code-editor-mode'>
+                                    <SelectBox
+                                        onChange={(data) => this.setState({ mode: data })}
+                                        value={mode}
+                                        isClearable={false}
+                                        options={MODES}
+                                        placeholder="Mode"
+                                        field='name'
+                                        menuPlacement={'top'}
+                                    />
+                                </div>
+                            </div>
+                <AceEditor
+                    mode={mode.value}
+                    theme="monokai"
+                    name="Drivezy-Code-editor"
+                    width='100%'
+                    height='85vh'
+                    // onLoad={this.onLoad}
+                    onChange={this.onChange}
+                    fontSize={fontSize}
+                    showPrintMargin={true}
+                    showGutter={true}
+                    highlightActiveLine={true}
+                    value={value}
+                    setOptions={{
+                        enableBasicAutocompletion: true,
+                        enableLiveAutocompletion: true,
+                        enableSnippets: false,
+                        showLineNumbers: true,
+                        tabSize: 2,
+                    }}
+                />
+            </div>
         )
     }
 
@@ -92,19 +140,6 @@ export default class CodeEditor extends Component {
             <div className='flex code-editor-header'>
                 <div className='code-title'>
                     Code editor
-                </div>
-
-                <div className='select-box-container flex'>
-                    <div sm={2} className='mode-selection'>
-                        <SelectBox
-                        isClearable={false}
-                            onChange={(data) => this.setState({ mode: data })}
-                            value={mode}
-                            options={MODES}
-                            placeholder="Mode"
-                            field='name'
-                        />
-                    </div>
                 </div>
             </div>
         )
@@ -259,53 +294,6 @@ export default class CodeEditor extends Component {
                 {
                     inline ?
                         <div>
-                            <div className="script-controls flex">
-                                <Button
-                                    id='submit-script-inline'
-                                    onClick={this.onSubmit}
-                                    disabled={tempScript == script}
-                                    className="btn btn-sm scriptAction">
-                                    <i className="fa fa-save"></i>
-                                </Button>
-
-                                <Button
-                                    disabled={fontSize >= maxFontSize}
-                                    onClick={() => {
-                                        let { fontSize } = this.state;
-                                        fontSize = fontSize >= maxFontSize ? maxFontSize : fontSize + 1;
-                                        SetItem(SCRIPT_FONT_SIZE, fontSize);
-                                        this.setState({ fontSize });
-                                    }}
-                                    className="btn btn-sm scriptAction"
-                                >
-                                    <i className="fa fa-search-plus"></i>
-                                </Button>
-
-                                <Button
-                                    disabled={fontSize <= minFontSize}
-                                    onClick={() => {
-                                        let { fontSize } = this.state;
-                                        fontSize = fontSize <= minFontSize ? minFontSize : fontSize - 1;
-                                        SetItem(SCRIPT_FONT_SIZE, fontSize);
-                                        this.setState({ fontSize });
-                                    }}
-                                    className="btn btn-sm scriptAction"
-                                >
-                                    <i className="fa fa-search-minus"></i>
-                                </Button>
-                                
-                                <div className='code-editor-mode'>
-                                <SelectBox
-                                    onChange={(data) => this.setState({ mode: data })}
-                                    value={mode}
-                                    isClearable={false}
-                                    options={MODES}
-                                    placeholder="Mode"
-                                    field='name'
-                                    menuPlacement={'top'}
-                                />
-                                </div>
-                            </div>
                             {this.editorComponent()}
                         </div>
                         :

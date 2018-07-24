@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import SelectBox from './../../Components/Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import ScriptInput from './../../Components/Forms/Components/Script-Input/scriptInput.component';
 
-import { GetUrlParams, Location } from './../../Utils/location.utils';
+import {  ToastNotifications } from 'drivezy-web-utils/build/Utils';
+import { GetUrlParams, Location } from 'drivezy-web-utils/build/Utils/location.utils';
+import { Get, Put, BuildUrlForGetCall, IsObjectHaveKeys  } from 'common-js-util';
 
-import { BuildUrlForGetCall, IsObjectHaveKeys } from './../../Utils/common.utils';
-import { Get, Put, Post } from './../../Utils/http.utils';
 import { GetColumnDetail, ExtractColumnName } from './../../Utils/panel.utils';
-import ToastNotifications from '../../Utils/toast.utils';
 
 import { ClientScriptEndPoint } from './../../Constants/api.constants';
 import { ROUTE_URL } from './../../Constants/global.constants';
@@ -127,7 +126,7 @@ export default class ClientScript extends Component {
         const { selectedOption } = this.state;
 
         return (
-            <div className='security-rule-container container'>
+            <div className='security-rule-container'>
                 {/* <div className="page-bar">
                     <div className="search-bar">
                         Security Rule
@@ -135,6 +134,11 @@ export default class ClientScript extends Component {
                 </div> */}
 
                 <div className='body'>
+
+                <div className="script-header">
+                    {<h6>Client Script - {clientScript.id} </h6>}
+                </div>
+
                     <form name='securityRule' className="clientScript">
                         <div className='form-row'>
                             <div className='form-group'>
@@ -156,13 +160,13 @@ export default class ClientScript extends Component {
                                 </div>
                                 <div className="activeInput inputField">
                                     <label>Active</label>
-                                    <div class="pretty p-default p-thick p-pulse p-bigger">
+                                    <div className="pretty p-default p-thick p-pulse p-bigger">
                                         <input type="checkbox"
                                             value={clientScript.active ? 0 : 1}
                                             checked={clientScript.active ? 1 : 0}
                                             onChange={e => this.setRuleValue(e.target.value == '1' ? 1 : 0, 'active')}
                                         />
-                                        <div class="state p-success-o">
+                                        <div className="state p-success-o">
                                             <label>&nbsp;</label>
                                         </div>
                                     </div>

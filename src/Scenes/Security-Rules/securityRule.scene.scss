@@ -1,25 +1,37 @@
 .security-rule-container{
+    .script-header{
+        background-color: #ebeef0;
+        h6{
+            margin-bottom: 0rem;
+            padding: 10px 30px;
+        }
+    }
     display: flex;
     justify-content: center;
     align-items: center;
     .body{
-        width: 80%;
+        width: 100%;
         background: #fff;
-        margin: 30px;
-    .clientScript{
+    .security-rule{
         background-color: #fff;
         padding: 50px 0;
     }
     .form-row{
     justify-content: center;
+    width : 100%;
     .form-group{
         width: 90%;
         justify-content: space-between;
         display: flex;
         .inputField{
-            width: 40%;
+            width: 30.5%;
             display: flex;
             align-items: center;
+        }
+        .columnInput{
+            .select-box{
+                min-width: 65% !important;
+            }
         }
         label{
             float: left;
@@ -27,14 +39,20 @@
             display: flex;
         }
         .descriptionInput{
-            width: 97%;
+            width: 97.3%;
             display: flex;
+        }
+        .col{
+            padding: 0;
         }
         .col .inline{
             padding: 0;
         }
         .filterCondition{
             padding: 0;
+        }
+        .editor-actions{
+            width: 91%;
         }
     }
     .roles{

@@ -1,21 +1,15 @@
-
-
-import GLOBAL from './../Constants/global.constants';
-
-import { Get } from './http.utils';
-import { StoreEvent } from './stateManager.utils';
 /************************************
  * All user related utility methods
  ***********************************/
-
-import { GetItem } from './localStorage.utils';
-
+import GLOBAL from './../Constants/global.constants';
 import { LoginCheckEndPoint } from './../Constants/api.constants';
 
+import { Get, StoreEvent } from 'common-js-util';
+import { GetItem } from 'drivezy-web-utils/build/Utils/localStorage.utils';
 
 let CurrentUser = {};
-
 let fireToken = '';
+
 /**
  * Returns firebase token for users
  * first checks in local variable, if its undefined, returns from Asyncstorage

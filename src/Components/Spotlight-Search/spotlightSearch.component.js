@@ -4,11 +4,10 @@ import './spotlightSearch.component.css';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { HotKeys } from 'react-hotkeys';
 
-import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import TypeaheadComponent from './../Forms/Components/Typeahead/typeahead.component';
 
 import { GetMenus } from './../../Utils/menu.utils';
-import { Location } from './../../Utils/location.utils';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 
 let subMenu;
 
@@ -40,7 +39,7 @@ export class Spotlight extends Component {
 
     keyboardHandlers = {
         // 'moveUp': (event) => { this.traverse(0) },
-        // 'moveDown': (event) => { this.traverse(1) },
+        // 'moveDown': (event) => { this.traverse(1) },se
         // 'enter': (event) => { this.onSelect(event) }
     }
 
@@ -136,7 +135,7 @@ export class Spotlight extends Component {
         let matches = [];
 
         if (searchText) {
-            menus.forEach((module) => {
+            menus.modules.forEach((module) => {
                 module.menus.forEach((menu) => {
                     if (menu.name.toLowerCase().indexOf(searchText) != -1) {
                         matches.push(menu);
@@ -199,7 +198,7 @@ export class Spotlight extends Component {
             </HotKeys>
         )
     }
-}
+}                                                                                                                                                       
 
 
 

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import './Login.scene.css';
-import { Card, CardBody, Button, Form, FormGroup, Label } from 'reactstrap';
+import { Card, CardBody, Form, FormGroup, Label } from 'reactstrap';
 
-import { SubscribeToEvent } from './../../Utils/stateManager.utils';
-import { Location } from './../../Utils/location.utils';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
+import { Post, SubscribeToEvent } from 'common-js-util';
 
 import GLOBAL from './../../Constants/global.constants';
 
@@ -12,7 +12,6 @@ import {
 } from 'react-router-dom';
 
 import { LoginCheck } from './../../Utils/user.utils';
-import { Post } from './../../Utils/http.utils';
 
 export default class LoginScene extends Component {
 

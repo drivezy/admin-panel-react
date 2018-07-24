@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import {ToastNotifications} from 'drivezy-web-utils/build/Utils';
 
-import { Location } from './../../Utils/location.utils';
-import ToastNotifications from './../../Utils/toast.utils';
-import { Delete } from './../../Utils/http.utils';
-import { IsUndefined } from '../../Utils/common.utils';
+import { IsUndefined } from './../../Utils/common.utils';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { DeletePreference } from './../../Utils/preference.utils';
-
-import { MenuFilterEndPoint } from './../../Constants/api.constants';
 
 import './filter.component.css';
 
@@ -51,7 +48,7 @@ export default class PredefinedFilter extends React.Component {
                     urlParams.layout = null;
                     this.setUrlProps(urlParams);
                 }
-                ToastNotifications.success('Records has been deleted');
+                ToastNotifications.success({ title: 'Records has been deleted' });
             }
         }
     }

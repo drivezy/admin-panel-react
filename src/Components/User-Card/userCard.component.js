@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import {
-    Card, CardHeader, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Button, Row, Col, Progress, Nav, NavItem, NavLink, TabContent, TabPane
+    Card, 
 } from 'reactstrap';
-import { Link } from 'react-router-dom';
 
+import { Get } from 'common-js-util';
 
-import { Get } from './../../Utils/http.utils';
-import './userCard.component.css';
 import UserLicenseCard from '../User-License-Card/userLicenseCard.component';
+import './userCard.component.css';
 
 export default class UserCard extends Component {
 
@@ -43,29 +41,24 @@ export default class UserCard extends Component {
         return (
             <div className="user-card card">
 
-                <UserLicenseCard userData={userData} />
+                <UserLicenseCard userData={userData} flag={0}/>
 
                 <Card>
 
-                    <div className="user-photo">
-                        {
-                            userData.photograph ?
-                                <img src={`${userData.photograph}`} alt="" />
-                                : <img className="dummy-image" src={require('./../../Assets/images/photograph.png')} alt="" />
-                        }
+                    <div className="user-photo-and-user-name">
 
-                    </div>
-                    <div className="details list-group-item">
-
-                        <div className="text-field"><i className="fa fa-user" aria-hidden="true"></i>
-                            Name
-                        </div>
-
-                        <div className="data-field">
+                        <div className="user-name">
                             {userData.display_name}
                         </div>
-                    </div>
 
+                        <div className="user-photo">
+                            {
+                                userData.photograph ?
+                                    <img src={`${userData.photograph}`} alt="" />
+                                    : <img className="dummy-image" src={require('./../../Assets/images/photograph.png')} alt="" />
+                            }
+                        </div>
+                    </div>
 
                     <div className="details list-group-item">
 

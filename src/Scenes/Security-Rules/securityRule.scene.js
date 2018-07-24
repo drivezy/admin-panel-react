@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 
+import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
+import { GetUrlParams, Location } from 'drivezy-web-utils/build/Utils/location.utils';
+
+
+import { Get, Put, Post, Delete, BuildUrlForGetCall, IsObjectHaveKeys } from 'common-js-util';
+
 import ScriptInput from './../../Components/Forms/Components/Script-Input/scriptInput.component';
 import SelectBox from './../../Components/Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import ReferenceInput from './../../Components/Forms/Components/Reference-Input/referenceInput';
-import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 
-import ToastNotifications from '../../Utils/toast.utils';
-import { GetUrlParams, Location } from './../../Utils/location.utils';
-import { Get, Put, Post, Delete } from './../../Utils/http.utils';
-import { BuildUrlForGetCall, IsObjectHaveKeys } from '../../Utils/common.utils';
 import { GetColumnDetail, ExtractColumnName } from './../../Utils/panel.utils';
 
 import { SecurityRuleEndPoint } from './../../Constants/api.constants';
@@ -143,6 +144,7 @@ export default class SecurityRule extends Component {
         const { id: roleId } = role;
 
         const result = await Post({ url: 'api/record/roleAssignment', body: { source_id, source_type, role_id: roleId }, urlPrefix: ROUTE_URL });
+        console.log(result);
         if (result.success) {
             rule.roles.push(result.response);
             this.setState({ rule });
@@ -197,8 +199,9 @@ export default class SecurityRule extends Component {
 
     render() {
         const { columns, rule, selectedColumn, scriptPayload } = this.state;
-        const { name = '', script: scriptObj = {} } = rule;
-        const { script } = scriptObj;
+        const { name = '' } = rule;
+        const scriptObj = rule.script || {};
+        const { script = '' } = scriptObj;
 
         return (
             <div className='security-rule-container'>
@@ -206,10 +209,15 @@ export default class SecurityRule extends Component {
                     <div className="search-bar">
                         Security Rule
                     </div>
-                </div> */}
+        </div> */}
 
                 <div className='body'>
-                    <form name='securityRule' className="clientScript">
+
+                <div className="script-header">
+                    {<h6>Security Rule - {rule.id} </h6>}
+                </div>
+
+                    <form name='securityRule' className="security-rule">
                         <div className='form-row'>
                             <div className='form-group'>
                                 <div className="nameInput inputField">
@@ -229,7 +237,7 @@ export default class SecurityRule extends Component {
                                     <textarea
                                         placeholder='Enter Filter Condition'
                                         rows="3"
-                                        value={rule.filter_condition}
+                                        value={rule.filter_condition || ''}
                                         onChange={e => this.setRuleValue(e.target.value, 'filter_condition')}
                                         className="description"
                                     />
@@ -248,7 +256,7 @@ export default class SecurityRule extends Component {
                             <div className='form-group'>
                                 {
                                     IsObjectHaveKeys(scriptPayload) &&
-                                    <div className="filterCondition col">
+                                    <div className="scriptInput col">
                                         <label>Script</label>
                                         <ScriptInput
                                             inline
