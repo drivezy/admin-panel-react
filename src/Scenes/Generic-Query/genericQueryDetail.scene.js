@@ -151,7 +151,7 @@ export default class GenericQueryDetail extends Component {
         if (result.success) {
             const queryListing = result.response;
             this.setState({ queryListing });
-
+            console.log(result);
 
             let stats = result.stats ? result.stats : stats;
             params.dictionary = result.dictionary ? result.dictionary : params.dictionary;
@@ -251,6 +251,7 @@ export default class GenericQueryDetail extends Component {
                 <div className="page-bar">
                     <div className="listing-tools left">
                         <div className="search-box-wrapper">
+                        {console.log(filterContent)}
                             <ListingSearch
                                 localSearch={localSearch}
                                 onEdit={this.filterLocally}
