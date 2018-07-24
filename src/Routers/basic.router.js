@@ -4,13 +4,18 @@ import {
     Route, Switch, Redirect
 } from 'react-router-dom';
 
-import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
+import { ToastNotifications, ModalManager, LoaderUtils } from 'drivezy-web-utils/build/Utils';
+import { GetItem, SetItem } from 'drivezy-web-utils/build/Utils/localStorage.utils';
 import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
+
 import { ToastContainer } from 'drivezy-web-utils/build/Components/Toast-Container/toastContainer.component';
 import { ModalWrapper } from 'drivezy-web-utils/build/Components/Modal-Wrapper/modalWrapper.component';
 import { ConfirmModal } from 'drivezy-web-utils/build/Components/Confirm-Modal-Wrapper/confirm.modal';
 
+import { InitializeCommonJs } from 'common-js-util';
 // import { ToastContainer } from 'react-toastify';
+import GLOBAL from './../Constants/global.constants';
+
 
 import { SubscribeToEvent } from 'common-js-util';
 
@@ -41,6 +46,16 @@ import { LoginCheck } from './../Utils/user.utils';
  * Starting Route is the parent level routing definition, 
  */
 export default class BasicRoute extends Component {
+    constructor(props) {
+        super(props);
+        InitializeCommonJs({
+            GLOBAL,
+            ToastNotifications,
+            GetItem, SetItem,
+            Loader: LoaderUtils
+        });
+    }
+
     state = {
         loggedUser: {},
 
