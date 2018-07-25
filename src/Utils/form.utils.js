@@ -119,7 +119,7 @@ export default class FormUtil {
             return self.form.data[column];
         }
 
-        return null;
+        return self.form.data;
     };
 
     /**
