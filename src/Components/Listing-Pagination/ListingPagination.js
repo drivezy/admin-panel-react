@@ -187,7 +187,7 @@ export default class ListingPagination extends Component {
                 {
                     statsData && statsData.total > 0 &&
                     <div className="pagination-record">
-                        Showing {current_page ? ((((current_page) * limit) - limit) + 1) : 0} - {current_page ? ((current_page) * limit) : 0} results from {statsData ? statsData.total : 0}
+                        Showing {current_page ? ((((current_page) * limit) - limit) + 1) : 0} - {current_page ? ((((current_page*limit)<statsData.total) ? (current_page*limit) : statsData.total ) * limit) : 0} results from {statsData ? statsData.total : 0}
                     </div>
                 }
             </div>
