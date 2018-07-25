@@ -156,7 +156,7 @@ export default class PortletTable extends Component {
             listing.sort(generateSortFn(sortKey, reverse));
         }
 
-        this.setState({ listing:listing, sortKey:sortKey, reverse:reverse })
+        this.setState({ listing, sortKey, reverse })
         
     }
 
