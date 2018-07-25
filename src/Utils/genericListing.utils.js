@@ -279,79 +279,38 @@ export function FilterTable(data, method) {
     };
 
     let query = '';
-    if (data.selectedColumn.path.split(".").length == 2) { // for columns which is child of table itself
-        if (urlParams.query) { // if previous query present then it will executed
-            let a = {};
-            let f = 0;
-            a = urlParams.query.split(" AND ");
-            for (let i = 0; i < a.length; i++) { // for checking overlapping query
-                let b = {};
-                let newquery;
-                b = a[i].split(" LIKE ");
-                if (newquery == b[0]) {
-                    f = 1;
-                }
+
+    if (urlParams.query) { // if previous query present then it will executed
+        let a = {};
+        let f = 0;
+        a = urlParams.query.split(" AND ");
+        for (let i = 0; i < a.length; i++) { // for checking overlapping query
+            let b = {};
+            let newquery;
+            b = a[i].split(" LIKE ");
+            if (newquery == b[0]) {
+                f = 1;
             }
-            if (f == 0) { // if not overlappin
-
-                query = urlParams.query + ' AND ' + GetPathWithParent(data.selectedColumn) + method[0] + "'" + data.listingRow[data.selectedColumn.path] + "'";
-                // query = urlParams.query + ' AND ' + data.selectedColumn.path + method[0] + "'" + data.listingRow[data.selectedColumn.path] + "'";
-
-                urlParams.query = query;
-                Location.search(urlParams, { props: paramProps });
-            } else { // if overlappin
-
-                query = urlParams.query;
-
-                urlParams.query = query;
-                Location.search(urlParams, { props: paramProps });
-            }
-        } else { // if previous query not present then it will executed
-
-            // query = `\`${data.selectedColumn.parent}\`${data.selectedColumn.name}${method[0]}'${data.listingRow[data.selectedColumn.path]}`;
-            query = GetPathWithParent(data.selectedColumn) + method[0] + "'" + data.listingRow[data.selectedColumn.path] + "'";
-
+        }
+        if (f == 0) { // if not overlappin
+            query = urlParams.query + ' AND ' + GetPathWithParent(data.selectedColumn) + method[0] + "'" + data.listingRow[data.selectedColumn.path] + "'";
+            urlParams.query = query;
+            Location.search(urlParams, { props: paramProps });
+        } else { // if overlappin
+            query = urlParams.query;
             urlParams.query = query;
             Location.search(urlParams, { props: paramProps });
         }
-    } else if (data.selectedColumn.path.split(".").length == 3) { // This will executed when showmatching clicked second time
-        let regex = /.([^.]*)$/; // filters out anything before first '.'
-        let path = data.selectedColumn.path.replace(regex, "");
-        if (urlParams.query) { // if previous query present then it will executed
-            let newquery = data.selectedColumn["parent"] + './id';
-            let a = {};
-            let f = 0;
-            a = urlParams.query.split(" AND ");
-            for (let i = 0; i < a.length; i++) { // for checking overlapping query
-                let b = {};
-                b = a[i].split(" = ");
-                if (newquery == b[0]) {
-                    f = 1;
-                }
-            }
-            if (f == 0) { // if not overlapping
-                query = urlParams.query + ' AND `' + data.selectedColumn["parent"] + '`.id' + method[1] + "'" + data.listingRow[data.starter + '.id'] + "'";
-                Location.search({
-                    query: query
-                });
-            } else { // if overlapping
-                query = urlParams.query;
-                Location.search({
-                    query: query
-                });
-            }
-        } else { // if previous query not present then it will executed
+    } else { // if previous query not present then it will executed
+        // query = `\`${data.selectedColumn.parent}\`${data.selectedColumn.name}${method[0]}'${data.listingRow[data.selectedColumn.path]}`;
+        query = GetPathWithParent(data.selectedColumn) + method[0] + "'" + data.listingRow[data.selectedColumn.path] + "'";
 
-            query = '`' + data.selectedColumn["parent"] + '`.id' + method[1] + "'" + data.listingRow[data.starter + '.id'] + "'";
-
-            urlParams.query = query;
-
-            Location.search(urlParams, { props: paramProps });
-        }
+        urlParams.query = query;
+        Location.search(urlParams, { props: paramProps });
     }
 }
 
-export async function GetAggregation (operator, caption, data) {
+export async function GetAggregation(operator, caption, data) {
     let options = GetDefaultOptions();
     options.aggregation_column = data.selectedColumn.path;
     options.aggregation_operator = operator;
