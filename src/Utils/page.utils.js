@@ -2,6 +2,7 @@ import { Get, Post, Delete, Put } from 'common-js-util';
 import { Location} from 'drivezy-web-utils/build/Utils/location.utils';
 import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
+import { ROUTE_URL } from './../Constants/global.constants';
 import { CreateUrl } from './generic.utils';
 
 let self = {};
@@ -14,6 +15,22 @@ export default class Pageutil {
      */
     static setForm(page) {
         self.page = page;
+    };
+
+    static getParentValue(column) {
+        return column ? self.page.parent[column] : self.page.parent;
+    }
+
+    /**
+     * returns value of the provided column
+     * @param  {string} column - column name
+     */
+    static getValue(column) {
+        if (typeof self.page == "object" && self.page.data[column]) {
+            return self.page.data[column];
+        }
+
+        return self.page.data;
     };
 
     /**
@@ -49,7 +66,7 @@ export default class Pageutil {
     }
 
 
-    static httpCall({ url, callback, extraParams, method = 'get', urlPrefix }) {
+    static httpCall({ url, callback, extraParams, method = 'get', urlPrefix = ROUTE_URL }) {
         const methods = {
             get: Get, post: Post, put: Put, delete: Delete
         };

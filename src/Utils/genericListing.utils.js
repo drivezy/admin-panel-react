@@ -1,7 +1,9 @@
 
-import { Get, IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall, TrimQueryString, IsObjectHaveKeys } from 'common-js-util';
+import { Get, IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall, TrimQueryString, IsObjectHaveKeys, CopyToClipBoard } from 'common-js-util';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
+import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
-import { GetParsedLayoutScript, GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, ParseRestrictedQuery } from './generic.utils';
+import { GetParsedLayoutScript, GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, ParseRestrictedQuery, GetPathWithParent } from './generic.utils';
 
 import { ROUTE_URL } from './../Constants/global.constants';
 
@@ -168,7 +170,7 @@ function PrepareObjectForListing(result, { extraParams }) {
             formPreferences = GetParsedLayoutScript(configuration.form_layouts);
             // formPreference = formPreferences[0] || {};
         } else {
-            formPreferences = GetParsedLayoutScript(model.form_layouts);   
+            formPreferences = GetParsedLayoutScript(model.form_layouts);
         }
 
         formPreference = formPreferences[0] || {};
@@ -269,6 +271,58 @@ export function GetDefaultOptions() {
     };
 }
 
+
+export function FilterTable(data, method) {
+    const urlParams = Location.search();
+    const paramProps = {
+        history: data.history, match: data.match
+    };
+
+    let query = '';
+
+    if (urlParams.query) { // if previous query present then it will executed
+        let a = {};
+        let f = 0;
+        a = urlParams.query.split(" AND ");
+        for (let i = 0; i < a.length; i++) { // for checking overlapping query
+            let b = {};
+            let newquery;
+            b = a[i].split(" LIKE ");
+            if (newquery == b[0]) {
+                f = 1;
+            }
+        }
+        if (f == 0) { // if not overlappin
+            query = urlParams.query + ' AND ' + GetPathWithParent(data.selectedColumn) + method[0] + "'" + data.listingRow[data.selectedColumn.path] + "'";
+            urlParams.query = query;
+            Location.search(urlParams, { props: paramProps });
+        } else { // if overlappin
+            query = urlParams.query;
+            urlParams.query = query;
+            Location.search(urlParams, { props: paramProps });
+        }
+    } else { // if previous query not present then it will executed
+        // query = `\`${data.selectedColumn.parent}\`${data.selectedColumn.name}${method[0]}'${data.listingRow[data.selectedColumn.path]}`;
+        query = GetPathWithParent(data.selectedColumn) + method[0] + "'" + data.listingRow[data.selectedColumn.path] + "'";
+
+        urlParams.query = query;
+        Location.search(urlParams, { props: paramProps });
+    }
+}
+
+export async function GetAggregation(operator, caption, data) {
+    let options = GetDefaultOptions();
+    options.aggregation_column = data.selectedColumn.path;
+    options.aggregation_operator = operator;
+
+    const url = BuildUrlForGetCall(data.menuDetail.url, options);
+
+    const result = await Get({ url });
+
+    if (result.success) {
+        ToastNotifications.success({ description: result.response, title: caption });
+    }
+}
 
 /**
  * everytime few variables are being initialized whenever api call is made to fetch data
