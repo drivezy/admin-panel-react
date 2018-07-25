@@ -44,7 +44,33 @@
         // background: #475a6b;
         color: white;
     }
+    .dropdown{
+        .dropdown-button{
+            &:hover{
+                color: #fff;
+            }
+        }
+        .dropdown-menu {
+            min-width: 140px !important;
+        }
+    .dropdown-menu.menu-operations{
+        background: #fff;
+        .menu-item {
+        display: flex;
+        .menu-link{
+            font-size: 17px !important;
+            padding: 4px 10px !important;
+            span.badge{
+            color: #000;
+            opacity: 1;
+            }
+            }
+        }
+        }
+    }
 }
+
+
 
 .drivezy-light-theme {
     .custom-actions {

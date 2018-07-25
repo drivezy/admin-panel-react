@@ -139,6 +139,7 @@ export default class GenericDetail extends Component {
                 <div className="right">
                     <div className="btn-group header-actions" id="generic-detail-header-dynamic-icon-group">
                         <CustomAction menuDetail={menuDetail} history={history} genericData={genericDataForCustomColumn} actions={portlet.nextActions} listingRow={data} placement={'as_record'} callback={this.getDetailRecord} />
+                        <CustomAction menuDetail={menuDetail} history={history} genericData={genericDataForCustomColumn} actions={portlet.nextActions} listingRow={data} placement={'as_dropdown'} callback={this.getDetailRecord} />
                     </div>
 
                     {
