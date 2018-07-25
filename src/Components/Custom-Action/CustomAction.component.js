@@ -107,39 +107,12 @@ export default class CustomAction extends Component {
                         if (!action) {
                             return null;
                         }
-                        if (action[placement] && placement == 'as_record') {
-                            // if (action.placement_id == placement || true) {
-                            const html =
-
-                                // <button key={key}
-                                //     onClick={() => {
-                                //         this.callFunction({ action, listingRow });
-                                //     }}
-                                //     type="button" className="btn btn-sm btn-light">
-                                <span className="button-element" onClick={() => { this.callFunction({ action, listingRow }) }}>
-                                    {/* <i className={`fa ${action.icon}`}></i> */}
-                                    <i className={`fa ${action.image}`}></i>
-
-                                    {/* Temporaririly fix to hide the name for row actions */}
-                                    {/* {
-                                        ((action.placement_id == 168) || (position == 'header')) && <span className="action-label">
-                                            {action.name}
-                                        </span>
-                                    } */}
-                                </span>
-
-                            // </button>
-                            return (
-                                <CustomTooltip placement="top" key={key} html={html} title={action.name}></CustomTooltip>
-                            );
-                        }
 
                         if (action[placement] && placement == 'as_dropdown') {
-                            console.log(action)
                             // const html =
                             //     <button type="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true" class="dropdown-button dropdown-toggle btn btn-primary">Filter</button>
                             return (
-                                <Dropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                                <Dropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle} key={key}>
                                     {/* <DropdownToggle data-toggle="dropdown" aria-expanded={this.state.dropdownOpen}> */}
                                     <DropdownToggle caret
                                         className='dropdown-button'
@@ -166,6 +139,32 @@ export default class CustomAction extends Component {
                                         }
                                     </DropdownMenu>
                                 </Dropdown>
+                            );
+                        }
+                        else if(action[placement]){
+                            // if (action.placement_id == placement || true) {
+                            const html =
+
+                                // <button key={key}
+                                //     onClick={() => {
+                                //         this.callFunction({ action, listingRow });
+                                //     }}
+                                //     type="button" className="btn btn-sm btn-light">
+                                <span className="button-element" onClick={() => { this.callFunction({ action, listingRow }) }}>
+                                    {/* <i className={`fa ${action.icon}`}></i> */}
+                                    <i className={`fa ${action.image}`}></i>
+
+                                    {/* Temporaririly fix to hide the name for row actions */}
+                                    {/* {
+                                        ((action.placement_id == 168) || (position == 'header')) && <span className="action-label">
+                                            {action.name}
+                                        </span>
+                                    } */}
+                                </span>
+
+                            // </button>
+                            return (
+                                <CustomTooltip placement="top" key={key} html={html} title={action.name}></CustomTooltip>
                             );
                         }
                     })
