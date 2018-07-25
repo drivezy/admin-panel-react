@@ -21,7 +21,7 @@ import CustomAction from './../../Components/Custom-Action/CustomAction.componen
 import PredefinedFilter from './../../Components/Dropdown-Filter/filter.component';
 import ListingSearch from './../../Components/Listing-Search/listingSearch.component';
 
-import { GetDefaultOptions } from './../../Utils/genericListing.utils';
+import { GetDefaultOptions, FilterTable, GetAggregation } from './../../Utils/genericListing.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns, GetPathWithParent } from './../../Utils/generic.utils';
 import { GetListingRecord } from './../../Utils/genericListing.utils';
 
@@ -130,92 +130,12 @@ export default class GenericListing extends Component {
         }
     }
 
-    filterTable = (data, method) => {
-        const paramProps = {
-            history: data.history, match: data.match
-        };
-
-        let query = '';
-        if (data.selectedColumn.path.split(".").length == 2) { // for columns which is child of table itself
-            if (this.urlParams.query) { // if previous query present then it will executed
-                let a = {};
-                let f = 0;
-                a = this.urlParams.query.split(" AND ");
-                for (let i = 0; i < a.length; i++) { // for checking overlapping query
-                    let b = {};
-                    let newquery;
-                    b = a[i].split(" LIKE ");
-                    if (newquery == b[0]) {
-                        f = 1;
-                    }
-                }
-                if (f == 0) { // if not overlappin
-
-                    query = this.urlParams.query + ' AND ' + GetPathWithParent(data.selectedColumn) + method[0] + "'" + data.listingRow[data.selectedColumn.path] + "'";
-                    // query = this.urlParams.query + ' AND ' + data.selectedColumn.path + method[0] + "'" + data.listingRow[data.selectedColumn.path] + "'";
-
-                    this.urlParams.query = query;
-                    Location.search(this.urlParams, { props: paramProps });
-                } else { // if overlappin
-
-                    query = this.urlParams.query;
-
-                    this.urlParams.query = query;
-                    Location.search(this.urlParams, { props: paramProps });
-                }
-            } else { // if previous query not present then it will executed
-
-                // query = `\`${data.selectedColumn.parent}\`${data.selectedColumn.name}${method[0]}'${data.listingRow[data.selectedColumn.path]}`;
-                query = GetPathWithParent(data.selectedColumn) + method[0] + "'" + data.listingRow[data.selectedColumn.path] + "'";
-
-                this.urlParams.query = query;
-                Location.search(this.urlParams, { props: paramProps });
-            }
-        } else if (data.selectedColumn.path.split(".").length == 3) { // This will executed when showmatching clicked second time
-            let regex = /.([^.]*)$/; // filters out anything before first '.'
-            let path = data.selectedColumn.path.replace(regex, "");
-            if (this.urlParams.query) { // if previous query present then it will executed
-                let newquery = data.selectedColumn["parent"] + './id';
-                let a = {};
-                let f = 0;
-                a = this.urlParams.query.split(" AND ");
-                for (let i = 0; i < a.length; i++) { // for checking overlapping query
-                    let b = {};
-                    b = a[i].split(" = ");
-                    if (newquery == b[0]) {
-                        f = 1;
-                    }
-                }
-                if (f == 0) { // if not overlapping
-                    query = this.urlParams.query + ' AND `' + data.selectedColumn["parent"] + '`.id' + method[1] + "'" + data.listingRow[data.starter + '.id'] + "'";
-                    Location.search({
-                        query: query
-                    });
-                } else { // if overlapping
-                    query = this.urlParams.query;
-                    Location.search({
-                        query: query
-                    });
-                }
-            } else { // if previous query not present then it will executed
-
-                query = '`' + data.selectedColumn["parent"] + '`.id' + method[1] + "'" + data.listingRow[data.starter + '.id'] + "'";
-
-                this.urlParams.query = query;
-
-                Location.search(this.urlParams, { props: paramProps });
-            }
-        }
-    }
 
     filterColumn = (column) => {
         let selected;
         if (column.path.split(".").length == 2) { // for columns which is child of table itself
             selected = column.path;
         }
-        // else if (column.path.split(".").length == 3) { // for reference columns (for e.g. Created by table in with any menu)
-        //     selected = column.path;
-        // }
 
         if (typeof this.toggleAdvancedFilter == 'function') {
             this.toggleAdvancedFilter({ single: selected });
@@ -425,8 +345,9 @@ export default class GenericListing extends Component {
             icon: 'fa-retweet',
             subMenu: false,
             onClick: (data) => {
-                this.filterTable(data, [" LIKE ", " = "]);
-                return data.selectedColumn.path.split(".").length < 3;
+                FilterTable(data, [" LIKE ", " = "]);
+                return true;
+                // return data.selectedColumn.path.split(".").length < 3;
             },
             disabled: false
         }, {
@@ -435,8 +356,9 @@ export default class GenericListing extends Component {
             icon: 'fa-columns',
             subMenu: false,
             onClick: (data) => {
-                this.filterTable(data, [" NOT LIKE ", " != "]);
-                return data.selectedColumn.path.split(".").length < 3;
+                FilterTable(data, [" NOT LIKE ", " != "]);
+                // return data.selectedColumn.path.split(".").length < 3;
+                return true;
             },
             disabled: false
         }, {
@@ -446,7 +368,8 @@ export default class GenericListing extends Component {
             subMenu: false,
             onClick: (data) => {
                 this.filterColumn(data.selectedColumn);
-                return data.selectedColumn.path.split(".").length < 3;
+                // return data.selectedColumn.path.split(".").length < 3;
+                return true;
             },
             disabled: false
         }, {
@@ -455,11 +378,9 @@ export default class GenericListing extends Component {
             icon: 'fa-chart-line',
             subMenu: true,
             onClick: (data, operator) => {
-              
-                this.openAggregationResult(operator.name.toLowerCase(), operator.name + ' of ' + data.selectedColumn.display_name + ' equals : ', data)
-            }, disabled: (data) => {
-                return (data.selectedColumn.path.split('.').length != 1)
-            }
+                GetAggregation(operator.name.toLowerCase(), operator.name + ' of ' + data.selectedColumn.display_name + ' equals : ', data)
+            }, 
+            disabled: (data) => (data.selectedColumn.path.split('.').length != 1)
         }, { subMenu: null },
         {
             id: 4,

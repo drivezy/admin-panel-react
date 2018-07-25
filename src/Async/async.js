@@ -13,6 +13,7 @@ export default function asyncComponent(importComponent) {
         }
 
         async componentDidMount() {
+            // const { default: component } = await import(`./../Scenes/Generic-Listing/genericListing.scene`);
             const { default: component } = await import(`./../Scenes/${importComponent}.js`);
 
             this.setState({
