@@ -8,7 +8,7 @@ import {
 
 import  QueryActions  from './../Query-Actions/queryActions.component';
 import { RowTemplate } from './../../../Utils/generic.utils';
-import { Location } from './../../../Utils/location.utils';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 
 
 export default class QueryTable extends Component {

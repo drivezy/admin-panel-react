@@ -54,11 +54,12 @@ export default class GenericQueryDetail extends Component {
     }
 
     componentDidMount = async () => {
+        const { queryParamsData } = this.state
         this.getQueryParamsData();
-        const result = await Get({ url: 'userPreference', parameter: "invoice_details.list" });
-        result.response[18].column_definition = JSON.parse(result.response[18].value);
-        console.log(result.response[18]);
-        const layout = result.response[18];
+        const result = await Get({ url: 'userPreference', parameter: queryParamsData.short_name+"list" });
+        result.response[0].column_definition = JSON.parse(result.response[0].value);
+        console.log(result.response[0]);
+        const layout = result.response[0];
         this.setState({ layout: layout });
         console.log(this.state.layout);
 
@@ -75,7 +76,7 @@ export default class GenericQueryDetail extends Component {
             const finalColumns = CreateFinalColumns(columns, layout.column_definition);
             // this.setState({ queryParamsData });
             this.state.queryParamsData = queryParamsData;
-            this.setState({ finalColumns });
+            this.setState({ finalColumns: finalColumns });
             console.log(layout)
             // this.getDataForListing();
             this.setState({ layout });
@@ -147,10 +148,10 @@ export default class GenericQueryDetail extends Component {
 
         const url = BuildUrlForGetCall("getReportData", options);
 
-        const result = await Post({ url, body: { month: "2016-07", query_name: "invoice_details" } });
+        const result = await Post({ url, body: { month: "2016-07", query_name: queryParamsData.short_name } });
         if (result.success) {
             const queryListing = result.response;
-            this.setState({ queryListing });
+            this.setState({ queryListing: queryListing });
             console.log(result);
 
             let stats = result.stats ? result.stats : stats;
@@ -193,7 +194,7 @@ export default class GenericQueryDetail extends Component {
             restrictColumn: "",
         };
         this.state.loading = false;
-        this.setState({ resultData });
+        this.setState({ resultData: resultData });
     }
 
     toggleMenu = (arrowstate, arrow) => {
@@ -287,7 +288,7 @@ export default class GenericQueryDetail extends Component {
 
                             {
 
-                                resultData && finalColumns && resultData.listName && resultData.columns && preference &&
+                                resultData && resultData.listName && resultData.columns && // finalColumns && 
                                 <QueryTableSettings
 
                                     listName={resultData.listName}
