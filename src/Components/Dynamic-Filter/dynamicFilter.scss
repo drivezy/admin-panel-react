@@ -39,6 +39,15 @@
                         padding: 0px 5px;
                         display: inline-block;
                     }
+                    p.query-name{
+                        margin: 0px;
+                        padding: 0px 5px;
+                        display: inline-block;
+                        overflow-x: scroll;
+                        overflow-y: hidden;
+                        white-space: nowrap;
+                        width: 130px;
+                    }
                     span.delete-icon {
                         float: right;
                         font-size: 10px;
