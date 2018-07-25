@@ -934,7 +934,7 @@ export default class ConfigureDynamicFilter extends Component {
                                         Close
                                     </button>
                                     <button className="btn btn-success" onClick={this.submit} style={{ margin: '8px' }}>
-                                        Save
+                                        Go
                                     </button>
                                 </div>
                             </div>
