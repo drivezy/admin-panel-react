@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './CustomAction.css';
 
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+
 import { ProcessForm } from './../../Utils/formMiddleware.utils';
 import { ProcessPage } from './../../Utils/pageMiddleware.utils';
 
@@ -8,6 +10,8 @@ import { CreateUrl, ConvertDependencyInjectionToArgs, RemoveStarterFromThePath }
 // import { IsUndefinedOrNull } from './../../Utils/common.utils';
 
 // import FormCreator from './../Form-Creator/formCreator.component';
+
+import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 
 // import ModalHeader from './../../Wrappers/Modal-Wrapper/templates/Modal-Header/modalHeader.component'
 // import ModalFooter from './../../Wrappers/Modal-Wrapper/templates/Modal-Footer/modalFooter.component';
@@ -25,8 +29,10 @@ export default class CustomAction extends Component {
 
         self = this;
         this.state = {
+            dropdownOpen: false,
             actions: props.actions,
-            genericData: props.genericData
+            genericData: props.genericData,
+            placement: props.placement
         };
     }
 
@@ -39,6 +45,12 @@ export default class CustomAction extends Component {
 
     componentDidMount = () => {
         const { actions } = this.state
+    }
+
+    toggle = () => {
+        this.setState({
+            dropdownOpen: !this.state.dropdownOpen
+        });
     }
 
     callFunction = ({ action, listingRow }) => {
@@ -92,10 +104,10 @@ export default class CustomAction extends Component {
             <div className="custom-actions flex">
                 {
                     sortActions.map((action, key) => {
-                        if(!action) { 
+                        if (!action) {
                             return null;
                         }
-                        if (action[placement]) {
+                        if (action[placement] && placement == 'as_record') {
                             // if (action.placement_id == placement || true) {
                             const html =
 
@@ -119,6 +131,41 @@ export default class CustomAction extends Component {
                             // </button>
                             return (
                                 <CustomTooltip placement="top" key={key} html={html} title={action.name}></CustomTooltip>
+                            );
+                        }
+
+                        if (action[placement] && placement == 'as_dropdown') {
+                            console.log(action)
+                            // const html =
+                            //     <button type="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true" class="dropdown-button dropdown-toggle btn btn-primary">Filter</button>
+                            return (
+                                <Dropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                                    {/* <DropdownToggle data-toggle="dropdown" aria-expanded={this.state.dropdownOpen}> */}
+                                    <DropdownToggle caret
+                                        className='dropdown-button'
+                                        color="secondary"
+                                        onClick={this.toggle}
+                                        data-toggle="dropdown"
+                                        aria-expanded={this.state.dropdownOpen}
+                                    >
+                                        Actions
+                                    </DropdownToggle>
+                                    <DropdownMenu className="dropdown-menu custom-click pull-right menu-operations" right>
+                                        {
+
+                                            <div className="menu-item" key={key} role="menuitem">
+                                                <a className="menu-link">
+                                                    <span className="badge" onClick={() => { this.callFunction({ action, listingRow }) }}>
+                                                        <i className={`fa ${action.image}`}></i>
+                                                        &nbsp;
+                                                        {action.name}
+                                                    </span>
+                                                </a>
+                                            </div>
+
+                                        }
+                                    </DropdownMenu>
+                                </Dropdown>
                             );
                         }
                     })
