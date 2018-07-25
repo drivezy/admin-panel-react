@@ -8,6 +8,7 @@ import { CreateQuery } from './../../Utils/dynamicFilter.utils';
 import { SetPreference } from './../../Utils/preference.utils';
 
 import { MenuFilterEndPoint } from './../../Constants/api.constants';
+import CustomTooltip from '../../Components/Custom-Tooltip/customTooltip.component';
 import './dynamicFilter.css';
 
 export default class DynamicFilter extends Component {
@@ -338,8 +339,9 @@ export default class DynamicFilter extends Component {
                                 if (query) {
                                     return (
                                         <li key={key} className="form-badge list-group-item">
-                                            <p className="filter-name">
-                                                {query}
+                                            <p className="query-name">
+                                                {/* {query} */}
+                                                <CustomTooltip placement="top" html={query} title={query}></CustomTooltip>
                                             </p>
                                         </li>
                                     )
