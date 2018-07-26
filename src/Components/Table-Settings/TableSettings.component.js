@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Collapse, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import _ from 'lodash';
-import { SubscribeToEvent, IsObjectHaveKeys  } from 'common-js-util';
+import { IsObjectHaveKeys  } from 'common-js-util';
+import { SubscribeToEvent } from 'state-manager-utility';
 
 import { SetPreference } from './../../Utils/preference.utils';
 import { changeArrayPosition } from './../../Utils/js.utils';

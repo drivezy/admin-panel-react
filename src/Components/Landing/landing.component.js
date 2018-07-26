@@ -6,7 +6,7 @@ import {
 
 /** Components */
 // import { ToastNotifications, LoaderUtils } from 'drivezy-web-utils/build/Utils';
-// import { GetItem, SetItem } from 'drivezy-web-utils/build/Utils/localStorage.utils';
+// import { GetItem, SetItem } from 'storage-utility';
 
 // import { InitializeCommonJs } from 'common-js-util';
 

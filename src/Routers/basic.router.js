@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom';
 
 import { ToastNotifications, ModalManager, LoaderUtils } from 'drivezy-web-utils/build/Utils';
-import { GetItem, SetItem } from 'drivezy-web-utils/build/Utils/localStorage.utils';
+import { GetItem, SetItem } from 'storage-utility';
 import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 
 import { ToastContainer } from 'drivezy-web-utils/build/Components/Toast-Container/toastContainer.component';
@@ -17,7 +17,7 @@ import { InitializeCommonJs } from 'common-js-util';
 import GLOBAL from './../Constants/global.constants';
 
 
-import { SubscribeToEvent } from 'common-js-util';
+import { SubscribeToEvent } from 'state-manager-utility';
 
 // /** Router */
 import PrivateRoute from './privateRoute.router';
