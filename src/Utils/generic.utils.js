@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
-import {  ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
+import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
 import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 
 import { Get, Delete, IsUndefinedOrNull, BuildUrlForGetCall, IsObjectHaveKeys } from 'common-js-util';
@@ -299,19 +299,19 @@ export function CreateUrl({ url = '', obj }) {
     return url;
 }
 
-export function ConvertDependencyInjectionToArgs(dependencies) {
-    if (!dependencies) {
-        return [];
-    }
+// export function ConvertDependencyInjectionToArgs(dependencies) {
+//     if (!dependencies) {
+//         return [];
+//     }
 
-    var args = [];
-    var dependency = dependencies.split(",");
-    for (var i in dependency) {
-        args.push('this.' + eval(dependency[i]));
-    }
+//     var args = [];
+//     var dependency = dependencies.split(",");
+//     for (var i in dependency) {
+//         args.push('this.' + eval(dependency[i]));
+//     }
 
-    return args;
-}
+//     return args;
+// }
 
 /**
  * Register all the methods coming from db
@@ -804,3 +804,41 @@ export function GetPathWithParent(column) {
     // if (column.path.split('.').length > 2) {
     return `\`${column.parent}\`.${column.referenced_column ? column.referenced_column : column.name}`;
 }
+
+/**
+ * evaluates condition and return boolean value accordingly
+ * @param  {string} condition
+ * @param  {object} itemRow
+ */
+export function EvalCondtionForNextActions(condition, itemRow) {
+    if (!condition) {
+        return true;
+    }
+
+    var reg = /([:$])\w+/g;
+    var expressions = [];
+    var evaluatedExpressions = [];
+    expressions = condition.match(reg);
+
+    for (var i in expressions) {
+        var expression = expressions[i].split(":")[1];
+        // added try catch for checking conditions of menu action
+        try {
+            evaluatedExpressions[i] = eval(itemRow[expression]);
+
+            if (evaluatedExpressions[i] instanceof Array) {
+                if (evaluatedExpressions[i].length) {
+                    evaluatedExpressions[i] = 1;
+                } else {
+                    evaluatedExpressions[i] = 0;
+                }
+            }
+
+            condition = condition.replace(expressions[i], evaluatedExpressions[i]);
+        } catch (e) {
+            evaluatedExpressions[i] = itemRow[expression];
+            condition = condition.replace(expressions[i], "'" + evaluatedExpressions[i] + "'");
+        }
+    }
+    return eval(condition);
+};
