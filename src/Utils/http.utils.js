@@ -6,7 +6,7 @@
 // import GLOBAL from './../Constants/global.constants';
 // import { GetFireToken } from './user.utils';
 // import { IsUndefined, CheckInternet } from './common.utils';
-// import { StoreEvent, SubscribeToEvent, IsEventAvailable } from 'state-manager';
+// import { StoreEvent, SubscribeToEvent, IsEventAvailable } from 'state-manager-utility';
 // import { ToastNotifications, LoaderUtils } from 'drivezy-web-utils/build/Utils';
 
 // const defautlHeaders = {

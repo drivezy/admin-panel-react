@@ -5,7 +5,7 @@ import GLOBAL from './../Constants/global.constants';
 import { LoginCheckEndPoint } from './../Constants/api.constants';
 
 import { Get } from 'common-js-util';
-import { StoreEvent }from 'state-manager';
+import { StoreEvent }from 'state-manager-utility';
 import { GetItem } from 'storage-utility';
 
 let CurrentUser = {};

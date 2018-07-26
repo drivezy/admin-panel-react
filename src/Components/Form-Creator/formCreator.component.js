@@ -12,7 +12,7 @@ import Yup from 'yup';
 import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
 import { SetItem } from 'storage-utility';
 import { Upload, Post, Put, IsObjectHaveKeys, IsUndefined } from 'common-js-util';
-import { SubscribeToEvent } from 'state-manager';
+import { SubscribeToEvent } from 'state-manager-utility';
 
 import { GetChangedMethods } from './../../Utils/generic.utils';
 

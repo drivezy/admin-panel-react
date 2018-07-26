@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './header.css';
-import { SubscribeToEvent } from 'state-manager';
+import { SubscribeToEvent } from 'state-manager-utility';
 
 import ActiveModule from './../../Components/Active-Module/ActiveModule.component';
 import PageNav from './../../Components/Page-Nav/PageNav';

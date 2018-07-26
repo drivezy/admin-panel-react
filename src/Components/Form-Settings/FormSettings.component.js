@@ -4,7 +4,7 @@ import './FormSettings.css';
 import _ from 'lodash';
 
 import { IsObjectHaveKeys } from 'common-js-util';
-import { SubscribeToEvent } from 'state-manager';
+import { SubscribeToEvent } from 'state-manager-utility';
 
 import { SetPreference } from './../../Utils/preference.utils';
 

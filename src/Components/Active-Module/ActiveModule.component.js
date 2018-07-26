@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './ActiveModule.css';
 
 import { Link } from 'react-router-dom';
-import { SubscribeToEvent } from 'state-manager';
+import { SubscribeToEvent } from 'state-manager-utility';
 
 
 export default class ActiveModule extends Component {

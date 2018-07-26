@@ -4,7 +4,7 @@ import { Card, CardBody, Form, FormGroup, Label } from 'reactstrap';
 
 import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { Post } from 'common-js-util';
-import { SubscribeToEvent } from 'state-manager';
+import { SubscribeToEvent } from 'state-manager-utility';
 
 import GLOBAL from './../../Constants/global.constants';
 

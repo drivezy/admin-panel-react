@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Collapse } from 'reactstrap';
 
 import {  Get } from 'common-js-util';
-import { SubscribeToEvent, UnsubscribeEvent } from 'state-manager';
+import { SubscribeToEvent, UnsubscribeEvent } from 'state-manager-utility';
 
 import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 
