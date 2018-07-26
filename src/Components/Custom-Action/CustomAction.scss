@@ -51,13 +51,14 @@
             }
         }
         .dropdown-menu {
-            min-width: 140px !important;
+            min-width: 180px !important;
         }
     .dropdown-menu.menu-operations{
         background: #fff;
         .menu-item {
         display: flex;
         .menu-link{
+            cursor: pointer;
             font-size: 17px !important;
             padding: 4px 10px !important;
             span.badge{
