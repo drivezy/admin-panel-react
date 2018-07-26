@@ -213,7 +213,7 @@ export default class GenericListing extends Component {
                             <div className="generic-listing-search">
                                 {
                                     filterContent && filterContent.dictionary &&
-                                    <ListingSearch localSearch={localSearch} onEdit={this.filterLocally} searchDetail={{ name: genericData.model.display_column }} searchQuery={this.urlParams.search} dictionary={filterContent.dictionary} />
+                                    <ListingSearch localSearch={localSearch} onEdit={this.filterLocally} searchDetail={{ name: genericData.model.display_column }} dictionary={filterContent.dictionary} />
                                 }
                             </div>
                             <div className="search-wrapper">
