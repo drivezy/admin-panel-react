@@ -1,11 +1,6 @@
 .booking {
     display: flex;
     flex-direction: column;
-    .header-actions{
-        display: flex;
-        justify-content: flex-end;
-        padding: 2px 5px;
-    }
     .booking-details {
         height: 75%;
         display: flex;

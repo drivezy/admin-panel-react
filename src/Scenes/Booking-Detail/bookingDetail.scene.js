@@ -2,20 +2,12 @@ import React, { Component } from 'react';
 
 import './bookingDetail.scene.css';
 
-import { StoreEvent } from 'common-js-util';
-
 import UserCard from './../../Components/User-Card/userCard.component';
 import BookingFeedback from './../../Components/Booking/Components/Booking-Feedback/bookingFeedback.component';
 import BookingPreRide from './../../Components/Booking/Components/Booking-Pre-Ride/bookingPreRide.component';
 import BookingRideReturn from './../../Components/Booking/Components/Booking-Ride-Return/bookingRideReturn.component';
 import BookingTabsDetail from './../../Components/Booking/Components/Booking-Tabs-Detail/bookingTabsDetail.component';
-import SummaryCard from './../../Components/Summary-Card/summaryCard';
-import CustomAction from './../../Components/Custom-Action/CustomAction.component';
-
-import { GetPreSelectedMethods, RegisterMethod, GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
-
-// import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns, GetPathWithParent } from './../../Utils/generic.utils';
-
+import SummaryCard from './../../Components/Summary-Card/summaryCard'
 
 import { Booking } from './../../Utils/booking.utils';
 
@@ -24,8 +16,7 @@ export default class BookingDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            bookingDetail: {},
-            menuDetail: {}
+            bookingDetail: {}
         };
     }
 
@@ -40,53 +31,14 @@ export default class BookingDetail extends Component {
             let bookingDetail = result.response;
             this.setState({ bookingDetail })
         }
-        this.getMenuData();
-    }
-
-    getMenuData = async () => {
-        const { menuId } = this.props;
-        const result = await GetMenuDetail(menuId);
-        if (result.success) {
-            const { response = {} } = result;
-            const menuDetail = ConvertMenuDetailForGenericPage(response || {});
-            this.state.menuDetail = menuDetail;
-            this.setState({ menuDetail });
-        }
-    }
-
-    refreshPage(event) {
-        event.preventDefault();
-        this.getBookingDetail();
     }
 
     render() {
-        const { history } = this.props;
-        const { bookingDetail = {}, menuDetail } = this.state;
-
-        const genericDataForCustomColumn = {
-            formPreference: {},
-            formPreferences: [],
-            starter: 'booking',
-            columns: {},
-            url: menuDetail.url ? menuDetail.url.split("/:")[0] : '',
-            model: { name: 'booking' },
-            modelId: null,
-            methods: RegisterMethod(menuDetail.uiActions),// genericutils 
-            preDefinedmethods: GetPreSelectedMethods(), // genericutils
-            modelHash: null
-        };
-
+        const { bookingDetail = {} } = this.state;
         return (
             <div className="booking">
-                <div className="header-actions">
-                    <button className="refresh-button btn btn-sm" onClick={(e) => { this.refreshPage(e) }}>
-                        <i className="fa fa-refresh"></i>
-                    </button>
-                    &nbsp;
-                    <CustomAction menuDetail={menuDetail} genericData={genericDataForCustomColumn} history={history} actions={menuDetail.uiActions} listingRow={bookingDetail} placement={'as_dropdown'} callback={this.getBookingDetail} />
-                </div>
-
                 <div className="booking-details">
+
                     <div className="booking-user-detail">
                         {
                             bookingDetail.user && bookingDetail.user.id ?
@@ -95,6 +47,7 @@ export default class BookingDetail extends Component {
                         }
                     </div>
 
+                    {/* <div className="details-body"> */}
                     <div className="pre-ride-detail-and-ride-return">
                         <div className="booking-pre-ride-detail">
                             {
@@ -103,16 +56,25 @@ export default class BookingDetail extends Component {
                                     : null
                             }
                         </div>
+
                         <div className="booking-ride-return-detail">
                             {
                                 bookingDetail.id ?
                                     <BookingRideReturn bookingRideReturnData={bookingDetail} />
                                     : null
                             }
+
+
                         </div>
+
+
+
+
+
                     </div>
 
                     <div className="summary-and-feedback">
+
                         <div className="summary-detail-card">
                             {
                                 (bookingDetail.id ?
@@ -121,6 +83,7 @@ export default class BookingDetail extends Component {
                             }
 
                         </div>
+
                         {
                             (bookingDetail.id && bookingDetail.status != null && bookingDetail.feedback.length) ?
                                 <div className="booking-feedback-detail">
@@ -128,7 +91,13 @@ export default class BookingDetail extends Component {
                                 </div>
                                 : null
                         }
+
                     </div>
+
+
+                    {/* </div> */}
+
+
                 </div>
 
                 <div className="booking-tabs">
@@ -141,6 +110,8 @@ export default class BookingDetail extends Component {
                     </div>
                 </div>
             </div >
+
+
         )
     }
 }
