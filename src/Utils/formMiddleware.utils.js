@@ -8,7 +8,7 @@ import FormCreator from './../Components/Form-Creator/formCreator.component';
 
 import { Get, SelectFromOptions } from 'common-js-util';
 import { ModalManager } from 'drivezy-web-utils/build/Utils';
-import { GetItem } from 'drivezy-web-utils/build/Utils/localStorage.utils';
+import { GetItem } from 'storage-utility';
 import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 
 import FormUtils from './form.utils';

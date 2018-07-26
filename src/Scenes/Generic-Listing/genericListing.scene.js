@@ -8,7 +8,8 @@ import {
 
 import { HotKeys } from 'react-hotkeys';
 
-import { Get, SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent, BuildUrlForGetCall, SelectFromOptions, CopyToClipBoard } from 'common-js-util';
+import { Get, BuildUrlForGetCall, SelectFromOptions, CopyToClipBoard } from 'common-js-util';
+import { SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent } from 'state-manager-utility';
 import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
 import { GetUrlParams, Location } from 'drivezy-web-utils/build/Utils/location.utils';
 
@@ -213,7 +214,7 @@ export default class GenericListing extends Component {
                             <div className="generic-listing-search">
                                 {
                                     filterContent && filterContent.dictionary &&
-                                    <ListingSearch localSearch={localSearch} onEdit={this.filterLocally} searchDetail={{ name: genericData.model.display_column }} searchQuery={this.urlParams.search} dictionary={filterContent.dictionary} />
+                                    <ListingSearch localSearch={localSearch} onEdit={this.filterLocally} searchDetail={{ name: genericData.model.display_column }} dictionary={filterContent.dictionary} />
                                 }
                             </div>
                             <div className="search-wrapper">

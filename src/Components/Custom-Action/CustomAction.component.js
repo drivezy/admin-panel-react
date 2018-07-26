@@ -100,20 +100,20 @@ export default class CustomAction extends Component {
         const { actions = [], listingRow = [], genericData = {}, placement = 'as_record', position } = this.props;
         let sortActions = this.state.actions;
         sortActions = _.orderBy(actions, 'display_order', 'asc')
+
+        let filteredActions = [];
+        let sortedActions = [];
+
+        filteredActions = sortActions.filter((action)=>action[placement]&&placement=='as_dropdown');
+        sortedActions = sortActions.filter((action)=>action[placement]&&placement != 'as_dropdown');
+
         return (
             <div className="custom-actions flex">
-                {
-                    sortActions.map((action, key) => {
-                        if (!action) {
-                            return null;
-                        }
 
-                        if (action[placement] && placement == 'as_dropdown') {
-                            // const html =
-                            //     <button type="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true" class="dropdown-button dropdown-toggle btn btn-primary">Filter</button>
-                            return (
-                                <Dropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle} key={key}>
-                                    {/* <DropdownToggle data-toggle="dropdown" aria-expanded={this.state.dropdownOpen}> */}
+                {/* <DropAction placement="as_dropdown" actions="sortActions"> */}
+    {
+                (filteredActions.length > 0) ? 
+                                <Dropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                                     <DropdownToggle caret
                                         className='dropdown-button'
                                         color="secondary"
@@ -125,7 +125,7 @@ export default class CustomAction extends Component {
                                     </DropdownToggle>
                                     <DropdownMenu className="dropdown-menu custom-click pull-right menu-operations" right>
                                         {
-
+                                            filteredActions.map((action, key) =>
                                             <div className="menu-item" key={key} role="menuitem">
                                                 <a className="menu-link">
                                                     <span className="badge" onClick={() => { this.callFunction({ action, listingRow }) }}>
@@ -135,23 +135,22 @@ export default class CustomAction extends Component {
                                                     </span>
                                                 </a>
                                             </div>
-
+                                            )
                                         }
                                     </DropdownMenu>
                                 </Dropdown>
-                            );
-                        }
-                        else if(action[placement]){
-                            // if (action.placement_id == placement || true) {
-                            const html =
+                        : null
+                    }
 
-                                // <button key={key}
-                                //     onClick={() => {
-                                //         this.callFunction({ action, listingRow });
-                                //     }}
-                                //     type="button" className="btn btn-sm btn-light">
+                {
+                    sortedActions.map((action, key) => {
+                        if (!action) {
+                            return null;
+                        }
+                        
+                        if(action[placement]){
+                            const html =
                                 <span className="button-element" onClick={() => { this.callFunction({ action, listingRow }) }}>
-                                    {/* <i className={`fa ${action.icon}`}></i> */}
                                     <i className={`fa ${action.image}`}></i>
 
                                     {/* Temporaririly fix to hide the name for row actions */}
