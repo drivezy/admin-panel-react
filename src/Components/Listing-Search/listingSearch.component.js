@@ -28,18 +28,19 @@ export default class ListingSearch extends Component {
         this.initialize(this.props);
     }
 
-    UNSAFE_componentWillReceiveProps(nextProps, prevProps) {
-        if (nextProps.localSearch != prevProps.localSearch) {
-            this.initialize(nextProps); // on props update
-        }
-    }
+    // UNSAFE_componentWillReceiveProps(nextProps, prevProps) {
+    //     if (nextProps.localSearch != prevProps.localSearch) {
+    //         this.initialize(nextProps); // on props update
+    //     }
+    // }
 
     /**
      * extracts query from string and assing value
      */
     initialize = async (props) => {
-        const { dictionary, searchQuery, searchDetail } = props;
+        const { dictionary, searchDetail } = props;
         let selectedColumn;
+        const searchQuery = Location.search().search;
 
 
         if (searchQuery) {
@@ -96,6 +97,8 @@ export default class ListingSearch extends Component {
      */
     filterChange(select) {
         let valueColumnType = "input";
+        this.state.selectedColumn = select;
+        this.state.activeColumn = select;
         this.setState({
             selectedColumn: select,
             query: '',
