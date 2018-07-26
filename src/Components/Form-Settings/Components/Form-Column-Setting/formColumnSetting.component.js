@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './FormColumnSettings.css';
 import _ from 'lodash';
 
 import { Collapse, Card, CardBody } from 'reactstrap';
