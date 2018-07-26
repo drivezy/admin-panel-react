@@ -12,6 +12,7 @@ export default class CustomTooltip extends Component {
     constructor(props) {
         super(props);
    }
+   
    render() {
         const { html, title, placement } = this.props;
         return (
