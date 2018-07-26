@@ -5,7 +5,8 @@ import { Redirect } from 'react-router-dom';
 
 import { ToastNotifications, LoaderComponent, LoaderUtils, ModalManager } from 'drivezy-web-utils/build/Utils';
 import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
-import { SubscribeToEvent, Get, Post } from 'common-js-util';
+import {  Get, Post } from 'common-js-util';
+import { SubscribeToEvent } from 'state-manager-utility';
 
 import GLOBAL from './../../Constants/global.constants';
 

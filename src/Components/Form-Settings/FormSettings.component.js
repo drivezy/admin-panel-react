@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import './FormSettings.css';
 import _ from 'lodash';
 
-import { SubscribeToEvent, IsObjectHaveKeys } from 'common-js-util';
+import { IsObjectHaveKeys } from 'common-js-util';
+import { SubscribeToEvent } from 'state-manager-utility';
 
 import { SetPreference } from './../../Utils/preference.utils';
 

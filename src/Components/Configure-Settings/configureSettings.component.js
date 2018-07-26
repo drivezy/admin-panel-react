@@ -11,7 +11,7 @@ import {
 import { HotKeys } from 'react-hotkeys';
 
 import { ModalManager } from 'drivezy-web-utils/build/Utils';
-import { StoreEvent } from 'common-js-util';
+import { StoreEvent } from 'state-manager-utility';
 
 import ThemeUtil from './../../Utils/theme.utils';
 import { SetUserPreference } from './../../Utils/userPreference.utils';

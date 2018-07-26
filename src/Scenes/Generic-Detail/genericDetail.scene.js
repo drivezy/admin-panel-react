@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { GetUrlParams, Location } from 'drivezy-web-utils/build/Utils/location.utils';
-import { StoreEvent, SubscribeToEvent, UnsubscribeEvent } from 'common-js-util';
+import { StoreEvent, SubscribeToEvent, UnsubscribeEvent } from 'state-manager-utility';
 
 import DetailPortlet from './../../Components/Detail-Portlet/DetailPortlet.component';
 import DetailIncludes from './../../Components/Detail-Includes/DetailIncludes';

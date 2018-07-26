@@ -1,7 +1,7 @@
 
 // import { Get, ArrayToObject } from 'common-js-util';
-// import { SetItem, GetItem, SetCookie, GetCookie  } from 'drivezy-web-utils/build/Utils';
-
+// import { SetCookie, GetCookie  } from 'drivezy-web-utils/build/Utils';
+// import { SetItem, GetItem } from 'storage-utility';
 // import { OpenPropertiesEndPoint } from './../Constants/api.constants';
 
 // export async function FindProperty(propertyName) {

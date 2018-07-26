@@ -11,7 +11,7 @@ import moment from 'moment';
 import './datePicker.css';
 
 
-import GLOBAL from './../../../../Constants/global.constants'
+import GLOBAL from './../../../../Constants/global.constants';
 
 export default class DatePicker extends Component {
 

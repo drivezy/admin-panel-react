@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './sideNav.css';
 
-import { StoreEvent } from 'common-js-util';
+import { StoreEvent } from 'state-manager-utility';
 
 import { HotKeys } from 'react-hotkeys';
 
