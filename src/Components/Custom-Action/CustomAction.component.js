@@ -5,6 +5,7 @@ import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap
 
 import { ProcessForm } from './../../Utils/formMiddleware.utils';
 import { ProcessPage } from './../../Utils/pageMiddleware.utils';
+import { IsUndefined } from './../../Utils/common.utils';
 
 import { CreateUrl, ConvertDependencyInjectionToArgs, RemoveStarterFromThePath } from './../../Utils/generic.utils';
 // import { IsUndefinedOrNull } from './../../Utils/common.utils';
@@ -49,7 +50,8 @@ export default class CustomAction extends Component {
 
     toggle = () => {
         this.setState({
-            dropdownOpen: !this.state.dropdownOpen
+            dropdownOpen: !this.state.dropdownOpen,
+            searchText: ''
         });
     }
 
@@ -96,6 +98,14 @@ export default class CustomAction extends Component {
         // }
     }
 
+    searchFilter = ({ target = {}, value } = {}) => {
+        const searchText = IsUndefined(value) ? target.value : '';
+        const { actions = [] } = this.props;
+
+        const filteredUserFilter = actions.filter(action => action.name.toLowerCase().includes(searchText.toLowerCase()));
+        this.setState({ searchText, filteredUserFilter });
+    }
+
     render() {
         const { actions = [], listingRow = [], genericData = {}, placement = 'as_record', position } = this.props;
         let sortActions = this.state.actions;
@@ -106,6 +116,8 @@ export default class CustomAction extends Component {
 
         filteredActions = sortActions.filter((action)=>action[placement]&&placement=='as_dropdown');
         sortedActions = sortActions.filter((action)=>action[placement]&&placement != 'as_dropdown');
+        const { filteredUserFilter, searchText } = this.state;
+        const filters = searchText ? filteredUserFilter : filteredActions;
 
         return (
             <div className="custom-actions flex">
@@ -125,7 +137,18 @@ export default class CustomAction extends Component {
                                     </DropdownToggle>
                                     <DropdownMenu className="dropdown-menu custom-click pull-right menu-operations" right>
                                         {
-                                            filteredActions.map((action, key) =>
+                                                filteredActions.length > 1 ?
+                                                <div>
+                                                    <div className="form-group has-feedback">
+                                                        <input value={searchText} onChange={this.searchFilter} type="text" className="form-control" id="search-operation" placeholder='Search Actions' />
+                                                        {/* <i onClick={() => searchText ? this.searchFilter({ value: null }) : null} className={`fa fa-${searchText ? 'times-circle cursor-pointer' : 'search'} form-control-feedback`} aria-hidden="true"></i> */}
+                                                    </div>
+                                                </div>
+                                                :
+                                                null
+                                        }
+                                        {
+                                            filters.map((action, key) =>
                                             <div className="menu-item" key={key} role="menuitem">
                                                 <a className="menu-link">
                                                     <span className="badge" onClick={() => { this.callFunction({ action, listingRow }) }}>
