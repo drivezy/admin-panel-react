@@ -36,6 +36,11 @@
     }
 }
 
+.disabled-action { 
+    opacity: .3;
+    pointer-events: none;    
+}
+
 .custom-actions {
     .tooltip-element {
         margin: 0px 4px;
