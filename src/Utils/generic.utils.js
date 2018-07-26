@@ -815,7 +815,7 @@ export function EvalCondtionForNextActions(condition, itemRow) {
         return true;
     }
 
-    var reg = /([:$])\w+/g;
+    var reg = /:[\w.]*/g;
     var expressions = [];
     var evaluatedExpressions = [];
     expressions = condition.match(reg);
