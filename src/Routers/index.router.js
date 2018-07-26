@@ -3,7 +3,7 @@ import { HotKeys } from 'react-hotkeys';
 
 import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { PreserveState } from 'drivezy-web-utils/build/Utils';
-import { SubscribeToEvent } from 'common-js-util';
+import { SubscribeToEvent } from 'state-manager';
 
 /** Component */
 import Landing from './../Components/Landing/landing.component';

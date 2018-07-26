@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Collapse } from 'reactstrap';
 
-import { SubscribeToEvent, UnsubscribeEvent, Get } from 'common-js-util';
+import {  Get } from 'common-js-util';
+import { SubscribeToEvent, UnsubscribeEvent } from 'state-manager';
+
 import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 
 import Typeahead from './../Forms/Components/Typeahead/typeahead.component';

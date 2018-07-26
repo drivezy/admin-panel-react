@@ -17,7 +17,7 @@ import { InitializeCommonJs } from 'common-js-util';
 import GLOBAL from './../Constants/global.constants';
 
 
-import { SubscribeToEvent } from 'common-js-util';
+import { SubscribeToEvent } from 'state-manager';
 
 // /** Router */
 import PrivateRoute from './privateRoute.router';
