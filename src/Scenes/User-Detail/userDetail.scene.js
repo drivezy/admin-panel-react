@@ -10,6 +10,8 @@ import { Get } from 'common-js-util';
 
 import UserCard from './../../Components/User-Card/userCard.component';
 import TableWrapper from './../../Components/Table-Wrapper/tableWrapper.component';
+import CustomAction from './../../Components/Custom-Action/CustomAction.component';
+import { GetPreSelectedMethods, RegisterMethod, GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
 
 import './userDetail.scene.css';
 
@@ -19,7 +21,8 @@ export default class UserDetail extends Component {
         super(props);
         this.state = {
             userData: {},
-            activeTab: 0
+            activeTab: 0,
+            menuDetail: {}
         }
     }
 
@@ -187,6 +190,18 @@ export default class UserDetail extends Component {
                 ]
             });
         }
+        this.getMenuData();
+    }
+
+    getMenuData = async () => {
+        const { menuId } = this.props;
+        const result = await GetMenuDetail(menuId);
+        if (result.success) {
+            const { response = {} } = result;
+            const menuDetail = ConvertMenuDetailForGenericPage(response || {});
+            this.state.menuDetail = menuDetail;
+            this.setState({ menuDetail });
+        }
     }
 
     toggle = (key, tab) => {
@@ -195,72 +210,98 @@ export default class UserDetail extends Component {
         });
     }
 
+    refreshPage(event) {
+        event.preventDefault();
+        this.getUser();
+    }
+
 
     render() {
+        const { history } = this.props;
+        const { userData = {}, tabContent = [], activeTab, menuDetail } = this.state;
 
-        const { userData = {}, tabContent = [], activeTab } = this.state;
-
+        const genericDataForCustomColumn = {
+            formPreference: {},
+            formPreferences: [],
+            starter: 'user',
+            columns: {},
+            url: menuDetail.url ? menuDetail.url.split("/:")[0] : '',
+            model: { name: 'user' },
+            modelId: null,
+            methods: RegisterMethod(menuDetail.uiActions),// genericutils 
+            preDefinedmethods: GetPreSelectedMethods(), // genericutils
+            modelHash: null
+        };
 
         return (
-
-            <div className="display">
-
-                {/* <Row> */}
-                <div className="user-detail">
-                    {/* <Col lg="12" sm= md= xs= > */}
-                    <div className="user-card-data">
-                        {
-                            userData.id ? <UserCard userData={userData} /> : null
-                        }
-                    </div>
-                    {/* <div className="user-license-data">
-                                    {
-                                        userData.id ? <UserLicenseCard userData={userData} /> : null
-                                    }
-                                </div> */}
-                    {/* </Col> */}
+        
+            <div className="user-details">
+                <div className="header-actions">
+                    <button className="refresh-button btn btn-sm" onClick={(e) => { this.refreshPage(e) }}>
+                        <i className="fa fa-refresh"></i>
+                    </button>
+                    &nbsp;&nbsp;
+                    <CustomAction menuDetail={menuDetail} genericData={genericDataForCustomColumn} history={history} actions={menuDetail.uiActions} listingRow={userData} placement={'as_dropdown'} callback={this.getUser} />
                 </div>
-
-                {/* <Col> */}
-                <Card className="tab-wrapper">
-                    <Nav tabs>
-                        {
-                            tabContent.length ?
-                                tabContent.map((tab, key) => (
-                                    <NavItem key={key}>
+                
+                <div className="display">
+                    {/* <Row> */}
+                    <div className="user-detail">
+                        {/* <Col lg="12" sm= md= xs= > */}
+                        <div className="user-card-data">
+                            {
+                                userData.id ? <UserCard userData={userData} /> : null
+                            }
+                        </div>
+                        {/* <div className="user-license-data">
                                         {
-                                            tab.data.length > 0 &&
-                                            <NavLink
-                                                className={classnames({ active: activeTab === key ? 'active' : '' })}
-                                                onClick={() => { this.toggle(key, tab); }}>
-                                                <i className="fa fa-bars"></i> {tab.name}
-                                            </NavLink>
+                                            userData.id ? <UserLicenseCard userData={userData} /> : null
                                         }
-                                    </NavItem>
-                                ))
-                                : null
-                        }
-                    </Nav>
-                    <TabContent activeTab={activeTab}>
-                        {
-                            tabContent.length ?
-                                tabContent.map((tab, key) => {
-                                    if (activeTab == key) {
-                                        return (
-                                            <TabPane className='relative' key={key} tabId={key}>
-                                                {
-                                                    tab.data.length > 0 &&
-                                                    <TableWrapper listing={tab.data} columns={tab.columns}></TableWrapper>
-                                                }
-                                            </TabPane>
-                                        )
-                                    }
-                                })
-                                : null}
-                    </TabContent>
-                </Card>
-                {/* </Col> */}
-                {/* // </Row> */}
+                                    </div> */}
+                        {/* </Col> */}
+                    </div>
+
+                    {/* <Col> */}
+                    <Card className="tab-wrapper">
+                        <Nav tabs>
+                            {
+                                tabContent.length ?
+                                    tabContent.map((tab, key) => (
+                                        <NavItem key={key}>
+                                            {
+                                                tab.data.length > 0 &&
+                                                <NavLink
+                                                    className={classnames({ active: activeTab === key ? 'active' : '' })}
+                                                    onClick={() => { this.toggle(key, tab); }}>
+                                                    <i className="fa fa-bars"></i> {tab.name}
+                                                </NavLink>
+                                            }
+                                        </NavItem>
+                                    ))
+                                    : null
+                            }
+                        </Nav>
+                        <TabContent activeTab={activeTab}>
+                            {
+                                tabContent.length ?
+                                    tabContent.map((tab, key) => {
+                                        if (activeTab == key) {
+                                            return (
+                                                <TabPane className='relative' key={key} tabId={key}>
+                                                    {
+                                                        tab.data.length > 0 &&
+                                                        <TableWrapper listing={tab.data} columns={tab.columns}></TableWrapper>
+                                                    }
+                                                </TabPane>
+                                            )
+                                        }
+                                    })
+                                    : null}
+                        </TabContent>
+                    </Card>
+                    {/* </Col> */}
+                    {/* // </Row> */}
+                </div>
             </div>
         )
     }
