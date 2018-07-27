@@ -48,6 +48,7 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
 
         let layouts = formContent.layouts;
 
+        // if ui action is intended for form type
         if (isForm) {
             formContent.route = response.form.end_point;
             formContent.layout = [];
@@ -62,7 +63,8 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
             formContent.data = GetDataFromDictionary(formContent.dictionary);
             formContent.modelId = response.form.id;
 
-            if (response.form.form_type_id == 53) {
+            // for prompt type form
+            if (response.form.form_type_id == 53) { 
                 const { description: message } = response.form;
                 const submitCallback = response.client_scripts ? response.client_scripts : [];
                 ConfirmUtils.confirmModal({ message, callback: () => ExecuteScript({ formContent, scripts: submitCallback, context: FormUtils, contextName: 'form' }) })
@@ -90,13 +92,8 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
         }
 
         if (openModal) {
-            // ModalManager.openModal({
-            //     headerText: formContent.name,
-            //     modalBody: () => (<FormCreator payload={formContent} />),
-            // });
             OpenModalForm(formContent);
         }
-
     }
 }
 
