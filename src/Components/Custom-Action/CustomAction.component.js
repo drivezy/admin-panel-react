@@ -7,7 +7,7 @@ import { ProcessForm } from './../../Utils/formMiddleware.utils';
 import { ProcessPage } from './../../Utils/pageMiddleware.utils';
 import { IsUndefined } from './../../Utils/common.utils';
 
-import { CreateUrl, ConvertDependencyInjectionToArgs, RemoveStarterFromThePath } from './../../Utils/generic.utils';
+import { CreateUrl, RemoveStarterFromThePath, EvalCondtionForNextActions } from './../../Utils/generic.utils';
 // import { IsUndefinedOrNull } from './../../Utils/common.utils';
 
 // import FormCreator from './../Form-Creator/formCreator.component';
@@ -107,7 +107,7 @@ export default class CustomAction extends Component {
     }
 
     render() {
-        const { actions = [], listingRow = [], genericData = {}, placement = 'as_record', position } = this.props;
+        const { actions = [], listingRow = [], genericData = {}, placement = 'as_record', menuDetail = {}, position } = this.props;
         let sortActions = this.state.actions;
         sortActions = _.orderBy(actions, 'display_order', 'asc')
 
@@ -123,57 +123,67 @@ export default class CustomAction extends Component {
             <div className="custom-actions flex">
 
                 {/* <DropAction placement="as_dropdown" actions="sortActions"> */}
-    {
-                (filteredActions.length > 0) ? 
-                                <Dropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-                                    <DropdownToggle caret
-                                        className='dropdown-button'
-                                        color="secondary"
-                                        onClick={this.toggle}
-                                        data-toggle="dropdown"
-                                        aria-expanded={this.state.dropdownOpen}
-                                    >
-                                        Actions
+                {
+                    (filteredActions.length > 0) ?
+                        <Dropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                            <DropdownToggle caret
+                                className='dropdown-button'
+                                color="secondary"
+                                onClick={this.toggle}
+                                data-toggle="dropdown"
+                                aria-expanded={this.state.dropdownOpen}
+                            >
+                                Actions
                                     </DropdownToggle>
-                                    <DropdownMenu className="dropdown-menu custom-click pull-right menu-operations" right>
-                                        {
-                                                filteredActions.length > 1 ?
-                                                <div>
-                                                    <div className="form-group has-feedback">
-                                                        <input value={searchText} onChange={this.searchFilter} type="text" className="form-control" id="search-operation" placeholder='Search Actions' />
-                                                        {/* <i onClick={() => searchText ? this.searchFilter({ value: null }) : null} className={`fa fa-${searchText ? 'times-circle cursor-pointer' : 'search'} form-control-feedback`} aria-hidden="true"></i> */}
-                                                    </div>
-                                                </div>
-                                                :
-                                                null
+                            <DropdownMenu className="dropdown-menu custom-click pull-right menu-operations" right>
+                                {
+                                        filteredActions.length > 1 ?
+                                        <div>
+                                            <div className="form-group has-feedback">
+                                                <input value={searchText} onChange={this.searchFilter} type="text" className="form-control" id="search-operation" placeholder='Search Actions' />
+                                                {/* <i onClick={() => searchText ? this.searchFilter({ value: null }) : null} className={`fa fa-${searchText ? 'times-circle cursor-pointer' : 'search'} form-control-feedback`} aria-hidden="true"></i> */}
+                                            </div>
+                                        </div>
+                                        :
+                                        null
+                                }
+                                {
+                                    filters.map((action, key) => {
+                                        const filterScript = action.filter_condition ? action.filter_condition.script : null;
+                                        const isDisabled = !EvalCondtionForNextActions(filterScript, listingRow);
+                                        if(isDisabled) { 
+                                            return null;
                                         }
-                                        {
-                                            filters.map((action, key) =>
-                                            <div className="menu-item" key={key} role="menuitem">
+                                        return (
+                                            <div className='menu-item' key={key} role="menuitem">
                                                 <a className="menu-link">
                                                     <span className="badge" onClick={() => { this.callFunction({ action, listingRow }) }}>
                                                         <i className={`fa ${action.image}`}></i>
                                                         &nbsp;
-                                                        {action.name}
+                                                            {action.name}
                                                     </span>
                                                 </a>
                                             </div>
-                                            )
-                                        }
-                                    </DropdownMenu>
-                                </Dropdown>
+                                        )
+                                    }
+                                    )
+                                }
+                            </DropdownMenu>
+                        </Dropdown>
                         : null
-                    }
+                }
 
                 {
                     sortedActions.map((action, key) => {
                         if (!action) {
                             return null;
                         }
-                        
-                        if(action[placement]){
+
+                        const filterScript = action.filter_condition ? action.filter_condition.script : null;
+                        const isDisabled = !EvalCondtionForNextActions(filterScript, listingRow);
+                        if (action[placement]) {
                             const html =
-                                <span className="button-element" onClick={() => { this.callFunction({ action, listingRow }) }}>
+                                <span className={`button-element ${isDisabled ? 'disabled-action' : ''}`} onClick={() => { this.callFunction({ action, listingRow }) }}>
                                     <i className={`fa ${action.image}`}></i>
 
                                     {/* Temporaririly fix to hide the name for row actions */}
