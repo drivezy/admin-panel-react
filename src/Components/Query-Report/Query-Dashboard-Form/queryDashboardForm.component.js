@@ -59,7 +59,11 @@ const inputElement = (payload) => {
         // String Ends
 
         // Single DatePicker with Timepicker 
-        594: <DateTimePicker />
+        594: <DateTimePicker />,
+        // Single DatePicker with Timepicker ends
+
+        // Single DatePicker with Timepicker 
+        109: <DateTimePicker />
         // Single DatePicker with Timepicker ends
 
     }
@@ -68,6 +72,7 @@ const inputElement = (payload) => {
 }
 
 const formElements = props => {
+
     const {
         values,
         touched,
@@ -82,15 +87,15 @@ const formElements = props => {
     } = props;
 
     const { payload } = props;
-    let shouldColumnSplited = false;
 
+    let shouldColumnSplited = false;
 
     return (
         <Form role="form" name="genericForm" >
             <div className="form-row">
                 <div className="picker">
                     {
-                        payload.map((preference, key) => {
+                        payload.fields.map((preference, key) => {
 
                             let elem, column;
 
@@ -102,6 +107,7 @@ const formElements = props => {
                                 return (
                                     <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
                                         <label>{column.label || column.display_name}</label>
+
                                         {elem}
 
                                         {/* Showing Errors when there are errors */}
@@ -149,18 +155,32 @@ const FormContents = withFormik({
 export default class QueryDashboardForm extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
-            payload: this.props.payload
+            payload: {
+                queryData: this.props.queryParamsData,
+                columns: this.props.columns || [],
+                fields: this.props.fields || []
+            }
         }
+    }
+
+    UNSAFE_componentWillReceivePropscomponentWillReceiveProps(nextProps) {
+        this.setState({
+            payload: {
+                queryData: this.props.queryParamsData,
+                columns: this.props.columns || [],
+                fields: this.props.fields || []
+            }
+        });
     }
 
     render() {
 
         const { payload } = this.state;
-        console.log(payload);
-        return (
 
-            <div className="form-creator">
+        return (
+            <div className="dashboard-form">
                 <Card>
                     {
                         payload ?
@@ -175,60 +195,3 @@ export default class QueryDashboardForm extends Component {
         )
     }
 }
-
-
-
-
-
-
-
-
-// import React, { Component } from 'react';
-// import './queryForm.component.css';
-
-// import DateTimePicker from './../../../Date-Time-Picker/dateTimePicker.component'
-
-// export default class QueryForm extends Component {
-//     constructor(props) {
-//         super(props);
-
-//         this.state = {
-//             formData: props.formData
-//         }
-
-//     }
-
-//     formElements = (data_type) => {
-//         const element = {
-//             107:<div className="data-point"> <label className="form-label"/> Number <input type="text" className="form-control" id="search-operation" placeholder='Number' /> </div>,
-//             // 108:<div className="data-point"> <label className="form-label"/> String <input type="text" className="form-control" id="search-operation" placeholder='String' /> </div>,
-//             109:<div className="data-point"> <label className="form-label"/> Date <input type="text" className="form-control" id="search-operation" placeholder='Date' /> </div>,
-//             110:<div className="data-point"> <label className="form-label"/> Date Range <input type="text" className="form-control" id="search-operation" placeholder='Date Range' /> </div>,
-//             111:<div className="data-point"> <label className="form-label"/> Boolean <input type="text" className="form-control" id="search-operation" placeholder='Boolean' /> </div>,
-//             116:<div className="data-point"> <label className="form-label"/> Dropdown <input type="text" className="form-control" id="search-operation" placeholder='Dropdown' /> </div>,
-//             117:<div className="data-point"> <label className="form-label"/> Reference <input type="text" className="form-control" id="search-operation" placeholder='Reference' /> </div>,
-//             594:<div className="data-point"> <label className="form-label"/> DateTime <DateTimePicker  /></div>
-//         }
-
-
-//         return element[data_type.data_type_type_id] || element[108];
-//     }
-
-
-
-
-//     render() {
-
-//         const { formData } = this.state;
-
-//         console.log(formData);
-
-//         return (
-//             <div className="form-group">
-//                 {
-//                     formData.map((data, key) => this.formElements(data.param_type_id))
-//                 }
-//             </div>
-//         )
-//     }
-// }

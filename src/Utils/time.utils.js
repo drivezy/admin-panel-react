@@ -7,6 +7,10 @@ export function GetTime({ dateTime, format }) {
     return moment(dt).format(format || GLOBAL.API_DATE_FORMAT);
 }
 
+export function ConvertLiteral(description) {
+    return eval(description);
+}
+
 /**
  * Function to convert seconds to mm:ss format
  * @param  {number} secs

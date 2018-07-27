@@ -341,7 +341,7 @@ export default class QueryTableSettings extends Component {
                 response.column_definition = JSON.parse(response.value);
                 layout = response;
             }
-            
+
             this.props.onSubmit(layout);
         }
 
@@ -404,18 +404,14 @@ export default class QueryTableSettings extends Component {
             </ModalHeader>
                 <ModalBody>
                     <div className="left">
-
                         <div className="card" >
                             <div className="card-body parent-card">
-
                                 <div className="card-top">
                                     <h6 className="card-title">All Columns</h6>
-
                                     <div className="input-holder">
                                         <input type="text" className="search-box" placeholder="Search Columns" />
                                     </div>
                                 </div>
-
                                 <ListGroup className="parent-group">
                                     {
                                         columnKeys.map((column, index) => (
@@ -431,13 +427,9 @@ export default class QueryTableSettings extends Component {
                                                 </div>
 
                                                 <Collapse isOpen={this.state.list[column]} className="columns-wrapper">
-
-
                                                     <ListGroup className="inner-columns">
                                                         {
-
                                                             leftColumns[column].map((entry, key) => (
-
                                                                 <div key={key} className="column-group" onDoubleClick={() => this.addColumn(entry)} >
                                                                     <div className="column-label">
                                                                         {entry.column_name}
@@ -448,15 +440,8 @@ export default class QueryTableSettings extends Component {
                                                                         </button>
                                                                     </div>
                                                                 </div>
-
-
-                                                            )
-
-                                                            )
-
-
+                                                            ))
                                                         }
-
                                                     </ListGroup>
                                                 </Collapse>
                                             </div>
@@ -466,32 +451,25 @@ export default class QueryTableSettings extends Component {
 
                             </div>
                         </div>
-
-
                     </div>
 
                     <div className="controls">
                         <Button color="primary" size="sm" onClick={this.moveSelectedUp}>
                             <i className="fa fa-arrow-up"></i>
                         </Button>
-
                         <Button color="primary" size="sm" onClick={this.moveSelectedDown}>
                             <i className="fa fa-arrow-down"></i>
                         </Button>
                     </div>
 
                     <div className="right">
-
                         <div className="card">
                             <div className="card-body parent-card">
                                 <div className="card-top">
                                     <h6 className="card-title">Selected Columns</h6>
                                 </div>
-
                                 <ListGroup className="parent-group">
-
                                     {
-
                                         tempSelectedColumns && tempSelectedColumns.map((column, index) =>
                                             // Component Manages column props
                                             <QueryColumnSetting removeColumn={this.removeColumn} columns={columns} activeColumn={activeColumn} selectColumn={this.selectColumn} column={column} index={index} key={index} />
@@ -499,11 +477,9 @@ export default class QueryTableSettings extends Component {
                                         )
                                     }
                                 </ListGroup>
-
                             </div>
                         </div>
                     </div>
-
                 </ModalBody>
                 <ModalFooter>
                     <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>

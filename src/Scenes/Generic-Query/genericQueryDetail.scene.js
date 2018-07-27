@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+
 import './genericQueryDetail.scene.css';
 import QueryHeader from './../../Components/Query-Report/Query-Header/queryHeader.component';
 import DynamicFilter from './../../Components/Dynamic-Filter/dynamicFilter.component';
@@ -17,20 +18,22 @@ import { GetPreferences } from './../../Utils/preference.utils';
 import { BuildUrlForGetCall, IsObjectHaveKeys } from './../../Utils/common.utils';
 import { GetColumnsForListing, CreateFinalColumns, GetDefaultOptionsForQuery } from './../../Utils/query.utils';
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
-
+import { GetLookupValues } from './../../Utils/lookup.utils';
 
 import ListingSearch from './../../Components/Listing-Search/listingSearch.component';
 import { SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent } from 'common-js-util';
-
+import { ConvertLiteral } from './../../Utils/time.utils';
 
 export default class GenericQueryDetail extends Component {
     filterContent = {};
     urlParams = Location.search();
+    formContent = {};
 
     constructor(props) {
         super(props);
         this.state = {
             ...GetUrlParams(this.props),
+            dateLiterals: [],
             queryParamsData: {},
             queryListing: {},
             preference: {},
@@ -55,13 +58,15 @@ export default class GenericQueryDetail extends Component {
 
     componentDidMount = async () => {
         const { queryParamsData } = this.state
-        this.getQueryParamsData();
-        const result = await Get({ url: 'userPreference', parameter: queryParamsData.short_name+"list" });
+
+        this.getDateLiterals().then(() => {
+            this.getQueryParamsData();
+        })
+
+        const result = await Get({ url: 'userPreference', parameter: queryParamsData.short_name + "list" });
         result.response[0].column_definition = JSON.parse(result.response[0].value);
-        console.log(result.response[0]);
         const layout = result.response[0];
         this.setState({ layout: layout });
-        console.log(this.state.layout);
 
     }
 
@@ -85,8 +90,6 @@ export default class GenericQueryDetail extends Component {
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (IsObjectHaveKeys(this.state.queryParamsData)) {
-
-
             const newProps = GetUrlParams(nextProps);
             this.state.params = newProps.params;
             this.state.queryString = newProps.queryString;
@@ -118,46 +121,71 @@ export default class GenericQueryDetail extends Component {
         const result = await QueryData(id);
         if (result.success) {
             let queryParamsData = result.response;
-            console.log(queryParamsData);
-            this.setState({ queryParamsData });
 
             let prefName = queryParamsData.short_name + ".list";
-            console.log(queryParamsData);
+
             let preferences = await GetPreferences(prefName);
 
             var preference = preferences.response.filter(function (item) {
                 return item.parameter == prefName;
             })
 
-            //            let preference = preferences.response.filter((item) => {return item.parameter == prefName} );
+            // Short Name
+            this.formContent.query_name = queryParamsData.short_name;
 
-            this.setState({ preference: preference });
-            // this.setState(queryParamsData);
-            console.log(preference);
-            this.getDataForListing();
+            // For each parameter add the default value for submission 
+            queryParamsData.parameters.forEach((parameter) => {
+                var matchingValue = this.replaceLiterals(parameter.default_param_value);
+                if (matchingValue) {
+                    this.formContent[parameter.param] = ConvertLiteral(matchingValue.description);
+                } else {
+                    this.formContent[parameter.param] = parameter.default_param_value;
+                }
+            });
 
-            this.setState({ actions: queryParamsData.actions });
+
+            // Set state with the loaded values
+            this.setState({ preference: preference, queryParamsData, actions: queryParamsData.actions });
+
+
+            // Get the reports data for the formContent
+            this.getDataForListing(this.formContent);
+
         }
     }
 
-    getDataForListing = async () => {
-        const { queryParamsData, preference, params } = this.state;
+    /**
+     * Replace the literals with matching lookup value
+     */
+    replaceLiterals = (entry) => this.state.dateLiterals.filter((item) => item.name == entry).pop();
+
+    getDateLiterals = async () => {
+        const result = await GetLookupValues(102);
+        if (result.success) {
+            const dateLiterals = result.response;
+            this.setState({ dateLiterals })
+        }
+    }
+
+    getDataForListing = async (formContent) => {
+        const { preference, params } = this.state;
+
+        const queryParamsData = this.state.queryParamsData;
 
         // let options = GetDefaultOptionsForQuery();
         let options = { includes: '', order: '1,asc', query: '', limit: this.state.limit, page: this.state.currentPage, dictionary: false, stats: true }
 
         const url = BuildUrlForGetCall("getReportData", options);
 
-        const result = await Post({ url, body: { month: "2016-07", query_name: queryParamsData.short_name } });
+        const result = await Post({ url, body: formContent });
         if (result.success) {
             const queryListing = result.response;
             this.setState({ queryListing: queryListing });
-            console.log(result);
 
             let stats = result.stats ? result.stats : stats;
             params.dictionary = result.dictionary ? result.dictionary : params.dictionary;
             params.includes = "";
-            params.starter = queryParamsData.short_name;
+            params.starter = this.state.queryParamsData.short_name;
 
 
             let tempColumns = GetColumnsForListing(params);
@@ -167,7 +195,6 @@ export default class GenericQueryDetail extends Component {
 
             if (preference.length) {
                 finalColumns = CreateFinalColumns(tempColumns, JSON.parse(preference[0].value));
-                console.log(finalColumns);
             }
 
             this.setState({ stats, params, columns: tempColumns, finalColumns, stats });
@@ -176,7 +203,6 @@ export default class GenericQueryDetail extends Component {
 
             // return Get({ url, queryString: { page } });
             console.log(GetUrlParams(this.props));
-            console.log(queryParamsData);
         }
     }
 
@@ -242,21 +268,14 @@ export default class GenericQueryDetail extends Component {
 
         let filterContent = {};
 
-
-        // if (localSearch.value) {
-        //     filteredResults = listing.filter(entry => entry[starter + '.' + localSearch.field] && (entry[starter + '.' + localSearch.field].toString().toLowerCase().indexOf(localSearch.value) != -1));
-        // }
-        console.log(this.state.layout);
         return (
             <div className="generic-query">
                 <div className="page-bar">
                     <div className="listing-tools left">
                         <div className="search-box-wrapper">
-                        {console.log(filterContent)}
                             <ListingSearch
                                 localSearch={localSearch}
                                 onEdit={this.filterLocally}
-                                // searchDetail={{ name: genericData.model.display_column }}
                                 searchQuery={this.urlParams.search}
                                 dictionary={filterContent.dictionary}
                             />
@@ -393,10 +412,8 @@ export default class GenericQueryDetail extends Component {
                             queryData={queryParamsData}
                             actions={this.state.actions}
                         />
-
-
-
                     }
+
                     {
                         (resultData.stats) ?
                             <ListingPagination
