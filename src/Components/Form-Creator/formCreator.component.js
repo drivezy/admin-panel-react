@@ -183,6 +183,30 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         />,
         // Reference Ends
 
+        // List Select with options from api
+        [COLUMN_TYPE.SELECT]: <Field
+            name={column.name}
+            render={({ field /* _form */ }) => (
+                <ListSelect column={column} name={column.name}
+                    placeholder={`Enter ${column.display_name}`}
+                    // onChange={props.setFieldValue}
+                    isClearable={!column.required}
+                    onChange={(value, event) => {
+                        const valId = value && typeof value == 'object' ? value.id : value;
+                        FormUtils.OnChangeListener({ column, value: valId, ...event });
+                        props.setFieldValue(event, value);
+                    }}
+                    // onChange={({ ...args }) => { FormUtils.OnChangeListener(args); props.setFieldValue(args); }}
+                    model={values[column.name]} />
+            )}
+        />,
+        // 7: <Field
+        //     name={column.name}
+        //     render={({ field /* _form */ }) => (
+        //         <ListSelect column={column} name={column.name} onChange={props.setFieldValue} model={values[column.name]} />
+        //     )}
+        // />,
+        // List Select Ends
 
         // Script Input
         [COLUMN_TYPE.SCRIPT]: <ScriptInput
@@ -225,15 +249,6 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
             model={values[column.index]}
         />,
         // Form Input Ends
-
-        // List Select with options from api
-        7: <Field
-            name={column.name}
-            render={({ field /* _form */ }) => (
-                <ListSelect column={column} name={column.name} onChange={props.setFieldValue} model={values[column.name]} />
-            )}
-        />,
-        // List Select Ends
 
         // DatePicker
         [COLUMN_TYPE.DATE]: <Field

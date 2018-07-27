@@ -2,9 +2,9 @@
 // Refer https://github.com/skratchdot/react-bootstrap-daterangepicker
 
 import React, { Component } from 'react';
-import { Get } from 'common-js-util';
+import { Get, IsEqualObject } from 'common-js-util';
 
-import GLOBAL from './../../../../Constants/global.constants';
+import { ROUTE_URL } from './../../../../Constants/global.constants';
 
 import SelectBox from './../Select-Box/selectBoxForGenericForm.component';
 import './listSelect.css';
@@ -19,6 +19,8 @@ export default class ListSelect extends Component {
             value: this.props.model || '',
             options: []
         }
+
+        this.loadOptions(this.props.column);
     }
 
     loadOptions = async (column) => {
@@ -27,13 +29,13 @@ export default class ListSelect extends Component {
 
         if ((column.reference_model) && column.reference_model.route_name) {
             var route = column.reference_model.route_name;
-            url = route.split('api/admin/')[1]
+            url = route;
         } else if (column.route) {
             var route = column.route;
-            url = route.split('api/admin/')[1]
+            url = route;
         }
 
-        const result = await Get({ url: url });
+        const result = await Get({ url: url, urlPrefix: ROUTE_URL });
 
         if (result.success) {
             const options = result.response;
@@ -41,26 +43,30 @@ export default class ListSelect extends Component {
         }
     }
 
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        if (nextProps.column) {
-            this.loadOptions(nextProps.column);
+    componentDidUpdate(updatedProps) {
+        const { column } = this.props;
+        const { column: updatedColumn } = updatedProps;
+        if (updatedColumn && !IsEqualObject(updatedColumn.reference_model, column.reference_model)) {
+            this.loadOptions(updatedColumn);
         }
     }
 
     render() {
-
-        const { column } = this.props;
-
-        const { url, value, options } = this.state;
+        const { column, isClearable } = this.props;
+        const reference_model = column.reference_model ? column.reference_model : {};
+        const { value, options } = this.state;
 
         return (
             <div className="reference-input">
                 <SelectBox
                     multi={this.props.multi}
                     options={options}
+                    isClearable={isClearable}
                     name={this.props.name}
                     onChange={this.props.onChange}
-                    field={column.reference_model.display_column || column.display_column}
+                    index="id"
+                    field={reference_model.display_column || column.display_column}
+                    queryField={reference_model.display_column || column.display_column}
                     sortingType={column.sorting_type}
                     // async={url}
                     value={value} />
