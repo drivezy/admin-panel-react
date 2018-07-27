@@ -820,11 +820,18 @@ export function EvalCondtionForNextActions(condition, itemRow) {
     var evaluatedExpressions = [];
     expressions = condition.match(reg);
 
+    const pathSample = Object.keys(itemRow)[0];
+
     for (var i in expressions) {
         var expression = expressions[i].split(":")[1];
         // added try catch for checking conditions of menu action
         try {
-            evaluatedExpressions[i] = eval(itemRow[expression]);
+            const isSingleLevel = IsObjectSingleLevel(itemRow);
+            if (isSingleLevel) {
+                evaluatedExpressions[i] = eval(itemRow[expression]);
+            } else {
+                evaluatedExpressions[i] = eval(`itemRow.${expression}`);
+            }
 
             if (evaluatedExpressions[i] instanceof Array) {
                 if (evaluatedExpressions[i].length) {
@@ -848,3 +855,22 @@ export function EvalCondtionForNextActions(condition, itemRow) {
         console.error(e);
     }
 };
+
+/**
+ * detects if object have only single level of attribute
+ * for e.g. data object from generic apis return single level object so method return true for those object
+ */
+function IsObjectSingleLevel(object) {
+    let isSingleLevel = false;
+    if (!(object && typeof object == 'object')) {
+        return isSingleLevel;
+    }
+
+    const pathSample = Object.keys(object)[0];
+    if (typeof pathSample != 'string') {
+        return isSingleLevel;
+    }
+
+    isSingleLevel = pathSample.split('.').length > 1 ? true : false;
+    return isSingleLevel;
+}
