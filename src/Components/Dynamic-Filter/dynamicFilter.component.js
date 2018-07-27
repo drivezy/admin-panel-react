@@ -302,6 +302,7 @@ export default class DynamicFilter extends Component {
 
                 <div className="active-filters">
                     <ul className="form-groups">
+                        <div className="filters">
                         {/* Blocks shows the active filter  */}
                         {
                             activeLayout && activeLayout.id ?
@@ -339,47 +340,48 @@ export default class DynamicFilter extends Component {
                                 if (query) {
                                     return (
                                         <li key={key} className="form-badge list-group-item">
-                                            <p className="query-name">
-                                                {/* {query} */}
-                                                <CustomTooltip placement="top" html={query} title={query}></CustomTooltip>
+                                            <p className="filter-name">
+                                                {query}
+                                                {/* <CustomTooltip placement="top" html={query} title={query}></CustomTooltip> */}
                                             </p>
                                         </li>
                                     )
                                 }
                             })
                         }
-
-                        {
-                            sqlArray.length ?
-                                (!activeLayout.id ?
-                                    <li className="clear-link">
-                                        <button className="btn btn-xs btn-success" onClick={this.openSaveFilterModal}>
-                                            <i className="fa fa-floppy-o" aria-hidden="true"></i> &nbsp;
-                                            Save
-                                </button>
-                                    </li>
-                                    :
-                                    <li className="clear-link" >
-                                        <button className="btn btn-xs btn-success" onClick={this.updateFilter}>
-                                            <i className="fa fa-floppy-o" aria-hidden="true"></i> &nbsp;
-                                            {currentUser.isSuperAdmin ? 'Update for All' : 'Create New'}
+                        </div>
+                        <div className="filter-actions">
+                            {
+                                sqlArray.length ?
+                                    (!activeLayout.id ?
+                                        <li className="clear-link">
+                                            <button className="btn btn-xs btn-success" onClick={this.openSaveFilterModal}>
+                                                <i className="fa fa-floppy-o" aria-hidden="true"></i> &nbsp;
+                                                Save
                                         </button>
+                                        </li>
+                                        :
+                                        <li className="clear-link" >
+                                            <button className="btn btn-xs btn-success" onClick={this.updateFilter}>
+                                                <i className="fa fa-floppy-o" aria-hidden="true"></i> &nbsp;
+                                                {currentUser.isSuperAdmin ? 'Update for All' : 'Create New'}
+                                            </button>
+                                        </li>
+                                    )
+                                    :
+                                    null
+                            }
+                            &nbsp;&nbsp;
+                            {
+                                (sqlArray.length || activeLayout.id) ?
+                                    <li className="clear-link">
+                                        <a onClick={this.clearQuery}>
+                                            Clear
+                                    </a>
                                     </li>
-                                )
-                                :
-                                null
-                        }
-
-                        {
-                            (sqlArray.length || activeLayout.id) ?
-                                <li className="clear-link">
-                                    <a onClick={this.clearQuery}>
-                                        Clear
-                                </a>
-                                </li>
-                                : null
-                        }
-
+                                    : null
+                            }
+                        </div>
                     </ul>
                 </div>
             </div>
