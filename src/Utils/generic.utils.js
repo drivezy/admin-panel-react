@@ -164,7 +164,7 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
                 // if (selected.filter) {
                 finalColumnDefinition[i].filter = selected.filter;
                 // }
-                // finalColumnDefinition[i].defaultLayout = defaultColumns;
+                finalColumnDefinition[i].defaultLayout = defaultColumns;
 
                 const relationIndex = dict.parent;
 
