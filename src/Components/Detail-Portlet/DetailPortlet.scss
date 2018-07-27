@@ -23,7 +23,15 @@
         padding: 0px !important;
     }
 
+    .tooltip-element{
+        float: right;
+    }
+
     .pull-right {
+        overflow-y: hidden;
+        overflow-x: scroll;
+        white-space: nowrap;
+        max-width: 490px;
         float: right;
         font-size: 90%;
     }
