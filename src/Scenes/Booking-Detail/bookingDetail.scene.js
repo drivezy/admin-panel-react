@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import './bookingDetail.scene.css';
 
-import { StoreEvent } from 'common-js-util';
+// import { StoreEvent } from 'common-js-util';
 
 import UserCard from './../../Components/User-Card/userCard.component';
 import BookingFeedback from './../../Components/Booking/Components/Booking-Feedback/bookingFeedback.component';
@@ -13,6 +13,8 @@ import SummaryCard from './../../Components/Summary-Card/summaryCard';
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 
 import { GetPreSelectedMethods, RegisterMethod, GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
+import { SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent } from 'state-manager-utility';
+
 
 // import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns, GetPathWithParent } from './../../Utils/generic.utils';
 
@@ -51,6 +53,7 @@ export default class BookingDetail extends Component {
             const menuDetail = ConvertMenuDetailForGenericPage(response || {});
             this.state.menuDetail = menuDetail;
             this.setState({ menuDetail });
+        StoreEvent({ eventName: 'rightClickData', data: { menuData: menuDetail } });
         }
     }
 

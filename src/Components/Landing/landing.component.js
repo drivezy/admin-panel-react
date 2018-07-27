@@ -16,7 +16,7 @@ import SideNav from './../../Scenes/Side-Nav/sideNav.scene';
 import Header from './../../Scenes/Header/header.scene';
 // import BookingDetail from './../../Scenes/Booking-Detail/bookingDetail.scene';
 // import UserDetail from './../../Scenes/User-Detail/userDetail.scene';
-import ExpenseVoucherDetail from './../../Scenes/Expense-Voucher/expenseVoucherDetail.scene';
+// import ExpenseVoucherDetail from './../../Scenes/Expense-Voucher/expenseVoucherDetail.scene';
 import UserLicense from './../../Scenes/User-License/userLicense.scene';
 // import VehicleDetail from './../../Scenes/Vehicle-Detail/vehicleDetail.scene';
 
@@ -124,7 +124,7 @@ export default class LandingApp extends Component {
                             <Route path={`${match.path}detail/:page/:detailId`} component={GenericDetail} /> */}
 
                             {/* <Route exact path='/booking/:id' component={BookingDetail} /> */}
-                            <Route exact path='/voucherDef/:voucherId' component={ExpenseVoucherDetail} />
+                            {/* <Route exact path='/expenseVoucher/:voucherId' component={ExpenseVoucherDetail} /> */}
                             <Route exact path='/userLicense/:userId' component={UserLicense} />
                             
                             <Route exact path='/ticket/:ticketId' component={TicketDetail} />
