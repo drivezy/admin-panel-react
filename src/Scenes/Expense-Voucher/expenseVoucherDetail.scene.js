@@ -12,6 +12,7 @@ import TableWrapper from './../../Components/Table-Wrapper/tableWrapper.componen
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 
 import { GetPreSelectedMethods, RegisterMethod, GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
+import { SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent } from 'state-manager-utility';
 
 export default class ExpenseVoucherDetail extends Component {
 
@@ -130,6 +131,7 @@ export default class ExpenseVoucherDetail extends Component {
             const menuDetail = ConvertMenuDetailForGenericPage(response || {});
             this.state.menuDetail = menuDetail;
             this.setState({ menuDetail });
+        StoreEvent({ eventName: 'rightClickData', data: { menuData: menuDetail } });
         }
     }
 

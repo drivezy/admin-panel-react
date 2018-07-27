@@ -12,6 +12,8 @@ import UserCard from './../../Components/User-Card/userCard.component';
 import TableWrapper from './../../Components/Table-Wrapper/tableWrapper.component';
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 import { GetPreSelectedMethods, RegisterMethod, GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
+import { SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent } from 'state-manager-utility';
+
 
 import './userDetail.scene.css';
 
@@ -201,6 +203,7 @@ export default class UserDetail extends Component {
             const menuDetail = ConvertMenuDetailForGenericPage(response || {});
             this.state.menuDetail = menuDetail;
             this.setState({ menuDetail });
+        StoreEvent({ eventName: 'rightClickData', data: { menuData: menuDetail } });
         }
     }
 
