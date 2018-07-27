@@ -43,7 +43,16 @@ export default class FormUtil {
         }
 
     }
-
+   
+    /**
+     * To make api call 
+     * @param  {} {url -> put full url like 'api/admin/apiName'
+     * @param  {} body -> JSON object that is to be sent along with the api
+     * @param  {} callback -> initialize a function and wrote toast method
+     * @param  {} extraParams -> if you want send some extra params along with api
+     * @param  {} method='get' as default and supported methods like get,post,put,delete
+     * @param  {} urlPrefix=ROUTE_URL}
+     */
     static httpCall({ url, body, callback, extraParams, method = 'get', urlPrefix = ROUTE_URL }) {
         const methods = {
             get: Get, post: Post, put: Put, delete: Delete
@@ -138,7 +147,11 @@ export default class FormUtil {
     };
 
     // static 
-
+    /**
+     * To embed the query along with reference url
+     * @param  {string} column -> column name like "source_id"
+     * @param  {object} queryParams -> param where you want to apply some query like {query: `lookup_type = ${lookuptypeId}`}
+     */
     static setQuery(column, queryParams) {
         const dict = self.form.dictionary[column];
 
