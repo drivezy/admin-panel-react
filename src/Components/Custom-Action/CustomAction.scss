@@ -71,6 +71,15 @@
     }
 }
 
+.has-feedback { 
+    padding: 0 5px;
+    position: relative;
+    input { 
+        font-size: 12px;
+        box-shadow: none !important;
+    }
+}
+
 
 
 .drivezy-light-theme {

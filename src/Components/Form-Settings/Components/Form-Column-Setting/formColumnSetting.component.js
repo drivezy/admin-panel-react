@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './FormColumnSettings.css';
+import './../../../../Assets/Global-Shared/columnConfigurator.css';
 import _ from 'lodash';
 
 import { Collapse, Card, CardBody } from 'reactstrap';
