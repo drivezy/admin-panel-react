@@ -7,7 +7,7 @@ import Switch from './../../../Forms/Components/Switch/switch';
 
 import Filters from './../../../../Constants/filters';
 
-import './columnSetting.component.css';
+import './../../../../Assets/Global-Shared/columnConfigurator.css';
 
 export default class ColumnSetting extends Component {
 
