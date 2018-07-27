@@ -840,5 +840,11 @@ export function EvalCondtionForNextActions(condition, itemRow) {
             condition = condition.replace(expressions[i], "'" + evaluatedExpressions[i] + "'");
         }
     }
-    return eval(condition);
+    try {
+        return eval(condition);
+    } catch (e) {
+        console.warn('Error in filter condition, Please check script');
+        console.warn('Executed script ->', e);
+        console.error(e);
+    }
 };
