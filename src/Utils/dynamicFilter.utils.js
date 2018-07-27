@@ -4,6 +4,7 @@
 import { Get, BuildUrlForGetCall } from 'common-js-util';
 import { GetTime } from './time.utils';
 import GLOBAL from './../Constants/global.constants';
+import { STRING_WITHIN_TILDE, PICK_AFTER_LAST_DOTS } from './../Constants/regex.constants';
 import COLUMN_TYPE from './../Constants/columnType.constants';
 
 /**
@@ -67,11 +68,9 @@ export async function GetInputRecord({ input: val, currentUser = null, column, q
 }
 
 export function GetSelectedColumn({ selectedColumnQuery, dictionary = {} }) {
-    const regexForPickingAfterLastDot = /[^\.]+$/;
-    const regexForStringWithinTilde = /(?<=\`).*(?=\`)/g;
 
-    const columnName = selectedColumnQuery.match(regexForPickingAfterLastDot)[0];
-    const parentName = selectedColumnQuery.match(regexForStringWithinTilde)[0];
+    const columnName = selectedColumnQuery.match(PICK_AFTER_LAST_DOTS)[0];
+    const parentName = selectedColumnQuery.match(STRING_WITHIN_TILDE)[0];
 
     if (dictionary && !Array.isArray(dictionary)) {
         dictionary = Object.values(dictionary);
@@ -92,7 +91,7 @@ export async function CreateQuery({ rawQuery, dictionary = {}, finalSql: FinalSq
     if (!rawQuery) {
         return;
     }
-    
+
     const parentQueries = rawQuery.split(' AND ');
     const sqlArray = [];
     const arr = [];

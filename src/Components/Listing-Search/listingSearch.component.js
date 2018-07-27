@@ -5,8 +5,11 @@ import SelectBox from './../Forms/Components/Select-Box/selectBoxForGenericForm.
 import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { Get, BuildUrlForGetCall, SelectFromOptions, IsObjectHaveKeys } from 'common-js-util';
 
-import './listingSearch.component.css'
+import { GetPathWithParent } from './../../Utils/generic.utils';
+
+import './listingSearch.component.css';
 import GLOBAL from './../../Constants/global.constants';
+import {PICK_AFTER_LAST_DOTS} from './../../Constants/regex.constants';
 
 //let activeColumn = {};
 
@@ -48,7 +51,8 @@ export default class ListingSearch extends Component {
             const regex = /["%25]/g;
             values[2] = values[2].replace(regex, '');
 
-            selectedColumn = SelectFromOptions(dictionary, values[0], 'name');
+            const column = values[0].match(PICK_AFTER_LAST_DOTS)[0];;
+            selectedColumn = SelectFromOptions(dictionary, column, 'name');
             // this.setState({ activeColumn: selectedColumn });
             this.state.activeColumn = selectedColumn;
 
@@ -140,6 +144,7 @@ export default class ListingSearch extends Component {
         }
     }
 
+
     convertToInputField = (data) => {
         let query = '';
         this.setState({
@@ -163,14 +168,14 @@ export default class ListingSearch extends Component {
 
     callFunction = (event) => {
         let query = '';
-        const urlParams = this.urlParams;
+        const urlParams = Location.search();
 
         const paramProps = {
             history: this.props.history, match: this.props.match
         };
 
         if (event.target.value) {
-            query += this.state.activeColumn.name + ' like "%25' + event.target.value + '%25"';
+            query += GetPathWithParent(this.state.activeColumn) + ' like "%25' + event.target.value + '%25"';
             urlParams.search = query;
         } else {
             delete urlParams.search
