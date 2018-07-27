@@ -47,10 +47,14 @@ const booleanOptions = [{ name: "True", id: 1 }, { name: "False", id: 0 }];
 
 const submitGenericForm = async ({ payload, newValues, onSubmit }) => {
     const url = GetUrlForFormSubmit({ payload });
-    const Method = payload.method == 'edit' ? Put : Post;
+    let Method = Post;
+    let body = newValues;
+    if (payload.method == 'edit') {
+        Method = Put;
+        const originalValues = FormUtils.getOriginalData();
+        body = GetChangedMethods(newValues, originalValues);
+    }
 
-    const originalValues = FormUtils.getOriginalData();
-    let body = GetChangedMethods(newValues, originalValues);
     if (IsObjectHaveKeys(payload.restrictedQuery)) {
         body = { ...body, ...payload.restrictedQuery };
     }
