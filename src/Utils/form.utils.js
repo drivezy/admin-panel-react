@@ -154,6 +154,9 @@ export default class FormUtil {
     }
 
     static getRecordValue(column) {
+        if (!column) {
+            return self.form.record;
+        }
         return self.form.record[column];
     }
 
