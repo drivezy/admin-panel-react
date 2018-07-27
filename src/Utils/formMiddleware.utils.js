@@ -60,11 +60,11 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
                 formContent.layout = layouts[0];
             }
             formContent.record = formContent.data;
-            formContent.data = GetDataFromDictionary(formContent.dictionary);
+            formContent.data = GetDataFromDictionary(formContent.dictionary, formContent.data);
             formContent.modelId = response.form.id;
 
             // for prompt type form
-            if (response.form.form_type_id == 53) { 
+            if (response.form.form_type_id == 53) {
                 const { description: message } = response.form;
                 const submitCallback = response.client_scripts ? response.client_scripts : [];
                 ConfirmUtils.confirmModal({ message, callback: () => ExecuteScript({ formContent, scripts: submitCallback, context: FormUtils, contextName: 'form' }) })
@@ -105,12 +105,13 @@ export function OpenModalForm(formContent) {
     });
 }
 
-function GetDataFromDictionary(dictionary) {
+function GetDataFromDictionary(dictionary, data) {
     const obj = {};
+    data = data && Object.keys(data).length ? data : {};
     for (let i in dictionary) {
         const column = dictionary[i];
         if (column) {
-            obj[column.name] = null;
+            obj[column.name] = data[column.name];
         }
     }
 
