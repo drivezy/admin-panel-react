@@ -63,6 +63,12 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
             formContent.data = GetDataFromDictionary(formContent.dictionary, formContent.data);
             formContent.modelId = response.form.id;
 
+            if (response.form.method_id == 23) {
+                formContent.method = 'edit';
+            } else if (response.form.method_id == 22) {
+                formContent.method = 'add';
+            }
+
             // for prompt type form
             if (response.form.form_type_id == 53) {
                 const { description: message } = response.form;
