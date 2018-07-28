@@ -162,7 +162,7 @@ export default class CustomAction extends Component {
                                 {
                                     filters.map((action, key) => {
                                         const filterScript = action.filter_condition ? action.filter_condition.script : null;
-                                        const isDisabled = !EvalCondtionForNextActions(filterScript, listingRow);
+                                        const isDisabled = !EvalCondtionForNextActions(filterScript, listingRow, genericData.starter);
                                         if(isDisabled) { 
                                             return null;
                                         }
@@ -192,7 +192,7 @@ export default class CustomAction extends Component {
                         }
 
                         const filterScript = action.filter_condition ? action.filter_condition.script : null;
-                        const isDisabled = !EvalCondtionForNextActions(filterScript, listingRow);
+                        const isDisabled = !EvalCondtionForNextActions(filterScript, listingRow, genericData.starter);
                         if (action[placement]) {
                             const html =
                                 <span className={`button-element ${isDisabled ? 'disabled-action' : ''}`} onClick={() => { this.callFunction({ action, listingRow }) }}>
