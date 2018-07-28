@@ -139,16 +139,16 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
     // const selectedColumns = GetSelectedColumnDefinition(layout);
 
     if (selectedColumns && selectedColumns.length == 0) {
-            for (const i in columns) {
-                selectedColumns.push({
-                    object: columns[i].parent, column: columns[i].name, headingCollapsed: true, heading: "", index: i
-                });
-                if(selectedColumns.length <6 ){
-                    continue;
-                }
-                else
-                 break;
+        for (const i in columns) {
+            selectedColumns.push({
+                object: columns[i].parent, column: columns[i].name, headingCollapsed: true, heading: "", index: i
+            });
+            if (selectedColumns.length < 6) {
+                continue;
             }
+            else
+                break;
+        }
         defaultColumns = true;
     }
 
@@ -810,9 +810,14 @@ export function GetPathWithParent(column) {
  * @param  {string} condition
  * @param  {object} itemRow
  */
-export function EvalCondtionForNextActions(condition, itemRow) {
+export function EvalCondtionForNextActions(condition, itemRow, starter) {
     if (!condition) {
         return true;
+    }
+    let data = { ...itemRow };
+
+    if (starter) {
+        data = RemoveStarterFromThePath({ data: itemRow, starter });
     }
 
     var reg = /:[\w.]*/g;
@@ -820,17 +825,17 @@ export function EvalCondtionForNextActions(condition, itemRow) {
     var evaluatedExpressions = [];
     expressions = condition.match(reg);
 
-    const pathSample = Object.keys(itemRow)[0];
+    const pathSample = Object.keys(data)[0];
 
     for (var i in expressions) {
         var expression = expressions[i].split(":")[1];
         // added try catch for checking conditions of menu action
         try {
-            const isSingleLevel = IsObjectSingleLevel(itemRow);
+            const isSingleLevel = IsObjectSingleLevel(data);
             if (isSingleLevel) {
-                evaluatedExpressions[i] = eval(itemRow[expression]);
+                evaluatedExpressions[i] = eval(data[expression]);
             } else {
-                evaluatedExpressions[i] = eval(`itemRow.${expression}`);
+                evaluatedExpressions[i] = eval(`data.${expression}`);
             }
 
             if (evaluatedExpressions[i] instanceof Array) {
@@ -841,9 +846,10 @@ export function EvalCondtionForNextActions(condition, itemRow) {
                 }
             }
 
+            evaluatedExpressions[i] = typeof evaluatedExpressions[i] == 'string' ? `'${evaluatedExpressions[i]}'` :  evaluatedExpressions[i];
             condition = condition.replace(expressions[i], evaluatedExpressions[i]);
         } catch (e) {
-            evaluatedExpressions[i] = itemRow[expression];
+            evaluatedExpressions[i] = data[expression];
             condition = condition.replace(expressions[i], "'" + evaluatedExpressions[i] + "'");
         }
     }
