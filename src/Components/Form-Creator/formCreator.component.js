@@ -119,6 +119,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
                 // props.handleChange(event, args);
                 props.setFieldValue(column.name, event.target.value)
             }}
+            disabled={column.disabled}
             autoComplete="off"
             value={values[column.name]}
         />,
@@ -254,7 +255,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         [COLUMN_TYPE.DATE]: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <DatePicker single={true} placeholder={`Enter ${column.display_name}`} name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
+                <DatePicker disabled={column.disabled} single={true} placeholder={`Enter ${column.display_name}`} name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
             )}
         />,
         // DatePicker Ends
@@ -263,7 +264,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         [COLUMN_TYPE.DATETIME]: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <DatePicker single={true} placeholder={`Enter ${column.display_name}`} timePicker={true} name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
+                <DatePicker disabled={column.disabled} single={true} placeholder={`Enter ${column.display_name}`} timePicker={true} name={column.name} onChange={props.setFieldValue} value={values[column.name]} />
             )}
         />,
         // Single Datepicker Ends
@@ -286,7 +287,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         160: <Field
             name={column.name}
             render={({ field /* _form */ }) => (
-                <textarea name={column.name} placeholder={`Enter ${column.display_name}`} className="form-control" rows="3" onChange={({ ...args }) => { FormUtils.OnChangeListener(args); props.handleChange(args); }} value={values[column.name]}></textarea>
+                <textarea disabled={column.disabled} name={column.name} placeholder={`Enter ${column.display_name}`} className="form-control" rows="3" onChange={({ ...args }) => { FormUtils.OnChangeListener(args); props.handleChange(args); }} value={values[column.name]}></textarea>
             )}
         />,
         // TextArea Ends

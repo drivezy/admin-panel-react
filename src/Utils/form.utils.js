@@ -43,7 +43,7 @@ export default class FormUtil {
         }
 
     }
-   
+
     /**
      * To make api call 
      * @param  {} {url -> put full url like 'api/admin/apiName'
@@ -106,14 +106,22 @@ export default class FormUtil {
      * @param  {string} column - column name
      * @param  {boolean} value -true if disabled, false if enabled
      */
-    static setDisabled(column, value = true, form = self.form) {
-        const columnObj = form.dictionary[column];
-
-        if (!columnObj) {
-            return form;
+    static setDisabled(columns, value = true, form = self.form) {
+        if (Array.isArray(columns)) {
+            columns.forEach(column => disableColumn(column));
+        } else {
+            disableColumn(columns);
         }
 
-        form.dictionary[column].disabled = value;
+        function disableColumn(column) {
+            const columnObj = form.dictionary[column];
+
+            if (!columnObj) {
+                return form;
+            }
+
+            form.dictionary[column].disabled = value;
+        }
 
         self.form = form;
         FormUtil.updateForm(false);
