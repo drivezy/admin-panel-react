@@ -310,7 +310,7 @@ export default class GenericListing extends Component {
                                         </Card> : null
                                 }
 
-                                { (finalColumns[0].defaultLayout) ? <div className="noColumnMessage">No columns were selected, displaying default columns</div> : null}
+                                { (finalColumns[0] && finalColumns[0].defaultLayout) ? <div className="noColumnMessage">No columns were selected, displaying default columns</div> : null}
 
                                 {
                                     (finalColumns && finalColumns.length) ?

@@ -138,7 +138,7 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
     let defaultColumns = false;
     // const selectedColumns = GetSelectedColumnDefinition(layout);
 
-    if (selectedColumns.length == 0) {
+    if (selectedColumns && selectedColumns.length == 0) {
             for (const i in columns) {
                 selectedColumns.push({
                     object: columns[i].parent, column: columns[i].name, headingCollapsed: true, heading: "", index: i
