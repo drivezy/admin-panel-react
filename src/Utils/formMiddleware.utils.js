@@ -12,7 +12,7 @@ import { GetItem } from 'storage-utility';
 import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 
 import FormUtils from './form.utils';
-import { GetUrlForFormCreator, GetColumnsForListing, GetParsedLayoutScript, ParseRestrictedQuery } from './generic.utils';
+import { GetUrlForFormCreator, GetColumnsForListing, GetParsedLayoutScript, ParseRestrictedQuery, CreateUrlForFetchingDetailRecords } from './generic.utils';
 import { ExecuteScript } from './inject-method/injectScript.utils';
 
 import { ROUTE_URL, RECORD_URL } from './../Constants/global.constants';
@@ -50,7 +50,7 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
 
         // if ui action is intended for form type
         if (isForm) {
-            formContent.route = response.form.end_point;
+            formContent.route = CreateUrlForFetchingDetailRecords({ url: response.form.end_point, urlParameter: formContent.data });
             formContent.layout = [];
 
             layouts = GetParsedLayoutScript(response.form_layouts);
