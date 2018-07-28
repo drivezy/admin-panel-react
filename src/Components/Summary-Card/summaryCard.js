@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Card, Row, Col, Collapse, Button, CardBody } from 'reactstrap';
 import './../../Components/Booking/Components/Booking-Ride-Return/bookingRideReturn.component';
-import {TruncateDecimal} from './../../Utils/js.utils';
+import { TruncateDecimal } from './../../Utils/js.utils';
 import './summaryCard.css';
 
 export default class SummaryCard extends Component {
@@ -22,8 +22,6 @@ export default class SummaryCard extends Component {
 
     render() {
         const { bookingData = {} } = this.state;
-
-
         let paidAmount = 0;
         if (bookingData.payment && bookingData.payment.length) {
             bookingData.payment.forEach(function (data) {
@@ -151,87 +149,47 @@ export default class SummaryCard extends Component {
 
                         }
 
-                    </div>    
+                    </div>
                 </div>
 
 
                 <div className="pricing-object">
-
                     <div>
                         <div className="pricing" onClick={this.toggle}  >
-                        Pricing Object
-
-                            <i className={"fa " + (this.state.collapse ? 'fa-caret-up' : 'fa-caret-down')}>
-                            </i>
-
-
+                            Pricing Object<i className={"fa " + (this.state.collapse ? 'fa-caret-up' : 'fa-caret-down')}></i>
                         </div>
-                        {/* <Button className="display-button" onClick={this.toggle} ></Button> */}
                         <Collapse isOpen={this.state.collapse}>
                             <Card className="card-body">
                                 <CardBody>
-
-                                    <Row className="card-object">
-
-                                        <Col className= "item">Weekday Hourly Normal</Col>
-                                        <Col className="value">{TruncateDecimal(bookingData.pricing_object.weekday_hourly_normal)}</Col>
-                                    </Row>
-                                    <Row className="card-object">
-                                        <Col className= "item">Weekday Daily Normal</Col>
-                                        <Col className="value">{TruncateDecimal(bookingData.pricing_object.weekday_daily_normal)}</Col>
-                                    </Row>
-                                    <Row className="card-object">
-
-                                        <Col className= "item">Weekday Hourly</Col>
-                                        <Col className="value">{TruncateDecimal(bookingData.pricing_object.weekday_hourly)}</Col>
-                                    </Row>
-                                    <Row className="card-object">
-
-                                        <Col className= "item">Weekday Daily</Col>
-                                        <Col className="value">{TruncateDecimal(bookingData.pricing_object.weekday_daily)}</Col>
-                                    </Row>
-                                    <Row className="card-object">
-
-                                        <Col className= "item">Weekend Hourly</Col>
-                                        <Col className="value">{TruncateDecimal(bookingData.pricing_object.weekend_hourly)}</Col>
-                                    </Row>
-                                    <Row className="card-object">
-
-                                        <Col className= "item">Weekend Daily</Col>
-                                        <Col className="value">{TruncateDecimal(bookingData.pricing_object.weekend_daily)}</Col>
-                                    </Row>
-                                    <Row className="card-object">
-
-                                        <Col className= "item">Extra km Charge</Col>
-                                        <Col className="value">{bookingData.pricing_object.extra_km_charge}</Col>
-                                    </Row>
-                                    <Row className="card-object">
-
-                                        <Col className= "item">Fuelless km Charge</Col>
-                                        <Col className="value">{bookingData.pricing_object.fuelless_km_charge}</Col>
-                                    </Row>
-                                    <Row className="card-object">
-
-                                        <Col className= "item">Caution Deposit</Col>
-                                        <Col className="value">{bookingData.pricing_object.caution_deposit}</Col>
-                                    </Row>
-                                    <Row className="card-object">
-
-                                        <Col className= "item">City</Col>
-                                        <Col className="value">{bookingData.pricing_object.city}</Col>
-                                    </Row>
-                                    <Row className="card-object">
-
-                                        <Col className= "item">Peak</Col>
-                                        <Col className="value">{bookingData.pricing_object.peak}</Col>
-
-                                    </Row>
-
+                                    {
+                                        Object.keys(bookingData.pricing_object).map(key => {
+                                            const pricing = bookingData.pricing_object[key];
+                                            key = key.replace( /_/g, " ");
+                                            if (key == 'city') {
+                                                return;
+                                            }
+                                            else if (key == 'peak'){
+                                                return (
+                                                    <Row className="card-object" key={key}>
+                                                        <Col className="item">{key}</Col>
+                                                        <Col className="value">{pricing ? 'True' : 'False'}</Col>
+                                                    </Row>
+                                                )
+                                            }
+                                            else{
+                                                return (
+                                                    <Row className="card-object" key={key}>
+                                                        <Col className="item">{key}</Col>
+                                                        <Col className="value">{pricing}</Col>
+                                                    </Row>
+                                                )
+                                            }
+                                        })
+                                    }
                                 </CardBody>
                             </Card>
                         </Collapse>
                     </div>
-
                 </div>
             </Card>
         )
