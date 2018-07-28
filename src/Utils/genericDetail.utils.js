@@ -1,7 +1,7 @@
 import { IsUndefinedOrNull, BuildUrlForGetCall, IsObjectHaveKeys } from './common.utils';
 import { Get } from 'common-js-util';
 
-import { CreateFinalColumns, GetPreSelectedMethods, RegisterMethod, GetColumnsForListing, ConvertMenuDetailForGenericPage, GetParsedLayoutScript } from './generic.utils';
+import { CreateFinalColumns, GetPreSelectedMethods, RegisterMethod, GetColumnsForListing, ConvertMenuDetailForGenericPage, GetParsedLayoutScript, CreateUrlForFetchingDetailRecords } from './generic.utils';
 import { ROUTE_URL } from './../Constants/global.constants';
 
 /**
@@ -197,28 +197,6 @@ export function GetColumnsForDetail(params, excludeStarter) {
     return selectedColumns;
 };
 
-
-/**
- * Evaluates value against url
- * @param  {} url
- */
-function CreateUrlForFetchingDetailRecords({ url, urlParameter }) {
-    if (!url) {
-        return false;
-    }
-    var reg = /([:$])\w+/g;
-    var params = url.match(reg);
-    if (!params || !params.length) {
-        return url;
-    }
-    for (var i in params) {
-        // url = url.replace(params[i], $stateParams[params[i].split(":")[1]]);
-        const key = params[i];
-
-        url = url.replace(key, urlParameter[key.substr(1)]);
-    }
-    return url;
-}
 
 function Initialization(genericDetailObject) {
     return {

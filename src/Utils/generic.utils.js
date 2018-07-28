@@ -857,6 +857,28 @@ export function EvalCondtionForNextActions(condition, itemRow) {
 };
 
 /**
+ * Evaluates value against url
+ * @param  {} url
+ */
+export function CreateUrlForFetchingDetailRecords({ url, urlParameter }) {
+    if (!url) {
+        return false;
+    }
+    var reg = /([:$])\w+/g;
+    var params = url.match(reg);
+    if (!params || !params.length) {
+        return url;
+    }
+    for (var i in params) {
+        // url = url.replace(params[i], $stateParams[params[i].split(":")[1]]);
+        const key = params[i];
+
+        url = url.replace(key, urlParameter[key.substr(1)]);
+    }
+    return url;
+}
+
+/**
  * detects if object have only single level of attribute
  * for e.g. data object from generic apis return single level object so method return true for those object
  */
