@@ -56,7 +56,7 @@ export default class Header extends Component {
             onClick: (data) => {
                 const { menuDetail, history } = this.state;
 
-                let pageUrl = "/menu/" + (menuDetail.menuData.meniId ? menuDetail.menuData.meniId : menuDetail.menuData.id)
+                let pageUrl = "/menu/" + (menuDetail.menuData.menuId ? menuDetail.menuData.menuId : menuDetail.menuData.id)
 
                 history.push(`${pageUrl}`);
             },
@@ -69,7 +69,7 @@ export default class Header extends Component {
             onClick: (data) => {
                 const { menuDetail, history } = this.state;
 
-                let pageUrl = "/model/" + (menuDetail.menuData.meniId ? menuDetail.menuData.meniId : menuDetail.menuData.id)
+                let pageUrl = "/model/" + (menuDetail.menuData.menuId ? menuDetail.menuData.menuId : menuDetail.menuData.id)
 
                 history.push(`${pageUrl}`);
             },
