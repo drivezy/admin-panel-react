@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './header.css';
-import { SubscribeToEvent } from 'state-manager-utility';
+import { SubscribeToEvent, UnsubscribeEvent } from 'state-manager-utility';
 
 import ActiveModule from './../../Components/Active-Module/ActiveModule.component';
 import PageNav from './../../Components/Page-Nav/PageNav';
@@ -19,6 +19,10 @@ export default class Header extends Component {
 
     componentDidMount() {
         SubscribeToEvent({ eventName: 'rightClickData', callback: this.getMenuData });
+    }
+
+    componentWillUnmount() { 
+        UnsubscribeEvent({ eventName: 'rightClickData', callback: this.getMenuData });
     }
 
     getMenuData = (data) => {
