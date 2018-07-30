@@ -4,7 +4,7 @@ import { Card, CardBody, Form, FormGroup, Label } from 'reactstrap';
 
 import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { Post } from 'common-js-util';
-import { SubscribeToEvent } from 'state-manager-utility';
+import { SubscribeToEvent, UnsubscribeEvent } from 'state-manager-utility';
 
 import GLOBAL from './../../Constants/global.constants';
 
@@ -27,14 +27,17 @@ export default class LoginScene extends Component {
         // this.loggedIn.bind(this);
         this.proceedLogin.bind(this);
 
-        Location.getHistoryMethod(this.getRouterProps); // pass methods, so that location utils can get history object
+        // When used is landed in login scene, loginCheck is done to ensure if user is already loggedin
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
     }
 
     userDataFetched = (data) => {
         const { history } = this.props;
+
+        // in order to avoid unnecessary navigation, 'loggedUser' listener is removed after login check is done once
+        UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
         if (data.id) {
-            history.goBack();
+            Location.back();
         }
     }
 
