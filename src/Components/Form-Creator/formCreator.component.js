@@ -38,6 +38,7 @@ import { GetUrlForFormSubmit } from './../../Utils/generic.utils';
 
 import { ROUTE_URL } from './../../Constants/global.constants';
 import COLUMN_TYPE from './../../Constants/columnType.constants';
+import SCRIPT_TYPE from './../../Constants/scriptType.constants';
 
 import RightClick from './../../Components/Right-Click/rightClick.component';
 import { CopyToClipBoard } from './../../Utils/common.utils';
@@ -46,6 +47,14 @@ const booleanOptions = [{ name: "True", id: 1 }, { name: "False", id: 0 }];
 
 
 const submitGenericForm = async ({ payload, newValues, onSubmit }) => {
+
+    const scripts = payload.scripts;
+    const updatedPayload = ExecuteScript({ formContent: payload, scripts, context: FormUtils, contextName: 'form', executionType: SCRIPT_TYPE.ON_SUBMIT });
+
+    if (!payload.route) {
+        onSubmit();
+        return;
+    }
     const url = GetUrlForFormSubmit({ payload });
     let Method = Post;
     let body = newValues;
@@ -53,6 +62,10 @@ const submitGenericForm = async ({ payload, newValues, onSubmit }) => {
         Method = Put;
         const originalValues = FormUtils.getOriginalData();
         body = GetChangedMethods(newValues, originalValues);
+    }
+
+    if (updatedPayload.body) {
+        body = { ...body, ...updatedPayload.body };
     }
 
     if (IsObjectHaveKeys(payload.restrictedQuery)) {
