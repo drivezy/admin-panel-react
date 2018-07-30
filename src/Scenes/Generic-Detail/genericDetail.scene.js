@@ -65,7 +65,6 @@ export default class GenericDetail extends Component {
 
 
     getMenuData = async () => {
-        const { queryString } = this.state;
         // const { menuId } = queryString;
         const { menuId } = this.props;
         const result = await GetMenuDetail(menuId);
@@ -77,6 +76,7 @@ export default class GenericDetail extends Component {
             this.state.menuDetail = menuDetail;
             this.getDetailRecord();
             StoreEvent({ eventName: 'showMenuName', data: { menuName: this.state.menuDetail.pageName } });
+            
             // }
         }
     }
@@ -88,9 +88,15 @@ export default class GenericDetail extends Component {
     }
 
     dataFetched = ({ tabDetail, portlet }) => {
+        const { menuDetail } = this.state;
         tabDetail.refreshContent = this.getDetailRecord;
         const parentData = RemoveStarterFromThePath({ data: portlet.data, starter: portlet.starter });
         this.setState({ portlet, tabDetail, parentData, loading: false });
+        const rightClickOptions = {
+            modelId: portlet.model.id,
+            menuId: menuDetail.menuId
+        }
+        StoreEvent({ eventName: 'rightClickData', data: { menuData: rightClickOptions } });
     }
 
     getColumn = (preference, dictionary) => {
