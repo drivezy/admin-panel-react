@@ -270,16 +270,25 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // Single Datepicker Ends
 
         // Image Upload
-        [COLUMN_TYPE.UPLOAD]: <Field
-            name={column.name}
-            render={({ field /* _form */ }) => (
-                <ImageUpload name={column.name} onRemove={props.onFileRemove}
-                    onSelect={(column, name) => {
-                        console.log(column, name);
-                        props.onFileUpload(column, name);
-                    }}
-                />
-            )}
+        // [COLUMN_TYPE.UPLOAD]: <Field
+        //     name={column.name}
+        //     value={values[column.name]}
+        //     render={({ field /* _form */ }) => (
+        //         <ImageUpload name={column.name} onRemove={props.onFileRemove}
+        //             onSelect={(column, name) => {
+        //                 // console.log(column, name);
+        //                  props.setFieldValue(column, name ? name.name : '');
+        //                 props.onFileUpload(column, name);
+        //             }}
+        //         />
+        //     )}
+        // />,
+        [COLUMN_TYPE.UPLOAD]: <ImageUpload value={values[column.name]} name={column.name} onRemove={props.onFileRemove}
+            onSelect={(column, name) => {
+                // console.log(column, name);
+                props.setFieldValue(column, name ? name.name : '');
+                props.onFileUpload(column, name);
+            }}
         />,
         // Image Upload Ends
 
