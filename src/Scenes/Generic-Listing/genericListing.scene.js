@@ -101,12 +101,12 @@ export default class GenericListing extends Component {
         const { menuDetail, genericData, queryString, currentUser, isTab } = this.state;
         GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser, isTab });
 
-    
+
     }
 
     dataFetched = ({ genericData, filterContent }) => {
         const { propageGenericDataToParent, index } = this.props;
-
+        const { isTab } = this.state;
         this.setState({ genericData, filterContent, loading: false });
         if (genericData) {
 
@@ -114,7 +114,9 @@ export default class GenericListing extends Component {
                 genericData.filterContent = filterContent;
                 propageGenericDataToParent(genericData, index);
             }
-            StoreEvent({ eventName: 'rightClickData', data: { menuData: genericData } });
+            if (!isTab) {
+                StoreEvent({ eventName: 'rightClickData', data: { menuData: genericData } });
+            }
         }
     }
 
