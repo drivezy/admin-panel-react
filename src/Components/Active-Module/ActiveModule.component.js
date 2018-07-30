@@ -3,7 +3,7 @@ import './ActiveModule.css';
 
 import { Link } from 'react-router-dom';
 import { SubscribeToEvent } from 'state-manager-utility';
-
+import _ from 'lodash';
 
 export default class ActiveModule extends Component {
 
@@ -47,6 +47,8 @@ export default class ActiveModule extends Component {
 
     render() {
         const { menuName, menus, module } = this.state;
+        let sortMenu = this.state.menus;
+        sortMenu = _.orderBy(menus, 'name', 'asc')
 
         return (
             <div className="active-module">
@@ -65,14 +67,14 @@ export default class ActiveModule extends Component {
                             Select a module to list menus in it or type to search all the menus
                         </p>
                         {
-                            menus.length != 0 ?
+                            sortMenu.length != 0 ?
                                 <div className="panel menus">
                                     <div className="panel-heading">
                                         {module.name}
                                     </div>
                                     <div className="panel-body">
                                         {
-                                            menus.map((menu, key) => (
+                                            sortMenu.map((menu, key) => (
                                                 (menu.visible == 1) && (<Link onClick={() => this.clickedValue(menu)} to={'/' + menu.url} className="menu-list" key={key}>
                                                     <span className="menu-icon">
                                                         <i className={`menu-icon fa ${menu.image ? menu.image : 'fa-flickr'}`}></i>
