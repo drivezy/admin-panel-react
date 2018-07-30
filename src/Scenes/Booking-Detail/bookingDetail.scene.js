@@ -13,7 +13,6 @@ import SummaryCard from './../../Components/Summary-Card/summaryCard';
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 
 import { GetPreSelectedMethods, RegisterMethod, GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
-import { StoreEvent } from 'state-manager-utility';
 
 import { Booking } from './../../Utils/booking.utils';
 
