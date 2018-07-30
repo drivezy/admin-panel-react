@@ -121,8 +121,6 @@ export default class CustomAction extends Component {
 
         return (
             <div className="custom-actions flex">
-
-                {/* <DropAction placement="as_dropdown" actions="sortActions"> */}
                 {
                     (filteredActions.length > 0) ?
                         <Dropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
@@ -159,6 +157,7 @@ export default class CustomAction extends Component {
                                                 <a className="menu-link">
                                                     <span className="badge" onClick={() => { this.callFunction({ action, listingRow }) }}>
                                                         <i className={`fa ${action.image}`}></i>
+                                                        &nbsp;
                                                         &nbsp;
                                                             {action.name}
                                                     </span>
@@ -201,7 +200,7 @@ export default class CustomAction extends Component {
                         }
                     })
                 }
-            </div >
+                </div>
         )
     }
 }
