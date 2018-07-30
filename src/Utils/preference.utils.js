@@ -75,7 +75,9 @@ export function GetSourceMorphMap(source, reverse = false) {
         modelAlias: '2f7de4d415673d4da9ae054931189828',
         form: 'b5fc8139e5e9852493c99ed9662c6e63',
         user: '70d5a8d4402b30b0935f4cd6e9a92729',
-        uiAction: '4b8aa3702cfdca58f26e9b9bc0009ca7'
+        uiAction: '4b8aa3702cfdca58f26e9b9bc0009ca7',
+        servicingHistory: '5ec9f224c2f0cfab93f84e3db52a7220',
+        fuellingUpload: '2be91888ecb8b32bf5dfc0569f871af5'
     };
 
     if (reverse) {

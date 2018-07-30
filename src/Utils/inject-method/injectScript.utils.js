@@ -1,12 +1,16 @@
 import './injectScript.utils.css';
 import $ from 'jquery';
+
+import SCRIPT_TYPE from './../../Constants/scriptType.constants';
+import { IsUndefined } from 'common-js-util';
+
 /**
  * Executes script in the context of data
  * @param  {object} {data
  * @param  {array} script}
  */
 
-export function ExecuteScript({ formContent, scripts, context, contextName = 'form' }) {
+export function ExecuteScript({ formContent, scripts, context, contextName = 'form', executionType }) {
     if (!Array.isArray(scripts) || !scripts.length) {
         return formContent;
     }
@@ -14,7 +18,7 @@ export function ExecuteScript({ formContent, scripts, context, contextName = 'fo
     let script = '';
 
     for (let i in scripts) {
-        script += PrefixScript(scripts[i]);
+        script += PrefixScript(scripts[i], executionType);
     }
 
 
@@ -112,12 +116,15 @@ export function RemoveError(script) {
 };
 
 // Prepare script for execution according to script type
-export function PrefixScript(definition) {
-    if (definition.activity_type_id == 2) {
+export function PrefixScript(definition, executionType) {
+    if (definition.activity_type_id == SCRIPT_TYPE.ON_CHANGE) {
         return `form.onChange({ column: '${definition.column}', callback: (event, column)=> { ${definition.script}} })`;
     }
-    return definition.script;
+    if (IsUndefined(executionType) || executionType == definition.activity_type_id) {
+        return definition.script;
+    }
 
+    return '';
 
 }
 

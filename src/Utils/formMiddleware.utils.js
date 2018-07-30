@@ -16,6 +16,7 @@ import { GetUrlForFormCreator, GetColumnsForListing, GetParsedLayoutScript, Pars
 import { ExecuteScript } from './inject-method/injectScript.utils';
 
 import { ROUTE_URL, RECORD_URL } from './../Constants/global.constants';
+import SCRIPT_TYPE from './../Constants/scriptType.constants';
 
 export async function ProcessForm({ formContent, scripts, isForm, openModal = true }) {
     const url = GetUrlForFormCreator({ payload: formContent, getDictionary: true, isForm });
@@ -94,7 +95,7 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
         formContent.restrictedQuery = restrictedQuery;
 
         if (Array.isArray(scripts)) {
-            formContent = ExecuteScript({ formContent, scripts, context: FormUtils, contextName: 'form' });
+            formContent = ExecuteScript({ formContent, scripts, context: FormUtils, contextName: 'form', executionType: SCRIPT_TYPE.ON_LOAD });
         }
 
         if (openModal) {

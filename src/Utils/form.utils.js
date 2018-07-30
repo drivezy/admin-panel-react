@@ -41,7 +41,14 @@ export default class FormUtil {
                 callback(value, column, event);
             }
         }
+    }
 
+    /**
+     * sets body which is appended with existing payload while making api call
+     * @param  {object} body={}
+     */
+    static setBody(body = {}) {
+        self.form.body = body;
     }
 
     /**
