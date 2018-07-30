@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { HotKeys } from 'react-hotkeys';
 
-import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { PreserveState } from 'drivezy-web-utils/build/Utils';
 import { SubscribeToEvent } from 'state-manager-utility';
 
@@ -42,8 +41,6 @@ export default class IndexRouter extends Component {
             }
         }
         // props.GetCities();
-        
-        Location.getHistoryMethod(this.getRouterProps); // pass methods, so that location utils can get history object
     }
 
 

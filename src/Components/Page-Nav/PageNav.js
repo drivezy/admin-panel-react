@@ -5,8 +5,8 @@ import { Redirect } from 'react-router-dom';
 
 import { ToastNotifications, LoaderComponent, LoaderUtils, ModalManager } from 'drivezy-web-utils/build/Utils';
 import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
-import {  Get, Post } from 'common-js-util';
-import { SubscribeToEvent } from 'state-manager-utility';
+import { Get, Post } from 'common-js-util';
+import { SubscribeToEvent, StoreEvent, UnsubscribeEvent } from 'state-manager-utility';
 
 import GLOBAL from './../../Constants/global.constants';
 
@@ -34,6 +34,10 @@ export default class PageNav extends Component {
         const spacing = ThemeUtil.getCurrentSpacing();
         this.changeSpacing(spacing);
         this.changeTheme(theme);
+    }
+
+    componentWillUnmount() {
+        UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
 
     userDataFetched = (data) => {
@@ -75,6 +79,7 @@ export default class PageNav extends Component {
         const res = await Get({ urlPrefix: GLOBAL.ROUTE_URL, url: 'logout' });
         if (res.success) {
             const a = (this.props.location ? this.props.location.state : null) || { from: { pathname: '/login' } };
+            StoreEvent({ eventName: 'loggedUser', data: {} });
             this.setState({ redirectToReferrer: true });
         }
     }
