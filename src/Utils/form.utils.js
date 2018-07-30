@@ -213,10 +213,14 @@ export default class FormUtil {
         // this.updateForm();
     };
 
-    static redirect(url) {
+    static redirect(url, queryParam) {
         // static redirect({ action, listingRow, history, genericData }) {
         url = CreateUrl({ url, obj: self.form.data });
-        Location.navigate({ url });
+        Location.navigate({ url, queryParam });
+    }
+
+    static search(obj, reset = false) {
+        Location.search(obj, { reset });
     }
 
     /**
