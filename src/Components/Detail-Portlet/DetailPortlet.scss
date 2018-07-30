@@ -32,8 +32,7 @@
     }
 
     .pull-right {
-        overflow-y: hidden;
-        overflow-x: scroll;
+        overflow: hidden;
         white-space: nowrap;
         max-width: 490px;
         float: right;
