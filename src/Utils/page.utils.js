@@ -1,5 +1,5 @@
 import { Get, Post, Delete, Put } from 'common-js-util';
-import { Location} from 'drivezy-web-utils/build/Utils/location.utils';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
 import { ROUTE_URL } from './../Constants/global.constants';
@@ -43,10 +43,14 @@ export default class Pageutil {
         return page;
     }
 
-    static redirect(url) {
+    static redirect(url, queryParam) {
         // static redirect({ action, listingRow, history, genericData }) {
         url = CreateUrl({ url, obj: self.page.data });
-        Location.navigate({ url });
+        Location.navigate({ url, queryParam });
+    }
+
+    static search(obj, reset = false) {
+        Location.search(obj, { reset });
     }
 
     static getData() {

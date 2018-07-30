@@ -24,17 +24,19 @@ export function ExecuteScript({ formContent, scripts, context, contextName = 'fo
 
 
     // methods({ formContent, context, contextName, script, scripts });
-    methods.bind({ a: 'test' })({ formContent, context, contextName, script, scripts });
+    methods.bind({ a: 'test' })({ formContent, context, contextName, script, scripts, executionType });
     // methods({ formContent, FormUtils });
     return formContent;
 }
 
 // @TODO change formContent name later as it was built for form execution but later being used in many place
-function methods({ formContent, context, contextName, script, scripts }) {
+function methods({ formContent, context, contextName, script, scripts, executionType }) {
     // function methods({ formContent, FormUtils: form }) {
     try {
         window[contextName] = context; // as value of 'this' is getting undefined, using window 
-        window[contextName].setForm(formContent);
+        if (SCRIPT_TYPE.ON_SUBMIT != executionType) {
+            window[contextName].setForm(formContent);
+        }
         eval(script);
 
         formContent = window[contextName].getForm(true);
