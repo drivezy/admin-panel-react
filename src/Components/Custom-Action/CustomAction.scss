@@ -1,6 +1,9 @@
 @import 'Assets/Global-Shared/theme.scss';
 .header-actions {
     .custom-actions {
+        justify-content: center;
+        align-items: center;
+        display: flex;
         .button-element {
             text-transform: capitalize;
             padding: 5px 8px;
@@ -56,16 +59,19 @@
             }
         }
         .dropdown-menu {
-            min-width: 180px !important;
+            min-width: 230px !important;
+            max-height: 585px;
+            overflow: scroll;
         }
     .dropdown-menu.menu-operations{
         background: #fff;
         .menu-item {
         display: flex;
+        padding: 7px;
         .menu-link{
             cursor: pointer;
-            font-size: 17px !important;
-            padding: 4px 10px !important;
+            font-size: 18px !important;
+            padding: 1px 2px !important;
             span.badge{
             color: #000;
             opacity: 1;

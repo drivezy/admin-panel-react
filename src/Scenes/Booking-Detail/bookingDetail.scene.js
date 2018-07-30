@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import './bookingDetail.scene.css';
 
-import { StoreEvent } from 'common-js-util';
+import { StoreEvent } from 'state-manager-utility';
 
 import UserCard from './../../Components/User-Card/userCard.component';
 import BookingFeedback from './../../Components/Booking/Components/Booking-Feedback/bookingFeedback.component';
@@ -38,7 +38,7 @@ export default class BookingDetail extends Component {
         const result = await Booking(id);
         if (result.success) {
             let bookingDetail = result.response;
-            this.setState({ bookingDetail })
+            this.setState({ bookingDetail });      
         }
         this.getMenuData();
     }
@@ -51,6 +51,7 @@ export default class BookingDetail extends Component {
             const menuDetail = ConvertMenuDetailForGenericPage(response || {});
             this.state.menuDetail = menuDetail;
             this.setState({ menuDetail });
+            StoreEvent({ eventName: 'rightClickData', data: { menuData: response } });            
         }
     }
 
@@ -83,6 +84,7 @@ export default class BookingDetail extends Component {
                         <i className="fa fa-refresh"></i>
                     </button>
                     &nbsp;
+                    <CustomAction menuDetail={menuDetail} genericData={genericDataForCustomColumn} history={history} actions={menuDetail.uiActions} listingRow={bookingDetail} placement={'as_header'} callback={this.getBookingDetail} />
                     <CustomAction menuDetail={menuDetail} genericData={genericDataForCustomColumn} history={history} actions={menuDetail.uiActions} listingRow={bookingDetail} placement={'as_dropdown'} callback={this.getBookingDetail} />
                 </div>
 
