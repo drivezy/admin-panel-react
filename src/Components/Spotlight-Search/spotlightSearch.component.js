@@ -119,7 +119,6 @@ export class Spotlight extends Component {
     // }
 
     redirectTo = (state) => {
-        console.log(state);
         this.setState({ isOpen: !this.state.isOpen });
         Location.navigate({ url: state.url });
     }
@@ -188,7 +187,19 @@ export class Spotlight extends Component {
                              </div>
                             }
                             <ul className="list-group list-group-flush">
-                                {matches.slice(0, 5).map((match, key) => (<li ref={this.menuItem} onKeyDown={this.onSelect} onClick={() => this.redirectTo(match)} key={key} className="list-group-item">{match.name}</li>))}
+                                {
+                                    matches.slice(0, 5).map((match, key) => (
+                                        match.visible ?
+                                            <li 
+                                            ref={this.menuItem} 
+                                            onKeyDown={this.onSelect} 
+                                            onClick={() => this.redirectTo(match)} key={key} 
+                                            className="list-group-item">{match.name}
+                                            </li>
+                                        :
+                                        null
+                                ))
+                                }
                             </ul>
                         </div>
                     }
@@ -198,7 +209,7 @@ export class Spotlight extends Component {
             </HotKeys>
         )
     }
-}                                                                                                                                                       
+}
 
 
 
