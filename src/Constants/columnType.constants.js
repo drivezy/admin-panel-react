@@ -10,5 +10,6 @@ export default {
     SERIALIZABLE: 9,
     SCRIPT: 10,
     FORM: 11,
-    UPLOAD: 12
+    UPLOAD: 12,
+    MULTIPLE_UPLOAD: 13
 };
