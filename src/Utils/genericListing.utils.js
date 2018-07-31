@@ -3,7 +3,7 @@ import { Get, IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall, TrimQuer
 import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
-import { GetParsedLayoutScript, GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, ParseRestrictedQuery, GetPathWithParent } from './generic.utils';
+import { GetParsedLayoutScript, GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, ParseRestrictedQuery, GetPathWithParent, FilterOutDuplicateActions } from './generic.utils';
 
 import { ROUTE_URL } from './../Constants/global.constants';
 
@@ -14,7 +14,7 @@ let tempQuery; // used to decide if stats is to be fetched from server
 * url and menu detail, fetch data and passes them further to the components
 * to show listing data
 */
-export const GetListingRecord = async ({ configuration, queryString = {}, callback, data, currentUser = {}, index, isTab }) => {
+export const GetListingRecord = async ({ configuration, queryString = {}, callback, data, currentUser = {}, index, isTab, withoutIdentifier = false }) => {
     const params = Initialization(configuration, queryString);
     // const this = {};
     this.currentUser = currentUser;
@@ -50,7 +50,9 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
 
     const restricted_query = configuration.restricted_query || configuration.query;
     options.query += IsUndefinedOrNull(restricted_query) ? '' : ' and ' + ConvertToQuery.call(this, restricted_query);
-    options.request_identifier = data.request_identifier;
+    if (!withoutIdentifier) {
+        options.request_identifier = data.request_identifier;
+    }
     // If a filter is applied , add the query to options.query
 
     /****************************************************
@@ -183,6 +185,8 @@ function PrepareObjectForListing(result, { extraParams }) {
             }
         }
 
+        const nextActions = FilterOutDuplicateActions([...model.actions, ...configuration.uiActions]);
+
         // Preparing the generic listing object
         const genericListingObj = {
             stats: stats || data.stats,
@@ -204,7 +208,7 @@ function PrepareObjectForListing(result, { extraParams }) {
             // @TODO uncomment this line to get selectedColumn
             layout: configuration.layout || {},
             // layout: configuration.preference[configuration.listName + ".list"] ? JSON.parse(configuration.preference[configuration.listName + ".list"]) : null, // formPreference: configuration.preference[configuration.listName + '.form'] ? JSON.parse(configuration.preference[configuration.listName + '.form']) : null,
-            nextActions: [...model.actions, ...configuration.uiActions],
+            nextActions,
             // nextActions: model.actions,
             formPreference,
             formPreferences,
