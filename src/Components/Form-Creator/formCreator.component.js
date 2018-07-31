@@ -51,6 +51,8 @@ const submitGenericForm = async ({ payload, newValues, onSubmit }) => {
     const scripts = payload.scripts;
 
     let body = newValues;
+    let Method = Post;
+    
     if (payload.method == 'edit') {
         Method = Put;
         const originalValues = FormUtils.getOriginalData();
@@ -65,7 +67,6 @@ const submitGenericForm = async ({ payload, newValues, onSubmit }) => {
         return;
     }
     const url = GetUrlForFormSubmit({ payload });
-    let Method = Post;
 
     if (updatedPayload.body) {
         body = { ...body, ...updatedPayload.body };
