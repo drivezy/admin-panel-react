@@ -168,8 +168,8 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
 
                 const relationIndex = dict.parent;
 
-                if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && relationship[relationIndex].hasOwnProperty('related_model')) {
-                    finalColumnDefinition[i].reference_route = relationship[relationIndex].related_model.state_name;
+                if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && relationship[relationIndex].hasOwnProperty('reference_model')) {
+                    finalColumnDefinition[i].menu_url = relationship[relationIndex].reference_model.menu_url;
                 }
                 // if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex)) {
                 //     if (relationship[relationIndex].hasOwnProperty('related_model')) {
@@ -597,24 +597,13 @@ export function RowTemplate({ selectedColumn, listingRow, path = 'path' }) {
     if (selectedColumn.column_type_id == COLUMN_TYPE.BOOLEAN) {
         // return eval('listingRow.' + selectedColumn.path) ? 'Yes' : 'No';
         return listingRow[selectedColumn.path] ? <div className="green">Yes</div> : <div className="red">No</div>;
-    } else if (selectedColumn.route) {
-        let id;
-        if (selectedColumn[path].split('.')[1]) {
-            id = convertIt(selectedColumn[path]);
-            const evalValue = eval('listingRow.' + id);
-            if (evalValue) {
-                id = eval('listingRow.' + id).id;
-            } else {
-                id = null;
-            }
-        } else {
-            id = listingRow.id;
-        }
-        return id
-            ?
-            <a className='cursor-pointer' onClick={() => Location.navigate({ url: `${selectedColumn.reference_route}${id}` })}>{eval('listingRow.' + selectedColumn[path])}</a>
-            :
-            defaultRowValue({ listingRow, selectedColumn, path });
+    } else if (selectedColumn.route && selectedColumn.menu_url) {
+        // const id = listingRow[selectedColumn.p]
+        const idPath = selectedColumn.parent + '.id';
+        const path = `${selectedColumn.menu_url}/${listingRow[idPath]}`
+        return <a class='hyperlink-field' onClick={() => Location.navigate({ url: path })}>
+            {defaultRowValue({ listingRow, selectedColumn, path })}
+        </a>
     } else {
         return defaultRowValue({ listingRow, selectedColumn, path });
     }
@@ -846,7 +835,7 @@ export function EvalCondtionForNextActions(condition, itemRow, starter) {
                 }
             }
 
-            evaluatedExpressions[i] = typeof evaluatedExpressions[i] == 'string' ? `'${evaluatedExpressions[i]}'` :  evaluatedExpressions[i];
+            evaluatedExpressions[i] = typeof evaluatedExpressions[i] == 'string' ? `'${evaluatedExpressions[i]}'` : evaluatedExpressions[i];
             condition = condition.replace(expressions[i], evaluatedExpressions[i]);
         } catch (e) {
             evaluatedExpressions[i] = data[expression];
