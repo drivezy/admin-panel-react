@@ -3,7 +3,7 @@ import { Get, IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall, TrimQuer
 import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
-import { GetParsedLayoutScript, GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, ParseRestrictedQuery, GetPathWithParent } from './generic.utils';
+import { GetParsedLayoutScript, GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, ParseRestrictedQuery, GetPathWithParent, FilterOutDuplicateActions } from './generic.utils';
 
 import { ROUTE_URL } from './../Constants/global.constants';
 
@@ -185,6 +185,8 @@ function PrepareObjectForListing(result, { extraParams }) {
             }
         }
 
+        const nextActions = FilterOutDuplicateActions([...model.actions, ...configuration.uiActions]);
+
         // Preparing the generic listing object
         const genericListingObj = {
             stats: stats || data.stats,
@@ -206,7 +208,7 @@ function PrepareObjectForListing(result, { extraParams }) {
             // @TODO uncomment this line to get selectedColumn
             layout: configuration.layout || {},
             // layout: configuration.preference[configuration.listName + ".list"] ? JSON.parse(configuration.preference[configuration.listName + ".list"]) : null, // formPreference: configuration.preference[configuration.listName + '.form'] ? JSON.parse(configuration.preference[configuration.listName + '.form']) : null,
-            nextActions: [...model.actions, ...configuration.uiActions],
+            nextActions,
             // nextActions: model.actions,
             formPreference,
             formPreferences,

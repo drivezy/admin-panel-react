@@ -874,6 +874,32 @@ export function CreateUrlForFetchingDetailRecords({ url, urlParameter }) {
 }
 
 /**
+ * Filters out same kind of actions on the basis of their identifier
+ * in the event of same identifier, action having higher id gets preference
+ * @param  {array} actions
+ */
+export function FilterOutDuplicateActions(actions) {
+    const obj = {};
+    const finalActions = [...actions];
+    const duplicateIndices = [];
+    if (!Array.isArray(actions)) {
+        return [];
+    }
+    actions.forEach((action, index) => {
+        const identifier = action.identifier;
+        if (obj[identifier]) {
+            const duplicateIndex = obj[identifier].id < action.id ? index : obj[identifier].index;
+            duplicateIndices.push(duplicateIndex);
+        } else {
+            obj[identifier] = { ...action, ...{ index } };
+        }
+    });
+
+    duplicateIndices.forEach(index => finalActions.splice(index, 1));
+    return finalActions;
+}
+
+/**
  * detects if object have only single level of attribute
  * for e.g. data object from generic apis return single level object so method return true for those object
  */

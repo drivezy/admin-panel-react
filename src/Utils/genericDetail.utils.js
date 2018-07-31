@@ -1,7 +1,7 @@
 import { IsUndefinedOrNull, BuildUrlForGetCall, IsObjectHaveKeys } from './common.utils';
 import { Get } from 'common-js-util';
 
-import { CreateFinalColumns, GetPreSelectedMethods, RegisterMethod, GetColumnsForListing, ConvertMenuDetailForGenericPage, GetParsedLayoutScript, CreateUrlForFetchingDetailRecords } from './generic.utils';
+import { CreateFinalColumns, GetPreSelectedMethods, RegisterMethod, GetColumnsForListing, ConvertMenuDetailForGenericPage, GetParsedLayoutScript, CreateUrlForFetchingDetailRecords, FilterOutDuplicateActions } from './generic.utils';
 import { ROUTE_URL } from './../Constants/global.constants';
 
 /**
@@ -121,7 +121,7 @@ export function GetDataForPortlet({ portletDetail, genericDetailObject, portletD
     obj.relationship = relationship;
     obj.dictionary = dictionary;
     const model = obj.model = relationship[obj.starter];
-    obj.nextActions = [...obj.model.actions, ...genericDetailObject.uiActions];
+    obj.nextActions = FilterOutDuplicateActions([...obj.model.actions, ...genericDetailObject.uiActions]);
     obj.model = model;
     const formPreferences = GetParsedLayoutScript(model.form_layouts);
 
