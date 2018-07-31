@@ -81,7 +81,8 @@ export default class PredefinedFilter extends React.Component {
         const { filteredUserFilter, searchText } = this.state;
         const filters = searchText ? filteredUserFilter : layouts;
         return (
-            <Dropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+            layouts.length > 1 ?
+                <Dropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                 {/* <DropdownToggle data-toggle="dropdown" aria-expanded={this.state.dropdownOpen}> */}
                 <DropdownToggle caret
                     className='dropdown-button'
@@ -123,6 +124,7 @@ export default class PredefinedFilter extends React.Component {
                     }
                 </DropdownMenu>
             </Dropdown>
+            : null
         );
     }
 }
