@@ -26,6 +26,10 @@ export default class VehicleDetail extends Component {
         this.getVehicleDetail();
     }
 
+    componentWillUnmount() {
+        StoreEvent({ eventName: 'rightClickData', data: {} });
+    }
+
     getVehicleDetail = async () => {
         const { id } = this.props.match.params;
         const url = 'vehicle/' + parseInt(id) + '?includes=car,tracker,venue,vehicle_detail.vendor.vendor_user,permits.state,bookings.type,bookings.user,bookings.pickup_venue,bookings.drop_venue,bookings.status,documents.type,servicing.status,fueling,defects.severity,defects.damage_type,bookings.ride_return,bookings.feedback'

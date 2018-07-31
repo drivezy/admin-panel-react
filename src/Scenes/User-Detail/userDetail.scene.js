@@ -27,6 +27,10 @@ export default class UserDetail extends Component {
         this.getUser();
     }
 
+    componentWillUnmount() {
+        StoreEvent({ eventName: 'rightClickData', data: {} });
+    }
+
     getUser = async () => {
         const { id } = this.props.match.params;
         const url = 'user/' + id + '?includes=bookings.vehicle,bookings.pickup_venue,payment_requests.booking,payment_requests.order,roles.createdUser,roles.role,permissions.created_user,permissions.permission,comments.created_user,sms,user_tickets.status,user_tickets.category,user_tickets.assigned_to,bookings.feedback,licenses'

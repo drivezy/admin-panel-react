@@ -23,6 +23,10 @@ export default class ExpenseVoucherDetail extends Component {
         this.getVoucherDetail();
     }
 
+    componentWillUnmount() {
+        StoreEvent({ eventName: 'rightClickData', data: {} });
+    }
+
     getVoucherDetail = async () => {
         const { voucherId } = this.props.match.params;
         const url = 'expenseVoucher/' + voucherId + '?includes=head,comments.created_user,tags,receipts.created_user,receipts.type,cash.created_user,cheque.created_user,imps.created_user,details,status,payee,vendor,authorized_by,unauthorized_by,invoices.created_user,invoices.tds_type,city,venue'

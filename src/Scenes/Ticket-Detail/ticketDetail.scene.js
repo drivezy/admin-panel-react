@@ -20,6 +20,10 @@ export default class TicketDetail extends Component {
     componentDidMount() {
         this.getTicketDetail();
     }
+    
+    componentWillUnmount() {
+        StoreEvent({ eventName: 'rightClickData', data: {} });
+    }
 
     getTicketDetail = async () => {
         const { ticketId } = this.props.match.params;

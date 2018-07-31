@@ -60,6 +60,7 @@ export default class GenericListing extends Component {
         this.state.isCollapsed = false;
         DeleteEvent({ eventName: 'ToggleAdvancedFilter' });
         UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
+        StoreEvent({ eventName: 'rightClickData', data: {} });
     }
 
     userDataArrived = (user) => {
@@ -312,7 +313,7 @@ export default class GenericListing extends Component {
                                         </Card> : null
                                 }
 
-                                { (finalColumns[0] && finalColumns[0].defaultLayout) ? <div className="noColumnMessage">No columns were selected, displaying default columns</div> : null}
+                                {(finalColumns[0] && finalColumns[0].defaultLayout) ? <div className="noColumnMessage">No columns were selected, displaying default columns</div> : null}
 
                                 {
                                     (finalColumns && finalColumns.length) ?
@@ -383,7 +384,7 @@ export default class GenericListing extends Component {
             subMenu: true,
             onClick: (data, operator) => {
                 GetAggregation(operator.name.toLowerCase(), operator.name + ' of ' + data.selectedColumn.display_name + ' equals : ', data)
-            }, 
+            },
             disabled: (data) => (data.selectedColumn.path.split('.').length != 1)
         }, { subMenu: null },
         {
