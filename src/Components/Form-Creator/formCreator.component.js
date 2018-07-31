@@ -49,6 +49,15 @@ const booleanOptions = [{ name: "True", id: 1 }, { name: "False", id: 0 }];
 const submitGenericForm = async ({ payload, newValues, onSubmit }) => {
 
     const scripts = payload.scripts;
+
+    let body = newValues;
+    if (payload.method == 'edit') {
+        Method = Put;
+        const originalValues = FormUtils.getOriginalData();
+        body = GetChangedMethods(newValues, originalValues);
+    }
+    payload.body = body;
+
     const updatedPayload = ExecuteScript({ formContent: payload, scripts, context: FormUtils, contextName: 'form', executionType: SCRIPT_TYPE.ON_SUBMIT });
 
     if (!payload.route) {
@@ -57,12 +66,6 @@ const submitGenericForm = async ({ payload, newValues, onSubmit }) => {
     }
     const url = GetUrlForFormSubmit({ payload });
     let Method = Post;
-    let body = newValues;
-    if (payload.method == 'edit') {
-        Method = Put;
-        const originalValues = FormUtils.getOriginalData();
-        body = GetChangedMethods(newValues, originalValues);
-    }
 
     if (updatedPayload.body) {
         body = { ...body, ...updatedPayload.body };
@@ -73,6 +76,10 @@ const submitGenericForm = async ({ payload, newValues, onSubmit }) => {
     }
 
     const result = await Method({ url, body, urlPrefix: ROUTE_URL });
+
+    payload.response = result.response;
+    ExecuteScript({ formContent: payload, scripts, context: FormUtils, contextName: 'form', executionType: SCRIPT_TYPE.POST_SUBMISSION });
+
     if (result.success && onSubmit) {
         onSubmit();
     }
