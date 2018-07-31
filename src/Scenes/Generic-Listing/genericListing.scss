@@ -33,8 +33,10 @@
             margin: 0px;
         }
         .search-wrapper {
+            width: 100%;
             .form-groups{
-                width: 93%;
+                max-width: 68%;
+                position: relative;
             }
         }
         .header-actions {
