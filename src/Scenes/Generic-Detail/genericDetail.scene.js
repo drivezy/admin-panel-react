@@ -82,10 +82,10 @@ export default class GenericDetail extends Component {
         }
     }
 
-    getDetailRecord = () => {
+    getDetailRecord = ({ withoutIdentifier = false } = {}) => {
         const { menuDetail, portlet, urlParameter, params } = this.state;
         // const {menuId} = this.props
-        GetDetailRecord({ configuration: menuDetail, callback: this.dataFetched, data: portlet, urlParameter: params });
+        GetDetailRecord({ configuration: menuDetail, callback: this.dataFetched, data: portlet, urlParameter: params, withoutIdentifier });
     }
 
     dataFetched = ({ tabDetail, portlet }) => {
@@ -115,7 +115,7 @@ export default class GenericDetail extends Component {
             // this.setState({ portlet, menuDetail });
             this.state.portlet = portlet;
             this.state.menuDetail = menuDetail;
-            this.getDetailRecord();
+            this.getDetailRecord({ withoutIdentifier: true });
         }
     }
 

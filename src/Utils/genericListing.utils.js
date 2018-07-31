@@ -14,7 +14,7 @@ let tempQuery; // used to decide if stats is to be fetched from server
 * url and menu detail, fetch data and passes them further to the components
 * to show listing data
 */
-export const GetListingRecord = async ({ configuration, queryString = {}, callback, data, currentUser = {}, index, isTab }) => {
+export const GetListingRecord = async ({ configuration, queryString = {}, callback, data, currentUser = {}, index, isTab, withoutIdentifier = false }) => {
     const params = Initialization(configuration, queryString);
     // const this = {};
     this.currentUser = currentUser;
@@ -50,7 +50,9 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
 
     const restricted_query = configuration.restricted_query || configuration.query;
     options.query += IsUndefinedOrNull(restricted_query) ? '' : ' and ' + ConvertToQuery.call(this, restricted_query);
-    options.request_identifier = data.request_identifier;
+    if (!withoutIdentifier) {
+        options.request_identifier = data.request_identifier;
+    }
     // If a filter is applied , add the query to options.query
 
     /****************************************************

@@ -97,12 +97,10 @@ export default class GenericListing extends Component {
         }
     }
 
-    getListingData = () => {
+    getListingData = ({ withoutIdentifier = false } = {}) => {
         // this.setState({loading:})
         const { menuDetail, genericData, queryString, currentUser, isTab } = this.state;
-        GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser, isTab });
-
-
+        GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser, isTab, withoutIdentifier });
     }
 
     dataFetched = ({ genericData, filterContent }) => {
@@ -179,7 +177,7 @@ export default class GenericListing extends Component {
             // this.setState({ genericData });
             this.state.genericData = genericData;
             this.state.menuDetail = menuDetail;
-            this.getListingData();
+            this.getListingData({ withoutIdentifier: true });
         }
     }
 
