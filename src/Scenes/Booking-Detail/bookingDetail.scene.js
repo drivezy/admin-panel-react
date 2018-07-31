@@ -33,6 +33,10 @@ export default class BookingDetail extends Component {
         this.getBookingDetail();
     }
 
+    componentWillUnmount() {
+        StoreEvent({ eventName: 'rightClickData', data: {} });
+    }
+
     getBookingDetail = async () => {
         const { id } = this.props.match.params;
         const result = await Booking(id);

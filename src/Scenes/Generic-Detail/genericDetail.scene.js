@@ -34,6 +34,7 @@ export default class GenericDetail extends Component {
 
     componentWillUnmount() {
         UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
+        StoreEvent({ eventName: 'rightClickData', data: {} });
     }
 
     componentDidMount() {

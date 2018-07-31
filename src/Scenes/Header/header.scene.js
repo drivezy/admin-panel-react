@@ -4,16 +4,20 @@ import { SubscribeToEvent, UnsubscribeEvent } from 'state-manager-utility';
 
 import ActiveModule from './../../Components/Active-Module/ActiveModule.component';
 import PageNav from './../../Components/Page-Nav/PageNav';
+import {IsObjectHaveKeys} from 'common-js-util';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 
 import RightClick from './../../Components/Right-Click/rightClick.component';
 
 export default class Header extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
             visible: props.visible || false,
             menuDetail: {},
             history: props.history,
+            enabled: false
         }
     }
 
@@ -21,17 +25,19 @@ export default class Header extends Component {
         SubscribeToEvent({ eventName: 'rightClickData', callback: this.getMenuData });
     }
 
-    componentWillUnmount() { 
+    componentWillUnmount() {
         UnsubscribeEvent({ eventName: 'rightClickData', callback: this.getMenuData });
     }
 
     getMenuData = (data) => {
         this.setState({
-            menuDetail: data
+            menuDetail: data,
+            enabled: (IsObjectHaveKeys(data) ? true : false)
         })
     }
 
     render() {
+        const { enabled } = this.state;
         return (
 
             <div className="landing-header">
@@ -39,7 +45,7 @@ export default class Header extends Component {
                 <div className="header-content">
 
                     <ActiveModule />
-                    <RightClick rowOptions={this.rowOptions} renderTag="div" className='generic-table-td' />
+                    { enabled ? <RightClick rowOptions={this.rowOptions} renderTag="div" className='generic-table-td' /> : null}
                     <PageNav />
 
                 </div>
@@ -60,7 +66,8 @@ export default class Header extends Component {
 
                 history.push(`${pageUrl}`);
             },
-            disabled: false
+            disabled: false,
+            enabled: false
         }, {
             id: 4,
             name: "Redirect Model Detail",
@@ -73,7 +80,8 @@ export default class Header extends Component {
 
                 history.push(`${pageUrl}`);
             },
-            disabled: false
+            disabled: false,
+            enabled: false
         }
     ];
 }
