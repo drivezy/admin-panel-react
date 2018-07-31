@@ -211,8 +211,9 @@ export default class GenericDetail extends Component {
             subMenu: false,
             onClick: (data) => {
                 const { history, match } = this.props;
+                const { menuDetail } = this.state;
 
-                let pageUrl = "/menu/" + this.state.menuDetail.menuId
+                let pageUrl = "/menu/" + menuDetail.menuId
                 Location.navigate({ url: pageUrl });
                 // history.push(`${pageUrl}`);
             }
@@ -223,8 +224,9 @@ export default class GenericDetail extends Component {
             subMenu: false,
             onClick: (data) => {
                 const { history, match } = this.props;
+                const { portlet } = this.state;
 
-                let url = "/model/" + this.state.menuDetail.model.id
+                let url = "/model/" + portlet.model.id
                 Location.navigate({ url });
                 // history.push(`${url}`);
             }
