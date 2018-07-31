@@ -20,7 +20,11 @@ export default class FormUtil {
     static onChange({ column, callback }) {
         onChangeListeners[column] = callback;
     }
-
+    
+    /**
+     * Returns source hash value for the given source
+     * @param  {string} source
+     */
     static getSourceHash(source) {
         return GetSourceMorphMap(source);
     }
@@ -49,6 +53,22 @@ export default class FormUtil {
      */
     static setBody(body = {}) {
         self.form.body = body;
+    }
+    
+    /**
+     * Returns body of the form right before making api call
+     * this method is available for onSubmit and postSubmission script
+     */
+    static getBody() {
+        return self.form.body;
+    }
+    
+    /**
+     * Returns response value after api call made thorough given route
+     * this method is supposed to use only for postSubmission script
+     */
+    static getResponseValue() {
+        return self.form.response;
     }
 
     /**
@@ -176,18 +196,31 @@ export default class FormUtil {
             self.form.dictionary[column].reference_model.route_name = url;
         }
     }
-
+    
+    /**
+     * Returns menu detail
+     */
     static getMenuDetail() {
         return self.form.menu;
     }
-
+    
+    /**
+     * same as data value,
+     * ideally this method should be used when dealing with form
+     *
+     * @param  {} column
+     */
     static getRecordValue(column) {
         if (!column) {
             return self.form.record;
         }
         return self.form.record[column];
     }
-
+    
+    /**
+     * in case of tabs, returns portlet value
+     * @param  {string} column
+     */
     static getParentValue(column) {
         return column ? self.form.parent[column] : self.form.parent;
     }
