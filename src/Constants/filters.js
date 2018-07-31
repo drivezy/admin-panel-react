@@ -15,5 +15,10 @@ export default {
         "columnType": [
             COLUMN_TYPE.STRING
         ],
+    },
+    "External Link": {
+        "name": "External Link",
+        "columnType": COLUMN_TYPE.STRING,
+        "path": 'Generic-Column-Filters/hyperlink.component.js'
     }
 }
