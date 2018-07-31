@@ -384,7 +384,11 @@ const formElements = props => {
                             if (!preference.split) {
                                 column = payload.dictionary[preference.index];
 
-                                elem = inputElement({ props, values, column, shouldColumnSplited, key });
+                                if (column) {
+                                    elem = inputElement({ props, values, column, shouldColumnSplited, key });
+                                } else {
+                                    elem = null;
+                                }
 
                             } else {
                                 shouldColumnSplited = preference.label.includes('s-split-') ? true : preference.label.includes('e-split-') ? false : shouldColumnSplited;
@@ -457,7 +461,10 @@ const FormContents = withFormik({
         column_definition.forEach(async (preference) => {
             if (!preference.split) {
                 let column = payload.dictionary[preference.index];
-                response[column.name] = payload.data[column.name] || '';
+                if (column) {
+                    response[column.name] = payload.data[column.name] || '';
+                }
+
 
                 // if (column.column_type_id == COLUMN_TYPE.BOOLEAN) {
                 //     const val = SelectFromOptions(booleanOptions, payload.data[column.name], 'id');
@@ -494,7 +501,7 @@ const FormContents = withFormik({
                 return;
             }
             const column = dictionary[columnDefinition.index];
-            if (column.required) {
+            if (column && column.required) {
                 da[column.name] = Yup.string().required(column.display_name + ' is required.');
             }
         });
