@@ -58,9 +58,9 @@ export default class BookingPreRide extends Component {
                             {
                                 (bookingPreRideData && bookingPreRideData.status) ?
                                     <Col>
-                                        <div className="booking-status-verified"
-                                        //className={theClassName}
-                                        >{bookingPreRideData.status.value}</div>
+                                        <div className="booking-status-verified">
+                                            {bookingPreRideData.status.value}
+                                        </div>
                                     </Col>
                                     :
                                     <Col >
@@ -69,7 +69,6 @@ export default class BookingPreRide extends Component {
                             }
                         </Row>
                     </CardTitle>
-
                     <CardBody className="booked-vehicle-data">
                         <Row className="vehicle-info">
                             <Col sm="4">
@@ -82,28 +81,24 @@ export default class BookingPreRide extends Component {
                                     </Link>
 
                                     <span className="vehicle-info-name">-
-                                            <CustomTooltip placement="top" html={bookingPreRideData.vehicle.car.name} title="Current Vehicle"></CustomTooltip>
+                                            <CustomTooltip placement="top" html={'(' +bookingPreRideData.vehicle.car.name + ')'} title="Current Vehicle"></CustomTooltip>
                                     </span>
                                 </div>
-
-                                {/* {
-                                        bookingPreRideData.billing_car == null &&
-                                        <p>
-                                            {bookingPreRideData.vehicle.car.name}
-                                        </p>
-                                    } */}
+                                
+                                <div className="billing-car-name">
                                 {
                                     bookingPreRideData.billing_car != null &&
                                     <CustomTooltip placement="top" html={bookingPreRideData.billing_car.name} title="Billing Vehicle"></CustomTooltip>
                                 }
-                                <p>
+                                </div>
+                                <p className="ride-type">
                                     <span>
                                         {bookingPreRideData.type.value}
                                     </span>
                                 </p>
-                                <p>
+                                <p className="fuel-type">
                                     <span>
-                                        [{bookingPreRideData.fuel_package == null ? bookingPreRideData.with_fuel ? 'withfuel' : 'fuelless' : bookingPreRideData.fuel_package + ' kms Fuel Package'}]
+                                        [{bookingPreRideData.fuel_package == null ? bookingPreRideData.with_fuel ? ' With Fuel Package ' : ' With No-Fuel Package ' : bookingPreRideData.fuel_package + ' kms Fuel Package'}]
                                     </span>
                                 </p>
                             </Col>
