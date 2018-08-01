@@ -601,7 +601,7 @@ export function RowTemplate({ selectedColumn, listingRow, path = 'path' }) {
         // const id = listingRow[selectedColumn.p]
         const idPath = selectedColumn.parent + '.id';
         const path = `${selectedColumn.menu_url}/${listingRow[idPath]}`
-        return <a class='hyperlink-field' onClick={() => Location.navigate({ url: path })}>
+        return <a className='hyperlink-field' onClick={() => Location.navigate({ url: path })}>
             {defaultRowValue({ listingRow, selectedColumn, path })}
         </a>
     } else {
