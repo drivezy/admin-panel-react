@@ -188,7 +188,7 @@ export class Spotlight extends Component {
                             }
                             <ul className="list-group list-group-flush">
                                 {
-                                    matches.slice(0, 5).map((match, key) => (
+                                    matches.slice(0, 10).map((match, key) => (
                                         match.visible ?
                                             <li 
                                             ref={this.menuItem} 
