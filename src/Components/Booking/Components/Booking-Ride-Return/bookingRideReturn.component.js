@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import {
-    Card, CardTitle, CardBody, Row, Col, ButtonToolbar, Button, Progress
+    Card, CardBody, Row, Col, Progress
 } from 'reactstrap';
 
-import { BookingPickupDate, BookingPickupTime, BookingDropDate, BookingDropTime, TotalDuration } from './../../../../Utils/booking.utils';
+import { BookingPickupDate, BookingPickupTime, BookingDropDate, BookingDropTime, TotalDuration, RideStatus  } from './../../../../Utils/booking.utils';
 import { Link } from 'react-router-dom';
 
 import './bookingRideReturn.css';
-import SummaryCard from '../../../Summary-Card/summaryCard';
-import BookingDetail from '../../../../Scenes/Booking-Detail/bookingDetail.scene';
 
 export default class BookingRideReturn extends Component {
 
@@ -30,6 +28,7 @@ export default class BookingRideReturn extends Component {
         let bookingStartTime = BookingPickupTime(bookingRideReturnData.actual_start_time);
         let bookingEndDate = BookingDropDate(bookingRideReturnData.actual_end_time);
         let bookingEndTime = BookingDropTime(bookingRideReturnData.actual_end_time);
+        let theClassName = RideStatus(bookingRideReturnData.status.id);
 
         let paidAmount = 0;
         bookingRideReturnData.payment.forEach(function (data) {
@@ -79,18 +78,6 @@ export default class BookingRideReturn extends Component {
             }
         }
         totalOdo = (kmDifference) + (addPreviousOdo);
-
-        let theClassName =
-            (bookingRideReturnData.status.id === 8 ? "booking-status-cancelled"
-                :
-                (bookingRideReturnData.status.id === 7 ? "booking-status-complete"
-                    :
-                    (bookingRideReturnData.status.id === 6 ? "booking-status-active"
-                        :
-                        (bookingRideReturnData.status.id === 5 ? "booking-status-pending"
-                            :
-                            (bookingRideReturnData.status.id === 0 ? "booking-status-unverified"
-                                : null)))));
 
         return (
             <div>

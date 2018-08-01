@@ -6,7 +6,7 @@ import {
 import './bookingPreRide.css';
 import { Link } from 'react-router-dom';
 
-import { BookingPickupDate, BookingPickupTime, BookingDropDate, BookingDropTime, TotalDuration } from './../../../../Utils/booking.utils';
+import { BookingPickupDate, BookingPickupTime, BookingDropDate, BookingDropTime, TotalDuration, RideStatus } from './../../../../Utils/booking.utils';
 import CustomTooltip from '../../../Custom-Tooltip/customTooltip.component';
 
 export default class BookingPreRide extends Component {
@@ -27,26 +27,13 @@ export default class BookingPreRide extends Component {
         let bookingDropDate = BookingDropDate(bookingPreRideData.drop_time);
         let bookingDropTime = BookingDropTime(bookingPreRideData.drop_time);
         let duration = TotalDuration(bookingPreRideData.drop_time, bookingPreRideData.pickup_time);
+        let theClassName = RideStatus(bookingPreRideData.status.id);
 
         if (bookingPreRideData.coupon) {
             couponDescription = bookingPreRideData.coupon.campaign.cashback ? 'Campaign Discription:' + bookingPreRideData.coupon.campaign.description : 'Campaign Discription:' + bookingPreRideData.coupon.campaign.description + ' | ' + (bookingPreRideData.coupon.description ? "Coupon Description:" + bookingPreRideData.coupon.description : " ") + "Discount Amount:" + bookingPreRideData.coupon_discount;
         }
 
-        let theClassName =
-            (bookingPreRideData.status.id === 8 ? "booking-status-cancelled"
-                :
-                (bookingPreRideData.status.id === 7 ? "booking-status-complete"
-                    :
-                    (bookingPreRideData.status.id === 6 ? "booking-status-active"
-                        :
-                        (bookingPreRideData.status.id === 5 ? "booking-status-pending"
-                            :
-                            (bookingPreRideData.status.id === 0 ? "booking-status-unverified"
-                                : null)))));
-
-
         return (
-
             <Card className="booking-panel-container" >
                 <div className="booking-details">
                     <CardTitle className="heading">
