@@ -888,7 +888,7 @@ export function FilterOutDuplicateActions(actions) {
     actions.forEach((action, index) => {
         const identifier = action.identifier;
         if (obj[identifier]) {
-            const duplicateIndex = obj[identifier].id < action.id ? index : obj[identifier].index;
+            const duplicateIndex = obj[identifier].id > action.id ? index : obj[identifier].index;
             duplicateIndices.push(duplicateIndex);
         } else {
             obj[identifier] = { ...action, ...{ index } };
