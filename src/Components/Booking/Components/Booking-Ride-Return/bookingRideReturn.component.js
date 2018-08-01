@@ -80,6 +80,18 @@ export default class BookingRideReturn extends Component {
         }
         totalOdo = (kmDifference) + (addPreviousOdo);
 
+        let theClassName =
+            (bookingRideReturnData.status.id === 8 ? "booking-status-cancelled"
+                :
+                (bookingRideReturnData.status.id === 7 ? "booking-status-complete"
+                    :
+                    (bookingRideReturnData.status.id === 6 ? "booking-status-active"
+                        :
+                        (bookingRideReturnData.status.id === 5 ? "booking-status-pending"
+                            :
+                            (bookingRideReturnData.status.id === 0 ? "booking-status-unverified"
+                                : null)))));
+
         return (
             <div>
 
@@ -89,7 +101,9 @@ export default class BookingRideReturn extends Component {
                         {
                             (bookingRideReturnData && bookingRideReturnData.status && bookingRideReturnData.status.id == 8) ? <div className="trip-card-heading">Cancellation Details</div>
                                 :
-                                <div className="trip-card-heading">Trip Details</div>
+                                <div className={theClassName}>
+                                    <div className="trip-card-heading">Trip Details</div>
+                                </div>
                         }
                         {
                             (bookingRideReturnData && !bookingRideReturnData.status) ?
