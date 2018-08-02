@@ -281,14 +281,10 @@ export default class PortletTable extends Component {
                         <tbody>
                             {
                                 listing.map((listingRow, rowKey) =>
-
-
                                     <tr className="table-row" key={rowKey}>
-
                                         <td className="row-key">
                                             {rowKey + 1}
                                         </td>
-
                                         {
                                             finalColumns.map((selectedColumn, key) => {
                                                 const html =
