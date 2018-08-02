@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Collapse, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import _ from 'lodash';
-import { IsObjectHaveKeys  } from 'common-js-util';
+import { IsObjectHaveKeys } from 'common-js-util';
 import { SubscribeToEvent } from 'state-manager-utility';
 
 import { SetPreference } from './../../Utils/preference.utils';
@@ -104,17 +104,19 @@ export default class TableSettings extends Component {
 
         this.setState({ tempSelectedColumns: selectedColumns });
 
-        if(column.separator){
+        if (column.separator) {
             return;
-        } 
-        else 
+        }
+        else
             this.addColumnToLeft(column);
     }
 
     addColumnToLeft(column) {
         const { tempColumns, columns } = this.state;
         column = columns[column.index];
-        tempColumns[column.path] = column;
+        if (column) {
+            tempColumns[column.path] = column;
+        }
         // tempColumns[column.path] = tempColumns.push(column);
     }
 
@@ -157,7 +159,7 @@ export default class TableSettings extends Component {
     addHSplit = () => {
         const { tempSelectedColumns } = this.state;
         let ext = Math.floor(Math.random() * 1000);
-        tempSelectedColumns.push({ split: true, label: "seperator", headingCollapsed: true, heading: "", separator: true, column: 'seperator' + ext});
+        tempSelectedColumns.push({ split: true, label: "seperator", headingCollapsed: true, heading: "", separator: true, column: 'seperator' + ext });
         this.setState({ tempSelectedColumns });
     }
 
@@ -166,9 +168,9 @@ export default class TableSettings extends Component {
         tempSelectedColumns.splice(index, 1);
         let end;
         if (item.label.split("-")[0] == "seperator") {
-            
+
         }
-        else if (item.separator){
+        else if (item.separator) {
             return tempSelectedColumns;
         }
         else {
@@ -389,7 +391,7 @@ export default class TableSettings extends Component {
                                 <ListGroup className="parent-group">
                                     {
                                         tempSelectedColumns.map((column, index) =>
-                                            ((column.split) && (!column.separator)?
+                                            ((column.split) && (!column.separator) ?
                                                 <div key={index}>
                                                     <ListGroupItem className={`${activeColumn.position === index && 'active'}`} tag="button" action key={index} onClick={() => this.selectColumn(column, index)}>
                                                         ---- {column.label} ----

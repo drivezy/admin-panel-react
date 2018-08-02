@@ -101,9 +101,11 @@ export default class ColumnSetting extends Component {
                     <div className="item-label" onClick={() => this.props.selectColumn(column, this.props.index)} onDoubleClick={() => this.props.removeColumn(column)} >
                         {
                             column.separator ?
-                                <span>{"------" + column.label + "-------" }</span>
+                                <span>{"------" + column.label + "-------"}</span>
                                 :
-                                <span>{column.columnTitle ? column.columnTitle : columns[column.index].display_name}</span>
+                                <span>
+                                    {column.columnTitle ? column.columnTitle : columns[column.index].display_name}
+                                </span>
                         }
                     </div>
                     {
