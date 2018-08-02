@@ -18,7 +18,7 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
     const params = Initialization(configuration, queryString);
     // const this = {};
     this.currentUser = currentUser;
-    let options = GetDefaultOptions();
+    let options = GetDefaultOptions(isTab);
 
     params.page = queryString.page ? parseInt(queryString.page) : data.currentPage;
     if (params.includes) {
@@ -93,7 +93,7 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
     options.dictionary = data.dictionary ? false : true;
 
     options.page = queryString.page || options.page;
-    options.limit = queryString.limit || 20;
+    options.limit = queryString.limit ? queryString.limit : isTab ? 10 : 20 || 20;
 
     if (queryString.scopes) {
         options.scopes = queryString.scopes;
@@ -260,13 +260,13 @@ function PrepareObjectForListing(result, { extraParams }) {
 /**
  * Returns default option for get call params
  */
-export function GetDefaultOptions() {
+export function GetDefaultOptions(isTab) {
     return {
         includes: '',
         order: 'id,asc',
         // query: 'id=id',
         query: '',
-        limit: 20,
+        limit: isTab ? 10 : 20,
         page: 1,
         list: true,
         stats: false,
