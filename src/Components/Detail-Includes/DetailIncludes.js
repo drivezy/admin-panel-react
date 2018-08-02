@@ -29,7 +29,7 @@ export default class DetailIncludes extends Component {
         activeTab = activeTab == -1 ? 0 : activeTab;
         if (!hash) {
             // window.location.hash = includesArr[0];
-            Location.navigate({ url: '#' + includesArr[0], method: 'replace' })
+            Location.navigate({ url: '#' + includesArr[0], method: 'replace', queryParam: Location.search() })
         }
 
         this.state = {

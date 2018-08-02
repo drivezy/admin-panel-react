@@ -114,13 +114,15 @@ export default class CustomAction extends Component {
         let filteredActions = [];
         let sortedActions = [];
 
-        filteredActions = sortActions.filter((action)=>action[placement]&&placement=='as_dropdown');
-        sortedActions = sortActions.filter((action)=>action[placement]&&placement != 'as_dropdown');
+        filteredActions = sortActions.filter((action) => action[placement] && placement == 'as_dropdown');
+        sortedActions = sortActions.filter((action) => action[placement] && placement != 'as_dropdown');
         const { filteredUserFilter, searchText } = this.state;
         const filters = searchText ? filteredUserFilter : filteredActions;
 
         return (
+
             <div className="custom-actions flex">
+
                 {
                     (filteredActions.length > 0) ?
                         <Dropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
@@ -135,7 +137,7 @@ export default class CustomAction extends Component {
                                     </DropdownToggle>
                             <DropdownMenu className="dropdown-menu custom-click pull-right menu-operations" right>
                                 {
-                                        filteredActions.length > 1 ?
+                                    filteredActions.length > 1 ?
                                         <div>
                                             <div className="form-group has-feedback">
                                                 <input value={searchText} onChange={this.searchFilter} type="text" className="form-control" id="search-operation" placeholder='Search Actions' />
@@ -149,7 +151,7 @@ export default class CustomAction extends Component {
                                     filters.map((action, key) => {
                                         const filterScript = action.filter_condition ? action.filter_condition.script : null;
                                         const isDisabled = !EvalCondtionForNextActions(filterScript, listingRow, genericData.starter);
-                                        if(isDisabled) { 
+                                        if (isDisabled) {
                                             return null;
                                         }
                                         return (
@@ -200,7 +202,7 @@ export default class CustomAction extends Component {
                         }
                     })
                 }
-                </div>
+            </div>
         )
     }
 }

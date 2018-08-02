@@ -2,23 +2,28 @@
 .generic-detail-container {
     .header {
         display: flex;
-        justify-content: space-between;
-        // background: #dcdcdc7a;
+        justify-content: space-between; // background: #dcdcdc7a;
         height: 40px;
         padding: 0px 4px;
         border-bottom: 1px solid #ccc9c9;
-        background: whitesmoke;
-        // margin: -8px;
+        background: whitesmoke; // margin: -8px;
         .left {}
         .right {
             margin-right: 15px;
             display: flex;
             align-items: center;
+            .tooltip-element {
+                cursor: pointer;
+                padding: 7px 10px; 
+                margin: 0px 2px;
+                color: black;
+                
+            }
             @include themify($themes) {
                 color: themed('secondaryColor');
             }
         }
-        .custom-actions{
+        .custom-actions {
             align-items: center;
         }
     }
@@ -31,5 +36,5 @@
     .noListMessage {
         padding: 10px;
         background-color: #fff;
-    } 
+    }
 }

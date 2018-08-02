@@ -12,6 +12,9 @@ import RightClick from './../../Components/Right-Click/rightClick.component';
 import { RemoveStarterFromThePath } from './../../Utils/generic.utils';
 import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns } from './../../Utils/generic.utils';
 import { GetDetailRecord } from './../../Utils/genericDetail.utils';
+import { RECORD_URL } from './../../Constants/global.constants';
+import { Get } from 'common-js-util';
+import Pageutil from './../../Utils/page.utils';
 
 import './genericDetail.css';
 
@@ -77,7 +80,7 @@ export default class GenericDetail extends Component {
             this.state.menuDetail = menuDetail;
             this.getDetailRecord();
             StoreEvent({ eventName: 'showMenuName', data: { menuName: this.state.menuDetail.pageName } });
-            
+
             // }
         }
     }
@@ -119,6 +122,50 @@ export default class GenericDetail extends Component {
         }
     }
 
+    navigate = async (direction) => {
+        const a = Location.search();
+        console.log("Go Right")
+        let route = this.state.menuDetail.url;
+        let tempUrl = route.split('/');
+        tempUrl.pop();
+        tempUrl = tempUrl.reverse();
+        tempUrl.pop(); tempUrl.pop();
+        let baseUrl = tempUrl.join('/');
+        let id = this.state.params.id;
+        // let url = baseUrl + '?query=id>'+ id + '&limit=1'
+        let url, newUrl, newId;
+        if (direction == 1) {
+            url = baseUrl + '?query=id>' + id + '&limit=1'
+            newUrl = await Get({ url: url, urlPrefix: RECORD_URL })
+            if (newUrl.response.length) {
+                newId = newUrl.response[0].id;
+            }
+            else {
+                alert('No more records to show')
+                return 1;
+            }
+        }
+        else {
+            url = baseUrl + '?query=id<' + id
+            newUrl = await Get({ url: url, urlPrefix: RECORD_URL })
+            if (newUrl.response.length) {
+                newId = newUrl.response[newUrl.response.length - 1].id;
+            }
+            else {
+                alert('No more records to show')
+                return 1;
+            }
+        }
+
+        url = '/' + baseUrl + '/' + newId;
+        console.log(url);
+        // Pageutil.redirect(url);
+        console.log(a);
+        Location.navigate({ url });
+        this.getMenuData();
+
+    }
+
     render() {
         const { history, location, match } = this.props;
         const { menuDetail = {}, portlet = {}, tabDetail = {}, currentUser = {}, parentData, loading } = this.state;
@@ -144,29 +191,33 @@ export default class GenericDetail extends Component {
                 <div className="left" />
 
                 <div className="right">
+
+                    <span className="tooltip-element" onClick={() => this.navigate(0)}> <i className="fa fa-chevron-left" aria-hidden="true"></i></span>
+                    <span className="tooltip-element" onClick={() => this.navigate(1)}> <i className="fa fa-chevron-right" aria-hidden="true"></i></span>
+
                     <div className="btn-group header-actions" id="generic-detail-header-dynamic-icon-group">
                         <CustomAction menuDetail={menuDetail} history={history} genericData={genericDataForCustomColumn} actions={portlet.nextActions} listingRow={data} placement={'as_record'} callback={this.getDetailRecord} />
                         &nbsp;
                         {
-                        portlet.portletColumns ?
-                            <TableSettings
-                                source='menu'
-                                onSubmit={this.layoutChanges}
-                                listName={portlet.listName}
-                                layout={menuDetail.layout}
-                                columns={portlet.portletColumns}
-                                menuId={menuDetail.menuId}
-                                userId={currentUser.id}
-                                showSplitFlag={true}
-                            // finalColumns={finalColumns}
-                            />
-                            : null
+                            portlet.portletColumns ?
+                                <TableSettings
+                                    source='menu'
+                                    onSubmit={this.layoutChanges}
+                                    listName={portlet.listName}
+                                    layout={menuDetail.layout}
+                                    columns={portlet.portletColumns}
+                                    menuId={menuDetail.menuId}
+                                    userId={currentUser.id}
+                                    showSplitFlag={true}
+                                // finalColumns={finalColumns}
+                                />
+                                : null
                         }
                         &nbsp;
                         <CustomAction menuDetail={menuDetail} history={history} genericData={genericDataForCustomColumn} actions={portlet.nextActions} listingRow={data} placement={'as_dropdown'} callback={this.getDetailRecord} />
                     </div>
 
-                    
+
                 </div>
             </div>;
 
@@ -183,7 +234,7 @@ export default class GenericDetail extends Component {
                                 </h6>
                             </div> :
                             <div>
-                    
+
                                 {
                                     finalColumns.length ?
                                         <DetailPortlet listingRow={data} finalColumns={finalColumns} starter={starter} />

@@ -43,8 +43,18 @@ export default class Pageutil {
         return page;
     }
 
-    static redirect(url, queryParam) {
+    static redirect(url, queryParam = {}) {
         // static redirect({ action, listingRow, history, genericData }) {
+        const listingQuery = Location.search()
+        let redirectListingQuery = {}
+        if (listingQuery.search) {
+            redirectListingQuery.redirectSearch = listingQuery.search;
+        }
+        if (listingQuery.query) {
+            redirectListingQuery.redirectQuery = listingQuery.query;
+        }
+        queryParam = { ...queryParam, ...redirectListingQuery };
+
         url = CreateUrl({ url, obj: self.page.data });
         Location.navigate({ url, queryParam });
     }
