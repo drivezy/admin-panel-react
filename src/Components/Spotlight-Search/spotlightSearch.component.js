@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import './spotlightSearch.component.css';
 
-import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Modal, ModalBody } from 'reactstrap';
 import { HotKeys } from 'react-hotkeys';
-
-import TypeaheadComponent from './../Forms/Components/Typeahead/typeahead.component';
 
 import { GetMenus } from './../../Utils/menu.utils';
 import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 
 let subMenu;
+
+let searchLength = 0;
 
 export class Spotlight extends Component {
 
@@ -24,7 +24,8 @@ export class Spotlight extends Component {
             isOpen: false,
             menus: [],
             searchText: '',
-            activeMenu: {}
+            activeMenu: {},
+            searchList: []
         }
     }
 
@@ -38,9 +39,9 @@ export class Spotlight extends Component {
     }
 
     keyboardHandlers = {
-        // 'moveUp': (event) => { this.traverse(0) },
-        // 'moveDown': (event) => { this.traverse(1) },se
-        // 'enter': (event) => { this.onSelect(event) }
+        'moveUp': (event) => { this.traverse(0) },
+        'moveDown': (event) => {  this.traverse(1) },
+        'enter': (event) => { this.onSelect(event)}
     }
 
 
@@ -51,8 +52,8 @@ export class Spotlight extends Component {
         this.setState({ isOpen: !this.state.isOpen, menus: GetMenus() });
     }
 
-    searchMenus = (event, text) => {
-        this.setState({ searchText: text });
+    searchMenus = (event) => {
+        this.setState({ searchText: event.target.value });
     }
 
     keyboardPress = (event) => {
@@ -67,15 +68,26 @@ export class Spotlight extends Component {
                 }
             } else if (event.which == 38) {
                 this.searchInput.current.blur();
-
             }
         }
     }
 
     onSelect = (event) => {
-        // console.log(event);
-        // console.log(this.menus[])
-        // console.log(menu);
+        const { searchList = [] } = this.state
+        if (event.which == 40) {
+            this.searchInput.current.blur();
+            var menus = document.getElementsByClassName('spotlight-menu-list')[0];
+            if (menus) {
+                subMenu = menus.querySelectorAll('.list-group-item')[0]
+                subMenu.focus();
+                subMenu.classList.add('hovered');
+            }
+        } else if (event.which == 38) {
+            this.searchInput.current.blur();
+        }
+        else if (event.which == 13){
+            this.redirectTo(searchList[searchLength][this.currentIndex]);
+        }
     }
 
     traverse = (direction) => {
@@ -95,29 +107,6 @@ export class Spotlight extends Component {
         }
     }
 
-
-
-
-    //     // Traverse until it find next element
-    //     function traverse(panel) {
-    //     // if the panel is hidden check for next
-    //     if (panel.hasClass("ng-hide")) {
-    //         traverse(panel.next());
-    //     } else {
-    //         // See if panel has children
-    //         var children = panel.find(".list-group-item");
-    //         // check if there is children
-    //         if (children.length) {
-    //             children[0].focus();
-    //         } else {
-    //             // The panel should not have ng-hide , if it has should try for the next to it
-    //             if (panel.next().find(".list-group-item").length) {
-    //                 traverse(panel.next());
-    //             }
-    //         }
-    //     }
-    // }
-
     redirectTo = (state) => {
         this.setState({ isOpen: !this.state.isOpen });
         Location.navigate({ url: state.url });
@@ -125,7 +114,7 @@ export class Spotlight extends Component {
 
     render() {
 
-        const { menus, searchText, isOpen } = this.state;
+        const { menus, searchText, isOpen, searchList } = this.state;
 
         if (isOpen) {
             // document.getElementById('spotlight-input').focus();
@@ -134,28 +123,17 @@ export class Spotlight extends Component {
         let matches = [];
 
         if (searchText) {
+            const { searchList = [] } = this.state
             menus.modules.forEach((module) => {
                 module.menus.forEach((menu) => {
                     if (menu.name.toLowerCase().indexOf(searchText) != -1) {
-                        matches.push(menu);
+                        menu.visible ? matches.push(menu) : null
                     }
                 });
             });
+            searchList.push(matches);
+            searchLength = searchText.length-1;
         }
-
-
-
-        // if (searchText) {
-        // menus.forEach((module) => {
-        //     module.menus.forEach((menu) => {
-        //         if (menu.visibility) {
-        //             matches.push(menu);
-        //         }
-        //         // if (menu.name.toLowerCase().indexOf(searchText) != -1) {
-        //         // }
-        //     });
-        // });
-        // }
 
         return (
             <HotKeys attach={window} focused={true} keyMap={this.keyboardControlMap} handlers={this.keyboardHandlers}>
@@ -170,10 +148,9 @@ export class Spotlight extends Component {
 
                             {/* <TypeaheadComponent onChange={this.redirectTo} options={matches} /> */}
 
-                            <input ref={this.searchInput} id="spotlight-input" type="text" className="form-control" onKeyDown={this.keyboardPress.bind(this)} onChange={(event) => this.searchMenus(event, event.target.value)} placeholder="Type to Search" aria-label="Username" aria-describedby="basic-addon1" />
+                            <input ref={this.searchInput} id="spotlight-input" type="text" className="form-control" onKeyDown={this.keyboardPress.bind(this)} onChange={(event) => {this.currentIndex = 0; this.searchMenus(event)}} placeholder="Type to Search" aria-label="Username" aria-describedby="basic-addon1" />
                         </div>
                     </ModalBody>
-
                     {/* Menus matching Text */}
                     {
                         searchText
@@ -189,15 +166,12 @@ export class Spotlight extends Component {
                             <ul className="list-group list-group-flush">
                                 {
                                     matches.slice(0, 10).map((match, key) => (
-                                        match.visible ?
-                                            <li 
+                                            <li
                                             ref={this.menuItem} 
                                             onKeyDown={this.onSelect} 
-                                            onClick={() => this.redirectTo(match)} key={key} 
+                                            onClick={() => this.redirectTo(match)} key={key}
                                             className="list-group-item">{match.name}
                                             </li>
-                                        :
-                                        null
                                 ))
                                 }
                             </ul>
@@ -210,22 +184,3 @@ export class Spotlight extends Component {
         )
     }
 }
-
-
-
-                    // {
-                    //     searchText
-                    //     &&
-                    //     <div className="card spotlight-menu-list">
-                    //         {
-                    //             (matches.length == 0)
-                    //             &&
-                    //             <div className="card-header">
-                    //                 No matching records
-                    //         </div>
-                    //         }
-                    //         <ul className="list-group list-group-flush">
-                    //             {matches.slice(0, 5).map((match, key) => (<li onClick={() => this.redirectTo(match)} key={key} className="list-group-item">{match.name}</li>))}
-                    //         </ul>
-                    //     </div>
-                    // }
