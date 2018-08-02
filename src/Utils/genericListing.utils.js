@@ -93,7 +93,7 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
     options.dictionary = data.dictionary ? false : true;
 
     options.page = queryString.page || options.page;
-    options.limit = queryString.limit || 20;
+    options.limit = queryString.limit || isTab ? 10 : 20;
 
     if (queryString.scopes) {
         options.scopes = queryString.scopes;
