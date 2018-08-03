@@ -49,7 +49,7 @@ export default class Pageutil {
         // const modalBody = () => import('./../Components/Test-Modal/test-modal.component');
         const ModalBody = LoadAsyncComponent(() => require(`./../Components/${path}`));
         ModalManager.openModal({
-            headerText: 'Input Form',
+            headerText: self.page.name || 'Input Form',
             modalBody: () => <ModalBody
                 data={self.page.data}
                 menu={self.page.menu}

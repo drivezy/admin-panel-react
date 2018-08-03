@@ -104,7 +104,7 @@ export default class ColumnSetting extends Component {
                                 <span>{"------" + column.label + "-------"}</span>
                                 :
                                 <span>
-                                    {column.columnTitle ? column.columnTitle : columns[column.index].display_name}
+                                    {column.columnTitle ? column.columnTitle : (columns[column.index] ? columns[column.index].display_name : null)}
                                 </span>
                         }
                     </div>
