@@ -67,14 +67,15 @@
             padding-top: 0px;
             padding-bottom: 0px;
             .card-object {
-                font-size: 10px;
+                font-weight: bold;
+                font-size: 13px;
                 display: flex;
                 flex-direction: column;
                 padding-top: 12px;
                 padding-bottom: 12px;
                 .item {
                     text-align: left;
-                    width: 135px;
+                    width: 190px;
                     text-transform: capitalize;
                 }
                 .value {
