@@ -85,8 +85,8 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
         options.query = options.query.replace("'currentUser'", currentUser.id);
     }
 
-    options.stats = (data.stats && IsUndefinedOrNull(queryString.query) && tempQuery) ? false : true;
-    tempQuery = IsUndefinedOrNull(queryString.query) || IsUndefinedOrNull(queryString.search);
+    options.stats = (data.stats && IsUndefinedOrNull(queryString.query) && IsUndefinedOrNull(queryString.search) && tempQuery) ? false : true;
+    tempQuery = IsUndefinedOrNull(queryString.query) && IsUndefinedOrNull(queryString.search);
     // To be used to fetch stats when user selects some query and then deselects it
 
     // @TODO dont fetch dictionary if already available
