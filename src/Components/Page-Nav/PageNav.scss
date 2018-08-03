@@ -81,6 +81,10 @@
             white-space: nowrap;
             background: #f9f9f9;
             .user-details {
+                a{
+                    color: #000;
+                    text-decoration: none;
+                }
                 border-bottom: 1px solid #efefef;
                 background: whitesmoke;
                 .display-name {
