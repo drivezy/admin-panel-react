@@ -14,15 +14,17 @@
             flex-basis:99%;
         }
         .user-license-data {
+            height: 60%;
+        }
+    }
+    .tab-wrapper{
             height: 60%;  
         }
     }
 .tab-wrapper{
         width: 100%;
-       // margin-left:2px;
         overflow-x: scroll;
         height: 40%;
-        // margin-right: 5px;
     }
 }
 }

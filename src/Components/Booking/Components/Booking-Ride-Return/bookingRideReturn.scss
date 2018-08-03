@@ -2,7 +2,6 @@
     .trip-panel-container {
         flex-basis: 70%;
         margin: 2px;
-        border-top: 3px solid #6a6b173d;
         padding-left: 15px ;
         padding-right: 15px;
         .panel-body {
@@ -24,8 +23,7 @@
             }
             .booking-status-cancelled {
                 width: 100%;
-                
-                border-top: 3px solid #cc0000;
+                border-top: 5px solid #cc0000;
                 padding-top: 15px;
                 color: #cc0000;
                 margin: 0px;
@@ -34,7 +32,7 @@
             .booking-status-active {
                 width: 100%;
                 padding-top: 15px;
-                border-top: 3px solid #1eb10480;
+                border-top: 5px solid #1eb10480;
                 color: #1b6e14;
                 margin: 0px;
             }
@@ -42,7 +40,7 @@
             .booking-status-complete {
                 width: 100%;
                 padding-top: 15px;
-                border-top: 3px solid #d37a06;
+                border-top: 5px solid #d37a06;
                 color: #d37a06;
                 margin: 0px;
             }
@@ -50,7 +48,7 @@
             .booking-status-pending {
                 width: 100%;
                 padding-top: 15px;
-                border-top: 3px solid #11a2ce;
+                border-top: 5px solid #11a2ce;
                 color: #11a2ce;
                 margin: 0px;
             }
@@ -58,7 +56,7 @@
             .booking-status-unverified {
                 width: 100%;
                 padding-top: 15px;
-                border-top: 3px solid rgb(7, 6, 6);
+                border-top: 5px solid rgb(7, 6, 6);
                 color: rgb(7, 6, 6);
                 margin: 0px;
             }

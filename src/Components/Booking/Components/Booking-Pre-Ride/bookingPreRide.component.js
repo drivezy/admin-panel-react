@@ -63,7 +63,7 @@ export default class BookingPreRide extends Component {
                             </Col>
                             <Col sm="5" className="vehicle-info-data">
                                 <div>
-                                    <Link to={`/allVehicleDetail/${bookingPreRideData.vehicle.id}`} className="vehicle-info-number">
+                                    <Link to={`/vehicle/${bookingPreRideData.vehicle.id}`} className="vehicle-info-number">
                                         {bookingPreRideData.vehicle.registration_number}
                                     </Link>
 
@@ -103,6 +103,7 @@ export default class BookingPreRide extends Component {
 
                             </Col>
                         </Row>
+                        <hr />
                         <Row className="booking-detail-date">
                             <Col >
                                 <div className="jr-start-time">
