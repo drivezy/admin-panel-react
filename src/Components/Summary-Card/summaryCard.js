@@ -188,7 +188,7 @@ export default class SummaryCard extends Component {
                                                 return (
                                                     <Row className="card-object" key={key}>
                                                         <Col className="item">{key}</Col>
-                                                        <Col className="value">{pricing.toFixed(2)}</Col>
+                                                        <Col className="value">{pricing}</Col>
                                                     </Row>
                                                 )
                                             }

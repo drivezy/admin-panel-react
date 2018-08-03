@@ -11,6 +11,7 @@ export default class StartRide extends Component {
         };
     }
 
+  
     render() {
         const startRide = {}
         const { bookingDetail } = this.state
