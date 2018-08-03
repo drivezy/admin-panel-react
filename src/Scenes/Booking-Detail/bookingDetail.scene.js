@@ -14,6 +14,7 @@ import CustomAction from './../../Components/Custom-Action/CustomAction.componen
 import StartRide from './../../Components/Booking/Components/Modals/Start-Ride/startRide.component';
 import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
 import { GetPreSelectedMethods, RegisterMethod, GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
+import { BookingDate } from './../../Utils/booking.utils';
 
 import { Booking } from './../../Utils/booking.utils';
 
@@ -70,6 +71,8 @@ export default class BookingDetail extends Component {
         const { history } = this.props;
         const { bookingDetail = {}, menuDetail } = this.state;
 
+        let bookingDate = BookingDate(bookingDetail.updated_at);
+
         const genericDataForCustomColumn = {
             formPreference: {},
             formPreferences: [],
@@ -85,13 +88,18 @@ export default class BookingDetail extends Component {
 
         return (
             <div className="booking">
-                <div className="header-actions">
-                    <button className="refresh-button btn btn-sm" onClick={(e) => { this.refreshPage(e) }}>
-                        <i className="fa fa-refresh"></i>
-                    </button>
-                    &nbsp;
-                    <CustomAction menuDetail={menuDetail} genericData={genericDataForCustomColumn} history={history} actions={menuDetail.uiActions} listingRow={bookingDetail} placement={'as_header'} callback={this.getBookingDetail} />
-                    <CustomAction menuDetail={menuDetail} genericData={genericDataForCustomColumn} history={history} actions={menuDetail.uiActions} listingRow={bookingDetail} placement={'as_dropdown'} callback={this.getBookingDetail} />
+                <div className="booking-header">
+                    <div className="booking-info">
+                        Booking Deatils View | {bookingDetail.token} | {bookingDate}
+                    </div>
+                    <div className="header-actions">
+                        <button className="refresh-button btn btn-sm" onClick={(e) => { this.refreshPage(e) }}>
+                            <i className="fa fa-refresh"></i>
+                        </button>
+                        &nbsp;
+                        <CustomAction menuDetail={menuDetail} genericData={genericDataForCustomColumn} history={history} actions={menuDetail.uiActions} listingRow={bookingDetail} placement={'as_header'} callback={this.getBookingDetail} />
+                        <CustomAction menuDetail={menuDetail} genericData={genericDataForCustomColumn} history={history} actions={menuDetail.uiActions} listingRow={bookingDetail} placement={'as_dropdown'} callback={this.getBookingDetail} />
+                    </div>
                 </div>
 
                 <div className="booking-details">
