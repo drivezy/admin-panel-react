@@ -302,7 +302,7 @@ export default class DynamicFilter extends Component {
 
                 <div className="active-filters">
                     <ul className="form-groups">
-                        <div className="filters">
+                        <div className="filters no-scrollbar">
                         {/* Blocks shows the active filter  */}
                         {
                             activeLayout && activeLayout.id ?

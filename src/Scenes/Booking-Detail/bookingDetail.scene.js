@@ -15,9 +15,6 @@ import CustomAction from './../../Components/Custom-Action/CustomAction.componen
 import { GetPreSelectedMethods, RegisterMethod, GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
 import { BookingDate } from './../../Utils/booking.utils';
 
-// import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns, GetPathWithParent } from './../../Utils/generic.utils';
-
-
 import { Booking } from './../../Utils/booking.utils';
 
 export default class BookingDetail extends Component {
@@ -56,7 +53,8 @@ export default class BookingDetail extends Component {
             const menuDetail = ConvertMenuDetailForGenericPage(response || {});
             this.state.menuDetail = menuDetail;
             this.setState({ menuDetail });
-            StoreEvent({ eventName: 'rightClickData', data: { menuData: response } });
+        StoreEvent({ eventName: 'rightClickData', data: { menuData: menuDetail } });
+
         }
     }
 

@@ -1,3 +1,9 @@
+.user-details{
+    .header-actions{
+        display: flex;
+        justify-content: flex-end;
+        padding: 2px 5px;
+    }
 .display{
     display: flex;
     flex-direction: row;
@@ -12,8 +18,13 @@
         }
     }
     .tab-wrapper{
+            height: 60%;  
+        }
+    }
+.tab-wrapper{
         width: 100%;
         overflow-x: scroll;
         height: 40%;
     }
+}
 }

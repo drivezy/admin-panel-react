@@ -23,6 +23,11 @@ import _ from 'lodash';
 let customMethods = {};
 
 let self = {};
+
+/**
+ * Returns custom actions according to placement
+ * displays dropdown ui actions
+ */ 
 export default class CustomAction extends Component {
     methods = {};
     constructor(props) {
@@ -48,6 +53,9 @@ export default class CustomAction extends Component {
         const { actions } = this.state
     }
 
+    /**
+     * toggle filter dropdown and re-initialise searchtext to empty
+     */
     toggle = () => {
         this.setState({
             dropdownOpen: !this.state.dropdownOpen,
@@ -97,7 +105,11 @@ export default class CustomAction extends Component {
         //     }
         // }
     }
-
+    /**
+     * takes value in the search box and filter actions
+     * @param  {object} {target={}
+     * @param  {string} value}={}
+     */
     searchFilter = ({ target = {}, value } = {}) => {
         const searchText = IsUndefined(value) ? target.value : '';
         const { actions = [] } = this.props;
@@ -132,7 +144,7 @@ export default class CustomAction extends Component {
                                 aria-expanded={this.state.dropdownOpen}
                             >
                                 Actions
-                                    </DropdownToggle>
+                            </DropdownToggle>
                             <DropdownMenu className="dropdown-menu custom-click pull-right menu-operations" right>
                                 {
                                         filteredActions.length > 1 ?
