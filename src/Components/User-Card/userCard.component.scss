@@ -2,67 +2,65 @@
 // @import '~/node_modules/bootstrap/scss/_mixins.scss';
 
 .user-card{
-
+    height: 100%;
     display: flex;
     flex-direction: column;
+    .user-detail-card
+        {
+            .details{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            text-align: justify;
+            
+            .text-field{
+                flex-basis: left;
+                color:  #3a3a3a;
+                width: 49%;
+                display: table-cell;
+                i.fa{
+                    margin-right: 4px;
+                }
+            }
 
-    // @include list-group;
-    // @include list-group;
-    
+            .data-field{
 
-    .details{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        text-align: justify;
-        
-        .text-field{
-            flex-basis: left;
-            color:  #3a3a3a;
-            width: 49%;
+            color: #8a8a8a;
+            width: 70%;
+            text-align: right;
             display: table-cell;
-            i.fa{
-                margin-right: 4px;
             }
         }
+    
+        .user-photo-and-user-name {
+            display: flex;
+            flex-direction: row;
 
-         .data-field{
+            .user-photo{
 
-         color: #8a8a8a;
-         width: 70%;
-         text-align: right;
-         display: table-cell;
-        }
-    }
-   
-    .user-photo-and-user-name {
-        display: flex;
-        flex-direction: row;
+                flex-basis: 30%;
+                img{
+                    float: right;
+                    width: 67px;
+                    margin-bottom: 5px;
+                    margin-right: 50px;
+                    margin-top: 5px;
+                    height: auto;
+                    border: 1px solid #efefef;
+                    border-radius: 25%;
+                }
+            }
 
-        .user-photo{
-
-            flex-basis: 30%;
-            img{
+            .user-name{
+                flex-basis: 70%;
+                vertical-align: middle;
+            // padding-left: 70px;
                 float: right;
-                width: 67px;
-                margin-bottom: 5px;
-                margin-right: 50px;
-                margin-top: 5px;
-                height: auto;
-                border: 1px solid #efefef;
-                border-radius: 25%;
+                padding-top: 34px;
+                font-size: 17px;
+                text-align: center;
+                color: #25262b91
             }
-        }
-
-        .user-name{
-            flex-basis: 70%;
-            vertical-align: middle;
-           // padding-left: 70px;
-            float: right;
-            padding-top: 34px;
-            font-size: 17px;
-            text-align: center;
-            color: #25262b91
         }
     }
 }

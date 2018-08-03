@@ -138,7 +138,7 @@ export default class CustomAction extends Component {
                                         filteredActions.length > 1 ?
                                         <div>
                                             <div className="form-group has-feedback">
-                                                <input value={searchText} onChange={this.searchFilter} type="text" className="form-control" id="search-operation" placeholder='Search Actions' />
+                                                <input value={searchText} onChange={this.searchFilter} type="text" className="form-control" id="search-operation" placeholder='Search Actions'/>
                                                 {/* <i onClick={() => searchText ? this.searchFilter({ value: null }) : null} className={`fa fa-${searchText ? 'times-circle cursor-pointer' : 'search'} form-control-feedback`} aria-hidden="true"></i> */}
                                             </div>
                                         </div>
