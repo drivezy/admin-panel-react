@@ -52,7 +52,7 @@ const submitGenericForm = async ({ payload, newValues, onSubmit }) => {
 
     let body = newValues;
     let Method = Post;
-    
+
     if (payload.method == 'edit') {
         Method = Put;
         const originalValues = FormUtils.getOriginalData();
@@ -314,6 +314,16 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
             }}
         />,
         // Image Upload Ends
+
+        [COLUMN_TYPE.MULTIPLE_UPLOAD]: <ImageUpload value={values[column.name]} name={column.name} onRemove={props.onFileRemove}
+            onSelect={(column, name) => {
+                // console.log(column, name);
+                setTimeout(() => {
+                    props.setFieldValue(column, name ? name.name : '')
+                    props.onFileUpload(column, name);
+                });
+            }}
+        />,
 
         // TextArea Begins
         160: <Field
