@@ -103,6 +103,7 @@ export default class BookingPreRide extends Component {
 
                             </Col>
                         </Row>
+                        <hr />
                         <Row className="booking-detail-date">
                             <Col >
                                 <div className="jr-start-time">

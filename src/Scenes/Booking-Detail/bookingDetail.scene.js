@@ -13,6 +13,7 @@ import SummaryCard from './../../Components/Summary-Card/summaryCard';
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 
 import { GetPreSelectedMethods, RegisterMethod, GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
+import { BookingDate } from './../../Utils/booking.utils';
 
 // import { GetMenuDetail, ConvertMenuDetailForGenericPage, CreateFinalColumns, GetPathWithParent } from './../../Utils/generic.utils';
 
@@ -42,7 +43,7 @@ export default class BookingDetail extends Component {
         const result = await Booking(id);
         if (result.success) {
             let bookingDetail = result.response;
-            this.setState({ bookingDetail });      
+            this.setState({ bookingDetail });
         }
         this.getMenuData();
     }
@@ -55,7 +56,7 @@ export default class BookingDetail extends Component {
             const menuDetail = ConvertMenuDetailForGenericPage(response || {});
             this.state.menuDetail = menuDetail;
             this.setState({ menuDetail });
-            StoreEvent({ eventName: 'rightClickData', data: { menuData: response } });            
+            StoreEvent({ eventName: 'rightClickData', data: { menuData: response } });
         }
     }
 
@@ -67,6 +68,8 @@ export default class BookingDetail extends Component {
     render() {
         const { history } = this.props;
         const { bookingDetail = {}, menuDetail } = this.state;
+
+        let bookingDate = BookingDate(bookingDetail.updated_at);
 
         const genericDataForCustomColumn = {
             formPreference: {},
@@ -83,13 +86,18 @@ export default class BookingDetail extends Component {
 
         return (
             <div className="booking">
-                <div className="header-actions">
-                    <button className="refresh-button btn btn-sm" onClick={(e) => { this.refreshPage(e) }}>
-                        <i className="fa fa-refresh"></i>
-                    </button>
-                    &nbsp;
-                    <CustomAction menuDetail={menuDetail} genericData={genericDataForCustomColumn} history={history} actions={menuDetail.uiActions} listingRow={bookingDetail} placement={'as_header'} callback={this.getBookingDetail} />
-                    <CustomAction menuDetail={menuDetail} genericData={genericDataForCustomColumn} history={history} actions={menuDetail.uiActions} listingRow={bookingDetail} placement={'as_dropdown'} callback={this.getBookingDetail} />
+                <div className="booking-header">
+                    <div className="booking-info">
+                        Booking Deatils View | {bookingDetail.token} | {bookingDate}
+                    </div>
+                    <div className="header-actions">
+                        <button className="refresh-button btn btn-sm" onClick={(e) => { this.refreshPage(e) }}>
+                            <i className="fa fa-refresh"></i>
+                        </button>
+                        &nbsp;
+                        <CustomAction menuDetail={menuDetail} genericData={genericDataForCustomColumn} history={history} actions={menuDetail.uiActions} listingRow={bookingDetail} placement={'as_header'} callback={this.getBookingDetail} />
+                        <CustomAction menuDetail={menuDetail} genericData={genericDataForCustomColumn} history={history} actions={menuDetail.uiActions} listingRow={bookingDetail} placement={'as_dropdown'} callback={this.getBookingDetail} />
+                    </div>
                 </div>
 
                 <div className="booking-details">
