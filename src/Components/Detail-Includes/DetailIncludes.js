@@ -267,7 +267,7 @@ export default class DetailIncludes extends Component {
             // let id = data.listingRow.id;
             let id = data.listingRow[data.starter + '.id'];
             CopyToClipBoard(id);
-            ToastNotifications.success("Id - " + id + " has been copied");
+            ToastNotifications.success({ title: "Id - " + id + " has been copied" });
         }
     }];
 }

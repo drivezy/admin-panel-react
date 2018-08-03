@@ -9,7 +9,7 @@ import { GetPathWithParent } from './../../Utils/generic.utils';
 
 import './listingSearch.component.css';
 import GLOBAL from './../../Constants/global.constants';
-import {PICK_AFTER_LAST_DOTS} from './../../Constants/regex.constants';
+import { PICK_AFTER_LAST_DOTS } from './../../Constants/regex.constants';
 
 //let activeColumn = {};
 
