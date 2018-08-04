@@ -27,8 +27,10 @@ export default class BookingPreRide extends Component {
         let bookingDropDate = BookingDropDate(bookingPreRideData.drop_time);
         let bookingDropTime = BookingDropTime(bookingPreRideData.drop_time);
         let duration = TotalDuration(bookingPreRideData.drop_time, bookingPreRideData.pickup_time);
-        let theClassName = RideStatus(bookingPreRideData.status.id);
-
+        let theClassName;
+        if (bookingPreRideData.status) {
+            theClassName = RideStatus(bookingPreRideData.status.id);
+        }
         if (bookingPreRideData.coupon) {
             couponDescription = bookingPreRideData.coupon.campaign.cashback ? 'Campaign Discription:' + bookingPreRideData.coupon.campaign.description : 'Campaign Discription:' + bookingPreRideData.coupon.campaign.description + ' | ' + (bookingPreRideData.coupon.description ? "Coupon Description:" + bookingPreRideData.coupon.description : " ") + "Discount Amount:" + bookingPreRideData.coupon_discount;
         }
@@ -68,15 +70,15 @@ export default class BookingPreRide extends Component {
                                     </Link>
 
                                     <span className="vehicle-info-name">-
-                                            <CustomTooltip placement="top" html={'(' +bookingPreRideData.vehicle.car.name + ')'} title="Current Vehicle"></CustomTooltip>
+                                            <CustomTooltip placement="top" html={'(' + bookingPreRideData.vehicle.car.name + ')'} title="Current Vehicle"></CustomTooltip>
                                     </span>
                                 </div>
-                                
+
                                 <div className="billing-car-name">
-                                {
-                                    bookingPreRideData.billing_car != null &&
-                                    <CustomTooltip placement="top" html={bookingPreRideData.billing_car.name} title="Billing Vehicle"></CustomTooltip>
-                                }
+                                    {
+                                        bookingPreRideData.billing_car != null &&
+                                        <CustomTooltip placement="top" html={bookingPreRideData.billing_car.name} title="Billing Vehicle"></CustomTooltip>
+                                    }
                                 </div>
                                 <p className="ride-type">
                                     <span>
@@ -130,7 +132,7 @@ export default class BookingPreRide extends Component {
                                     </div>
                                     <div className="no-padding light-red  font-11" align="center">
                                         {duration}
-                                        </div>
+                                    </div>
                                 </div>
                             </Col>
                             <Col>

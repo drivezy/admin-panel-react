@@ -3,7 +3,7 @@ import {
     Card, CardBody, Row, Col, Progress
 } from 'reactstrap';
 
-import { BookingPickupDate, BookingPickupTime, BookingDropDate, BookingDropTime, TotalDuration, RideStatus  } from './../../../../Utils/booking.utils';
+import { BookingPickupDate, BookingPickupTime, BookingDropDate, BookingDropTime, TotalDuration, RideStatus } from './../../../../Utils/booking.utils';
 import { Link } from 'react-router-dom';
 
 import './bookingRideReturn.css';
@@ -23,13 +23,15 @@ export default class BookingRideReturn extends Component {
         let totalDuration;
         let totalOdo;
         let kmDifference;
+        let theClassName;
 
         let bookingStartDate = BookingPickupDate(bookingRideReturnData.actual_start_time);
         let bookingStartTime = BookingPickupTime(bookingRideReturnData.actual_start_time);
         let bookingEndDate = BookingDropDate(bookingRideReturnData.actual_end_time);
         let bookingEndTime = BookingDropTime(bookingRideReturnData.actual_end_time);
-        let theClassName = RideStatus(bookingRideReturnData.status.id);
-
+        if (bookingRideReturnData.status) {
+             theClassName = RideStatus(bookingRideReturnData.status.id);
+        }
         let paidAmount = 0;
         bookingRideReturnData.payment.forEach(function (data) {
             paidAmount += parseFloat(data.amount);
