@@ -12,7 +12,8 @@ import BookingTabsDetail from './../../Components/Booking/Components/Booking-Tab
 import SummaryCard from './../../Components/Summary-Card/summaryCard';
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 import StartRide from './../../Components/Booking/Components/Modals/Start-Ride/startRide.component';
-import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
+import { ModalManager } from 'drivezy-web-utils/build/Utils';
+import EndRide from './../../Components/Booking/Components/Modals/End-Ride/endRide.component';
 import { GetPreSelectedMethods, RegisterMethod, GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
 import { BookingDate } from './../../Utils/booking.utils';
 
@@ -63,10 +64,6 @@ export default class BookingDetail extends Component {
         this.getBookingDetail();
     }
 
-    hello() {
-
-    }
-
     render() {
         const { history } = this.props;
         const { bookingDetail = {}, menuDetail } = this.state;
@@ -95,6 +92,15 @@ export default class BookingDetail extends Component {
                     <div className="header-actions">
                         <button className="refresh-button btn btn-sm" onClick={(e) => { this.refreshPage(e) }}>
                             <i className="fa fa-refresh"></i>
+                        </button>
+                        &nbsp;
+                        <button className="btn btn-sm" onClick={() => {
+                            ModalManager.openModal({
+                                headerText: "Complete Ride",
+                                modalBody: () => (<EndRide endRidedata={bookingDetail}/>)
+                            })
+                        }}>
+                            <i className="fa fa-hourglass-end"></i>
                         </button>
                         &nbsp;
                         <CustomAction menuDetail={menuDetail} genericData={genericDataForCustomColumn} history={history} actions={menuDetail.uiActions} listingRow={bookingDetail} placement={'as_header'} callback={this.getBookingDetail} />
@@ -157,7 +163,7 @@ export default class BookingDetail extends Component {
                         }
                     </div>
                 </div>
-            </div >
+            </div>
         )
     }
 }

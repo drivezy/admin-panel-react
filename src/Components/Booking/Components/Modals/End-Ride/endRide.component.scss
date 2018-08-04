@@ -1,0 +1,37 @@
+.modalBody{
+    background-color: #f1f1f1;
+    .endRide-modal{
+        .ride-form{
+            display: flex;
+            margin: 25px;
+            padding: 15px 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            .ride-info{
+                flex: 1;
+                padding: 0 25px;
+                border-right: 1px solid #e4e4e4;
+                .row{
+                    padding: 5px 0px;
+                    label{
+                        margin-bottom: 0rem !important;
+                    }
+                    input{
+                        width: 100%;
+                        padding: 5px;
+                        border-radius: 5px;
+                        border: 1px solid #868686;
+                    }
+                    input:disabled{
+                        background-color:#f1f1f1;
+                    }
+                }
+            }
+            .addons{
+                border: 1px solid #999;
+                padding: 10px 5px;
+                border-radius: 5px;            
+            }
+        }
+    }
+}
