@@ -11,10 +11,16 @@ import BookingRideReturn from './../../Components/Booking/Components/Booking-Rid
 import BookingTabsDetail from './../../Components/Booking/Components/Booking-Tabs-Detail/bookingTabsDetail.component';
 import SummaryCard from './../../Components/Summary-Card/summaryCard';
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
+<<<<<<< HEAD
 import EndRide from './../../Components/Booking/Components/Modals/End-Ride/endRide.component';
 import { ModalManager } from 'drivezy-web-utils/build/Utils';
 
+=======
+import StartRide from './../../Components/Booking/Components/Modals/Start-Ride/startRide.component';
+import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
+>>>>>>> 7ed6066a7816e944f0e46962466d2beffa436c38
 import { GetPreSelectedMethods, RegisterMethod, GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
+import { BookingDate } from './../../Utils/booking.utils';
 
 import { Booking } from './../../Utils/booking.utils';
 
@@ -63,9 +69,15 @@ export default class BookingDetail extends Component {
         this.getBookingDetail();
     }
 
+    hello() {
+
+    }
+
     render() {
         const { history } = this.props;
         const { bookingDetail = {}, menuDetail } = this.state;
+
+        let bookingDate = BookingDate(bookingDetail.updated_at);
 
         const genericDataForCustomColumn = {
             formPreference: {},
@@ -82,22 +94,18 @@ export default class BookingDetail extends Component {
 
         return (
             <div className="booking">
-                <div className="header-actions">
-                    <button className="refresh-button btn btn-sm" onClick={(e) => { this.refreshPage(e) }}>
-                        <i className="fa fa-refresh"></i>
-                    </button>
-                    &nbsp;
-                    <button className="btn btn-sm" onClick={() => {
-                        ModalManager.openModal({
-                            headerText: "Complete Ride",
-                            modalBody: () => (<EndRide endRidedata={bookingDetail}/>)
-                        })
-                    }}>
-                        <i className="fa fa-hourglass-end"></i>
-                    </button>
-                    &nbsp;
-                    <CustomAction menuDetail={menuDetail} genericData={genericDataForCustomColumn} history={history} actions={menuDetail.uiActions} listingRow={bookingDetail} placement={'as_header'} callback={this.getBookingDetail} />
-                    <CustomAction menuDetail={menuDetail} genericData={genericDataForCustomColumn} history={history} actions={menuDetail.uiActions} listingRow={bookingDetail} placement={'as_dropdown'} callback={this.getBookingDetail} />
+                <div className="booking-header">
+                    <div className="booking-info">
+                        Booking Deatils View | {bookingDetail.token} | {bookingDate}
+                    </div>
+                    <div className="header-actions">
+                        <button className="refresh-button btn btn-sm" onClick={(e) => { this.refreshPage(e) }}>
+                            <i className="fa fa-refresh"></i>
+                        </button>
+                        &nbsp;
+                        <CustomAction menuDetail={menuDetail} genericData={genericDataForCustomColumn} history={history} actions={menuDetail.uiActions} listingRow={bookingDetail} placement={'as_header'} callback={this.getBookingDetail} />
+                        <CustomAction menuDetail={menuDetail} genericData={genericDataForCustomColumn} history={history} actions={menuDetail.uiActions} listingRow={bookingDetail} placement={'as_dropdown'} callback={this.getBookingDetail} />
+                    </div>
                 </div>
 
                 <div className="booking-details">
@@ -132,7 +140,15 @@ export default class BookingDetail extends Component {
                                 (bookingDetail.id ?
                                     <SummaryCard bookingData={bookingDetail} />
                                     : null)
+
                             }
+
+                            <button onClick={() => {
+                                ModalManager.openModal({
+                                    modalBody: () => (<StartRide bookingDetail={this.state.bookingDetail}></StartRide>)
+                                });
+                            }}>HELLO</button>
+
 
                         </div>
                         {
