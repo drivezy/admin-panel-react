@@ -137,13 +137,6 @@ export default class BookingDetail extends Component {
 
                             }
 
-                            <button onClick={() => {
-                                ModalManager.openModal({
-                                    modalBody: () => (<StartRide bookingDetail={this.state.bookingDetail}></StartRide>)
-                                });
-                            }}>HELLO</button>
-
-
                         </div>
                         {
                             (bookingDetail.id && bookingDetail.status != null && bookingDetail.feedback.length) ?
