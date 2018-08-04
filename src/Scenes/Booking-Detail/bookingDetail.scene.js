@@ -11,14 +11,8 @@ import BookingRideReturn from './../../Components/Booking/Components/Booking-Rid
 import BookingTabsDetail from './../../Components/Booking/Components/Booking-Tabs-Detail/bookingTabsDetail.component';
 import SummaryCard from './../../Components/Summary-Card/summaryCard';
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
-<<<<<<< HEAD
-import EndRide from './../../Components/Booking/Components/Modals/End-Ride/endRide.component';
-import { ModalManager } from 'drivezy-web-utils/build/Utils';
-
-=======
 import StartRide from './../../Components/Booking/Components/Modals/Start-Ride/startRide.component';
 import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
->>>>>>> 7ed6066a7816e944f0e46962466d2beffa436c38
 import { GetPreSelectedMethods, RegisterMethod, GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
 import { BookingDate } from './../../Utils/booking.utils';
 
