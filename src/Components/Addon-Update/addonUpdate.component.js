@@ -22,9 +22,9 @@ export default class AddonUpdate extends React.Component {
 
     getAddons = async (rideData) => {
         if (rideData.is_bike == 1) {
-            var url = 'accessoryAddon?query=active=1 and bike_only=0';
+            var url = 'accessoryAddon?query=active=1 and bike_only=1';
         } else {
-            url = 'accessoryAddon?query=active=1 and bike_only=1';
+            url = 'accessoryAddon?query=active=1 and bike_only=0';
         }
         const result = await Get({ url: url, urlPrefix: 'https://api.justride.in/api/admin/' });
         if (result.success) {
@@ -36,13 +36,16 @@ export default class AddonUpdate extends React.Component {
         const { startAddons } = this.state;
         quantity ? startAddons.push(addOn) : startAddons.splice(0,1);
         this.setState({ startAddons });
-        console.log(startAddons);
     }
 
     updateEndAddons = (quantity, addOn) => {
-        const { endAddons } = this.state;
+        const { endAddons, startAddons } = this.state;
         quantity ? endAddons.push(addOn) : endAddons.splice(0,1);
         this.setState({ endAddons });
+        if(endAddons.length > startAddons.length){
+            startAddons.push(addOn)
+        }
+        this.setState({ startAddons });
     }
 
     render() {
