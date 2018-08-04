@@ -63,6 +63,7 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
             formContent.record = formContent.data;
             formContent.data = GetDataFromDictionary(formContent.dictionary, formContent.data);
             formContent.modelId = response.form.id;
+            formContent.name = response.form.name;
 
             if (response.form.method_id == 23) {
                 formContent.method = 'edit';
@@ -74,7 +75,7 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
             if (response.form.form_type_id == 53) {
                 const { description: message } = response.form;
                 const submitCallback = response.client_scripts ? response.client_scripts : [];
-                ConfirmUtils.confirmModal({ message, callback: () => ExecuteScript({ formContent, scripts: submitCallback, context: FormUtils, contextName: 'form' }) })
+                ConfirmUtils.confirmModal({ title: formContent.name, message, callback: () => ExecuteScript({ formContent, scripts: submitCallback, context: FormUtils, contextName: 'form' }) })
                 return;
             }
         }
@@ -124,3 +125,4 @@ function GetDataFromDictionary(dictionary, data) {
 
     return obj;
 }
+
