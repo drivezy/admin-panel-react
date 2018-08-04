@@ -29,9 +29,9 @@ export default class AddonUpdate extends React.Component {
 
     getAddons = async (rideData) => {
         if (rideData.is_bike == 1) {
-            var url = 'accessoryAddon?query=active=1 and bike_only=0';
+            var url = 'accessoryAddon?query=active=1 and bike_only=1';
         } else {
-            url = 'accessoryAddon?query=active=1 and bike_only=1';
+            url = 'accessoryAddon?query=active=1 and bike_only=0';
         }
         const result = await Get({ url: url, urlPrefix: 'https://api.justride.in/api/admin/' });
         if (result.success) {
