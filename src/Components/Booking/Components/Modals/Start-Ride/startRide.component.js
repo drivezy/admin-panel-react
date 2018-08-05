@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import UserCard from './../../../../User-Card/userCard.component';
 import { ModalManager } from 'drivezy-web-utils/build/Utils';
+import AddonUpdate from './../../../../Addon-Update/addonUpdate.component';
 import './startRide.component.css';
 
 export default class StartRide extends Component {
@@ -21,6 +22,7 @@ export default class StartRide extends Component {
 
     onSubmit = (startOdo, startFuel, alternateNumber, comment, pickupTime) => {
         // this.state({ startOdo: startOdo1, startFuel: startFuel1, alternateNumber: alternateNumber1, comment: comment1, pickupTime: pickupTime1 })
+
         this.setState({ startOdo, startFuel, alternateNumber, comment, pickupTime })
         ModalManager.closeModal();
 
@@ -33,7 +35,7 @@ export default class StartRide extends Component {
     render() {
         const { startOdo, startFuel, alternateNumber, comment, pickupTime } = this.state;
         const { data } = this.state
-        let count = { pillion: 0, complementary: 0 };
+        let count = 0;
 
         return (
             <div className="modal-start-ride">
@@ -62,8 +64,10 @@ export default class StartRide extends Component {
 
                             <div className="details">
                                 <div className="text-field"> <i className="fa fa-phone" aria-hidden="true"></i>Alternate Number</div>
-                                <input onChange={(e) => (this.state.alternateNumber = e.target.value)} type="number" className="data-field" placeholder='Alternate Number' required></input>
-                                {alternateNumber ? (alternateNumber.length > 10 ? <span>Enter a valid number </span> : null) : null}
+                                <input onChange={(e) => 
+                                    {(this.state.alternateNumber = e.target.value); count++; console.log(count)}
+                                } type="number"  className={count<10 ? "data-field" : "data-field inactive"} 
+                                placeholder='Alternate Number'></input>
                             </div>
 
                             <div className="details">
@@ -72,27 +76,12 @@ export default class StartRide extends Component {
                             </div>
 
                         </div>
-
-                        <div className="add-ons">
-                            <div> Add Ons
-                        <div className="add-ons-details" >
-                                    <span className="text-field">Pillion Rider Helmet</span>
-                                    <span className="buttons">
-                                        <button className="minus">-</button>
-                                        <input className="quantity" placeholder={count.pillion}></input>
-                                        <button className="plus" onClick>+</button>
-                                    </span>
-                                </div>
-                                <div className="add-ons-details" >
-                                    <span className="text-field">Complementary Helmet</span>
-                                    <span className="buttons">
-                                        <button className="minus">-</button>
-                                        <input className="quantity" placeholder={count.complementary}></input>
-                                        <button className="plus">+</button>
-                                    </span>
-                                </div>
+                        {
+                            <div className="addon">
+                                {/* Pass rideStatus = 1 for start and 0 for end */}
+                                <AddonUpdate rideStatus={1} rideData={this.state.data} />
                             </div>
-                        </div>
+                        }
 
                     </div>
                 </div>
