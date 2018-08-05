@@ -20,7 +20,6 @@ export default class EndRide extends Component {
         return (
             <div className="modalBody">
                 <div className="endRide-modal">
-                    {console.log(endRideInfo)}
                     <div className="ride-form">
                         <div className="ride-info">
                             <div className="row">
@@ -201,8 +200,20 @@ export default class EndRide extends Component {
                             {
                             <div className="addon">
                                 {/* Pass rideStatus = 1 for start and 0 for end */}
-                                <AddonUpdate rideStatus={0} rideData={endRideInfo}/>
+                                <AddonUpdate rideStatus={1} rideData={endRideInfo}/>
                             </div>
+                            }
+                            {
+                                <button onClick={() => 
+                                                        endRideInfo.startAddons.helmet ? 
+                                                        alert(`Helmet : ${endRideInfo.startAddons.helmet}`)
+                                                        :
+                                                        (
+                                                        endRideInfo.startAddons.aux ? (alert(`AUX : ${endRideInfo.startAddons.aux}`), alert(`Seater : ${endRideInfo.startAddons.seater}`)) : null
+                                                        )
+                                                }>
+                                    Check Addons
+                                </button>
                             }
                         </div>
                     </div>
