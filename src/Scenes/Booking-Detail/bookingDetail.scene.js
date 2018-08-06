@@ -94,15 +94,6 @@ export default class BookingDetail extends Component {
                             <i className="fa fa-refresh"></i>
                         </button>
                         &nbsp;
-                        <button className="btn btn-sm" onClick={() => {
-                            ModalManager.openModal({
-                                headerText: "Complete Ride",
-                                modalBody: () => (<EndRide endRidedata={bookingDetail}/>)
-                            })
-                        }}>
-                            <i className="fa fa-hourglass-end"></i>
-                        </button>
-                        &nbsp;
                         <CustomAction menuDetail={menuDetail} genericData={genericDataForCustomColumn} history={history} actions={menuDetail.uiActions} listingRow={bookingDetail} placement={'as_header'} callback={this.getBookingDetail} />
                         <CustomAction menuDetail={menuDetail} genericData={genericDataForCustomColumn} history={history} actions={menuDetail.uiActions} listingRow={bookingDetail} placement={'as_dropdown'} callback={this.getBookingDetail} />
                     </div>

@@ -24,7 +24,6 @@ export default class StartRide extends Component {
 
     onSubmit = async (startOdo, startFuel, alternateNumber, comment, pickupTime) => {
         this.setState({ startOdo, startFuel, alternateNumber, comment, pickupTime })
-        console.log( startOdo, startFuel, alternateNumber, comment, pickupTime )
         const result = await Post({ url: "startRide",
         body: {
             comments : comment,
@@ -37,7 +36,6 @@ export default class StartRide extends Component {
         }
         ,
         urlPrefix: 'https://api.justride.in/api/admin/' });
-        console.log(result);
         ModalManager.closeModal();
     }
 
