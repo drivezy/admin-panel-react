@@ -31,7 +31,7 @@ import FormSettings from './../Form-Settings/FormSettings.component';
 import ScriptInput from './../Forms/Components/Script-Input/scriptInput.component';
 import FormInput from './../Forms/Components/Form-Type/formType.component';
 
-import { ExecuteScript } from './../../Utils/Inject-Method/injectScript.utils';
+import { ExecuteScript } from './../../Utils/Inject-Methods/injectScript.utils';
 
 import FormUtils from './../../Utils/form.utils';
 import { GetUrlForFormSubmit } from './../../Utils/generic.utils';
