@@ -1,7 +1,7 @@
 import { IsUndefinedOrNull, BuildUrlForGetCall, IsObjectHaveKeys } from './common.utils';
 import { Get } from 'common-js-util';
 
-import { CreateFinalColumns, GetPreSelectedMethods, RegisterMethod, GetColumnsForListing, ConvertMenuDetailForGenericPage, GetParsedLayoutScript } from './generic.utils';
+import { CreateFinalColumns, GetPreSelectedMethods, RegisterMethod, GetColumnsForListing, ConvertMenuDetailForGenericPage, GetParsedLayoutScript, CreateUrlForFetchingDetailRecords, FilterOutDuplicateActions } from './generic.utils';
 import { ROUTE_URL } from './../Constants/global.constants';
 
 /**
@@ -9,7 +9,7 @@ import { ROUTE_URL } from './../Constants/global.constants';
  * same as ConfigureDataForDirective
  * @param  {object} genericDetailObject - urlParameter
  */
-export function GetDetailRecord({ configuration: genericDetailObject, callback, data, urlParameter }) {
+export function GetDetailRecord({ configuration: genericDetailObject, callback, data, urlParameter, withoutIdentifier = false }) {
     const params = Initialization(genericDetailObject);
     const options = {};
 
@@ -17,9 +17,17 @@ export function GetDetailRecord({ configuration: genericDetailObject, callback, 
     if (params.includes) {
         options.includes = params.includes;
     }
+
+    if (data.layout && data.layout.id) {
+        options.layout_id = data.layout.id;
+    } else if (genericDetailObject.layout && genericDetailObject.layout.id) {
+        options.layout_id = genericDetailObject.layout.id;
+    }
     options.dictionary = params.dictionary ? false : true;
 
-    options.request_identifier = data.request_identifier;
+    if (!withoutIdentifier) {
+        options.request_identifier = data.request_identifier;
+    }
     const module = CreateUrlForFetchingDetailRecords({ url: genericDetailObject.url, urlParameter });
     if (!module) {
         alert("No Url has been set for this menu, Contact Admin");
@@ -47,10 +55,10 @@ function PrepareObjectForDetailPage(result, { extraParams }) {
     }
 
     const portletDetail = data.record;
-    let tabs;   
+    let tabs;
 
     // if fetching data for the first time, process tabs object and attach extra properties
-    if (data.tabs && Object.keys(data.tabs).length) { 
+    if (data.tabs && Object.keys(data.tabs).length) {
         tabs = data.tabs
         tabs = GetDataForTabs({ tabs });
     } else { // else take from previously fetched data
@@ -64,7 +72,7 @@ function PrepareObjectForDetailPage(result, { extraParams }) {
     const tabDetail = {
         tabs
     }
-   
+
     const preDefinedmethods = GetPreSelectedMethods();
     const methods = RegisterMethod(genericDetailObject.nextActions)
     portlet.methods = methods;
@@ -119,7 +127,7 @@ export function GetDataForPortlet({ portletDetail, genericDetailObject, portletD
     obj.relationship = relationship;
     obj.dictionary = dictionary;
     const model = obj.model = relationship[obj.starter];
-    obj.nextActions = [...obj.model.actions, ...genericDetailObject.uiActions];
+    obj.nextActions = FilterOutDuplicateActions([...obj.model.actions, ...genericDetailObject.uiActions]);
     obj.model = model;
     const formPreferences = GetParsedLayoutScript(model.form_layouts);
 
@@ -197,28 +205,6 @@ export function GetColumnsForDetail(params, excludeStarter) {
     return selectedColumns;
 };
 
-
-/**
- * Evaluates value against url
- * @param  {} url
- */
-function CreateUrlForFetchingDetailRecords({ url, urlParameter }) {
-    if (!url) {
-        return false;
-    }
-    var reg = /([:$])\w+/g;
-    var params = url.match(reg);
-    if (!params || !params.length) {
-        return url;
-    }
-    for (var i in params) {
-        // url = url.replace(params[i], $stateParams[params[i].split(":")[1]]);
-        const key = params[i];
-
-        url = url.replace(key, urlParameter[key.substr(1)]);
-    }
-    return url;
-}
 
 function Initialization(genericDetailObject) {
     return {

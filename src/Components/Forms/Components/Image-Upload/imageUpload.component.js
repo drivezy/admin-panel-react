@@ -6,7 +6,7 @@ import './imageUpload.component.css';
 
 import GLOBAL from './../../../../Constants/global.constants'
 
-// import Dropzone from 'react-dropzone'
+import Dropzone from 'react-dropzone';
 
 export default class imageUpload extends Component {
 
@@ -39,9 +39,9 @@ export default class imageUpload extends Component {
         const { file } = this.state;
         return (
             <div className="image-upload">
-                {/* <Dropzone className="drop-zone btn btn-outline-primary" onDrop={this.onSelect} >
+                <Dropzone className="drop-zone btn btn-outline-primary" onDrop={this.onSelect} >
                     Select
-                </Dropzone> */}
+                </Dropzone>
 
                 {/* Uploaded File */}
                 {

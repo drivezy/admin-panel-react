@@ -1,19 +1,23 @@
 import React, { Component } from 'react';
 import './header.css';
-import { SubscribeToEvent } from 'state-manager-utility';
+import { SubscribeToEvent, UnsubscribeEvent } from 'state-manager-utility';
 
 import ActiveModule from './../../Components/Active-Module/ActiveModule.component';
 import PageNav from './../../Components/Page-Nav/PageNav';
+import {IsObjectHaveKeys} from 'common-js-util';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 
 import RightClick from './../../Components/Right-Click/rightClick.component';
 
 export default class Header extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
             visible: props.visible || false,
             menuDetail: {},
             history: props.history,
+            enabled: false
         }
     }
 
@@ -21,13 +25,19 @@ export default class Header extends Component {
         SubscribeToEvent({ eventName: 'rightClickData', callback: this.getMenuData });
     }
 
+    componentWillUnmount() {
+        UnsubscribeEvent({ eventName: 'rightClickData', callback: this.getMenuData });
+    }
+
     getMenuData = (data) => {
         this.setState({
-            menuDetail: data
+            menuDetail: data,
+            enabled: (IsObjectHaveKeys(data) ? true : false)
         })
     }
 
     render() {
+        const { enabled } = this.state;
         return (
 
             <div className="landing-header">
@@ -35,7 +45,7 @@ export default class Header extends Component {
                 <div className="header-content">
 
                     <ActiveModule />
-                    <RightClick rowOptions={this.rowOptions} renderTag="div" className='generic-table-td' />
+                    { enabled ? <RightClick rowOptions={this.rowOptions} renderTag="div" className='generic-table-td' /> : null}
                     <PageNav />
 
                 </div>
@@ -52,11 +62,12 @@ export default class Header extends Component {
             onClick: (data) => {
                 const { menuDetail, history } = this.state;
 
-                let pageUrl = "/menu/" + menuDetail.menuData.menuId
+                let pageUrl = "/menu/" + menuDetail.menuData.menuId;
 
                 history.push(`${pageUrl}`);
             },
-            disabled: false
+            disabled: false,
+            enabled: false
         }, {
             id: 4,
             name: "Redirect Model Detail",
@@ -65,11 +76,12 @@ export default class Header extends Component {
             onClick: (data) => {
                 const { menuDetail, history } = this.state;
 
-                let pageUrl = "/model/" + menuDetail.menuData.model.id
+                let pageUrl = "/model/" + (menuDetail.menuData.model ? menuDetail.menuData.model.id : menuDetail.menuData.modelId)
 
                 history.push(`${pageUrl}`);
             },
-            disabled: false
+            disabled: false,
+            enabled: false
         }
     ];
 }

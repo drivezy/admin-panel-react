@@ -2,6 +2,7 @@
 import { Get, Post, Delete, Put, BuildUrlForGetCall, IsUndefined } from 'common-js-util';
 import { StoreEvent } from 'state-manager-utility';
 import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
+import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
 import { GetSourceMorphMap } from './preference.utils';
 import { ROUTE_URL } from './../Constants/global.constants';
@@ -21,8 +22,16 @@ export default class FormUtil {
         onChangeListeners[column] = callback;
     }
 
+    /**
+     * Returns source hash value for the given source
+     * @param  {string} source
+     */
     static getSourceHash(source) {
         return GetSourceMorphMap(source);
+    }
+
+    static toast({ method = 'success', description = '', title = '' }) {
+        ToastNotifications[method]({ title, description });
     }
 
     /**
@@ -41,9 +50,41 @@ export default class FormUtil {
                 callback(value, column, event);
             }
         }
-
     }
 
+    /**
+     * sets body which is appended with existing payload while making api call
+     * @param  {object} body={}
+     */
+    static setBody(body = {}) {
+        self.form.body = body;
+    }
+
+    /**
+     * Returns body of the form right before making api call
+     * this method is available for onSubmit and postSubmission script
+     */
+    static getBody() {
+        return self.form.body;
+    }
+
+    /**
+     * Returns response value after api call made thorough given route
+     * this method is supposed to use only for postSubmission script
+     */
+    static getResponseValue() {
+        return self.form.response;
+    }
+
+    /**
+     * To make api call 
+     * @param  {} {url -> put full url like 'api/admin/apiName'
+     * @param  {} body -> JSON object that is to be sent along with the api
+     * @param  {} callback -> initialize a function and wrote toast method
+     * @param  {} extraParams -> if you want send some extra params along with api
+     * @param  {} method='get' as default and supported methods like get,post,put,delete
+     * @param  {} urlPrefix=ROUTE_URL}
+     */
     static httpCall({ url, body, callback, extraParams, method = 'get', urlPrefix = ROUTE_URL }) {
         const methods = {
             get: Get, post: Post, put: Put, delete: Delete
@@ -97,14 +138,22 @@ export default class FormUtil {
      * @param  {string} column - column name
      * @param  {boolean} value -true if disabled, false if enabled
      */
-    static setDisabled(column, value = true, form = self.form) {
-        const columnObj = form.dictionary[column];
-
-        if (!columnObj) {
-            return form;
+    static setDisabled(columns, value = true, form = self.form) {
+        if (Array.isArray(columns)) {
+            columns.forEach(column => disableColumn(column));
+        } else {
+            disableColumn(columns);
         }
 
-        form.dictionary[column].disabled = value;
+        function disableColumn(column) {
+            const columnObj = form.dictionary[column];
+
+            if (!columnObj) {
+                return form;
+            }
+
+            form.dictionary[column].disabled = value;
+        }
 
         self.form = form;
         FormUtil.updateForm(false);
@@ -138,7 +187,11 @@ export default class FormUtil {
     };
 
     // static 
-
+    /**
+     * To embed the query along with reference url
+     * @param  {string} column -> column name like "source_id"
+     * @param  {object} queryParams -> param where you want to apply some query like {query: `lookup_type = ${lookuptypeId}`}
+     */
     static setQuery(column, queryParams) {
         const dict = self.form.dictionary[column];
 
@@ -149,14 +202,30 @@ export default class FormUtil {
         }
     }
 
+    /**
+     * Returns menu detail
+     */
     static getMenuDetail() {
         return self.form.menu;
     }
 
+    /**
+     * same as data value,
+     * ideally this method should be used when dealing with form
+     *
+     * @param  {} column
+     */
     static getRecordValue(column) {
+        if (!column) {
+            return self.form.record;
+        }
         return self.form.record[column];
     }
 
+    /**
+     * in case of tabs, returns portlet value
+     * @param  {string} column
+     */
     static getParentValue(column) {
         return column ? self.form.parent[column] : self.form.parent;
     }
@@ -182,10 +251,14 @@ export default class FormUtil {
         // this.updateForm();
     };
 
-    static redirect(url) {
+    static redirect(url, queryParam) {
         // static redirect({ action, listingRow, history, genericData }) {
         url = CreateUrl({ url, obj: self.form.data });
-        Location.navigate({ url });
+        Location.navigate({ url, queryParam });
+    }
+
+    static search(obj, reset = false) {
+        Location.search(obj, { reset });
     }
 
     /**

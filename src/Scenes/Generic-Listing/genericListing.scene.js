@@ -60,6 +60,7 @@ export default class GenericListing extends Component {
         this.state.isCollapsed = false;
         DeleteEvent({ eventName: 'ToggleAdvancedFilter' });
         UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
+        StoreEvent({ eventName: 'rightClickData', data: {} });
     }
 
     userDataArrived = (user) => {
@@ -96,17 +97,15 @@ export default class GenericListing extends Component {
         }
     }
 
-    getListingData = () => {
+    getListingData = ({ withoutIdentifier = false } = {}) => {
         // this.setState({loading:})
         const { menuDetail, genericData, queryString, currentUser, isTab } = this.state;
-        GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser, isTab });
-
-
+        GetListingRecord({ configuration: menuDetail, callback: this.dataFetched, data: genericData, queryString, currentUser, isTab, withoutIdentifier });
     }
 
     dataFetched = ({ genericData, filterContent }) => {
         const { propageGenericDataToParent, index } = this.props;
-
+        const { isTab } = this.state;
         this.setState({ genericData, filterContent, loading: false });
         if (genericData) {
 
@@ -114,7 +113,9 @@ export default class GenericListing extends Component {
                 genericData.filterContent = filterContent;
                 propageGenericDataToParent(genericData, index);
             }
-            StoreEvent({ eventName: 'rightClickData', data: { menuData: genericData } });
+            if (!isTab) {
+                StoreEvent({ eventName: 'rightClickData', data: { menuData: genericData } });
+            }
         }
     }
 
@@ -176,7 +177,7 @@ export default class GenericListing extends Component {
             // this.setState({ genericData });
             this.state.genericData = genericData;
             this.state.menuDetail = menuDetail;
-            this.getListingData();
+            this.getListingData({ withoutIdentifier: true });
         }
     }
 
@@ -310,7 +311,7 @@ export default class GenericListing extends Component {
                                         </Card> : null
                                 }
 
-                                {/* { (finalColumns[0].defaultLayout) ? <div className="noColumnMessage">No columns were selected, displaying default columns</div> : null} */}
+                                {(finalColumns[0] && finalColumns[0].defaultLayout) ? <div className="noColumnMessage">No columns were selected, displaying default columns</div> : null}
 
                                 {
                                     (finalColumns && finalColumns.length) ?
@@ -381,7 +382,7 @@ export default class GenericListing extends Component {
             subMenu: true,
             onClick: (data, operator) => {
                 GetAggregation(operator.name.toLowerCase(), operator.name + ' of ' + data.selectedColumn.display_name + ' equals : ', data)
-            }, 
+            },
             disabled: (data) => (data.selectedColumn.path.split('.').length != 1)
         }, { subMenu: null },
         {

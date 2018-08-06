@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
-import {  ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
+import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
 import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 
 import { Get, Delete, IsUndefinedOrNull, BuildUrlForGetCall, IsObjectHaveKeys } from 'common-js-util';
@@ -135,22 +135,22 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
 export function CreateFinalColumns(columns, selectedColumns, relationship) {
     const finalColumnDefinition = [];
     let splitEnabled = false;
-    // let defaultColumns = false;
+    let defaultColumns = false;
     // const selectedColumns = GetSelectedColumnDefinition(layout);
 
-    // if (selectedColumns.length == 0) {
-    //         for (const i in columns) {
-    //             selectedColumns.push({
-    //                 object: columns[i].parent, column: columns[i].name, headingCollapsed: true, heading: "", index: i
-    //             });
-    //             if(selectedColumns.length <6 ){
-    //                 continue;
-    //             }
-    //             else
-    //              break;
-    //         }
-    //     defaultColumns = true;
-    // }
+    if (selectedColumns && selectedColumns.length == 0) {
+        for (const i in columns) {
+            selectedColumns.push({
+                object: columns[i].parent, column: columns[i].name, headingCollapsed: true, heading: "", index: i
+            });
+            if (selectedColumns.length < 6) {
+                continue;
+            }
+            else
+                break;
+        }
+        defaultColumns = true;
+    }
 
     for (const i in selectedColumns) {
         const selected = selectedColumns[i];
@@ -164,12 +164,12 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
                 // if (selected.filter) {
                 finalColumnDefinition[i].filter = selected.filter;
                 // }
-                // finalColumnDefinition[i].defaultLayout = defaultColumns;
+                finalColumnDefinition[i].defaultLayout = defaultColumns;
 
                 const relationIndex = dict.parent;
 
-                if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && relationship[relationIndex].hasOwnProperty('related_model')) {
-                    finalColumnDefinition[i].reference_route = relationship[relationIndex].related_model.state_name;
+                if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && relationship[relationIndex].hasOwnProperty('reference_model')) {
+                    finalColumnDefinition[i].menu_url = relationship[relationIndex].reference_model.menu_url;
                 }
                 // if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex)) {
                 //     if (relationship[relationIndex].hasOwnProperty('related_model')) {
@@ -299,19 +299,19 @@ export function CreateUrl({ url = '', obj }) {
     return url;
 }
 
-export function ConvertDependencyInjectionToArgs(dependencies) {
-    if (!dependencies) {
-        return [];
-    }
+// export function ConvertDependencyInjectionToArgs(dependencies) {
+//     if (!dependencies) {
+//         return [];
+//     }
 
-    var args = [];
-    var dependency = dependencies.split(",");
-    for (var i in dependency) {
-        args.push('this.' + eval(dependency[i]));
-    }
+//     var args = [];
+//     var dependency = dependencies.split(",");
+//     for (var i in dependency) {
+//         args.push('this.' + eval(dependency[i]));
+//     }
 
-    return args;
-}
+//     return args;
+// }
 
 /**
  * Register all the methods coming from db
@@ -597,24 +597,13 @@ export function RowTemplate({ selectedColumn, listingRow, path = 'path' }) {
     if (selectedColumn.column_type_id == COLUMN_TYPE.BOOLEAN) {
         // return eval('listingRow.' + selectedColumn.path) ? 'Yes' : 'No';
         return listingRow[selectedColumn.path] ? <div className="green">Yes</div> : <div className="red">No</div>;
-    } else if (selectedColumn.route) {
-        let id;
-        if (selectedColumn[path].split('.')[1]) {
-            id = convertIt(selectedColumn[path]);
-            const evalValue = eval('listingRow.' + id);
-            if (evalValue) {
-                id = eval('listingRow.' + id).id;
-            } else {
-                id = null;
-            }
-        } else {
-            id = listingRow.id;
-        }
-        return id
-            ?
-            <a className='cursor-pointer' onClick={() => Location.navigate({ url: `${selectedColumn.reference_route}${id}` })}>{eval('listingRow.' + selectedColumn[path])}</a>
-            :
-            defaultRowValue({ listingRow, selectedColumn, path });
+    } else if (selectedColumn.route && selectedColumn.menu_url) {
+        // const id = listingRow[selectedColumn.p]
+        const idPath = selectedColumn.parent + '.id';
+        const path = `${selectedColumn.menu_url}/${listingRow[idPath]}`
+        return <a className='hyperlink-field' onClick={() => Location.navigate({ url: path })}>
+            {defaultRowValue({ listingRow, selectedColumn, path })}
+        </a>
     } else {
         return defaultRowValue({ listingRow, selectedColumn, path });
     }
@@ -803,4 +792,128 @@ export function ParseRestrictedQuery(queryString) {
 export function GetPathWithParent(column) {
     // if (column.path.split('.').length > 2) {
     return `\`${column.parent}\`.${column.referenced_column ? column.referenced_column : column.name}`;
+}
+
+/**
+ * evaluates condition and return boolean value accordingly
+ * @param  {string} condition
+ * @param  {object} itemRow
+ */
+export function EvalCondtionForNextActions(condition, itemRow, starter) {
+    if (!condition) {
+        return true;
+    }
+    let data = { ...itemRow };
+
+    if (starter) {
+        data = RemoveStarterFromThePath({ data: itemRow, starter });
+    }
+
+    var reg = /:[\w.]*/g;
+    var expressions = [];
+    var evaluatedExpressions = [];
+    expressions = condition.match(reg);
+
+    const pathSample = Object.keys(data)[0];
+
+    for (var i in expressions) {
+        var expression = expressions[i].split(":")[1];
+        // added try catch for checking conditions of menu action
+        try {
+            const isSingleLevel = IsObjectSingleLevel(data);
+            if (isSingleLevel) {
+                evaluatedExpressions[i] = eval(data[expression]);
+            } else {
+                evaluatedExpressions[i] = eval(`data.${expression}`);
+            }
+
+            if (evaluatedExpressions[i] instanceof Array) {
+                if (evaluatedExpressions[i].length) {
+                    evaluatedExpressions[i] = 1;
+                } else {
+                    evaluatedExpressions[i] = 0;
+                }
+            }
+
+            evaluatedExpressions[i] = typeof evaluatedExpressions[i] == 'string' ? `'${evaluatedExpressions[i]}'` : evaluatedExpressions[i];
+            condition = condition.replace(expressions[i], evaluatedExpressions[i]);
+        } catch (e) {
+            evaluatedExpressions[i] = data[expression];
+            condition = condition.replace(expressions[i], "'" + evaluatedExpressions[i] + "'");
+        }
+    }
+    try {
+        return eval(condition);
+    } catch (e) {
+        console.warn('Error in filter condition, Please check script');
+        console.warn('Executed script ->', e);
+        console.error(e);
+    }
+};
+
+/**
+ * Evaluates value against url
+ * @param  {} url
+ */
+export function CreateUrlForFetchingDetailRecords({ url, urlParameter }) {
+    if (!url) {
+        return false;
+    }
+    var reg = /([:$])\w+/g;
+    var params = url.match(reg);
+    if (!params || !params.length) {
+        return url;
+    }
+    for (var i in params) {
+        // url = url.replace(params[i], $stateParams[params[i].split(":")[1]]);
+        const key = params[i];
+
+        url = url.replace(key, urlParameter[key.substr(1)]);
+    }
+    return url;
+}
+
+/**
+ * Filters out same kind of actions on the basis of their identifier
+ * in the event of same identifier, action having higher id gets preference
+ * @param  {array} actions
+ */
+export function FilterOutDuplicateActions(actions) {
+    const obj = {};
+    const finalActions = [...actions];
+    const duplicateIndices = [];
+    if (!Array.isArray(actions)) {
+        return [];
+    }
+    actions.forEach((action, index) => {
+        const identifier = action.identifier;
+        if (obj[identifier]) {
+            const duplicateIndex = obj[identifier].id > action.id ? index : obj[identifier].index;
+            duplicateIndices.push(duplicateIndex);
+        } else {
+            obj[identifier] = { ...action, ...{ index } };
+        }
+    });
+
+    duplicateIndices.forEach(index => finalActions.splice(index, 1));
+    return finalActions;
+}
+
+/**
+ * detects if object have only single level of attribute
+ * for e.g. data object from generic apis return single level object so method return true for those object
+ */
+function IsObjectSingleLevel(object) {
+    let isSingleLevel = false;
+    if (!(object && typeof object == 'object')) {
+        return isSingleLevel;
+    }
+
+    const pathSample = Object.keys(object)[0];
+    if (typeof pathSample != 'string') {
+        return isSingleLevel;
+    }
+
+    isSingleLevel = pathSample.split('.').length > 1 ? true : false;
+    return isSingleLevel;
 }

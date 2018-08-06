@@ -420,12 +420,12 @@ export default class ConfigureDynamicFilter extends Component {
                 //	<daterangepicker> is injected to the template with the format and selected value
                 filterArr[parentIndex][childIndex].html = () => (<DatePicker format={this.dateFormat} timePicker={true} onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex, dateRange: true, })} value={{ startDate, endDate }} />);
                 // filterArr[parentIndex][childIndex].html = (<daterange-picker ng-model="b.slot" format="{{configureFilter.dateFormat}}" />);
-                // filterArr[parentIndex][childIndex].html = "<div class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding-left\"><daterange-picker ng-model=\"b.slot\" format=\"{{configureFilter.dateFormat}}\"></daterange-picker></div>";
+                // filterArr[parentIndex][childIndex].html = "<div className=\"col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding-left\"><daterange-picker ng-model=\"b.slot\" format=\"{{configureFilter.dateFormat}}\"></daterange-picker></div>";
                 break;
 
             case " NOT BETWEEN ":
                 filterArr[parentIndex][childIndex].html = () => <DatePicker format={this.dateFormat} timePicker={true} onChange={(data) => this.convertToInputField({ data, parentIndex, childIndex, dateRange: true })} value={{ startDate, endDate }} />;
-                // filterArr[parentIndex][childIndex].html = "<div class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding-left\"><daterange-picker ng-model=\"b.slot\" format=\"{{configureFilter.dateFormat}}\"></daterange-picker></div>";
+                // filterArr[parentIndex][childIndex].html = "<div className=\"col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding-left\"><daterange-picker ng-model=\"b.slot\" format=\"{{configureFilter.dateFormat}}\"></daterange-picker></div>";
                 break;
 
             case " IS NULL ":

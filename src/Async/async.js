@@ -13,8 +13,9 @@ export default function asyncComponent(importComponent) {
         }
 
         async componentDidMount() {
-            // const { default: component } = await import(`./../Scenes/Generic-ListListing/genericListing.scene`);
-            const { default: component } = await import(`./../Scenes/${importComponent}.js`);
+            // const { default: component } = await import(`./../Scenes/Generic-Listing/genericListing.scene`);
+            // const { default: component } = await import(`./../Scenes/${importComponent}.js`);
+            const { default: component } = await importComponent();
 
             this.setState({
                 component: component

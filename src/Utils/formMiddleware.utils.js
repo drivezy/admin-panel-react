@@ -12,10 +12,11 @@ import { GetItem } from 'storage-utility';
 import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 
 import FormUtils from './form.utils';
-import { GetUrlForFormCreator, GetColumnsForListing, GetParsedLayoutScript, ParseRestrictedQuery } from './generic.utils';
+import { GetUrlForFormCreator, GetColumnsForListing, GetParsedLayoutScript, ParseRestrictedQuery, CreateUrlForFetchingDetailRecords } from './generic.utils';
 import { ExecuteScript } from './inject-method/injectScript.utils';
 
 import { ROUTE_URL, RECORD_URL } from './../Constants/global.constants';
+import SCRIPT_TYPE from './../Constants/scriptType.constants';
 
 export async function ProcessForm({ formContent, scripts, isForm, openModal = true }) {
     const url = GetUrlForFormCreator({ payload: formContent, getDictionary: true, isForm });
@@ -48,8 +49,9 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
 
         let layouts = formContent.layouts;
 
+        // if ui action is intended for form type
         if (isForm) {
-            formContent.route = response.form.end_point;
+            formContent.route = CreateUrlForFetchingDetailRecords({ url: response.form.end_point, urlParameter: formContent.data });
             formContent.layout = [];
 
             layouts = GetParsedLayoutScript(response.form_layouts);
@@ -59,13 +61,21 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
                 formContent.layout = layouts[0];
             }
             formContent.record = formContent.data;
-            formContent.data = GetDataFromDictionary(formContent.dictionary);
+            formContent.data = GetDataFromDictionary(formContent.dictionary, formContent.data);
             formContent.modelId = response.form.id;
+            formContent.name = response.form.name;
 
+            if (response.form.method_id == 23) {
+                formContent.method = 'edit';
+            } else if (response.form.method_id == 22) {
+                formContent.method = 'add';
+            }
+
+            // for prompt type form
             if (response.form.form_type_id == 53) {
                 const { description: message } = response.form;
                 const submitCallback = response.client_scripts ? response.client_scripts : [];
-                ConfirmUtils.confirmModal({ message, callback: () => ExecuteScript({ formContent, scripts: submitCallback, context: FormUtils, contextName: 'form' }) })
+                ConfirmUtils.confirmModal({ title: formContent.name, message, callback: () => ExecuteScript({ formContent, scripts: submitCallback, context: FormUtils, contextName: 'form' }) })
                 return;
             }
         }
@@ -73,9 +83,9 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
         // get 
         // form-layout-{modelId} = layout id
         const layoutId = GetItem(`form-layout-${formContent.modelId}`);
-        if (layoutId) {
-            formContent.layout = SelectFromOptions(layouts, layoutId, 'id') || {};
-        }
+        // if (layoutId) {
+        formContent.layout = SelectFromOptions(layouts, layoutId, 'id') || {};
+        // }
 
 
         const restrictedQuery = ParseRestrictedQuery(formContent.menu.restricted_query);
@@ -86,17 +96,12 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
         formContent.restrictedQuery = restrictedQuery;
 
         if (Array.isArray(scripts)) {
-            formContent = ExecuteScript({ formContent, scripts, context: FormUtils, contextName: 'form' });
+            formContent = ExecuteScript({ formContent, scripts, context: FormUtils, contextName: 'form', executionType: SCRIPT_TYPE.ON_LOAD });
         }
 
         if (openModal) {
-            // ModalManager.openModal({
-            //     headerText: formContent.name,
-            //     modalBody: () => (<FormCreator payload={formContent} />),
-            // });
             OpenModalForm(formContent);
         }
-
     }
 }
 
@@ -108,14 +113,16 @@ export function OpenModalForm(formContent) {
     });
 }
 
-function GetDataFromDictionary(dictionary) {
+function GetDataFromDictionary(dictionary, data) {
     const obj = {};
+    data = data && Object.keys(data).length ? data : {};
     for (let i in dictionary) {
         const column = dictionary[i];
         if (column) {
-            obj[column.name] = null;
+            obj[column.name] = data[column.name];
         }
     }
 
     return obj;
 }
+

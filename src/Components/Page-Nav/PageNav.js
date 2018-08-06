@@ -5,8 +5,9 @@ import { Redirect } from 'react-router-dom';
 
 import { ToastNotifications, LoaderComponent, LoaderUtils, ModalManager } from 'drivezy-web-utils/build/Utils';
 import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
-import {  Get, Post } from 'common-js-util';
-import { SubscribeToEvent } from 'state-manager-utility';
+import { Get, Post } from 'common-js-util';
+import { SubscribeToEvent, StoreEvent, UnsubscribeEvent } from 'state-manager-utility';
+import { Link } from 'react-router-dom';
 
 import GLOBAL from './../../Constants/global.constants';
 
@@ -34,6 +35,10 @@ export default class PageNav extends Component {
         const spacing = ThemeUtil.getCurrentSpacing();
         this.changeSpacing(spacing);
         this.changeTheme(theme);
+    }
+
+    componentWillUnmount() {
+        UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
     }
 
     userDataFetched = (data) => {
@@ -75,6 +80,7 @@ export default class PageNav extends Component {
         const res = await Get({ urlPrefix: GLOBAL.ROUTE_URL, url: 'logout' });
         if (res.success) {
             const a = (this.props.location ? this.props.location.state : null) || { from: { pathname: '/login' } };
+            StoreEvent({ eventName: 'loggedUser', data: {} });
             this.setState({ redirectToReferrer: true });
         }
     }
@@ -124,15 +130,17 @@ export default class PageNav extends Component {
 
                     <DropdownMenu right>
                         <DropdownItem className="user-wrapper">
-                            <a className="user-details">
-                                <div className="display-name">
-                                    {this.state.currentUser.display_name}
-                                </div>
-                                <div className="email">
-                                    {this.state.currentUser.email ? this.state.currentUser.email.substring(0, 6) : null}
-                                    <i className="fa fa-cog" aria-hidden="true"></i>
-                                </div>
-                            </a>
+                            <span className="user-details">
+                                <Link to={`/user/${currentUser.id}`}>
+                                    <div className="display-name">
+                                        {this.state.currentUser.display_name}
+                                    </div>
+                                    <div className="email">
+                                        {this.state.currentUser.email ? this.state.currentUser.email.substring(0, 6) : null}
+                                        <i className="fa fa-cog" aria-hidden="true"></i>
+                                    </div>
+                                </Link>
+                            </span>
                         </DropdownItem>
                         <DropdownItem>Clear Storage</DropdownItem>
                         <DropdownItem>Set Homepage</DropdownItem>

@@ -10,6 +10,7 @@ import RightClick from './../../Components/Right-Click/rightClick.component';
 import { CopyToClipBoard } from './../../Utils/common.utils';
 import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
 import { RowTemplate } from './../../Utils/generic.utils';
+import CustomTooltip from '../Custom-Tooltip/customTooltip.component';
 
 export default class DetailPortlet extends Component {
     constructor(props) {
@@ -75,7 +76,7 @@ export default class DetailPortlet extends Component {
 
                                             </Col>
                                             <Col>
-                                                <span className="pull-right"> {RowTemplate({ selectedColumn, listingRow })}</span>
+                                                <CustomTooltip placement="top" html={<span className="pull-right"> {RowTemplate({ selectedColumn, listingRow })}</span>} title={RowTemplate({ selectedColumn, listingRow })}></CustomTooltip> 
                                             </Col>
                                         </div>
 

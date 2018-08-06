@@ -23,9 +23,19 @@
         padding: 0px !important;
     }
 
-    .pull-right {
+    .col strong{
+        font-size: 105%;
+    }
+
+    .tooltip-element{
         float: right;
-        font-size: 90%;
+    }
+
+    .pull-right {
+        overflow: hidden;
+        white-space: nowrap;
+        max-width: 490px;
+        float: right;
     }
     .padding-bottom-4 {
         padding-bottom: 4px;

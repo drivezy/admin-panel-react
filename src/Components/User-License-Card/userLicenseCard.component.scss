@@ -56,12 +56,11 @@
 
 
     .user-license-data{
-
         display: flex;
         flex-direction: row;
-        justify-content: left;
-        font-size: 17px;
-
+        justify-content: center;
+        padding: 4px;
+        font-size: 15px;
         .data-field{
             padding-left: 3px;
             margin-left: 13px;

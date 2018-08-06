@@ -34,6 +34,7 @@ export default class GenericDetail extends Component {
 
     componentWillUnmount() {
         UnsubscribeEvent({ eventName: 'loggedUser', callback: this.userDataArrived });
+        StoreEvent({ eventName: 'rightClickData', data: {} });
     }
 
     componentDidMount() {
@@ -65,7 +66,6 @@ export default class GenericDetail extends Component {
 
 
     getMenuData = async () => {
-        const { queryString } = this.state;
         // const { menuId } = queryString;
         const { menuId } = this.props;
         const result = await GetMenuDetail(menuId);
@@ -77,20 +77,27 @@ export default class GenericDetail extends Component {
             this.state.menuDetail = menuDetail;
             this.getDetailRecord();
             StoreEvent({ eventName: 'showMenuName', data: { menuName: this.state.menuDetail.pageName } });
+            
             // }
         }
     }
 
-    getDetailRecord = () => {
+    getDetailRecord = ({ withoutIdentifier = false } = {}) => {
         const { menuDetail, portlet, urlParameter, params } = this.state;
         // const {menuId} = this.props
-        GetDetailRecord({ configuration: menuDetail, callback: this.dataFetched, data: portlet, urlParameter: params });
+        GetDetailRecord({ configuration: menuDetail, callback: this.dataFetched, data: portlet, urlParameter: params, withoutIdentifier });
     }
 
     dataFetched = ({ tabDetail, portlet }) => {
+        const { menuDetail } = this.state;
         tabDetail.refreshContent = this.getDetailRecord;
         const parentData = RemoveStarterFromThePath({ data: portlet.data, starter: portlet.starter });
         this.setState({ portlet, tabDetail, parentData, loading: false });
+        const rightClickOptions = {
+            modelId: portlet.model.id,
+            menuId: menuDetail.menuId
+        }
+        StoreEvent({ eventName: 'rightClickData', data: { menuData: rightClickOptions } });
     }
 
     getColumn = (preference, dictionary) => {
@@ -108,7 +115,7 @@ export default class GenericDetail extends Component {
             // this.setState({ portlet, menuDetail });
             this.state.portlet = portlet;
             this.state.menuDetail = menuDetail;
-            this.getDetailRecord();
+            this.getDetailRecord({ withoutIdentifier: true });
         }
     }
 
@@ -122,7 +129,7 @@ export default class GenericDetail extends Component {
             formPreferences,
             starter,
             columns: portlet.portletColumns,
-            modelName: menuDetail.formPreferenceName + '.form',
+            // modelName: menuDetail.formPreferenceName + '.form',
             // module: menuDetail.url ? menuDetail.url.split("/:")[0] : '',
             url: menuDetail.url ? menuDetail.url.split("/:")[0] : '',
             model: portlet.model,
@@ -136,13 +143,11 @@ export default class GenericDetail extends Component {
             <div className="header">
                 <div className="left" />
 
-                <div className="right">
+                <div className="right"> 
                     <div className="btn-group header-actions" id="generic-detail-header-dynamic-icon-group">
                         <CustomAction menuDetail={menuDetail} history={history} genericData={genericDataForCustomColumn} actions={portlet.nextActions} listingRow={data} placement={'as_record'} callback={this.getDetailRecord} />
-                        <CustomAction menuDetail={menuDetail} history={history} genericData={genericDataForCustomColumn} actions={portlet.nextActions} listingRow={data} placement={'as_dropdown'} callback={this.getDetailRecord} />
-                    </div>
-
-                    {
+                        &nbsp;
+                        {
                         portlet.portletColumns ?
                             <TableSettings
                                 source='menu'
@@ -156,7 +161,12 @@ export default class GenericDetail extends Component {
                             // finalColumns={finalColumns}
                             />
                             : null
-                    }
+                        }
+                        &nbsp;
+                        <CustomAction menuDetail={menuDetail} history={history} genericData={genericDataForCustomColumn} actions={portlet.nextActions} listingRow={data} placement={'as_dropdown'} callback={this.getDetailRecord} />
+                    </div>
+
+                    
                 </div>
             </div>;
 
@@ -201,8 +211,9 @@ export default class GenericDetail extends Component {
             subMenu: false,
             onClick: (data) => {
                 const { history, match } = this.props;
+                const { menuDetail } = this.state;
 
-                let pageUrl = "/menu/" + this.state.menuDetail.menuId
+                let pageUrl = "/menu/" + menuDetail.menuId
                 Location.navigate({ url: pageUrl });
                 // history.push(`${pageUrl}`);
             }
@@ -213,8 +224,9 @@ export default class GenericDetail extends Component {
             subMenu: false,
             onClick: (data) => {
                 const { history, match } = this.props;
+                const { portlet } = this.state;
 
-                let url = "/model/" + this.state.menuDetail.model.id
+                let url = "/model/" + portlet.model.id
                 Location.navigate({ url });
                 // history.push(`${url}`);
             }

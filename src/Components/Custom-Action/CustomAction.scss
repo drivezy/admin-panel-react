@@ -1,6 +1,9 @@
 @import 'Assets/Global-Shared/theme.scss';
 .header-actions {
     .custom-actions {
+        justify-content: center;
+        align-items: center;
+        display: flex;
         .button-element {
             text-transform: capitalize;
             padding: 5px 8px;
@@ -36,6 +39,11 @@
     }
 }
 
+.disabled-action { 
+    opacity: .3;
+    pointer-events: none;    
+}
+
 .custom-actions {
     .tooltip-element {
         margin: 0px 4px;
@@ -51,15 +59,22 @@
             }
         }
         .dropdown-menu {
-            min-width: 140px !important;
+            left: -155px !important;
+            top: 30px !important;
+            transform: none !important;
+            min-width: 230px !important;
+            max-height: 540px;
+            overflow: scroll;
         }
     .dropdown-menu.menu-operations{
         background: #fff;
         .menu-item {
         display: flex;
+        padding: 7px;
         .menu-link{
-            font-size: 17px !important;
-            padding: 4px 10px !important;
+            cursor: pointer;
+            font-size: 18px !important;
+            padding: 1px 2px !important;
             span.badge{
             color: #000;
             opacity: 1;
@@ -67,6 +82,15 @@
             }
         }
         }
+    }
+}
+
+.has-feedback { 
+    padding: 0 5px;
+    position: relative;
+    input { 
+        font-size: 12px;
+        box-shadow: none !important;
     }
 }
 

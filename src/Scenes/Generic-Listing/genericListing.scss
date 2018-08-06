@@ -27,11 +27,18 @@
         }
         .search-bar {
             display: flex;
+            width: 85%;
         }
         .table-settings {
             margin: 0px;
         }
-        .search-wrapper {}
+        .search-wrapper {
+            width: 100%;
+            .form-groups{
+                max-width: 68%;
+                position: relative;
+            }
+        }
         .header-actions {
             display: flex;
             align-items: center;
@@ -69,7 +76,7 @@
             margin-left: 1100px;
         }
         .generic-listing-search {
-            width: 40%;
+            width: 25%;
         }
     }
     .configure-filter-wrapper {

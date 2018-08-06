@@ -49,7 +49,7 @@ export default class CodeEditor extends Component {
         }
     }
 
-    UNSAFE_componentWillReceivePropscomponentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.setState({ value: nextProps.value || '' });
     }
 

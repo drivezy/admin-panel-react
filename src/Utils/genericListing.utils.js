@@ -3,7 +3,7 @@ import { Get, IsUndefinedOrNull, SelectFromOptions, BuildUrlForGetCall, TrimQuer
 import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
-import { GetParsedLayoutScript, GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, ParseRestrictedQuery, GetPathWithParent } from './generic.utils';
+import { GetParsedLayoutScript, GetColumnsForListing, ConvertToQuery, CreateFinalColumns, RegisterMethod, GetPreSelectedMethods, ParseRestrictedQuery, GetPathWithParent, FilterOutDuplicateActions } from './generic.utils';
 
 import { ROUTE_URL } from './../Constants/global.constants';
 
@@ -14,11 +14,11 @@ let tempQuery; // used to decide if stats is to be fetched from server
 * url and menu detail, fetch data and passes them further to the components
 * to show listing data
 */
-export const GetListingRecord = async ({ configuration, queryString = {}, callback, data, currentUser = {}, index, isTab }) => {
+export const GetListingRecord = async ({ configuration, queryString = {}, callback, data, currentUser = {}, index, isTab, withoutIdentifier = false }) => {
     const params = Initialization(configuration, queryString);
     // const this = {};
     this.currentUser = currentUser;
-    let options = GetDefaultOptions();
+    let options = GetDefaultOptions(isTab);
 
     params.page = queryString.page ? parseInt(queryString.page) : data.currentPage;
     if (params.includes) {
@@ -50,7 +50,9 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
 
     const restricted_query = configuration.restricted_query || configuration.query;
     options.query += IsUndefinedOrNull(restricted_query) ? '' : ' and ' + ConvertToQuery.call(this, restricted_query);
-    options.request_identifier = data.request_identifier;
+    if (!withoutIdentifier) {
+        options.request_identifier = data.request_identifier;
+    }
     // If a filter is applied , add the query to options.query
 
     /****************************************************
@@ -83,15 +85,15 @@ export const GetListingRecord = async ({ configuration, queryString = {}, callba
         options.query = options.query.replace("'currentUser'", currentUser.id);
     }
 
-    options.stats = (data.stats && IsUndefinedOrNull(queryString.query) && tempQuery) ? false : true;
-    tempQuery = IsUndefinedOrNull(queryString.query) || IsUndefinedOrNull(queryString.search);
+    options.stats = (data.stats && IsUndefinedOrNull(queryString.query) && IsUndefinedOrNull(queryString.search) && tempQuery) ? false : true;
+    tempQuery = IsUndefinedOrNull(queryString.query) && IsUndefinedOrNull(queryString.search);
     // To be used to fetch stats when user selects some query and then deselects it
 
     // @TODO dont fetch dictionary if already available
     options.dictionary = data.dictionary ? false : true;
 
     options.page = queryString.page || options.page;
-    options.limit = queryString.limit || 20;
+    options.limit = queryString.limit ? queryString.limit : isTab ? 10 : 20 || 20;
 
     if (queryString.scopes) {
         options.scopes = queryString.scopes;
@@ -183,6 +185,8 @@ function PrepareObjectForListing(result, { extraParams }) {
             }
         }
 
+        const nextActions = FilterOutDuplicateActions([...model.actions, ...configuration.uiActions]);
+
         // Preparing the generic listing object
         const genericListingObj = {
             stats: stats || data.stats,
@@ -204,7 +208,7 @@ function PrepareObjectForListing(result, { extraParams }) {
             // @TODO uncomment this line to get selectedColumn
             layout: configuration.layout || {},
             // layout: configuration.preference[configuration.listName + ".list"] ? JSON.parse(configuration.preference[configuration.listName + ".list"]) : null, // formPreference: configuration.preference[configuration.listName + '.form'] ? JSON.parse(configuration.preference[configuration.listName + '.form']) : null,
-            nextActions: [...model.actions, ...configuration.uiActions],
+            nextActions,
             // nextActions: model.actions,
             formPreference,
             formPreferences,
@@ -256,13 +260,13 @@ function PrepareObjectForListing(result, { extraParams }) {
 /**
  * Returns default option for get call params
  */
-export function GetDefaultOptions() {
+export function GetDefaultOptions(isTab) {
     return {
         includes: '',
         order: 'id,asc',
         // query: 'id=id',
         query: '',
-        limit: 20,
+        limit: isTab ? 10 : 20,
         page: 1,
         list: true,
         stats: false,
