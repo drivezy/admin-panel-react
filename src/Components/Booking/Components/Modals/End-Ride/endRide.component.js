@@ -75,12 +75,10 @@ export default class EndRide extends Component {
             urlPrefix: 'https://api.justride.in/api/admin/'
         });
         if (result.success) {
-            // this.setState({ stateOptions: result.response });
-            // ModalManager.openModal({
-            //     headerText: "CONFIRM COMPLETE RIDE FOR",
-            //     modalBody: () => (<EndRideConfirm endRidedata={endRideInfo} />)
-            console.log(result)
-            // })
+            ModalManager.openModal({
+                headerText: "CONFIRM COMPLETE RIDE FOR",
+                modalBody: () => (<EndRideConfirm endRidedata={endRideInfo} reviewRideData={result.response} />)
+            })
         }
         
     }
@@ -344,8 +342,8 @@ export default class EndRide extends Component {
                             &nbsp;
                                 <button className="btn btn-warning"> Reset </button>
                             &nbsp;
-                                <button type="submit" className="btn btn-success" onClick={() => 
-                                this.reviewRide
+                                <button type="submit" className="btn btn-success" onClick={(e) => 
+                                {e.preventDefault(); this.reviewRide();}
                             }> Complete Ride </button>
                         </div>
                     </div>
