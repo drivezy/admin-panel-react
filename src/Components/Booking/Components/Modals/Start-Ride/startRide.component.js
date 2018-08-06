@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import UserCard from './../../../../User-Card/userCard.component';
 import { ModalManager } from 'drivezy-web-utils/build/Utils';
 import AddonUpdate from './../../../../Addon-Update/addonUpdate.component';
+import { Post } from 'common-js-util';
+
 import './startRide.component.css';
 
 export default class StartRide extends Component {
@@ -20,12 +22,23 @@ export default class StartRide extends Component {
         };
     }
 
-    onSubmit = (startOdo, startFuel, alternateNumber, comment, pickupTime) => {
-        // this.state({ startOdo: startOdo1, startFuel: startFuel1, alternateNumber: alternateNumber1, comment: comment1, pickupTime: pickupTime1 })
-
+    onSubmit = async (startOdo, startFuel, alternateNumber, comment, pickupTime) => {
         this.setState({ startOdo, startFuel, alternateNumber, comment, pickupTime })
+        console.log( startOdo, startFuel, alternateNumber, comment, pickupTime )
+        const result = await Post({ url: "startRide",
+        body: {
+            comments : comment,
+            fuel_percentage : startFuel,
+            mobile_number : alternateNumber,
+            odo_reading : startOdo,
+            pnr : this.state.data.token,
+            start_time: pickupTime,
+            addon: this.state.data.start_addons
+        }
+        ,
+        urlPrefix: 'https://api.justride.in/api/admin/' });
+        console.log(result);
         ModalManager.closeModal();
-
     }
 
     onCancel() {
@@ -65,7 +78,7 @@ export default class StartRide extends Component {
                             <div className="details">
                                 <div className="text-field"> <i className="fa fa-phone" aria-hidden="true"></i>Alternate Number</div>
                                 <input onChange={(e) => 
-                                    {(this.state.alternateNumber = e.target.value); count++; console.log(count)}
+                                    {(this.state.alternateNumber = e.target.value); count++;}
                                 } type="number"  className={count<10 ? "data-field" : "data-field inactive"} 
                                 placeholder='Alternate Number'></input>
                             </div>
@@ -78,7 +91,6 @@ export default class StartRide extends Component {
                         </div>
                         {
                             <div className="addon">
-                                {/* Pass rideStatus = 1 for start and 0 for end */}
                                 <AddonUpdate rideStatus={1} rideData={this.state.data} />
                             </div>
                         }
@@ -87,7 +99,7 @@ export default class StartRide extends Component {
                 </div>
                 <div className="cancel-and-submit">
                     <button className="cancel" onClick={() => { this.onCancel() }}>Cancel</button>
-                    <button className="submit" onClick={() => { this.onSubmit(startOdo, startFuel, alternateNumber, comment, pickupTime) }}>Submit</button>
+                    <button className="submit" onClick={() => { this.onSubmit(this.state.startOdo, this.state.startFuel, this.state.alternateNumber, this.state.comment, this.state.pickupTime) }}>Submit</button>
                 </div>
             </div>
         )

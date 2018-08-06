@@ -70,6 +70,7 @@ export default class AddonUpdate extends React.Component {
         this.setState({ startAddons });
         rideData.start_addons = startAddons;
         this.setState({ rideData });
+        console.log(rideData)
     }
 
     updateEndAddons = (quantity, addOn) => {
@@ -149,6 +150,7 @@ export default class AddonUpdate extends React.Component {
                                                         // 0
                                                     }
                                                 </div>
+                                                <br />
                                                 <br />
                                             </div>
                                             :
