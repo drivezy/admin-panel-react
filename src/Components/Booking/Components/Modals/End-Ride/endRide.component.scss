@@ -34,4 +34,13 @@
             }
         }
     }
+    .modalfooter{
+        padding: 10px 25px;
+        .row{
+            align-items: center;
+        }
+        .btns{
+            text-align: right;
+        }
+    }
 }

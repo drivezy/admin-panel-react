@@ -3,21 +3,23 @@ import './endRide.component.css';
 
 import AddonUpdate from './../../../../Addon-Update/addonUpdate.component';
 import { ModalManager } from 'drivezy-web-utils/build/Utils';
-import EndRideConfirm from './endRideConfirm.component';
 
-export default class EndRide extends Component {
+import { TotalDuration } from './../../../../../Utils/booking.utils';
+
+export default class EndRideConfirm extends Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            endRideInfo: this.props.endRidedata
+            endRideInfo: this.props.endRidedata,
         }
     }
 
     render() {
         const { endRideInfo = {} } = this.state;
-        const { endRidedata } = this.props;
+
+        let duration = TotalDuration(endRideInfo.endTime, endRideInfo.pickup_time);
 
         return (
             <div className="modalBody">
@@ -32,6 +34,30 @@ export default class EndRide extends Component {
                                     <input type='text' value={endRideInfo.token} disabled/>
                                 </div>
                             </div>
+                            {
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-12">
+                                            <label>Duration</label>
+                                        </div>
+                                        <div className="col-sm-12">
+                                            <input type='text' value={duration} disabled/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-12">
+                                            <label>Distance</label>
+                                        </div>
+                                        <div className="col-sm-12">
+                                            <input type='number' value={endRideInfo.ride_return.end_odo_reading - endRideInfo.ride_return.start_odo_reading} disabled/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
                             {
                             <div className="row">
                                 <div className="col-sm-5">
@@ -50,7 +76,7 @@ export default class EndRide extends Component {
                                             <label>End Time&nbsp;<i className="fa fa-clock-o" aria-hidden="true"></i>&nbsp;<i className="fa fa-car" aria-hidden="true"></i></label>
                                         </div>
                                         <div className="col-sm-12">
-                                            <input type='datetime-local' placeholder='2018-08-03 15:11' onChange={(e) => { endRideInfo.endTime= e.target.value; this.setState({ endRideInfo });}} required/>
+                                            <input type='datetime-local' value={endRideInfo.endTime} disabled/>
                                         </div>
                                     </div>
                                 </div>
@@ -73,7 +99,7 @@ export default class EndRide extends Component {
                                         <label>End Odo Reading</label>
                                     </div>
                                     <div className="col-sm-12">
-                                        <input type='text' placeholder={endRideInfo.ride_return.start_odo_reading} onChange={(e) => { endRideInfo.ride_return.end_odo_reading= e.target.value; this.setState({ endRideInfo });}}/>
+                                        <input type='text' value={endRideInfo.ride_return.end_odo_reading} disabled/>
                                     </div>
                                 </div>
                             </div>
@@ -96,12 +122,13 @@ export default class EndRide extends Component {
                                             <label>End Fuel Percentage</label>
                                         </div>
                                         <div className="col-sm-12">
-                                            <input type='text' placeholder='100' onChange={(e) => { endRideInfo.ride_return.end_fuel_percentage= e.target.value; this.setState({ endRideInfo });}}/>
+                                            <input type='text' value={endRideInfo.ride_return.end_fuel_percentage} disabled/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        }{
+                        }
+                        {/* {
                             <div className="row">
                                 <div className="col-sm-6">
                                     <div className="row">
@@ -147,16 +174,16 @@ export default class EndRide extends Component {
                                     </div>
                                 </div>
                             </div>
-                        }
+                        } */}
                             <div className="row">
                                 <div className="col-sm-12">
                                     <label>Comments</label>
                                 </div>
                                 <div className="col-sm-12">
-                                    <input type='text' placeholder="Add comments" onChange={(e) => { endRideInfo.comments = e.target.value; this.setState({ endRideInfo });}}/>
+                                    <input type='text' value={endRideInfo.comments} disabled/>
                                 </div>
                             </div>
-                        {
+                        {/* {
                             <div className="row">
                             <div className="col-sm-6">
                                 <div className="row">
@@ -179,8 +206,8 @@ export default class EndRide extends Component {
                                 </div>
                             </div>
                         </div>
-                        }
-                        </div>
+                        } */}
+                </div>
                         <div className="ride-info">
                             <div className="row">
                                 <div className="col-sm-12">
@@ -216,14 +243,14 @@ export default class EndRide extends Component {
                             <div className="col-sm-6 btns">
                                 <button className="btn btn-default"> Cancel </button>
                                 &nbsp;
-                                <button className="btn btn-warning"> Reset </button>
+                                <button className="btn btn-warning"> Go Back </button>
                                 &nbsp;
-                                <button type="submit" className="btn btn-success" onClick={() => {
-                                    ModalManager.openModal({
-                                    headerText: "CONFIRM COMPLETE RIDE FOR",
-                                    modalBody: () => (<EndRideConfirm endRidedata={endRideInfo}/>)
-                                })
-                            }}> Complete Ride </button>
+                                <button className="btn btn-success" onClick={() => {
+                            ModalManager.openModal({
+                                headerText: "CONFIRM COMPLETE RIDE FOR",
+                                modalBody: () => (<EndRideConfirm endRidedata={endRideInfo}/>)
+                            })
+                        }}> Confirm Complete Ride </button>
                             </div>
                     </div>
                 </div>
