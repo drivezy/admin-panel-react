@@ -12,7 +12,8 @@ import BookingTabsDetail from './../../Components/Booking/Components/Booking-Tab
 import SummaryCard from './../../Components/Summary-Card/summaryCard';
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 import StartRide from './../../Components/Booking/Components/Modals/Start-Ride/startRide.component';
-import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
+import { ModalManager } from 'drivezy-web-utils/build/Utils';
+import EndRide from './../../Components/Booking/Components/Modals/End-Ride/endRide.component';
 import { GetPreSelectedMethods, RegisterMethod, GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
 import { BookingDate } from './../../Utils/booking.utils';
 
@@ -61,10 +62,6 @@ export default class BookingDetail extends Component {
     refreshPage(event) {
         event.preventDefault();
         this.getBookingDetail();
-    }
-
-    hello() {
-
     }
 
     render() {
@@ -137,13 +134,6 @@ export default class BookingDetail extends Component {
 
                             }
 
-                            <button onClick={() => {
-                                ModalManager.openModal({
-                                    modalBody: () => (<StartRide bookingDetail={this.state.bookingDetail}></StartRide>)
-                                });
-                            }}>HELLO</button>
-
-
                         </div>
                         {
                             (bookingDetail.id && bookingDetail.status != null && bookingDetail.feedback.length) ?
@@ -164,7 +154,7 @@ export default class BookingDetail extends Component {
                         }
                     </div>
                 </div>
-            </div >
+            </div>
         )
     }
 }
