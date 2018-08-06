@@ -9,7 +9,7 @@ import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 
 let subMenu;
 
-let searchLength = 0;
+// let searchLength = 0;
 
 export class Spotlight extends Component {
 
@@ -26,6 +26,7 @@ export class Spotlight extends Component {
             searchText: '',
             activeMenu: {},
             searchList: []
+            // searchLength: 0
         }
     }
 
@@ -74,6 +75,7 @@ export class Spotlight extends Component {
 
     onSelect = (event) => {
         const { searchList = [] } = this.state
+        const  searchLength  = searchList.length-1;
         if (event.which == 40) {
             this.searchInput.current.blur();
             var menus = document.getElementsByClassName('spotlight-menu-list')[0];
@@ -108,8 +110,9 @@ export class Spotlight extends Component {
     }
 
     redirectTo = (state) => {
+        
         this.setState({ isOpen: !this.state.isOpen });
-        Location.navigate({ url: state.url });
+        Location.navigate({ url: '/'+state.url });
     }
 
     render() {
@@ -132,7 +135,8 @@ export class Spotlight extends Component {
                 });
             });
             searchList.push(matches);
-            searchLength = searchText.length-1;
+            //this.searchLength = searchText.length-1;
+            // this.setState({searchLength: searchText.length-1});
         }
 
         return (
