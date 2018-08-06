@@ -13,7 +13,7 @@ import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 
 import FormUtils from './form.utils';
 import { GetUrlForFormCreator, GetColumnsForListing, GetParsedLayoutScript, ParseRestrictedQuery, CreateUrlForFetchingDetailRecords } from './generic.utils';
-import { ExecuteScript } from './inject-method/injectScript.utils';
+import { ExecuteScript } from './Inject-Method/injectScript.utils';
 
 import { ROUTE_URL, RECORD_URL } from './../Constants/global.constants';
 import SCRIPT_TYPE from './../Constants/scriptType.constants';
