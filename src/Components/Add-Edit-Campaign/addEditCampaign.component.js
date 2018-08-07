@@ -3,11 +3,12 @@ import React, { Component } from 'react';
 import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
 
 import { ModalBody } from 'reactstrap';
-import { withFormik, Field } from 'formik';
+import { withFormik, Field, Form } from 'formik';
 import { Put } from 'common-js-util';
 
 import SelectBox from './../Forms/Components/Select-Box/selectBox';
 import { GetLookupValues } from './../../Utils/lookup.utils';
+import DatePicker from './../Forms/Components/Date-Picker/datePicker';
 
 // Our inner form component which receives our form's state and updater methods as props
 const InnerForm = props => {
@@ -19,192 +20,200 @@ const InnerForm = props => {
     } = props;
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div className="modal-body">
-                <div className="panel panel-info">
-                    <div className="panel-body">
-                        <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div className="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                <div className="form-group">
-                                    <label className="control-label val-span">Campaign Name</label>
-                                    <div className="input-group">
-                                        <span className="input-group-addon">
-                                            <i className="fa fa-strikethrough"></i>
-                                        </span>
-                                        <input name="Camp" type="text" className="form-control form-box requiredField" placeholder="Name" required />
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div className="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                <div className="form-group">
-                                    <label className="control-label val-span">Description</label>
-                                    <textarea name="Description" type="text" className="form-control form-box requredField" placeholder="Description" required></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div className="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                <div className="form-group">
-                                    <label className="control-label">Pick Up and Drop Time</label>
-                                    <div className="input-group date-field">
-                                        <span className="input-group-addon">
-                                            <i className="fa fa-calendar"></i>
-                                        </span>
-                                        <div>
-                                            <daterange-picker required="true" placeholder="Select Range" ></daterange-picker>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                <div className="form-group">
-                                    <label className="control-label">Start and End Time</label>
-                                    <div className="input-group date-field">
-                                        <span className="input-group-addon">
-                                            <i className="fa fa-calendar"></i>
-                                        </span>
-                                        <div>
-                                            <daterange-picker required="true" placeholder="Select Range" ></daterange-picker>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
-                                <div className="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                    <div className="form-group">
-                                        <label className="label-color val-span">Active</label>
-                                        <div className="input-group select-input-form">
-                                            <span className="input-group-addon">
-                                                <i className="fa fa-toggle-off"></i>
-                                            </span>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                    <div className="form-group">
-                                        <label className="label-color val-span">Reusable</label>
-                                        <div className="input-group select-input-form">
-                                            <span className="input-group-addon">
-                                                <i className="fa fa-toggle-off"></i>
-                                            </span>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
-                                <div className="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                    <div className="form-group">
-                                        <label className="label-color val-span">Cashback</label>
-                                        <div className="input-group select-input-form">
-                                            <span className="input-group-addon">
-                                                <i className="fa fa-toggle-off"></i>
-                                            </span>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                    <div className="form-group">
-                                        <label className="label-color val-span">Peak Applicable</label>
-                                        <div className="input-group select-input-form">
-                                            <span className="input-group-addon">
-                                                <i className="fa fa-toggle-off"></i>
-                                            </span>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div >
-                            <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
-                                <div className="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                    <div className="form-group border-select-filter">
-                                        <label className="control-label val-span">Coupon Type</label>
-                                        <div className="input-group select-input-form">
-                                            <span className="input-group-addon">
-                                                <i className="fa fa-chevron-down"></i>
-                                            </span>
-                                            <Field
-                                                name='object_name'
-                                                render={() => (
-                                                    <SelectBox valueKey="name" field="name" onChange={(selected) => { setFieldValue('object_name', selected.value) }} value={values.object_name} options={props.couponList} />
-                                                )}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                    <div className="form-group">
-                                        <label className="control-label val-span">Parameter&nbsp;
-                                    {/* <a ng-show="addCampaignRecord.couponTypeObj.selected.value=='CouponGeneric'" ng-click="addCampaignRecord.generateParameter()"
-                                                style="color:red">
-                                                <span className="glyphicon glyphicon-plus"></span>
-                                            </a>
-                                            <a ng-show="addCampaignRecord.couponTypeObj.selected.value=='CouponAll'" ng-click="addCampaignRecord.couponBenefits()" style="color:red">
-                                                <span className="glyphicon glyphicon-plus"></span>
-                                            </a> */}
-                                        </label>
-                                        <textarea name="Param" type="text" className="form-control form-box requiredField" placeholder="Parameter" required></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <div className="col-lg-6 col-md-6 col-sm-6 col-xs-12" ng-show="addCampaignRecord.couponTypeObj.selected.value=='CouponAll'">
-                                    <div className="form-group">
-                                        <label className="control-label val-span">Validation&nbsp;
-                                    {/* <a ng-show="addCampaignRecord.couponTypeObj.selected.value=='CouponAll'" ng-click="addCampaignRecord.generateGenericParameter()"
-                                                style="color:red">
-                                                <span className="glyphicon glyphicon-plus"></span>
-                                            </a> */}
-                                        </label>
-                                        <textarea name="Param" type="text" className="form-control form-box requiredField" placeholder="Validation"></textarea>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div >
-                    </div >
-                </div >
-            </div >
-            <div className="modal-footer ">
-                <div className="col-md-6 text-left">
-                    <small>
-                        Create New Campaign.
-                    </small>
+        <Form role="form" name="genericForm" >
+            <div className="form-row">
+                <div className="form-group col-6">
+                    <label>Campaign Name</label>
+                    <input ng-model="addCampaignRecord.formContent.name" name="Camp" type="text" className="form-control form-box requiredField" placeholder="Name" required />
                 </div>
-                <div className="col-md-6">
-                    <button className="btn btn-default" ng-click="addCampaignRecord.close()">Cancel</button>
-                    <button className="btn btn-success" ng-disabled="campaignForm.$invalid" ng-click="addCampaignRecord.addCamp()">
+                <div className="form-group col-6">
+                    <label className="control-label val-span">Description</label>
+                    <textarea ng-model="addCampaignRecord.formContent.description" name="Description" type="text" className="form-control form-box requredField" placeholder="Description" required></textarea>
+                </div>
+                <div className="form-group col-6">
+                    <label className="control-label">Pickup Time</label>
+                    <div className="input-group date-field">
+                        <div>
+                            <DatePicker placeholder={`Enter Pickup Time`} timePicker={true} name="Pickup time" onChange={props.setFieldValue} value={values.pickup_time} />
+                            {/* <daterange-picker required="true" placeholder="Select Range" ng-model="addCampaignRecord.pick_drop_range" min-date="addCampaignRecord.pickup_time"></daterange-picker> */}
+                        </div>
+                    </div>
+                </div>
+                <div className="form-group col-6">
+                    <label className="control-label">Drop Time</label>
+                    <div className="input-group date-field">
+                        <div>
+                            <DatePicker placeholder={`Enter Drop Time`} timePicker={true} name="Drop time" onChange={props.setFieldValue} value={values.drop_time} />
+                            {/* <daterange-picker required="true" placeholder="Select Range" ng-model="addCampaignRecord.start_end_range" min-date="addCampaignRecord.start_time"></daterange-picker> */}
+                        </div>
+                    </div>
+                </div>
+                <div className="form-group col-6">
+                    <label className="control-label">Start Time</label>
+                    <div className="input-group date-field">
+                        <div>
+                            <DatePicker placeholder={`Enter Pickup Time`} timePicker={true} name="Pickup time" onChange={props.setFieldValue} value={values.start_time} />
+                            {/* <daterange-picker required="true" placeholder="Select Range" ng-model="addCampaignRecord.pick_drop_range" min-date="addCampaignRecord.pickup_time"></daterange-picker> */}
+                        </div>
+                    </div>
+                </div>
+                <div className="form-group col-6">
+                    <label className="control-label">End Time</label>
+                    <div className="input-group date-field">
+                        <div>
+                            <DatePicker placeholder={`Enter Drop Time`} timePicker={true} name="Drop time" onChange={props.setFieldValue} value={values.end_time} />
+                            {/* <daterange-picker required="true" placeholder="Select Range" ng-model="addCampaignRecord.start_end_range" min-date="addCampaignRecord.start_time"></daterange-picker> */}
+                        </div>
+                    </div>
+                </div>
+                <div className="form-group col-6">
+                    <label className="label-color val-span">Active</label>
+                    <Field
+                        name={values.active}
+                        render={({ field /* _form */ }) => (
+                            <div className="button-group">
+                                <button className={`btn btn-sm btn-${values.active ? `success` : `default`}`}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        FormUtils.OnChangeListener({ values, value: true });
+                                        props.setFieldValue(values.active, true);
+                                    }
+                                    }>True</button>
+
+                                &nbsp;&nbsp;
+
+                                    <button className={`btn btn-sm btn-${values.active ? "default" : "danger"}`}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        FormUtils.OnChangeListener({ values, value: false });
+                                        props.setFieldValue(values.active, false);
+                                    }
+                                    }>False</button>
+                            </div>
+                        )}
+                    />
+
+                </div>
+                <div className="form-group col-6">
+                    <label className="label-color val-span">Reusable</label>
+                    <Field
+                        name={values.reusable}
+                        render={({ field /* _form */ }) => (
+                            <div className="button-group">
+                                <button className={`btn btn-sm btn-${values.reusable ? `success` : `default`}`}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        FormUtils.OnChangeListener({ values, value: true });
+                                        props.setFieldValue(values.reusable, true);
+                                    }
+                                    }>True</button>
+
+                                &nbsp;&nbsp;
+
+                                    <button className={`btn btn-sm btn-${values.reusable ? "default" : "danger"}`}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        FormUtils.OnChangeListener({ values, value: false });
+                                        props.setFieldValue(values.reusable, false);
+                                    }
+                                    }>False</button>
+                            </div>
+                        )}
+                    />
+
+                </div>
+                <div className="form-group col-6">
+                    <label className="label-color val-span">Cashback</label>
+                    <Field
+                        name={values.cashback}
+                        render={({ field /* _form */ }) => (
+                            <div className="button-group">
+                                <button className={`btn btn-sm btn-${values.cashback ? `success` : `default`}`}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        FormUtils.OnChangeListener({ values, value: true });
+                                        props.setFieldValue(values.cashback, true);
+                                    }
+                                    }>True</button>
+
+                                &nbsp;&nbsp;
+
+                                    <button className={`btn btn-sm btn-${values.cashback ? "default" : "danger"}`}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        FormUtils.OnChangeListener({ values, value: false });
+                                        props.setFieldValue(values.cashback, false);
+                                    }
+                                    }>False</button>
+                            </div>
+                        )}
+                    />
+
+                </div>
+                <div className="form-group col-6">
+                    <label className="label-color val-span">Peak Applicable</label>
+                    <Field
+                        name={values.peak_applicable}
+                        render={({ field /* _form */ }) => (
+                            <div className="button-group">
+                                <button className={`btn btn-sm btn-${values.peak_applicable ? `success` : `default`}`}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        FormUtils.OnChangeListener({ values, value: true });
+                                        props.setFieldValue(values.peak_applicable, true);
+                                    }
+                                    }>True</button>
+
+                                &nbsp;&nbsp;
+
+                                    <button className={`btn btn-sm btn-${values.peak_applicable ? "default" : "danger"}`}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        FormUtils.OnChangeListener({ values, value: false });
+                                        props.setFieldValue(values.peak_applicable, false);
+                                    }
+                                    }>False</button>
+                            </div>
+                        )}
+                    />
+
+                </div>
+                <div className="form-group col-6">
+                    <label>Coupon Type</label>
+                    <Field
+                        name='object_name'
+                        render={() => (
+                            <SelectBox valueKey="name" field="name" onChange={(selected) => { setFieldValue('object_name', selected.value) }} value={values.object_name} options={props.couponList} />
+                        )}
+                    />
+                </div>
+                <div className="form-group col-6">
+                    <label className="control-label val-span">Parameter</label>
+                    <textarea name="Param" type="text" className="form-control form-box requiredField" placeholder="Parameter" required></textarea>
+                </div>
+                <div className="form-group col-6">
+                    <label className="control-label val-span">Validation</label>
+                    <textarea name="Param" type="text" className="form-control form-box requiredField" placeholder="Validation"></textarea>
+                </div>
+            </div>
+            <div className="modal-footer">
+                <div className="modal-actions row justify-content-end">
+
+                    {/* <button className="btn btn-warning" onClick={handleReset}>
+                        Reset
+                    </button> */}
+
+                    {/* <button className="btn btn-primary">
+                        Cancel
+                    </button> */}
+
+                    <button className="btn btn-success" disabled={isSubmitting} type="submit">
                         Submit
                     </button>
                 </div>
             </div>
-
-
-
-
-
-
-
-            {/* <div className="form-group">
-                <label>Coupon Type</label>
-                <Field
-                    name='object_name'
-                    render={() => (
-                        <SelectBox valueKey="name" field="name" onChange={(selected) => { setFieldValue('object_name', selected.value) }} value={values.object_name} options={props.couponList} />
-                    )}
-                />
-            </div>
-            <div className="form-group">
-                <div className="margin-top-5" id="buttonWidth">
-                    <button className="btn btn-primary pull-right button-blue" type="submit" disabled={isSubmitting}>
-                        Save Changes
-                    </button>
-                </div>
-            </div> */}
-        </form >
+        </Form>
     )
 }
 
@@ -218,7 +227,12 @@ const CampaignForm = withFormik({
         const { campaignData } = props;
 
         return {
-            object_name: campaignData.object_name ? campaignData.object_name : ''
+            object_name: campaignData.object_name ? campaignData.object_name : '',
+            cashback: campaignData.cashback ? campaignData.cashback : '',
+            pickup_time: campaignData.pickup_time ? campaignData.pickup_time : '',
+            drop_time: campaignData.drop_time ? campaignData.drop_time : '',
+            start_time: campaignData.start_time ? campaignData.start_time : '',
+            end_time: campaignData.end_time ? campaignData.end_time : ''
         }
 
     },
@@ -267,10 +281,14 @@ const CampaignForm = withFormik({
         }
     ) => {
         const result = await Put({
-            url: 'userLicense/' + props.rejectdData.licenseIndex,
+            url: 'campaign',
             body: {
-                approved: values.approved,
-                rejection_reason: values.rejection_reason
+                cashback: values.cashback,
+                object_name: values.object_name,
+                pickup_time: values.pickup_time,
+                drop_time: values.drop_time,
+                start_time: values.start_time,
+                end_time: values.end_time
             }
         });
 
