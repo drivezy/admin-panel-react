@@ -4,6 +4,7 @@ import { Post} from 'common-js-util';
 
 import { TotalDuration } from './../../../../../Utils/booking.utils';
 import { ModalManager } from 'drivezy-web-utils/build/Utils';
+import { RECORD_URL } from './../../../../../Constants/global.constants';
 
 export default class EndRideConfirm extends Component {
 
@@ -16,12 +17,18 @@ export default class EndRideConfirm extends Component {
             flattenReviewData: []
         }
     }
-
+    /**
+     * Flat review data
+     */
     componentDidMount() {
         const { reviewdata } = this.state;
         this.flattenData(reviewdata);
     }
-
+    
+    /**
+     * data from endRide component
+     * @param  {object} reviewdata
+     */
     flattenData = (reviewdata) => {
         function dive(currentKey, into, target) {
             for (var i in into) {
@@ -51,7 +58,9 @@ export default class EndRideConfirm extends Component {
         var flattened = (flatten(reviewdata));
         this.setState({ flattenReviewData: flattened });
     }
-
+    /**
+     * Call endRide to Post data and close modal
+     */
     endRide = async() => {
             const { endRideInfo } = this.state;
             const result = await Post({
@@ -78,22 +87,17 @@ export default class EndRideConfirm extends Component {
                     start_fuel_percentage : endRideInfo.start_fuel_percentage,
                     start_addons : endRideInfo.start_addons
                 },
-                urlPrefix: 'https://api.justride.in/api/admin/'
+                urlPrefix: RECORD_URL
             });
             if (result.success) {
-                ModalManager.closeModal();
                 ModalManager.closeModal();
             }
             
         }
 
-    componentWillUnmount(){
-        ModalManager.closeModal();
-    }
-
     render() {
         let amount = 0;
-        const { endRideInfo = {}, flattenReviewData, payableAmount } = this.state;
+        const { endRideInfo = {}, flattenReviewData } = this.state;
 
         let duration = TotalDuration(endRideInfo.endTime, endRideInfo.pickup_time);
         return (

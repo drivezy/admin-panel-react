@@ -2,13 +2,7 @@ import React from 'react';
 import './addonUpdate.component.css';
 import { Get } from 'common-js-util';
 import { IsObjectHaveKeys } from 'common-js-util/build/common.utils';
-
-let helmet = 0;
-let endhelmet = 0;
-let aux = 0;
-let endaux = 0;
-let seater = 0;
-let endseater = 0;
+import { RECORD_URL } from './../../Constants/global.constants';
 
 export default class AddonUpdate extends React.Component {
     constructor(props) {
@@ -28,19 +22,29 @@ export default class AddonUpdate extends React.Component {
         this.getAddons(rideData);
     }
 
+    /**
+     * fetch Addons according to vehicle booked
+     * @param  {object} rideData
+     */
     getAddons = async (rideData) => {
         if (rideData.is_bike == 1) {
             var url = 'accessoryAddon?query=active=1 and bike_only=0';
         } else {
             url = 'accessoryAddon?query=active=1 and bike_only=1';
         }
-        const result = await Get({ url: url, urlPrefix: 'https://api.justride.in/api/admin/' });
+        const result = await Get({ url: url, urlPrefix: RECORD_URL });
         if (result.success) {
             this.setState({ addOns: result.response });
         }
 
     }
 
+    /**
+     * 1 for adding addon 0 for removing addon
+     * @param  {int} quantity
+     * addon details when add or subtract is clicked
+     * @param  {object} addOn
+     */
     updateStartAddons = (quantity, addOn) => {
         const { startAddons = [], rideData } = this.state;
         const addons = {
@@ -72,6 +76,12 @@ export default class AddonUpdate extends React.Component {
         this.setState({ rideData });
     }
 
+    /**
+     * 1 for adding addon 0 for removing addon
+     * @param  {int} quantity
+     * addon details when add or subtract is clicked
+     * @param  {object} addOn
+     */
     updateEndAddons = (quantity, addOn) => {
         const { endAddons, rideData } = this.state;
         const addons = {
