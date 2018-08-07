@@ -9,6 +9,10 @@ import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
 import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 
 import TableWrapper from './../../Components/Table-Wrapper/tableWrapper.component';
+import CustomAction from './../../Components/Custom-Action/CustomAction.component';
+
+import { GetPreSelectedMethods, RegisterMethod, GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
+import { SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent } from 'state-manager-utility';
 
 export default class ExpenseVoucherDetail extends Component {
 
@@ -16,6 +20,7 @@ export default class ExpenseVoucherDetail extends Component {
         super(props);
         this.state = {
             voucherDetail: {},
+            menuDetail: {}
         };
     }
 
@@ -24,7 +29,7 @@ export default class ExpenseVoucherDetail extends Component {
     }
 
     getVoucherDetail = async () => {
-        const { voucherId } = this.props.match.params;
+        const voucherId = this.props.match.params.id;
         const url = 'expenseVoucher/' + voucherId + '?includes=head,comments.created_user,tags,receipts.created_user,receipts.type,cash.created_user,cheque.created_user,imps.created_user,details,status,payee,vendor,authorized_by,unauthorized_by,invoices.created_user,invoices.tds_type,city,venue'
         const result = await Get({ url });
 
@@ -32,6 +37,7 @@ export default class ExpenseVoucherDetail extends Component {
             const voucherDetail = result.response;
             this.setState({ voucherDetail });
         }
+        this.getMenuData();
     }
 
     refresh = () => {
@@ -115,17 +121,52 @@ export default class ExpenseVoucherDetail extends Component {
         ConfirmUtils.confirmModal({ message: "Are you sure you want to unauthorize this expense?", callback: method });
     }
 
+    getMenuData = async () => {
+        const { menuId } = this.props;
+
+        const result = await GetMenuDetail(menuId);
+        console.log(result);
+        if (result.success) {
+            const { response = {} } = result;
+            const menuDetail = ConvertMenuDetailForGenericPage(response || {});
+            this.state.menuDetail = menuDetail;
+            this.setState({ menuDetail });
+        StoreEvent({ eventName: 'rightClickData', data: { menuData: menuDetail } });
+        }
+    }
+
+    refreshPage(event) {
+        event.preventDefault();
+        this.getVoucherDetail();
+    }
+
     render() {
-        const { voucherDetail = {} } = this.state;
-        console.log(voucherDetail);
+        const { history } = this.props;
+        const { voucherDetail = {}, menuDetail } = this.state;
+        console.log(menuDetail)
+        const genericDataForCustomColumn = {
+            formPreference: {},
+            formPreferences: [],
+            starter: 'expense',
+            columns: {},
+            url: menuDetail.url ? menuDetail.url.split("/:")[0] : '',
+            model: { name: 'expense' },
+            modelId: null,
+            methods: RegisterMethod(menuDetail.uiActions),// genericutils 
+            preDefinedmethods: GetPreSelectedMethods(), // genericutils
+            modelHash: null
+        };
+
         return (
             <div className="expense-voucher-detail">
+
                 {
                     voucherDetail.id &&
                     <div className="expense-voucher">
                         <div className="expense-voucher-header">
                             <div className="header-content">
                                 <h6>Expense Voucher Detail</h6>
+                                <CustomAction menuDetail={menuDetail} genericData={genericDataForCustomColumn} history={history} actions={menuDetail.uiActions} listingRow={voucherDetail} placement={'as_dropdown'} callback={this.getVoucherDetail} />
                                 <button type="button" className="btn btn-sm btn-primary" uib-tooltip="Refresh Content" onClick={() => { this.refresh() }} >
                                     <i className="fa fa-refresh"></i>
                                 </button>
