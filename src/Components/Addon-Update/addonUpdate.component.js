@@ -136,19 +136,33 @@ export default class AddonUpdate extends React.Component {
                                                 </div>
                                                 <div className="col-sm-3 no-padding-right no-padding-left">
                                                     <div className="btn-group">
+                                                        {/* updateStartAddons to update start ride addons
+                                                            Pass 0 for subtracting one add-on and 
+                                                            Pass 1 for adding one add-on
+                                                        */}
                                                         <button type="button" className="btn btn-sm btn-danger" onClick={(e) => this.updateStartAddons(0, addon)}>-</button>
+                                                        {/* 
+                                                            Display Addon Quantity
+                                                        */}
                                                         <button type="button" className="btn btn-default">
                                                             {
                                                                 Array.isArray(startAddons) && startAddons.length ?
-                                                                (startAddons.map((addOn, key) => (
-                                                                    (addOn.id == addon.id) ? (addOn.quantity || 0) : null)))
-                                                                :
-                                                                0
+                                                                    (startAddons.map((addOn, key) => (
+                                                                        (addOn.id == addon.id) ? (addOn.quantity || 0) : null)))
+                                                                    :
+                                                                    0
                                                             }
                                                         </button>
+                                                        {/* updateStartAddons to update start ride addons
+                                                            Pass 0 for subtracting one add-on and 
+                                                            Pass 1 for adding one add-on
+                                                        */}
                                                         <button type="button" className="btn btn-sm btn-primary" onClick={(e) => this.updateStartAddons(1, addon)}>+</button>
                                                     </div>
                                                 </div>
+                                                {/* 
+                                                    Display Addon Total Price
+                                                */}
                                                 <div className="col-sm-3">
                                                     Rs. {
                                                         // Array.isArray(startAddons) & startAddons.length ?
@@ -185,19 +199,33 @@ export default class AddonUpdate extends React.Component {
                                                     </div>
                                                     <div className="col-sm-3 no-padding-right no-padding-left">
                                                         <div className="btn-group">
+                                                            {/* updateStartAddons to update start ride addons
+                                                            Pass 0 for subtracting one add-on and 
+                                                            Pass 1 for adding one add-on
+                                                        */}
                                                             <button type="button" className="btn btn-sm btn-danger" onClick={(e) => this.updateStartAddons(0, addon)}>-</button>
+                                                            {/* 
+                                                            Display Addon Quantity
+                                                        */}
                                                             <button type="button" className="btn btn-default">
                                                                 {
                                                                     Array.isArray(startAddons) && startAddons.length ?
-                                                                    (startAddons.map((addOn, key) => (
-                                                                        (addOn.id == addon.id) ? (addOn.quantity || 0) : null)))
-                                                                    :
-                                                                    0
+                                                                        (startAddons.map((addOn, key) => (
+                                                                            (addOn.id == addon.id) ? (addOn.quantity || 0) : null)))
+                                                                        :
+                                                                        0
                                                                 }
                                                             </button>
+                                                            {/* updateStartAddons to update start ride addons
+                                                            Pass 0 for subtracting one add-on and 
+                                                            Pass 1 for adding one add-on
+                                                        */}
                                                             <button type="button" className="btn btn-sm btn-primary" onClick={(e) => this.updateStartAddons(1, addon)}>+</button>
                                                         </div>
                                                     </div>
+                                                    {/* 
+                                                            Display Addon Total Price
+                                                        */}
                                                     <div className="col-sm-3">
                                                         Rs. {
                                                             // Array.isArray(startAddons) & startAddons.length ?
@@ -231,26 +259,40 @@ export default class AddonUpdate extends React.Component {
                                                     </div>
                                                     <div className="col-sm-3 no-padding-right no-padding-left">
                                                         <div className="btn-group">
+                                                            {/* updateStartAddons to update start ride addons
+                                                            Pass 0 for subtracting one add-on and 
+                                                            Pass 1 for adding one add-on
+                                                        */}
                                                             <button type="button" className="btn btn-sm btn-danger" onClick={(e) => this.updateEndAddons(0, addon)}>-</button>
+                                                            {/* 
+                                                            Display Addon Quantity
+                                                        */}
                                                             <button type="button" className="btn btn-default">
                                                                 {
                                                                     Array.isArray(startAddons) && startAddons.length ?
-                                                                    (endAddons.map((addOn, key) => (
-                                                                        (addOn.id == addon.id) ? (addOn.quantity || 0) : null)))
-                                                                    :
-                                                                    0
+                                                                        (endAddons.map((addOn, key) => (
+                                                                            (addOn.id == addon.id) ? (addOn.quantity || 0) : null)))
+                                                                        :
+                                                                        0
                                                                 }
                                                             </button>
+                                                            {/* updateStartAddons to update start ride addons
+                                                            Pass 0 for subtracting one add-on and 
+                                                            Pass 1 for adding one add-on
+                                                        */}
                                                             <button type="button" className="btn btn-sm btn-primary" onClick={(e) => this.updateEndAddons(1, addon)}>+</button>
                                                         </div>
                                                     </div>
+                                                    {/* 
+                                                            Display Addon Total Price
+                                                        */}
                                                     <div className="col-sm-3">
                                                         Rs. {
                                                             Array.isArray(endAddons) && endAddons.length ?
-                                                            (endAddons.map((addOn, key) => (
-                                                                (addOn.id == addon.id) ? (addOn.quantity * addon.fixed_cost || 0) : null)))
-                                                            :
-                                                            0
+                                                                (endAddons.map((addOn, key) => (
+                                                                    (addOn.id == addon.id) ? (addOn.quantity * addon.fixed_cost || 0) : null)))
+                                                                :
+                                                                0
                                                         }
                                                     </div>
                                                 </div>
