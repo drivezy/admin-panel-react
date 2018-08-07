@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import UserCard from './../../../../User-Card/userCard.component';
+
 import { ModalManager } from 'drivezy-web-utils/build/Utils';
 import AddonUpdate from './../../../../Addon-Update/addonUpdate.component';
 import { Post } from 'common-js-util';
-
 import './startRide.component.css';
 
 export default class StartRide extends Component {

@@ -21,7 +21,7 @@ export default class SummaryCard extends Component {
         };
     }
 
-    componentDidMount(){
+    componentDidMount() {
         const { bookingData } = this.state;
         this.getBookingData(bookingData);
     }
@@ -62,6 +62,7 @@ export default class SummaryCard extends Component {
 
     render() {
         const { bookingData = {} } = this.state;
+        const status = bookingData.status || {};
 
         return (
             <Card className="summary-card">
@@ -84,7 +85,7 @@ export default class SummaryCard extends Component {
                         </div>
 
                         {
-                            (bookingData.status.id == 5 || bookingData.status.id == 6) ?
+                            (status.id == 5 || status.id == 6) ?
 
                                 <div className="class">
 
@@ -101,7 +102,7 @@ export default class SummaryCard extends Component {
                         }
 
                         {
-                            (bookingData.status.id == 7 || bookingData.status.id == 8) ?
+                            (status.id == 7 || status.id == 8) ?
 
                                 <div className="class">
 
@@ -118,7 +119,7 @@ export default class SummaryCard extends Component {
                         }
 
                         {
-                            (bookingData && bookingData.type.id != 580 && amountDue < 0 && bookingData.status.id != 5 && bookingData.status.id != 6) &&
+                            (bookingData && bookingData.type.id != 580 && amountDue < 0 && status.id != 5 && status.id != 6) &&
 
                             <div className="class">
 
@@ -141,7 +142,7 @@ export default class SummaryCard extends Component {
 
 
                         {
-                            (bookingData && amountDue > 0 && bookingData.status.id != 5 && bookingData.status.id != 6) &&
+                            (bookingData && amountDue > 0 && status.id != 5 && status.id != 6) &&
 
                             <div className="class">
 
@@ -172,11 +173,11 @@ export default class SummaryCard extends Component {
                                     {
                                         Object.keys(bookingData.pricing_object).map(key => {
                                             const pricing = bookingData.pricing_object[key];
-                                            key = key.replace( /_/g, " ");
+                                            key = key.replace(/_/g, " ");
                                             if (key == 'city') {
                                                 return;
                                             }
-                                            else if (key == 'peak'){
+                                            else if (key == 'peak') {
                                                 return (
                                                     <Row className="card-object" key={key}>
                                                         <Col className="item">{key}</Col>
@@ -184,7 +185,7 @@ export default class SummaryCard extends Component {
                                                     </Row>
                                                 )
                                             }
-                                            else{
+                                            else {
                                                 return (
                                                     <Row className="card-object" key={key}>
                                                         <Col className="item">{key}</Col>

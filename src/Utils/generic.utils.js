@@ -348,12 +348,12 @@ export function GetPreSelectedMethods() {
     let menuDictionary = null;
     let menuColumns = null;
 
-    methods.preferenceSetting = (preference, preferenceObj) => {
-        ModalManager.openModal({
-            headerText: "Edit " + preferenceObj.name + " Preference",
-            modalBody: () => (<PreferenceSetting listing={preference} preferenceObj={preferenceObj}></PreferenceSetting>)
-        })
-    }
+    // methods.preferenceSetting = (preference, preferenceObj) => {
+    //     ModalManager.openModal({
+    //         headerText: "Edit " + preferenceObj.name + " Preference",
+    //         modalBody: () => (<PreferenceSetting listing={preference} preferenceObj={preferenceObj}></PreferenceSetting>)
+    //     })
+    // }
 
 
     methods.redirectGeneric = ({ action, listingRow, history, genericData }) => {
