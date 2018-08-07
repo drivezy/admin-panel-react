@@ -27,6 +27,7 @@ export default class BookingPreRide extends Component {
         let bookingDropDate = BookingDropDate(bookingPreRideData.drop_time);
         let bookingDropTime = BookingDropTime(bookingPreRideData.drop_time);
         let duration = TotalDuration(bookingPreRideData.drop_time, bookingPreRideData.pickup_time);
+        let theClassName;
         if (bookingPreRideData.status) {
             theClassName = RideStatus(bookingPreRideData.status.id);
         }

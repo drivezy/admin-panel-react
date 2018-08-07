@@ -96,8 +96,9 @@ export default class StartRide extends Component {
                     </div>
                 </div>
                 <div className="cancel-and-submit">
-                    <button className="cancel" onClick={() => { this.onCancel() }}>Cancel</button>
-                    <button className="submit" onClick={() => { this.onSubmit(this.state.startOdo, this.state.startFuel, this.state.alternateNumber, this.state.comment, this.state.pickupTime) }}>Submit</button>
+                    <button className="cancel btn btn-warning" onClick={() => { this.onCancel() }}>Cancel</button>
+                    &nbsp;
+                    <button className="submit btn btn-success" onClick={() => { this.onSubmit(this.state.startOdo, this.state.startFuel, this.state.alternateNumber, this.state.comment, this.state.pickupTime) }}>Submit</button>
                 </div>
             </div>
         )
