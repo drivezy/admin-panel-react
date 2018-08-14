@@ -103,7 +103,7 @@ export default class CustomAction extends Component {
         const { actions = [] } = this.props;
 
         const filteredUserFilter = actions.filter(action => action.name.toLowerCase().includes(searchText.toLowerCase()));
-        this.setState({ searchText, filteredUserFilter });
+        this.setState({ searchText: target.value, filteredUserFilter });
     }
 
     render() {
