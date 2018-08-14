@@ -40,6 +40,9 @@ export default class ChangeVehicle extends Component {
         this.getCityCars();
     }
 
+    /**
+     * Method to get cars for particular city id
+     */
     getCityCars = async () => {
         const { bookingData } = this.state;
         const result = await Get({
@@ -50,7 +53,9 @@ export default class ChangeVehicle extends Component {
             this.setState({ cityCars: result.response.car });
         }
     }
-
+    /**
+     * Open Confirmation Modal and change vehicle for Booking ID
+     */
     confirmChange = () => {
         const { bookingData, car_id, new_fuel, old_fuel, reason, start_date, reason_id, registration_id, new_odo, old_odo} = this.state;
         let between_booking = (bookingData.status.id == 6) ? true : false;

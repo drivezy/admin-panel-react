@@ -29,6 +29,10 @@ export default class ChangeVehicle extends Component {
         this.getVenues();
     }
 
+    /**
+     * To get cars for particular city_id
+     * @param  {number} limit
+     */
     getCars = async (limit) => {
         const option = {
             id: 0,
@@ -45,7 +49,9 @@ export default class ChangeVehicle extends Component {
             return result.response;
         }
     }
-
+    /**
+     * To get venues for particular city id
+     */
     getVenues = async () => {
         const option = {
             id: 0,
@@ -62,6 +68,10 @@ export default class ChangeVehicle extends Component {
         }
     }
 
+    /**
+     * Method to get cars and reasons for vehicle change,
+     * Open Vehicle change modal with 'manual' equal to TRUE
+     */
     manuallyChange = async () => {
         let carsList = await this.getCars(200);
         const { bookingData } = this.state;
@@ -77,20 +87,24 @@ export default class ChangeVehicle extends Component {
         }
     }
 
+    /**
+     * Method to get reasons for vehicle change,
+     * Open Vehicle change modal with 'manual' equal to FALSE
+     */
     vehicleChange = async (vehicle) => {
-        let carsList = await this.getCars(200);
         const { bookingData } = this.state;
-        console.log(vehicle)
         const result = await Get({
             url: `lookupType/22?includes=values`,
             urlPrefix: API_HOST
         });
         ModalManager.openModal({
             headerText: "CHANGE VEHICLE",
-            modalBody: () => (<ManualVehicleChange cars={carsList} reasons={result.response.values} bookingData={bookingData} manual={false} vehicle={vehicle}/>)
+            modalBody: () => (<ManualVehicleChange reasons={result.response.values} bookingData={bookingData} manual={false} vehicle={vehicle}/>)
         })
     }
-
+    /**
+     * Function to get Vehicles for Selected CAR and VENUE
+     */
     getVehicles = async () => {
         const { car_id, venue_id, bookingData } = this.state;
         const body = {};
