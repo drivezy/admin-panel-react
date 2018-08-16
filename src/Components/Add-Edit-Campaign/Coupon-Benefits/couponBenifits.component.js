@@ -3,7 +3,7 @@ import './couponBenifits.component.css';
 import { withFormik } from "formik";
 
 // import { ArrayToObject, Get, Post, SelectFromOptions } from 'common-js-util';
-import { ModalManager } from "drivezy-web-utils/build/Utils";
+import {ToastNotifications, ModalManager } from "drivezy-web-utils/build/Utils";
 
 
 
@@ -39,11 +39,25 @@ export default class CouponBenefits extends Component {
         };
   }
 
+  cancel = () => {
+    ModalManager.closeModal();
+  }
+
+//   submit = async () => {
+//     let url = "serialiseData";
+//     const result = await Post({ url: url, body: this.state.formContent })
+//     if (result.success) {
+//       this.props.setParameter(result.response);
+//       ToastNotifications.success({ title: "Coupon benefits added successfully!" });
+//       ModalManager.closeModal();
+//     }
+//   }
+
   componentDidMount(){
     this.couponPricing();
   }
     couponPricing = async () => {
-       const result = await Get('couponPricing');
+       const result = await Get({url: 'couponPricing'});
        if(result.success){
             this.setState({pricingData: result.response})
        }
@@ -73,12 +87,18 @@ export default class CouponBenefits extends Component {
   }
 
   submit = () => {
+      let params = {};
+      if(this.state.currentIndex){
+        params[this.state.formData[this.state.currentIndex].label] = this.state.formData[this.state.currentIndex].custom_input;
+      }else{
+        params = { pricing_id: this.state.customCurrentIndex, custom_param: this.state.pricingData[this.state.currentIndex].custom_input };
+      }
     ModalManager.closeModal();
   }
 
 
   render() {
-     const  {formContent, formData, pricingData, currentIndex} = this.state;
+     const  {formContent, formData, pricingData, currentIndex, customCurrentIndex} = this.state;
     return (
      <div className="coupon-benefits">
             <div className="default-calumn">
@@ -107,13 +127,13 @@ export default class CouponBenefits extends Component {
                                     formData.map((item, key) =>{
                                         return(<tr key={key}>
                                                 <td>
-                                                    <input type="radio"  value={item.label} onClick={() => this.setState({currentIndex: key}) } checked={key==currentIndex}/>
+                                                    <input type="radio" value={item.label} onClick={() => {this.setState({customCurrentIndex: null});this.setState({currentIndex: key})}} checked={key==currentIndex}/>
                                                 </td>
                                                 <td>
                                                     {item.label}
                                                 </td>
                                                 <td>
-                                                    <input className="form-control" value={item.input} type="text" />
+                                                    <input className="form-control" onChange={(e) => {item.custom_input=e.target.value; this.setState({item})}} disabled={key!=currentIndex} value={item.custom_input} type="text" />
                                                 </td>
                                             </tr>)
                                     })
@@ -149,10 +169,10 @@ export default class CouponBenefits extends Component {
                             </thead>
                             <tbody className="roboto-regular font-12">
                                 {
-                                    formData.map((item, key) =>{
+                                    pricingData.map((item, key) =>{
                                         return (<tr key={key}>
                                             <td>
-                                                <input type="radio" value={item.id} />
+                                                <input type="radio" value={item.id} onClick={() => {this.setState({customCurrentIndex: key});this.setState({currentIndex: null})} } checked={key==customCurrentIndex}/>
                                             </td>
                                             <td>
                                                 {item.name}
@@ -161,7 +181,7 @@ export default class CouponBenefits extends Component {
                                                 {item.description}
                                             </td>
                                             <td>
-                                                <input className="form-control" type="text" />
+                                                <input className="form-control" onChange={(e) => {item.custom_input=e.target.value; this.setState({item})}} disabled={key!=customCurrentIndex} value={item.custom_input} type="text" />
                                             </td>
                                         </tr>)
                                     })

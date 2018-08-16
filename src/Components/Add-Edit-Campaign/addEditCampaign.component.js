@@ -11,10 +11,9 @@ import { GetLookupValues } from './../../Utils/lookup.utils';
 import DatePicker from './../Forms/Components/Date-Picker/datePicker';
 import GenerateParameter from './Generate-Parameter/generateParameter.component';
 import CouponBenefits from './Coupon-Benefits/couponBenifits.component';
+import GenerateGenericParameter from './Generate-Generic-Parameter/GenerateGenericParameter.component';
 
-var boolArray = [{value: true, label: 'Yes'},{value: false, label: 'No'}];
-
-var temp = [{ name:"Coupon3HourOffCampaign", id:'12', value:"Coupon3HourOffCampaign"},{ name:"Coupon3HourOffCampaign", id:'12', value:"Coupon3HourOffCampaign"}]
+var boolArray = [{ value: true, label: 'Yes' }, { value: false, label: 'No' }];
 
 // Our inner form component which receives our form's state and updater methods as props
 const InnerForm = props => {
@@ -27,7 +26,10 @@ const InnerForm = props => {
         formContent,
         couponList,
         openCouponBenefitsModal,
-        openGenerateParameterModal
+        openGenerateParameterModal,
+        openGenerateGenericParameterModal,
+        couponChange,
+        couponType
     } = props;
 
     return (
@@ -109,23 +111,42 @@ const InnerForm = props => {
                     <Field
                         name='coupon_type'
                         render={({ field /* _form */ }) => (
-                            <SelectBox valueKey="value" label="name" field="label" name='coupon_type' placeholder={'coupon_type'} onChange={(selected) => { setFieldValue('coupon_type', selected ? selected.value : null) }} value={values.gender} options={temp} />
+                            <SelectBox valueKey="value" label="name" field="label" name='coupon_type' placeholder={'coupon_type'}
+                                onChange={(selected) => {
+                                    couponChange(selected.value);
+                                    setFieldValue('coupon_type', selected ? selected.value : null)
+                                }}
+                                value={formContent.coupon_type} options={couponList} />
                         )}
                     />
+                    {formContent.coupon_type}
                 </div>
                 <div className="form-group col-6">
                     <label className="control-label val-span">Parameter
                         {
-                            
-                            <i className="fa fa-plus" onClick={()=> openGenerateParameterModal()} ></i>
+                            couponType == "CouponGeneric" &&
+                            <i className="fa fa-plus" onClick={() => openGenerateParameterModal()} ></i>
+                        }
+                        {
+                            couponType == "CouponAll" &&
+                            <i className="fa fa-plus" onClick={() => openCouponBenefitsModal() } ></i>
                         }
                     </label>
-                    <textarea name="Param" type="text" className="form-control form-box requiredField" placeholder="Parameter" required></textarea>
+                    <textarea name="Param" type="text" className="form-control form-box requiredField" placeholder="Parameter" value={formContent.parameters} required></textarea>
                 </div>
+
+                {
+                 couponType == "CouponAll" &&
                 <div className="form-group col-6">
-                    <label className="control-label val-span">Validation <i className="fa fa-plus" onClick={()=> openCouponBenefitsModal()}></i> </label>
+                    <label className="control-label val-span">Validation
+                 
+                            <i className="fa fa-plus" onClick={() => openGenerateGenericParameterModal()}></i>
+                        
+                    </label>
                     <textarea name="Param" type="text" className="form-control form-box requiredField" placeholder="Validation"></textarea>
                 </div>
+                }
+
             </div>
             <div className="modal-footer">
                 <div className="modal-actions row justify-content-end">
@@ -167,7 +188,7 @@ const CampaignForm = withFormik({
         }
 
     },
-   
+
     // Submission handler
     handleSubmit: async (
         values,
@@ -202,7 +223,8 @@ export default class AddEditCampaign extends Component {
         this.state = {
             campaignData: this.props.data,
             couponList: [],
-            formContent: JSON.parse(JSON.stringify(this.props.data))
+            formContent: JSON.parse(JSON.stringify(this.props.data)),
+            couponType: null
         }
     }
 
@@ -222,7 +244,7 @@ export default class AddEditCampaign extends Component {
     openGenerateParameterModal = () => {
         ModalManager.openModal({
             headerText: "Generate Parameter",
-            modalBody: () => (<GenerateParameter />)
+            modalBody: () => (<GenerateParameter setParameter={this.setParameter} />)
         })
     }
     openCouponBenefitsModal = () => {
@@ -230,6 +252,23 @@ export default class AddEditCampaign extends Component {
             headerText: "Coupon Benefits",
             modalBody: () => (<CouponBenefits />)
         })
+    }
+
+    openGenerateGenericParameterModal = () => {
+        ModalManager.openModal({
+            headerText: "Generate Parameter",
+            modalBody: () => (<GenerateGenericParameter setParameter={this.setParameter} />)
+        })
+    }
+
+    setParameter = (value) => {
+        let {formContent} = this.state;
+        formContent.parameters = value;
+        this.setState({formContent});
+    }
+
+    couponChange = (value) => {
+        this.setState({ couponType: value })
     }
 
     onSubmit = () => {
@@ -244,7 +283,7 @@ export default class AddEditCampaign extends Component {
                 <div>
                     {
                         couponList &&
-                        <CampaignForm onSubmit={this.onSubmit} formContent={formContent} openGenerateParameterModal={this.openGenerateParameterModal} openCouponBenefitsModal={this.openCouponBenefitsModal} campaignData={campaignData} couponList={couponList} />
+                        <CampaignForm onSubmit={this.onSubmit} formContent={formContent} openGenerateParameterModal={this.openGenerateParameterModal} openCouponBenefitsModal={this.openCouponBenefitsModal} openGenerateGenericParameterModal={this.openGenerateGenericParameterModal} campaignData={campaignData} couponList={couponList} couponType={this.state.couponType} couponChange={this.couponChange} />
                     }
                 </div>
             </ModalBody>

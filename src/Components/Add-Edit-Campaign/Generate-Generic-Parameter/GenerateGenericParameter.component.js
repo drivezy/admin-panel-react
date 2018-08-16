@@ -8,7 +8,7 @@ import SelectBox from "./../../../Components/Forms/Components/Select-Box/selectB
 
 const boolArray = [{ value: '0', label: "No" }, { value: '1', label: "Yes" }];
 
-export default class ResetInvoice extends Component {
+export default class GenerateGenericParameter extends Component {
   constructor(props) {
     super(props);
     this.state = {
