@@ -5,6 +5,8 @@ import { withFormik } from "formik";
 
 import { ModalManager } from "drivezy-web-utils/build/Utils";
 
+import { TotalDuration } from './../../../../../Utils/booking.utils';
+
 import CustomTooltip from "../../../../Custom-Tooltip/customTooltip.component";
 
 import AddonUpdate from "./../../../../Addon-Update/addonUpdate.component";
@@ -36,8 +38,7 @@ export default class ResetInvoice extends Component {
       states: [],
       permits: this.props.data && this.props.data.ride_return.permits ? this.props.data.ride_return.permits : [{}],
       walletBalance: 0,
-      permitImageurl: '',
-      dur: (this.props.ride_return.actual_start_time,this.props.pickup_time)
+      permitImageurl: ''
     };
     this.uploadImage.bind(this);
   }
@@ -155,7 +156,8 @@ export default class ResetInvoice extends Component {
 
   render() {
     const {bookingDetail,endRideData,permitObj,countries,states,permits} = this.state;
-    // const bookingDetail = {...this.props.data};
+
+    let Duration = TotalDuration(endRideData.ride_return.actual_end_time, endRideData.ride_return.actual_start_time)
 
     return (
       this.state.endRideData &&
@@ -257,6 +259,8 @@ export default class ResetInvoice extends Component {
                     <DatePicker single={true} format="YYYY-MM-DD HH:mm:00" timePicker={true} placeholder={`Enter start time`} value={this.state.endRideData.ride_return.actual_end_time} />
                   </div>
 
+                  {
+                  (Duration > "5") ?
                   <div className="details">
                     <div className="text-field">Ride is late by </div>
                     <SelectBox
@@ -270,6 +274,8 @@ export default class ResetInvoice extends Component {
                       options={lateByCustomerObj}
                     />
                   </div>
+                  : null
+                  }
 
                   <div className="details">
                     <div className="text-field">

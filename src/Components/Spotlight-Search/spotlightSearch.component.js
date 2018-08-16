@@ -88,6 +88,7 @@ export class Spotlight extends Component {
         else if (event.which == 13){
             this.redirectTo(searchList[searchLength][this.currentIndex]);
         }
+    this.currentIndex = 0;
     }
 
     traverse = (direction) => {
