@@ -1,0 +1,21 @@
+.generate-parameter{
+    .parameters{
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        padding: 15px;
+        .details {
+            width: 50%;
+            padding: 15px;
+            .text-field {
+              margin-bottom: 5px;
+              font-weight: 700 !important;
+              i {
+                padding-left: 10px;
+              }
+            }
+            input {
+            }
+          }
+    }
+}
