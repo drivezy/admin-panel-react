@@ -1,0 +1,28 @@
+.manual-change-modal{
+    background: #eaeaea;
+    padding: 18px;
+    .change-wrapper{
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        .row{
+            margin-bottom: 15px;
+        }
+        .car-select{
+            display: flex;
+            justify-content: space-around;
+        }
+    }
+    .modalfooter{
+        padding: 12px 10px 12px;
+        background: #fff;
+        margin: 20px 0px 0px;
+        border-radius: 5px;
+        .row{
+            align-items: center;
+        }
+        .btns{
+            text-align: right;
+        }
+    }
+}

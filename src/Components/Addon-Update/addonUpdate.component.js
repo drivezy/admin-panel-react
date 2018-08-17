@@ -2,7 +2,7 @@ import React from 'react';
 import './addonUpdate.component.css';
 import { Get } from 'common-js-util';
 import { IsObjectHaveKeys } from 'common-js-util/build/common.utils';
-import { RECORD_URL } from './../../Constants/global.constants';
+import { API_HOST } from './../../Constants/global.constants';
 
 export default class AddonUpdate extends React.Component {
     constructor(props) {
@@ -32,7 +32,7 @@ export default class AddonUpdate extends React.Component {
         } else {
             url = 'accessoryAddon?query=active=1 and bike_only=1';
         }
-        const result = await Get({ url: url, urlPrefix: RECORD_URL });
+        const result = await Get({ url: url, urlPrefix: API_HOST });
         if (result.success) {
             this.setState({ addOns: result.response });
         }
