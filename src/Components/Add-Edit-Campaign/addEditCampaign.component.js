@@ -38,34 +38,34 @@ const InnerForm = props => {
             <div className="form-row">
                 <div className="form-group col-6">
                     <label>Campaign Name</label>
-                    <input value={formContent.name} name="Camp" type="text" className="form-control form-box requiredField" placeholder="Name" required />
+                    <input value={values.name} name="Campaign" type="text" onChange={handleChange} className="form-control form-box requiredField" placeholder="Name" required />
                 </div>
                 <div className="form-group col-6">
                     <label className="control-label val-span">Description</label>
-                    <textarea value={formContent.description} name="Description" type="text" className="form-control form-box requredField" placeholder="Description" required></textarea>
+                    <textarea value={values.description} name="Description" type="text" onChange={handleChange} className="form-control form-box requredField" placeholder="Description" required></textarea>
                 </div>
                 <div className="form-group col-6">
                     <label className="control-label">Pickup Time</label>
                     <div className="date-field">
-                        <DatePicker single={true} placeholder={`Enter Pickup Time`} timePicker={true} name="Pickup time" onChange={handleChange} value={formContent.pickup_time} />
+                        <DatePicker single={true} placeholder={`Enter Pickup Time`} timePicker={true} name="Pickup time" onChange={handleChange} value={values.pickup_time}/>
                     </div>
                 </div>
                 <div className="form-group col-6">
                     <label className="control-label">Drop Time</label>
                     <div className="date-field">
-                        <DatePicker single={true} placeholder={`Enter Drop Time`} timePicker={true} name="Drop time" onChange={handleChange} value={formContent.drop_time} />
+                        <DatePicker single={true} placeholder={`Enter Drop Time`} timePicker={true} name="Drop time" onChange={handleChange} value={values.drop_time}/>
                     </div>
                 </div>
                 <div className="form-group col-6">
                     <label className="control-label">Start Time</label>
                     <div className="date-field">
-                        <DatePicker single={true} placeholder={`Enter Pickup Time`} timePicker={true} name="Pickup time" onChange={handleChange} value={formContent.start_time} />
+                        <DatePicker single={true} placeholder={`Enter Pickup Time`} timePicker={true} name="Pickup time" onChange={handleChange} value={values.start_time}/>
                     </div>
                 </div>
                 <div className="form-group col-6">
                     <label className="control-label">End Time</label>
                     <div className="date-field">
-                        <DatePicker single={true} placeholder={`Enter Drop Time`} timePicker={true} name="Drop time" onChange={handleChange} value={formContent.end_time} />
+                        <DatePicker single={true} placeholder={`Enter Drop Time`} timePicker={true} name="Drop time" onChange={handleChange} value={values.end_time}/>
                     </div>
                 </div>
                 <div className="form-group col-6">
@@ -73,7 +73,7 @@ const InnerForm = props => {
                     <Field
                         name='active'
                         render={({ field /* _form */ }) => (
-                            <SelectBox valueKey="value" field="label" name='active' placeholder={'active'} onChange={(selected) => { setFieldValue('active', selected ? selected.value : null) }} value={values.gender} options={boolArray} />
+                            <SelectBox valueKey="value" field="label" name='active' placeholder={'active'} onChange={(selected) => { setFieldValue('active', selected ? selected.value : null) }} value={values.active} options={boolArray} />
                         )}
                     />
                 </div>
@@ -82,7 +82,7 @@ const InnerForm = props => {
                     <Field
                         name='reusable'
                         render={({ field /* _form */ }) => (
-                            <SelectBox valueKey="value" field="label" name='reusable' placeholder={'reusable'} onChange={(selected) => { setFieldValue('reusable', selected ? selected.value : null) }} value={values.gender} options={boolArray} />
+                            <SelectBox valueKey="value" field="label" name='reusable' placeholder={'reusable'} onChange={(selected) => { setFieldValue('reusable', selected ? selected.value : null) }} value={values.reusable} options={boolArray} />
                         )}
                     />
                 </div>
@@ -91,7 +91,7 @@ const InnerForm = props => {
                     <Field
                         name='cashback'
                         render={({ field /* _form */ }) => (
-                            <SelectBox valueKey="value" field="label" name='cashback' placeholder={'cashback'} onChange={(selected) => { setFieldValue('cashback', selected ? selected.value : null) }} value={values.gender} options={boolArray} />
+                            <SelectBox valueKey="value" field="label" name='cashback' placeholder={'cashback'} onChange={(selected) => { setFieldValue('cashback', selected ? selected.value : null) }} value={values.cashback} options={boolArray} />
                         )}
                     />
 
@@ -101,10 +101,12 @@ const InnerForm = props => {
                     <Field
                         name='peak_applicable'
                         render={({ field /* _form */ }) => (
-                            <SelectBox valueKey="value" field="label" name='peak_applicable' placeholder={'peak_applicable'} onChange={(selected) => { setFieldValue('peak_applicable', selected ? selected.value : null) }} value={values.gender} options={boolArray} />
+                            <SelectBox valueKey="value" field="label" name='peak_applicable' placeholder={'peak_applicable'}
+                             onChange={(selected) => 
+                                { setFieldValue('peak_applicable', selected ? selected.value : null) }} value={values.peak_applicable} options={boolArray} />
                         )}
                     />
-
+                        {values.peak_applicable}
                 </div>
                 <div className="form-group col-6">
                     <label>Coupon Type</label>
@@ -125,25 +127,23 @@ const InnerForm = props => {
                     <label className="control-label val-span">Parameter
                         {
                             couponType == "CouponGeneric" &&
-                            <i className="fa fa-plus" onClick={() => openGenerateParameterModal()} ></i>
+                            <i style={{color: '#FF5A5F', marginLeft: '5px'}} className="fa fa-plus" onClick={() => openGenerateParameterModal()} ></i>
                         }
                         {
                             couponType == "CouponAll" &&
-                            <i className="fa fa-plus" onClick={() => openCouponBenefitsModal() } ></i>
+                            <i style={{color: '#FF5A5F', marginLeft: '5px'}} className="fa fa-plus" onClick={() => openCouponBenefitsModal() } ></i>
                         }
                     </label>
-                    <textarea name="Param" type="text" className="form-control form-box requiredField" placeholder="Parameter" value={formContent.parameters} required></textarea>
+                    <textarea name="Param" type="text" className="form-control form-box requiredField" placeholder="Parameter" value={formContent.parameters}></textarea>
                 </div>
 
                 {
                  couponType == "CouponAll" &&
                 <div className="form-group col-6">
                     <label className="control-label val-span">Validation
-                 
-                            <i className="fa fa-plus" onClick={() => openGenerateGenericParameterModal()}></i>
-                        
+                        <i style={{color: '#FF5A5F', marginLeft: '5px'}} className="fa fa-plus" onClick={() => openGenerateGenericParameterModal()}></i>
                     </label>
-                    <textarea name="Param" type="text" className="form-control form-box requiredField" placeholder="Validation"></textarea>
+                    <textarea name="Param" type="text" value={formContent.validateData} className="form-control form-box requiredField" placeholder="Validation"></textarea>
                 </div>
                 }
 
@@ -198,20 +198,7 @@ const CampaignForm = withFormik({
             setErrors /* setValues, setStatus, and other goodies */,
         }
     ) => {
-        const result = await Put({
-            url: 'campaign',
-            body: {
-                cashback: values.cashback,
-                object_name: values.object_name,
-                pickup_time: values.pickup_time,
-                drop_time: values.drop_time,
-                start_time: values.start_time,
-                end_time: values.end_time
-            }
-        });
-
-
-        props.onSubmit();
+        props.onSubmit(values);
     },
 })(InnerForm);
 
@@ -224,7 +211,8 @@ export default class AddEditCampaign extends Component {
             campaignData: this.props.data,
             couponList: [],
             formContent: JSON.parse(JSON.stringify(this.props.data)),
-            couponType: null
+            couponType: null,
+            isNew: (this.props.data == {}) ? true : false
         }
     }
 
@@ -250,14 +238,14 @@ export default class AddEditCampaign extends Component {
     openCouponBenefitsModal = () => {
         ModalManager.openModal({
             headerText: "Coupon Benefits",
-            modalBody: () => (<CouponBenefits />)
+            modalBody: () => (<CouponBenefits setParameter={this.setParameter} />)
         })
     }
 
     openGenerateGenericParameterModal = () => {
         ModalManager.openModal({
             headerText: "Generate Parameter",
-            modalBody: () => (<GenerateGenericParameter setParameter={this.setParameter} />)
+            modalBody: () => (<GenerateGenericParameter setValidation={this.setValidation} />)
         })
     }
 
@@ -271,9 +259,48 @@ export default class AddEditCampaign extends Component {
         this.setState({ couponType: value })
     }
 
-    onSubmit = () => {
-        ToastNotifications.success({ title: "Campaign added successfully!" });
-        ModalManager.closeModal();
+    setValidation = (value) => {
+        let {formContent} = this.state;
+        formContent.validateData = value;
+        this.setState({formContent});
+    }
+
+    onSubmit = async () => {
+            if(this.state.isNew){
+                let url = "campaign";
+                let formContent = {};
+                // self.formContent.object_name = self.couponTypeObj.selected.value;
+                // self.formContent.pickup_time = self.pick_drop_range.startDate;
+                // self.formContent.drop_time = self.pick_drop_range.endDate;
+                // self.formContent.start_time = self.start_end_range.startDate;
+                // self.formContent.end_time = self.start_end_range.endDate;
+                // self.formContent.cashback = parseInt(self.formContent.cashback)
+                // ListingFactory.addRecord(url, self.formContent)
+                //     .then(function(data) {
+                //         if (data.data.success == true) {
+                //             self.myform = false;
+                //             swl.success("Campaign has been added!");
+                //             $uibModalInstance.close();
+                //             callBackFunction();
+                //         } else {
+                //             $uibModalInstance.close();
+                //             callBackFunction();
+                //         }
+                //     });
+                const result = await Post({ url: url, body: formContent })
+                if (result.success) {
+                    ToastNotifications.success({ title: "Campaign added successfully!" });
+                    ModalManager.closeModal();
+                }
+            }else{
+                let url = "campaign/" + this.state.campaignObj.id;
+                const result = await Put({ url: url, body: formContent })
+                if (result.success) {
+                    ToastNotifications.success({ title: "Campaign edited successfully!" });
+                    ModalManager.closeModal();
+                }
+            }
+       
     }
 
     render() {

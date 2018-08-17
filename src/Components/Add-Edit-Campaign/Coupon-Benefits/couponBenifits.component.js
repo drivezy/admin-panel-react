@@ -34,7 +34,6 @@ export default class CouponBenefits extends Component {
                         label: 'minWeekday',
                     }
                 ],
-        currentIndex: 0,
         pricingData: []
         };
   }
@@ -86,14 +85,20 @@ export default class CouponBenefits extends Component {
     ModalManager.closeModal();
   }
 
-  submit = () => {
+  submit = async () => {
+      let url = "serialiseData";
       let params = {};
       if(this.state.currentIndex){
         params[this.state.formData[this.state.currentIndex].label] = this.state.formData[this.state.currentIndex].custom_input;
       }else{
-        params = { pricing_id: this.state.customCurrentIndex, custom_param: this.state.pricingData[this.state.currentIndex].custom_input };
+        params = { pricing_id: this.state.customCurrentIndex, custom_param: this.state.pricingData[this.state.customCurrentIndex].custom_input };
       }
-    ModalManager.closeModal();
+      params.object = true;
+      const result = await Post({ url: url, body: params })
+      if (result.success) {
+        this.props.setParameter(result.response);
+        ModalManager.closeModal();
+      }
   }
 
 
@@ -127,7 +132,7 @@ export default class CouponBenefits extends Component {
                                     formData.map((item, key) =>{
                                         return(<tr key={key}>
                                                 <td>
-                                                    <input type="radio" value={item.label} onClick={() => {this.setState({customCurrentIndex: null});this.setState({currentIndex: key})}} checked={key==currentIndex}/>
+                                                    <input type="radio" value={item.label} onChange={() => {this.setState({customCurrentIndex: null});this.setState({currentIndex: key})}} checked={key==currentIndex}/>
                                                 </td>
                                                 <td>
                                                     {item.label}
@@ -172,7 +177,7 @@ export default class CouponBenefits extends Component {
                                     pricingData.map((item, key) =>{
                                         return (<tr key={key}>
                                             <td>
-                                                <input type="radio" value={item.id} onClick={() => {this.setState({customCurrentIndex: key});this.setState({currentIndex: null})} } checked={key==customCurrentIndex}/>
+                                                <input type="radio" value={item.id} onChange={() => {this.setState({customCurrentIndex: key});this.setState({currentIndex: null})} } checked={key==customCurrentIndex}/>
                                             </td>
                                             <td>
                                                 {item.name}
