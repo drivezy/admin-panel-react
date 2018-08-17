@@ -309,7 +309,7 @@ export default class AddEditCampaign extends Component {
         formContent.cashback = values.cashback.value;
         formContent.drop_time = values.drop_time;
         formContent.end_time = values.end_time;
-        formContent.object_name = values.object_name.name;
+        
         //formContent.parameter = values.parameter;
         formContent.peak_applicable = values.peak_applicable.value;
         formContent.pickup_time = values.pickup_time;
@@ -324,6 +324,7 @@ export default class AddEditCampaign extends Component {
 
         if (this.state.isNew) {
             let url = "campaign";
+            formContent.object_name = values.object_name.name;
             // self.formContent.object_name = self.couponTypeObj.selected.value;
             // self.formContent.pickup_time = self.pick_drop_range.startDate;
             // self.formContent.drop_time = self.pick_drop_range.endDate;
@@ -348,7 +349,8 @@ export default class AddEditCampaign extends Component {
                 ModalManager.closeModal();
             }
         } else {
-            let url = "campaign/" + this.state.campaignObj.id;
+            formContent.object_name = values.coupon_type;
+            let url = "campaign/" + this.state.campaignData.id;     
             const result = await Put({ url: url, body: formContent })
             if (result.success) {
                 ToastNotifications.success({ title: "Campaign edited successfully!" });
