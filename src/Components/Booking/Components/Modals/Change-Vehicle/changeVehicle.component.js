@@ -25,10 +25,10 @@ export default class ChangeVehicle extends Component {
     }
 
     componentDidMount() {
-        const { bookingData } = this.state;
+        // const { bookingData } = this.state;
         this.getCars(1000);
         this.getVenues();
-        this.getVehicles(bookingData.billing_car.id, bookingData.venue_pick.id);
+        // this.getVehicles(bookingData.billing_car.id,bookingData.venue_pick.id)
     }
 
     /**
@@ -107,11 +107,11 @@ export default class ChangeVehicle extends Component {
     /**
      * Function to get Vehicles for Selected CAR and VENUE
      */
-    getVehicles = async (carId, venueId) => {
-        const { bookingData } = this.state;
+    getVehicles = async (venueId) => {
+        const { car_id, bookingData } = this.state;
         const body = {};
-        if (carId) {
-            body.car_id = carId;
+        if (car_id) {
+            body.car_id = car_id;
         }
         if (venueId) {
             body.venue_id = venueId;
@@ -129,7 +129,8 @@ export default class ChangeVehicle extends Component {
 
 
     render() {
-        const { cars, venues, vehicleList, bookingData, car_id } = this.state;
+        const { cars, venues, vehicleList, bookingData } = this.state;
+        console.log(bookingData);
         return (
             <div className="changeVehicle">
                 <div className="modal-change-vehicle">
@@ -168,7 +169,7 @@ export default class ChangeVehicle extends Component {
                                         <div className="input-group-prepend">
                                             <span className="input-group-text" id="basic-addon1"><i className="fa fa-strikethrough"></i></span>
                                         </div>
-                                            <SelectBox isClearable={false} value={bookingData.venue_pick.name} onChange={(value) => { this.setState({ venue_id: value.id }); this.getVehicles(car_id, value.id); }} field="name" options={venues} />
+                                            <SelectBox isClearable={false} value={bookingData.venue_pick.name} onChange={(value) => { this.setState({ venue_id: value.id }); this.getVehicles(value.id); }} field="name" options={venues} />
                                         </div>
                                     </div>
                                 </div>
