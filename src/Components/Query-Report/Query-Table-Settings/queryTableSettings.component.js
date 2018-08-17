@@ -1,43 +1,119 @@
 import React, { Component } from 'react';
-import { Collapse, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import './queryTableSettings.css';
 import _ from 'lodash';
-import { IsObjectHaveKeys } from 'common-js-util';
-import { SubscribeToEvent } from 'state-manager-utility';
 
-import { SetPreference } from './../../Utils/preference.utils';
-import { changeArrayPosition } from './../../Utils/js.utils';
+import { SetPreference } from './../../../Utils/query.utils';
 
-import ColumnSetting from './Components/Column-Setting/columnSetting.component';
+import { changeArrayPosition } from './../../../Utils/js.utils';
 
-import './TableSettings.css';
+import { Collapse, ListGroup, ListGroupItem, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-export default class TableSettings extends Component {
+import QueryColumnSetting from './../Query-Column-Setting/queryColumnSetting.component';
+import { IsObjectHaveKeys } from './../../../Utils/common.utils';
+export default class QueryTableSettings extends Component {
 
     constructor(props) {
         super(props);
 
-        const layout = this.props.layout || {};
+        let columns = Array.isArray(this.props.selectedColumns) && this.props.selectedColumns[0] ? this.props.selectedColumns[0].value : [];
+        columns = typeof columns == 'string' ? JSON.parse(columns) : columns;
         this.state = {
             modal: false,
-            selectedColumns: layout.column_definition || [],
-            tempSelectedColumns: layout.column_definition || [],
+            selectedColumns: columns || [],
+            tempSelectedColumns: [...columns] || [],
             columns: this.props.columns,
             list: {},
             activeColumn: {},
-            showSplitFlag: this.props.showSplitFlag,
-            formConfigurator: ''
+            tempColumns: this.props.columns,
+            layout: this.props.preference
         }
     }
+
+
+    // toggleModal = () => {
+    //     this.setState({ modal: !this.state.modal, activeColumn: {}, tempSelectedColumns: this.props.selectedColumns })
+    // }
+
+    // toggleList = (index) => {
+    //     let obj = this.state.list;
+    //     obj[index] = !obj[index];
+    //     this.setState({ list: obj });
+    // }
+
+    // addColumn = (column) => {
+    //     let selectedColumns = this.state.tempSelectedColumns;
+
+    //     selectedColumns.push({
+    //         column: column.parent + "." + column.id, headingCollapsed: true, heading: ""
+    //     });
+
+    //     this.setState({ tempSelectedColumns: selectedColumns })
+    // }
+
+    // removeColumn = (column) => {
+    //     let selectedColumns = this.state.tempSelectedColumns;
+
+    //     selectedColumns = selectedColumns.filter((entry) => (entry.column != column.column));
+
+    //     this.setState({ tempSelectedColumns: selectedColumns })
+    // }
+
+    // toggleColumn = (column) => {
+    //     column.expanded = !column.expanded
+    // }
+
+    // selectColumn = (column, index) => {
+    //     if (typeof column != 'string') {
+    //         column.index = index;
+    //         this.setState({ activeColumn: column });
+    //     }
+    // }
+
+    // moveSelectedUp = () => {
+    //     this.moveSelectedItem(-1);
+    // }
+
+    // moveSelectedDown = () => {
+    //     this.moveSelectedItem(1);
+    // }
+
+    // moveSelectedItem = (key) => {
+    //     let activeColumn = this.state.activeColumn;
+    //     let index = this.state.activeColumn.index;
+    //     let result = changeArrayPosition(this.state.tempSelectedColumns, index, index + key)
+    //     activeColumn.index = result.index;
+    //     this.setState({ tempSelectedColumns: result.array, activeColumn: activeColumn });
+    // }
+
+    // addSplit = () => {
+    //     let ext = Math.floor(Math.random() * 1000);
+    //     const selectedColumns = this.state.tempSelectedColumns;
+    //     selectedColumns.push("e-split-" + ext);
+
+    //     selectedColumns.push("s-split-" + ext);
+    //     this.setState({ selectedColumns });
+    // }
+
+    // applyChanges = async () => {
+    //     const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
+    //     result.success ? this.setState({ modal: !this.state.modal }) : null;
+    //     this.props.onSubmit(this.state.tempSelectedColumns);
+    // }
 
     componentDidMount() {
         //const co = JSON.stringify(this.state.columns);
         // this.setState({ tempColumns: JSON.parse(co) });
         this.setState({ tempColumns: { ...this.state.columns } });
-        SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
+        //SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
+
     }
 
+
     toggleModal = () => {
-        this.setState({ modal: !this.state.modal, activeColumn: {}, tempSelectedColumns: IsObjectHaveKeys(this.props.layout) ? this.props.layout.column_definition : [] })
+        console.log(this.state.tempSelectedColumns);
+        this.setState({ modal: !this.state.modal, activeColumn: {} })
+        // this.setState({ modal: !this.state.modal, activeColumn: {}, tempSelectedColumns: IsObjectHaveKeys(this.state.tempSelectedColumns) ? this.state.tempSelectedColumns.value : [] })
+
     }
 
     expandAll = () => {
@@ -67,32 +143,57 @@ export default class TableSettings extends Component {
         this.setState({ formConfigurator });
     }
 
+
+
     addColumn = (column) => {
 
-        let selectedColumns = this.state.tempSelectedColumns;
+
+        let tempSelectedColumns = this.state.tempSelectedColumns;
+        const { tempColumns } = this.state
 
         // const regexForPickingAfterLastDot = /[^\.]+$/;
-        selectedColumns.push({
-            headingCollapsed: true, heading: "", object: column.parent, column: column.name, index: column.parent + '.' + column.name
+
+
+        // this.props.finalColumns.map((column, key) =>
+        //     tempSelectedColumns.push({
+        //         headingCollapsed: true, heading: "", id: column.id, object: column.parent, column: column.column_name, index: column.parent + '.' + column.column_name
+        //     })
+
+        // )
+
+        tempSelectedColumns.push({
+            headingCollapsed: true, heading: "", id: column.id, object: column.parent, column: column.column_name, index: column.parent + '.' + column.column_name
             // headingCollapsed: true, heading: "", object: column.parent, column: column.name, index: column.parent + '.' + column.name
             // headingCollapsed: true, heading: "", object: column.parent.match(regexForPickingAfterLastDot)[0], column: column.name, columnObj: column
             // column: column.parent + "." + column.id, headingCollapsed: true, heading: ""
         });
 
-        this.state.tempSelectedColumns = selectedColumns;
+        this.setState({ tempSelectedColumns: tempSelectedColumns })
+        console.log(this.state.tempSelectedColumns);
+        console.log(this.props.finalColumns);
         // this.setState({ tempSelectedColumns: selectedColumns })
-        this.removeColumnFromLeft(column);
+
+        //this.removeColumnFromLeft(column);
+
+        let value = column.parent + '.' + column.id;
+        delete tempColumns[value];
+        this.setState({ tempColumns });
+
     }
 
-    removeColumnFromLeft(column) {
-        const { tempColumns } = this.state;
-        delete tempColumns[column.path];
-        this.setState({ tempColumns });
-    }
+    // removeColumnFromLeft(column) {
+    //     const { tempColumns } = this.state;
+    //     console.log(tempColumns);
+    //     let value = column.parent+ '.' +column.path;
+    //     // delete tempColumns['invoice_details.cgst'];
+    //     delete tempColumns[value]
+    //     this.setState({ tempColumns });
+
+    // }
 
     removeColumn = (column) => {
         let selectedColumns = this.state.tempSelectedColumns;
-
+        const { tempColumns } = this.state;
         selectedColumns = selectedColumns.filter((entry) => {
             //console.log(column, entry);
             const isSameName = entry.column != column.column;
@@ -102,22 +203,21 @@ export default class TableSettings extends Component {
             return (column.object != entry.object);
         });
 
-        this.setState({ tempSelectedColumns: selectedColumns });
+        this.setState({ tempSelectedColumns: selectedColumns })
+        //        this.addColumnToLeft(column);
 
-        if (column.separator) {
-            return;
-        }
-        else
-            this.addColumnToLeft(column);
+
+        this.addColumnToLeft(column);
     }
+
 
     addColumnToLeft(column) {
         const { tempColumns, columns } = this.state;
-        column = columns[column.index];
-        if (column) {
-            tempColumns[column.path] = column;
-        }
-        // tempColumns[column.path] = tempColumns.push(column);
+        let tempValueOfColumn = columns[column.object + '.' + column.id];
+        // tempColumns.push(tempValueOfColumn);
+        const index = tempValueOfColumn.parent + '.' + tempValueOfColumn.id;
+        tempColumns[index] = tempValueOfColumn;
+        //tempColumns[column.path] = tempColumns.push(tempValueOfColumn);
     }
 
     toggleColumn = (column) => {
@@ -158,8 +258,7 @@ export default class TableSettings extends Component {
 
     addHSplit = () => {
         const { tempSelectedColumns } = this.state;
-        let ext = Math.floor(Math.random() * 1000);
-        tempSelectedColumns.push({ split: true, label: "seperator", headingCollapsed: true, heading: "", separator: true, column: 'seperator' + ext });
+        tempSelectedColumns.push({ split: true, label: "seperator", headingCollapsed: true, heading: "" });
         this.setState({ tempSelectedColumns });
     }
 
@@ -168,9 +267,6 @@ export default class TableSettings extends Component {
         tempSelectedColumns.splice(index, 1);
         let end;
         if (item.label.split("-")[0] == "seperator") {
-
-        }
-        else if (item.separator) {
             return tempSelectedColumns;
         }
         else {
@@ -215,12 +311,12 @@ export default class TableSettings extends Component {
     // }
 
     searchColumn = (event) => {
-        const { tempColumns } = this.state;
+        const { tempSelectedColumns } = this.state;
         const searchedColumns = {};
 
-        for (var i in tempColumns) {
-            if (tempColumns[i].name.toString().toLowerCase().indexOf(event.target.value) != -1) {
-                searchedColumns[i] = tempColumns[i];
+        for (var i in tempSelectedColumns) {
+            if (tempSelectedColumns[i].name.toString().toLowerCase().indexOf(event.target.value) != -1) {
+                searchedColumns[i] = tempSelectedColumns[i];
             }
         }
         this.state.leftSearchText = event.target.value;
@@ -230,25 +326,25 @@ export default class TableSettings extends Component {
 
 
     applyChanges = async (overRide) => {
-        const { userId, menuId, listName, source } = this.props;
-        let { layout } = this.props;
+        const { listName } = this.props;
         const { tempSelectedColumns } = this.state;
-        const result = await SetPreference({ userId, source, menuId, name: listName, selectedColumns: this.state.tempSelectedColumns, layout, override_all: overRide ? 1 : 0 });
+        let layout;
+        const result = await SetPreference({ parameter: listName, selectedColumns: this.state.tempSelectedColumns, override_all: overRide ? 1 : 0 });
 
-        // const result = await SetPreference(this.props.listName, this.state.tempSelectedColumns);
 
         if (result.success) {
-            console.log(result);
             this.setState({ modal: !this.state.modal });
             if (IsObjectHaveKeys(layout)) {
                 layout.column_definition = tempSelectedColumns;
             } else {
                 const { response } = result;
-                response.column_definition = JSON.parse(response.column_definition);
+                response.column_definition = JSON.parse(response.value);
                 layout = response;
             }
+
             this.props.onSubmit(layout);
         }
+
     }
 
     selectedColumnUpdate = (column, index) => {
@@ -257,60 +353,65 @@ export default class TableSettings extends Component {
         this.setState({ tempSelectedColumns });
     }
 
+    updateSelectedColumns = () => {
+        const { finalColumns } = this.props
+        const { tempSelectedColumns } = this.state
+
+
+        finalColumns.map((column, key) =>
+            tempSelectedColumns.push({
+                headingCollapsed: true, heading: "", id: column.id, object: column.parent, column: column.column_name, index: column.parent + '.' + column.column_name
+            })
+        )
+
+
+        console.log(finalColumns);
+        console.log(tempSelectedColumns)
+    }
+
+
     modalWrapper() {
-        const { tempColumns: columns, searchedColumns, columns: originalColumns, tempSelectedColumns, activeColumn, showSplitFlag, formConfigurator, leftSearchText } = this.state;
-        const { source = 'module' } = this.props;
+        const { columns, tempSelectedColumns, activeColumn, tempColumns } = this.state;
+
+        // this.updateSelectedColumns();
+
         const selectedIds = [];
 
-        //console.log(showSplitFlag);
-
-        const tempSelectedColumnsArray = Object.values(tempSelectedColumns);
-        for (let value of tempSelectedColumns) {
+        for (let value in tempSelectedColumns) {
             if (typeof value != 'string') {
                 selectedIds.push(value.column);
-                // selectedIds.push(parseInt(value.column.split('.').pop()));
             }
+            // if (typeof value != 'string') {
+            //     selectedIds.push(parseInt(value.value.column.split('.').pop()));
+            // }
         }
 
-        const finalColumnList = leftSearchText ? searchedColumns : columns;
-        // const finalColumnList = searchedColumns && Object.keys(searchedColumns).length ? searchedColumns : columns;
 
-        const leftColumns = _.groupBy(finalColumnList, 'parent');
+        const leftColumns = _.groupBy(tempColumns, 'parent');
 
         const columnKeys = Object.keys(leftColumns);
-        this.state.parents = columnKeys;
-
-
 
         for (let key of columnKeys) {
-            leftColumns[key] = leftColumns[key].filter((column) => {
-                // console.log(column, selectedIds);
-                const index = selectedIds.indexOf(column.name);
-                // console.log(((index == -1) || (tempSelectedColumnsArray[index].object != column.parent)), column.name);
-                return ((index == -1) || (tempSelectedColumnsArray[index].object != column.parent));
-                // return selectedIds.indexOf(column.name) == -1
-            });
+            leftColumns[key] = leftColumns[key].filter((column) => (
+                selectedIds.indexOf(column.id) == -1
+            ));
         }
-
         return (
-            <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal} className="table-settings">
-                <ModalHeader toggle={this.toggleModal}>
+            <Modal size="lg" isOpen={this.state.modal} toggle={this.toggleModal.bind(this)} className="table-settings">
+
+                <ModalHeader toggle={this.toggleModal.bind(this)}>
                     Configure
-                </ModalHeader>
+            </ModalHeader>
                 <ModalBody>
                     <div className="left">
-
                         <div className="card" >
                             <div className="card-body parent-card">
-
                                 <div className="card-top">
-                                    <h6 className="card-title">All Columns({leftColumns.length ? leftColumns.length : 0})</h6>
-
+                                    <h6 className="card-title">All Columns</h6>
                                     <div className="input-holder">
-                                        <input type="text" onChange={event => this.searchColumn(event)} className="search-box" placeholder="Search Columns" />
+                                        <input type="text" className="search-box" placeholder="Search Columns" />
                                     </div>
                                 </div>
-
                                 <ListGroup className="parent-group">
                                     {
                                         columnKeys.map((column, index) => (
@@ -326,15 +427,12 @@ export default class TableSettings extends Component {
                                                 </div>
 
                                                 <Collapse isOpen={this.state.list[column]} className="columns-wrapper">
-
-
                                                     <ListGroup className="inner-columns">
                                                         {
                                                             leftColumns[column].map((entry, key) => (
-
                                                                 <div key={key} className="column-group" onDoubleClick={() => this.addColumn(entry)} >
                                                                     <div className="column-label">
-                                                                        {entry.display_name}
+                                                                        {entry.column_name}
                                                                     </div>
                                                                     <div className="icon-holder">
                                                                         <button className="add-column btn btn-sm btn-light" onClick={() => this.addColumn(entry)} >
@@ -353,89 +451,39 @@ export default class TableSettings extends Component {
 
                             </div>
                         </div>
-
-
                     </div>
 
                     <div className="controls">
-                        <Button color="info" size="sm" onClick={this.moveSelectedUp}>
+                        <Button color="primary" size="sm" onClick={this.moveSelectedUp}>
                             <i className="fa fa-arrow-up"></i>
                         </Button>
-
-                        <Button color="info" size="sm" onClick={this.moveSelectedDown}>
+                        <Button color="primary" size="sm" onClick={this.moveSelectedDown}>
                             <i className="fa fa-arrow-down"></i>
                         </Button>
-
-                        {
-                            showSplitFlag == true &&
-                            <Button color="secondary" size="sm" className="split" onClick={this.addSplit}>
-                                V-Split
-                            </Button>
-                        }
-                        {
-                            showSplitFlag == true &&
-                            <Button color="secondary" size="sm" className="split" onClick={this.addHSplit}>
-                                H-Split
-                            </Button>
-                        }
                     </div>
 
-
                     <div className="right">
-
                         <div className="card">
                             <div className="card-body parent-card">
                                 <div className="card-top">
-                                    <h6 className="card-title">Selected Columns({tempSelectedColumns.length})</h6>
+                                    <h6 className="card-title">Selected Columns</h6>
                                 </div>
-
                                 <ListGroup className="parent-group">
                                     {
-                                        tempSelectedColumns.map((column, index) =>
-                                            ((column.split) && (!column.separator) ?
-                                                <div key={index}>
-                                                    <ListGroupItem className={`${activeColumn.position === index && 'active'}`} tag="button" action key={index} onClick={() => this.selectColumn(column, index)}>
-                                                        ---- {column.label} ----
-                                                    <span className="close margin-top-4" data-dismiss="alert" aria-label="Close" onClick={() => this.removeSplit(index, column)}>
-                                                            <i className="fa fa-times"></i>
-                                                        </span>
-                                                    </ListGroupItem>
-                                                </div>
-                                                :
-                                                // Component Manages column props
-                                                <ColumnSetting
-                                                    source={source}
-                                                    removeColumn={this.removeColumn}
-                                                    columns={originalColumns}
-                                                    activeColumn={activeColumn}
-                                                    selectColumn={this.selectColumn}
-                                                    column={{ ...column }}
-                                                    index={index}
-                                                    key={index}
-                                                    selectedColumnUpdate={this.selectedColumnUpdate}
-                                                />
-                                                // Column Setting Ends
-                                            )
+                                        tempSelectedColumns && tempSelectedColumns.map((column, index) =>
+                                            // Component Manages column props
+                                            <QueryColumnSetting removeColumn={this.removeColumn} columns={columns} activeColumn={activeColumn} selectColumn={this.selectColumn} column={column} index={index} key={index} />
+                                            // Column Setting Ends
                                         )
                                     }
                                 </ListGroup>
-
                             </div>
                         </div>
                     </div>
-
                 </ModalBody>
                 <ModalFooter>
-                    <div className="leftButtons">
-                        {formConfigurator ?
-                            <button className="btn btn-warning applyForAllButton" onClick={() => this.applyChanges(true)}>Apply For All</button>
-                            : null
-                        }
-                    </div>
-                    <div className="rightButtons">
-                        <button className="btn btn-danger" onClick={this.toggleModal}>Cancel</button>
-                        <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
-                    </div>
+                    <Button color="primary" onClick={this.applyChanges}>Apply Changes</Button>
+                    <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
                 </ModalFooter>
             </Modal >
         )
@@ -444,9 +492,9 @@ export default class TableSettings extends Component {
     render() {
         return (
             <div className="table-settings">
-                <button className="btn settings-button btn-sm" onClick={this.toggleModal}>
-                    <i className="fa fa-bars"></i>
-                </button>
+                <Button color="secondary" size="sm" onClick={this.toggleModal}>
+                    <i className="fa fa-cog"></i>
+                </Button>
 
                 {
                     this.state.modal &&
@@ -456,6 +504,3 @@ export default class TableSettings extends Component {
         )
     }
 }
-
-
-

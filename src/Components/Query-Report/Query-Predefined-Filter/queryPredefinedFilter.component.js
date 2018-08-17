@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import {ToastNotifications} from 'drivezy-web-utils/build/Utils';
+import { Dropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
 
-import { IsUndefined } from './../../Utils/common.utils';
 import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
-import { DeletePreference } from './../../Utils/preference.utils';
+import { IsUndefined } from '../../../Utils/common.utils';
+import { DeletePreference } from './../../../Utils/preference.utils';
 
-import './filter.component.css';
+import './queryPredefinedFilter.css';
 
-export default class PredefinedFilter extends React.Component {
+export default class QueryPredefinedFilter extends React.Component {
 
     urlParams = Location.search();
 
@@ -16,6 +15,9 @@ export default class PredefinedFilter extends React.Component {
         super(props);
 
         this.state = {
+            filters: this.props.filters,
+            finalColumns: this.props.finalColumns,
+            listingObject: this.props.listingObject,
             dropdownOpen: false,
             searchText: '',
             filteredUserFilter: []
@@ -48,7 +50,7 @@ export default class PredefinedFilter extends React.Component {
                     urlParams.layout = null;
                     this.setUrlProps(urlParams);
                 }
-                ToastNotifications.success({ title: 'Records has been deleted' });
+                // ToastNotifications.success('Records has been deleted');
             }
         }
     }
@@ -77,12 +79,9 @@ export default class PredefinedFilter extends React.Component {
     }
 
     render() {
-        const { layouts, history, match } = this.props;
-        const { filteredUserFilter, searchText } = this.state;
-        const filters = searchText ? filteredUserFilter : layouts;
+        const { filters, finalColumns, listingObject } = this.state;
         return (
-            layouts.length > 1 ?
-                <Dropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+            <Dropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                 {/* <DropdownToggle data-toggle="dropdown" aria-expanded={this.state.dropdownOpen}> */}
                 <DropdownToggle caret
                     className='dropdown-button'
@@ -94,7 +93,7 @@ export default class PredefinedFilter extends React.Component {
                     Filter
                     </DropdownToggle>
                 <DropdownMenu className="dropdown-menu custom-click pull-right menu-operations" right>
-                    {   layouts && 
+                    {/* {
                         layouts.length > 1 ?
                             <div>
                                 <div className="form-group has-feedback">
@@ -104,7 +103,7 @@ export default class PredefinedFilter extends React.Component {
                             </div>
                             :
                             null
-                    }
+                    } */}
                     {
                         filters.map((filter, index) => {
                             if (filter.name && filter.query && filter.name != 'default') {
@@ -124,7 +123,6 @@ export default class PredefinedFilter extends React.Component {
                     }
                 </DropdownMenu>
             </Dropdown>
-            : null
         );
     }
 }

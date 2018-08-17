@@ -459,7 +459,7 @@ const formElements = props => {
                         Cancel
                     </button> */}
 
-                    <button className="btn btn-success" disabled={isSubmitting} type="submit">
+                    <button className="btn btn-success" disabled={!dirty || isSubmitting} type="submit">
                         Submit
                     </button>
                 </div>
