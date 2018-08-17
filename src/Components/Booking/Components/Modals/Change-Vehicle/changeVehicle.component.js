@@ -25,8 +25,10 @@ export default class ChangeVehicle extends Component {
     }
 
     componentDidMount() {
+        const { bookingData } = this.state;
         this.getCars(1000);
         this.getVenues();
+        this.getVehicles(bookingData.billing_car.id, bookingData.venue_pick.id);
     }
 
     /**
@@ -105,14 +107,14 @@ export default class ChangeVehicle extends Component {
     /**
      * Function to get Vehicles for Selected CAR and VENUE
      */
-    getVehicles = async () => {
-        const { car_id, venue_id, bookingData } = this.state;
+    getVehicles = async (carId, venueId) => {
+        const { bookingData } = this.state;
         const body = {};
-        if (car_id) {
-            body.car_id = car_id;
+        if (carId) {
+            body.car_id = carId;
         }
-        if (venue_id) {
-            body.venue_id = venue_id;
+        if (venueId) {
+            body.venue_id = venueId;
         }
         const result = await Post({
             url: `suggestVehicle/${bookingData.id}`,
@@ -122,11 +124,12 @@ export default class ChangeVehicle extends Component {
         if (result.success) {
             this.setState({ vehicleList: result.response })
         }
+        this.state.vehicleList = [];
     }
 
 
     render() {
-        const { cars, venues, vehicleList } = this.state;
+        const { cars, venues, vehicleList, bookingData, car_id } = this.state;
         return (
             <div className="changeVehicle">
                 <div className="modal-change-vehicle">
@@ -147,7 +150,7 @@ export default class ChangeVehicle extends Component {
                                             <span className="input-group-text" id="basic-addon1"><i className="fa fa-strikethrough"></i></span>
                                         </div>
                                         
-                                            <SelectBox isClearable={false} onChange={(value) => { this.setState({ car_id: value.id }); }} field="name" options={cars} />
+                                            <SelectBox isClearable={false} value={bookingData.billing_car.name} onChange={(value) => { this.setState({ car_id: value.id }); }} field="name" options={cars} />
                                         
                                         </div>
                                     </div>
@@ -165,7 +168,7 @@ export default class ChangeVehicle extends Component {
                                         <div className="input-group-prepend">
                                             <span className="input-group-text" id="basic-addon1"><i className="fa fa-strikethrough"></i></span>
                                         </div>
-                                            <SelectBox isClearable={false} onChange={(value) => { this.setState({ venue_id: value.id }); this.getVehicles(); }} field="name" options={venues} />
+                                            <SelectBox isClearable={false} value={bookingData.venue_pick.name} onChange={(value) => { this.setState({ venue_id: value.id }); this.getVehicles(car_id, value.id); }} field="name" options={venues} />
                                         </div>
                                     </div>
                                 </div>
