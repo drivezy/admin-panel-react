@@ -836,8 +836,9 @@ export function EvalCondtionForNextActions(condition, itemRow, starter) {
             }
 
             evaluatedExpressions[i] = typeof evaluatedExpressions[i] == 'string' ? `'${evaluatedExpressions[i]}'` : evaluatedExpressions[i];
-            condition = condition.replace(expressions[i], evaluatedExpressions[i]);
+            condition = condition.replace(expressions[i], typeof evaluatedExpressions[i] == 'object' ? 1 : evaluatedExpressions[i]);
         } catch (e) {
+            console.log(e.message);
             evaluatedExpressions[i] = data[expression];
             condition = condition.replace(expressions[i], "'" + evaluatedExpressions[i] + "'");
         }
