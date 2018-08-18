@@ -14,7 +14,7 @@ export default class RightClick extends Component {
     aggregationOperators = [{ name: 'Sum' }, { name: 'Avg' }, { name: 'Max' }, { name: 'Min' }];
 
     // Calling function for ui actions
-    callFunction = ({ rowOption, listingRow }) => {
+    callFunction = ({ rowOption, listingRow }, e) => {
         let action = rowOption;
         const { genericData, history, callback, source = 'model', menuDetail = {}, parentData = {} } = this.props;
         this.genericData = genericData;
@@ -29,7 +29,7 @@ export default class RightClick extends Component {
                 parent: parentData,
                 execution_script: action.execution_script
             }
-            ProcessPage({ pageContent });
+            ProcessPage({ pageContent }, e);
         }
     }
 
@@ -52,20 +52,20 @@ export default class RightClick extends Component {
                             if (rowOption.as_context) {
                                 return (
                                     <MenuItem key={key} >
-                                        <span className="space-icon" onClick={() => { this.callFunction({ rowOption, listingRow }) }}>{rowOption.name}</span>
+                                        <span className="space-icon" onClick={(e) => { this.callFunction({ rowOption, listingRow }, e) }}>{rowOption.name}</span>
                                     </MenuItem>
                                 )
                             } else if (typeof rowOption.onClick == 'function') {
                                 return (
                                     !rowOption.subMenu ?
-                                        <MenuItem key={key} onClick={() => rowOption.onClick(this.props)} data={this.props} >
+                                        <MenuItem key={key} onClick={(e) => rowOption.onClick(this.props, e)} data={this.props} >
                                             <i className={`fa ${rowOption.icon}`} />
                                             <span className="space-icon">{rowOption.name}</span>
                                         </MenuItem> :
                                         <SubMenu disabled={typeof rowOption.disabled == 'function' ? rowOption.disabled(this.props) : rowOption.disabled} key={key} title={[<i key={1} className={`fa ${rowOption.icon}`} />, <span key={2}> {rowOption.name}</span>]}>
                                             {
                                                 this.aggregationOperators.map((operator, index) =>
-                                                    <MenuItem key={index} onClick={() => rowOption.onClick(this.props, operator)} data={this.props}>
+                                                    <MenuItem key={index} onClick={(e) => rowOption.onClick(this.props, operator, e)} data={this.props}>
                                                         {operator.name}
                                                     </MenuItem>
                                                 )
