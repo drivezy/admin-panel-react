@@ -6,6 +6,7 @@ import SelectBox from './../../../../Forms/Components/Select-Box/selectBoxForGen
 import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 import DatePicker from './../../../../Forms/Components/Date-Picker/datePicker';
 import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
+import DateTimePicker from './../../../../../../src/Components/Date-Time-Picker/dateTimePicker.component';
 
 import {
     Table
@@ -164,7 +165,8 @@ export default class ChangeVehicle extends Component {
                             Time
                     </div>
                         <div className="col-sm-12">
-                            <DatePicker single={true} timePicker={true} onChange={(value) => this.setState({ start_date: value }) } />
+                            {/* <DatePicker single={true} timePicker={true} onChange={(value) => this.setState({ start_date: value }) } /> */}
+                            <DateTimePicker onChange={(value) => this.setState({ start_date: value }) } />
                         </div>
                     </div>
 
