@@ -4,6 +4,9 @@ import './../../Components/Booking/Components/Booking-Ride-Return/bookingRideRet
 import { TruncateDecimal } from './../../Utils/js.utils';
 import './summaryCard.css';
 
+let tentative_amount=0;
+let paidAmount=0;
+
 export default class SummaryCard extends Component {
 
     constructor(props) {
@@ -20,11 +23,10 @@ export default class SummaryCard extends Component {
         this.setState({ collapse: !this.state.collapse });
     }
 
-    render() {
-        const { bookingData = {} } = this.state;
-        let paidAmount = 0;
-        if (bookingData.payment && bookingData.payment.length) {
-            bookingData.payment.forEach(function (data) {
+    getBookingData = (bookingData) => {
+        tentative_amount = bookingData.tentative_amount;
+        if (bookingData.booking_payment && bookingData.booking_payment.length) {
+            bookingData.booking_payment.forEach(function (data) {
                 paidAmount += parseFloat(data.amount);
             });
         }
@@ -180,7 +182,7 @@ export default class SummaryCard extends Component {
                                                 return (
                                                     <Row className="card-object" key={key}>
                                                         <Col className="item">{key}</Col>
-                                                        <Col className="value">{pricing}</Col>
+                                                        <Col className="value">{pricing.toFixed ? pricing.toFixed(2): pricing}</Col>
                                                     </Row>
                                                 )
                                             }

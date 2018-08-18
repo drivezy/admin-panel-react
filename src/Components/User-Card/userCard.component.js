@@ -4,7 +4,7 @@ import {
 } from 'reactstrap';
 
 import { Get } from 'common-js-util';
-
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import UserLicenseCard from '../User-License-Card/userLicenseCard.component';
 import './userCard.component.css';
 
@@ -42,29 +42,30 @@ export default class UserCard extends Component {
             <div className="user-card card">
 
                 <UserLicenseCard userData={userData} flag={0}/>
+                
+                <div className="user-detail-card">
+                    <Card>
 
-                <Card>
+                        <div className="user-photo-and-user-name">
 
-                    <div className="user-photo-and-user-name">
+                            <div className="user-name">
+                                <a onClick={() => Location.navigate({ url: `/user/${userData.id}`})}>{userData.display_name}</a>
+                            </div>
 
-                        <div className="user-name">
-                            {userData.display_name}
+                            <div className="user-photo">
+                                {
+                                    userData.photograph ?
+                                        <a onClick={() => Location.navigate({ url: `/user/${userData.id}`})}><img src={`${userData.photograph}`} alt="" /></a>
+                                        : <img className="dummy-image" src={require('./../../Assets/images/photograph.png')} alt="" />
+                                }
+                            </div>
                         </div>
-
-                        <div className="user-photo">
-                            {
-                                userData.photograph ?
-                                    <img src={`${userData.photograph}`} alt="" />
-                                    : <img className="dummy-image" src={require('./../../Assets/images/photograph.png')} alt="" />
-                            }
-                        </div>
-                    </div>
 
                     <div className="details list-group-item">
 
-                        <div className="text-field"><i className="fa fa-phone" aria-hidden="true"></i>
-                            Contact
-                        </div>
+                            <div className="data-field">
+                                {userData.mobile}&nbsp;{userData.is_mobile_validated ? <i className="fa fa-check-circle"></i> : null}
+                            </div>
 
                         <div className="data-field">
                             {userData.mobile}
@@ -79,9 +80,9 @@ export default class UserCard extends Component {
                             Email
                         </div>
 
-                        <div className="data-field">
-                            {userData.email}
-                        </div>
+                            <div className="user-email data-field">
+                                <a onClick={() => Location.navigate({ url: `/user/${userData.id}`})}>{userData.email}</a>
+                            </div>
                     </div>
 
 
@@ -123,6 +124,7 @@ export default class UserCard extends Component {
                     </div>
                 </Card>
             </div>
+        </div>
 
         )
     }
