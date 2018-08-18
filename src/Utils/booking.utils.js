@@ -27,4 +27,21 @@ export function TotalDuration(updationTime, ActualStartTime) {
     return Math.floor(d.asHours()) + "h " + Math.floor(d.minutes()) + "m";
 }
 
+export function RideStatus(statusId){
+    switch (statusId) {
+        case 8:
+            return ("booking-status-cancelled");
+        case 7:
+            return ("booking-status-complete");
+        case 6:
+            return ("booking-status-active");
+        case 5:
+            return ("booking-status-pending");
+        case 0:
+            return ("booking-status-unverified");
+        default :
+            break;
+    }
+}
+
 

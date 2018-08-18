@@ -31,9 +31,9 @@ export default class BookingRideReturn extends Component {
         let bookingStartTime = BookingPickupTime(bookingRideReturnData.ride_return.actual_start_time);
         let bookingEndDate = BookingDropDate(bookingRideReturnData.ride_return.actual_end_time);
         let bookingEndTime = BookingDropTime(bookingRideReturnData.ride_return.actual_end_time);
-        // if (bookingRideReturnData.status) {
-        //      theClassName = RideStatus(bookingRideReturnData.status.id);
-        // }
+        if (bookingRideReturnData.status) {
+             theClassName = RideStatus(bookingRideReturnData.status.id);
+        }
         let paidAmount = 0;
         bookingRideReturnData.payment.forEach(function (data) {
             paidAmount += parseFloat(data.amount);
