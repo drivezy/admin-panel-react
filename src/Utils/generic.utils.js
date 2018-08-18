@@ -413,7 +413,7 @@ export function GetPreSelectedMethods() {
      * @param  {object} genericData}
      */
     methods.addGeneric = ({ action, listingRow, genericData, source = 'module', menuDetail, parent }) => {
-        const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Add', menuDetail, parent });
+        const formContent = GetFormContent({ listingRow, action, genericData, source, method: 'Add', menuDetail, parent });
         ProcessForm({ formContent });
         // const formContent = {
         //     source,
@@ -438,7 +438,7 @@ export function GetPreSelectedMethods() {
      * @param  {object} genericData}
      */
     methods.editGeneric = ({ action, listingRow, genericData, source = 'model', menuDetail, parent }) => {
-        const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Edit', menuDetail, parent });
+        const formContent = GetFormContent({ listingRow, action, genericData, source, method: 'Edit', menuDetail, parent });
         ProcessForm({ formContent });
         // const payload = { method: 'edit', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module };
         // const formContent = {
@@ -466,7 +466,7 @@ export function GetPreSelectedMethods() {
     }
 
     methods.customForm = ({ action, listingRow, genericData, source = 'form', menuDetail, parent }) => {
-        const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Add', menuDetail, parent });
+        const formContent = GetFormContent({ listingRow, action, genericData, source, method: 'Add', menuDetail, parent });
         formContent.form = action;
         ProcessForm({ formContent, isForm: true });
     }
@@ -479,7 +479,7 @@ export function GetPreSelectedMethods() {
      * @param  {object} genericData}
      */
     methods.copyGeneric = ({ action, listingRow, genericData, source = 'module', menuDetail, parent }) => {
-        const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Add', menuDetail, parent });
+        const formContent = GetFormContent({ listingRow, action, genericData, source, method: 'Add', menuDetail, parent });
         ProcessForm({ formContent });
         // const formContent = {
         //     source,
@@ -549,28 +549,29 @@ export function GetPreSelectedMethods() {
         }
     }
 
-    function getFormContent({ listingRow, action, genericData, source, method, menuDetail = {}, parent = {} }) {
-        return {
-            method: method.toLowerCase(),
-            menu: menuDetail,
-            source,
-            parent: parent,
-            callback: action.callback,
-            data: listingRow,
-            starter: genericData.starter,
-            dictionary: genericData.columns,
-            relationship: genericData.model,
-            layout: genericData.formPreference,
-            layouts: genericData.formPreferences,
-            userId: genericData.userId,
-            modelId: genericData.modelId,
-            modelAliasId: genericData.modelAliasId,
-            route: genericData.url,
-            name: method + ' ' + genericData.starter,
-            modelHash: genericData.modelHash
-        };
-    }
     return methods;
+}
+
+export function GetFormContent({ listingRow, action, genericData, source, method = '', menuDetail = {}, parent = {} }) {
+    return {
+        method: method.toLowerCase(),
+        menu: menuDetail,
+        source,
+        parent: parent,
+        callback: action.callback,
+        data: listingRow,
+        starter: genericData.starter,
+        dictionary: genericData.columns,
+        relationship: genericData.model,
+        layout: genericData.formPreference,
+        layouts: genericData.formPreferences,
+        userId: genericData.userId,
+        modelId: genericData.modelId,
+        modelAliasId: genericData.modelAliasId,
+        route: genericData.url,
+        name: method + ' ' + genericData.starter,
+        modelHash: genericData.modelHash
+    };
 }
 
 export async function GetPreference(paramName) {
