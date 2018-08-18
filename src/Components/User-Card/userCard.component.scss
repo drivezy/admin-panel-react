@@ -6,9 +6,11 @@
     display: flex;
     flex-direction: column;
     .user-detail-card
-        {
-        margin-top: 30px; 
-            .details{
+        {   
+            .fa-check-circle{
+                color: green;
+            }
+          .details{
             display: flex;
             flex-direction: row;
             justify-content: space-between;
@@ -24,6 +26,10 @@
                 }
             }
 
+            .user-email{
+                cursor: pointer;
+            }
+
             .data-field{
 
             color: #8a8a8a;
@@ -36,6 +42,9 @@
         .user-photo-and-user-name {
             display: flex;
             flex-direction: row;
+            .user-name,.user-photo{
+                cursor: pointer;
+            }
 
             .user-photo{
 
