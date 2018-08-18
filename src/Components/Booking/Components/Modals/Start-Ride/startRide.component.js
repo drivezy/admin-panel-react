@@ -5,7 +5,8 @@ import { ModalManager } from 'drivezy-web-utils/build/Utils';
 import AddonUpdate from './../../../../Addon-Update/addonUpdate.component';
 import { Post } from 'common-js-util';
 import './startRide.component.css';
-import { RECORD_URL } from './../../../../../Constants/global.constants';
+import { API_HOST } from './../../../../../Constants/global.constants';
+import { ToastNotifications } from 'drivezy-web-utils/build/Utils/toast.utils';
 
 export default class StartRide extends Component {
 
@@ -36,7 +37,13 @@ export default class StartRide extends Component {
             addon: this.state.data.start_addons
         }
         ,
-        urlPrefix: RECORD_URL });
+        urlPrefix: API_HOST });
+
+        let message = result.response
+
+        if(result.success )
+            ToastNotifications.success({title: 'Ride Started Succesfully'})
+
         ModalManager.closeModal();
     }
 
