@@ -61,24 +61,20 @@ export default class UserCard extends Component {
                             </div>
                         </div>
 
-                    <div className="details list-group-item">
+                            <div className="text-field"><i className="fa fa-phone" aria-hidden="true"></i>
+                                Contact
+                            </div>
 
                             <div className="data-field">
                                 {userData.mobile}&nbsp;{userData.is_mobile_validated ? <i className="fa fa-check-circle"></i> : null}
                             </div>
 
-                        <div className="data-field">
-                            {userData.mobile}
-                        </div>
 
-                    </div>
+                        <div className="details list-group-item">
 
-
-                    <div className="details list-group-item">
-
-                        <div className="text-field"><i className="fa fa-envelope" aria-hidden="true"></i>
-                            Email
-                        </div>
+                            <div className="text-field"><i className="fa fa-envelope" aria-hidden="true"></i>
+                                Email
+                            </div>
 
                             <div className="user-email data-field">
                                 <a onClick={() => Location.navigate({ url: `/user/${userData.id}`})}>{userData.email}</a>
@@ -87,45 +83,44 @@ export default class UserCard extends Component {
 
 
 
-                    {/* (userData.gender) ?
-                        <div className="data-field"><i className="fa fa-hands-helping" aria-hidden="true"></i>
-                        </div>
-                        :
-                        null
-                */}
+                        {/* (userData.gender) ?
+                            <div className="data-field"><i className="fa fa-hands-helping" aria-hidden="true"></i>
+                            </div>
+                            :
+                            null
+                    */}
 
-                    <div className="details list-group-item" >
-                        <div className="text-field"><i className="fa fa-birthday-cake" aria-hidden="true"></i>
-                            DOB
-                        </div>
-                        <div className="data-field">
-                            {userData.dob}
-                        </div>
-                    </div >
-
-
-                    <div className="details list-group-item">
-                        <div className="text-field"><i className="fa fa-certificate" aria-hidden="true"></i>
-                            Promo
-                        </div>
-                        <div className="data-field">
-                            ₹ {promoWallet}
-                        </div>
-                    </div>
+                        <div className="details list-group-item" >
+                            <div className="text-field"><i className="fa fa-birthday-cake" aria-hidden="true"></i>
+                                DOB
+                            </div>
+                            <div className="data-field">
+                                {userData.dob}
+                            </div>
+                        </div >
 
 
-                    <div className="details list-group-item">
-                        <div className="text-field"><i className="fa fa-money" aria-hidden="true"></i>
-                            Cash
+                        <div className="details list-group-item">
+                            <div className="text-field"><i className="fa fa-certificate" aria-hidden="true"></i>
+                                Promo
+                            </div>
+                            <div className="data-field">
+                                ₹ {promoWallet}
+                            </div>
                         </div>
-                        <div className="data-field">
-                            ₹ {cashWallet}
+
+
+                        <div className="details list-group-item">
+                            <div className="text-field"><i className="fa fa-money" aria-hidden="true"></i>
+                                Cash
+                            </div>
+                            <div className="data-field">
+                                ₹ {cashWallet}
+                            </div>
                         </div>
-                    </div>
-                </Card>
+                    </Card>
+                </div>
             </div>
-        </div>
-
         )
     }
 }

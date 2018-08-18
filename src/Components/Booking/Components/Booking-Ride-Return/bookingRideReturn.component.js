@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import {
-    Card, CardTitle, CardBody, Row, Col, ButtonToolbar, Button, Progress
+    Card, CardBody, Row, Col, Progress
 } from 'reactstrap';
 
-import { BookingPickupDate, BookingPickupTime, BookingDropDate, BookingDropTime, TotalDuration, RideStatus } from './../../../../Utils/booking.utils';
+import { BookingPickupDate, BookingPickupTime, BookingDropDate, BookingDropTime, TotalDuration, RideStatus  } from './../../../../Utils/booking.utils';
 import { Link } from 'react-router-dom';
 
 import './bookingRideReturn.css';
-import SummaryCard from '../../../Summary-Card/summaryCard';
-import BookingDetail from '../../../../Scenes/Booking-Detail/bookingDetail.scene';
 
 export default class BookingRideReturn extends Component {
 
@@ -92,7 +90,9 @@ export default class BookingRideReturn extends Component {
                         {
                             (bookingRideReturnData && bookingRideReturnData.status && bookingRideReturnData.status.id == 8) ? <div className="trip-card-heading">Cancellation Details</div>
                                 :
-                                <div className="trip-card-heading">Trip Details</div>
+                                <div className={theClassName}>
+                                    <div className="trip-card-heading">Trip Details</div>
+                                </div>
                         }
                         {
                             (bookingRideReturnData && !bookingRideReturnData.status) ?
