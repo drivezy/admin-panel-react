@@ -168,8 +168,8 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
 
                 const relationIndex = dict.parent;
 
-                if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && relationship[relationIndex].hasOwnProperty('reference_model')) {
-                    finalColumnDefinition[i].menu_url = relationship[relationIndex].reference_model.menu_url;
+                if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && (relationship[relationIndex].menu_url || relationship[relationIndex].hasOwnProperty('reference_model'))) {
+                    finalColumnDefinition[i].menu_url = relationship[relationIndex].menu_url || relationship[relationIndex].reference_model.menu_url;
                 }
                 // if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex)) {
                 //     if (relationship[relationIndex].hasOwnProperty('related_model')) {
@@ -601,7 +601,7 @@ export function RowTemplate({ selectedColumn, listingRow, path = 'path' }) {
         // const id = listingRow[selectedColumn.p]
         const idPath = selectedColumn.parent + '.id';
         const path = `${selectedColumn.menu_url}/${listingRow[idPath]}`
-        return <a className='hyperlink-field' onClick={() => Location.navigate({ url: path })}>
+        return <a className='hyperlink-field' onClick={(e) => Location.navigate({ url: path }, e)}>
             {defaultRowValue({ listingRow, selectedColumn, path })}
         </a>
     } else {

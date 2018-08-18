@@ -8,7 +8,7 @@
     "bootstrap": "^4.0.0",
     "bootstrap-daterangepicker": "^3.0.1",
     "common-js-util": "^0.1.7",
-    "drivezy-web-utils": "0.0.23",
+    "drivezy-web-utils": "0.0.26",
     "formik": "^0.11.11",
     "imageviewer": "^1.0.0",
     "jquery": "^3.3.1",
