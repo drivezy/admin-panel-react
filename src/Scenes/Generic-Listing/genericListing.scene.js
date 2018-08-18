@@ -15,7 +15,7 @@ import { GetUrlParams, Location } from 'drivezy-web-utils/build/Utils/location.u
 
 import DynamicFilter from './../../Components/Dynamic-Filter/dynamicFilter.component';
 import ConfigureDynamicFilter from './../../Components/Configure-Filter/configureFilter.component';
-import ListingPagination from './../../Components/Listing-Pagination/ListingPagination';
+import ListingPagination from './../../Components/Listing-Pagination/listingPagination.component';
 import TableSettings from './../../Components/Table-Settings/TableSettings.component';
 import PortletTable from './../../Components/Portlet-Table/PortletTable.component';
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';

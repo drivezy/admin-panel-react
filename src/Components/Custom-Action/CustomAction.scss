@@ -59,8 +59,11 @@
             }
         }
         .dropdown-menu {
+            left: -155px !important;
+            top: 30px !important;
+            transform: none !important;
             min-width: 230px !important;
-            max-height: 585px;
+            max-height: 540px;
             overflow: scroll;
         }
     .dropdown-menu.menu-operations{

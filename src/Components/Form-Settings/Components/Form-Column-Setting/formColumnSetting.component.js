@@ -51,11 +51,11 @@ export default class FormColumnSetting extends Component {
             <div className={`column-setting ${activeColumn.column == column.column ? 'active' : ''}`} >
                 <div className="column-label">
                     <div className="item-label" onClick={() => this.props.selectColumn(column, this.props.index)} onDoubleClick={() => this.props.removeColumn(column)} >
-                        {column.columnTitle ? column.columnTitle : columns[column.index].display_name}
+                        {column.columnTitle ? column.columnTitle : (columns[column.index] ? columns[column.index].display_name : null)}
                     </div>
                     <div className="column-toggle" onClick={() => this.props.removeColumn(column)}>
-                                <i className={`fa fa-trash`}></i>
-                            </div>
+                        <i className={`fa fa-trash`}></i>
+                    </div>
                     <div className="column-toggle" onClick={this.toggleSetting}>
                         <i className={`fa ${column.expanded ? ' fa-chevron-down' : ' fa-chevron-right'}`}></i>
                     </div>

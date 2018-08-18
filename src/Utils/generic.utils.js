@@ -168,8 +168,8 @@ export function CreateFinalColumns(columns, selectedColumns, relationship) {
 
                 const relationIndex = dict.parent;
 
-                if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && relationship[relationIndex].hasOwnProperty('reference_model')) {
-                    finalColumnDefinition[i].menu_url = relationship[relationIndex].reference_model.menu_url;
+                if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex) && (relationship[relationIndex].menu_url || relationship[relationIndex].hasOwnProperty('reference_model'))) {
+                    finalColumnDefinition[i].menu_url = relationship[relationIndex].menu_url || relationship[relationIndex].reference_model.menu_url;
                 }
                 // if (!IsUndefinedOrNull(relationship) && relationship.hasOwnProperty(relationIndex)) {
                 //     if (relationship[relationIndex].hasOwnProperty('related_model')) {
@@ -348,12 +348,12 @@ export function GetPreSelectedMethods() {
     let menuDictionary = null;
     let menuColumns = null;
 
-    methods.preferenceSetting = (preference, preferenceObj) => {
-        ModalManager.openModal({
-            headerText: "Edit " + preferenceObj.name + " Preference",
-            modalBody: () => (<PreferenceSetting listing={preference} preferenceObj={preferenceObj}></PreferenceSetting>)
-        })
-    }
+    // methods.preferenceSetting = (preference, preferenceObj) => {
+    //     ModalManager.openModal({
+    //         headerText: "Edit " + preferenceObj.name + " Preference",
+    //         modalBody: () => (<PreferenceSetting listing={preference} preferenceObj={preferenceObj}></PreferenceSetting>)
+    //     })
+    // }
 
 
     methods.redirectGeneric = ({ action, listingRow, history, genericData }) => {
@@ -413,7 +413,7 @@ export function GetPreSelectedMethods() {
      * @param  {object} genericData}
      */
     methods.addGeneric = ({ action, listingRow, genericData, source = 'module', menuDetail, parent }) => {
-        const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Add', menuDetail, parent });
+        const formContent = GetFormContent({ listingRow, action, genericData, source, method: 'Add', menuDetail, parent });
         ProcessForm({ formContent });
         // const formContent = {
         //     source,
@@ -438,7 +438,7 @@ export function GetPreSelectedMethods() {
      * @param  {object} genericData}
      */
     methods.editGeneric = ({ action, listingRow, genericData, source = 'model', menuDetail, parent }) => {
-        const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Edit', menuDetail, parent });
+        const formContent = GetFormContent({ listingRow, action, genericData, source, method: 'Edit', menuDetail, parent });
         ProcessForm({ formContent });
         // const payload = { method: 'edit', action, listingRow, columns: genericData.columns, formPreference: genericData.formPreference, modelName: genericData.modelName, module: genericData.module };
         // const formContent = {
@@ -466,7 +466,7 @@ export function GetPreSelectedMethods() {
     }
 
     methods.customForm = ({ action, listingRow, genericData, source = 'form', menuDetail, parent }) => {
-        const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Add', menuDetail, parent });
+        const formContent = GetFormContent({ listingRow, action, genericData, source, method: 'Add', menuDetail, parent });
         formContent.form = action;
         ProcessForm({ formContent, isForm: true });
     }
@@ -479,7 +479,7 @@ export function GetPreSelectedMethods() {
      * @param  {object} genericData}
      */
     methods.copyGeneric = ({ action, listingRow, genericData, source = 'module', menuDetail, parent }) => {
-        const formContent = getFormContent({ listingRow, action, genericData, source, method: 'Add', menuDetail, parent });
+        const formContent = GetFormContent({ listingRow, action, genericData, source, method: 'Add', menuDetail, parent });
         ProcessForm({ formContent });
         // const formContent = {
         //     source,
@@ -549,28 +549,29 @@ export function GetPreSelectedMethods() {
         }
     }
 
-    function getFormContent({ listingRow, action, genericData, source, method, menuDetail = {}, parent = {} }) {
-        return {
-            method: method.toLowerCase(),
-            menu: menuDetail,
-            source,
-            parent: parent,
-            callback: action.callback,
-            data: listingRow,
-            starter: genericData.starter,
-            dictionary: genericData.columns,
-            relationship: genericData.model,
-            layout: genericData.formPreference,
-            layouts: genericData.formPreferences,
-            userId: genericData.userId,
-            modelId: genericData.modelId,
-            modelAliasId: genericData.modelAliasId,
-            route: genericData.url,
-            name: method + ' ' + genericData.starter,
-            modelHash: genericData.modelHash
-        };
-    }
     return methods;
+}
+
+export function GetFormContent({ listingRow, action, genericData, source, method = '', menuDetail = {}, parent = {} }) {
+    return {
+        method: method.toLowerCase(),
+        menu: menuDetail,
+        source,
+        parent: parent,
+        callback: action.callback,
+        data: listingRow,
+        starter: genericData.starter,
+        dictionary: genericData.columns,
+        relationship: genericData.model,
+        layout: genericData.formPreference,
+        layouts: genericData.formPreferences,
+        userId: genericData.userId,
+        modelId: genericData.modelId,
+        modelAliasId: genericData.modelAliasId,
+        route: genericData.url,
+        name: method + ' ' + genericData.starter,
+        modelHash: genericData.modelHash
+    };
 }
 
 export async function GetPreference(paramName) {
@@ -601,7 +602,7 @@ export function RowTemplate({ selectedColumn, listingRow, path = 'path' }) {
         // const id = listingRow[selectedColumn.p]
         const idPath = selectedColumn.parent + '.id';
         const path = `${selectedColumn.menu_url}/${listingRow[idPath]}`
-        return <a className='hyperlink-field' onClick={() => Location.navigate({ url: path })}>
+        return <a className='hyperlink-field' onClick={(e) => Location.navigate({ url: path }, e)}>
             {defaultRowValue({ listingRow, selectedColumn, path })}
         </a>
     } else {
@@ -836,8 +837,9 @@ export function EvalCondtionForNextActions(condition, itemRow, starter) {
             }
 
             evaluatedExpressions[i] = typeof evaluatedExpressions[i] == 'string' ? `'${evaluatedExpressions[i]}'` : evaluatedExpressions[i];
-            condition = condition.replace(expressions[i], evaluatedExpressions[i]);
+            condition = condition.replace(expressions[i], typeof evaluatedExpressions[i] == 'object' ? 1 : evaluatedExpressions[i]);
         } catch (e) {
+            console.log(e.message);
             evaluatedExpressions[i] = data[expression];
             condition = condition.replace(expressions[i], "'" + evaluatedExpressions[i] + "'");
         }
