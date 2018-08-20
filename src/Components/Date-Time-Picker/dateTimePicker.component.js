@@ -21,7 +21,7 @@ export default class DateTimePicker extends Component {
         $image.datetimepicker({
             viewMode: this.props.viewMode,
             format: this.props.format,
-            inline: true,
+            // inline: true,
             sideBySide: true
         });
 
