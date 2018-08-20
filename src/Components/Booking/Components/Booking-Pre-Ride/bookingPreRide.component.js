@@ -69,16 +69,16 @@ export default class BookingPreRide extends Component {
                                         {bookingPreRideData.vehicle.registration_number}
                                     </Link>
 
-                                    <span className="vehicle-info-name">-
-                                            <CustomTooltip placement="top" html={'(' + bookingPreRideData.vehicle.car.name + ')'} title="Current Vehicle"></CustomTooltip>
+                                    <span className="vehicle-info-name">
+                                            <CustomTooltip placement="top" html={'(' +bookingPreRideData.vehicle.car.name + ')'} title="Current Vehicle"></CustomTooltip>
                                     </span>
                                 </div>
-
+                                
                                 <div className="billing-car-name">
-                                    {
-                                        bookingPreRideData.billing_car != null &&
-                                        <CustomTooltip placement="top" html={bookingPreRideData.billing_car.name} title="Billing Vehicle"></CustomTooltip>
-                                    }
+                                {
+                                    bookingPreRideData.billing_car != null &&
+                                    <CustomTooltip placement="top" html={bookingPreRideData.billing_car.name} title="Billing Vehicle"></CustomTooltip>
+                                }
                                 </div>
                                 <p className="ride-type">
                                     <span>

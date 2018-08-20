@@ -11,7 +11,7 @@ import QueryDashboardForm from './../../Components/Query-Report/Query-Dashboard-
 import QueryTable from './../../Components/Query-Report/Query-Table/queryTable.component';
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import { Get, Post } from 'common-js-util';
-import ListingPagination from './../../Components/Listing-Pagination/listingPagination.component'
+import ListingPagination from './../../Components/Listing-Pagination/listingPagination.component';
 import { GetUrlParams, Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { QueryData } from './../../Utils/query.utils';
 import { GetPreferences } from './../../Utils/preference.utils';

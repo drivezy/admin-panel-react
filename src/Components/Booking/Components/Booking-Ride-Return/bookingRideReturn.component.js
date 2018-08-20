@@ -3,7 +3,7 @@ import {
     Card, CardBody, Row, Col, Progress
 } from 'reactstrap';
 
-import { BookingPickupDate, BookingPickupTime, BookingDropDate, BookingDropTime, TotalDuration, RideStatus } from './../../../../Utils/booking.utils';
+import { BookingPickupDate, BookingPickupTime, BookingDropDate, BookingDropTime, TotalDuration, RideStatus  } from './../../../../Utils/booking.utils';
 import { Link } from 'react-router-dom';
 
 import './bookingRideReturn.css';
