@@ -55,9 +55,17 @@ export default class Pageutil {
                 data={self.page.data}
                 menu={self.page.menu}
                 parent={self.page.parent}
+                callback={self.page.callback}
                 {...args}
             />
         });
+    }
+    
+    /**
+     * Returns callback method to refresh the page content
+     */
+    static getCallback() {
+        return self.page.callback;
     }
 
     /**

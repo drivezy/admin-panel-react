@@ -35,6 +35,13 @@ export default class FormUtil {
     }
 
     /**
+     * Returns callback method to refresh the page content
+     */
+    static getCallback() {
+        return self.page.callback;
+    }
+
+    /**
      * This method is being used by form creator to keep notifying
      * on event change
      * 
