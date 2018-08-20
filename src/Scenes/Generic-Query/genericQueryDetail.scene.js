@@ -255,7 +255,8 @@ export default class GenericQueryDetail extends Component {
      * Maintain localSearch for locally searching on type 
      */
     filterLocally = (column, value) => {
-        this.setState({ localSearch: { field: column ? column.name : '', value: value ? value : null } });
+        console.log(column);
+        this.setState({ localSearch: { field: column ? column.column_name : '', value: value ? value : null } });
     }
 
     render() {
@@ -265,6 +266,10 @@ export default class GenericQueryDetail extends Component {
         const { history, match, parentData } = this.props;
 
         let filteredResults = [];
+
+        if(localSearch.value){
+            filteredResults = resultData.listing.filter(entry => entry[localSearch.field] && (entry[localSearch.field].toString().toLowerCase().indexOf(localSearch.value) != -1));
+        }
 
         let filterContent = {};
 
@@ -277,7 +282,7 @@ export default class GenericQueryDetail extends Component {
                                 localSearch={localSearch}
                                 onEdit={this.filterLocally}
                                 searchQuery={this.urlParams.search}
-                                dictionary={filterContent.dictionary}
+                                dictionary={resultData.dictionary}
                             />
                         </div>
                         <div className="dynamic-filter-wrapper">

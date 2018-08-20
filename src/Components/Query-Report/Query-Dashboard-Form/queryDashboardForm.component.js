@@ -105,7 +105,7 @@ const formElements = props => {
                             }
                             if (column) {
                                 return (
-                                    <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
+                                    <div key={key} className={`form-group`}>
                                         <label>{column.label || column.display_name}</label>
 
                                         {elem}
@@ -165,7 +165,7 @@ export default class QueryDashboardForm extends Component {
         }
     }
 
-    UNSAFE_componentWillReceivePropscomponentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps){
         this.setState({
             payload: {
                 queryData: this.props.queryParamsData,
@@ -173,7 +173,9 @@ export default class QueryDashboardForm extends Component {
                 fields: this.props.fields || []
             }
         });
+
     }
+
 
     render() {
 

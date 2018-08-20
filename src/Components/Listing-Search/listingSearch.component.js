@@ -221,6 +221,7 @@ export default class ListingSearch extends Component {
                         <div className="listing-select-tool">
                             <SelectBox label="display_name"
                                 isClearable={false}
+                                field="display_name"
                                 onChange={(data) => {
                                     this.filterChange(data)
                                 }} value={selectedColumn} options={dictionary} placeholder='Column' />

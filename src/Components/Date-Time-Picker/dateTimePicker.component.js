@@ -15,8 +15,7 @@ export default class DateTimePicker extends Component {
     }
 
     componentDidMount() {
-        let $image = $('#datetimepicker10');
-        
+        let $image = $('.date-time-wrapper');
 
         $image.datetimepicker({
             viewMode: this.props.viewMode,
@@ -25,12 +24,6 @@ export default class DateTimePicker extends Component {
             sideBySide: true
         });
 
-        // $(function () {
-        //     $('#datetimepicker10').datetimepicker({
-        //         viewMode: this.props.viewMode,
-        //         format: this.props.format
-        //     });
-        // });
     }
 
     render() {
@@ -39,14 +32,14 @@ export default class DateTimePicker extends Component {
             <div>
                 <div className="col-sm-12">
                     <div className="form-group-wrapper">
-                        <div className='input-group date' id='datetimepicker10' >
-                            <input type='text' autocomplete="off" className="form-control" />
-                            <span className="input-group-addon">
+                        <div className='input-group date'>
+                            <input id='datetimepicker10' type='text' autocomplete="off" className="form-control date-time-wrapper" />
+                            {/* <span className="input-group-addon">
                                 <span>
                                     <i className="fa fa-calendar" aria-hidden="true">
                                     </i>
                                 </span>
-                            </span>
+                            </span> */}
                         </div>
                     </div>
                 </div>

@@ -1,17 +1,16 @@
-.reports-content{
-    .form-creator{
-        .card{
-                form{
-                    height: 45px;
-                    background-color: #fff;
-
-                .form-row{
-                    .picker{
+.reports-content {
+    .dashboard-form {
+        .card {
+            form {
+                height: 45px;
+                background-color: #fff;
+                .form-row {
+                    .picker {
                         display: flex;
-                        .form-group{
+                        .form-group {
                             border-bottom: none;
                         }
-                        .form-group{
+                        .form-group {
                             display: flex;
                             flex-direction: row;
                             background-color: #fff;
@@ -21,7 +20,7 @@
                             padding-left: 10px;
                             margin-bottom: 0px;
                             border-radius: 2px;
-                            .data-point{
+                            .data-point {
                                 border-right: 1px solid black;
                                 .form-label {
                                     font-weight: bold;
@@ -40,12 +39,10 @@
                                 }
                             }
                         }
-
                     }
                 }
-                }
-            }
-            .modal-actions{
             }
         }
+        .modal-actions {}
     }
+}
