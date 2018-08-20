@@ -238,7 +238,7 @@ export class Spotlight extends Component {
     render() {
 
         const { menus, searchText, isOpen, searchList } = this.state;
-
+        let searchLength;
         if (isOpen) {
             // document.getElementById('spotlight-input').focus();
         }
