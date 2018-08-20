@@ -4,34 +4,35 @@
     }
     display: flex;
     flex-direction: column;
-    .header-actions{
+    .booking-header{
+        .booking-info{
+            float: left;
+            font-size: 130%;
+            padding: 5px 20px;
+            color: #666;
+        }
+        .header-actions{
         display: flex;
         justify-content: flex-end;
         padding: 2px 5px;
+        }
     }
     .booking-details {
         height: 75%;
         display: flex;
-        flex-direction: row;
         .booking-user-detail {
             flex-basis: 28%;
         }
-        // .details-body {
-            // display: flex;
-            // width: 76%;
-            // width: 100%;
-            // flex-direction: row;
             .pre-ride-detail-and-ride-return{
-                width: 70%;
                 display: flex;
                 flex-direction: column;
-                margin-left: 2px;
+                padding: 0 10px;
                 .booking-pre-ride-detail {
-                    margin-right: 2px;
-                    
+                    padding: 0 0 10px 0; 
                 }
-
-                
+                .card{
+                    border-radius: 10px;
+                }
             }
             .summary-and-feedback {
                 flex-basis: 30%;
@@ -53,7 +54,6 @@
                     }
                 }
             }
-        // }
     }
     .booking-tabs {
         height: 25%;

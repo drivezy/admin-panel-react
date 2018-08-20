@@ -1,0 +1,119 @@
+.generic-query {
+    .page-bar {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 4px 6px;
+        background: #f1f1f1;
+        border-bottom: 1px solid #d4d4d4;
+        .listing-tools {
+            display: flex;
+            justify-content: space-between;
+            &.left {
+                .dynamic-filter-wrapper {
+                    // flex-basis: 70%;
+                }
+                .search-box-wrapper {
+                    margin-right: 3px; // flex-basis: 30%;
+                    .select-input-search-container {
+                        custom-select-field {
+                            .custom-drop-down {
+                                min-height: 32px;
+                                #single-button {
+                                    box-shadow: none;
+                                }
+                            }
+                        }
+                        input#search-generic {
+                            margin: 1px;
+                            height: 31px;
+                            border-radius: 2px;
+                            border-color: #d6d6d6;
+                            box-shadow: none;
+                        }
+                    }
+                }
+            }
+            &.right {
+                .portlet-tools {
+                    padding: 3px;
+                    display: flex;
+                }
+                .btn-group {
+                    button.btn {
+                        border: 1px solid #dadfe3; // color: #7b797a;
+                        color: #35485a;
+                        background-color: #fff;
+                        cursor: pointer;
+                        vertical-align: middle;
+                        -webkit-font-smoothing: antialiased;
+                        transition: .1s ease-in;
+                        color: #183247;
+                        padding: 5px 10px;
+                        text-align: center;
+                        &:hover {
+                            outline: 0;
+                            background-color: #ebedf0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .active-filters-container{
+        background: #dce3e6 !important;
+        .btn{
+            margin: 5px;
+            background-color: #fff !important;
+            color: #555;
+            border-color: #fff;
+            padding: 20px 30px;
+        }
+    }
+    .query-details {
+        .query-header {
+            
+            display: flex;
+            background: #dcdcdc7a;
+            min-height: 45px;
+            //height : 45px;
+            border: 1px solid #d6d6d6;
+            margin: 0px;
+            padding: 8px;
+            .header-content {
+                margin: 5px;
+                display: -ms-flexbox;
+                // display: flex; //  justify-content: space-between;
+                align-items: center;
+                flex-basis: 10%;
+                position: relative;
+                .content-name{
+                    position: absolute;
+                    float: left;
+                }
+            }
+            .metrics-container {
+                float: right;
+                position: relative;
+                align-content: center;
+                .metrics-wrapper {
+                    position: relative;
+                    .metrics {
+                        //position: absolute;
+                        float: left;
+                        display: flex;
+                    }
+
+                    .active-filters {
+                        background-color: #e2e4e6 !important;
+                    }
+                        .form-groups {
+                            display:flex;
+                            flex-direction: column;
+                        }
+                    }
+                }
+            }
+        }
+    }

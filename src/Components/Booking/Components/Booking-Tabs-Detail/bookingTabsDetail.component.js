@@ -416,6 +416,22 @@ export default class BookingTabsDetail extends Component {
                 },{
                     field: "user_requested",
                     label: "User Requested"
+                },{
+                    name: 'Pricing Object',
+                    data: bookingTabsData.pricing_object,
+                    columns: [{
+                        field: "weekday_hourly_normal",
+                        label: "Weekday Hourly Normal"
+                    }, {
+                        field: "billing_date",
+                        label: "Date"
+                    }, {
+                        field: "created_by",
+                        label: "Debit"
+                    }, {
+                        field: "amount",
+                        label: "Credit"
+                    }]
                 }]
             }
         ]

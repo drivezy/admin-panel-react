@@ -27,8 +27,10 @@ export default class BookingPreRide extends Component {
         let bookingDropDate = BookingDropDate(bookingPreRideData.drop_time);
         let bookingDropTime = BookingDropTime(bookingPreRideData.drop_time);
         let duration = TotalDuration(bookingPreRideData.drop_time, bookingPreRideData.pickup_time);
-        let theClassName = RideStatus(bookingPreRideData.status.id);
-
+        let theClassName;
+        if (bookingPreRideData.status) {
+            theClassName = RideStatus(bookingPreRideData.status.id);
+        }
         if (bookingPreRideData.coupon) {
             couponDescription = bookingPreRideData.coupon.campaign.cashback ? 'Campaign Discription:' + bookingPreRideData.coupon.campaign.description : 'Campaign Discription:' + bookingPreRideData.coupon.campaign.description + ' | ' + (bookingPreRideData.coupon.description ? "Coupon Description:" + bookingPreRideData.coupon.description : " ") + "Discount Amount:" + bookingPreRideData.coupon_discount;
         }
@@ -63,11 +65,11 @@ export default class BookingPreRide extends Component {
                             </Col>
                             <Col sm="5" className="vehicle-info-data">
                                 <div>
-                                    <Link to={`/allVehicleDetail/${bookingPreRideData.vehicle.id}`} className="vehicle-info-number">
+                                    <Link to={`/vehicle/${bookingPreRideData.vehicle.id}`} className="vehicle-info-number">
                                         {bookingPreRideData.vehicle.registration_number}
                                     </Link>
 
-                                    <span className="vehicle-info-name">-
+                                    <span className="vehicle-info-name">
                                             <CustomTooltip placement="top" html={'(' +bookingPreRideData.vehicle.car.name + ')'} title="Current Vehicle"></CustomTooltip>
                                     </span>
                                 </div>
@@ -103,6 +105,7 @@ export default class BookingPreRide extends Component {
 
                             </Col>
                         </Row>
+                        <hr />
                         <Row className="booking-detail-date">
                             <Col >
                                 <div className="jr-start-time">
@@ -129,7 +132,7 @@ export default class BookingPreRide extends Component {
                                     </div>
                                     <div className="no-padding light-red  font-11" align="center">
                                         {duration}
-                                        </div>
+                                    </div>
                                 </div>
                             </Col>
                             <Col>
