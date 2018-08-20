@@ -14,7 +14,8 @@ import GLOBAL from './../../Constants/global.constants';
 import SettingsUtil from './../../Utils/settings.utils';
 import ThemeUtil from './../../Utils/theme.utils';
 import ImpersonateFrom from './../../Components/Impersonate-Form/impersonateForm.component';
-import { RemoveItem } from './../../Utils/localStorage.utils';
+// import { RemoveItem } from './../../Utils/localStorage.utils';
+import { RemoveItem } from 'storage-utility';
 import { SetUserPreference } from './../../Utils/userPreference.utils';
 
 export default class PageNav extends Component {

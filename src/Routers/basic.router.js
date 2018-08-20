@@ -89,15 +89,15 @@ export class BasicRoute extends Component {
         this.getHomepage();
     }
 
-    getHomepage = async() => {
-        const preference = await GetUserPreferences();
-        if(preference.success){
-            const preferences = preference.response;
-            preferences.map((parameter) => (
-                (parameter.parameter == "homepage") ? homepage = parameter.value : null
-            )) 
-        }
-    } 
+    // getHomepage = async() => {
+    //     const preference = await GetUserPreferences();
+    //     if(preference.success){
+    //         const preferences = preference.response;
+    //         preferences.map((parameter) => (
+    //             (parameter.parameter == "homepage") ? homepage = parameter.value : null
+    //         )) 
+    //     }
+    // } 
 
     userDataFetched = (data) => {
         if (data.id) {
@@ -117,12 +117,7 @@ export class BasicRoute extends Component {
                 <Switch>
                     <Route path="/signup" component={SignupScene} />
                     <Route path="/login" component={LoginScene} />
-                    {
-                    homepage ?
-                    <PrivateRoute path={homepage} loggedUser={loggedUser} component={IndexRouter} />
-                    :
                     <PrivateRoute path="/" loggedUser={loggedUser} component={IndexRouter} />
-                    }
                 </Switch>
                 {/* </Router> */}
                 <ToastContainer ref={(elem) => { ToastNotifications.register(elem); }} />
