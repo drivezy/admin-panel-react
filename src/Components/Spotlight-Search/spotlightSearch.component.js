@@ -9,7 +9,7 @@ import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 
 let subMenu;
 
-let searchLength = 0;
+// let searchLength = 0;
 
 export class Spotlight extends Component {
 
@@ -98,7 +98,6 @@ export class Spotlight extends Component {
         let result;
         let querySearchList = []
         switch (obj) {
-
             // To search PNR
             case 1:
                 var url = "bookingToken/" + searchText;
@@ -161,9 +160,10 @@ export class Spotlight extends Component {
                 break;
 
             case 9:     //@TODO MAKE A LIST PAGE WHERE WE SHOULD REDIRECT
-
                 break;
 
+            default:
+                break;
         }
     }
 
@@ -189,7 +189,8 @@ export class Spotlight extends Component {
     }
 
     onSelect = (event) => {
-        const { searchList = [], querySearchList = [] } = this.state
+        const { searchList = [], querySearchList = [] } = this.state;
+        const searchLength = searchList.length - 1;
         if (event.which == 40) {
             this.searchInput.current.blur();
             var menus = document.getElementsByClassName('spotlight-menu-list')[0];
@@ -227,10 +228,10 @@ export class Spotlight extends Component {
     }
 
     redirectTo = (state) => {
-        
-            this.setState({ isOpen: !this.state.isOpen });
-            if (state) {
-            Location.navigate({ url: state.url });
+
+        this.setState({ isOpen: !this.state.isOpen });
+        if (state) {
+            Location.navigate({ url: '/' + state.url });
         }
     }
 

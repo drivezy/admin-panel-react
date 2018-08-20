@@ -4,6 +4,11 @@ import './../../Components/Booking/Components/Booking-Ride-Return/bookingRideRet
 import { TruncateDecimal } from './../../Utils/js.utils';
 import './summaryCard.css';
 
+let paidAmount = 0;
+let fairAmount = 0;
+let amountDue = 0;
+let tentative_amount = 0;
+
 export default class SummaryCard extends Component {
 
     constructor(props) {
@@ -16,26 +21,22 @@ export default class SummaryCard extends Component {
         };
     }
 
-    toggle() {
-        this.setState({ collapse: !this.state.collapse });
+    componentDidMount() {
+        const { bookingData } = this.state;
+        this.getBookingData(bookingData);
     }
 
-    render() {
-        const { bookingData = {} } = this.state;
-        let paidAmount = 0;
+    getBookingData = (bookingData) => {
         if (bookingData.payment && bookingData.payment.length) {
             bookingData.payment.forEach(function (data) {
                 paidAmount += parseFloat(data.amount);
             });
         }
-
-        let fairAmount = 0;
         if (bookingData.collection && bookingData.collection.length) {
             bookingData.collection.forEach(function (data) {
                 fairAmount += parseFloat(data.amount);
             });
         }
-
         if (bookingData.extension && bookingData.extension.length) {
             let approvedExtensionCost = 0;
             bookingData.extension.forEach(function (data) {
@@ -44,16 +45,24 @@ export default class SummaryCard extends Component {
                 }
             });
             if (approvedExtensionCost > 0) {
-                bookingData.tentative_amount += approvedExtensionCost
+                tentative_amount += approvedExtensionCost;
             }
         }
-
-        let amountDue = 0;
         bookingData.refund.forEach(function (remaining_amount) {
             if (remaining_amount.processed == 0) {
                 amountDue += parseFloat(remaining_amount.amount);
             }
         });
+    }
+
+    toggle = (e) => {
+        e.preventDefault();
+        this.setState({ collapse: !this.state.collapse });
+    }
+
+    render() {
+        const { bookingData = {} } = this.state;
+        const status = bookingData.status || {};
 
         return (
             <Card className="summary-card">
@@ -71,12 +80,12 @@ export default class SummaryCard extends Component {
                             </div>
 
                             <div className="data">
-                                ₹{paidAmount}
+                                ₹{paidAmount.toFixed(2)}
                             </div>
                         </div>
 
                         {
-                            (bookingData.status.id == 5 || bookingData.status.id == 6) ?
+                            (status.id == 5 || status.id == 6) ?
 
                                 <div className="class">
 
@@ -85,7 +94,7 @@ export default class SummaryCard extends Component {
                                     </div>
 
                                     <div className="data">
-                                        ₹{bookingData.tentative_amount}
+                                        ₹{tentative_amount.toFixed(2)}
                                     </div>
                                 </div>
 
@@ -93,7 +102,7 @@ export default class SummaryCard extends Component {
                         }
 
                         {
-                            (bookingData.status.id == 7 || bookingData.status.id == 8) ?
+                            (status.id == 7 || status.id == 8) ?
 
                                 <div className="class">
 
@@ -102,7 +111,7 @@ export default class SummaryCard extends Component {
                                     </div>
 
                                     <div className="data">
-                                        ₹{fairAmount}
+                                        ₹{fairAmount.toFixed(2)}
                                     </div>
                                 </div>
 
@@ -110,7 +119,7 @@ export default class SummaryCard extends Component {
                         }
 
                         {
-                            (bookingData && bookingData.type.id != 580 && amountDue < 0 && bookingData.status.id != 5 && bookingData.status.id != 6) &&
+                            (bookingData && bookingData.type.id != 580 && amountDue < 0 && status.id != 5 && status.id != 6) &&
 
                             <div className="class">
 
@@ -122,7 +131,7 @@ export default class SummaryCard extends Component {
 
                                 {
                                     amountDue < 0 ? <div className="data">
-                                        ₹{0 - amountDue}
+                                        ₹{(0 - amountDue).toFixed(2)}
                                     </div>
                                         : null
                                 }
@@ -133,7 +142,7 @@ export default class SummaryCard extends Component {
 
 
                         {
-                            (bookingData && amountDue > 0 && bookingData.status.id != 5 && bookingData.status.id != 6) &&
+                            (bookingData && amountDue > 0 && status.id != 5 && status.id != 6) &&
 
                             <div className="class">
 
@@ -142,7 +151,7 @@ export default class SummaryCard extends Component {
                                     </div>
 
                                 <div className="data">
-                                    ₹{amountDue}
+                                    ₹{amountDue.toFixed(2)}
                                 </div>
                             </div>
 
@@ -155,7 +164,7 @@ export default class SummaryCard extends Component {
 
                 <div className="pricing-object">
                     <div>
-                        <div className="pricing" onClick={this.toggle}  >
+                        <div className="pricing" onClick={(e) => this.toggle(e)}  >
                             Pricing Object<i className={"fa " + (this.state.collapse ? 'fa-caret-up' : 'fa-caret-down')}></i>
                         </div>
                         <Collapse isOpen={this.state.collapse}>
@@ -164,11 +173,11 @@ export default class SummaryCard extends Component {
                                     {
                                         Object.keys(bookingData.pricing_object).map(key => {
                                             const pricing = bookingData.pricing_object[key];
-                                            key = key.replace( /_/g, " ");
+                                            key = key.replace(/_/g, " ");
                                             if (key == 'city') {
                                                 return;
                                             }
-                                            else if (key == 'peak'){
+                                            else if (key == 'peak') {
                                                 return (
                                                     <Row className="card-object" key={key}>
                                                         <Col className="item">{key}</Col>
@@ -176,7 +185,7 @@ export default class SummaryCard extends Component {
                                                     </Row>
                                                 )
                                             }
-                                            else{
+                                            else {
                                                 return (
                                                     <Row className="card-object" key={key}>
                                                         <Col className="item">{key}</Col>

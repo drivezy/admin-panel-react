@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import _ from 'lodash';
 
 export default class RosterContent extends Component {
 
@@ -8,10 +9,11 @@ export default class RosterContent extends Component {
         this.state = {
             rosterData: props.rosterData,
             svgFlag: true,
-            dayColumn: [],
+            leftColumn: [],
             marginLine: [],
             pickupDrops: [],
             shiftRects: [],
+            shiftNumberRect: [],
             columnText: [],
             shiftTexts: [],
             leftButtons: [],
@@ -22,9 +24,11 @@ export default class RosterContent extends Component {
             manualPunch: [],
             customAddButtons: [],
             origin: props.origin,
-            dayColumnWidth: 75,
+            leftColumnWidth: 60,
+            pickupDropFlag: false,
             hours: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
-            timeDivisionWidth: 1
+            selfTimewidth: 1,
+            selfIndex: 0
         }
     }
 
@@ -50,42 +54,166 @@ export default class RosterContent extends Component {
     }
     daysBetween = (date1, date2) => {
         //Get 1 day in milliseconds
-        var one_day = 1000 * 60 * 60 * 24;
-        var dateFormatted1 = this.formatDate(date1);
-        var dateFormatted2 = this.formatDate(date2);
+        let one_day = 1000 * 60 * 60 * 24;
+        let dateFormatted1 = this.formatDate(date1);
+        let dateFormatted2 = this.formatDate(date2);
         // Convert both dates to milliseconds
-        var date1_ms = dateFormatted1.getTime();
-        var date2_ms = dateFormatted2.getTime();
+        let date1_ms = dateFormatted1.getTime();
+        let date2_ms = dateFormatted2.getTime();
 
         // Calculate the difference in milliseconds
-        var difference_ms = date2_ms - date1_ms;
+        let difference_ms = date2_ms - date1_ms;
 
         // Convert back to days and return
         return Math.round(difference_ms / one_day);
 
     }
 
+    filterArray = (rosterData) => {
+        let currDate = new Date();
+        let rosterTemp = rosterData.roster_fleet_details;
+        for (let i in rosterTemp) {
+
+            for (let j = 0; j < rosterTemp[i].assignments.length; j++) {
+                let iterDate = this.formatDate(rosterTemp[i].assignments[j].shift_details.end_time);
+                if (rosterTemp[i].assignments[j].fleet_details == null && iterDate <= currDate) {
+                    rosterTemp[i].assignments.splice(j, 1);
+                    j = j - 1;
+                }
+            }
+
+        }
+        return rosterTemp
+
+    }
+    decorateDailyView = (rosterData) => {
+        var rosterTemp = rosterData;
+        var shift_details = [];
+        var temp = _.groupBy(rosterTemp, ["venue_id"])
+        // var temp = $filter("groupBy")(rosterTemp, "venue_id");
+        for (var i in temp) {
+            shift_details.push({
+                'shift_details': temp[i]
+            })
+        }
+        return this.assignAssignmentsDailyView(temp);
+    }
+    assignAssignmentsDailyView = (temp) => {
+        var retObj = [];
+        for (var i in temp) {
+            retObj.push({
+                'assignments': temp[i],
+                'date': temp[i][0].shift_date
+            });
+        }
+        return retObj;
+    }
+    decorate = (rosterData) => {
+        var retObj = {};
+        var roster_fleet_details = [];
+        rosterData.forEach(function (element, key) {
+            var assignments = [];
+            assignments.push({ 'shift_details': key });
+            roster_fleet_details.push({ 'assignments': assignments, 'date': key.shift_date });
+            if (this.formatDate(key.start_time).getDate() != this.formatDate(key.end_time).getDate()) {
+                roster_fleet_details.push({ 'assignments': [], 'date': String(this.formatDate(key.end_time)).substring(4, 15) });
+            }
+        })
+        return (roster_fleet_details);
+    }
+    filterDailyArray = (rosterTemp) => {
+        let currDate = new Date();
+        for (let i in rosterTemp) {
+
+            for (let j = 0; j < rosterTemp[i].assignments.length; j++) {
+                let iterDate = this.formatDate(rosterTemp[i].assignments[j].end_time);
+                if (rosterTemp[i].assignments[j].station_manager == null && iterDate <= currDate) {
+                    rosterTemp[i].assignments.splice(j, 1);
+                    j = j - 1;
+                }
+            }
+
+        }
+        return rosterTemp
+    }
+
+    pickupDropSelect = (value, index) => {
+        let { origin, pickupDrops, pickupDropFlag, selfIndex } = this.state;
+        if (origin != "fleetView" && origin != "dailyView") {
+            pickupDropFlag = value;
+            selfIndex = index;
+            let visib
+            if (value) {
+                visib = "visible";
+
+            }
+            else {
+                visib = "hidden";
+
+            }
+            for (let i = index * 24; i < (index * 24 + 24); i++) {
+                pickupDrops[i].style = { "fill": "#dde7ed", "stroke": "#a2b2bc", "strokeWidth": 1, "visibility": visib };
+                pickupDrops[i].pickupstyle = { "fill": "#41b6ac", "fontSize": "14px", "visibility": visib };
+                pickupDrops[i].dropstyle = { "fill": " #797979", "fontSize": "14px", "visibility": visib };
+            }
+            this.setState({ pickupDrops, pickupDropFlag, selfIndex });
+        }
+    }
+    shiftHover = (value, rect) => {
+        let visib;
+        let { origin, selfIndex, marginLine } = this.state;
+        if (value) {
+            visib = "visible";
+        }
+        else {
+            visib = "hidden";
+        }
+        let startHour, endHour;
+        let data = rect.data;
+        if (origin == "dailyView") {
+            startHour = this.formatDate(data.start_time).getHours();
+            endHour = this.formatDate(data.end_time).getHours();
+        } else {
+            startHour = this.formatDate(data.shift_details.start_time).getHours();
+            endHour = this.formatDate(data.shift_details.end_time).getHours();
+        }
+        marginLine[startHour].style = { "stroke": rect.color, "visibility": visib };
+        marginLine[endHour].style = { "stroke": rect.color, "visibility": visib };
+        if (origin != "fleetView" && origin != "dailyView") {
+            this.pickupDropSelect(value, selfIndex);
+        }
+        this.setState(marginLine);
+    }
     draw = () => {
         const { rosterData, origin } = this.state;
-        let { dayColumn, marginLine, pickupDrops, shiftRects, columnText, shiftTexts, leftButtons, overFlowShifts, shiftOverflowText, partitionRect, multiColor, manualPunch, customAddButtons, timeDivisionWidth } = this.state;
+        let { leftColumn, marginLine, pickupDrops, shiftRects, shiftNumberRect, columnText, shiftTexts, leftButtons, overFlowShifts, shiftOverflowText, partitionRect, multiColor, manualPunch, customAddButtons, selfTimewidth, leftColumnWidth, hours, pickupDropFlag, selfIndex } = this.state;
 
-        let totalElements = 0;
+        pickupDropFlag = false;
         const svg = ReactDOM.findDOMNode(this.refs.mySvg);
-
         let rowHeight = 5;
-        const dayColumnWidth = 75;
-        const rectYHeight = 20;
-        let overFlowFlag = false;
-        let hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+        leftColumnWidth = 60;
+        let pickupDropHeight = 20;
+        hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+        let startMarginTop = 11;
         let selfWidth = svg.width.animVal.value;
-        let timeWidth = (selfWidth - dayColumnWidth) / 24;
-        let selfHeight = 5 * window.innerHeight;
-        let tempHeight = selfHeight;
-        let svgWidth = svg.getBoundingClientRect().x;
-        const buttons = [{
+        let shiftSeperatorMargin = 10;
+        let shiftRectHeight = 42;
+        let emptyBoxHeight = 107;
+        let bottomRowBlockMargin = 12;
+        let totalRowBlockHeight = 0;
+        let leftColumnTextLeftMargin = 20;
+        let buttonHeight = 25;
+        let buttonMargin = 38;
+        let shiftNumberBoxWidth = 40;
+
+        let svgFlag = true;
+        let overFlowFlag = false;
+        let svgWidth;
+
+        let buttons = [{
             'id': 0,
             'text': "\uf067",
-            'color': "#7CB342",
+            'color': "#5fb760",
             'fontColor': "white",
             'hoverText': "Single/Batch Assign"
         },
@@ -101,133 +229,119 @@ export default class RosterContent extends Component {
         let customAddButton = [{
             'id': 2,
             'text': "\uf234",
-            'color': "#7CB342",
+            'color': "#5fb760",
             'fontColor': "white",
             'hoverText': "Custom Assign"
         }];
+        let timeWidth = (selfWidth - leftColumnWidth) / 24;
+        let selfMargin = svg.getBoundingClientRect().x;
+        selfWidth = svg.width.animVal.value;
+        let selfHeight = 5 * window.innerHeight;
+        let tempHeight = selfHeight;
 
-        rowHeight = 5;
-        const bookingObj = rosterData.roster_booking_details;
-        const rosterTemp = rosterData.roster_fleet_details;
-        // If data origin is fleet View then restructure the data
+
+
+
+        // Draw 
+
+        let bookingObj = rosterData.roster_booking_details;
+        let rosterTemp;
         if (origin == "fleetView") {
-            // const rosterTemp = decorate();
+            rosterTemp = this.decorate(rosterData);
+        }
+        else if (origin == "dailyView") {
+            rosterTemp = this.decorateDailyView(rosterData);
+            rosterTemp = this.filterDailyArray(rosterTemp);
         }
         else {
-            const rosterTemp = rosterData.roster_fleet_details;
+            //  rosterTemp = angular.copy(shiftDetails.roster_fleet_details);
+            //  rosterTemp = shiftDetails.filter(function (shift) {
+
+            // })
+            rosterTemp = this.filterArray(rosterData);
         }
 
-        let totalDays = this.daysBetween(rosterTemp[0].date, rosterTemp[rosterTemp.length - 1].date);
-        let heightDay = selfHeight / (totalDays + 1);
-        timeWidth = (selfWidth - dayColumnWidth) / 24;
-        let totalTimeWidth = selfWidth - dayColumnWidth;
-        marginLine = [];
-        for (let k in hours) {
-            makeMarginLine(dayColumnWidth + (timeWidth * k), 15);
-        }
-
-        function makeMarginLine(x, y) {
-            let temp = {
-                'x1': x, 'y1': y, 'x2': x, 'y2': selfHeight, style: { stroke: "#e8edf4" }
-            };
-            marginLine.push(temp);
-        }
-        let temp = {};
+        let totalRowBlocks = rosterTemp.length;
+        let timeIntervalWidth = (selfWidth - leftColumnWidth) / 24;
+        selfTimewidth = timeIntervalWidth;
         let overFlowCount = 0;
         for (let i in rosterTemp) {
-            let indentTop = 0;
-
-            let rowElementLength = rosterTemp[i].assignments.length;
+            let rowBlockHeight;
+            let ShiftRectYStart = pickupDropHeight + startMarginTop + totalRowBlockHeight;
+            let totalRowShifts = rosterTemp[i].assignments.length;
+            let startRowPos = ShiftRectYStart - pickupDropHeight - startMarginTop;
             if (overFlowFlag) {
                 overFlowFlag = false;
-                indentTop += 25 * (overFlowCount);
-                rowElementLength = rowElementLength + overFlowCount;
+                totalRowShifts = totalRowShifts + overFlowCount;
+                ShiftRectYStart = ShiftRectYStart + (overFlowCount * (shiftRectHeight + shiftSeperatorMargin));
             }
-            let assignLength = rosterTemp[i].assignments.length == 0 || rosterTemp[i].assignments.length == 1 ? 2 : rowElementLength;
-            let startY = (assignLength * 20 + (assignLength - 1) * 5 + 30);
-            heightDay = startY;
-            let marg = 0;
-            // Object that makes left Column (day column)
-            temp = {
-                'x': 0, 'y': rowHeight, 'width': dayColumnWidth, 'height': startY, style: {
-                    fill: '#efefef',
-                    stroke: '#797979',
-                    strokeWidth: 1
-                }
-            };
-            dayColumn.push(temp);
 
-            // Object that controls the text on the left column
+            if (totalRowShifts < 2) {
+                rowBlockHeight = emptyBoxHeight + pickupDropHeight + startMarginTop;
+            }
+            else {
+                rowBlockHeight = pickupDropHeight + startMarginTop + (shiftSeperatorMargin * (totalRowShifts - 1)) + (shiftRectHeight * totalRowShifts) + bottomRowBlockMargin;
+            }
+            totalRowBlockHeight = totalRowBlockHeight + rowBlockHeight;
+            let tempLeftColumn = {
+                'x': 0,
+                'y': startRowPos,
+                'width': leftColumnWidth,
+                'height': rowBlockHeight,
+                'style': { "fill": "#dde7ed", "stroke": "#a2b2bc", "strokeWidth": 2 }
+            }
+            leftColumn.push(tempLeftColumn);
+
             let tempColumnText = {};
             if (origin != "dailyView") {
                 tempColumnText = {
-                    'text': rosterTemp[i].date, 'x': 20, 'y': rowHeight + heightDay / 2, style: {
-                        writingMode: 'tb',
-                        fontSize: '12px'
-                    }
-                };
+                    'text': rosterTemp[i].date,
+                    'x': leftColumnTextLeftMargin,
+                    'y': startRowPos + rowBlockHeight / 2,
+                    'style': { "writingMode": " tb-rl", "fontSize": "14px" }
+                }
             }
-            if (origin == "fleetView") {
+            else {
                 tempColumnText = {
-                    'text': rosterTemp[i].date, 'x': 20, 'y': rowHeight + heightDay / 2, style: {
-                        writingMode: 'tb',
-                        fontSize: '10px'
-                    }
-                };
+                    'text': rosterTemp[i].assignments[0].venue.name.substring(0, 19),
+                    'x': leftColumnTextLeftMargin,
+                    'y': startRowPos + rowBlockHeight / 2,
+                    'style': { "writingMode": "tb-rl", "fontSize": "14px" }
+                }
             }
-            else if (origin == "dailyView") {
-                tempColumnText = {
-                    'text': rosterTemp[i].venue, 'x': 120 + dayColumnWidth, 'y': rowHeight + heightDay - 12, style: {
-                        fill: '#D3D3D3',
-                        fontSize: '20px'
-                    }
-                };
-            }
-
             columnText.push(tempColumnText);
 
-            // Object that controls the rectangle to seperate days
             let tempPartitionRect = {
-                'x': dayColumnWidth, 'y': rowHeight, 'width': selfWidth - dayColumnWidth, 'height': startY,
-                style: {
-                    fill: 'white',
-                    stroke: '#797979',
-                    strokeWidth: 1,
-                    fillOpacity: 0
-                }
+                'x': leftColumnWidth,
+                'y': startRowPos,
+                'width': selfWidth - leftColumnWidth,
+                'height': rowBlockHeight,
+                'style': { "fill": "white", "stroke": "#a2b2bc", "strokeWidth": 1, "fillOpacity": 0 }
             }
             partitionRect.push(tempPartitionRect);
 
-            // Begin drawing Pickups and drops
-            if (origin != "fleetView") {
-                for (var j in bookingObj) {
+            // Begin drawing pickups and drops
+            if (origin != "fleetView" && origin != "dailyView") {
+                for (let j in bookingObj) {
                     if (rosterTemp[i].date == bookingObj[j].date) {
-                        for (var m in bookingObj[j].no_of_bookings) {
+                        for (let m in bookingObj[j].no_of_bookings) {
                             let timeFrame = bookingObj[j].no_of_bookings[m].time_frame;
                             let startDate = timeFrame.substring(0, 19);
                             let startHour = this.formatDate(startDate).getHours();
-                            let d = Math.abs(this.daysBetween(this.formatDate(rosterTemp[i].date), rosterTemp[0].date));
                             bookingObj[j].no_of_bookings[m].bookings.pickups = bookingObj[j].no_of_bookings[m].bookings.pickups ? bookingObj[j].no_of_bookings[m].bookings.pickups : 0;
                             bookingObj[j].no_of_bookings[m].bookings.dropOffs = bookingObj[j].no_of_bookings[m].bookings.dropOffs ? bookingObj[j].no_of_bookings[m].bookings.dropOffs : 0;
                             let tempPickupDrop = {
-                                'x': dayColumnWidth + timeWidth * startHour, 'y': rowHeight, 'width': timeWidth, 'height': 20,
-                                style: {
-                                    fill: '#efefef',
-                                    stroke: '#797979',
-                                    strokeWidth: 1,
-                                },
-                                'textPickup': bookingObj[j].no_of_bookings[m].bookings.pickups, 'textDrop': bookingObj[j].no_of_bookings[m].bookings.dropOffs
+                                'x': leftColumnWidth + timeIntervalWidth * startHour,
+                                'y': startRowPos,
+                                'width': timeIntervalWidth,
+                                'height': pickupDropHeight,
+                                'textPickup': bookingObj[j].no_of_bookings[m].bookings.pickups,
+                                'textDrop': bookingObj[j].no_of_bookings[m].bookings.dropOffs,
+                                'style': { "fill": "#dde7ed", "stroke": "#a2b2bc", "strokeWidth": 1, "visibility": "hidden" },
+                                'pickupstyle': { "fill": "#41b6ac", "fontSize": "14px", "visibility": "hidden" },
+                                'dropstyle': { "fill": "#797979", "fontSize": "14px", "visibility": "hidden" }
                             }
                             pickupDrops.push(tempPickupDrop);
-                            // c.font = "12px Roboto";
-                            // c.fillStyle = "green";
-                            // // left indentation of 25 from the position_x of the box, text in the middle of the box height
-                            // bookingObj[j].no_of_bookings[m].bookings.pickups = bookingObj[j].no_of_bookings[m].bookings.pickups ? bookingObj[j].no_of_bookings[m].bookings.pickups : 0;
-                            // bookingObj[j].no_of_bookings[m].bookings.dropOffs = bookingObj[j].no_of_bookings[m].bookings.dropOffs ? bookingObj[j].no_of_bookings[m].bookings.dropOffs : 0;
-                            // c.fillText(bookingObj[j].no_of_bookings[m].bookings.pickups, dayColumnWidth + timeWidth * startHour + 10, rowHeight + 13);
-                            // c.fillStyle = "red";
-                            // c.fillText(bookingObj[j].no_of_bookings[m].bookings.dropOffs, dayColumnWidth + timeWidth * startHour + 25, rowHeight + 13);
-
                         }
                     }
                 }
@@ -235,19 +349,9 @@ export default class RosterContent extends Component {
             overFlowCount = 0;
             let currDate = new Date();
 
-            // Checking Monday. Add and delete buttons are present on every Monday of future dates.
+            // Checking Monday, Add and delete buttons are present on every Monday of future dates
             let startIterDate = this.formatDate(rosterTemp[i].date);
             let boolCheckMonday = startIterDate.getDay() == 1 && startIterDate > currDate;
-            let buttonHeight;
-            let buttonMargin;
-            if (rosterTemp[i].assignments.length < 3) {
-                buttonHeight = 20;
-                buttonMargin = 30;
-            }
-            else {
-                buttonMargin = 40;
-                buttonHeight = 24;
-            }
             let buttFlag = false;
             let countButton;
             if ((startIterDate.getDate() == currDate.getDate() || boolCheckMonday) && origin != "fleetView") {
@@ -258,18 +362,15 @@ export default class RosterContent extends Component {
                     // Object that controls the position of buttons
 
                     let tempLeftButtons = {
-                        'x': 40, 'y': rowHeight + heightDay / 2 - buttonMargin + countButton, 'width': buttonHeight, 'height': buttonHeight,
-                        style: {
-                            fill: buttons[butt].color,
-                            stroke: '#797979',
-                            strokeWidth: 2,
-
-                        },
+                        'x': 32,
+                        'y': startRowPos + rowBlockHeight / 2 + countButton - buttonMargin,
+                        'width': buttonHeight, 'height': buttonHeight,
+                        'style': { "fill": buttons[butt].color },
                         'text': buttons[butt].text,
-                        buttonStyle: {
-                            fill: 'white'
-                        },
-                        'data': rosterTemp[i], 'id': buttons[butt].id, 'hoverText': buttons[butt].hoverText
+                        'buttonStyle': { "fill": "white" },
+                        'data': rosterTemp[i],
+                        'id': buttons[butt].id,
+                        'hoverText': buttons[butt].hoverText
                     }
                     leftButtons.push(tempLeftButtons);
                     countButton += 40;
@@ -280,261 +381,299 @@ export default class RosterContent extends Component {
                 let cusCountButt = buttFlag ? countButton : 0;
                 for (let custButt in customAddButton) {
                     let tempCustomAddButton = {
-                        'x': 40, 'y': rowHeight + heightDay / 2 - buttonMargin + cusCountButt, 'width': buttonHeight, 'height': buttonHeight,
-                        style: {
-                            fill: customAddButton[custButt].color,
-                            stroke: '#797979',
-                            strokeWidth: 2
-                        },
+                        'x': 32,
+                        'y': startRowPos + rowBlockHeight / 2 - buttonMargin + cusCountButt,
+                        'width': buttonHeight, 'height': buttonHeight,
+                        'style': { "fill": customAddButton[custButt].color },
                         'text': customAddButton[custButt].text,
-                        buttonStyle: {
-                            fill: 'white'
-                        }, 'data': rosterTemp[i], 'id': customAddButton[custButt].id, 'hoverText': customAddButton[custButt].hoverText
+                        'buttonStyle': { "fill": "white" },
+                        'data': rosterTemp[i],
+                        'id': customAddButton[custButt].id,
+                        'hoverText': customAddButton[custButt].hoverText
                     }
-                    customAddButtons.push(tempCustomAddButton);
+                    customAddButton.push(tempCustomAddButton);
                     cusCountButt += 40;
                 }
             }
-
-            // Begin drawing shifts in a date
+            let marginCounter = 1;
+            let countAssignment = 0;
             for (let j in rosterTemp[i].assignments) {
-                let currDate = new Date();
-                let iterDate = this.formatDate(rosterTemp[i].assignments[j].shift_details.end_time);
-                let countApproved, countUnApproved, countManualPunch;
-                let tempFlag, punchFlag;
-                // if (origin == "dailyView") {
-                //     iterDate = this.formatDate(rosterTemp[i].assignments[j] ? rosterTemp[i].assignments[j].shift_details.end_time : formContent.date + "T23:59:59");
-                // }
-
-                totalElements = totalElements + 2;
-                indentTop += 25;
-                let timeFrame = rosterTemp[i].assignments[j].shift_details;
+                let rosterTempShiftDetails
+                if (origin == "dailyView") {
+                    rosterTempShiftDetails = rosterTemp[i].assignments[j];
+                }
+                else {
+                    rosterTempShiftDetails = rosterTemp[i].assignments[j].shift_details
+                }
+                let iterDate = this.formatDate(rosterTempShiftDetails.end_time);
+                if (origin == "dailyView") {
+                    // iterDate = this.formatDate(rosterTemp[i].assignments[j] ? rosterTempShiftDetails.end_time : formContent.date + "T23:59:59");
+                }
+                let timeFrame = rosterTempShiftDetails;
                 let startDate = timeFrame.start_time;
                 let startHour = this.formatDate(startDate).getHours();
                 let endDate = timeFrame.end_time;
                 let endHour = this.formatDate(endDate).getHours();
-                let userWidth = this.checkHourDiff(this.formatDate(startDate), this.formatDate(endDate));
+                let shiftRect = this.checkHourDiff(this.formatDate(startDate), this.formatDate(endDate));
                 let shiftColor = "";
-                // Variable that stores present shift color. By default light blur color for Unassigned
-                shiftColor = "#81D4FA";
+                shiftColor = "white";
+                let shiftNumberRectColor = "#7e939d";
+                let strokeColor = "#849aa5";
+                let countApproved;
+                let countUnApproved;
+                let countManualPunch, tempFlag, punchFlag;
+                // Green color for active = 1
+                if (rosterTempShiftDetails.active && iterDate <= currDate) {
+                    shiftColor = "#81c784";
+                    strokeColor = "#81c784";
+                    shiftNumberRectColor = "#77b87a";
+                    tempFlag = false;
+                    punchFlag = false;
+                    countApproved = 0;
+                    countUnApproved = 0;
+                    countManualPunch = 0;
+                    for (let m in rosterTempShiftDetails.shift_attendance) {
+                        tempFlag = true;
 
-                // Do not show Absent or present colors if the date is in future
-                if ((rosterTemp[i].assignments[j].fleet_details || origin == "fleetView") && iterDate <= currDate) {
-                    // Green color for active = 1
-                    if (rosterTemp[i].assignments[j].shift_details.active && iterDate <= currDate) {
-                        shiftColor = "#43A047";
-                        tempFlag = false;
-                        punchFlag = false;
-                        countApproved = 0;
-                        countUnApproved = 0;
-                        countManualPunch = 0;
-                        for (let m in rosterTemp[i].assignments[j].shift_details.shift_attendance) {
-                            tempFlag = true;
-
-                            if (rosterTemp[i].assignments[j].shift_details.shift_attendance[m].approved) {
-                                let hourDiff = Math.abs(this.formatDate(rosterTemp[i].assignments[j].shift_details.shift_attendance[m].start_time) - this.formatDate(rosterTemp[i].assignments[j].shift_details.shift_attendance[m].end_time)) / 36e5;
-                                countApproved = countApproved + hourDiff;
+                        if (rosterTempShiftDetails.shift_attendance[m].approved) {
+                            let hourDiff = Math.abs(this.formatDate(rosterTempShiftDetails.shift_attendance[m].start_time) - this.formatDate(rosterTempShiftDetails.shift_attendance[m].end_time)) / 36e5;
+                            countApproved = countApproved + hourDiff;
+                        }
+                        else {
+                            let hourDiff = Math.abs(this.formatDate(rosterTempShiftDetails.shift_attendance[m].start_time) - this.formatDate(rosterTempShiftDetails.shift_attendance[m].end_time)) / 36e5;
+                            countUnApproved = countUnApproved + hourDiff;
+                        }
+                        if (rosterTempShiftDetails.shift_attendance[m].manual_punch) {
+                            if (rosterTempShiftDetails.shift_attendance[m].approved == null || rosterTempShiftDetails.shift_attendance[m].approved == 0) {
+                                tempFlag = true;
+                                punchFlag = true;
                             }
-                            else {
-                                let hourDiff = Math.abs(this.formatDate(rosterTemp[i].assignments[j].shift_details.shift_attendance[m].start_time) - this.formatDate(rosterTemp[i].assignments[j].shift_details.shift_attendance[m].end_time)) / 36e5;
-                                countUnApproved = countUnApproved + hourDiff;
-                            }
-                            if (rosterTemp[i].assignments[j].shift_details.shift_attendance[m].manual_punch) {
-                                if (rosterTemp[i].assignments[j].shift_details.shift_attendance[m].approved == null || rosterTemp[i].assignments[j].shift_details.shift_attendance[m].approved == 0) {
-                                    tempFlag = true;
-                                    punchFlag = true;
-                                }
-                                countManualPunch++;
-                            }
+                            countManualPunch++;
                         }
                     }
-                    // Red color for active = 0
-                    else {
-                        shiftColor = "#F44336";
-
-                    }
                 }
-                // Orange color for assigned future shifts
-                else if ((rosterTemp[i].assignments[j].fleet_details || origin == "fleetView") && iterDate > currDate) {
-                    shiftColor = "#FB8C00";
+                // Red color for active = 0
+                else if ((!rosterTempShiftDetails.active) && iterDate <= currDate) {
+                    shiftColor = "#e46765";
+                    strokeColor = "#e46765";
+                    shiftNumberRectColor = "#d06767";
                 }
 
-                // Overflow cases. Shifts starts at today and finishes tomorrow
-                if (this.formatDate(rosterTemp[i].assignments[j].shift_details.start_time).getDate() != this.formatDate(rosterTemp[i].assignments[j].shift_details.end_time).getDate() && origin != "dailyView") {
-                    totalElements++;
+                if ((rosterTemp[i].assignments[j].fleet_details || origin == "fleetView") && iterDate > currDate) {
+                    shiftColor = "#ffab00";
+                    strokeColor = "#ffab00";
+                    shiftNumberRectColor = "#d88f17";
+                }
+                // Overflow condition
+                if (this.formatDate(rosterTempShiftDetails.start_time).getDate() != this.formatDate(rosterTempShiftDetails.end_time).getDate() && origin != "dailyView") {
                     let dateTemp = new Date('2018-01-01T00:00');
-                    let customUserWidth = this.checkHourDiff(this.formatDate(dateTemp), this.formatDate(endDate));
+                    let overFlowShiftRectWidth = this.checkHourDiff(this.formatDate(dateTemp), this.formatDate(endDate));
                     if (parseInt(i) < rosterTemp.length - 1) {
                         overFlowFlag = true;
-                        let downShiftOverFlow = (rosterTemp[i].assignments.length - (parseInt(j) + 1)) * (5 + rectYHeight) + 5 + rectYHeight + 25 + overFlowCount * (rectYHeight + 5);
+                        let downShiftOverFlow = ((totalRowShifts - (parseInt(j) + 1)) * (shiftSeperatorMargin + shiftRectHeight)) + bottomRowBlockMargin + pickupDropHeight + startMarginTop + overFlowCount * (shiftSeperatorMargin + shiftRectHeight) + shiftRectHeight;
                         overFlowCount++;
                         if (origin != "fleetView") {
                             if (rosterTemp[i].assignments[j].fleet_details || iterDate >= currDate) {
                                 // Object to control overflow shift rectangle
+                                let tempIndent = marginCounter ? (startMarginTop) : shiftSeperatorMargin;
+                                marginCounter = 0;
                                 let tempOverFlowShifts = {
-                                    'x': dayColumnWidth, 'y': rowHeight + indentTop + downShiftOverFlow, 'width': timeWidth * (customUserWidth), 'height': rectYHeight,
-                                    style: {
-                                        fill: shiftColor
-                                    },
-                                    data: rosterTemp[i].assignments[j], 'uibText': rosterTemp[i].assignments[j].fleet_details ? rosterTemp[i].assignments[j].fleet_details.employee ? rosterTemp[i].assignments[j].fleet_details.employee.employee_number + " " + rosterTemp[i].assignments[j].fleet_details.display_name : "Missing Employee number" : " Not Assigned"
+                                    'x': leftColumnWidth,
+                                    'y': startRowPos + pickupDropHeight + tempIndent + ((shiftSeperatorMargin + shiftRectHeight) * j) + downShiftOverFlow,
+                                    'width': timeIntervalWidth * (overFlowShiftRectWidth),
+                                    'height': shiftRectHeight,
+                                    'color': strokeColor,
+                                    'style': { "fill": shiftColor, "stroke": strokeColor, "strokeWidth": "4px" },
+                                    'data': rosterTemp[i].assignments[j],
+                                    'uibText': rosterTemp[i].assignments[j].fleet_details ? rosterTemp[i].assignments[j].fleet_details.employee ? (parseInt(j) + 1).toString() + " " + rosterTemp[i].assignments[j].fleet_details.employee.employee_number + " " + rosterTemp[i].assignments[j].fleet_details.display_name : (parseInt(j) + 1).toString() + " " + "Missing Employee number" : (parseInt(j) + 1).toString() + " " + " Not Assigned"
                                 };
                                 overFlowShifts.push(tempOverFlowShifts);
                             }
                         }
-                        else if (origin == "fleetView") {
-                            // Object to control overflow shift rectangle
-                            let tempOverFlowShifts = {
-                                'x': dayColumnWidth, 'y': rowHeight + indentTop + downShiftOverFlow + 10, 'width': timeWidth * (customUserWidth), 'height': rectYHeight,
-                                style: {
-                                    fill: shiftColor
-                                },
-                                data: rosterTemp[i].assignments[j], 'uibText': rosterTemp[i].assignments[j].shift_details.venue.name
-                            };
-                            overFlowShifts.push(tempOverFlowShifts);
-                        }
-
-                        let text;
-                        if (rosterTemp[i].assignments[j].fleet_details != null && rosterTemp[i].assignments[j].fleet_details.employee) {
-                            text = rosterTemp[i].assignments[j].fleet_details.employee.employee_number + "   " + "  " + rosterTemp[i].assignments[j].fleet_details.display_name + "   " + "   " + startDate.substring(11, 19) + "   " + endDate.substring(11, 19);
-                            if ((countApproved || countUnApproved || countManualPunch) && rosterTemp[i].assignments[j].shift_details.active) {
-                                text = text + " | P: " + countApproved + "hrs | A: " + countUnApproved + "hrs | MP: " + countManualPunch;
-                            }
-                        }
-                        else if (rosterTemp[i].assignments[j].fleet_details == null) {
-                            text = "Not Assigned"
-                        }
-                        else {
-                            text = " ";
-                        }
-                        if (origin == "fleetView") {
-                            text = rosterTemp[i].assignments[j].shift_details.venue.name + " " + " " + startDate.substring(11, 19) + " " + endDate.substring(11, 19);
-                        }
-                        // Object to control overflow shift Text
-                        if (rosterTemp[i].assignments[j].fleet_details || iterDate >= currDate) {
-                            let tempOverFlowShiftText = {
-                                'text': text, 'x': dayColumnWidth + 5, 'y': rowHeight + indentTop + downShiftOverFlow + 14, data: rosterTemp[i].assignments[j],
-                                style: {
-                                    fill: 'white',
-                                    letterSpacing: 1.5
-                                }
-                            };
-                            shiftOverflowText.push(tempOverFlowShiftText);
-                        }
-                        else if (origin == "fleetView") {
-                            // Object to control overflow shift rectangle
-                            let tempOverFlowShiftText = {
-                                'text': text, 'x': dayColumnWidth + 5, 'y': rowHeight + indentTop + downShiftOverFlow + 14 + 10, data: rosterTemp[i].assignments[j],
-                                style: {
-                                    fill: 'white',
-                                    letterSpacing: 1.5
-                                }
-                            };
-                            shiftOverflowText.push(tempOverFlowShiftText);
-                        }
                     }
 
                 }
 
-                // Draw shifts
-                if ((rosterTemp[i].assignments[j].fleet_details || iterDate >= currDate) && origin != "fleetView") {
-                    // Objects to control shifts, their color, etc
-                    if (tempFlag && punchFlag) {
-                        let tempManualPunch = {
-                            'text': '\uf0a6', 'x': dayColumnWidth + timeWidth * (startHour) - 20, 'y': rowHeight + indentTop + 14, data: rosterTemp[i].assignments[j], 'style': "fill:black; letter-spacing:1.5;"
-                        };
-                        manualPunch.push(tempManualPunch);
-                        punchFlag = false;
-                    }
-                    let tempShiftRect = {
-                        'x': dayColumnWidth + timeWidth * (startHour), 'y': rowHeight + indentTop, 'width': timeWidth * (userWidth), 'height': rectYHeight,
-                        style: {
-                            fill: shiftColor,
-                        },
-                        data: rosterTemp[i].assignments[j], 'uibText': rosterTemp[i].assignments[j].fleet_details ? rosterTemp[i].assignments[j].fleet_details.employee ? rosterTemp[i].assignments[j].fleet_details.employee.employee_number + " " + rosterTemp[i].assignments[j].fleet_details.display_name : "Missing Employee number" : "Not Assigned"
-                    };
-                    shiftRects.push(tempShiftRect);
-                }
-                // If origin is from Employee roster neglect the dates
-                else if (origin == "fleetView") {
-                    if (tempFlag && punchFlag) {
-                        let tempManualPunch = {
-                            'text': '\uf0a6', 'x': dayColumnWidth + timeWidth * (startHour) - 20, 'y': rowHeight + indentTop + 14, data: rosterTemp[i].assignments[j],
-                            style: {
-                                fill: 'black',
-                                letterSpacing: 1.5
-                            }
-                        };
-                        manualPunch.push(tempManualPunch);
-                    }
-                    let tempShiftRect = {
-                        'x': dayColumnWidth + timeWidth * (startHour), 'y': rowHeight + indentTop, 'width': timeWidth * (userWidth), 'height': rectYHeight,
-                        style: {
-                            fill: shiftColor,
-                        },
-                        data: rosterTemp[i].assignments[j], 'uibText': rosterTemp[i].assignments[j].shift_details.venue.name
-                    };
-                    shiftRects.push(tempShiftRect);
-                    punchFlag = false;
-                }
-                let text;
-                if (origin != "fleetView") {
-                    if (rosterTemp[i].assignments[j].fleet_details != null && rosterTemp[i].assignments[j].fleet_details.employee) {
-                        text = rosterTemp[i].assignments[j].fleet_details.employee.employee_number + "   " + "  " + rosterTemp[i].assignments[j].fleet_details.display_name + "   " + "   " + startDate.substring(11, 19) + "   " + endDate.substring(11, 19);
-                        if (tempFlag) {
-                            text = text + " | P: " + countApproved + "hrs | A: " + countUnApproved + "hrs | MP: " + countManualPunch;
 
-                        }
+
+                // Draw shift rectangles
+                let tempShiftRect = {
+                    'x': leftColumnWidth + timeIntervalWidth * startHour,
+                    'y': ShiftRectYStart + ((shiftSeperatorMargin + shiftRectHeight) * j),
+                    'width': timeIntervalWidth * shiftRect,
+                    'height': shiftRectHeight,
+                    'color': strokeColor,
+                    'style': { "fill": shiftColor, "stroke": strokeColor, "strokeWidth": "4px" },
+                    'data': rosterTemp[i].assignments[j],
+                    'uibText': rosterTemp[i].assignments[j].fleet_details ? rosterTemp[i].assignments[j].fleet_details.employee ? (parseInt(j) + 1).toString() + " " + rosterTemp[i].assignments[j].fleet_details.employee.employee_number + " " + rosterTemp[i].assignments[j].fleet_details.display_name : (parseInt(j) + 1).toString() + " " + "Missing Employee number" : (parseInt(j) + 1).toString() + " " + "Not Assigned"
+                }
+                shiftRects.push(tempShiftRect);
+                let tempShiftNumberRects = {
+                    'x': leftColumnWidth + timeIntervalWidth * startHour,
+                    'y': ShiftRectYStart + ((shiftSeperatorMargin + shiftRectHeight) * j),
+                    'width': shiftNumberBoxWidth,
+                    'height': shiftRectHeight,
+                    'color': strokeColor,
+                    'style': { "fill": shiftNumberRectColor, "stroke": shiftNumberRectColor, "strokeWidth": "4px" },
+                    'data': rosterTemp[i].assignments[j],
+                    'uibText': rosterTemp[i].assignments[j].fleet_details ? rosterTemp[i].assignments[j].fleet_details.employee ? rosterTemp[i].assignments[j].fleet_details.employee.employee_number + " " + rosterTemp[i].assignments[j].fleet_details.display_name : "Missing Employee number" : "Not Assigned"
+                }
+                shiftNumberRect.push(tempShiftNumberRects);
+
+                // Shift Texts
+
+                let textShiftColor = "white";
+                let text0, text1, text2, text3, text4;
+                if ((rosterTemp[i].assignments[j].fleet_details != null && rosterTemp[i].assignments[j].fleet_details.employee) || origin != "weeklyView") {
+                    text1 = "";
+                    text2 = "";
+                    text3 = "";
+                    text4 = "";
+                    let indentText = 0;
+                    if (origin == "fleetView") {
+                        text1 = "";
+                        text2 = rosterTemp[i].assignments[j].shift_details.venue.name.substring(0, 26);
+                        text3 = startDate.substring(11, 19) + " -  " + endDate.substring(11, 19);
+                        indentText = 63;
                     }
-                    else if (rosterTemp[i].assignments[j].fleet_details == null) {
-                        text = "Not Assigned"
+                    else if (origin == "dailyView") {
+                        if (rosterTemp[i].assignments[j].station_manager && rosterTemp[i].assignments[j].station_manager.user) {
+                            text1 = rosterTemp[i].assignments[j].station_manager.user.employee.employee_number;
+                            text2 = rosterTemp[i].assignments[j].station_manager.user.display_name.substring(0, 15);
+                            text3 = startDate.substring(11, 19) + " -  " + endDate.substring(11, 19);
+                            text4 = " ";
+                        }
                     }
                     else {
-                        text = " ";
+                        text1 = rosterTemp[i].assignments[j].fleet_details.employee.employee_number;
+                        text2 = rosterTemp[i].assignments[j].fleet_details.display_name.substring(0, 15);
+                        text3 = startDate.substring(11, 19) + " -  " + endDate.substring(11, 19);
+                        text4 = " ";
+
                     }
-                }
-                if (origin == "fleetView") {
-                    text = rosterTemp[i].assignments[j].shift_details.venue.name + " " + " " + startDate.substring(11, 19) + " " + endDate.substring(11, 19);
+
+
+                    let tempShiftTextID = {
+                        'text': text1,
+                        'x': leftColumnWidth + timeIntervalWidth * startHour + 58,
+                        'y': ShiftRectYStart + ((shiftSeperatorMargin + shiftRectHeight) * j) + 18,
+                        'data': rosterTemp[i].assignments[j],
+                        'color': strokeColor,
+                        'style': { "fill": textShiftColor, "fontSize": "14px", "fontWeight": 500 },
+                        'title': text0 + " " + text1 + " " + text2 + " " + text3 + " " + text4
+                    };
+
+                    shiftTexts.push(tempShiftTextID);
+
                     if (tempFlag) {
-                        text = text + " | P: " + countApproved + "hrs | A: " + countUnApproved + "hrs | MP: " + countManualPunch;
+                        text4 = "  P: " + countApproved + "hrs | A: " + countUnApproved + "hrs | MP: " + countManualPunch;
+                        let tempAttendanceText = {
+                            'text': text4,
+                            'x': leftColumnWidth + timeIntervalWidth * startHour + 260,
+                            'y': ShiftRectYStart + ((shiftSeperatorMargin + shiftRectHeight) * j) + 18,
+                            'color': strokeColor,
+                            'data': rosterTemp[i].assignments[j],
+                            'style': { "fill": "white", "fontSize": "14px", "fontWeight": 500 },
+                            'title': text0 + " " + text1 + " " + text2 + " " + text3 + " " + text4
+                        };
+                        shiftTexts.push(tempAttendanceText);
+                    }
 
+                    let tempShiftTextDuration = {
+                        'text': text3,
+                        'x': leftColumnWidth + timeIntervalWidth * startHour + 58,
+                        'y': ShiftRectYStart + ((shiftSeperatorMargin + shiftRectHeight) * j) + shiftRectHeight - 3,
+                        'data': rosterTemp[i].assignments[j],
+                        'color': strokeColor,
+                        'style': { "fill": "white", "fontSize": "14px", "fontWeight": 500 },
+                        'title': text0 + " " + text1 + " " + text2 + " " + text3 + " " + text4
+                    };
+
+                    shiftTexts.push(tempShiftTextDuration);
+
+                    let tempShiftTextName = {
+                        'text': text2,
+                        'x': leftColumnWidth + timeIntervalWidth * startHour + 121 - indentText,
+                        'y': ShiftRectYStart + ((shiftSeperatorMargin + shiftRectHeight) * j) + 18,
+                        'color': strokeColor,
+                        'data': rosterTemp[i].assignments[j],
+                        'style': { "fill": "white", "fontSize": "16px", "fontWeight": 500 },
+                        'title': text0 + " " + text1 + " " + text2 + " " + text3 + " " + text4
+                    };
+
+                    shiftTexts.push(tempShiftTextName);
+                }
+                text0 = parseInt(j) + 1;
+                let text0indent = parseInt(text0) < 9 ? 15 : 10;
+                let tempShiftNumber = {
+                    'text': text0,
+                    'x': leftColumnWidth + timeIntervalWidth * startHour + text0indent,
+                    'y': ShiftRectYStart + ((shiftSeperatorMargin + shiftRectHeight) * j) + shiftRectHeight - 12,
+                    'color': strokeColor,
+                    'data': rosterTemp[i].assignments[j],
+                    'style': { "fill": "white", "fontSize": "22px", "fontWeight": 500 },
+                    'title': text0 + " " + text1 + " " + text2 + " " + text3 + " " + text4
+                };
+                shiftTexts.push(tempShiftNumber);
+                if (origin != "fleetView") {
+                    if ((rosterTemp[i].assignments[j].fleet_details == null && origin != "dailyView") || (rosterTemp[i].assignments[j].station_manager == null && origin == "dailyView")) {
+                        let text5 = "Not Assigned";
+                        textShiftColor = "#849aa5";
+                        let tempShiftNotAssigned = {
+                            'text': text5,
+                            'x': leftColumnWidth + timeIntervalWidth * startHour + 58,
+                            'y': ShiftRectYStart + ((shiftSeperatorMargin + shiftRectHeight) * j) + shiftRectHeight / 2 + 5,
+                            'color': strokeColor,
+                            'data': rosterTemp[i].assignments[j],
+                            'style': { "fill": textShiftColor, "fontSize": "16px", "fontWeight": 500 },
+                            'title': text0 + " " + text1 + " " + text2 + " " + text3 + " " + text4
+                        };
+
+                        shiftTexts.push(tempShiftNotAssigned);
                     }
                 }
-                let tempShiftText = {
-                    'text': text, 'x': dayColumnWidth + timeWidth * (startHour) + 20, 'y': rowHeight + indentTop + 14, data: rosterTemp[i].assignments[j],
-                    style: {
-                        fill: 'white',
-                        letterSpacing: 1.5
-                    }
-                };
 
-                shiftTexts.push(tempShiftText);
+
+
+
                 tempFlag = false;
+
+                countAssignment++;
             }
-            rowHeight = rowHeight + startY;
         }
-        //selfHeight = totalElements * rectYHeight + 10  * (totalElements-1) + rosterTemp.length * 50;
-        selfHeight = (- rosterTemp.length * (25 + 10 + 20) + totalElements * (25 + 10 + 25)) * 8;
-        timeDivisionWidth = parseInt(timeWidth)
-        this.setState({ marginLine, selfHeight, pickupDrops, shiftRects, columnText, shiftTexts, leftButtons, overFlowShifts, shiftOverflowText, partitionRect, multiColor, manualPunch, customAddButtons, selfWidth, timeDivisionWidth });
+        selfHeight = totalRowBlockHeight + 50;
+
+        for (let k in hours) {
+            makeMarginLine(leftColumnWidth + (timeIntervalWidth * k), 0);
+        }
+        function makeMarginLine(x, y) {
+            let temp = {
+                'x1': x, 'y1': y, 'x2': x, 'y2': selfHeight, 'style': { "stroke": "white", "visibility": "hidden" }
+            };
+            marginLine.push(temp);
+        }
+
+        pickupDropFlag = false;
+        selfIndex = 0;
+
+        selfTimewidth = parseInt(selfTimewidth);
+        this.setState({ leftColumn, marginLine, pickupDrops, shiftRects, shiftNumberRect, columnText, shiftTexts, leftButtons, overFlowShifts, shiftOverflowText, partitionRect, manualPunch, customAddButton, selfHeight, selfWidth, leftColumnWidth, hours, selfTimewidth, pickupDropFlag, selfIndex });
     }
 
     render() {
 
-        const { dayColumn, marginLine, pickupDrops, shiftRects, columnText, shiftTexts, leftButtons, overFlowShifts, shiftOverflowText, partitionRect, multiColor, manualPunch, customAddButtons, selfHeight, selfWidth, dayColumnWidth, hours, timeDivisionWidth } = this.state
+        const { leftColumn, marginLine, pickupDrops, shiftRects, shiftNumberRect, columnText, shiftTexts, leftButtons, overFlowShifts, shiftOverflowText, partitionRect, multiColor, manualPunch, customAddButtons, selfHeight, selfWidth, leftColumnWidth, hours, selfTimewidth, selfIndex } = this.state
         // console.log("hello", this.state);
         return (
             <div>
-                <div hl-sticky="" style={{ background: 'white', paddingTop: '10px' }}>
-                    <div style={{ display: 'flex', 'padding-left': dayColumnWidth + timeDivisionWidth / 2 }}>
+                <div hl-sticky="" style={{ background: 'white', paddingTop: '10px', paddingBottom: '8px', fontSize: '14px', fontWeight: 500 }}>
+                    <div style={{ display: 'flex', 'paddingLeft': leftColumnWidth + selfTimewidth / 2 }}>
                         {
                             hours.map((item, key) =>
-                                item < 9 ?
-                                    <div style={{width: timeDivisionWidth}}>
-                                        {item}
-                                    </div> :
-                                    <div style={{width: timeDivisionWidth + 4}}>
-                                        {item}
-                                    </div>
+
+                                <div key={key} style={{ width: selfTimewidth }} textAnchor="middle">
+                                    {item}
+                                </div>
                             )
                         }
                         {/* <div ng-repeat="item in roster.hours track by $index">
@@ -559,9 +698,9 @@ export default class RosterContent extends Component {
 
 
                         {
-                            dayColumn.map((day, key) => <rect key={key} x={day.x} y={day.y} width={day.width} height={day.height} style={day.style} />)
+                            leftColumn.map((day, key) => <rect key={key} x={day.x} y={day.y} width={day.width} height={day.height} style={day.style} />)
                         }
-                        {/* <rect ng-repeat="rect in roster.dayColumn" ng-attr-x="{{rect.x}}" ng-attr-y="{{rect.y}}" ng-attr-width="{{rect.width}}" ng-attr-height="{{rect.height}}"
+                        {/* <rect ng-repeat="rect in roster.leftColumn" ng-attr-x="{{rect.x}}" ng-attr-y="{{rect.y}}" ng-attr-width="{{rect.width}}" ng-attr-height="{{rect.height}}"
                         ng-attr-style="{{rect.style}}" /> */}
 
                         {
@@ -571,7 +710,7 @@ export default class RosterContent extends Component {
                         text-anchor="middle">{{ text.text }} </text> */}
 
                         {
-                            partitionRect.map((rect, key) => <rect key={key} x={rect.x} y={rect.y} width={rect.width} height={rect.height} style={rect.style} />)
+                            partitionRect.map((rect, key) => <rect key={key} x={rect.x} y={rect.y} width={rect.width} height={rect.height} style={rect.style} onMouseEnter={() => this.pickupDropSelect(true, key)} onMouseLeave={() => this.pickupDropSelect(false, key)} />)
                         }
 
 
@@ -626,19 +765,24 @@ export default class RosterContent extends Component {
                         ng-attr-height="{{rect.height}}" ng-attr-style="{{rect.style}}" /> */}
 
                         {
-                            pickupDrops.map((text, key) => <text key={key} x={text.x + 10} y={text.y + 13} style={{ fill: '#039BE5' }} textAnchor="middle" >{text.textPickup}</text>)
+                            pickupDrops.map((text, key) => <text key={key} x={text.x + text.width / 4} y={text.y + 15} style={text.pickupstyle}  >{text.textPickup}</text>)
 
                         }
                         {/* <text ng-repeat="text in roster.pickupDrops" ng-attr-x="{{text.x + 10}}" ng-attr-y="{{text.y + 13}}" style="fill: #039BE5">{{ text.textPickup }}</text> */}
                         {
-                            pickupDrops.map((text, key) => <text key={key} x={text.x + 35} y={text.y + 13} style={{ fill: '#8E24AA' }} textAnchor="middle" >{text.textDrop}</text>)
+                            pickupDrops.map((text, key) => <text key={key} x={text.x + text.width - text.width / 4} y={text.y + 15} style={text.dropstyle} textAnchor="end">{text.textDrop}</text>)
 
                         }
                         {/* <text ng-repeat="text in roster.pickupDrops" ng-attr-x="{{text.x + 35}}" ng-attr-y="{{text.y + 13}}" style="fill: #8E24AA;">{{ text.textDrop }}</text> */}
 
                         {
-                            shiftRects.map((rect, key) => <rect key={key} x={rect.x} y={rect.y} width={rect.width} height={rect.height} style={rect.style} className="cursor-pointer"><title>{rect.uibText}</title></rect>)
+                            shiftRects.map((rect, key) => <rect key={key} x={rect.x} y={rect.y} width={rect.width} height={rect.height} style={rect.style} className="cursor-pointer" rx="4" ry="4" onMouseEnter={() => this.shiftHover(true, rect)} onMouseLeave={() => this.shiftHover(false, rect)}><title>{rect.uibText}</title></rect>)
                         }
+
+                        {
+                            shiftNumberRect.map((rect, key) => <rect key={key} x={rect.x} y={rect.y} width={rect.width} height={rect.height} style={rect.style} className="cursor-pointer" rx="4" ry="4" onMouseEnter={() => this.shiftHover(true, rect)} onMouseLeave={() => this.shiftHover(false, rect)}><title>{rect.uibText}</title></rect>)
+                        }
+
 
                         {/* <rect ng-repeat="rect in roster.shiftRects" ng-attr-x="{{rect.x}}" ng-attr-y="{{rect.y}}" ng-attr-width="{{rect.width}}"
                         ng-attr-height="{{rect.height}}" ng-attr-style="{{rect.style}}" ng-click="roster.shiftClick(rect.data)" className="cursor-pointer">
@@ -646,7 +790,7 @@ export default class RosterContent extends Component {
                     </rect> */}
 
                         {
-                            shiftTexts.map((text, key) => <text key={key} x={text.x} y={text.y} style={text.style} className="cursor-pointer">{text.text} <title>{text.text}</title></text>)
+                            shiftTexts.map((text, key) => <text key={key} x={text.x} y={text.y} style={text.style} className="cursor-pointer" onMouseEnter={() => this.shiftHover(true, text)} onMouseLeave={() => this.shiftHover(false, text)}>{text.text} <title>{text.text}</title></text>)
 
                         }
                         {/* <text ng-repeat="text in roster.shiftTexts" ng-attr-x="{{text.x}}" ng-attr-y="{{text.y}}" className="cursor-pointer" ng-click="roster.shiftClick(text.data)"
@@ -654,7 +798,7 @@ export default class RosterContent extends Component {
                         <title>{{ text.text }}</title>
                     </text> */}
                         {
-                            overFlowShifts.map((rect, key) => <rect key={key} x={rect.x} y={rect.y} width={rect.width} height={rect.height} style={rect.style} className="cursor-pointer"><title>{rect.uibText}</title></rect>)
+                            overFlowShifts.map((rect, key) => <rect key={key} x={rect.x} y={rect.y} width={rect.width} height={rect.height} style={rect.style} className="cursor-pointer" rx="4" ry="4" onMouseEnter={() => this.shiftHover(true, rect)} onMouseLeave={() => this.shiftHover(false, rect)}><title>{rect.uibText}</title></rect>)
 
                         }
                         {/* <rect ng-repeat="rect in roster.overFlowShifts" ng-attr-x="{{rect.x}}" ng-attr-y="{{rect.y}}" ng-attr-width="{{rect.width}}"
@@ -663,7 +807,7 @@ export default class RosterContent extends Component {
                     </rect> */}
 
                         {
-                            shiftOverflowText.map((text, key) => <text key={key} x={text.x} y={text.y} style={text.style} textAnchor="middle" className="cursor-pointer">{text.text} <title>{text.text}</title></text>)
+                            shiftOverflowText.map((text, key) => <text key={key} x={text.x} y={text.y} style={text.style} textAnchor="middle" className="cursor-pointer" rx="4" ry="4" onMouseEnter={() => this.shiftHover(true, text)} onMouseLeave={() => this.shiftHover(false, text)}>{text.text} <title>{text.text}</title></text>)
 
                         }
                         {/* <text ng-repeat="text in roster.shiftOverflowText" ng-attr-x="{{text.x}}" ng-attr-y="{{text.y}}" className="cursor-pointer" ng-click="roster.shiftClick(text.data)"

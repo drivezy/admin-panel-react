@@ -16,13 +16,16 @@ import SideNav from './../../Scenes/Side-Nav/sideNav.scene';
 import Header from './../../Scenes/Header/header.scene';
 // import BookingDetail from './../../Scenes/Booking-Detail/bookingDetail.scene';
 // import UserDetail from './../../Scenes/User-Detail/userDetail.scene';
-import ExpenseVoucherDetail from './../../Scenes/Expense-Voucher/expenseVoucherDetail.scene';
+// import ExpenseVoucherDetail from './../../Scenes/Expense-Voucher/expenseVoucherDetail.scene';
 import UserLicense from './../../Scenes/User-License/userLicense.scene';
 // import VehicleDetail from './../../Scenes/Vehicle-Detail/vehicleDetail.scene';
 
 import { Spotlight } from './../../Components/Spotlight-Search/spotlightSearch.component';
 import TicketDetail from './../../Scenes/Ticket-Detail/ticketDetail.scene';
 import RosterTimeline from './../../Scenes/Roster-Timeline/rosterTimeline.scene';
+
+import GenericQueryDetail from './../../Scenes/Generic-Query/genericQueryDetail.scene';
+import QueryDashboardForm from './../../Components/Query-Report/Query-Dashboard-Form/queryDashboardForm.component'; //remove
 
 import LoadAsyncComponent from './../../Async/async';
 import SettingsUtil from './../../Utils/settings.utils';
@@ -124,12 +127,13 @@ export default class LandingApp extends Component {
                             <Route path={`${match.path}detail/:page/:detailId`} component={GenericDetail} /> */}
 
                             {/* <Route exact path='/booking/:id' component={BookingDetail} /> */}
-                            <Route exact path='/voucherDef/:voucherId' component={ExpenseVoucherDetail} />
+                            {/* <Route exact path='/expenseVoucher/:voucherId' component={ExpenseVoucherDetail} /> */}
                             <Route exact path='/userLicense/:userId' component={UserLicense} />
                             
                             <Route exact path='/ticket/:ticketId' component={TicketDetail} />
                             <Route exact path='/rosterTimeline' component={RosterTimeline} />
                             <Route exact path='/' component={HomeScene} />
+                            {/* <Route exact path='/manageReport/:queryId' component={GenericQueryDetail} /> */}
                             {/* <Route exact path='/user/:userId' component={UserDetail} /> */}
                             {/* <Route exact path='/vehicle/:vehicleId' component={VehicleDetail} /> */}
 

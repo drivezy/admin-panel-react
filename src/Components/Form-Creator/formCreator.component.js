@@ -31,7 +31,7 @@ import FormSettings from './../Form-Settings/FormSettings.component';
 import ScriptInput from './../Forms/Components/Script-Input/scriptInput.component';
 import FormInput from './../Forms/Components/Form-Type/formType.component';
 
-import { ExecuteScript } from './../../Utils/inject-method/injectScript.utils';
+import { ExecuteScript } from './../../Utils/Inject-Methods/injectScript.utils';
 
 import FormUtils from './../../Utils/form.utils';
 import { GetUrlForFormSubmit } from './../../Utils/generic.utils';
@@ -52,7 +52,7 @@ const submitGenericForm = async ({ payload, newValues, onSubmit }) => {
 
     let body = newValues;
     let Method = Post;
-    
+
     if (payload.method == 'edit') {
         Method = Put;
         const originalValues = FormUtils.getOriginalData();
@@ -315,6 +315,16 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         />,
         // Image Upload Ends
 
+        [COLUMN_TYPE.MULTIPLE_UPLOAD]: <ImageUpload value={values[column.name]} name={column.name} onRemove={props.onFileRemove}
+            onSelect={(column, name) => {
+                // console.log(column, name);
+                setTimeout(() => {
+                    props.setFieldValue(column, name ? name.name : '')
+                    props.onFileUpload(column, name);
+                });
+            }}
+        />,
+
         // TextArea Begins
         160: <Field
             name={column.name}
@@ -449,7 +459,7 @@ const formElements = props => {
                         Cancel
                     </button> */}
 
-                    <button className="btn btn-success" disabled={isSubmitting} type="submit">
+                    <button className="btn btn-success" disabled={!dirty || isSubmitting} type="submit">
                         Submit
                     </button>
                 </div>

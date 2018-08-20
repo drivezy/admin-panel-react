@@ -414,3 +414,21 @@ th {
     transition: all .2s linear !important;
     cursor: pointer;
 }
+
+.no-scrollbar{
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.text-center{
+    text-align: center;
+}
+
+.no-padding-right{
+    padding-right: 0 !important;
+}
+
+.no-padding-left{
+    padding-left: 0 !important;
+}

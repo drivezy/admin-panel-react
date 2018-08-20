@@ -7,7 +7,7 @@ import { ProcessForm } from './../../Utils/formMiddleware.utils';
 import { ProcessPage } from './../../Utils/pageMiddleware.utils';
 import { IsUndefined } from './../../Utils/common.utils';
 
-import { CreateUrl, RemoveStarterFromThePath, EvalCondtionForNextActions } from './../../Utils/generic.utils';
+import { CreateUrl, RemoveStarterFromThePath, EvalCondtionForNextActions, GetFormContent } from './../../Utils/generic.utils';
 // import { IsUndefinedOrNull } from './../../Utils/common.utils';
 
 // import FormCreator from './../Form-Creator/formCreator.component';
@@ -23,6 +23,11 @@ import _ from 'lodash';
 let customMethods = {};
 
 let self = {};
+
+/**
+ * Returns custom actions according to placement
+ * displays dropdown ui actions
+ */ 
 export default class CustomAction extends Component {
     methods = {};
     constructor(props) {
@@ -48,6 +53,9 @@ export default class CustomAction extends Component {
         const { actions } = this.state
     }
 
+    /**
+     * toggle filter dropdown and re-initialise searchtext to empty
+     */
     toggle = () => {
         this.setState({
             dropdownOpen: !this.state.dropdownOpen,
@@ -61,20 +69,21 @@ export default class CustomAction extends Component {
         this.genericData = genericData;
         const data = RemoveStarterFromThePath({ data: listingRow, starter: genericData.starter });
 
-
+        action.callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : callback) : callback;
         if (action.form_id) {
-            action.callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : callback) : callback;
             genericData.preDefinedmethods.customForm({ action, listingRow: data, genericData, history, menuDetail, parent: parentData });
         } else if (action.execution_script) {
-            const pageContent = {
-                data,
-                parent: parentData,
-                execution_script: action.execution_script
-            }
+            // const pageContent = {
+            //     data,
+            //     parent: parentData,
+            //     execution_script: action.execution_script
+            // }
+
+            let pageContent = GetFormContent({ action, listingRow: data, genericData, history, source, menuDetail, parent: parentData });
+            pageContent = { ...pageContent, ...{ execution_script: action.execution_script } };
             ProcessPage({ pageContent });
             // script evaluation goes here
         } else if (typeof genericData.preDefinedmethods[action.identifier] == "function") {
-            action.callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : callback) : callback;
             genericData.preDefinedmethods[action.identifier]({ action, listingRow: data, genericData, history, source, menuDetail, parent: parentData });
         } else {
             alert("The ui action " + action.id + " is not configued properly");
@@ -97,13 +106,17 @@ export default class CustomAction extends Component {
         //     }
         // }
     }
-
+    /**
+     * takes value in the search box and filter actions
+     * @param  {object} {target={}
+     * @param  {string} value}={}
+     */
     searchFilter = ({ target = {}, value } = {}) => {
         const searchText = IsUndefined(value) ? target.value : '';
         const { actions = [] } = this.props;
 
         const filteredUserFilter = actions.filter(action => action.name.toLowerCase().includes(searchText.toLowerCase()));
-        this.setState({ searchText, filteredUserFilter });
+        this.setState({ searchText: target.value, filteredUserFilter });
     }
 
     render() {
@@ -114,8 +127,8 @@ export default class CustomAction extends Component {
         let filteredActions = [];
         let sortedActions = [];
 
-        filteredActions = sortActions.filter((action)=>action[placement]&&placement=='as_dropdown');
-        sortedActions = sortActions.filter((action)=>action[placement]&&placement != 'as_dropdown');
+        filteredActions = sortActions.filter((action) => action[placement] && placement == 'as_dropdown');
+        sortedActions = sortActions.filter((action) => action[placement] && placement != 'as_dropdown');
         const { filteredUserFilter, searchText } = this.state;
         const filters = searchText ? filteredUserFilter : filteredActions;
 
@@ -132,13 +145,13 @@ export default class CustomAction extends Component {
                                 aria-expanded={this.state.dropdownOpen}
                             >
                                 Actions
-                                    </DropdownToggle>
+                            </DropdownToggle>
                             <DropdownMenu className="dropdown-menu custom-click pull-right menu-operations" right>
                                 {
-                                        filteredActions.length > 1 ?
+                                    filteredActions.length > 1 ?
                                         <div>
                                             <div className="form-group has-feedback">
-                                                <input value={searchText} onChange={this.searchFilter} type="text" className="form-control" id="search-operation" placeholder='Search Actions' />
+                                                <input value={searchText} onChange={this.searchFilter} type="text" className="form-control" id="search-operation" placeholder='Search Actions'/>
                                                 {/* <i onClick={() => searchText ? this.searchFilter({ value: null }) : null} className={`fa fa-${searchText ? 'times-circle cursor-pointer' : 'search'} form-control-feedback`} aria-hidden="true"></i> */}
                                             </div>
                                         </div>
@@ -149,7 +162,7 @@ export default class CustomAction extends Component {
                                     filters.map((action, key) => {
                                         const filterScript = action.filter_condition ? action.filter_condition.script : null;
                                         const isDisabled = !EvalCondtionForNextActions(filterScript, listingRow, genericData.starter);
-                                        if(isDisabled) { 
+                                        if (isDisabled) {
                                             return null;
                                         }
                                         return (
@@ -200,7 +213,7 @@ export default class CustomAction extends Component {
                         }
                     })
                 }
-                </div>
+            </div>
         )
     }
 }
