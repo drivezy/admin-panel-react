@@ -25,10 +25,10 @@ export default class BookingRideReturn extends Component {
         let kmDifference;
         let theClassName;
 
-        let bookingStartDate = BookingPickupDate(bookingRideReturnData.actual_start_time);
-        let bookingStartTime = BookingPickupTime(bookingRideReturnData.actual_start_time);
-        let bookingEndDate = BookingDropDate(bookingRideReturnData.actual_end_time);
-        let bookingEndTime = BookingDropTime(bookingRideReturnData.actual_end_time);
+        let bookingStartDate = BookingPickupDate(bookingRideReturnData.ride_return.actual_start_time);
+        let bookingStartTime = BookingPickupTime(bookingRideReturnData.ride_return.actual_start_time);
+        let bookingEndDate = BookingDropDate(bookingRideReturnData.ride_return.actual_end_time);
+        let bookingEndTime = BookingDropTime(bookingRideReturnData.ride_return.actual_end_time);
         if (bookingRideReturnData.status) {
              theClassName = RideStatus(bookingRideReturnData.status.id);
         }

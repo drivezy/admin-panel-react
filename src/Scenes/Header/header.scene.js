@@ -4,8 +4,9 @@ import { SubscribeToEvent, UnsubscribeEvent } from 'state-manager-utility';
 
 import ActiveModule from './../../Components/Active-Module/ActiveModule.component';
 import PageNav from './../../Components/Page-Nav/PageNav';
-import {IsObjectHaveKeys} from 'common-js-util';
+
 import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
+import { IsObjectHaveKeys } from 'common-js-util';
 
 import RightClick from './../../Components/Right-Click/rightClick.component';
 
@@ -45,7 +46,7 @@ export default class Header extends Component {
                 <div className="header-content">
 
                     <ActiveModule />
-                    { enabled ? <RightClick rowOptions={this.rowOptions} renderTag="div" className='generic-table-td' /> : null}
+                    {enabled ? <RightClick rowOptions={this.rowOptions} renderTag="div" className='generic-table-td' /> : null}
                     <PageNav />
 
                 </div>
@@ -59,12 +60,11 @@ export default class Header extends Component {
             name: "Redirect Menu Detail",
             icon: 'fa-deaf',
             subMenu: false,
-            onClick: (data) => {
-                const { menuDetail, history } = this.state;
-
+            onClick: (data, e) => {
+                const { menuDetail } = this.state;
                 let pageUrl = "/menu/" + menuDetail.menuData.menuId;
-
-                history.push(`${pageUrl}`);
+                // history.push(`${pageUrl}`);
+                Location.navigate({ url: pageUrl }, e);
             },
             disabled: false,
             enabled: false
@@ -73,12 +73,10 @@ export default class Header extends Component {
             name: "Redirect Model Detail",
             icon: 'fa-info-circle',
             subMenu: false,
-            onClick: (data) => {
-                const { menuDetail, history } = this.state;
-
+            onClick: (data, e) => {
+                const { menuDetail } = this.state;
                 let pageUrl = "/model/" + (menuDetail.menuData.model ? menuDetail.menuData.model.id : menuDetail.menuData.modelId)
-
-                history.push(`${pageUrl}`);
+                Location.navigate({ url: pageUrl }, e);
             },
             disabled: false,
             enabled: false
