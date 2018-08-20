@@ -20,5 +20,10 @@ export default {
         "name": "External Link",
         "columnType": COLUMN_TYPE.STRING,
         "path": 'Generic-Column-Filters/hyperlink.component.js'
+    },
+    "Lead Status": { 
+        "name": "Lead Status",
+        "columnType": 686,
+        "path": 'Lead-Status/leadStatus.component.js'
     }
 }

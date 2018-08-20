@@ -12,8 +12,8 @@ export class ConfirmModalComponent extends Component {
         }
     }
 
-    confirmModal({ message, callback, title = '' }) {
-        this.setState({ isVisible: true, message, callback, title });
+    confirmModal({ message, callback, title = '', input = [] }) {
+        this.setState({ isVisible: true, message, callback, title, input });
     }
 
     confirm = (callback) => {
@@ -28,7 +28,7 @@ export class ConfirmModalComponent extends Component {
         this.setState({ isVisible: false })
     }
 
-    modalData = ({ message, callback }) => {
+    modalData = ({ message, callback, input }) => {
         return (
             <div className="confirm-modal">
                 <div className="modal-body">
@@ -36,10 +36,23 @@ export class ConfirmModalComponent extends Component {
                         {message}
                     </p>
                 </div>
+                {
+                    input.map((column, key) => {
+                        return (<div>
+                            <input type='text' value={column.value} placeholder={column.placeholder}
+                                onChange={e => {
+                                    input[key].value = e.target.value;
+                                    this.setState({ input });
+                                }}
+                            /> 
+                        </div>
+                        )
+                    })
+                }
                 <div className="modal-footer curved-bottom">
                     <div className="action-button">
                         <button className="btn btn-secondary" onClick={(e) => this.closeModal()}>Cancel</button>
-                        <button className="btn btn-danger" onClick={(e) => this.confirm(callback())}>Confirm</button>
+                        <button className="btn btn-danger" onClick={(e) => this.confirm(callback(input))}>Confirm</button>
                     </div>
                 </div>
             </div>
@@ -47,7 +60,7 @@ export class ConfirmModalComponent extends Component {
     }
 
     render() {
-        const { isVisible } = this.state;
+        const { isVisible, input } = this.state;
         return (
             <div>
                 <Modal size="md" isOpen={isVisible} toggle={this.toggleModal} className="form-settings-modal">
@@ -55,7 +68,7 @@ export class ConfirmModalComponent extends Component {
                         Confirm
                     </ModalHeader>
                     <ModalBody>
-                        {this.modalData({ message: this.state.message, callback: this.state.callback })}
+                        {this.modalData({ message: this.state.message, callback: this.state.callback, input })}
                     </ModalBody>
                 </Modal>
                 {/* <ModalWrapper
