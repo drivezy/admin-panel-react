@@ -1,4 +1,4 @@
-import { Get,Post } from 'common-js-util';
+import { Get, Post } from 'common-js-util';
 import { IsUndefinedOrNull } from './../Utils/common.utils';
 import { RECORD_URL } from './../Constants/global.constants';
 
@@ -59,7 +59,7 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
  * @param  {} value
  * @param  {} override_all
  */
-   export function SetPreference({ parameter, selectedColumns, override_all }) {
+export function SetPreference({ parameter, selectedColumns, override_all }) {
     // const source_type = GetSourceMorphMap(source);
 
     // const methods = { Post, Put };
@@ -86,12 +86,12 @@ export function GetColumnsForListing({ includes, relationship, starter, dictiona
  */
 export function CreateFinalColumns(columns, selectedColumns) {
     const finalColumnDefinition = [];
-   
 
     for (const i in selectedColumns) {
         const selected = selectedColumns[i];
         if (typeof (selected) == "object") {
-            const value = selected.object+'.'+selected.id;
+            const value = selected.object + '.' + selected.id;
+            // const value = selected.column;
             const dict = columns[value];
             if (dict) {
                 finalColumnDefinition[i] = dict;
@@ -126,7 +126,7 @@ export function CreateFinalColumns(columns, selectedColumns) {
     }
 
     return finalColumnDefinition;
-    
+
 }
 
 /**
