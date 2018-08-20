@@ -233,6 +233,7 @@
                             &.action-header {
                                 border: 1px solid;
                                 text-align: center;
+                                background: #fff;
                                 // border: 1px solid #a4b2b8;
                                 @include themify($themes) {
                                     // background: themed('sideTableBackground');
