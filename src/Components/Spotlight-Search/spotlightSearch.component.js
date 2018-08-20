@@ -105,11 +105,11 @@ export class Spotlight extends Component {
                 result = await Get({ url: url });
                 if (result.success) {
                     result.response.name = searchText;
-                    result.response.url = 'booking/'+result.response.id;
+                    result.response.url = 'booking/' + result.response.id;
                     querySearchList.push(result.response)
                     this.setState({ querySearchList });
 
-                    
+
                     // Location.navigate({ url: 'booking/'+result.response.id });
                 }
                 break;
@@ -227,8 +227,11 @@ export class Spotlight extends Component {
     }
 
     redirectTo = (state) => {
-        this.setState({ isOpen: !this.state.isOpen });
-        Location.navigate({ url: state.url });
+        
+            this.setState({ isOpen: !this.state.isOpen });
+            if (state) {
+            Location.navigate({ url: state.url });
+        }
     }
 
     render() {
@@ -294,7 +297,7 @@ export class Spotlight extends Component {
                                             className="list-group-item">{match.name}
                                         </li>
                                     ))
-                                    
+
                                 }
                             </ul>
                         </div>
