@@ -54,7 +54,7 @@ export default class BookingDetail extends Component {
             const menuDetail = ConvertMenuDetailForGenericPage(response || {});
             this.state.menuDetail = menuDetail;
             this.setState({ menuDetail });
-            StoreEvent({ eventName: 'rightClickData', data: { menuData: menuDetail } });
+            StoreEvent({ eventName: 'rightClickData', data: { menuData: menuDetail } });            
         }
     }
 
