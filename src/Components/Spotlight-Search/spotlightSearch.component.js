@@ -57,18 +57,24 @@ export class Spotlight extends Component {
     searchMenus = (event) => {
         let searchText = event.target.value
         this.setState({ searchText: searchText });
+    }
 
+    advancedSearch = () => {
         {
+            const { searchText } = this.state;
             let obj = {};
             if (searchText.length == 10 && searchText.slice(0, 3) != "INV") {
                 if (parseInt(searchText).toString().length == 10) {
                     obj = 2;
-                } else if (/[^a-zA-Z0-9]/.test(searchText) && searchText.indexOf("-") === -1) {
+                }
+                else if (/[^a-zA-Z0-9]/.test(searchText) && searchText.indexOf("-") === -1) {
                     obj = 2;
-                } else {
+                }
+                else {
                     obj = 1;
                 }
-            } else if (searchText.slice(0, 3) == "TKT") { // if the first 3 characters are tkt , its gonna be a ticket
+            }
+            else if (searchText.slice(0, 3) == "TKT") { // if the first 3 characters are tkt , its gonna be a ticket
                 obj = 6;
             } else if (searchText.slice(0, 3) == "INV") {
                 obj = 8;
@@ -86,10 +92,11 @@ export class Spotlight extends Component {
                 obj = 3;
             } else if (searchText.indexOf("-") != -1) {
                 obj = 5;
-            } else {
-                obj = 2;
             }
-
+            // else {
+            //     obj = 2;     //@ToDp : Carefully write execution for this case
+            // }
+            console.log(obj);
             this.searchVal(obj, searchText);
         }
     }
@@ -97,10 +104,12 @@ export class Spotlight extends Component {
     searchVal = async (obj, searchText) => {
         let result;
         let querySearchList = []
+        let url
         switch (obj) {
+
             // To search PNR
             case 1:
-                var url = "bookingToken/" + searchText;
+                url = "bookingToken/" + searchText;
                 result = await Get({ url: url });
                 if (result.success) {
                     result.response.name = searchText;
@@ -117,21 +126,30 @@ export class Spotlight extends Component {
             case 2:     //@TODO MAKE A LIST PAGE WHERE WE SHOULD REDIRECT
                 // getSetValue.setValue(searchText);
 
+                url = '/searchUsers?searchText=' + searchText;
+                // url = '/searchUsers';
+                const queryParam = { searchText };
+                Location.navigate({ url: url });
+                // Location.navigate({ url, queryParam });
                 break;
 
             // To search Payment
             case 3:     //@TODO MAKE A LIST PAGE WHERE WE SHOULD REDIRECT
                 // getSetValue.setValue(searchText);
-
+                console.log(3);
                 break;
 
             // To search vehicle
             case 4:     //@TODO MAKE A LIST PAGE WHERE WE SHOULD REDIRECT
-
+                url = '/searchVehicles?searchText=' + searchText;
+                // url = '/searchVehicles';
+                //const queryParam = { searchText };
+                Location.navigate({ url: url });
                 break;
 
             // To search coupon
             case 5:
+                console.log(5);
                 url = "coupon?query=coupon_code=\"" + searchText + "\"";
                 result = await Get({ url: url });
                 if (result.success)
@@ -140,6 +158,7 @@ export class Spotlight extends Component {
 
             // To search Ticket
             case 6:
+                console.log(6);
                 url = "task?query=ticket_number=\"" + searchText + "\"";
                 result = await Get({ url: url });
                 if (result.success)
@@ -148,11 +167,12 @@ export class Spotlight extends Component {
 
             // To search Vendor
             case 7:     //@TODO MAKE A LIST PAGE WHERE WE SHOULD REDIRECT
-
+                console.log(7);
                 break;
 
             // To search Ticket
             case 8:
+                console.log(8);
                 url = "expenseVoucher?query=invoice=\"" + searchText + "\"";
                 result = await Get({ url: url });
                 if (result.success)
@@ -160,16 +180,18 @@ export class Spotlight extends Component {
                 break;
 
             case 9:     //@TODO MAKE A LIST PAGE WHERE WE SHOULD REDIRECT
+                console.log(9);
                 break;
 
             default:
+                this.setState({ querySearchList: [] })
                 break;
         }
     }
 
 
     keyboardPress = (event) => {
-        if (this.state.searchText) {
+        if (event.target.value) {
             if (event.which == 40) {
                 this.searchInput.current.blur();
                 var menus = document.getElementsByClassName('spotlight-menu-list')[0];
@@ -183,7 +205,10 @@ export class Spotlight extends Component {
             }
             else if (event.which == 13) {
                 console.log(this.state.querySearchList)
-                this.redirectTo(this.state.querySearchList[0]);
+                this.redirectTo(this.state.querySearchList[this.state.querySearchList.length - 1]);
+
+                this.advancedSearch();
+
             }
         }
     }
@@ -280,6 +305,7 @@ export class Spotlight extends Component {
                     {
                         searchText
                         &&
+                        matches.length != 0 &&
                         <div className="card spotlight-menu-list">
                             {/* {
                                 (matches.length == 0)
