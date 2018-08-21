@@ -1,0 +1,34 @@
+.status-button {
+    display: flex;
+    flex-direction: row;
+    
+    .cursor-pointer{
+        margin-right: 3px;
+        border-radius: 3px;
+    }
+    .bg-orange-white-text{
+        color: rgb(187, 95, 95);
+        background: rgb(255, 204, 201);
+    }
+
+    .bg-purple-white-text{
+        color: rgb(156, 107, 156);
+        background: rgb(255, 179, 255);
+    }
+
+    .bg-red-white-text{
+        color: rgb(144, 30, 30);
+        background: rgb(251, 135, 135);
+    }
+
+    .bg-yellow-white-text{
+        background: #f1f13b;
+        color: #901e1e;
+    }
+
+    .bg-green-white-text{
+        color: rgb(81, 117, 81);
+        background: rgb(116, 222, 116);
+    }
+
+}

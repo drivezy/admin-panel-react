@@ -612,7 +612,7 @@ export function RowTemplate({ selectedColumn, listingRow, path = 'path' }) {
 
 function defaultRowValue({ listingRow, selectedColumn, path }) {
     try {
-        return <ParseComponent data={listingRow[selectedColumn.path]} filter={selectedColumn.filter} />;
+        return <ParseComponent listingRow={listingRow} data={listingRow[selectedColumn.path]} filter={selectedColumn.filter} />;
         // return eval('listingRow.' + selectedColumn[path]);
     } catch (e) {
         return '';

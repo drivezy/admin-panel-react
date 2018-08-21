@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import './spotlightSearch.component.css';
-
+import { Get, Put, Post } from 'common-js-util';
 import { Modal, ModalBody } from 'reactstrap';
 import { HotKeys } from 'react-hotkeys';
-
+import API_HOST from './../../Constants/global.constants';
 import { GetMenus } from './../../Utils/menu.utils';
 import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 
@@ -25,8 +25,9 @@ export class Spotlight extends Component {
             menus: [],
             searchText: '',
             activeMenu: {},
-            searchList: []
-            // searchLength: 0
+            searchList: [],
+            querySearchList: [],
+            searchLength: 0
         }
     }
 
@@ -41,8 +42,8 @@ export class Spotlight extends Component {
 
     keyboardHandlers = {
         'moveUp': (event) => { this.traverse(0) },
-        'moveDown': (event) => {  this.traverse(1) },
-        'enter': (event) => { this.onSelect(event)}
+        'moveDown': (event) => { this.traverse(1) },
+        'enter': (event) => { this.onSelect(event) }
     }
 
 
@@ -54,8 +55,118 @@ export class Spotlight extends Component {
     }
 
     searchMenus = (event) => {
-        this.setState({ searchText: event.target.value });
+        let searchText = event.target.value
+        this.setState({ searchText: searchText });
+
+        {
+            let obj = {};
+            if (searchText.length == 10 && searchText.slice(0, 3) != "INV") {
+                if (parseInt(searchText).toString().length == 10) {
+                    obj = 2;
+                } else if (/[^a-zA-Z0-9]/.test(searchText) && searchText.indexOf("-") === -1) {
+                    obj = 2;
+                } else {
+                    obj = 1;
+                }
+            } else if (searchText.slice(0, 3) == "TKT") { // if the first 3 characters are tkt , its gonna be a ticket
+                obj = 6;
+            } else if (searchText.slice(0, 3) == "INV") {
+                obj = 8;
+            } else if ((parseInt(searchText).toString().length == 4 || parseInt(searchText).toString().length == 3) && parseInt(searchText).toString() != "NaN") {
+                obj = 4;
+            } else if (searchText.length == 11 && searchText.indexOf("-") === -1) {
+                if (/\s/g.test((searchText).charAt(4))) { // check if the 4th characted is space
+                    obj = 4;
+                } else {
+                    obj = 2;
+                }
+            } else if (!isNaN(searchText)) { // checking if it is a number , to check for booking id
+                obj = 8;
+            } else if (searchText.length == 16) {
+                obj = 3;
+            } else if (searchText.indexOf("-") != -1) {
+                obj = 5;
+            } else {
+                obj = 2;
+            }
+
+            this.searchVal(obj, searchText);
+        }
     }
+
+    searchVal = async (obj, searchText) => {
+        let result;
+        let querySearchList = []
+        switch (obj) {
+            // To search PNR
+            case 1:
+                var url = "bookingToken/" + searchText;
+                result = await Get({ url: url });
+                if (result.success) {
+                    result.response.name = searchText;
+                    result.response.url = 'booking/' + result.response.id;
+                    querySearchList.push(result.response)
+                    this.setState({ querySearchList });
+
+
+                    // Location.navigate({ url: 'booking/'+result.response.id });
+                }
+                break;
+
+            // To search User
+            case 2:     //@TODO MAKE A LIST PAGE WHERE WE SHOULD REDIRECT
+                // getSetValue.setValue(searchText);
+
+                break;
+
+            // To search Payment
+            case 3:     //@TODO MAKE A LIST PAGE WHERE WE SHOULD REDIRECT
+                // getSetValue.setValue(searchText);
+
+                break;
+
+            // To search vehicle
+            case 4:     //@TODO MAKE A LIST PAGE WHERE WE SHOULD REDIRECT
+
+                break;
+
+            // To search coupon
+            case 5:
+                url = "coupon?query=coupon_code=\"" + searchText + "\"";
+                result = await Get({ url: url });
+                if (result.success)
+                    console.log(result);
+                break;
+
+            // To search Ticket
+            case 6:
+                url = "task?query=ticket_number=\"" + searchText + "\"";
+                result = await Get({ url: url });
+                if (result.success)
+                    console.log(result);
+                break;
+
+            // To search Vendor
+            case 7:     //@TODO MAKE A LIST PAGE WHERE WE SHOULD REDIRECT
+
+                break;
+
+            // To search Ticket
+            case 8:
+                url = "expenseVoucher?query=invoice=\"" + searchText + "\"";
+                result = await Get({ url: url });
+                if (result.success)
+                    console.log(result);
+                break;
+
+            case 9:     //@TODO MAKE A LIST PAGE WHERE WE SHOULD REDIRECT
+                break;
+
+            default:
+                break;
+        }
+    }
+
 
     keyboardPress = (event) => {
         if (this.state.searchText) {
@@ -70,12 +181,16 @@ export class Spotlight extends Component {
             } else if (event.which == 38) {
                 this.searchInput.current.blur();
             }
+            else if (event.which == 13) {
+                console.log(this.state.querySearchList)
+                this.redirectTo(this.state.querySearchList[0]);
+            }
         }
     }
 
     onSelect = (event) => {
-        const { searchList = [] } = this.state
-        const  searchLength  = searchList.length-1;
+        const { searchList = [], querySearchList = [] } = this.state;
+        const searchLength = searchList.length - 1;
         if (event.which == 40) {
             this.searchInput.current.blur();
             var menus = document.getElementsByClassName('spotlight-menu-list')[0];
@@ -87,8 +202,11 @@ export class Spotlight extends Component {
         } else if (event.which == 38) {
             this.searchInput.current.blur();
         }
-        else if (event.which == 13){
-            this.redirectTo(searchList[searchLength][this.currentIndex]);
+        else if (event.which == 13) {
+            if (searchList.length)
+                this.redirectTo(searchList[searchList.length - 1][this.currentIndex]);
+            else if (querySearchList.length)
+                this.redirectTo(searchList[searchList.length - 1][this.currentIndex]);
         }
     }
 
@@ -110,15 +228,17 @@ export class Spotlight extends Component {
     }
 
     redirectTo = (state) => {
-        
+
         this.setState({ isOpen: !this.state.isOpen });
-        Location.navigate({ url: '/'+state.url });
+        if (state) {
+            Location.navigate({ url: '/' + state.url });
+        }
     }
 
     render() {
 
         const { menus, searchText, isOpen, searchList } = this.state;
-
+        let searchLength;
         if (isOpen) {
             // document.getElementById('spotlight-input').focus();
         }
@@ -127,6 +247,7 @@ export class Spotlight extends Component {
 
         if (searchText) {
             const { searchList = [] } = this.state
+
             menus.modules.forEach((module) => {
                 module.menus.forEach((menu) => {
                     if (menu.name.toLowerCase().indexOf(searchText) != -1) {
@@ -134,9 +255,9 @@ export class Spotlight extends Component {
                     }
                 });
             });
+
             searchList.push(matches);
-            //this.searchLength = searchText.length-1;
-            // this.setState({searchLength: searchText.length-1});
+            searchLength = searchText.length - 1;
         }
 
         return (
@@ -152,7 +273,7 @@ export class Spotlight extends Component {
 
                             {/* <TypeaheadComponent onChange={this.redirectTo} options={matches} /> */}
 
-                            <input ref={this.searchInput} id="spotlight-input" type="text" className="form-control" onKeyDown={this.keyboardPress.bind(this)} onChange={(event) => {this.currentIndex = 0; this.searchMenus(event)}} placeholder="Type to Search" aria-label="Username" aria-describedby="basic-addon1" />
+                            <input ref={this.searchInput} id="spotlight-input" type="text" className="form-control" onKeyDown={this.keyboardPress.bind(this)} onChange={(event) => { this.currentIndex = 0; this.searchMenus(event) }} placeholder="Type to Search" aria-label="Username" aria-describedby="basic-addon1" />
                         </div>
                     </ModalBody>
                     {/* Menus matching Text */}
@@ -160,23 +281,24 @@ export class Spotlight extends Component {
                         searchText
                         &&
                         <div className="card spotlight-menu-list">
-                            {
+                            {/* {
                                 (matches.length == 0)
                                 &&
                                 <div className="card-header">
                                     No matching records
                              </div>
-                            }
+                            } */}
                             <ul className="list-group list-group-flush">
                                 {
                                     matches.slice(0, 10).map((match, key) => (
-                                            <li
-                                            ref={this.menuItem} 
-                                            onKeyDown={this.onSelect} 
+                                        <li
+                                            ref={this.menuItem}
+                                            onKeyDown={this.onSelect}
                                             onClick={() => this.redirectTo(match)} key={key}
                                             className="list-group-item">{match.name}
-                                            </li>
-                                ))
+                                        </li>
+                                    ))
+
                                 }
                             </ul>
                         </div>

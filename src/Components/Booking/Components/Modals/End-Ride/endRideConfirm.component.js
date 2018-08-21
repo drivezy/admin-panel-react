@@ -92,7 +92,6 @@ export default class EndRideConfirm extends Component {
             if (result.success) {
                 ModalManager.closeModal();
             }
-            
         }
 
     render() {

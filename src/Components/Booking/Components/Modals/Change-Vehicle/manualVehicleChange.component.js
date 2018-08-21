@@ -6,6 +6,7 @@ import SelectBox from './../../../../Forms/Components/Select-Box/selectBoxForGen
 import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 import DatePicker from './../../../../Forms/Components/Date-Picker/datePicker';
 import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
+import DateTimePicker from './../../../../../../src/Components/Date-Time-Picker/dateTimePicker.component';
 
 import {
     Table
@@ -57,7 +58,7 @@ export default class ChangeVehicle extends Component {
      * Open Confirmation Modal and change vehicle for Booking ID
      */
     confirmChange = () => {
-        const { bookingData, car_id, new_fuel, old_fuel, reason, start_date, reason_id, registration_id, new_odo, old_odo} = this.state;
+        const { bookingData, car_id, new_fuel, old_fuel, reason, start_date, reason_id, registration_id, new_odo, old_odo } = this.state;
         let between_booking = (bookingData.status.id == 6) ? true : false;
         const method = async () => {
             const result = await Post({
@@ -86,22 +87,23 @@ export default class ChangeVehicle extends Component {
     }
 
     render() {
-        const { cityCars, reasons, car_id, bookingData, registration_id, selected_car, manual, vehicle } = this.state;
+        const { cityCars, reasons, car_id, bookingData = {}, registration_id, selected_car, manual, vehicle } = this.state;
+        const ride_return = bookingData.ride_return || {};
         return (
             <div className="manual-change-modal">
                 <div className="change-wrapper">
                     {
-                    manual ?
-                    <div className="row">
-                        <div className="col-sm-12">
-                            Vehicle Modal
+                        manual ?
+                            <div className="row">
+                                <div className="col-sm-12">
+                                    Vehicle Modal
                     </div>
-                        <div className="col-sm-12">
-                            <SelectBox isClearable={false} onChange={(value) => { this.setState({ car_id: value.id, selected_car: value }); }} field="name" options={cityCars} />
-                        </div>
-                    </div>
-                    :
-                        null
+                                <div className="col-sm-12">
+                                    <SelectBox isClearable={false} onChange={(value) => { this.setState({ car_id: value.id, selected_car: value }); }} field="name" options={cityCars} />
+                                </div>
+                            </div>
+                            :
+                            null
                     }
                     {
                         car_id && manual ?
@@ -164,7 +166,8 @@ export default class ChangeVehicle extends Component {
                             Time
                     </div>
                         <div className="col-sm-12">
-                            <DatePicker single={true} timePicker={true} onChange={(value) => this.setState({ start_date: value }) } />
+                            {/* <DatePicker single={true} timePicker={true} onChange={(value) => this.setState({ start_date: value }) } /> */}
+                            <DateTimePicker onChange={(value) => this.setState({ start_date: value })} />
                         </div>
                     </div>
 
@@ -176,7 +179,7 @@ export default class ChangeVehicle extends Component {
                             <div className="input-group-prepend">
                                 <span className="input-group-text" id="basic-addon1"><i className="fa fa-strikethrough"></i></span>
                             </div>
-                            <input type="text" className="form-control"  onChange={(e) => { e.preventDefault(); this.setState({ reason: e.target.value }); }} placeholder="REASON" aria-label="Username" aria-describedby="basic-addon1"></input>
+                            <input type="text" className="form-control" onChange={(e) => { e.preventDefault(); this.setState({ reason: e.target.value }); }} placeholder="REASON" aria-label="Username" aria-describedby="basic-addon1"></input>
                         </div>
                     </div>
 
@@ -188,7 +191,7 @@ export default class ChangeVehicle extends Component {
                             <div className="input-group-prepend">
                                 <span className="input-group-text" id="basic-addon1"><i className="fa fa-strikethrough"></i></span>
                             </div>
-                            <input type="number" className="form-control"  onChange={(e) => { e.preventDefault(); this.setState({ new_odo: e.target.value }); }} placeholder="" aria-label="Username" aria-describedby="basic-addon1"></input>
+                            <input type="number" className="form-control" onChange={(e) => { e.preventDefault(); this.setState({ new_odo: e.target.value }); }} placeholder="" aria-label="Username" aria-describedby="basic-addon1"></input>
                         </div>
                     </div>
 
@@ -200,7 +203,7 @@ export default class ChangeVehicle extends Component {
                             <div className="input-group-prepend">
                                 <span className="input-group-text" id="basic-addon1"><i className="fa fa-strikethrough"></i></span>
                             </div>
-                            <input type="number" className="form-control"  onChange={(e) => { e.preventDefault(); this.setState({ old_odo: e.target.value }); }} placeholder={`Must be Greater than ${bookingData.ride_return.start_odo_reading}`} aria-label="Username" aria-describedby="basic-addon1"></input>
+                            <input type="number" className="form-control" onChange={(e) => { e.preventDefault(); this.setState({ old_odo: e.target.value }); }} placeholder={`Must be Greater than ${ride_return.start_odo_reading}`} aria-label="Username" aria-describedby="basic-addon1"></input>
                         </div>
                     </div>
 
@@ -212,7 +215,7 @@ export default class ChangeVehicle extends Component {
                             <div className="input-group-prepend">
                                 <span className="input-group-text" id="basic-addon1"><i className="fa fa-strikethrough"></i></span>
                             </div>
-                            <input type="number" className="form-control"  onChange={(e) => { e.preventDefault(); this.setState({ new_fuel: e.target.value }); }} placeholder="" aria-label="Username" aria-describedby="basic-addon1"></input>
+                            <input type="number" className="form-control" onChange={(e) => { e.preventDefault(); this.setState({ new_fuel: e.target.value }); }} placeholder="" aria-label="Username" aria-describedby="basic-addon1"></input>
                         </div>
                     </div>
 
@@ -224,7 +227,7 @@ export default class ChangeVehicle extends Component {
                             <div className="input-group-prepend">
                                 <span className="input-group-text" id="basic-addon1"><i className="fa fa-strikethrough"></i></span>
                             </div>
-                            <input type="number" className="form-control"  onChange={(e) => { e.preventDefault(); this.setState({ old_fuel: e.target.value }); }} placeholder="" aria-label="Username" aria-describedby="basic-addon1"></input>
+                            <input type="number" className="form-control" onChange={(e) => { e.preventDefault(); this.setState({ old_fuel: e.target.value }); }} placeholder="" aria-label="Username" aria-describedby="basic-addon1"></input>
                         </div>
                     </div>
 
