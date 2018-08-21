@@ -18,20 +18,16 @@ export const GetUserPreferences = () => {
  * @param  {} override_all
  */
 export function SetUserPreference( key , value) {
-   
-
     const methods = { Post, Put };
     let method = 'Post';
 
     const body = {
         // query,
-        parameter: "spotlightkeys",
+        parameter: key,
         key,
         value: JSON.stringify(value)
         
     };
-
-
     // @TODO add userid when saving for particular user (not for all)
 
     //return methods[method]({  body });
