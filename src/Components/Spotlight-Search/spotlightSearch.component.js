@@ -158,9 +158,13 @@ export class Spotlight extends Component {
             // To search Ticket
             case 6:
                 
-                url = "task?query=ticket_number=\"" + searchText + "\"";
-                result = await Get({ url: url });
-                
+                // url = "/ticket/" + searchText + "\"";
+                // result = await Get({ url: url });
+               
+                let body = 'ticket_number="'+searchText+'"';
+                result = await Get({ url: "task?query="+body });
+                url = '/ticket/' + result.response[0].id;
+                Location.navigate({url:url})
                 break;
 
             // To search Vendor
