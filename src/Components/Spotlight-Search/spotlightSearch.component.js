@@ -96,7 +96,7 @@ export class Spotlight extends Component {
             // else {
             //     obj = 2;     //@ToDp : Carefully write execution for this case
             // }
-            
+
             this.searchVal(obj, searchText);
         }
     }
@@ -105,6 +105,7 @@ export class Spotlight extends Component {
         let result;
         let querySearchList = []
         let url
+        let body
         switch (obj) {
 
             // To search PNR
@@ -136,7 +137,7 @@ export class Spotlight extends Component {
             // To search Payment
             case 3:     //@TODO MAKE A LIST PAGE WHERE WE SHOULD REDIRECT
                 // getSetValue.setValue(searchText);
-                
+
                 break;
 
             // To search vehicle
@@ -149,35 +150,43 @@ export class Spotlight extends Component {
 
             // To search coupon
             case 5:
-                
-                url = "coupon?query=coupon_code=\"" + searchText + "\"";
-                result = await Get({ url: url });
-                
+
+                body = 'coupon_code="' + searchText + '"';
+                result = await Get({ url: "coupon?query=" + body });
+                url = '/campaign/' + result.response[0].campaign_id;
+                Location.navigate({ url: url })
                 break;
 
             // To search Ticket
             case 6:
-                
-                url = "task?query=ticket_number=\"" + searchText + "\"";
-                result = await Get({ url: url });
-                
+
+                // url = "/ticket/" + searchText + "\"";
+                // result = await Get({ url: url });
+
+                body = 'ticket_number="' + searchText + '"';
+                result = await Get({ url: "task?query=" + body });
+                url = '/ticket/' + result.response[0].id;
+                Location.navigate({ url: url })
                 break;
 
             // To search Vendor
             case 7:     //@TODO MAKE A LIST PAGE WHERE WE SHOULD REDIRECT
-                
+
                 break;
 
-            // To search Ticket
+            // To search Invoice
             case 8:
-                
-                url = "expenseVoucher?query=invoice=\"" + searchText + "\"";
-                result = await Get({ url: url });
-                
+
+                body = 'invoice="' + searchText + '"';
+                result = await Get({ url: "expenseVoucher?query=" + body });
+                if (result.response.length) {
+                    url = '/expenseVoucher/' + result.response[0].id;
+                    Location.navigate({ url: url })
+                }
                 break;
 
             case 9:     //@TODO MAKE A LIST PAGE WHERE WE SHOULD REDIRECT
-                
+
                 break;
 
             default:
@@ -201,7 +210,7 @@ export class Spotlight extends Component {
                 this.searchInput.current.blur();
             }
             else if (event.which == 13) {
-                
+
                 this.redirectTo(this.state.querySearchList[this.state.querySearchList.length - 1]);
 
                 this.advancedSearch();
