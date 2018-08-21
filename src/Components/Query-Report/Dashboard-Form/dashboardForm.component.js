@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './queryDashboardForm.css';
+import './dashboardForm.css';
 
 import {
     Card, CardBody, Button
@@ -95,7 +95,7 @@ const formElements = props => {
 
     return (
         <Form role="form" name="genericForm" >
-            <div className="form-row">
+            <div className="form-elements">
 
 
                 {/* Parameters repeated to form the fields  */}
@@ -138,30 +138,31 @@ const formElements = props => {
                 {/* Group Column */}
 
                 <div className="select-elements">
-
                     <div className="form-element">
                         <div className="form-label">
-                            Group Column
+                            <label>
+                                Group Column
+                           </label>
+
                         </div>
-                        <SelectBox />
+                        <SelectBox multi="true" options={props.payload.columns} field="display_name" onChange={(value) => { props.handleChange }} />
                     </div>
 
                     <div className="form-element">
                         <div className="form-label">
-                            Aggregations
+                            <label>
+                                Aggregations
+                           </label>
                         </div>
                         <div className="select-container">
-                            <div className="">
+                            <div className="element-container">
                                 <SelectBox />
                             </div>
-                            <div>
-                                <SelectBox />
+                            <div className="element-container">
+                                <SelectBox options={props.payload.columns} field="display_name" onChange={(value) => { props.handleChange }} />
                             </div>
                         </div>
                     </div>
-
-
-
                 </div>
 
 
@@ -191,11 +192,13 @@ const FormContents = withFormik({
     mapPropsToValues: props => {
 
         const { payload } = props;
+
+
     },
     displayName: 'BasicForm', // helps with React DevTools
 })(formElements);
 
-export default class QueryDashboardForm extends Component {
+export default class DashboardForm extends Component {
     constructor(props) {
         super(props);
 

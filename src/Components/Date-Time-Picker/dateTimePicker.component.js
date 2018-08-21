@@ -30,7 +30,7 @@ export default class DateTimePicker extends Component {
         return (
             <div className="form-group-wrapper">
                 <div className='input-group date'>
-                    <input id='datetimepicker10' type='text' autocomplete="off" className="form-control date-time-wrapper" />
+                    <input id='datetimepicker10' type='text' autoComplete="off" className="form-control date-time-wrapper" />
                     {/* <span className="input-group-addon">
                                 <span>
                                     <i className="fa fa-calendar" aria-hidden="true">

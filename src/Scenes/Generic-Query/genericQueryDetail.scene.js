@@ -7,7 +7,7 @@ import DynamicFilter from './../../Components/Dynamic-Filter/dynamicFilter.compo
 import QueryTableSettings from './../../Components/Query-Report/Query-Table-Settings/queryTableSettings.component';
 import QueryPredefinedFilter from './../../Components/Query-Report/Query-Predefined-Filter/queryPredefinedFilter.component';
 import QueryConfigureDynamicFilter from './../../Components/Query-Report/Query-Configure-Filter/queryConfigureFilter.component';
-import QueryDashboardForm from './../../Components/Query-Report/Query-Dashboard-Form/queryDashboardForm.component';
+import DashboardForm from './../../Components/Query-Report/Dashboard-Form/dashboardForm.component';
 import QueryTable from './../../Components/Query-Report/Query-Table/queryTable.component';
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import { Get, Post } from 'common-js-util';
@@ -397,7 +397,7 @@ export default class GenericQueryDetail extends Component {
                     {
                         !(queryParamsData.comparable == 0 && queryParamsData.parameters && queryParamsData.parameters.length == 0) &&
                         // queryParamsData.parameters &&
-                        <QueryDashboardForm
+                        <DashboardForm
                             // savedDashboard={savedDashboard}
                             // queryTable={useQueryTable}
                             queryData={queryParamsData}

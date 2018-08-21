@@ -1,11 +1,16 @@
 .reports-content {
     .dashboard-form {
+        margin: 4px;
         .card {
-            margin: 2px;
+            height: 85px;
+            .card-body{
+                padding: 4px;
+            }
             form {
                 height: 45px;
                 background-color: #fff;
-                .form-row {
+                .form-elements {
+                    display: flex;
                     align-items: center;
                     .picker {
                         display: flex;
@@ -42,11 +47,16 @@
                 }
                 .select-elements {
                     display: flex;
+                    padding: 0px 5px;
                     .form-element {
+                        padding: 0px 10px;
                         display: flex;
                         flex-direction: column;
                         .select-container {
                             display: flex;
+                            .element-container{
+                                padding: 0px 4px;
+                            }
                         }
                     }
                 }
