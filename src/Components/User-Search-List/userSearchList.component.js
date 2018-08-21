@@ -22,7 +22,7 @@ export default class UserSearchList extends Component {
 
     componentWillReceiveProps() {
         const newSearchText = Location.search().searchText;
-        console.log(Location.search())
+        
         const { pageSearchText } = this.state;
         if (!newSearchText || (pageSearchText == newSearchText)) {
             return false;
