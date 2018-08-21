@@ -25,7 +25,7 @@ export function SetUserPreference( key , value) {
 
     const body = {
         // query,
-        parameter: "spotlightkeys",
+        parameter: key,
         key,
         value: JSON.stringify(value)
         
