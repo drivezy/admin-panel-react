@@ -7,6 +7,7 @@ import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 import { Get, Delete, IsUndefinedOrNull, BuildUrlForGetCall, IsObjectHaveKeys } from 'common-js-util';
 
 import { ProcessForm } from './formMiddleware.utils';
+// import { GetUser } from './user.utils';
 
 import ParseComponent from './../Components/Generic-Column-Filters/parseComponent.component';
 
@@ -756,6 +757,11 @@ export function GetChangedMethods(newValues, originalValues = {}) {
 }
 
 export function ParseRestrictedQuery(queryString) {
+    // const currentUser = GetUser();
+    // if (queryString.includes(":currentUser") && currentUser.id) {
+    //     queryString = queryString.replace(/:currentUser.id/g, currentUser.id);
+    // }
+
     const parsedQuery = [];
     if (!queryString) {
         return parsedQuery;
