@@ -1,18 +1,17 @@
 .reports-content {
     .dashboard-form {
         .card {
+            margin: 2px;
             form {
                 height: 45px;
                 background-color: #fff;
                 .form-row {
+                    align-items: center;
                     .picker {
                         display: flex;
                         .form-group {
-                            border-bottom: none;
-                        }
-                        .form-group {
                             display: flex;
-                            flex-direction: row;
+                            flex-direction: column;
                             background-color: #fff;
                             color: #b3b3b3;
                             font-size: 9px;
@@ -38,6 +37,16 @@
                                     }
                                 }
                             }
+                        }
+                    }
+                }
+                .select-elements {
+                    display: flex;
+                    .form-element {
+                        display: flex;
+                        flex-direction: column;
+                        .select-container {
+                            display: flex;
                         }
                     }
                 }

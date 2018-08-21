@@ -28,23 +28,17 @@ export default class DateTimePicker extends Component {
 
     render() {
         return (
-
-            <div>
-                <div className="col-sm-12">
-                    <div className="form-group-wrapper">
-                        <div className='input-group date'>
-                            <input id='datetimepicker10' type='text' autocomplete="off" className="form-control date-time-wrapper" />
-                            {/* <span className="input-group-addon">
+            <div className="form-group-wrapper">
+                <div className='input-group date'>
+                    <input id='datetimepicker10' type='text' autocomplete="off" className="form-control date-time-wrapper" />
+                    {/* <span className="input-group-addon">
                                 <span>
                                     <i className="fa fa-calendar" aria-hidden="true">
                                     </i>
                                 </span>
                             </span> */}
-                        </div>
-                    </div>
                 </div>
             </div>
-
         )
     }
 }

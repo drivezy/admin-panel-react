@@ -9,6 +9,9 @@ import { withFormik, Field, Form } from 'formik';
 import Yup from 'yup';
 
 import DateTimePicker from './../../../Components/Date-Time-Picker/dateTimePicker.component';
+
+import SelectBox from './../../../Components/Forms/Components/Select-Box/selectBox';
+
 // import { Upload, Post, Put, Get } from './../../../../Utils/http.utils';
 // import { GetChangedMethods } from './../../../../Utils/generic.utils';
 // import { IsObjectHaveKeys, IsUndefined } from './../../../../Utils/common.utils';
@@ -93,6 +96,9 @@ const formElements = props => {
     return (
         <Form role="form" name="genericForm" >
             <div className="form-row">
+
+
+                {/* Parameters repeated to form the fields  */}
                 <div className="picker">
                     {
                         payload.fields.map((preference, key) => {
@@ -127,6 +133,43 @@ const formElements = props => {
                         })
                     }
                 </div>
+                {/* Parameters repeated end  */}
+
+                {/* Group Column */}
+
+                <div className="select-elements">
+
+                    <div className="form-element">
+                        <div className="form-label">
+                            Group Column
+                        </div>
+                        <SelectBox />
+                    </div>
+
+                    <div className="form-element">
+                        <div className="form-label">
+                            Aggregations
+                        </div>
+                        <div className="select-container">
+                            <div className="">
+                                <SelectBox />
+                            </div>
+                            <div>
+                                <SelectBox />
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+
+                {/* Group Column Ends */}
+
+                {/* Aggregation */}
+
+                {/* Aggregation Ends */}
 
                 <div className="modal-actions">
                     <Button className="btn btn-primary btn-sm" onClick={handleReset}>
@@ -165,7 +208,7 @@ export default class QueryDashboardForm extends Component {
         }
     }
 
-    UNSAFE_componentWillReceiveProps(nextProps){
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.setState({
             payload: {
                 queryData: this.props.queryParamsData,
