@@ -174,12 +174,15 @@ export class Spotlight extends Component {
 
                 break;
 
-            // To search Ticket
+            // To search Invoice
             case 8:
 
-                url = "expenseVoucher?query=invoice=\"" + searchText + "\"";
-                result = await Get({ url: url });
-
+                body = 'invoice="' + searchText + '"';
+                result = await Get({ url: "expenseVoucher?query=" + body });
+                if (result.response.length) {
+                    url = '/expenseVoucher/' + result.response[0].id;
+                    Location.navigate({ url: url })
+                }
                 break;
 
             case 9:     //@TODO MAKE A LIST PAGE WHERE WE SHOULD REDIRECT
