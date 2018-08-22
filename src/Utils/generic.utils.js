@@ -843,7 +843,7 @@ export function EvalCondtionForNextActions(condition, itemRow, starter) {
             }
 
             evaluatedExpressions[i] = typeof evaluatedExpressions[i] == 'string' ? `'${evaluatedExpressions[i]}'` : evaluatedExpressions[i];
-            condition = condition.replace(expressions[i], typeof evaluatedExpressions[i] == 'object' ? 1 : evaluatedExpressions[i]);
+            condition = condition.replace(expressions[i], evaluatedExpressions[i] && typeof evaluatedExpressions[i] == 'object' ? 1 : evaluatedExpressions[i]);
         } catch (e) {
             console.log(e.message);
             evaluatedExpressions[i] = data[expression];
@@ -922,6 +922,6 @@ function IsObjectSingleLevel(object) {
         return isSingleLevel;
     }
 
-    isSingleLevel = pathSample.split('.').length > 1 ? true : false;
+    isSingleLevel = pathSample.split('.').length > 1 ? false : true;
     return isSingleLevel;
 }

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './sideNav.css';
-
-import { StoreEvent } from 'state-manager-utility';
-
+import { GroupBy } from 'common-js-util/build/common.utils'
+import { StoreEvent, SubscribeToEvent } from 'state-manager-utility';
+import _ from 'lodash';
 import { HotKeys } from 'react-hotkeys';
 
 export default class Sidenav extends Component {
@@ -10,9 +10,11 @@ export default class Sidenav extends Component {
         super(props);
         this.state = {
             visible: props.visible || false,
+            searchBarStatus: 0
             // onCollapse: props.onCollapse
         }
     }
+
 
     keyMap = {
         moveUp: 'shift+b',
@@ -21,17 +23,21 @@ export default class Sidenav extends Component {
         'moveUp': (event) => this.toggleNav(this.state.visible)
     }
 
-    componentDidMount() {
-        // const main = document.getElementById("main");
+    // componentDidMount() {
+    //     // const main = document.getElementById("main");
 
-        // if (main) {
-        //     main.addEventListener('click', () => {
-        //         if (this.state.visible) {
-        //             this.toggleNav();
-        //         }
-        //     })
-        // }
-        // this.closeNav();
+    //     // if (main) {
+    //     //     main.addEventListener('click', () => {
+    //     //         if (this.state.visible) {
+    //     //             this.toggleNav();
+    //     //         }
+    //     //     })
+    //     // }
+    //     // this.closeNav();
+    // }
+
+    componentDidMount() {
+        SubscribeToEvent({ eventName: 'searchMenu', callback: this.searchInMenus });
     }
 
     componentDidUpdate(prevProps) {
@@ -45,6 +51,22 @@ export default class Sidenav extends Component {
     //     }
     // }
 
+    searchInMenus = (data) => {
+        const menus = this.props.menus;
+        let matches = [];
+        menus.forEach((module) => {
+            module.menus.forEach((menu) => {
+                if (data != "" && menu.name.toLowerCase().indexOf(data) != -1 && menu.visible == 1) {
+                    menu.module = module.name
+                    matches.push(menu)
+                }
+            });
+        });
+
+        let sortMenu = GroupBy(matches, 'module')
+        StoreEvent({ eventName: 'searchInMenu', data: sortMenu })
+    }
+
     toggleNav = (visible = this.state.visible) => {
         this.props.onCollapse(visible);
     }
@@ -53,9 +75,22 @@ export default class Sidenav extends Component {
         StoreEvent({ eventName: 'toggledMenu', data: menu })
     }
 
+    toggleSearchBar = (searchBarStatus) => {
+        if (searchBarStatus) {
+
+            this.setState({ searchBarStatus })
+        }
+        else {
+
+            this.setState({ searchBarStatus })
+        }
+    }
+
+
     render() {
         const { visible } = this.state;
         const { menus } = this.props;
+
 
         return (
 
@@ -73,12 +108,25 @@ export default class Sidenav extends Component {
                         </div>
                         <div className="sidebar-menus">
                             <div className="menus">
+
+
+                                <div className="menu-item" onClick={() => this.toggleMenu([])} >
+                                    <div className="menu-label">
+                                        <div className="menu-icon">
+                                            <i className={`menu-icon fa ${'fa-search'}`}></i>
+                                        </div>
+                                        <div className="item-label `${visible ? 'menu-visible' : 'menu-hide'}`">
+                                            Search
+                                                </div>
+                                    </div>
+                                </div>
+
                                 {
                                     menus.map((menu, key) => (
                                         <div className="menu-item" key={key} onClick={() => this.toggleMenu(menu)}>
                                             <div className="menu-label">
                                                 <div className="menu-icon">
-                                                    <i className={`menu-icon fa ${menu.image?menu.image:'fa-flickr'}`}></i>
+                                                    <i className={`menu-icon fa ${menu.image ? menu.image : 'fa-flickr'}`}></i>
                                                 </div>
                                                 <div className="item-label `${visible ? 'menu-visible' : 'menu-hide'}`">
                                                     {menu.name}

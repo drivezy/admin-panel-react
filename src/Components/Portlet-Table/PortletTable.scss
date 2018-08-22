@@ -296,6 +296,7 @@
                 tr.table-row {
                     td {
                         padding: 6px 10px;
+                        font-size: 94%;
                     }
                 }
             }
@@ -368,6 +369,7 @@
                 tr.table-row {
                     td {
                         padding: 15px 20px;
+                        font-size: 110%;
                     }
                 }
             }
@@ -381,10 +383,9 @@
                 }
             }
             tr.table-row {
-                height: 60px;
                 td.action-column {
                     padding: 15px 20px;
-                    background-color: #000;
+                    font-size: 109%;
                 }
             }
         }
