@@ -1,8 +1,9 @@
 import React from 'react';
 import { ModalManager } from 'drivezy-web-utils/build/Utils';
-import DealAdd from './../Components/Partner-Deals/Modal/Partner-Deal-Add/partnerDealAdd.component';
-// import AmountCollection from './../Components/Partner-Deals/Modals/Amount-Collection/amountCollection.component';
-// import GoLive from './../Components/Partner-Deals/Modals/Go-Live/goLive.component';
+import DealAdd from './../Components/Partner-Deals/Modals/Partner-Deal-Add/partnerDealAdd.component';
+import AddDealTicket from './../Components/Partner-Deals/Modals/Add-Deal-Ticket/addDealTicket.component';
+import DealPayment from './../Components/Partner-Deals/Modals/Deal-Payment/dealPayment.component';
+import InsuranceInfo from './../Components/Partner-Deals/Modals/Insurance-Information/insuranceDetails.component';
 
 export function goLive(obj, callback, parent) {
         ModalManager.openModal({
@@ -25,19 +26,19 @@ export function goLive(obj, callback, parent) {
 //     })
 // }
 
-// export function Payment(obj, callback) {
-//     ModalManager.openModal({
-//         headerText: "Payment",
-//         modalBody: () => (<ManualVehicleChange />)
-//     })
-// }
+export function payment(obj, callback, parent) {
+    ModalManager.openModal({
+        headerText: "DEAL PAYMENT INFORMATION",
+        modalBody: () => (<DealPayment data={obj} callback={callback} parent={parent}/>)
+    })
+}
 
-// export function AddOrderTicket(obj, callback) {
-//     ModalManager.openModal({
-//         headerText: "Add Order Ticket",
-//         modalBody: () => (<ManualVehicleChange />)
-//     })
-// }
+export function addOrderTicket(obj, callback, parent) {
+    ModalManager.openModal({
+        headerText: "ORDER VEHICLE/ ADD ORDER TICKET",
+        modalBody: () => (<AddDealTicket data={obj} callback={callback} parent={parent}/>)
+    })
+}
 
 // export function AddInsuranceTicket(obj, callback) {
 //     ModalManager.openModal({
@@ -60,12 +61,12 @@ export function goLive(obj, callback, parent) {
 //     })
 // }
 
-// export function InsuranceDetails(obj, callback) {
-//     ModalManager.openModal({
-//         headerText: "Insurance Details",
-//         modalBody: () => (<ManualVehicleChange />)
-//     })
-// }
+export function insuranceDetails(obj, callback, parent) {
+    ModalManager.openModal({
+        headerText: "INSURANCE INFORMATION",
+        modalBody: () => (<InsuranceInfo data={obj} callback={callback} parent={parent}/>)
+    })
+}
 
 // export function RtoPermitDetails(obj, callback) {
 //     ModalManager.openModal({
@@ -95,12 +96,12 @@ export function goLive(obj, callback, parent) {
 //     })
 // }
 
-// export function RtoPayment(obj, callback) {
-//     ModalManager.openModal({
-//         headerText: "RTO Payment",
-//         modalBody: () => (<ManualVehicleChange />)
-//     })
-// }
+export function rtoPayment(obj, callback) {
+    ModalManager.openModal({
+        headerText: "RTO Payment",
+        modalBody: () => (<RTOPayment />)
+    })
+}
 
 // export function SpeedGovernancePayment(obj, callback) {
 //     ModalManager.openModal({

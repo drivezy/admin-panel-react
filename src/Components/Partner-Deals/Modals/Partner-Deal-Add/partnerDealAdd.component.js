@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import './partnerDealAdd.component.css';
 
-import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Get, Post } from 'common-js-util';
 import { API_HOST } from './../../../../Constants/global.constants';
-import { IsObjectHaveKeys } from 'common-js-util/build/common.utils';
 import SelectBox from './../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
+import { ModalManager } from 'drivezy-web-utils/build/Utils/modal.utils';
 
 export default class DealAdd extends Component {
 
@@ -131,7 +130,7 @@ export default class DealAdd extends Component {
                         <button className="btn btn-success">Send Bank Detail</button>
                     </div>
                     <div className="action-buttons">
-                        <button className="btn btn-default">Cancel</button>
+                        <button className="btn btn-default btn-sm" onClick={() => {ModalManager.closeModal();}}>Cancel</button>
                         &nbsp;
                         <button onClick={(e) => { e.preventDefault(); console.log(this.state) }} className="btn btn-success">Submit</button>
                     </div>

@@ -6,7 +6,6 @@ export default class PartnerDeals extends Component {
 
     constructor(props) {
         super(props)
-        console.log(props);
 
         ModalManager.closeModal();
         PartnerDealUtils[this.checklist_step.parameter.pre_method](props.data, props.callback, props.parent);
@@ -19,8 +18,8 @@ export default class PartnerDeals extends Component {
         "source_id": 1007,
         "description": "This step will make the vehicle live at the selected venue.",
         "parameter": {
-            "pre_method": "goLive",
-            "post_method": "goLive"
+            "pre_method": "insuranceDetails",
+            "post_method": "insuranceDetails"
         },
         "order": 45,
         "created_by": 81232,
