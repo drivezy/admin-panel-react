@@ -86,7 +86,7 @@ export class BasicRoute extends Component {
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
         // setTimeout(() => ConfirmUtils.confirmModal({ message: "Are you sure you want to request approval?", callback: () => console.log('hit') }), 2000);
         LoginCheck();
-        this.getHomepage();
+        // this.getHomepage();
     }
 
     // getHomepage = async() => {
