@@ -5,6 +5,9 @@ import AddDealTicket from './../Components/Partner-Deals/Modals/Add-Deal-Ticket/
 import DealPayment from './../Components/Partner-Deals/Modals/Deal-Payment/dealPayment.component';
 import InsuranceInfo from './../Components/Partner-Deals/Modals/Insurance-Information/insuranceDetails.component';
 import GoLive from './../Components/Partner-Deals/Modals/Go-Live/goLive.component';
+import AgreementUpload from './../Components/Partner-Deals/Modals/Agreement-Upload/agreementUpload.component';
+import OrderDetails from './../Components/Partner-Deals/Modals/Order-Details/orderDetails.component';
+import TrackerNotification from './../Components/Partner-Deals/Modals/Tracker-Notification/trackerNotification.component.js';
 
 export function editDeal(obj, callback, parent) {
         ModalManager.openModal({
@@ -55,12 +58,12 @@ export function addOrderTicket(obj, callback, parent) {
 //     })
 // }
 
-// export function OrderDetails(obj, callback) {
-//     ModalManager.openModal({
-//         headerText: "Order Details",
-//         modalBody: () => (<ManualVehicleChange />)
-//     })
-// }
+export function orderDetails(obj, callback, parent) {
+    ModalManager.openModal({
+        headerText: "Order Details",
+        modalBody: () => (<OrderDetails data={obj} callback={callback} parent={parent} />)
+    })
+}
 
 export function insuranceDetails(obj, callback, parent) {
     ModalManager.openModal({
@@ -76,19 +79,19 @@ export function insuranceDetails(obj, callback, parent) {
 //     })
 // }
 
-// export function TrackerNotification(obj, callback) {
-//     ModalManager.openModal({
-//         headerText: "Tracker Notification",
-//         modalBody: () => (<ManualVehicleChange />)
-//     })
-// }
+export function trackerNotification(obj, callback) {
+    ModalManager.openModal({
+        headerText: "SEND TRACKER NOTIFICATION",
+        modalBody: () => (<TrackerNotification />)
+    })
+}
 
-// export function AgreementUpload(obj, callback) {
-//     ModalManager.openModal({
-//         headerText: "Agreement Upload",
-//         modalBody: () => (<ManualVehicleChange />)
-//     })
-// }
+export function agreementUpload(obj, callback, parent) {
+    ModalManager.openModal({
+        headerText: "Agreement Upload",
+        modalBody: () => (<AgreementUpload data={obj} callback={callback} parent={parent}/>)
+    })
+}
 
 // export function SendInvitation(obj, callback) {
 //     ModalManager.openModal({
