@@ -14,6 +14,9 @@ import GLOBAL from './../../Constants/global.constants';
 import SettingsUtil from './../../Utils/settings.utils';
 import ThemeUtil from './../../Utils/theme.utils';
 import ImpersonateFrom from './../../Components/Impersonate-Form/impersonateForm.component';
+// import { RemoveItem } from './../../Utils/localStorage.utils';
+import { RemoveItem } from 'storage-utility';
+import { SetUserPreference } from './../../Utils/userPreference.utils';
 
 export default class PageNav extends Component {
     constructor(props) {
@@ -63,6 +66,18 @@ export default class PageNav extends Component {
 
         })
 
+    }
+
+    clearStorage = () => {
+        RemoveItem({ clearLocalStorage: true });
+        ToastNotifications.success({ title: 'Local-Storage cleared successfully' });
+    }
+
+    setHomepage = async() => {
+        const result = await SetUserPreference('homepage', window.location.pathname);
+        if(result.success){
+            ToastNotifications.success({ title: 'Homepage has been set!' });
+        }
     }
 
     deimpersonateUser = () => {
@@ -142,8 +157,8 @@ export default class PageNav extends Component {
                                 </Link>
                             </span>
                         </DropdownItem>
-                        <DropdownItem>Clear Storage</DropdownItem>
-                        <DropdownItem>Set Homepage</DropdownItem>
+                        <DropdownItem onClick={this.clearStorage}>Clear Storage</DropdownItem>
+                        <DropdownItem onClick={this.setHomepage}>Set Homepage</DropdownItem>
                         <DropdownItem>Change Password</DropdownItem>
                         <DropdownItem onClick={this.configureSettings}>Settings</DropdownItem>
                         <DropdownItem onClick={this.impersonateUser}>Impersonate User</DropdownItem>

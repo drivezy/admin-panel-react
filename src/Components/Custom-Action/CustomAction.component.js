@@ -27,7 +27,7 @@ let self = {};
 /**
  * Returns custom actions according to placement
  * displays dropdown ui actions
- */ 
+ */
 export default class CustomAction extends Component {
     methods = {};
     constructor(props) {
@@ -67,6 +67,9 @@ export default class CustomAction extends Component {
         const args = [];
         const { genericData, history, callback, source = 'model', menuDetail = {}, parentData = {} } = this.props;
         this.genericData = genericData;
+        if (source == 'model') { // dont send restricted query for model
+            delete menuDetail.restricted_query;
+        }
         const data = RemoveStarterFromThePath({ data: listingRow, starter: genericData.starter });
 
         action.callback = action.callback ? (typeof customMethods[action.callback] == "function" ? customMethods[action.callback] : callback) : callback;
@@ -151,7 +154,7 @@ export default class CustomAction extends Component {
                                     filteredActions.length > 1 ?
                                         <div>
                                             <div className="form-group has-feedback">
-                                                <input value={searchText} onChange={this.searchFilter} type="text" className="form-control" id="search-operation" placeholder='Search Actions'/>
+                                                <input value={searchText} onChange={this.searchFilter} type="text" className="form-control" id="search-operation" placeholder='Search Actions' />
                                                 {/* <i onClick={() => searchText ? this.searchFilter({ value: null }) : null} className={`fa fa-${searchText ? 'times-circle cursor-pointer' : 'search'} form-control-feedback`} aria-hidden="true"></i> */}
                                             </div>
                                         </div>

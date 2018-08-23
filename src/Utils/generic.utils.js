@@ -7,6 +7,7 @@ import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 import { Get, Delete, IsUndefinedOrNull, BuildUrlForGetCall, IsObjectHaveKeys } from 'common-js-util';
 
 import { ProcessForm } from './formMiddleware.utils';
+// import { GetUser } from './user.utils';
 
 import ParseComponent from './../Components/Generic-Column-Filters/parseComponent.component';
 
@@ -756,6 +757,11 @@ export function GetChangedMethods(newValues, originalValues = {}) {
 }
 
 export function ParseRestrictedQuery(queryString) {
+    // const currentUser = GetUser();
+    // if (queryString.includes(":currentUser") && currentUser.id) {
+    //     queryString = queryString.replace(/:currentUser.id/g, currentUser.id);
+    // }
+
     const parsedQuery = [];
     if (!queryString) {
         return parsedQuery;
@@ -837,7 +843,7 @@ export function EvalCondtionForNextActions(condition, itemRow, starter) {
             }
 
             evaluatedExpressions[i] = typeof evaluatedExpressions[i] == 'string' ? `'${evaluatedExpressions[i]}'` : evaluatedExpressions[i];
-            condition = condition.replace(expressions[i], typeof evaluatedExpressions[i] == 'object' ? 1 : evaluatedExpressions[i]);
+            condition = condition.replace(expressions[i], evaluatedExpressions[i] && typeof evaluatedExpressions[i] == 'object' ? 1 : evaluatedExpressions[i]);
         } catch (e) {
             console.log(e.message);
             evaluatedExpressions[i] = data[expression];
@@ -916,6 +922,6 @@ function IsObjectSingleLevel(object) {
         return isSingleLevel;
     }
 
-    isSingleLevel = pathSample.split('.').length > 1 ? true : false;
+    isSingleLevel = pathSample.split('.').length > 1 ? false : true;
     return isSingleLevel;
 }

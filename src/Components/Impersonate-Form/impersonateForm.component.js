@@ -7,7 +7,8 @@ import {
 import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
 import { Get, Post, BuildUrlForGetCall, IsUndefined } from 'common-js-util';
 
-import SelectBox from './../../Components/Forms/Components/Select-Box/selectBox';
+// import SelectBox from './../../Components/Forms/Components/Select-Box/selectBox';
+import SelectBox from './../../Components/Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import './impersonateForm.css';
 
 
@@ -30,8 +31,10 @@ export default class ImpersonateFrom extends Component {
             url = BuildUrlForGetCall(url, options);
 
             const result = await Get({ url });
-            const userContent = result.response;
-            return { options: userContent };
+            if (result.response) { 
+                return result.response;
+            }
+            // return { options: result.response };
         }
     }
 

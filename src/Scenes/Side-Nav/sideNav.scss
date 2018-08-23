@@ -1,5 +1,6 @@
 @import 'Assets/Global-Shared/theme.scss';
 .sidebar-wrapper {
+    
     height: 100%;
     width: 50px;
     position: fixed;
@@ -9,8 +10,7 @@
     overflow-x: hidden;
     transition: 0.1s;
     display: flex;
-    flex-direction: column;
-    // border-right: 1px solid;
+    flex-direction: column; // border-right: 1px solid;
     // @include themify($themes) {
     //     background: themed('sideBackground');
     //     border-color: themed('sidenavBorder');
@@ -21,7 +21,7 @@
     }
     &.collapsed {
         width: 40px;
-        .logo-container{
+        .logo-container {
             display: none;
         }
         .sidebar-menus {
@@ -29,6 +29,28 @@
                 // margin-top: 8px;
                 padding: 0px;
                 .menu-item {
+                    .sideNavOpen {
+                        height: 100%;
+                        /* 100% Full-height */
+                        width: 0;
+                        /* 0 width - change this with JavaScript */
+                        position: fixed;
+                        /* Stay in place */
+                        z-index: 1;
+                        /* Stay on top */
+                        top: 0;
+                        /* Stay at the top */
+                        left: 0;
+                        background-color: #111;
+                        /* Black*/
+                        overflow-x: hidden;
+                        /* Disable horizontal scroll */
+                        padding-top: 60px;
+                        /* Place content 60px from the top */
+                        transition: 0.5s;
+                        /* 0.5 second transition effect to slide in the sidenav */
+                    }
+                    .sideNavClose {}
                     .menu-label {
                         border-radius: 0px;
                         padding: 8px 12px;
@@ -77,12 +99,12 @@
         flex-direction: column;
         height: 100vh;
         border-right: 1px solid;
-        @include themify($themes){
+        @include themify($themes) {
             border-color: themed('secondaryDark')
         }
         .menus {
             // background: #35485b;
-            @include themify($themes){
+            @include themify($themes) {
                 background: themed('secondaryDark');
             }
             padding: 8px 10px;
