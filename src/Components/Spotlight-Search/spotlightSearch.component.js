@@ -59,9 +59,9 @@ export class Spotlight extends Component {
         this.setState({ searchText: searchText });
     }
 
-    advancedSearch = () => {
+    advancedSearch = (searchText) => {
         {
-            const { searchText } = this.state;
+
             let obj = {};
             if (searchText.length == 10 && searchText.slice(0, 3) != "INV") {
                 if (parseInt(searchText).toString().length == 10) {
@@ -197,6 +197,7 @@ export class Spotlight extends Component {
 
 
     keyboardPress = (event) => {
+        const { searchText } = this.state;
         if (event.target.value) {
             if (event.which == 40) {
                 this.searchInput.current.blur();
@@ -212,8 +213,7 @@ export class Spotlight extends Component {
             else if (event.which == 13) {
 
                 this.redirectTo(this.state.querySearchList[this.state.querySearchList.length - 1]);
-
-                this.advancedSearch();
+                this.advancedSearch(searchText);
 
             }
         }
