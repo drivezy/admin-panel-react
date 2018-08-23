@@ -112,14 +112,14 @@ export class Spotlight extends Component {
             case 1:
                 url = "bookingToken/" + searchText;
                 result = await Get({ url: url });
-                if (result.success) {
+                if (result.success && result.response.length) {
                     result.response.name = searchText;
                     result.response.url = 'booking/' + result.response.id;
                     querySearchList.push(result.response)
                     this.setState({ querySearchList });
 
 
-                    // Location.navigate({ url: 'booking/'+result.response.id });
+                    Location.navigate({ url: '/booking/' + result.response.id });
                 }
                 break;
 
@@ -142,10 +142,12 @@ export class Spotlight extends Component {
 
             // To search vehicle
             case 4:     //@TODO MAKE A LIST PAGE WHERE WE SHOULD REDIRECT
-                url = '/searchVehicles?searchText=' + searchText;
-                // url = '/searchVehicles';
-                //const queryParam = { searchText };
-                Location.navigate({ url: url });
+                
+                    url = '/searchVehicles?searchText=' + searchText;
+                    // url = '/searchVehicles';
+                    //const queryParam = { searchText };
+                    Location.navigate({ url: url });
+                
                 break;
 
             // To search coupon
@@ -153,8 +155,10 @@ export class Spotlight extends Component {
 
                 body = 'coupon_code="' + searchText + '"';
                 result = await Get({ url: "coupon?query=" + body });
-                url = '/campaign/' + result.response[0].campaign_id;
-                Location.navigate({ url: url })
+                if (result.success && result.response.length) {
+                    url = '/campaign/' + result.response[0].campaign_id;
+                    Location.navigate({ url: url })
+                }
                 break;
 
             // To search Ticket
@@ -165,8 +169,10 @@ export class Spotlight extends Component {
 
                 body = 'ticket_number="' + searchText + '"';
                 result = await Get({ url: "task?query=" + body });
-                url = '/ticket/' + result.response[0].id;
-                Location.navigate({ url: url })
+                if (result.success && result.response.length) {
+                    url = '/ticket/' + result.response[0].id;
+                    Location.navigate({ url: url })
+                }
                 break;
 
             // To search Vendor
