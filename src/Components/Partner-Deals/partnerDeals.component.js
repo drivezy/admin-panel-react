@@ -18,8 +18,8 @@ export default class PartnerDeals extends Component {
         "source_id": 1007,
         "description": "This step will make the vehicle live at the selected venue.",
         "parameter": {
-            "pre_method": "insuranceDetails",
-            "post_method": "insuranceDetails"
+            "pre_method": "goLive",
+            "post_method": "goLive"
         },
         "order": 45,
         "created_by": 81232,

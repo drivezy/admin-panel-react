@@ -37,7 +37,7 @@ export default class DateTimePicker extends Component {
         return (
 
             <div>
-                <div className="col-sm-12">
+                <div className="">
                     <div className="form-group-wrapper">
                         <div className='input-group date' id='datetimepicker10' >
                             <input type='text' autocomplete="off" className="form-control" />
