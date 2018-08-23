@@ -112,7 +112,7 @@ export class Spotlight extends Component {
             case 1:
                 url = "bookingToken/" + searchText;
                 result = await Get({ url: url });
-                if (result.success && result.response.length) {
+                if (result.success && Object.keys(result.response).length) {
                     result.response.name = searchText;
                     result.response.url = 'booking/' + result.response.id;
                     querySearchList.push(result.response)
