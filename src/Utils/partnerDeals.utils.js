@@ -8,6 +8,7 @@ import GoLive from './../Components/Partner-Deals/Modals/Go-Live/goLive.componen
 import AgreementUpload from './../Components/Partner-Deals/Modals/Agreement-Upload/agreementUpload.component';
 import OrderDetails from './../Components/Partner-Deals/Modals/Order-Details/orderDetails.component';
 import TrackerNotification from './../Components/Partner-Deals/Modals/Tracker-Notification/trackerNotification.component.js';
+import RTOTicket from './../Components/Partner-Deals/Modals/RTO-Ticket/rtoTicket.component';
 
 export function editDeal(obj, callback, parent) {
         ModalManager.openModal({
@@ -51,12 +52,12 @@ export function addOrderTicket(obj, callback, parent) {
 //     })
 // }
 
-// export function AddRtoTicket(obj, callback) {
-//     ModalManager.openModal({
-//         headerText: "Add RTO Ticket",
-//         modalBody: () => (<ManualVehicleChange />)
-//     })
-// }
+export function addRtoTicket(obj, callback, parent) {
+    ModalManager.openModal({
+        headerText: "Add RTO Ticket",
+        modalBody: () => (<RTOTicket data={obj} callback={callback} parent={parent}/>)
+    })
+}
 
 export function orderDetails(obj, callback, parent) {
     ModalManager.openModal({

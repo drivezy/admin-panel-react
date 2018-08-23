@@ -8,7 +8,7 @@ import GLOBAL from './../../../../Constants/global.constants'
 
 import Dropzone from 'react-dropzone';
 
-export default class imageUpload extends Component {
+export default class ImageUpload extends Component {
 
     constructor(props) {
         super(props);

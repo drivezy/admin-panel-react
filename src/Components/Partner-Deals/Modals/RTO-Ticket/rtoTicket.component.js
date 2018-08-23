@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
-import './trackerNotification.component.css';
+import './rtoTicket.component.css';
 
 import { Get, Post } from 'common-js-util';
 import { API_HOST } from './../../../../Constants/global.constants';
 import SelectBox from './../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
+import ImageUpload from './../../../Forms/Components/Image-Upload/imageUpload.component';
 
-export default class TrackerNotification extends Component {
+export default class RTOTicket extends Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
+            files: this.props,
             email: "",
             data: this.props.data,
             callback: this.props.callback,
@@ -31,40 +33,55 @@ export default class TrackerNotification extends Component {
     // }
 
     render() {
-        const { email } = this.state;
-
+        const { files } = this.state;
         return (
             <div className="partner-deal">
                 <div className="partner-deal-body">
                     <div className="options">
                         <div className="email">
                             <div className="helptext">
-                                Email
+                                RTO Dealer Email
                             </div>
                             <div className="div-group row">
                                 <div className="input-group">
                                     <div className="input-group-prepend">
                                         <span className="input-group-text" id="basic-addon1"><i className="fa fa-strikethrough"></i></span>
                                     </div>
-                                    <input className="input-value" onChange={(e) => { this.setState({ email: e.target.value }) }} type="email" placeholder="Enter Email"/>
-                                    {/* <SelectBox isClearable={false} onChange={(value) => { this.setState({ vendor_id: value.id }); }} field="name" options={vendors} /> */}
+                                    <input className="input-value" onChange={(e) => { this.setState({ email: e.target.value }) }} type="email" placeholder="Enter Email" />
                                 </div>
                             </div>
                         </div>
+                        <div className="email">
+                            <div className="helptext">
+                                RTO Dealer Email
+                            </div>
+                            <div className="div-group row">
+                                <div className="input-group">
+                                    <div className="input-group-prepend">
+                                        <span className="input-group-text" id="basic-addon1"><i className="fa fa-strikethrough"></i></span>
+                                    </div>
+                                    <ImageUpload onRemove={files.onFileRemove}
+                                        onSelect={() => {
+                                            alert('File Selected')
+                                        }}
+                                        />
+                                </div>
+                            </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div className="partner-deal-add-footer">
-                    {/* <div className="bank-detail-button">
+                    <div className="partner-deal-add-footer">
+                        {/* <div className="bank-detail-button">
                         <button className="btn btn-success">Send Bank Detail</button>
                     </div> */}
-                    <div className="action-buttons">
-                        <button className="btn btn-default">Cancel</button>
-                        &nbsp;
+                        <div className="action-buttons">
+                            <button className="btn btn-default">Cancel</button>
+                            &nbsp;
                         <button onClick={(e) => { e.preventDefault(); console.log(this.state) }} className="btn btn-success">Submit</button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-        );
-    }
+                );
+            }
 }

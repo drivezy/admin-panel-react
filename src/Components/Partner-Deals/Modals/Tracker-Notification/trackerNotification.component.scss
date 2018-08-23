@@ -1,6 +1,11 @@
-.input-value{
-    width: 94%;
-    border-radius: 0 5px 5px 0;
-    border: 1px solid #cacaca;
-    padding: 7px;
+.partner-deal{
+    background-color: #f5f5f5;
+    .partner-deal-body{
+        .input-value{
+        width: 94%;
+        border-radius: 0 5px 5px 0;
+        border: 1px solid #cacaca;
+        padding: 7px;
+        }
+    }
 }
