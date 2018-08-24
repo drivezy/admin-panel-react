@@ -5,13 +5,19 @@ import { withFormik } from "formik";
 
 import { ModalManager } from "drivezy-web-utils/build/Utils";
 
-import { TotalDuration } from './../../../../../Utils/booking.utils';
+import { TotalDuration } from "./../../../../../Utils/booking.utils";
 
 import CustomTooltip from "../../../../Custom-Tooltip/customTooltip.component";
 
 import AddonUpdate from "./../../../../Addon-Update/addonUpdate.component";
 
-import { ArrayToObject, Get, Post, IsUndefinedOrNull, Upload } from "common-js-util";
+import {
+  ArrayToObject,
+  Get,
+  Post,
+  IsUndefinedOrNull,
+  Upload
+} from "common-js-util";
 import ImageUpload from "./../../../../../Components/Forms/Components/Image-Upload/imageUpload.component";
 
 import SelectBox from "./../../../../../Components/Forms/Components/Select-Box/selectBoxForGenericForm.component";
@@ -26,8 +32,10 @@ const lateByCustomerObj = [
 export default class ResetInvoice extends Component {
   constructor(props) {
     super(props);
+    const data = { ...props.data.ride_return };
     this.state = {
-      bookingDetail: JSON.parse(JSON.stringify(this.props.data)),
+      //   bookingDetail: JSON.parse(JSON.stringify(this.props.data)),
+      bookingDetail: data,
       addon: [],
       start_addon: [],
       resetInvoice: {},
@@ -36,12 +44,20 @@ export default class ResetInvoice extends Component {
       permitObj: { country: null, state: null },
       countries: [],
       states: [],
-      permits: this.props.data && this.props.data.ride_return.permits ? this.props.data.ride_return.permits : [{}],
+      permits:
+        this.props.data && this.props.data.ride_return.permits
+          ? this.props.data.ride_return.permits
+          : [{}],
       walletBalance: 0,
-      permitImageurl: ''
+      permitImageurl: this.props.data && this.props.data.permits.length ? this.props.data.permits[0].image : null,
+      permit_validity: this.props.data && this.props.data.permits.length ? this.props.data.permits[0].validity : null
     };
-    this.uploadImage.bind(this);
   }
+
+  //   UNSAFE_componentWillReceiveProps (nextProps){
+  //     let bookingDetail = this.stringifyObj(nextProps.data);
+  //     console.log(bookingDetail);
+  //   }
 
   componentDidMount() {
     this.getCountry();
@@ -73,23 +89,15 @@ export default class ResetInvoice extends Component {
     }
   };
 
-  uploadImage = async(entry) =>{
-    this.state.permits = [{}];
-    this.state.permits[0].file = entry
-    const result = await Upload('uploadFile', entry);
-    if(result.success){
-        this.state.permits[0].image = result.response;
-        let permitImageurl = result.response;
-        this.setState({permitImageurl});
+  uploadImage = async (entry) => {
+    let {permits} = this.state;
+    permits[0].file = entry;
+    const result = await Upload("uploadFile", entry);
+    if (result.success) {
+      let permitImageurl = result.response;
+      this.setState({permitImageurl});
     }
-  }
-
-  // getTimeDiffernce(start_time, end_time){
-  //     let ms = moment(endTime).diff(moment(startTime));
-  //     let d = moment.duration(ms);
-  //     let s = d.asMinutes();
-  //     return s;
-  // }
+  };
 
   submit = async () => {
     for (var i in this.state.endRideData.startRideAddon) {
@@ -118,7 +126,8 @@ export default class ResetInvoice extends Component {
       refuel_cost: this.state.endRideData.ride_return.refuelling_cost,
       damage_cost: this.state.endRideData.ride_return.damage_cost,
       repair_cost: this.state.endRideData.ride_return.repairing_cost,
-      end_fuel_percentage: this.state.endRideData.ride_return.end_fuel_percentage,
+      end_fuel_percentage: this.state.endRideData.ride_return
+        .end_fuel_percentage,
       mobile_number: this.state.endRideData.ride_return.mobile_number,
       comments: this.state.endRideData.ride_return.comments,
       permit_refund: IsUndefinedOrNull(
@@ -129,14 +138,8 @@ export default class ResetInvoice extends Component {
       permit_state: IsUndefinedOrNull(this.state.permitObj.state)
         ? null
         : this.state.permitObj.state.id,
-      permit_image:
-        this.state.permits.length != 0
-          ? this.state.permits[0].image
-          : null,
-      permit_validity:
-        this.state.permits.length != 0
-          ? this.state.permits[0].validity
-          : null,
+      permit_image: this.state.permitImageurl,
+      permit_validity: this.state.permit_validity,
       redeem: this.state.endRideData.ride_return.redeem,
       addons: this.state.endRideData.addon,
       start_addons: this.state.endRideData.start_addon
@@ -150,18 +153,31 @@ export default class ResetInvoice extends Component {
 
     console.log(postDict);
 
-    // const result = await Post({ url: url, body: postDict });
-    // ModalManager.closeModal();
+    const result = await Post({ url: url, body: postDict });
+    if (result.success) {
+      ModalManager.closeModal();
+    }
   };
 
   render() {
-    const {bookingDetail,endRideData,permitObj,countries,states,permits} = this.state;
+    const {
+      bookingDetail,
+      endRideData,
+      permitObj,
+      countries,
+      states,
+      permits
+    } = this.state;
 
-    let Duration = TotalDuration(endRideData.ride_return.actual_end_time, endRideData.ride_return.actual_start_time)
+    // const { data } = this.props;
+
+    let Duration = TotalDuration(
+      endRideData.ride_return.actual_end_time,
+      endRideData.ride_return.actual_start_time
+    );
 
     return (
-      this.state.endRideData &&
-      bookingDetail.ride_return && (
+      this.state.endRideData && (
         <div className="reset-invoice">
           <fieldset
             disabled={this.state.disable}
@@ -176,14 +192,20 @@ export default class ResetInvoice extends Component {
                 >
                   <div className="details">
                     <div className="text-field">
-                      Start Odo{bookingDetail.ride_return.start_odo_reading}
+                      Start Odo
                       <CustomTooltip
                         placement="left"
-                        html={<i className="fa fa-car" onClick={() => {
-                            this.state.endRideData.ride_return.start_odo_reading =
-                              bookingDetail.ride_return.start_odo_reading;
-                            this.setState({ endRideData });
-                          }} aria-hidden="true" />}
+                        html={
+                          <i
+                            className="fa fa-car"
+                            onClick={() => {
+                              this.state.endRideData.ride_return.start_odo_reading =
+                                bookingDetail.start_odo_reading;
+                              this.setState({ endRideData });
+                            }}
+                            aria-hidden="true"
+                          />
+                        }
                         title="reset start odo"
                       />
                     </div>
@@ -206,11 +228,17 @@ export default class ResetInvoice extends Component {
                       End Odo
                       <CustomTooltip
                         placement="left"
-                        html={<i className="fa fa-car" onClick={() => {
-                            this.state.endRideData.ride_return.end_odo_reading =
-                              bookingDetail.ride_return.end_odo_reading;
-                            this.setState({ endRideData });
-                          }} aria-hidden="true" />}
+                        html={
+                          <i
+                            className="fa fa-car"
+                            onClick={() => {
+                              this.state.endRideData.ride_return.end_odo_reading =
+                                bookingDetail.end_odo_reading;
+                              this.setState({ endRideData });
+                            }}
+                            aria-hidden="true"
+                          />
+                        }
                         title="reset end odo"
                       />
                     </div>
@@ -228,65 +256,96 @@ export default class ResetInvoice extends Component {
                   </div>
 
                   <div className="details">
-                    <div className="text-field" >
+                    <div className="text-field">
                       Start Time
                       <CustomTooltip
                         placement="left"
-                        html={<i className="fa fa-clock" onClick={() => {
-                            this.state.endRideData.ride_return.actual_start_time =
-                              bookingDetail.ride_return.actual_start_time;
-                            this.setState({ endRideData });
-                          }} aria-hidden="true" />}
+                        html={
+                          <i
+                            className="fa fa-clock"
+                            onClick={() => {
+                              this.state.endRideData.ride_return.actual_start_time =
+                                bookingDetail.actual_start_time;
+                              this.setState({ endRideData });
+                            }}
+                            aria-hidden="true"
+                          />
+                        }
                         title="reset start time"
                       />
                     </div>
-                    <DatePicker single={true} format="YYYY-MM-DD HH:mm:00" timePicker={true} placeholder={`Enter start time`} value={this.state.endRideData.ride_return.actual_start_time} />
-
+                    <DatePicker
+                      single={true}
+                      format="YYYY-MM-DD HH:mm:00"
+                      timePicker={true}
+                      placeholder={`Enter start time`}
+                      value={
+                        this.state.endRideData.ride_return.actual_start_time
+                      }
+                      onChange={(name,value) => {let endRideData ={ride_return: {actual_start_time : value}}; this.setState({endRideData})}}
+                    />
                   </div>
                   <div className="details">
                     <div className="text-field">
                       End Time
                       <CustomTooltip
                         placement="left"
-                        html={<i className="fa fa-clock" onClick={() => {
-                            this.state.endRideData.ride_return.actual_end_time =
-                              bookingDetail.ride_return.actual_end_time;
-                            this.setState({ endRideData });
-                          }} aria-hidden="true" />}
+                        html={
+                          <i
+                            className="fa fa-clock"
+                            onClick={() => {
+                              this.state.endRideData.ride_return.actual_end_time =
+                                bookingDetail.actual_end_time;
+                              this.setState({ endRideData });
+                            }}
+                            aria-hidden="true"
+                          />
+                        }
                         title="reset end time"
                       />
                     </div>
-                    <DatePicker single={true} format="YYYY-MM-DD HH:mm:00" timePicker={true} placeholder={`Enter start time`} value={this.state.endRideData.ride_return.actual_end_time} />
-                  </div>
-
-                  {
-                  (Duration > "5") ?
-                  <div className="details">
-                    <div className="text-field">Ride is late by </div>
-                    <SelectBox
-                      key="2"
-                      isClearable={false}
-                      onChange={value => {
-                        this.setState({ lbs: value });
-                      }}
-                      value={this.state.lbs}
-                      field="name"
-                      options={lateByCustomerObj}
+                    <DatePicker
+                      single={true}
+                      format="YYYY-MM-DD HH:mm:00"
+                      minDate={this.state.endRideData.ride_return.actual_start_time}
+                      timePicker={true}
+                      placeholder={`Enter start time`}
+                      value={this.state.endRideData.ride_return.actual_end_time}
+                      onChange={(name,value) => {let endRideData ={ride_return: {actual_end_time : value}}; this.setState({endRideData})}}
                     />
                   </div>
-                  : null
-                  }
+
+                  {Duration > "5" ? (
+                    <div className="details">
+                      <div className="text-field">Ride is late by </div>
+                      <SelectBox
+                        isClearable={false}
+                        onChange={value => {
+                          this.setState({ lbs: value });
+                        }}
+                        value={this.state.lbs}
+                        field="name"
+                        options={lateByCustomerObj}
+                      />
+                    </div>
+                  ) : null}
 
                   <div className="details">
                     <div className="text-field">
                       Start Fuel Percentage
                       <CustomTooltip
                         placement="left"
-                        html={<i className="fa fa-money" onClick={() => {
-                            this.state.endRideData.ride_return.start_fuel_percentage =
-                              bookingDetail.ride_return.start_fuel_percentage;
-                            this.setState({ endRideData });
-                          }} aria-hidden="true" />}
+                        html={
+                          <i
+                            className="fa fa-money"
+                            onClick={() => {
+                              this.state.endRideData.ride_return.start_fuel_percentage =
+                                bookingDetail.start_fuel_percentage;
+                              this.setState({ endRideData });
+                            }}
+                            aria-hidden="true"
+                          />
+                        }
                         title="reset Start Fuel Percentage"
                       />
                     </div>
@@ -310,11 +369,17 @@ export default class ResetInvoice extends Component {
                       End Fuel Percentage
                       <CustomTooltip
                         placement="left"
-                        html={<i className="fa fa-money" onClick={() => {
-                            this.state.endRideData.ride_return.end_fuel_percentage =
-                              bookingDetail.ride_return.end_fuel_percentage;
-                            this.setState({ endRideData });
-                          }} aria-hidden="true" />}
+                        html={
+                          <i
+                            className="fa fa-money"
+                            onClick={() => {
+                              this.state.endRideData.ride_return.end_fuel_percentage =
+                                bookingDetail.end_fuel_percentage;
+                              this.setState({ endRideData });
+                            }}
+                            aria-hidden="true"
+                          />
+                        }
                         title="reset end Fuel Percentage"
                       />
                     </div>
@@ -338,11 +403,17 @@ export default class ResetInvoice extends Component {
                       Other Cost
                       <CustomTooltip
                         placement="left"
-                        html={<i className="fa fa-money" onClick={() => {
-                            this.state.endRideData.ride_return.other_cost =
-                              bookingDetail.ride_return.other_cost;
-                            this.setState({ endRideData });
-                          }} aria-hidden="true" />}
+                        html={
+                          <i
+                            className="fa fa-money"
+                            onClick={() => {
+                              this.state.endRideData.ride_return.other_cost =
+                                bookingDetail.other_cost;
+                              this.setState({ endRideData });
+                            }}
+                            aria-hidden="true"
+                          />
+                        }
                         title="reset other cost"
                       />
                     </div>
@@ -363,11 +434,17 @@ export default class ResetInvoice extends Component {
                       Cleanliness Cost
                       <CustomTooltip
                         placement="left"
-                        html={<i className="fa fa-money" onClick={() => {
-                            this.state.endRideData.ride_return.cleanliness_charge =
-                              bookingDetail.ride_return.cleanliness_charge;
-                            this.setState({ endRideData });
-                          }} aria-hidden="true" />}
+                        html={
+                          <i
+                            className="fa fa-money"
+                            onClick={() => {
+                              this.state.endRideData.ride_return.cleanliness_charge =
+                                bookingDetail.cleanliness_charge;
+                              this.setState({ endRideData });
+                            }}
+                            aria-hidden="true"
+                          />
+                        }
                         title="reset Cleanliness Cost"
                       />
                     </div>
@@ -390,11 +467,17 @@ export default class ResetInvoice extends Component {
                       Discount
                       <CustomTooltip
                         placement="left"
-                        html={<i className="fa fa-money" onClick={() => {
-                            this.state.endRideData.ride_return.discount =
-                              bookingDetail.ride_return.discount;
-                            this.setState({ endRideData });
-                          }} aria-hidden="true" />}
+                        html={
+                          <i
+                            className="fa fa-money"
+                            onClick={() => {
+                              this.state.endRideData.ride_return.discount =
+                                bookingDetail.discount;
+                              this.setState({ endRideData });
+                            }}
+                            aria-hidden="true"
+                          />
+                        }
                         title="reset discount"
                       />
                     </div>
@@ -415,11 +498,17 @@ export default class ResetInvoice extends Component {
                       Damage cost
                       <CustomTooltip
                         placement="left"
-                        html={<i className="fa fa-money" onClick={() => {
-                            this.state.endRideData.ride_return.discount =
-                              bookingDetail.ride_return.discount;
-                            this.setState({ endRideData });
-                          }} aria-hidden="true" />}
+                        html={
+                          <i
+                            className="fa fa-money"
+                            onClick={() => {
+                              this.state.endRideData.ride_return.discount =
+                                bookingDetail.discount;
+                              this.setState({ endRideData });
+                            }}
+                            aria-hidden="true"
+                          />
+                        }
                         title="reset damage cost"
                       />
                     </div>
@@ -440,11 +529,17 @@ export default class ResetInvoice extends Component {
                       Extra Refund
                       <CustomTooltip
                         placement="left"
-                        html={<i className="fa fa-money" onClick={() => {
-                            this.state.endRideData.ride_return.refund_amount =
-                              bookingDetail.ride_return.refund_amount;
-                            this.setState({ endRideData });
-                          }} aria-hidden="true" />}
+                        html={
+                          <i
+                            className="fa fa-money"
+                            onClick={() => {
+                              this.state.endRideData.ride_return.refund_amount =
+                                bookingDetail.refund_amount;
+                              this.setState({ endRideData });
+                            }}
+                            aria-hidden="true"
+                          />
+                        }
                         title="reset extra refundt"
                       />
                     </div>
@@ -477,11 +572,17 @@ export default class ResetInvoice extends Component {
                       Repair Cost
                       <CustomTooltip
                         placement="left"
-                        html={<i className="fa fa-money" onClick={() => {
-                            this.state.endRideData.ride_return.repairing_cost =
-                              bookingDetail.ride_return.repairing_cost;
-                            this.setState({ endRideData });
-                          }} aria-hidden="true" />}
+                        html={
+                          <i
+                            className="fa fa-money"
+                            onClick={() => {
+                              this.state.endRideData.ride_return.repairing_cost =
+                                bookingDetail.repairing_cost;
+                              this.setState({ endRideData });
+                            }}
+                            aria-hidden="true"
+                          />
+                        }
                         title="reset repair cost"
                       />
                     </div>
@@ -502,11 +603,17 @@ export default class ResetInvoice extends Component {
                       Refuelling Cost
                       <CustomTooltip
                         placement="left"
-                        html={<i className="fa fa-money" onClick={() => {
-                            this.state.endRideData.ride_return.refuelling_cost =
-                              bookingDetail.ride_return.refuelling_cost;
-                            this.setState({ endRideData });
-                          }} aria-hidden="true" />}
+                        html={
+                          <i
+                            className="fa fa-money"
+                            onClick={() => {
+                              this.state.endRideData.ride_return.refuelling_cost =
+                                bookingDetail.refuelling_cost;
+                              this.setState({ endRideData });
+                            }}
+                            aria-hidden="true"
+                          />
+                        }
                         title="reset refuelling cost"
                       />
                     </div>
@@ -523,9 +630,7 @@ export default class ResetInvoice extends Component {
                     />
                   </div>
                   <div className="details">
-                    <div className="text-field">
-                      State Permit Cost
-                    </div>
+                    <div className="text-field">State Permit Cost</div>
                     <input
                       value={
                         this.state.endRideData.ride_return.permit_reimbursement
@@ -548,7 +653,13 @@ export default class ResetInvoice extends Component {
                       }}
                     >
                       Redeem Amount
-                      <i className="fa fa-money" aria-hidden="true" onClick={() =>{this.getWalletBalance()}} />
+                      <i
+                        className="fa fa-money"
+                        aria-hidden="true"
+                        onClick={() => {
+                          this.getWalletBalance();
+                        }}
+                      />
                       ₹{this.state.walletBalance}
                     </div>
                     <input
@@ -611,7 +722,13 @@ export default class ResetInvoice extends Component {
                         Permit Validity
                         <i className="fa fa-money" aria-hidden="true" />
                       </div>
-                      <DatePicker single={true} placeholder={`Enter start time`} format="YYYY-MM-DD" value={this.state.permits[0].validity} />
+                      <DatePicker
+                        single={true}
+                        placeholder={`Enter start time`}
+                        format="YYYY-MM-DD"
+                        value={this.state.permits[0].validity}
+                        onChange={(name, value) => {this.setState({permit_validity: value})}}
+                      />
                     </div>
 
                     <div className="details">
@@ -619,11 +736,12 @@ export default class ResetInvoice extends Component {
                         Permit Copy{" "}
                         <i className="fa fa-money" aria-hidden="true" />
                       </div>
-                      <ImageUpload onRemove={this.state.permits = [{}]}
-                            onSelect={(column, name) => {
-                                this.uploadImage({image: name})
-                            }}
-                        />
+                      <ImageUpload
+                        onRemove={this.state.permits = [{}]}
+                        onSelect={(column, name) => {
+                          this.uploadImage({ image: name });
+                        }}
+                      />
                     </div>
                     <div className="details">
                       <div className="text-field">
@@ -635,7 +753,7 @@ export default class ResetInvoice extends Component {
                         value={this.state.permitImageurl}
                         type="text"
                         className="form-control"
-                        placeholder='Enter url'
+                        placeholder="Enter url"
                       />
                     </div>
                   </div>
