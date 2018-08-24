@@ -38,7 +38,6 @@ export default class TicketDetail extends Component {
 
         if (result.success) {
             const ticketDetail = result.response;
-            console.log(ticketDetail);
             this.setState({ ticketDetail });
         }
     }
