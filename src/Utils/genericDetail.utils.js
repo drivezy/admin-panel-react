@@ -17,6 +17,12 @@ export function GetDetailRecord({ configuration: genericDetailObject, callback, 
     if (params.includes) {
         options.includes = params.includes;
     }
+
+    if (data.layout && data.layout.id) {
+        options.layout_id = data.layout.id;
+    } else if (genericDetailObject.layout && genericDetailObject.layout.id) {
+        options.layout_id = genericDetailObject.layout.id;
+    }
     options.dictionary = params.dictionary ? false : true;
 
     if (!withoutIdentifier) {

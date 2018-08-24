@@ -13,7 +13,6 @@ import SummaryCard from './../../Components/Summary-Card/summaryCard';
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 import StartRide from './../../Components/Booking/Components/Modals/Start-Ride/startRide.component';
 import { ModalManager } from 'drivezy-web-utils/build/Utils';
-import EndRide from './../../Components/Booking/Components/Modals/End-Ride/endRide.component';
 import { GetPreSelectedMethods, RegisterMethod, GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
 import { BookingDate } from './../../Utils/booking.utils';
 
@@ -55,7 +54,7 @@ export default class BookingDetail extends Component {
             const menuDetail = ConvertMenuDetailForGenericPage(response || {});
             this.state.menuDetail = menuDetail;
             this.setState({ menuDetail });
-            StoreEvent({ eventName: 'rightClickData', data: { menuData: menuDetail } });
+            StoreEvent({ eventName: 'rightClickData', data: { menuData: menuDetail } });            
         }
     }
 
@@ -133,6 +132,7 @@ export default class BookingDetail extends Component {
                                     : null)
 
                             }
+
 
                         </div>
                         {

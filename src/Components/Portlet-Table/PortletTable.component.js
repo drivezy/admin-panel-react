@@ -141,7 +141,7 @@ export default class PortletTable extends Component {
                     return reverse ? -1 : 1;
                 }
 
-            };
+            }; 
         }
 
         let reverse = this.state.reverse;
@@ -157,6 +157,7 @@ export default class PortletTable extends Component {
         }
 
         this.setState({ listing, sortKey, reverse })
+        
     }
 
     dropdownSortOnDB = (sort, column) => {
@@ -184,8 +185,7 @@ export default class PortletTable extends Component {
     };
 
     render() {
-        const { genericData, finalColumns, listing, filterColumn } = this.state;
-
+        const { genericData, finalColumns, listing, filterColumn, reverse, sortKey } = this.state;
         const { history, match, menuDetail, rowTemplate, callback, tableType, rowOptions, source = 'model', parentData } = this.props;
 
 
@@ -219,7 +219,9 @@ export default class PortletTable extends Component {
                                 </th>
                                 {
                                     finalColumns.map((selectedColumn, key) => {
-                                        let conditionForSorting = (this.state.sortKey === selectedColumn.name) ? (this.state.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down') : ''
+                                        
+                                        let conditionForSorting = (sortKey == selectedColumn.parent+"."+selectedColumn.name) ? (reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down') : ''
+                                        
                                         const html = <div className="column-wrapper">
                                             {/* Column Title */}
                                             <div className="column-title printable">

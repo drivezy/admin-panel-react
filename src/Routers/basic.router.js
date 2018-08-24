@@ -38,6 +38,7 @@ import { Spotlight } from './../Components/Spotlight-Search/spotlightSearch.comp
 /** Util */
 import SettingsUtil from './../Utils/settings.utils';
 import { LoginCheck } from './../Utils/user.utils';
+import { GetUserPreferences } from './../Utils/userPreference.utils';
 
 /** Util Ends*/
 
@@ -45,6 +46,9 @@ import { LoginCheck } from './../Utils/user.utils';
  * BasicRoute is wrapped within Router to make available history object
  * history object is used to pass to Location utility method which is helpful in navigation across the project
  */
+
+ let homepage="";
+
 export class EntryComopnent extends Component {
     render() {
         return (
@@ -74,7 +78,6 @@ export class BasicRoute extends Component {
 
     state = {
         loggedUser: {},
-
     };
 
     getRouterProps = () => ({ history: this.props.history });
@@ -83,8 +86,18 @@ export class BasicRoute extends Component {
         SubscribeToEvent({ eventName: 'loggedUser', callback: this.userDataFetched });
         // setTimeout(() => ConfirmUtils.confirmModal({ message: "Are you sure you want to request approval?", callback: () => console.log('hit') }), 2000);
         LoginCheck();
-
+        // this.getHomepage();
     }
+
+    // getHomepage = async() => {
+    //     const preference = await GetUserPreferences();
+    //     if(preference.success){
+    //         const preferences = preference.response;
+    //         preferences.map((parameter) => (
+    //             (parameter.parameter == "homepage") ? homepage = parameter.value : null
+    //         )) 
+    //     }
+    // } 
 
     userDataFetched = (data) => {
         if (data.id) {

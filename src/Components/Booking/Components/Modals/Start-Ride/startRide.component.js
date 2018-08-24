@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import UserCard from './../../../../User-Card/userCard.component';
+
 import { ModalManager } from 'drivezy-web-utils/build/Utils';
 import AddonUpdate from './../../../../Addon-Update/addonUpdate.component';
 import { Post } from 'common-js-util';
-
 import './startRide.component.css';
+import { RECORD_URL } from './../../../../../Constants/global.constants';
 
 export default class StartRide extends Component {
 
@@ -35,7 +36,7 @@ export default class StartRide extends Component {
             addon: this.state.data.start_addons
         }
         ,
-        urlPrefix: 'https://api.justride.in/api/admin/' });
+        urlPrefix: RECORD_URL });
         ModalManager.closeModal();
     }
 
@@ -96,8 +97,9 @@ export default class StartRide extends Component {
                     </div>
                 </div>
                 <div className="cancel-and-submit">
-                    <button className="cancel" onClick={() => { this.onCancel() }}>Cancel</button>
-                    <button className="submit" onClick={() => { this.onSubmit(this.state.startOdo, this.state.startFuel, this.state.alternateNumber, this.state.comment, this.state.pickupTime) }}>Submit</button>
+                    <button className="cancel btn btn-warning" onClick={() => { this.onCancel() }}>Cancel</button>
+                    &nbsp;
+                    <button className="submit btn btn-success" onClick={() => { this.onSubmit(this.state.startOdo, this.state.startFuel, this.state.alternateNumber, this.state.comment, this.state.pickupTime) }}>Submit</button>
                 </div>
             </div>
         )

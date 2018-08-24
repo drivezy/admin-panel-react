@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import {
-    Card, 
+    Card,
 } from 'reactstrap';
 
 import { Get } from 'common-js-util';
-
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import UserLicenseCard from '../User-License-Card/userLicenseCard.component';
 import './userCard.component.css';
 
@@ -17,6 +17,10 @@ export default class UserCard extends Component {
             promoWallet: 0,
             cashWallet: 0
         };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({ userData: nextProps.userData });
     }
 
     componentDidMount() {
@@ -41,21 +45,21 @@ export default class UserCard extends Component {
         return (
             <div className="user-card card">
 
-                <UserLicenseCard userData={userData} flag={0}/>
-                
+                <UserLicenseCard userData={userData} flag={0} />
+
                 <div className="user-detail-card">
                     <Card>
 
                         <div className="user-photo-and-user-name">
 
                             <div className="user-name">
-                                {userData.display_name}
+                                <a onClick={() => Location.navigate({ url: `/user/${userData.id}` })}>{userData.display_name}</a>
                             </div>
 
                             <div className="user-photo">
                                 {
                                     userData.photograph ?
-                                        <img src={`${userData.photograph}`} alt="" />
+                                        <a onClick={() => Location.navigate({ url: `/user/${userData.id}` })}><img src={`${userData.photograph}`} alt="" /></a>
                                         : <img className="dummy-image" src={require('./../../Assets/images/photograph.png')} alt="" />
                                 }
                             </div>
@@ -68,7 +72,7 @@ export default class UserCard extends Component {
                             </div>
 
                             <div className="data-field">
-                                {userData.mobile}
+                                {userData.mobile}&nbsp;{userData.is_mobile_validated ? <i className="fa fa-check-circle"></i> : null}
                             </div>
 
                         </div>
@@ -80,8 +84,8 @@ export default class UserCard extends Component {
                                 Email
                             </div>
 
-                            <div className="data-field">
-                                {userData.email}
+                            <div className="user-email data-field">
+                                <a onClick={() => Location.navigate({ url: `/user/${userData.id}` })}>{userData.email}</a>
                             </div>
                         </div>
 

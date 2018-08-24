@@ -7,6 +7,7 @@ import EndRideConfirm from './endRideConfirm.component';
 import { Get, Post} from 'common-js-util';
 import CustomTooltip from '../../../../Custom-Tooltip/customTooltip.component';
 import SelectBox from './../../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
+import { API_HOST } from './../../../../../Constants/global.constants';
 
 export default class EndRide extends Component {
 
@@ -19,33 +20,44 @@ export default class EndRide extends Component {
         }
     }
 
+    /**
+     * To fetch Discount Options and States for permit state options
+     */
     componentDidMount() {
         this.getDiscountOptions();
         this.getStates();
     }
 
+    
+    /**
+     * To fetch Discount Options
+     */
     getDiscountOptions = async () => {
-        const { discountOptions } = this.state;
         const result = await Get({
             url: "lookupValue?query=lookup_type=38&limit=100",
-            urlPrefix: 'https://api.justride.in/api/admin/'
+            urlPrefix: API_HOST
         });
         if (result.success) {
             this.setState({ discountOptions: result.response });
         }
     }
 
+    /**
+     * To fetch States for permit state options
+     */
     getStates = async () => {
         const { stateOptions } = this.state;
         const result = await Get({
             url: "state",
-            urlPrefix: 'https://api.justride.in/api/admin/'
+            urlPrefix: API_HOST
         });
         if (result.success) {
             this.setState({ stateOptions: result.response });
         }
     }
-
+    /**
+     * Open reviewRide modal and send data to get reviewData using Input
+     */
     reviewRide = async() => {
         const { endRideInfo } = this.state;
         const result = await Post({
@@ -72,15 +84,13 @@ export default class EndRide extends Component {
                 start_fuel_percentage : endRideInfo.start_fuel_percentage,
                 start_addons : endRideInfo.start_addons
             },
-            urlPrefix: 'https://api.justride.in/api/admin/'
+            urlPrefix: API_HOST
         });
         if (result.success) {
-            // this.setState({ stateOptions: result.response });
-            // ModalManager.openModal({
-            //     headerText: "CONFIRM COMPLETE RIDE FOR",
-            //     modalBody: () => (<EndRideConfirm endRidedata={endRideInfo} />)
-            console.log(result)
-            // })
+            ModalManager.openModal({
+                headerText: "CONFIRM COMPLETE RIDE FOR",
+                modalBody: () => (<EndRideConfirm endRidedata={endRideInfo} reviewRideData={result.response} />)
+            })
         }
         
     }
@@ -344,8 +354,8 @@ export default class EndRide extends Component {
                             &nbsp;
                                 <button className="btn btn-warning"> Reset </button>
                             &nbsp;
-                                <button type="submit" className="btn btn-success" onClick={() => 
-                                this.reviewRide
+                                <button type="submit" className="btn btn-success" onClick={(e) => 
+                                {e.preventDefault(); this.reviewRide();}
                             }> Complete Ride </button>
                         </div>
                     </div>

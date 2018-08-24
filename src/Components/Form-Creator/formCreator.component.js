@@ -31,7 +31,7 @@ import FormSettings from './../Form-Settings/FormSettings.component';
 import ScriptInput from './../Forms/Components/Script-Input/scriptInput.component';
 import FormInput from './../Forms/Components/Form-Type/formType.component';
 
-import { ExecuteScript } from './../../Utils/inject-method/injectScript.utils';
+import { ExecuteScript } from './../../Utils/Inject-Methods/injectScript.utils';
 
 import FormUtils from './../../Utils/form.utils';
 import { GetUrlForFormSubmit } from './../../Utils/generic.utils';
@@ -459,7 +459,7 @@ const formElements = props => {
                         Cancel
                     </button> */}
 
-                    <button className="btn btn-success" disabled={isSubmitting} type="submit">
+                    <button className="btn btn-success" disabled={!dirty || isSubmitting} type="submit">
                         Submit
                     </button>
                 </div>
