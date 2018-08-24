@@ -7,7 +7,7 @@ import EndRideConfirm from './endRideConfirm.component';
 import { Get, Post} from 'common-js-util';
 import CustomTooltip from '../../../../Custom-Tooltip/customTooltip.component';
 import SelectBox from './../../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
-import { RECORD_URL } from './../../../../../Constants/global.constants';
+import { API_HOST } from './../../../../../Constants/global.constants';
 
 export default class EndRide extends Component {
 
@@ -35,7 +35,7 @@ export default class EndRide extends Component {
     getDiscountOptions = async () => {
         const result = await Get({
             url: "lookupValue?query=lookup_type=38&limit=100",
-            urlPrefix: RECORD_URL
+            urlPrefix: API_HOST
         });
         if (result.success) {
             this.setState({ discountOptions: result.response });
@@ -49,7 +49,7 @@ export default class EndRide extends Component {
         const { stateOptions } = this.state;
         const result = await Get({
             url: "state",
-            urlPrefix: RECORD_URL
+            urlPrefix: API_HOST
         });
         if (result.success) {
             this.setState({ stateOptions: result.response });
@@ -84,7 +84,7 @@ export default class EndRide extends Component {
                 start_fuel_percentage : endRideInfo.start_fuel_percentage,
                 start_addons : endRideInfo.start_addons
             },
-            urlPrefix: RECORD_URL
+            urlPrefix: API_HOST
         });
         if (result.success) {
             ModalManager.openModal({

@@ -78,9 +78,6 @@ const InnerForm = ({
                             </small>
                         );
 
-
-                        console.log(license);
-
                     })
                 }
 

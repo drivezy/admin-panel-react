@@ -1,0 +1,42 @@
+.changeVehicle{
+    background-color: #f1f1f1;
+    padding: 25px;
+    border-radius: 5px;
+    .modal-change-vehicle{
+        padding: 10px 30px 30px;
+        background-color: #fff;
+        .manual-change{
+            padding: 20px;
+            align-items: center;
+            font-size: 125%;
+            a{
+                color: #337ab7;
+                text-decoration: none;
+                cursor: pointer;
+            }
+        }
+        .div-group{
+            align-items: center;
+        }
+        .select-box{
+            width: 75% !important;
+        }
+    }
+    .vehicle-list{
+        .list-heading{
+            background-color: #cecece;
+        }
+        .table td, .table th{
+            padding: .35rem .75rem;
+            vertical-align: none;
+        }
+        label{
+            margin-bottom: 0rem;
+        }
+        tr.table-row{
+            &:nth-child(even){
+                background-color: #cecece;
+                }
+        }
+    }
+}

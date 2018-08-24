@@ -1,0 +1,142 @@
+@import 'Assets/Global-Shared/theme.scss';
+.table-settings {
+    .settings-button {
+        background: transparent;
+        &.btn {
+            @include themify($themes) {
+                // background: transparent;
+                background: themed('primaryLight');
+                color: themed('onPrimaryDark') ;// border-color: themed('settingsButton');
+                border: 1px solid;
+                border-color: themed('borderLight');
+            }
+        }
+    }
+    .setting-button {
+        padding: 4px 8px;
+    }
+    
+    .modal-header {
+        padding: 10px 20px;
+    }
+    .modal-body {
+        padding: 25px 20px 25px 20px;
+        background: whitesmoke;
+        display: flex;
+        justify-content: space-between;
+        .card-body.parent-card {
+            padding: 0px;
+            .card-top {
+                padding: 10px 15px;
+                background: aliceblue;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .input-holder {
+                    flex-basis: 50%;
+                    input.search-box {
+                        padding: 5px 10px;
+                        border: none;
+                        border-radius: 2px;
+                        border: 1px solid #c8c8c8;
+                    }
+                }
+                h6.card-title {
+                    margin-bottom: 0px;
+                    color: #395167;
+                }
+                .list-group .parent-group {
+                    padding: 10px 15px;
+                }
+            }
+        }
+        .left {
+            max-height: 70vh;
+            overflow-y: scroll;
+            flex-basis: 40%;
+            .columns-wrapper {
+                padding: 5px;
+                background: #ebebeb;
+                box-shadow: inset 0px 0px 2px 1px #d8d8d8;
+                .inner-columns {
+                    border: 1px solid #d6d4d4;
+                }
+            }
+            .column-group {
+                background: white;
+                &:hover {
+                    background: whitesmoke;
+                }
+                &.active {
+                    .column-label {
+                        background: #b3e5fc;
+                    }
+                }
+                display: flex;
+                justify-content: space-between;
+                border-bottom: 1px solid #c4c4c4;
+                .column-label {
+                    cursor: pointer;
+                    align-items: center;
+                    flex-basis: 85%;
+                    padding: 8px;
+                }
+                .icon-holder {
+                    color: #528dad;
+                    flex-basis: 15%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    button.add-column {}
+                }
+                .column-handle {}
+            }
+        }
+        .right {
+                .table-settings{
+                    .setting-button{
+                        font-size: .865rem !important;
+                    }
+            }
+            ul {
+                min-height: 45px;
+            }
+            max-height: 70vh;
+            overflow-y: scroll;
+            flex-basis: 40%;
+            .column-section {
+                // display: flex;
+                &.active {
+                    .column-label {
+                        background: #b3e5fc;
+                    }
+                }
+            }
+            .list-group-item {
+                &.active {
+                    background: #dff0d8;
+                    border-color: #dff0d8;
+                    color: #105d26;
+                }
+            }
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            button {
+                margin: 4px;
+            }
+            .split{
+                background: #138c9e !important;
+                border-color: #138c9e !important;
+            }
+        }
+    }
+    .modal-footer {
+        justify-content: none;
+        .rightButtons {
+            width: 100%;
+            text-align: right;
+        }
+    }
+}

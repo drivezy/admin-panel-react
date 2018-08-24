@@ -7,22 +7,32 @@ import {
 import { Get } from 'common-js-util';
 
 import './ticketDetail.scene.css';
+import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 
 export default class TicketDetail extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            ticketDetail: {}
+            ticketDetail: {},
+            ticketId: props.match.params.ticketId
         };
-    }
-
-    componentDidMount() {
         this.getTicketDetail();
     }
 
+    componentWillReceiveProps(nextProps) {
+        const { ticketId } = this.state;
+        if (nextProps.match.params.ticketId != ticketId) {
+            this.state.ticketId = nextProps.match.params.ticketId;
+            this.getTicketDetail();
+        }
+    }
+    // componentDidMount() {
+    //     this.getTicketDetail();
+    // }
+
     getTicketDetail = async () => {
-        const { ticketId } = this.props.match.params;
+        const { ticketId } = this.state;
         const url = 'task/' + ticketId + '?includes=status,group,assigned_to,user,associations,tags.tag.type,subscribers,category'
         const result = await Get({ url });
 
@@ -132,7 +142,7 @@ export default class TicketDetail extends Component {
                                 <div className="panel section-wrapper">
                                     <div className="panel-body detail-section">
                                         {
-                                            (!ticketDetail.category.id === 630 || !ticketDetail.category.id === 650 || !ticketDetail.category.id === 646 || !ticketDetail.category.id === 645) &&
+                                            ticketDetail.length && (!ticketDetail.category.id === 630 || !ticketDetail.category.id === 650 || !ticketDetail.category.id === 646 || !ticketDetail.category.id === 645) &&
                                             <div className="ticket-content">
                                                 <table className="table borderless ticket-detail-table">
                                                     <tbody>
@@ -307,7 +317,7 @@ export default class TicketDetail extends Component {
                                         </div> */}
 
                                         {
-                                            (ticketDetail.category.id == 650 || ticketDetail.category.id == 646 || ticketDetail.category.id == 645) &&
+                                            ticketDetail.length && (ticketDetail.category.id == 650 || ticketDetail.category.id == 646 || ticketDetail.category.id == 645) &&
                                             <div className="ticket-content">
                                                 <div className="ticket-label">
                                                     <p>

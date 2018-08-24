@@ -15,14 +15,14 @@ export default class ParseComponent extends Component {
     )
 
     render() {
-        const { filter: filterObj, data } = this.props;
+        const { filter: filterObj, data, listingRow } = this.props;
         let Comp;
         if (filterObj && filterObj.path) {
             let filter = Filters[filterObj.name];
             try {
                 Comp = LoadAsyncComponent(() => import(`./../${filter.path}`));
                 return (
-                    <Comp data={data} />
+                    <Comp data={data} listingRow={listingRow}/>
                 )
             } catch (e) {
                 console.error('Issue in filter.path');

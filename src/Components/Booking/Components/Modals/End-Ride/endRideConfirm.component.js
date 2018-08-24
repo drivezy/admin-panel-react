@@ -4,7 +4,7 @@ import { Post} from 'common-js-util';
 
 import { TotalDuration } from './../../../../../Utils/booking.utils';
 import { ModalManager } from 'drivezy-web-utils/build/Utils';
-import { RECORD_URL } from './../../../../../Constants/global.constants';
+import { API_HOST } from './../../../../../Constants/global.constants';
 
 export default class EndRideConfirm extends Component {
 
@@ -87,12 +87,11 @@ export default class EndRideConfirm extends Component {
                     start_fuel_percentage : endRideInfo.start_fuel_percentage,
                     start_addons : endRideInfo.start_addons
                 },
-                urlPrefix: RECORD_URL
+                urlPrefix: API_HOST
             });
             if (result.success) {
                 ModalManager.closeModal();
             }
-            
         }
 
     render() {
