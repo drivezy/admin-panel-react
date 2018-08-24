@@ -419,7 +419,8 @@ const formElements = props => {
                                     <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
                                         <RightClick html={html} key={key} renderTag="div" className='generic-form-label' rowOptions={props.headerOptions} column={column} />
                                         {elem}
-
+                                        <span className='info-text-color'> {column.info} </span>
+                                        <span className='warning-text-color'> {column.error} </span>
                                         {/* Showing Errors when there are errors */}
                                         {
                                             errors[column.name] && touched[column.name] ?
