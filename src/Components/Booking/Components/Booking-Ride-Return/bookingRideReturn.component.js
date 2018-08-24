@@ -20,7 +20,6 @@ export default class BookingRideReturn extends Component {
     render() {
 
         const { bookingRideReturnData = {} } = this.state;
-        console.log(bookingRideReturnData);
         let totalDuration;
         let totalOdo;
         let kmDifference;
