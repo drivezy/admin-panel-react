@@ -129,7 +129,6 @@ export default class AddonUpdate extends React.Component {
                             <div className="addon-update">
                                 {
                                     addOns.map((addon, key) => (
-                                        // (addon.name != 'Complimentary Helmet') ?
                                             <div className="row" key={key}>
                                                 <div className="col-sm-6 no-padding-right">
                                                     {addon.name}
@@ -175,8 +174,6 @@ export default class AddonUpdate extends React.Component {
                                                 <br />
                                                 <br />
                                             </div>
-                                            // :
-                                            // null
                                     ))
                                 }
                             </div>

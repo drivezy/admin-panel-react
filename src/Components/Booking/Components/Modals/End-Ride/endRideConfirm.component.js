@@ -211,7 +211,7 @@ export default class EndRideConfirm extends Component {
                                     <label>Comments</label>
                                 </div>
                                 <div className="col-sm-12">
-                                    <input type='text' value={endRideInfo.comments} disabled />
+                                    <input type='text' value={endRideInfo.ride_return.comments} disabled />
                                 </div>
                             </div>
                         </div>
@@ -269,6 +269,7 @@ export default class EndRideConfirm extends Component {
                             While picking the vehicle from user end the ride.
                             </div>
                         <div className="col-sm-6 btns">
+                            <button className="btn btn-default" onClick={(e) => { e.preventDefault(); ModalManager.closeModal() }}> Cancel </button>
                             <button className="btn btn-default"> Cancel </button>
                             &nbsp;
                                 <button className="btn btn-warning"> Go Back </button>
