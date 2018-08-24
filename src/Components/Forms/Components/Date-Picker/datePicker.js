@@ -43,7 +43,7 @@ export default class DatePicker extends Component {
         this.setState({ value });
     }
 
-    UNSAFE_componentWillReceiveProps = (nextProps) => {
+    componentWillReceiveProps = (nextProps) => {
         this.setState({
             format: nextProps.format || GLOBAL.DATE_TIME_FORMAT,
             minDate: nextProps.minDate,
