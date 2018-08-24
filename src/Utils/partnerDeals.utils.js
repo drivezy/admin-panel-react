@@ -9,6 +9,7 @@ import AgreementUpload from './../Components/Partner-Deals/Modals/Agreement-Uplo
 import OrderDetails from './../Components/Partner-Deals/Modals/Order-Details/orderDetails.component';
 import TrackerNotification from './../Components/Partner-Deals/Modals/Tracker-Notification/trackerNotification.component.js';
 import RTOTicket from './../Components/Partner-Deals/Modals/RTO-Ticket/rtoTicket.component';
+import AmountCollection from './../Components/Partner-Deals/Modals/Amount-Collection/amountCollection.component';
 
 export function editDeal(obj, callback, parent) {
         ModalManager.openModal({
@@ -17,12 +18,12 @@ export function editDeal(obj, callback, parent) {
         })
 }
 
-// export function amountCollection(obj, callback) {
-//     ModalManager.openModal({
-//         headerText: "Amount Collection",
-//         modalBody: () => (<AmountCollection />)
-//     })
-// }
+export function amountCollection(obj, callback) {
+    ModalManager.openModal({
+        headerText: "Amount Collection",
+        modalBody: () => (<AmountCollection />)
+    })
+}
 
 export function goLive(obj, callback, parent) {
     ModalManager.openModal({
