@@ -599,7 +599,7 @@ const FormContents = withFormik({
 
         function uploadImages() {
             return Promise.all(props.fileUploads.map((entry) => {
-                return Upload('uploadFile', entry).then((result) => {
+                return Upload('api/admin/uploadFile', entry).then((result) => {
 
                     newValues[entry.column] = result.response;
 
