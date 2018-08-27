@@ -23,7 +23,8 @@ import UserLicense from './../../Scenes/User-License/userLicense.scene';
 import { Spotlight } from './../../Components/Spotlight-Search/spotlightSearch.component';
 import TicketDetail from './../../Scenes/Ticket-Detail/ticketDetail.scene';
 import RosterTimeline from './../../Scenes/Roster-Timeline/rosterTimeline.scene';
-
+import UserSearchList from './../User-Search-List/userSearchList.component.js';
+import VehicleSearchList from './../Vehicle-Search-List/vehicleSearchList.component.js';
 import GenericQueryDetail from './../../Scenes/Generic-Query/genericQueryDetail.scene';
 
 import LoadAsyncComponent from './../../Async/async';
@@ -131,10 +132,14 @@ export default class LandingApp extends Component {
                             
                             <Route exact path='/ticket/:ticketId' component={TicketDetail} />
                             <Route exact path='/rosterTimeline' component={RosterTimeline} />
+                            <Route exact path='/searchUsers' component= {UserSearchList} />
+                            <Route exact path='/searchVehicles' component= {VehicleSearchList} />
                             <Route exact path='/' component={HomeScene} />
                             {/* <Route exact path='/manageReport/:queryId' component={GenericQueryDetail} /> */}
                             {/* <Route exact path='/user/:userId' component={UserDetail} /> */}
                             {/* <Route exact path='/vehicle/:vehicleId' component={VehicleDetail} /> */}
+
+                            <Route exact path='/userPage' component={RosterTimeline} />
 
                         </Switch>
                     </div>

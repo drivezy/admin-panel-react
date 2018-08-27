@@ -157,7 +157,7 @@ export default class SelectBox extends Component {
     }
 
     render() {
-        const { async, getOptions, isClearable = true, menuPlacement = 'auto' } = this.props;
+        const { async, getOptions, isClearable = true, menuPlacement = 'auto', selectClass } = this.props;
         const { options, field, key } = this.state;
         let { value } = this.state;
         let elem;
@@ -213,7 +213,7 @@ export default class SelectBox extends Component {
         }
 
         return (
-            <div className="select-box" >
+            <div className={`select-box ${selectClass}`} >
                 {elem}
             </div>
         );

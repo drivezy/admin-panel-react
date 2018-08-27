@@ -5,6 +5,8 @@ import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
 import { GetSourceMorphMap } from './preference.utils';
+import { GetTime } from './time.utils';
+
 import { ROUTE_URL } from './../Constants/global.constants';
 import { CreateUrl } from './generic.utils';
 
@@ -319,6 +321,14 @@ export default class FormUtil {
      */
     static updateForm(updateState = true) {
         StoreEvent({ eventName: 'formChanged', data: { ...self.form, ...{ updateState } } });
+    }
+
+     /**
+     * expects dateTime, format
+     * @param  {} {...args}
+     */
+    static getTime({ ...args }) {
+        return GetTime({ ...args });
     }
 }
 
