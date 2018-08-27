@@ -27,7 +27,7 @@ export default class AddonUpdate extends React.Component {
      * @param  {object} rideData
      */
     getAddons = async (rideData) => {
-        if (rideData.is_bike == 1) {
+        if (rideData.is_bike == 0) {
             var url = 'accessoryAddon?query=active=1 and bike_only=0';
         } else {
             url = 'accessoryAddon?query=active=1 and bike_only=1';
@@ -129,7 +129,6 @@ export default class AddonUpdate extends React.Component {
                             <div className="addon-update">
                                 {
                                     addOns.map((addon, key) => (
-                                        (addon.name != 'Complimentary Helmet') ?
                                             <div className="row" key={key}>
                                                 <div className="col-sm-6 no-padding-right">
                                                     {addon.name}
@@ -175,8 +174,6 @@ export default class AddonUpdate extends React.Component {
                                                 <br />
                                                 <br />
                                             </div>
-                                            :
-                                            null
                                     ))
                                 }
                             </div>

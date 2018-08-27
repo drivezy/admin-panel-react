@@ -1,5 +1,5 @@
 import React from 'react';
-import { ModalManager } from 'drivezy-web-utils/build/Utils';
+
 import DealAdd from './../Components/Partner-Deals/Modals/Partner-Deal-Add/partnerDealAdd.component';
 import AddDealTicket from './../Components/Partner-Deals/Modals/Add-Deal-Ticket/addDealTicket.component';
 import DealPayment from './../Components/Partner-Deals/Modals/Deal-Payment/dealPayment.component';
@@ -10,6 +10,8 @@ import OrderDetails from './../Components/Partner-Deals/Modals/Order-Details/ord
 import TrackerNotification from './../Components/Partner-Deals/Modals/Tracker-Notification/trackerNotification.component.js';
 import RTOTicket from './../Components/Partner-Deals/Modals/RTO-Ticket/rtoTicket.component';
 import AmountCollection from './../Components/Partner-Deals/Modals/Amount-Collection/amountCollection.component';
+
+import { ModalManager } from 'drivezy-web-utils/build/Utils';
 
 export function editDeal(obj, callback, parent) {
         ModalManager.openModal({

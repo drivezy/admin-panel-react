@@ -15,7 +15,7 @@ export default class DateTimePicker extends Component {
     }
 
     componentDidMount() {
-        let $image = $('#datetimepicker10');
+        let $image = $('#datetimepicker11');
         
 
         $image.datetimepicker({
@@ -40,12 +40,12 @@ export default class DateTimePicker extends Component {
                 <div className="">
                     <div className="form-group-wrapper">
                         <div className='input-group date' id='datetimepicker10' >
-                            <input type='text' autocomplete="off" className="form-control" />
+                            <input type='text' autocomplete="off" className="form-control" id='datetimepicker11' />
                             <span className="input-group-addon">
-                                <span>
+                                {/* <span>
                                     <i className="fa fa-calendar" aria-hidden="true">
                                     </i>
-                                </span>
+                                </span> */}
                             </span>
                         </div>
                     </div>

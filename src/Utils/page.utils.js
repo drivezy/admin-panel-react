@@ -6,6 +6,7 @@ import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils'
 import { GetUser } from './user.utils';
 import { ROUTE_URL } from './../Constants/global.constants';
 import { CreateUrl } from './generic.utils';
+import { GetTime } from './time.utils';
 
 import LoadAsyncComponent from './../Async/async';
 
@@ -60,7 +61,7 @@ export default class Pageutil {
             />
         });
     }
-    
+
     /**
      * Returns callback method to refresh the page content
      */
@@ -111,5 +112,13 @@ export default class Pageutil {
         };
 
         methods[method]({ url, callback, extraParams, urlPrefix });
+    }
+
+    /**
+     * expects dateTime, format
+     * @param  {} {...args}
+     */
+    static getTime({ ...args }) {
+        return GetTime({ ...args });
     }
 }
