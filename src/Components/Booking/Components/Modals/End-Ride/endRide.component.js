@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 import './endRide.component.css';
 
+import moment from 'moment';
+
+import { API_HOST } from './../../../../../Constants/global.constants';
+
 import AddonUpdate from './../../../../Addon-Update/addonUpdate.component';
-import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
 import EndRideConfirm from './endRideConfirm.component';
-import { Get, Post } from 'common-js-util';
 import CustomTooltip from '../../../../Custom-Tooltip/customTooltip.component';
 import SelectBox from './../../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
-import { API_HOST } from './../../../../../Constants/global.constants';
 import DatePicker from './../../../../Forms/Components/Date-Picker/datePicker';
-import moment from 'moment';
+
+import { Get, Post} from 'common-js-util';
+import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
 
 export default class EndRide extends Component {
 
@@ -50,7 +53,6 @@ export default class EndRide extends Component {
      * To fetch States for permit state options
      */
     getStates = async () => {
-        const { stateOptions } = this.state;
         const result = await Get({
             url: "state",
             urlPrefix: API_HOST

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import './endRideConfirm.component.css';
-import { Post} from 'common-js-util';
 
+import { API_HOST } from './../../../../../Constants/global.constants';
+
+import { Post} from 'common-js-util';
 import { TotalDuration } from './../../../../../Utils/booking.utils';
 import { ModalManager } from 'drivezy-web-utils/build/Utils';
-import { API_HOST } from './../../../../../Constants/global.constants';
 import DatePicker from './../../../../Forms/Components/Date-Picker/datePicker';
 
 export default class EndRideConfirm extends Component {
@@ -17,10 +18,9 @@ export default class EndRideConfirm extends Component {
             reviewdata: this.props.reviewRideData,
             flattenReviewData: []
         }
-        console.log(this.props)
     }
     /**
-     * Flat review data
+     * Flat review data from review ride modal
      */
     componentDidMount() {
         const { reviewdata } = this.state;

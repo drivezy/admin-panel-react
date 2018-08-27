@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import './manualVehicleChange.component.css';
+
 import { API_HOST } from './../../../../../Constants/global.constants';
-import { Get, Post } from 'common-js-util';
+
 import SelectBox from './../../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
-import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 import DatePicker from './../../../../Forms/Components/Date-Picker/datePicker';
-import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
 import DateTimePicker from './../../../../../../src/Components/Date-Time-Picker/dateTimePicker.component';
+
+import { Get, Post } from 'common-js-util';
+import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
+import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
 
 import {
     Table
@@ -167,6 +170,7 @@ export default class ChangeVehicle extends Component {
                     </div>
                         <div className="col-sm-12">
                             {/* <DatePicker single={true} timePicker={true} onChange={(value) => this.setState({ start_date: value }) } /> */}
+                            
                             <DateTimePicker onChange={(value) => this.setState({ start_date: value })} />
                         </div>
                     </div>
