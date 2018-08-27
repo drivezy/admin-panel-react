@@ -1,0 +1,70 @@
+.partner-deal{
+    .partner-deal-header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0px 25px;
+        height: 50px;
+        background: #1f2533;
+        border-radius: 5px 5px 0 0;
+        color: #49ba8e;
+        .header-name{
+            text-transform: uppercase;
+            font-size: 135%;
+            letter-spacing: 2px;
+        }
+    }
+    .partner-deal-body{
+        background-color: #f5f5f5;
+        padding: 15px;
+        .selects{
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            .select-box {
+                min-width: 250px !important;
+            }
+        }
+        .row{
+            margin: 0 !important;
+        }
+        .input-options{
+            .helptext{
+                text-transform: capitalize;
+            }
+            .options{
+                padding: 20px;
+                .div-group{
+                    padding: 5px 15px;
+                    input{
+                        border-radius: 0px 5px 5px 0;
+                        box-shadow: none;
+                        border: 1px solid #3c763d;
+                        width: 80%;
+                        padding: 0px 8px;
+                    }
+                    .input-group-text{
+                        background-color: #dff0d8;
+                        border: 1px solid #3c763d;
+                    }
+                    .input-group{
+                        .disabled{
+                            background-color: #e2e2e2;
+                            color: #000;
+                            cursor: not-allowed;
+                        }
+                    }
+                    .description{
+                        text-align: right;
+                        font-size: 85%;
+                    }
+                }
+            }
+        }
+    }
+    .partner-deal-footer{
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 20px;
+    }
+}

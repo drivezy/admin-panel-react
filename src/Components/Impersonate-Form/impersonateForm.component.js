@@ -32,7 +32,7 @@ export default class ImpersonateFrom extends Component {
 
             const result = await Get({ url });
             if (result.response) { 
-                return result.response;
+                return result.response
             }
             // return { options: result.response };
         }
