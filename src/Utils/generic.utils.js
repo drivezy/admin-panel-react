@@ -827,7 +827,8 @@ export function EvalCondtionForNextActions(condition, itemRow, starter) {
         var expression = expressions[i].split(":")[1];
         // added try catch for checking conditions of menu action
         try {
-            const isSingleLevel = IsObjectSingleLevel(data);
+            // const isSingleLevel = IsObjectSingleLevel(data);
+            const isSingleLevel = expression.split('.').length > 1 ? false : true;
             if (isSingleLevel) {
                 evaluatedExpressions[i] = eval(data[expression]);
             } else {

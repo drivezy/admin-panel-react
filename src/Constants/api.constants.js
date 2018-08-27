@@ -27,4 +27,6 @@ export const UserPreferenceEndPoint = 'userPreference';
 export const SecurityRuleEndPoint = 'api/record/securityRule/';
 export const ClientScriptEndPoint = 'api/record/clientScript/';
 export const ColumnsEndPoint = 'api/record/column';
+
+export const ImageUploadEndpoint = 'api/multipleTypeUpload'; // uploads images
 /** Private routes ends here */

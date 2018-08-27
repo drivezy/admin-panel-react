@@ -75,7 +75,7 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
             if (response.form.form_type_id == 53) {
                 const { description: message } = response.form;
                 const submitCallback = response.client_scripts ? response.client_scripts : [];
-                ConfirmUtils.confirmModal({ title: formContent.name, message, callback: () => ExecuteScript({ formContent, scripts: submitCallback, context: FormUtils, contextName: 'form' }) })
+                ConfirmUtils.confirmModal({ title: formContent.name, message, callback: () => { ExecuteScript({ formContent, scripts: submitCallback, context: FormUtils, contextName: 'form' }); if (typeof formContent.callback == 'function') formContent.callback(); } })
                 return;
             }
         }
