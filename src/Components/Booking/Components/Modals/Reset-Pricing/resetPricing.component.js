@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { ModalManager, ToastNotifications } from 'drivezy-web-utils/build/Utils';
-import { Get, Post, Put } from 'common-js-util';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
+
 import SelectBox from './../../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
+
+import { ModalManager, ToastNotifications } from 'drivezy-web-utils/build/Utils';
+import { Get, Post } from 'common-js-util';
+
 import './resetPricing.component.css'
-import {
-    Table
-} from 'reactstrap';
 
 export default class ResetPricing extends Component {
 
