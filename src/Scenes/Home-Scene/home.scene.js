@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 // import { Typeahead } from 'react-bootstrap-typeahead';
 // import 'react-bootstrap-typeahead/css/Typeahead.css';
-import MultipleUpload from './../../Components/Forms/Components/Multiple-Image-Upload/multipleImageUpload.component';
+import { MultiUploadModal } from './../../Utils/upload.utils';
 import './home.scene.css';
 
 
@@ -29,7 +29,7 @@ export default class Home extends Component {
 
         return (
             <div className="home-scene">
-                <h1 onClick={() => MultipleUpload({ title: 'Home Upload' })}>
+                <h1 onClick={() => MultiUploadModal({ title: 'Home Upload', })}>
                     Upload
                 </h1>
             </div>

@@ -25,6 +25,7 @@ import TimePicker from './../Forms/Components/Time-Picker/timePicker';
 import ListSelect from './../Forms/Components/List-Select/listSelect';
 import Switch from './../Forms/Components/Switch/switch';
 import ImageUpload from './../Forms/Components/Image-Upload/imageUpload.component';
+import MultipleUpload from './../Forms/Components/Multiple-Image-Upload/multipleImageUpload.component';
 // import ImageThumbnail from './../Forms/Components/Image-Thumbnail/imageThumbnail.component';
 // import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from 'constants';
 import FormSettings from './../Form-Settings/FormSettings.component';

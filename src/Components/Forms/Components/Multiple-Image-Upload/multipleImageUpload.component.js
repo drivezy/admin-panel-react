@@ -1,27 +1,22 @@
 
 
 import React, { Component } from 'react';
-import SelectBox from './../Select-Box/selectBoxForGenericForm.component';
+
+import Dropzone from 'react-dropzone';
+import { ModalManager } from 'drivezy-web-utils/build/Utils';
+
 import DatePicker from './../Date-Picker/datePicker';
 
+import SelectBox from './../Select-Box/selectBoxForGenericForm.component';
+
 import { GetLookupValues } from './../../../../Utils/lookup.utils';
-import './multipleImageUpload.component.css';
-import Dropzone from 'react-dropzone';
-
-import { ModalManager } from 'drivezy-web-utils/build/Utils';
 import { MultipleUpload } from './../../../../Utils/upload.utils';
-
 import { ROUTE_URL } from './../../../../Constants/global.constants';
 
-export default function MultiUpload({ title, column }) {
-    ModalManager.openModal({
-        className: 'generic-form-container',
-        headerText: title || 'Multiple Upload',
-        modalBody: () => (<ImageUpload column={column} onSubmit={val => console.log(val)} />),
-    });
-}
+import './multipleImageUpload.component.css';
 
-class ImageUpload extends Component {
+
+export default class MultipleImageUpload extends Component {
     constructor(props) {
         super(props);
 
@@ -69,7 +64,7 @@ class ImageUpload extends Component {
     }
 
     uploadFiles = () => {
-        const { dontUpload, onSubmit, column, source = 'booking', sourceId = '364207' } = this.props;
+        const { dontUpload, onSubmit, column, source, sourceId } = this.props;
         const { files } = this.state;
         if (!onSubmit) {
             this.closeModal();
@@ -94,8 +89,8 @@ class ImageUpload extends Component {
             });
 
             MultipleUpload(data).then(result => {
-                if (result.response) {
-                    onSubmit(column, result);
+                if (result.success) {
+                    onSubmit(column, result.response.success);
                     this.closeModal();
                 }
             });
