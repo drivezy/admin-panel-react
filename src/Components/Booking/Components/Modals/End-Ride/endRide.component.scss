@@ -35,6 +35,15 @@
                             flex-wrap: nowrap !important;
                         }
                     }
+                    .wallet{
+                        padding: 0 8px;
+                        i{
+                            color: #2f99bb;
+                        }
+                        .btn{
+                            padding: 0 !important;
+                        }
+                    }
                 }
             }
             .error-text{

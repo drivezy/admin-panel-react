@@ -1,6 +1,19 @@
+import React from 'react';
+
+import DealAdd from './../Components/Partner-Deals/Modals/Partner-Deal-Add/partnerDealAdd.component';
+import AddDealTicket from './../Components/Partner-Deals/Modals/Add-Deal-Ticket/addDealTicket.component';
+import DealPayment from './../Components/Partner-Deals/Modals/Deal-Payment/dealPayment.component';
+import InsuranceInfo from './../Components/Partner-Deals/Modals/Insurance-Information/insuranceDetails.component';
+import GoLive from './../Components/Partner-Deals/Modals/Go-Live/goLive.component';
+import AgreementUpload from './../Components/Partner-Deals/Modals/Agreement-Upload/agreementUpload.component';
+import OrderDetails from './../Components/Partner-Deals/Modals/Order-Details/orderDetails.component';
+import TrackerNotification from './../Components/Partner-Deals/Modals/Tracker-Notification/trackerNotification.component.js';
+import RTOTicket from './../Components/Partner-Deals/Modals/RTO-Ticket/rtoTicket.component';
+import AmountCollection from './../Components/Partner-Deals/Modals/Amount-Collection/amountCollection.component';
+
 import { ModalManager } from 'drivezy-web-utils/build/Utils';
 
-export function EditDeal(obj, callback) {
+export function editDeal(obj, callback, parent) {
         ModalManager.openModal({
             headerText: "Edit Deal",
             modalBody: () => (<ManualVehicleChange cars={carsList} reasons={result.response.values} bookingData={bookingData} manual={true}/>)

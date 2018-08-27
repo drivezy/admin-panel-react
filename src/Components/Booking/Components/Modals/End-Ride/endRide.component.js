@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 import './endRide.component.css';
 
+import moment from 'moment';
+
+import { API_HOST } from './../../../../../Constants/global.constants';
+
 import AddonUpdate from './../../../../Addon-Update/addonUpdate.component';
-import { ModalManager } from 'drivezy-web-utils/build/Utils';
 import EndRideConfirm from './endRideConfirm.component';
-import { Get, Post } from 'common-js-util';
 import CustomTooltip from '../../../../Custom-Tooltip/customTooltip.component';
 import SelectBox from './../../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
-import { API_HOST } from './../../../../../Constants/global.constants';
 import DatePicker from './../../../../Forms/Components/Date-Picker/datePicker';
-import moment from 'moment';
+
+import { Get, Post} from 'common-js-util';
+import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
 
 export default class EndRide extends Component {
 
@@ -19,7 +22,8 @@ export default class EndRide extends Component {
             endRideInfo: this.props.data,
             discountOptions: [],
             stateOptions: [],
-            end_time: ""
+            end_time: "",
+            wallet_balance: 0
         }
     }
 
@@ -49,7 +53,6 @@ export default class EndRide extends Component {
      * To fetch States for permit state options
      */
     getStates = async () => {
-        const { stateOptions } = this.state;
         const result = await Get({
             url: "state",
             urlPrefix: API_HOST
@@ -66,7 +69,7 @@ export default class EndRide extends Component {
         const result = await Post({
             url: "reviewRide",
             body: {
-                actual_start_time: endRideInfo.end_time,
+                actual_start_time: endRideInfo.pickup_time,
                 addons: endRideInfo.addons,
                 cleanliness_cost: endRideInfo.cleanliness_cost,
                 comments: endRideInfo.ride_return.comments,
@@ -95,23 +98,38 @@ export default class EndRide extends Component {
                 modalBody: () => (<EndRideConfirm endRidedata={endRideInfo} reviewRideData={result.response} />)
             })
         }
+        else{
+            ToastNotifications.error({ title: `${result.response}` });
+        }
 
+    }
+
+    checkWalletBalance = async () => {
+        const { endRideInfo } = this.state;
+        const result = await Get({
+            url: `user/${endRideInfo.user_id}?includes=wallet.payment_request.booking,wallet.payment_refund.booking`,
+            urlPrefix: API_HOST
+        });
+        if (result.success) {
+            this.setState({ wallet_balance: result.response.wallet_refund });
+        }
     }
 
     setCurrentTime(presentTime) {
         const { endRideInfo } = this.state;
         // this.setState({ presentTime: presentTime })
-        let pickupTime;
+        let endTime;
         if (presentTime)
-            pickupTime = moment().format('YYYY-MM-DD HH:mm')
+            endTime = moment().format('YYYY-MM-DD HH:mm')
         else
-            pickupTime = endRideInfo.ride_return.scheduled_drop_time;
-        this.setState({ end_time: pickupTime });
-        console.log(this.state)
+            endTime = endRideInfo.ride_return.scheduled_drop_time;
+        this.setState({ end_time: endTime });
+        endRideInfo.end_time = endTime;
+        this.setState({ endRideInfo });
     }
 
     render() {
-        const { endRideInfo = {}, discountOptions = [], stateOptions = [], end_time } = this.state;
+        const { endRideInfo = {}, discountOptions = [], stateOptions = [], end_time, wallet_balance } = this.state;
 
         return (
             <div className="modalBody">
@@ -316,11 +334,18 @@ export default class EndRide extends Component {
                                     </div>
                                     <div className="col-sm-6">
                                         <div className="row">
-                                            <div className="col-sm-12">
-                                                <label>Redeem <i className="fa fa-refresh" aria-hidden="true"></i></label>
+                                            <div className="col-sm-12 wallet">
+                                                <label>Redeem
+                                                    <button className="btn btn-xs btn-default" onClick={() => { this.checkWalletBalance() }}><i className="fa fa-refresh" aria-hidden="true"></i></button>
+                                                </label>
                                             </div>
                                             <div className="col-sm-12">
                                                 <input type='text' placeholder='0' onChange={(e) => { endRideInfo.redeem = e.target.value; this.setState({ endRideInfo }); }} />
+                                            </div>
+                                            <div className="error-text col-sm-12">
+                                                {
+                                                    endRideInfo.redeem > wallet_balance ? <p>The number should be lesser than or equal to {wallet_balance}</p> : null
+                                                }
                                             </div>
                                             <div className="error-text col-sm-12">
                                                 {endRideInfo.redeem ? isNaN(endRideInfo.redeem) ? <p>Only numbers are allowed</p> : null : null}
@@ -404,7 +429,12 @@ export default class EndRide extends Component {
                                                 <label>Permit Validity</label>
                                             </div>
                                             <div className="col-sm-12">
-                                                <input type='date' placeholder="Select Range" onChange={(e) => { endRideInfo.permit_validity = e.target.value; this.setState({ endRideInfo }); }} />
+                                                <DatePicker
+                                                    value={endRideInfo.permit_validity}
+                                                    single={true}
+                                                    onChange={(name, value) => { endRideInfo.permit_validity = value; this.setState({ endRideInfo }) }}
+                                                />
+                                                {/* <input type='date' placeholder="Select Range" onChange={(e) => { endRideInfo.permit_validity = e.target.value; this.setState({ endRideInfo }); }} /> */}
                                             </div>
                                         </div>
                                         :

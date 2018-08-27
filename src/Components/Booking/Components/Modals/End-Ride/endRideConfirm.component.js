@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import './endRideConfirm.component.css';
-import { Post} from 'common-js-util';
 
+import { API_HOST } from './../../../../../Constants/global.constants';
+
+import { Post} from 'common-js-util';
 import { TotalDuration } from './../../../../../Utils/booking.utils';
 import { ModalManager } from 'drivezy-web-utils/build/Utils';
-import { API_HOST } from './../../../../../Constants/global.constants';
+import DatePicker from './../../../../Forms/Components/Date-Picker/datePicker';
 
 export default class EndRideConfirm extends Component {
 
@@ -18,7 +20,7 @@ export default class EndRideConfirm extends Component {
         }
     }
     /**
-     * Flat review data
+     * Flat review data from review ride modal
      */
     componentDidMount() {
         const { reviewdata } = this.state;
@@ -154,7 +156,12 @@ export default class EndRideConfirm extends Component {
                                                 <label>End Time&nbsp;<i className="fa fa-clock-o" aria-hidden="true"></i>&nbsp;<i className="fa fa-car" aria-hidden="true"></i></label>
                                             </div>
                                             <div className="col-sm-12">
-                                                <input type='datetime-local' value={endRideInfo.end_time} disabled />
+                                                <DatePicker
+                                                    value={endRideInfo.end_time}
+                                                    single={true}
+                                                    disabled
+                                                />
+                                                {/* <input type='datetime-local' value={endRideInfo.end_time} disabled /> */}
                                             </div>
                                         </div>
                                     </div>
@@ -270,7 +277,6 @@ export default class EndRideConfirm extends Component {
                             </div>
                         <div className="col-sm-6 btns">
                             <button className="btn btn-default" onClick={(e) => { e.preventDefault(); ModalManager.closeModal() }}> Cancel </button>
-                            <button className="btn btn-default"> Cancel </button>
                             &nbsp;
                                 <button className="btn btn-warning"> Go Back </button>
                             &nbsp;
