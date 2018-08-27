@@ -195,7 +195,8 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
                     // onChange={props.setFieldValue}
                     isClearable={!column.required}
                     onChange={(value, event) => {
-                        const valId = value && typeof value == 'object' ? value.id : value;
+                        const index = column.indexVal || 'id';
+                        const valId = value && typeof value == 'object' && !Array.isArray(value) ? value[index] : value;
                         FormUtils.OnChangeListener({ column, value: valId, ...event });
                         props.setFieldValue(event, value);
                     }}
@@ -214,7 +215,8 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
                     // onChange={props.setFieldValue}
                     isClearable={!column.required}
                     onChange={(value, event) => {
-                        const valId = value && typeof value == 'object' ? value.id : value;
+                        const index = column.indexVal || 'id';
+                        const valId = value && typeof value == 'object' && !Array.isArray(value) ? value[index] : value;
                         FormUtils.OnChangeListener({ column, value: valId, ...event });
                         props.setFieldValue(event, value);
                     }}
@@ -560,13 +562,17 @@ const FormContents = withFormik({
 
         // Check this code shubham , 
         // Modifying the data according to backend requiremend 
-
+        console.log(payload);
         let newValues = {};
         let keys = Object.keys(values);
         keys.forEach((key) => {
+            const column = payload.dictionary[key];
             const value = values[key];
 
-            newValues[key] = value && typeof value == 'object' ? value.id : value;
+            const index = column.indexVal || 'id';
+            newValues[key] = value && typeof value == 'object' && !Array.isArray(value) ? value[index] : value;
+
+            // newValues[key] = value && typeof value == 'object' ? value.id : value;
             // newValues[payload.dataModel + '.' + key] = values[key];
         })
 
