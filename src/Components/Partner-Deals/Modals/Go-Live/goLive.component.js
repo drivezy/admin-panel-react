@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
+
+import SelectBox from './../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
+import DateTimePicker from './../../../Date-Time-Picker/dateTimePicker.component';
+
+import { ModalManager } from 'drivezy-web-utils/build/Utils/modal.utils';
+import { Get, Post } from 'common-js-util';
+
+import { API_HOST } from './../../../../Constants/global.constants';
+
 import './goLive.component.css';
 
-import { Get, Post } from 'common-js-util';
-import { API_HOST } from './../../../../Constants/global.constants';
-import SelectBox from './../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
-import { ModalManager } from 'drivezy-web-utils/build/Utils/modal.utils';
-import DateTimePicker from './../../../Date-Time-Picker/dateTimePicker.component';
 
 export default class GoLive extends Component {
 

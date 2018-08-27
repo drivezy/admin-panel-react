@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import './agreementUpload.component.css';
+
+import SelectBox from './../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
+import ImageUpload from './../../../Forms/Components/Image-Upload/imageUpload.component';
 
 import { Get, Post } from 'common-js-util';
-import { API_HOST } from './../../../../Constants/global.constants';
-import SelectBox from './../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import { ModalManager } from 'drivezy-web-utils/build/Utils/modal.utils';
-import ImageUpload from './../../../Forms/Components/Image-Upload/imageUpload.component';
+
+import { API_HOST } from './../../../../Constants/global.constants';
+
+import './agreementUpload.component.css';
 
 export default class AgreementUpload extends Component {
 

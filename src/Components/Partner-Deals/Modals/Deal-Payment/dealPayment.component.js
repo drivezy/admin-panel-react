@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
-import './dealPayment.component.css';
-
-import { Get, Post } from 'common-js-util';
-import { API_HOST } from './../../../../Constants/global.constants';
-import { ModalManager } from 'drivezy-web-utils/build/Utils/modal.utils';
-import AddDealPayment from './addDealPayment.component';
-
 import {
     Table
 } from 'reactstrap';
+
+import AddDealPayment from './addDealPayment.component';
+
+import { ModalManager } from 'drivezy-web-utils/build/Utils/modal.utils';
+import { Get, Post } from 'common-js-util';
+
+import { API_HOST } from './../../../../Constants/global.constants';
+
+import './dealPayment.component.css';
 
 export default class DealPayment extends Component {
 

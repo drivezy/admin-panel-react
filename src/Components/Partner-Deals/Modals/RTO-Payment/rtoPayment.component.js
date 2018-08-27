@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import './rtoPayment.component.css';
 
-import { Get, Post } from 'common-js-util';
-import { API_HOST } from './../../../../Constants/global.constants';
-import SelectBox from './../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import ImageUpload from './../../../Forms/Components/Image-Upload/imageUpload.component';
+
+import './rtoPayment.component.css';
 
 export default class RTOTicket extends Component {
 

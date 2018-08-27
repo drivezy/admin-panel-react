@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import './insuranceDetails.component.css'
 
-import { Get, Post } from 'common-js-util';
 import { API_HOST } from './../../../../Constants/global.constants';
 import SelectBox from './../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
+
+import { Get, Post } from 'common-js-util';
 import { ModalManager } from 'drivezy-web-utils/build/Utils/modal.utils';
+
+import './insuranceDetails.component.css'
 
 export default class InsuranceInfo extends Component {
 

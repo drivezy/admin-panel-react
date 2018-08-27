@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import * as PartnerDealUtils from './../../Utils/partnerDeals.utils';
 import { ModalManager } from 'drivezy-web-utils/build/Utils/modal.utils';
 
