@@ -177,7 +177,7 @@ export default class SelectBox extends Component {
                 isClearable={isClearable}
                 loadOptions={this.getOptions}
                 onChange={this.handleChange.bind(this)}
-                multi={this.props.multi}
+                isMulti={this.props.multi}
                 getOptionLabel={(context, inputValue) => <span>{context[field]}</span>}
                 getOptionValue={(context, inputValue) => <span>{context[key]}</span>}
                 menuPlacement={menuPlacement}
@@ -191,7 +191,7 @@ export default class SelectBox extends Component {
                 loadOptions={getOptions}
                 isClearable={isClearable}
                 onChange={this.handleChange.bind(this)}
-                multi={this.props.multi}
+                isMulti={this.props.multi}
                 getOptionLabel={(context, inputValue) => <span>{context[field]}</span>}
                 getOptionValue={(context, inputValue) => <span>{context[key]}</span>}
                 menuPlacement={menuPlacement}
@@ -204,7 +204,7 @@ export default class SelectBox extends Component {
                 // value={value}
                 onChange={this.handleChange.bind(this)}
                 options={options}
-                multi={this.props.multi}
+                isMulti={this.props.multi}
                 isClearable={isClearable}
                 getOptionLabel={(context, inputValue) => <span>{context[field]}</span>}
                 getOptionValue={(context, inputValue) => <span>{context[key]}</span>}

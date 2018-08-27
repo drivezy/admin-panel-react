@@ -10,7 +10,7 @@ import Yup from 'yup';
 
 import DateTimePicker from './../../../Components/Date-Time-Picker/dateTimePicker.component';
 
-import SelectBox from './../../../Components/Forms/Components/Select-Box/selectBox';
+import SelectBox from './../../../Components/Forms/Components/Select-Box/selectBoxForGenericForm.component';
 
 // import { Upload, Post, Put, Get } from './../../../../Utils/http.utils';
 // import { GetChangedMethods } from './../../../../Utils/generic.utils';
@@ -105,6 +105,8 @@ const formElements = props => {
 
                             let elem, column;
 
+                            // If there is a preference , 
+                            // find the attached column
                             if (preference) {
                                 column = preference;
                                 elem = inputElement(preference.param_type_id);
@@ -145,7 +147,7 @@ const formElements = props => {
                            </label>
 
                         </div>
-                        <SelectBox multi="true" options={props.payload.columns} field="display_name" onChange={(value) => { props.handleChange }} />
+                        <SelectBox value={values['group_column']} multi="true" options={props.payload.columns} field="display_name" onChange={(value) => { props.handleChange }} />
                     </div>
 
                     <div className="form-element">
@@ -194,6 +196,9 @@ const FormContents = withFormik({
         const { payload } = props;
 
 
+    },
+    handleSubmit: async (values, { props, setSubmitting }) => {
+        console.log(values, props);
     },
     displayName: 'BasicForm', // helps with React DevTools
 })(formElements);
