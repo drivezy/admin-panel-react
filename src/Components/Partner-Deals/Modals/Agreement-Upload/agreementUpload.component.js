@@ -47,24 +47,24 @@ export default class AgreementUpload extends Component {
         }
     }
 
-    vehiclePayment = async() => {
-        const { parent, transaction_amount, payment_mode, transaction_id } = this.state;
-        // console.log(parent)
-        const result = await Post({
-            url: "vehiclePayment",
-            body: {
-                amount: transaction_amount,
-                deal_id: parent.id,
-                payment_mode_id: payment_mode,
-                payment_mode_type: parent.financing_type_id, //not sure about mode type id
-                transaction_id: transaction_id
-            },
-            urlPrefix: API_HOST
-        });
-        if (result.success) {
-            console.log(result);
-        }
-    }
+    // vehiclePayment = async() => {
+    //     const { parent, transaction_amount, payment_mode, transaction_id } = this.state;
+    //     // console.log(parent)
+    //     const result = await Post({
+    //         url: "vehiclePayment",
+    //         body: {
+    //             amount: transaction_amount,
+    //             deal_id: parent.id,
+    //             payment_mode_id: payment_mode,
+    //             payment_mode_type: parent.financing_type_id, //not sure about mode type id
+    //             transaction_id: transaction_id
+    //         },
+    //         urlPrefix: API_HOST
+    //     });
+    //     if (result.success) {
+    //         console.log(result);
+    //     }
+    // }
 
     render() {
         const { agreement_type, business_status, files } = this.state;
@@ -122,7 +122,7 @@ export default class AgreementUpload extends Component {
                     <div className="action-buttons">
                         <button className="btn btn-default btn-sm" onClick={() => {ModalManager.closeModal();}}>Cancel</button>
                         &nbsp;
-                        <button onClick={(e) => { e.preventDefault(); this.vehiclePayment(); }} className="btn btn-success">Submit</button>
+                        <button onClick={(e) => { e.preventDefault(); }} className="btn btn-success">Submit</button>
                     </div>
                 </div>
             </div>
