@@ -105,6 +105,22 @@ export default class BookingTabsDetail extends Component {
                     field: "created_by",
                     label: "Created By"
                 }]
+            },{
+                name: 'Booking Source',
+                data: bookingTabsData.source,
+                columns: [{
+                    field: "public_address",
+                    label: "Public Address"
+                }, {
+                    field: "private_address",
+                    label: "Private Address"
+                }, {
+                    field: "source",
+                    label: "Source"
+                }, {
+                    field: "browser",
+                    label: "Browser"
+                }]
             }, {
                 name: 'Refund',
                 data: bookingTabsData.refund,
