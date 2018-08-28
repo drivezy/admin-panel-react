@@ -5,17 +5,44 @@ export default class TableWrapper extends Component {
         super(props);
     }
 
+    getValue(selectedColumn, listingRow) {
+        let value;
+
+        // if (typeof selectedColumn == 'object' && listingRow[selectedColumn.field.split(".")[0]] && selectedColumn.field.split(".")[0] == 'booking' ) {
+        //     value = listingRow[selectedColumn.field.split(".")[0]]['token']
+        //     // console.log(selectedColumn.field.split(".")[0], selectedColumn.field.split(".")[1])
+        // }
+        try {
+            value = eval('listingRow.' + selectedColumn.field);
+            if (value && typeof value == 'object') {
+                value = value.id;
+            }
+
+        } catch (e) {
+            console.log(selectedColumn);
+            console.log(listingRow);
+            console.log('fuck u');
+        }
+        return value
+    }
+
     checkType = (selectedColumn, listingRow) => {
+        if (listingRow.booking && listingRow.booking.token)
+            listingRow.token = listingRow.booking.token
+
+        else if (listingRow.order && listingRow.order.identifier)
+            listingRow.token = listingRow.order.identifier
+
         switch (selectedColumn.type) {
             case 'link':
-                return <a target="_blank" href={`${eval('listingRow.' + selectedColumn.field)}`}>{selectedColumn.placeholder ? selectedColumn.placeholder : eval('listingRow.' + selectedColumn.field)}</a>
+                return <a target="_blank" href={`${this.getValue(selectedColumn, listingRow)}`}>{selectedColumn.placeholder ? selectedColumn.placeholder : this.getValue(selectedColumn, listingRow)}</a>
             case 'sref':
                 return <a href={`${selectedColumn.sref}${selectedColumn.id ? `${eval('listingRow.' + selectedColumn.id)}` : listingRow.id}`}>
                     <i className={`fa ${selectedColumn.class}`} />
-                    <span>{eval('listingRow.' + selectedColumn.field)}</span>
+                    <span>{this.getValue(selectedColumn, listingRow)}</span>
                 </a>
             default:
-                return <span>{selectedColumn.placeholder ? selectedColumn.placeholder : eval('listingRow.' + selectedColumn.field)}</span>
+                return <span>{selectedColumn.placeholder ? selectedColumn.placeholder : this.getValue(selectedColumn, listingRow)}</span>
         }
     }
 
