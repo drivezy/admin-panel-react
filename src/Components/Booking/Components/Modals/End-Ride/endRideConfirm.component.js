@@ -258,10 +258,10 @@ export default class EndRideConfirm extends Component {
                                                 <label>{flatten ? index : null}</label>
                                             </div>
                                             <div className="col-sm-3 text-center">
-                                                <label>{flatten > 0 ? flatten : null}</label>
+                                                <label>{flatten > 0 ? (parseFloat(flatten)).toFixed(2) : null}</label>
                                             </div>
                                             <div className="col-sm-3 text-center">
-                                                <label>{flatten < 0 ? flatten*(-1) : null}</label>
+                                                <label>{flatten < 0 ? (parseFloat(flatten*(-1))).toFixed(2) : null}</label>
                                             </div>
                                         </div>
                                         : null
