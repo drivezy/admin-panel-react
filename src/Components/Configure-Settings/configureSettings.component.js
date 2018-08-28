@@ -87,9 +87,9 @@ export default class ConfugreSettings extends Component {
 
         let value = 1
 
-
-
         StoreEvent({ eventName: 'launchSpotlight', data: { name: result.response } });
+
+        window.location.reload(true);
 
     }
 
