@@ -97,7 +97,7 @@ export default class GenericQueryDetail extends Component {
             this.state.params = newProps.params;
             this.state.queryString = newProps.queryString;
             this.setState({ currentPage: this.state.queryString.page ? this.state.queryString.page : 1, limit: this.state.queryString.limit ? this.state.queryString.limit : 20 })
-            this.getDataForListing();
+            this.getDataForListing(this.state.queryString);
         }
     }
 
@@ -182,6 +182,12 @@ export default class GenericQueryDetail extends Component {
         const { preference, params } = this.state;
 
         const queryParamsData = this.state.queryParamsData;
+
+        formContent.query_name = queryParamsData.short_name;
+
+        if (formContent.aggregate_column) {
+            formContent.aggregate_column = JSON.parse(formContent.aggregate_column);
+        }
 
         // let options = GetDefaultOptionsForQuery();
         let options = { includes: '', order: '1,asc', query: '', limit: this.state.limit, page: this.state.currentPage, dictionary: false, stats: true }
