@@ -87,6 +87,11 @@ export default class ConfugreSettings extends Component {
         StoreEvent({ eventName: 'launchSpotlight', data: { name: result.response } });
 
 
+        window.location.reload(true);
+
+
+
+
     }
 
     discardChanges = async (e) => {
@@ -96,6 +101,7 @@ export default class ConfugreSettings extends Component {
         // console.log(result);
 
         ModalManager.closeModal();
+
     }
 
     selectTheme = (theme) => {
