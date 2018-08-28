@@ -86,7 +86,7 @@ export default class BookingDetail extends Component {
             <div className="booking">
                 <div className="booking-header">
                     <div className="booking-info">
-                        Booking Deatils View | {bookingDetail.token} | {bookingDate}
+                        Booking Deatils View | {bookingDetail.token} | {bookingDate} | {bookingDetail.application ? bookingDetail.application.name : null}
                     </div>
                     <div className="header-actions">
                         <button className="refresh-button btn btn-sm" onClick={(e) => { this.refreshPage(e) }}>
