@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 
-
 import './genericQueryDetail.scene.css';
+
+
+import Dashboard from './../../Components/Query-Report/Dashboard/dashboard.component';
 import QueryHeader from './../../Components/Query-Report/Query-Header/queryHeader.component';
 import DynamicFilter from './../../Components/Dynamic-Filter/dynamicFilter.component';
 import QueryTableSettings from './../../Components/Query-Report/Query-Table-Settings/queryTableSettings.component';
@@ -33,6 +35,7 @@ export default class GenericQueryDetail extends Component {
         super(props);
         this.state = {
             ...GetUrlParams(this.props),
+            useQueryTable: true,
             dateLiterals: [],
             operators: [],
             queryParamsData: {},
@@ -189,6 +192,12 @@ export default class GenericQueryDetail extends Component {
             formContent.aggregate_column = JSON.parse(formContent.aggregate_column);
         }
 
+        // If there is a groupColumn or aggregateCoumn then disable useQueryTable
+        if ((formContent.group_column && formContent.group_column != '') || (formContent.aggregate_column && formContent.aggregate_column != '')) {
+            this.state.useQueryTable = false;
+        }
+
+
         // let options = GetDefaultOptionsForQuery();
         let options = { includes: '', order: '1,asc', query: '', limit: this.state.limit, page: this.state.currentPage, dictionary: false, stats: true }
 
@@ -278,7 +287,7 @@ export default class GenericQueryDetail extends Component {
 
     render() {
 
-        const { localSearch, operators, arrowstate, arrow, queryParamsData = {}, preference, columns, params, finalColumns, resultData, currentPage, stats, isTab, layout, loading } = this.state;
+        const { useQueryTable, localSearch, operators, arrowstate, arrow, queryParamsData = {}, preference, columns, params, finalColumns, resultData, currentPage, stats, isTab, layout, loading } = this.state;
 
         const { history, match, parentData } = this.props;
 
@@ -425,8 +434,11 @@ export default class GenericQueryDetail extends Component {
                         />
                     }
 
+
+                    {/* When GroupColumn//Aggregations are active we use queryTable */}
+
                     {
-                        resultData.listing && finalColumns &&
+                        useQueryTable && resultData.listing && finalColumns &&
                         <QueryTable
                             // formContent={formContent}
                             finalColumns={finalColumns}
@@ -436,6 +448,10 @@ export default class GenericQueryDetail extends Component {
                             actions={this.state.actions}
                         />
                     }
+
+                    {/* Else Dashboard */}
+
+                    {!useQueryTable && <Dashboard />}
 
                     {
                         (resultData.stats) ?

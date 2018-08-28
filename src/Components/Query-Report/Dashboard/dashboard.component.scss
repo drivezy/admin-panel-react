@@ -1,0 +1,23 @@
+.dashboard{
+    display: flex;
+    flex-wrap: wrap;
+    .flex-container {
+        // margin: 4px;
+        flex-basis: 50%;
+        &.expanded {
+            flex-basis: 100%;
+        }
+
+        .panel {
+            height: 98%;
+            margin: 4px;
+        }
+    }
+
+    .table-panel{
+
+    }
+    .graph-container{
+
+    }
+}
