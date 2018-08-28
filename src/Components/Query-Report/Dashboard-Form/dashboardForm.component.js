@@ -25,7 +25,8 @@ const inputElement = ({ props, preference, column, values }) => {
         // Single DatePicker with Timepicker ends
 
         // Single DatePicker with Timepicker 
-        109: <DateTimePicker format='YYYY-MM' name={column.param} onChange={props.setFieldValue} value={values[column.param]} />
+        // format='YYYY-MM' 
+        109: <DateTimePicker name={column.param} onChange={props.setFieldValue} value={values[column.param]} />
         // Single DatePicker with Timepicker ends
 
     }
@@ -41,7 +42,9 @@ class formElements extends Component {
 
         this.state = {
             operator: {},
-            group_column: {}
+            group_column: {},
+            custom_column: {},
+            aggregate_column: []
         }
     }
 
@@ -142,7 +145,13 @@ class formElements extends Component {
                                 </div>
                                 <div>
                                     <button type="button" className="btn btn-success btn-sm" onClick={() => {
-                                        props.setFieldValue('aggregate_column', { name: this.state.operator.name, operator: this.state.operator.id, column: this.state.custom_column.name });
+
+                                        const param = { name: this.state.operator.name, operator: this.state.operator.id, column: this.state.custom_column.column_name };
+
+                                        this.state.aggregate_column.push(param);
+
+                                        props.setFieldValue('aggregate_column', this.state.aggregate_column);
+                                        this.setState({ operator: '', custom_column: '' });
                                     }} >
                                         +
                                     </button>
