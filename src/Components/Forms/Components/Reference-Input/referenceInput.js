@@ -31,30 +31,35 @@ export default class ReferenceInput extends Component {
         //         this.loadInitialContent(nextProps);
         //     }
         // }
+
+        const { column } = nextProps;
+        const url = this.extractUrlFromColumn(column);
+
+        const stateObj = { url };
+
         if (nextProps.model && typeof nextProps.model == 'object') {
-            this.setState({ value: nextProps.model });
+            stateObj.value = nextProps.model;
         }
+        this.setState(stateObj);
     }
 
     componentWillUnmount = () => {
         // unmounted = true;
     }
 
+    extractUrlFromColumn(column) {
+        if ((column.reference_model) && column.reference_model.route_name || column.reference_model.modified_route) {
+            return column.reference_model.modified_route ? column.reference_model.modified_route : column.reference_model.route_name;
+        } else if (column.route) {
+            return column.route;
+        }
+    }
+
     loadInitialContent = async (props) => {
 
         const { column, model } = props;
 
-        let url = '';
-
-        if ((column.reference_model) && column.reference_model.route_name || column.reference_model.modified_route) {
-            var route = column.reference_model.modified_route ? column.reference_model.modified_route : column.reference_model.route_name;
-            url = route;
-        } else if (column.route) {
-
-            var route = column.route;
-
-            url = route;
-        }
+        let url = this.extractUrlFromColumn(column);
 
         // this.setState({ url });
         this.state.url = url;
@@ -82,7 +87,7 @@ export default class ReferenceInput extends Component {
 
                 this.setState({ value: options.pop() });
             }
-        } 
+        }
     }
     render() {
 
