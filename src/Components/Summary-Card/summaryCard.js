@@ -189,7 +189,7 @@ export default class SummaryCard extends Component {
                                                 return (
                                                     <Row className="card-object" key={key}>
                                                         <Col className="item">{key}</Col>
-                                                        <Col className="value">{pricing}</Col>
+                                                        <Col className="value">{(parseInt(pricing)).toFixed(2)}</Col>
                                                     </Row>
                                                 )
                                             }

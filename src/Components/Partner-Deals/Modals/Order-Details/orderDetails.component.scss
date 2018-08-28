@@ -1,0 +1,37 @@
+.add-deal-modal{
+    background-color: #f5f5f5;
+    .add-deal-modal-body{
+        background-color: #fff;
+        margin: 20px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        .fields{
+            width: 100%;
+            .form{
+                width: 100%;
+                .input-value{
+                    width: 94%;
+                    border-radius: 0 5px 5px 0;
+                    border: 1px solid #cacaca;
+                    padding: 7px;
+                }
+                .option{
+                    padding: 10px 0;
+                }
+            }
+            .mode-select{
+                .select-box{
+                    min-width: 94% !important;
+                }
+            }
+        }
+    }
+    .add-modal-footer{
+        display: flex;
+        justify-content: flex-end;
+        padding: 0 20px 20px;
+    }
+}

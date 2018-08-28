@@ -1,0 +1,37 @@
+.payment-list{
+    background-color: #f5f5f5;
+    .payment-list-header{
+        position: absolute;
+        top: 20px;
+        right: 45px;
+    }
+    .payment-list-body{
+        background: #fff;
+        margin: 20px;
+        .table{
+            label{
+                margin: 0;
+                font-size: 93%;
+            }
+        }
+        .table thead th {
+            padding: .5rem !important;
+            vertical-align: bottom;
+            border: 1px solid #dee2e6;
+        }
+        .save-btn{
+            .btn-sm{
+                padding: 0rem 0rem;
+            }
+        }
+    }
+    .deal-payment-footer{
+        display: flex;
+        justify-content: flex-end;
+        padding: 10px 20px 10px;
+        background-color: #fff;
+        .btn-sm{
+            border-color: #bfbfbf;
+        }
+    }
+}

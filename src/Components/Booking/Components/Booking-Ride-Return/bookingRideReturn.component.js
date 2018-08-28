@@ -25,6 +25,7 @@ export default class BookingRideReturn extends Component {
         let kmDifference;
         let theClassName;
 
+
         let bookingStartDate, bookingStartTime, bookingEndDate, bookingEndTime;
 
         if (bookingRideReturnData.ride_return) {

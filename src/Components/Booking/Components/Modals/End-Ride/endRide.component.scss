@@ -20,12 +20,41 @@
                         width: 100%;
                         padding: 5px;
                         border-radius: 5px;
-                        border: 1px solid #868686;
+                        border: 1px solid #328c30;
                     }
                     input:disabled{
                         background-color:#f1f1f1;
                     }
+                    .endTime{
+                        .btn{
+                            padding: 0 !important;
+                        }
+                    }
+                    .dateTime{
+                        .input-group{
+                            flex-wrap: nowrap !important;
+                        }
+                    }
+                    .wallet{
+                        padding: 0 8px;
+                        i{
+                            color: #2f99bb;
+                        }
+                        .btn{
+                            padding: 0 !important;
+                        }
+                    }
                 }
+            }
+            .error-text{
+                font-size: 80%;
+                color: #dc3545;
+            }
+            .red{
+                border: 1px solid #dc3545 !important;
+            }
+            .green{
+                border: 1px solid #328c30 !important;
             }
         }
     }
