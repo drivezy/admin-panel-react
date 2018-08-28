@@ -18,11 +18,7 @@ export default class TableWrapper extends Component {
                 value = value.id;
             }
 
-        } catch (e) {
-            console.log(selectedColumn);
-            console.log(listingRow);
-            console.log('fuck u');
-        }
+        } catch (e) { }
         return value
     }
 
