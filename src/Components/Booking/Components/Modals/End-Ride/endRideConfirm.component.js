@@ -7,6 +7,7 @@ import { Post} from 'common-js-util';
 import { TotalDuration } from './../../../../../Utils/booking.utils';
 import { ModalManager } from 'drivezy-web-utils/build/Utils';
 import DatePicker from './../../../../Forms/Components/Date-Picker/datePicker';
+import { ToastNotifications } from 'drivezy-web-utils/build/Utils/toast.utils';
 
 export default class EndRideConfirm extends Component {
 
@@ -71,28 +72,37 @@ export default class EndRideConfirm extends Component {
                     actual_start_time : endRideInfo.pickup_time,
                     addons : endRideInfo.addons,
                     cleanliness_cost : endRideInfo.cleanliness_cost,
-                    comments : endRideInfo.comments,
+                    comments : endRideInfo.ride_return.comments,
                     damage_cost : endRideInfo.damage_cost,
                     discount : endRideInfo.discount,
                     discount_lookup : endRideInfo.discount_lookup,
                     end_time :  endRideInfo.end_time,
-                    fuel_percentage : endRideInfo.end_fuel_percentage,
+                    fuel_percentage : endRideInfo.ride_return.end_fuel_percentage,
                     odo_reading : endRideInfo.ride_return.end_odo_reading,
                     other_cost : endRideInfo.other_cost,
                     permit_refund : endRideInfo.permit_refund,
                     permit_state : endRideInfo.permit_state,
                     permit_validity : endRideInfo.permit_validity,
                     pnr : endRideInfo.token,
+                    refund_amount: endRideInfo.ride_return.refund_amount,
                     redeem : endRideInfo.redeem,
                     refuel_cost : endRideInfo.refuel_cost,
                     repair_cost : endRideInfo.repair_cost,
-                    start_fuel_percentage : endRideInfo.start_fuel_percentage,
+                    start_fuel_percentage : endRideInfo.ride_return.start_fuel_percentage,
+                    start_odo_reading : endRideInfo.ride_return.start_odo_reading,
                     start_addons : endRideInfo.start_addons
                 },
                 urlPrefix: API_HOST
             });
             if (result.success) {
                 ModalManager.closeModal();
+                ModalManager.closeModal();
+                ToastNotifications.success({ title: "Ride Ended Successfully" });
+            }
+            else{
+                ModalManager.closeModal();
+                ModalManager.closeModal();
+                ToastNotifications.error({ title: `${result.response}` });
             }
         }
 
@@ -248,10 +258,10 @@ export default class EndRideConfirm extends Component {
                                                 <label>{flatten ? index : null}</label>
                                             </div>
                                             <div className="col-sm-3 text-center">
-                                                <label>{flatten > 0 ? flatten : null}</label>
+                                                <label>{flatten > 0 ? (parseFloat(flatten)).toFixed(2) : null}</label>
                                             </div>
                                             <div className="col-sm-3 text-center">
-                                                <label>{flatten < 0 ? flatten*(-1) : null}</label>
+                                                <label>{flatten < 0 ? (parseFloat(flatten*(-1))).toFixed(2) : null}</label>
                                             </div>
                                         </div>
                                         : null
