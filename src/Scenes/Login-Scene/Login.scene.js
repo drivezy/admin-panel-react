@@ -55,10 +55,8 @@ export default class LoginScene extends Component {
         const res = Post({ urlPrefix: GLOBAL.ROUTE_URL, url: 'login', body: { username, password } });
         const login = await res;
         if (login.success) {
-            // alert('User logged in successfully');
-            // this.loginCheck();
             const res = await LoginCheck();
-            if (res.success) {
+            if (res.success && res.response.admin) {
                 this.loggedIn(res.response);
             }
         }

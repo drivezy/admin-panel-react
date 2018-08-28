@@ -32,8 +32,8 @@ export default class UserCard extends Component {
         const url = 'wallet?user=' + userData.id
         const result = await Get({ url });
         if (result.success) {
-            const promoWallet = result.response.nonRewardAmount;
-            const cashWallet = result.response.rewardAmount;
+            const promoWallet = result.response.rewardAmount;
+            const cashWallet = result.response.nonRewardAmount;
             this.setState({ promoWallet, cashWallet })
         }
     }

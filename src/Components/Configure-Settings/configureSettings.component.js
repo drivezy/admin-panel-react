@@ -71,16 +71,13 @@ export default class ConfugreSettings extends Component {
 
     spacing = ThemeUtil.getSpacings();
 
-    applyChanges = async () => {
+    applyChanges = async (e) => {
+        e.preventDefault();
         const { selectedTheme, selectedSpacing } = this.state;
-
         ThemeUtil.setTheme(selectedTheme);
-
         ThemeUtil.setSpacing(selectedSpacing);
 
         ModalManager.closeModal();
-
-
 
         // this.focusSpotlight();
         const result = await SetUserPreference('spotlight', this.state.keys)
@@ -89,7 +86,21 @@ export default class ConfugreSettings extends Component {
 
         StoreEvent({ eventName: 'launchSpotlight', data: { name: result.response } });
 
+
         window.location.reload(true);
+
+
+
+
+    }
+
+    discardChanges = async (e) => {
+        e.preventDefault();
+        // console.log("DISCARDED");
+        // const result = await GetUserPreferences();
+        // console.log(result);
+
+        ModalManager.closeModal();
 
     }
 
@@ -121,8 +132,6 @@ export default class ConfugreSettings extends Component {
 
     toggle = (tab) => {
         if (tab == 2) {
-
-
             this.addKeyListener();
         }
         else {
@@ -130,7 +139,6 @@ export default class ConfugreSettings extends Component {
         }
 
         if (this.state.activeTab !== tab) {
-
 
             this.setState({
                 activeTab: tab
@@ -280,8 +288,8 @@ export default class ConfugreSettings extends Component {
                     </ModalBody>
                     <ModalFooter>
                         <div>
-                            <Button color="secondary" onClick={this.closeModal}>Cancel</Button>
-                            <Button color="primary" onClick={() => this.applyChanges()}>Apply Changes</Button>
+                            <Button color="secondary" onClick={(e) => this.discardChanges(e)}>Cancel</Button>
+                            <Button color="primary" onClick={(e) => this.applyChanges(e)}>Apply Changes</Button>
                         </div>
                     </ModalFooter>
                 </div >

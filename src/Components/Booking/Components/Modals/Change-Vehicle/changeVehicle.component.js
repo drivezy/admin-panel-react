@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import './changeVehicle.component.css';
+
 import { API_HOST } from './../../../../../Constants/global.constants';
-import { Get, Post } from 'common-js-util';
-import { ModalManager } from 'drivezy-web-utils/build/Utils';
 import SelectBox from './../../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import ManualVehicleChange from './manualVehicleChange.component';
+
+import { Get, Post } from 'common-js-util';
+import { ModalManager } from 'drivezy-web-utils/build/Utils';
 
 import {
     Table
