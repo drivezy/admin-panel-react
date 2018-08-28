@@ -12,48 +12,7 @@ import DateTimePicker from './../../../Components/Date-Time-Picker/dateTimePicke
 
 import SelectBox from './../../../Components/Forms/Components/Select-Box/selectBoxForGenericForm.component';
 
-// import { Upload, Post, Put, Get } from './../../../../Utils/http.utils';
-// import { GetChangedMethods } from './../../../../Utils/generic.utils';
-// import { IsObjectHaveKeys, IsUndefined } from './../../../../Utils/common.utils';
-
-//  import SelectBox from './../Forms/Components/Select-Box/selectBox';
-
-// import SelectBox from './../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
-// import ReferenceInput from './../../../Forms/Components/Reference-Input/referenceInput';
-// import DatePicker from './../../../Forms/Components/Date-Picker/datePicker';
-// import DateTimePicker from './../../../Date-Time-Picker/dateTimePicker.component'
-// import TimePicker from './../../../Forms/Components/Time-Picker/timePicker';
-// import ListSelect from './../../../Forms/Components/List-Select/listSelect';
-// import Switch from './../../../Forms/Components/Switch/switch';
-// import ModalManager from './../../../../Wrappers/Modal-Wrapper/modalManager';
-
-// import { SubscribeToEvent } from './../../../../Utils/stateManager.utils';
-// import FormUtils from './../../../../Utils/form.utils';
-// import { GetUrlForFormSubmit } from './../../../../Utils/generic.utils';
-// import { ROUTE_URL } from './../../../../Constants/global.constants';
-// /Users/mangeshlokhande/Projects/AdminReact/src/Components/Form-Creator/formCreator.component.js
-// /Users/mangeshlokhande/Projects/AdminReact/src/Components/Manage-Report/Components/Query-Form/queryForm.component.js
-
-
-
-// const DisplayFormikState = props => (
-//     <div style={{ margin: '1rem 0' }}>
-//         <h3 style={{ fontFamily: 'monospace' }} />
-//         <pre
-//             style={{
-//                 background: '#f6f8fa',
-//                 fontSize: '.65rem',
-//                 padding: '.5rem',
-//             }}>
-//             <strong>props</strong> ={' '}
-//             {JSON.stringify(props, null, 2)}
-//         </pre>
-//     </div>
-// );
-
-// const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
-
-const inputElement = (payload) => {
+const inputElement = ({ props, preference, column, values }) => {
 
     const elements = {
 
@@ -62,131 +21,280 @@ const inputElement = (payload) => {
         // String Ends
 
         // Single DatePicker with Timepicker 
-        594: <DateTimePicker />,
+        594: <DateTimePicker onChange={props.setFieldValue} name={column.param} vdalue={values[column.param]} />,
         // Single DatePicker with Timepicker ends
 
         // Single DatePicker with Timepicker 
-        109: <DateTimePicker />
+        109: <DateTimePicker format='YYYY-MM' name={column.param} onChange={props.setFieldValue} value={values[column.param]} />
         // Single DatePicker with Timepicker ends
 
     }
 
-    return elements[payload] || elements[108]; //uncomment this if required
+    return elements[column.param_type_id] || elements[108]; //uncomment this if required
 }
 
-const formElements = props => {
+class formElements extends Component {
 
-    const {
-        values,
-        touched,
-        errors,
-        dirty,
-        isSubmitting,
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        handleReset,
-        setFieldValue
-    } = props;
+    constructor(props) {
 
-    const { payload } = props;
+        super(props);
 
-    let shouldColumnSplited = false;
+        this.state = {
+            operator: {},
+            group_column: {}
+        }
+    }
 
-    return (
-        <Form role="form" name="genericForm" >
-            <div className="form-elements">
+    addOperator = () => {
+
+    }
 
 
-                {/* Parameters repeated to form the fields  */}
-                <div className="picker">
-                    {
-                        payload.fields.map((preference, key) => {
 
-                            let elem, column;
+    render() {
+        const {
+            values,
+            touched,
+            errors,
+            dirty,
+            isSubmitting,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            handleReset,
+            setFieldValue,
+            setValues,
+        } = this.props;
 
-                            // If there is a preference , 
-                            // find the attached column
-                            if (preference) {
-                                column = preference;
-                                elem = inputElement(preference.param_type_id);
-                            }
-                            if (column) {
-                                return (
-                                    <div key={key} className={`form-group`}>
-                                        <label>{column.label || column.display_name}</label>
 
-                                        {elem}
+        const { props } = this;
+        const { payload } = props;
 
-                                        {/* Showing Errors when there are errors */}
-                                        {/* {
-                                            errors[column.column_name] && touched[column.column_name] ?
-                                                <small id="emailHelp" className="form-text text-danger">
-                                                    {errors[column.column_name]}
-                                                </small>
-                                                :
-                                                null
-                                        } */}
+        let shouldColumnSplited = false;
 
-                                        {/* Errors Ends */}
-                                    </div>
-                                )
-                            }
-                        })
-                    }
-                </div>
-                {/* Parameters repeated end  */}
+        return (
+            <Form role="form" name="genericForm" >
+                <div className="form-elements">
 
-                {/* Group Column */}
 
-                <div className="select-elements">
-                    <div className="form-element">
-                        <div className="form-label">
-                            <label>
-                                Group Column
-                           </label>
+                    {/* Parameters repeated to form the fields  */}
+                    <div className="picker">
+                        {
+                            payload.fields.map((preference, key) => {
 
+                                let elem, column;
+
+                                // If there is a preference , 
+                                // find the attached column
+                                if (preference) {
+                                    column = preference;
+                                    elem = inputElement({ props, column, values });
+                                }
+                                if (column) {
+                                    return (
+                                        <div key={key} className={`form-group`}>
+                                            <label>{column.label || column.display_name}</label>
+
+                                            {elem}
+
+                                            {/* Showing Errors when there are errors */}
+                                            {/* {
+                                                errors[column.column_name] && touched[column.column_name] ?
+                                                    <small id="emailHelp" className="form-text text-danger">
+                                                        {errors[column.column_name]}
+                                                    </small>
+                                                    :
+                                                    null
+                                            } */}
+
+                                            {/* Errors Ends */}
+                                        </div>
+                                    )
+                                }
+                            })
+                        }
+                    </div>
+                    {/* Parameters repeated end  */}
+
+                    {/* Group Column */}
+                    <div className="select-elements">
+                        <div className="form-element">
+                            <div className="form-label">
+                                <label>
+                                    Group Column
+                               </label>
+                            </div>
+                            <SelectBox name="group_column" value={values['group_column']} multi="true" options={props.payload.columns} field="display_name" onChange={(value) => { console.log(value); props.setFieldValue('group_column', value.map((item) => item.column_name).join(',')); }} />
                         </div>
-                        <SelectBox value={values['group_column']} multi="true" options={props.payload.columns} field="display_name" onChange={(value) => { props.handleChange }} />
+
+                        <div className="form-element">
+                            <div className="form-label">
+                                <label>
+                                    Aggregations
+                               </label>
+                            </div>
+                            <div className="select-container">
+                                <div className="element-container">
+                                    <SelectBox onChange={(input) => { this.setState({ operator: input }) }} options={props.payload.operators} value={this.state.operator} />
+                                </div>
+                                <div className="element-container">
+                                    <SelectBox onChange={(input) => { this.setState({ custom_column: input }) }} options={props.payload.columns} field="display_name" value={this.state.custom_column} />
+                                </div>
+                                <div>
+                                    <button type="button" className="btn btn-success btn-sm" onClick={() => {
+                                        props.setFieldValue('aggregate_column', { name: this.state.operator.name, operator: this.state.operator.id, column: this.state.custom_column.name });
+                                    }} >
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="form-element">
-                        <div className="form-label">
-                            <label>
-                                Aggregations
-                           </label>
-                        </div>
-                        <div className="select-container">
-                            <div className="element-container">
-                                <SelectBox />
-                            </div>
-                            <div className="element-container">
-                                <SelectBox options={props.payload.columns} field="display_name" onChange={(value) => { props.handleChange }} />
-                            </div>
-                        </div>
+
+                    {/* Group Column Ends */}
+
+                    {/* Aggregation */}
+
+                    {/* Aggregation Ends */}
+
+                    <div className="modal-actions">
+                        <Button className="btn btn-primary btn-sm" onClick={handleReset}>
+                            Clear
+                        </Button>
+
+                        <Button className="btn btn-success btn-sm" onSubmit={handleSubmit} type="submit">
+                            Submit
+                        </Button>
                     </div>
                 </div>
-
-
-                {/* Group Column Ends */}
-
-                {/* Aggregation */}
-
-                {/* Aggregation Ends */}
-
-                <div className="modal-actions">
-                    <Button className="btn btn-primary btn-sm" onClick={handleReset}>
-                        Clear
-                    </Button>
-
-                    <Button className="btn btn-success btn-sm" onSubmit={handleSubmit} type="submit">
-                        Submit
-                    </Button>
-                </div>
-            </div>
-        </Form>
-    );
+            </Form>
+        );
+    }
 }
+
+// const formElements = props => {
+
+//     const {
+//         values,
+//         touched,
+//         errors,
+//         dirty,
+//         isSubmitting,
+//         handleChange,
+//         handleBlur,
+//         handleSubmit,
+//         handleReset,
+//         setFieldValue,
+//         setValues,
+//     } = props;
+
+//     const { payload } = props;
+
+//     let shouldColumnSplited = false;
+
+//     return (
+//         <Form role="form" name="genericForm" >
+//             <div className="form-elements">
+
+
+//                 {/* Parameters repeated to form the fields  */}
+//                 <div className="picker">
+//                     {
+//                         payload.fields.map((preference, key) => {
+
+//                             let elem, column;
+
+//                             // If there is a preference , 
+//                             // find the attached column
+//                             if (preference) {
+//                                 column = preference;
+//                                 elem = inputElement({ props, column, values });
+//                             }
+//                             if (column) {
+//                                 return (
+//                                     <div key={key} className={`form-group`}>
+//                                         <label>{column.label || column.display_name}</label>
+
+//                                         {elem}
+
+//                                         {/* Showing Errors when there are errors */}
+//                                         {/* {
+//                                             errors[column.column_name] && touched[column.column_name] ?
+//                                                 <small id="emailHelp" className="form-text text-danger">
+//                                                     {errors[column.column_name]}
+//                                                 </small>
+//                                                 :
+//                                                 null
+//                                         } */}
+
+//                                         {/* Errors Ends */}
+//                                     </div>
+//                                 )
+//                             }
+//                         })
+//                     }
+//                 </div>
+//                 {/* Parameters repeated end  */}
+
+//                 {/* Group Column */}
+//                 <div className="select-elements">
+//                     <div className="form-element">
+//                         <div className="form-label">
+//                             <label>
+//                                 Group Column
+//                            </label>
+//                         </div>
+//                         <SelectBox name="group_column" value={values['group_column']} multi="true" options={props.payload.columns} field="display_name" onChange={(value) => { console.log(value); props.setFieldValue('group_column', value.map((item) => item.column_name).join(',')); }} />
+//                     </div>
+
+//                     <div className="form-element">
+//                         <div className="form-label">
+//                             <label>
+//                                 Aggregations
+//                            </label>
+//                         </div>
+//                         <div className="select-container">
+//                             <div className="element-container">
+//                                 <SelectBox options={props.payload.operators} value={props.aggregation.operator} />
+//                             </div>
+//                             <div className="element-container">
+//                                 <SelectBox options={props.payload.columns} field="display_name" value={props.aggregation.custom_column} onChange={(value) => { props.handleChange }} />
+//                             </div>
+//                             <div>
+//                                 <button type="button" className="btn btn-success btn-sm" onClick={() => {
+
+//                                     props.setFieldValue('aggregate_column', JSON.stringify(props.aggregation.operator, props.aggregation.custom_column));
+//                                     // props.setFieldValue('aggregate_column');
+
+//                                 }} >
+//                                     +
+//                                 </button>
+//                             </div>
+//                         </div>
+//                     </div>
+//                 </div>
+
+
+//                 {/* Group Column Ends */}
+
+//                 {/* Aggregation */}
+
+//                 {/* Aggregation Ends */}
+
+//                 <div className="modal-actions">
+//                     <Button className="btn btn-primary btn-sm" onClick={handleReset}>
+//                         Clear
+//                     </Button>
+
+//                     <Button className="btn btn-success btn-sm" onSubmit={handleSubmit} type="submit">
+//                         Submit
+//                     </Button>
+//                 </div>
+//             </div>
+//         </Form>
+//     );
+// }
 
 
 const FormContents = withFormik({
@@ -196,6 +304,12 @@ const FormContents = withFormik({
         const { payload } = props;
 
 
+    },
+    setValues: () => {
+        console.log(arguments);
+    },
+    addAggregation: () => {
+        console.log('hello');
     },
     handleSubmit: async (values, { props, setSubmitting }) => {
         console.log(values, props);
@@ -209,6 +323,7 @@ export default class DashboardForm extends Component {
 
         this.state = {
             payload: {
+                operators: this.props.operators,
                 queryData: this.props.queryParamsData,
                 columns: this.props.columns || [],
                 fields: this.props.fields || []
@@ -219,6 +334,7 @@ export default class DashboardForm extends Component {
     UNSAFE_componentWillReceiveProps(nextProps) {
         this.setState({
             payload: {
+                operators: this.props.operators,
                 queryData: this.props.queryParamsData,
                 columns: this.props.columns || [],
                 fields: this.props.fields || []

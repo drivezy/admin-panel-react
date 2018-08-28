@@ -34,6 +34,7 @@ export default class GenericQueryDetail extends Component {
         this.state = {
             ...GetUrlParams(this.props),
             dateLiterals: [],
+            operators: [],
             queryParamsData: {},
             queryListing: {},
             preference: {},
@@ -60,7 +61,9 @@ export default class GenericQueryDetail extends Component {
         const { queryParamsData } = this.state
 
         this.getDateLiterals().then(() => {
-            this.getQueryParamsData();
+            this.getOperators().then(() => {
+                this.getQueryParamsData();
+            })
         })
 
         const result = await Get({ url: 'userPreference', parameter: queryParamsData.short_name + "list" });
@@ -167,6 +170,14 @@ export default class GenericQueryDetail extends Component {
         }
     }
 
+    getOperators = async () => {
+        const result = await GetLookupValues(90);
+        if (result.success) {
+            const operators = result.response;
+            this.setState({ operators })
+        }
+    }
+
     getDataForListing = async (formContent) => {
         const { preference, params } = this.state;
 
@@ -261,13 +272,13 @@ export default class GenericQueryDetail extends Component {
 
     render() {
 
-        const { localSearch, arrowstate, arrow, queryParamsData = {}, preference, columns, params, finalColumns, resultData, currentPage, stats, isTab, layout, loading } = this.state;
+        const { localSearch, operators, arrowstate, arrow, queryParamsData = {}, preference, columns, params, finalColumns, resultData, currentPage, stats, isTab, layout, loading } = this.state;
 
         const { history, match, parentData } = this.props;
 
         let filteredResults = [];
 
-        if(localSearch.value){
+        if (localSearch.value) {
             filteredResults = resultData.listing.filter(entry => entry[localSearch.field] && (entry[localSearch.field].toString().toLowerCase().indexOf(localSearch.value) != -1));
         }
 
@@ -398,6 +409,7 @@ export default class GenericQueryDetail extends Component {
                         !(queryParamsData.comparable == 0 && queryParamsData.parameters && queryParamsData.parameters.length == 0) &&
                         // queryParamsData.parameters &&
                         <DashboardForm
+                            operators={operators}
                             // savedDashboard={savedDashboard}
                             // queryTable={useQueryTable}
                             queryData={queryParamsData}
