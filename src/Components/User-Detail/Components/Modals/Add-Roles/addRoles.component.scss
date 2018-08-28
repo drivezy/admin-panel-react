@@ -1,0 +1,16 @@
+.assign-user-role {
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 5px;
+    font-weight: 700 !important;
+    padding: 19px;
+    .form-control {
+        width: 764px;
+        margin-top: 9px;
+    }
+    .btns {
+        margin-top: 12px;
+        /* float: right; */
+        text-align: right;
+    }
+}
