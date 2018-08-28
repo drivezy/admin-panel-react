@@ -46,9 +46,8 @@ export default class ReferenceInput extends Component {
 
         let url = '';
 
-        if ((column.reference_model) && column.reference_model.route_name) {
-            var route = column.reference_model.route_name;
-
+        if ((column.reference_model) && column.reference_model.route_name || column.reference_model.modified_route) {
+            var route = column.reference_model.modified_route ? column.reference_model.modified_route : column.reference_model.route_name;
             url = route;
         } else if (column.route) {
 
