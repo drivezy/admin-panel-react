@@ -99,6 +99,7 @@ export default class EndRide extends Component {
             })
         }
         else{
+            ModalManager.closeModal();
             ToastNotifications.error({ title: `${result.response}` });
         }
 
