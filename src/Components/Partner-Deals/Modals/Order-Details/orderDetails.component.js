@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import './orderDetails.component.css';
+
+import SelectBox from './../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 
 import { Get, Post } from 'common-js-util';
-import { API_HOST } from './../../../../Constants/global.constants';
-import SelectBox from './../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import { ModalManager } from 'drivezy-web-utils/build/Utils/modal.utils';
+
+import { API_HOST } from './../../../../Constants/global.constants';
+
+import './orderDetails.component.css';
 
 export default class OrderDetails extends Component {
 

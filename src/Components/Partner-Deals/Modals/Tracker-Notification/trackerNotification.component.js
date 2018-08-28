@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import './trackerNotification.component.css';
 
-import { Get, Post } from 'common-js-util';
-import { API_HOST } from './../../../../Constants/global.constants';
-import SelectBox from './../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
+import './trackerNotification.component.css';
 
 export default class TrackerNotification extends Component {
 

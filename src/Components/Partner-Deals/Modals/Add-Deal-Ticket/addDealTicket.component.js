@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import './addDealTicket.component.css';
+
+import SelectBox from './../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 
 import { Get, Post } from 'common-js-util';
+
 import { API_HOST } from './../../../../Constants/global.constants';
-import SelectBox from './../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
+
+import './addDealTicket.component.css';
 
 let total=0;
 

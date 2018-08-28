@@ -85,7 +85,7 @@ export default class UserDetail extends Component {
                         name: 'Transaction',
                         data: userTransaction,
                         columns: [{
-                            field: "booking.token",
+                            field: "token",
                             label: "PNR"
                         }, {
                             field: "order",

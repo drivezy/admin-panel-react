@@ -288,7 +288,7 @@ export class Spotlight extends Component {
 
             menus.modules.forEach((module) => {
                 module.menus.forEach((menu) => {
-                    if (menu.name.toLowerCase().indexOf(searchText) != -1) {
+                    if (menu.name.toLowerCase().indexOf(searchText.toLowerCase()) != -1) {
                         menu.visible ? matches.push(menu) : null
                     }
                 });
