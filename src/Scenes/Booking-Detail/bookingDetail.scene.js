@@ -44,6 +44,8 @@ export default class BookingDetail extends Component {
             this.setState({ bookingDetail });
         }
         this.getMenuData();
+        StoreEvent({ eventName: 'showMenuName', data: { menuName: `Booking Details` } });
+
     }
 
     getMenuData = async () => {
