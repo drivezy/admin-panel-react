@@ -111,7 +111,19 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // Static Ends
 
         // Number
-        [COLUMN_TYPE.NUMBER]: <Field autoComplete="off" className="form-control" type="number" name={column.name} placeholder={`Enter ${column.display_name}`} />,
+        // [COLUMN_TYPE.NUMBER]: <Field autoComplete="off" className="form-control" type="number" name={column.name} placeholder={`Enter ${column.display_name}`} />,
+        [COLUMN_TYPE.NUMBER]: <input type="number" id={column.name} name={column.name} className="form-control" rows="3"
+            placeholder={`Enter ${column.display_name}`}
+            onBlur={(e) => { console.log(e); props.handleBlur(e) }}
+            onChange={(event, ...args) => {
+                FormUtils.OnChangeListener({ column, value: event.target.value, ...event });
+                // props.handleChange(event, args);
+                props.setFieldValue(column.name, event.target.value)
+            }}
+            disabled={column.disabled}
+            autoComplete="off"
+            value={values[column.name]}
+        />,
         // Number Ends
 
         // 108: <Field disabled={column.disabled} id={column.name} onChange={({ ...args }) => FormUtils.OnChangeListener(args)} name={column.name} className={`form-control ${props.errors[column.index] && props.touched[column.index] ? 'is-invalid' : ''}`} type="text" placeholder={`Enter ${column.name}`} />,
@@ -159,7 +171,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
                             FormUtils.OnChangeListener({ column, value: true });
                             props.setFieldValue(column.name, true);
                         }
-                        }>True</button>
+                        }>True</button> 
 
                     &nbsp;&nbsp;
 
