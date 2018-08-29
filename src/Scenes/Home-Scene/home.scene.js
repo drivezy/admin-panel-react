@@ -2,14 +2,11 @@ import React, { Component } from 'react';
 
 // import { Typeahead } from 'react-bootstrap-typeahead';
 // import 'react-bootstrap-typeahead/css/Typeahead.css';
-
+import { MultiUploadModal } from './../../Utils/upload.utils';
 import './home.scene.css';
 
 
 export default class Home extends Component {
-
-
-
 
     radios = [
         { label: 'Justify (default)' },
@@ -31,7 +28,11 @@ export default class Home extends Component {
         const time = '20180105';
 
         return (
-            <div className="home-scene"></div>
+            <div className="home-scene">
+                <h1 onClick={() => MultiUploadModal({ title: 'Home Upload', })}>
+                    Upload
+                </h1>
+            </div>
         );
     }
 }

@@ -74,6 +74,53 @@ export default class BookingTabsDetail extends Component {
                     field: "created_by",
                     label: "Created By"
                 }]
+            },{
+                name: 'Booking Payment',
+                data: bookingTabsData.booking_payment,
+                columns: [{
+                    field: "reason",
+                    label: "Reason"
+                }, {
+                    field: "payment_acknowledged_datetime",
+                    label: "Payment Acknowledge Time"
+                    //sref: "/booking/",
+                    //type: "sref",
+                    //id: "id"
+                }, {
+                    field: "receipt_number",
+                    label: "Receipt Number"
+                }, {
+                    field: "source",
+                    label: "Source"
+                }, {
+                    field: "payment_source",
+                    label: "Payment Mode"
+                }, {
+                    field: "amount",
+                    label: "Amount"
+                }, {
+                    field: "created_at",
+                    label: "Created At"
+                }, {
+                    field: "created_by",
+                    label: "Created By"
+                }]
+            },{
+                name: 'Booking Source',
+                data: bookingTabsData.source,
+                columns: [{
+                    field: "public_address",
+                    label: "Public Address"
+                }, {
+                    field: "private_address",
+                    label: "Private Address"
+                }, {
+                    field: "source",
+                    label: "Source"
+                }, {
+                    field: "browser",
+                    label: "Browser"
+                }]
             }, {
                 name: 'Refund',
                 data: bookingTabsData.refund,

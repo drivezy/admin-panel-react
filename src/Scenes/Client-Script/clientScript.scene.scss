@@ -1,4 +1,7 @@
 .security-rule-container{
+    background-color: #fff;
+    height: 100%;
+    min-height: 100vh;
     .script-header{
         background-color: #ebeef0;
         h6{
@@ -22,6 +25,10 @@
             width: 40%;
             display: flex;
             align-items: center;
+            .select-box{
+                min-width: 200px;
+                z-index: 10;
+            }
         }
         label{
             float: left;
@@ -37,6 +44,11 @@
         }
         .col .inline{
             padding: 0;
+        }
+        .script-wrapper{
+            #Drivezy-Code-editor{
+                height: 50vh !important; 
+            }
         }
     }
     }

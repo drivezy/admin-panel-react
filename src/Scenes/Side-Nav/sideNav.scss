@@ -9,8 +9,7 @@
     overflow-x: hidden;
     transition: 0.1s;
     display: flex;
-    flex-direction: column;
-    // border-right: 1px solid;
+    flex-direction: column; // border-right: 1px solid;
     // @include themify($themes) {
     //     background: themed('sideBackground');
     //     border-color: themed('sidenavBorder');
@@ -21,7 +20,7 @@
     }
     &.collapsed {
         width: 40px;
-        .logo-container{
+        .logo-container {
             display: none;
         }
         .sidebar-menus {
@@ -77,12 +76,12 @@
         flex-direction: column;
         height: 100vh;
         border-right: 1px solid;
-        @include themify($themes){
+        @include themify($themes) {
             border-color: themed('secondaryDark')
         }
         .menus {
             // background: #35485b;
-            @include themify($themes){
+            @include themify($themes) {
                 background: themed('secondaryDark');
             }
             padding: 8px 10px;
@@ -123,6 +122,90 @@
                     }
                 }
             }
+        }
+    }
+}
+
+.side-search-card {
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #dfdfdf82;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    padding-left: 4px;
+    padding-right: 0px;
+    .search-image {
+        max-width: 80px;
+        min-width: 80px;
+    }
+    .search-data {
+        width: 66%;
+    }
+}
+
+.block {
+    left: 180px !important;
+}
+
+.none {
+    left: 40px !important;
+}
+
+.search-textbox {
+    display: flex;
+    flex-direction: row-reverse;
+    .search-box {
+        border: none;
+        color: #555;
+    }
+    i.fa {
+        margin: 12px;
+        color: #b58d8e;
+        cursor: pointer;
+    }
+}
+
+.search-instruction {
+    color: #b58d8e;
+    margin-left: 12px;
+}
+
+.search-bar-card {
+    margin: 4px;
+    display: block;
+    max-height: 300px;
+    min-height: 124px;
+    overflow-y: scroll;
+    .no-data-message {
+        font-size: 14px;
+        -webkit-font-smoothing: antialiased;
+        color: #9e9e9e;
+        padding: 8px;
+    }
+    .search-bar-heading {
+        font-size: 12px;
+        font-weight: 700;
+        padding-left: 8px;
+        padding-top: 2px;
+    }
+    .search-data {
+        // height: 18px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        margin: 10px;
+        .heading {
+            color: rgb(51, 51, 51);
+            font-size: 13px;
+        }
+        .subheading {
+            color: #732626;
+            font-size: 13px;
+        }
+        .lastheading {
+            color: #434873;
+            font-size: 13px;
         }
     }
 }

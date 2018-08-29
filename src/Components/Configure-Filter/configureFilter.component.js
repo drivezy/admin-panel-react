@@ -932,7 +932,7 @@ export default class ConfigureDynamicFilter extends Component {
                             </div>
                             <div className="footer-actions">
                                 <div className="actions">
-                                    <button className="btn btn-info" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
+                                    <button className="btn btn-default" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
                                         Close
                                     </button>
                                     <button className="btn btn-success" onClick={this.submit} style={{ margin: '8px' }}>

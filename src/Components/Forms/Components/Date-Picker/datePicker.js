@@ -29,7 +29,7 @@ export default class DatePicker extends Component {
     applyDate = (event, picker) => {
         let { value } = this.state;
 
-        if (this.props.single) {
+        if (this.props && this.props.single) {
             value = picker.startDate.format(this.state.format);
         } else {
             value.startDate = picker.startDate.format(this.state.format);
@@ -37,13 +37,14 @@ export default class DatePicker extends Component {
         }
 
         if (this.props.onChange) {
+            // this.props.onChange(...event);
             this.props.onChange(this.props.name, value);
         }
 
         this.setState({ value });
     }
 
-    unsafe_componentwillreceiveprops = (nextProps) => {
+    componentWillReceiveProps = (nextProps) => {
         this.setState({
             format: nextProps.format || GLOBAL.DATE_TIME_FORMAT,
             minDate: nextProps.minDate,
@@ -76,12 +77,12 @@ export default class DatePicker extends Component {
                 <div className="form-control">
                     {
                         this.props.single ?
-                            <DateRangePicker singleDatePicker onApply={this.applyDate} {...props}>
+                            <DateRangePicker showDropdowns={true} singleDatePicker onApply={this.applyDate} {...props}>
                                 <div className="picker">
                                     {props.startDate}
                                 </div>
                             </DateRangePicker>
-                            : <DateRangePicker {...props} onApply={this.applyDate}>
+                            : <DateRangePicker showDropdowns={true} {...props} onApply={this.applyDate}>
                                 <div className="picker">
                                     {props.startDate} - {props.endDate}
                                 </div>

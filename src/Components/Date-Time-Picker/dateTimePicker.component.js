@@ -12,29 +12,23 @@ export default class DateTimePicker extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            viewMode: props.viewMode || 'years',
-            format: props.format || 'MM/YYYY'
-
-        }
     }
 
     componentDidMount() {
-        let $image = $('#datetimepicker10');
-        let $image1 = $('#datetimepicker1');
+        let $image = $('#datetimepicker11');
+        
 
         $image.datetimepicker({
-            viewMode: 'years',
-            format: 'MM/YYYY'
+            viewMode: this.props.viewMode,
+            format: this.props.format,
+            // inline: true,
+            sideBySide: true
         });
-        $image1.datetimepicker({
-            viewMode: 'years',
-            format: 'MM/YYYY'
-        });
+
         // $(function () {
         //     $('#datetimepicker10').datetimepicker({
-        //         viewMode: 'years',
-        //         format: 'MM/YYYY'
+        //         viewMode: this.props.viewMode,
+        //         format: this.props.format
         //     });
         // });
     }
@@ -43,15 +37,15 @@ export default class DateTimePicker extends Component {
         return (
 
             <div>
-                <div className="col-sm-12">
+                <div className="">
                     <div className="form-group-wrapper">
                         <div className='input-group date' id='datetimepicker10' >
-                            <input type='text' autocomplete="off" className="form-control" id='datetimepicker1'  />
+                            <input type='text' autocomplete="off" className="form-control" id='datetimepicker11' />
                             <span className="input-group-addon">
-                                <span>
+                                {/* <span>
                                     <i className="fa fa-calendar" aria-hidden="true">
                                     </i>
-                                </span>
+                                </span> */}
                             </span>
                         </div>
                     </div>
