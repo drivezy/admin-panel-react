@@ -1,0 +1,17 @@
+.user-role {
+    .add-role {
+        margin: 18px;
+        float: right;
+        padding: 7px 10px 7px 10px;
+        font-weight: 700 !important;
+        border: 1px solid;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .show-role {
+        .data-not-present {
+            padding: 18px;
+            display: block;
+        }
+    }
+}

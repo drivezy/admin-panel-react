@@ -34,13 +34,18 @@ export default class ReferenceInput extends Component {
 
         const { column } = nextProps;
         const url = this.extractUrlFromColumn(column);
+        let stateObj = {};
 
-        const stateObj = { url };
+        if (url != this.state.url) {
+            stateObj = { url };
+        }
 
         if (nextProps.model && typeof nextProps.model == 'object') {
             stateObj.value = nextProps.model;
         }
-        this.setState(stateObj);
+        if (Object.keys(stateObj).length) {
+            this.setState(stateObj);
+        }
     }
 
     componentWillUnmount = () => {
@@ -48,7 +53,7 @@ export default class ReferenceInput extends Component {
     }
 
     extractUrlFromColumn(column) {
-        if ((column.reference_model) && column.reference_model.route_name || column.reference_model.modified_route) {
+        if ((column.reference_model) && (column.reference_model.route_name || column.reference_model.modified_route)) {
             return column.reference_model.modified_route ? column.reference_model.modified_route : column.reference_model.route_name;
         } else if (column.route) {
             return column.route;

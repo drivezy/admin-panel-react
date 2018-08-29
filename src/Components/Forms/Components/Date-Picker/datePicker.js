@@ -77,12 +77,12 @@ export default class DatePicker extends Component {
                 <div className="form-control">
                     {
                         this.props.single ?
-                            <DateRangePicker singleDatePicker onApply={this.applyDate} {...props}>
+                            <DateRangePicker showDropdowns={true} singleDatePicker onApply={this.applyDate} {...props}>
                                 <div className="picker">
                                     {props.startDate}
                                 </div>
                             </DateRangePicker>
-                            : <DateRangePicker {...props} onApply={this.applyDate}>
+                            : <DateRangePicker showDropdowns={true} {...props} onApply={this.applyDate}>
                                 <div className="picker">
                                     {props.startDate} - {props.endDate}
                                 </div>
