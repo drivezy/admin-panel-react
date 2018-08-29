@@ -48,7 +48,7 @@ export default class ReferenceInput extends Component {
     }
 
     extractUrlFromColumn(column) {
-        if ((column.reference_model) && column.reference_model.route_name || column.reference_model.modified_route) {
+        if ((column.reference_model) && (column.reference_model.route_name || column.reference_model.modified_route)) {
             return column.reference_model.modified_route ? column.reference_model.modified_route : column.reference_model.route_name;
         } else if (column.route) {
             return column.route;
