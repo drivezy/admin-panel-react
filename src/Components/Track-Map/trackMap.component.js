@@ -88,7 +88,7 @@ trackHistory = (item) => {
         item.history.length == 0 ? this.redMarker(origin.lat, origin.long) : "";
 
         this.infoWindowInitialization(trackMarker);
-        setTimeout(() => {
+        // setTimeout(() => {
             this.drawPolyline(item.history);
             if (!IsUndefinedOrNull(trackMarker)) {
                 trackMarker.setPosition(null);
@@ -108,7 +108,7 @@ trackHistory = (item) => {
                 this.infoWindowInitialization(trackMarker);
             }
             setDetails();
-        }, 1000);
+        // }, 1000);
     }
 };
 

@@ -176,7 +176,6 @@ export default class TrackHistory extends Component {
 
     render() {
         const { data, mapFlag, alarms, filterForm, alertPreference, alerts, vehicles } = this.state;
-        console.log(alarms);
         return (
             <div className="track-history">
                 <div style={{padding: '10px', display: 'flex', justifyContent: 'space-between', fontSize:'18px', background: '#dcdcdc7a'}} className="static-header">
@@ -211,17 +210,9 @@ export default class TrackHistory extends Component {
                                 {
                                     alarms.map((item,key) => 
                                         
-                                            (<div key={key} className="individual-alarm" onClick={() => {item = {active: true};this.setState({item})}}>
-                                                <input style={{display: 'none'}} type="checkbox" />
-                                                <div>
-                                                    <label className="[ btn btn-info ]">
-                                                        <span className={item.active ? "[ glyphicon glyphicon-ok active ]" :"[ glyphicon glyphicon-ok ]"}></span>
-                                                        <span></span>
-                                                    </label>
-                                                    <label  className="name">
-                                                    {item.name}
-                                                    </label>
-                                                </div>
+                                            (<div key={key} className="individual-alarm">
+                                                <input className="styled-checkbox" id={"styled-checkbox-"+key} type="checkbox" onClick={() => {item.active = !item.active; this.setState({item})}} checked={item.active}/>
+                                                <label className="name" htmlFor={"styled-checkbox-"+key}>{item.name}</label>
                                             </div>)
                                     )
                                 }

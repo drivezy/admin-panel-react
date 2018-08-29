@@ -4,6 +4,8 @@ import {
     Card, CardBody, CardHeader
 } from 'reactstrap';
 
+import './bookingTrackHistory.component.css';
+
 import moment from 'moment';
 
 import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
@@ -52,14 +54,14 @@ export default class BookingTrackHistory extends Component {
 
     UNSAFE_componentWillReceiveProps (nextProps){
         let params = {};
-        params.start_time =  nextProps.data.pickup_time;
-        params.end_time = nextProps.data.drop_time;
-        params.alerts = true;
-        params.vehicle = nextProps.data.vehicle_id;
-        // params.start_time = "2018-08-28 14:29:42";
-        // params.end_time = "2018-08-28 20:00:00";
+        // params.start_time =  nextProps.data.pickup_time;
+        // params.end_time = nextProps.data.drop_time;
         // params.alerts = true;
-        // params.vehicle = "1654";
+        // params.vehicle = nextProps.data.vehicle_id;
+        params.start_time = "2018-08-28 14:29:42";
+        params.end_time = "2018-08-28 20:00:00";
+        params.alerts = true;
+        params.vehicle = "1654";
      
         this.getTrackHistory(params);
     }
@@ -82,6 +84,15 @@ export default class BookingTrackHistory extends Component {
         console.log(alarms);
         return (
             <div className="track-history">
+                {  mapFlag ? 
+                   ( <div className="my-toggle-btn">
+                        <input type="checkbox" id="checkbox1" onChange={() => {this.setState({alertPreference : !alertPreference})}} checked={alertPreference}/>
+                        <label htmlFor="checkbox1">
+                        <span className="on">Show Alert</span>
+                        <span className="off">Hide Alert</span>
+                        </label>
+                    </div>) : null
+                }
             {
                 mapFlag ?
                 (<TrackHistoryComponent data={data} alarms={alarms} alerts={alerts} alertPreference={alertPreference} />):
