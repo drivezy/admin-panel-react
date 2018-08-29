@@ -27,7 +27,7 @@ class TableContents extends Component {
     }
 
     UNSAFE_componentWillReceiveProps(props) {
-        this.setState({ tableData: this.setState(props.tableData) });
+        this.setState({ tableData: props.tableData });
     }
 
     render() {
