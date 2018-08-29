@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import './dashboard.component.css';
 
+// Import the components used within the page
+
+import TableContents from './../../Query-Report/Table-Contents/tableContents.component';
+
 export default class Dashboard extends Component {
 
     graphTypes = [
@@ -14,7 +18,11 @@ export default class Dashboard extends Component {
         super(props);
 
         this.state = {
+            formContent: this.props.formContent,
             tableContents: this.props.tableContents,
+            columns: this.getColumns(this.props.tableContents),
+            ...this.setOtherParams(this.props.tableContents, this.props.formContent),
+
             graphs: this.props.graphs,//array used to save all the graphs
             formParams: this.props.formParams,
             savedDashboard: this.props.savedDashboard,
@@ -24,53 +32,99 @@ export default class Dashboard extends Component {
         }
     }
 
+    // Build a columns array with column and field
+    getColumns = (tableData) => {
+        if (tableData && tableData[0]) {
+            return Object.keys(tableData[0]).map((col) => { return { column: col.replace(/_/g, " "), field: col }; });
+        } else {
+            return [];
+        }
+    }
+
+    setOtherParams = (tableContents, formContent) => {
+
+        // const { columns } = this.state;
+        const columns = this.getColumns(tableContents);
+
+        this.group_columns = [];
+        this.aggregate_columns = [];
+
+        var group_columns = formContent.group_column.split(',').filter((entry) => entry != '') || [];
+        var aggregate_columns = formContent.aggregate_column || [];
+
+        // Build the group Columns
+        group_columns.forEach((column) => {
+            columns.forEach((innerColumn) => {
+                if (innerColumn.field == column) {
+                    this.group_columns.push(innerColumn.field);
+                }
+            });
+        });
+
+        // Build the aggreagate columns data
+        aggregate_columns.forEach((column) => {
+            columns.forEach((innerColumn) => {
+                if (innerColumn.field == (column.name.split(' ').join('_') + '_of_' + column.column)) {
+                    this.aggregate_columns.push(innerColumn.field);
+                }
+            });
+        });
+
+        return {
+            group_columns: this.group_columns,
+            aggregate_columns: this.aggregate_columns
+        };
+    }
+
     componentDidMount() {
     }
 
 
     UNSAFE_componentWillReceiveProps(nextProps) {
-
+        this.setState(
+            {
+                formContent: nextProps.formContent,
+                tableContents: nextProps.tableContents,
+                ...this.setOtherParams(nextProps.tableContents, nextProps.formContent)
+            }
+        );
     }
 
     render() {
-        const { tableContents, graphs, formParams, savedDashboard, savedGroupings, tableFilters, innerFilter } = this.state;
+        const { tableContents, group_columns, aggregate_columns, graphs, formParams, savedDashboard, savedGroupings, tableFilters, innerFilter } = this.state;
 
-        let group_columns= [];
-        let aggregate_columns = [];
-
+        console.log(tableContents);
         return (
-            <div class="dashboard">
-            
+            <div className="dashboard">
+                <div className="flex-container {{expandTable?'expanded':''}}">
+                    <div className="card" >
+                        <div className="card-body">
+                            <h5 className="card-title">Card title</h5>
 
+                            {/* Show the table Contents */}
+                            {tableContents && <TableContents tableData={tableContents} />}
+                            {/* Table Contents Ends */}
 
-                <div class="flex-container {{expandTable?'expanded':''}}">
-                    <div class="panel table-panel">
-                        <div class="panel-body flip-scroll">
-                            {/* {
-                                tableContents &&
-                                <TableContents innerFilter={innerFilter} savedDashboard={savedDashboard} tableFilters={tableFilters}
-                                    fullWidth={expandTable} tableContents={tableContents} columns={columns}></TableContents>
-                            } */}
                         </div>
                     </div>
                 </div>
-                <div class="flex-container">
+                <div className="flex-container">
                     {
                         graphs &&
                         graphs.map((graph, key) =>
-                            <div class="panel graph-container">
-                                <div class="panel-heading">
-                                    <div class="graph-title">
+                            <div className="panel graph-container">
+                                <div className="panel-heading">
+                                    <div className="graph-title">
                                         {graph.title || 'Graph'}
                                     </div>
-                                    <div class="actions">
-                                        <a class="btn btn-default btn-xs" ng-click="deleteGraph({index:$index})" href="#" data-original-title="" title="Delete graph">
-                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                    <div className="actions">
+                                        <a className="btn btn-default btn-xs" ng-click="deleteGraph({index:$index})" href="#" data-original-title="" title="Delete graph">
+                                            <i className="fa fa-trash-o" aria-hidden="true"></i>
                                         </a>
                                     </div>
                                 </div>
-                                <div class="panel-body">
-                                    <p class="loading-text" ng-show="!showGraph">
+                                <div className="panel-body">
+                                    <p className="loading-text" ng-show="!showGraph">
                                         Loading Graph
                                     </p>
                                     {/* <pie-graph graph={graph} show-graph="showGraph" delete-method="deleteGraph({index:$index})" ng-if="graph.graphData&&graph.graphType=='pie'"></pie-graph>
@@ -82,27 +136,29 @@ export default class Dashboard extends Component {
                         )
                     }
                 </div>
-                <div class="flex-container">
-                    <div class="graph-builder">
-                        <div class="panel">
-                            <div class="panel-heading">
+                <div className="flex-container">
+                    <div className="graph-builder">
+
+                        <div className="card" >
+                            <div className="card-body">
+                                <h5 className="card-title">Graph Builder</h5>
                                 <strong>Add Graph</strong>
                                 <small>Create a graph of your choice</small>
-                            </div>
-                            <div class="panel-body">
-                                <div class="portlet-body">
+
+                                {/* Input for building form */}
+                                <div className="portlet-body">
                                     {
                                         group_columns.length && aggregate_columns.length &&
-                                        <div class="graph-form-container">
-                                            <form name="graphForm" class="graph-form">
-                                                <div class="form-child">
-                                                    <div class="graph-wrapper">
+                                        <div className="graph-form-container">
+                                            <form name="graphForm" className="graph-form">
+                                                <div className="form-child">
+                                                    <div className="graph-wrapper">
                                                         <div class="graph-types">
                                                             <label for="graphTitle">Type of graph</label>
                                                             <div>
                                                                 {
                                                                     this.graphTypes &&
-                                                                    graphs.map((graph, key) =>
+                                                                    this.graphTypes.map((graph, key) =>
                                                                         <div class="graph-type-holder" ng-class="{'active':formContent.graph.graphType == graph.graphType}" ng-click="selectGraph(graph)">
                                                                             <div class="panel panel-default">
                                                                                 <div class="panel-body">
@@ -160,29 +216,34 @@ export default class Dashboard extends Component {
                                         </div>
                                     }
                                 </div>
-                            </div>
-                            <div>
-                                {
-                                    group_columns.length == 0 &&
-                                    <p>
-                                        Group by column to show relevant data.
+
+
+                                <div>
+                                    {
+                                        group_columns.length == 0 &&
+                                        <p>
+                                            Group by column to show relevant data.
                                     </p>
-                                }
-                            </div>
-                            <div>
-                                {
-                                    aggregate_columns.length == 0 &&
-                                    <p>
-                                        Select an aggregation to show relevant data.
+                                    }
+                                </div>
+                                <div>
+                                    {
+                                        aggregate_columns.length == 0 &&
+                                        <p>
+                                            Select an aggregation to show relevant data.
                                     </p>
-                                }
-                            </div>
-                            {
-                                (group_columns.length == 0 || aggregate_columns.length == 0) &&
-                                <small>
-                                    Group columns and add an aggregation to create a graph
+                                    }
+                                </div>
+                                {
+                                    (group_columns.length == 0 || aggregate_columns.length == 0) &&
+                                    <small>
+                                        Group columns and add an aggregation to create a graph
                                 </small>
-                            }
+                                }
+
+                                {/* Form Builder Ends */}
+
+                            </div>
                         </div>
                     </div>
                 </div>

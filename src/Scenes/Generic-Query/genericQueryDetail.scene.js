@@ -35,6 +35,7 @@ export default class GenericQueryDetail extends Component {
         super(props);
         this.state = {
             ...GetUrlParams(this.props),
+            formContent: {},
             useQueryTable: true,
             dateLiterals: [],
             operators: [],
@@ -153,12 +154,40 @@ export default class GenericQueryDetail extends Component {
             // Set state with the loaded values
             this.setState({ preference: preference, queryParamsData, actions: queryParamsData.actions });
 
+            let options = this.getParamsFromUrl(this.formContent);
 
             // Get the reports data for the formContent
-            this.getDataForListing(this.formContent);
+            this.getDataForListing(options);
 
         }
     }
+
+    getParamsFromUrl = (params) => {
+        const urlParams = GetUrlParams(this.props);
+
+        const { queryString } = urlParams;
+
+        let formContent = {};
+
+        formContent.from = queryString.from || params.from;
+        formContent.to = queryString.to || params.to;
+
+        if (queryString.group_column) {
+            formContent.group_column = queryString.group_column;
+        } else {
+            formContent.group_column = '';
+        }
+
+        if (queryString.aggregate_column) {
+            formContent.aggregate_column = JSON.parse(queryString.aggregate_column);
+        } else {
+            formContent.aggregate_column = [];
+        }
+
+        // Code for showing saved dashboard should come below 
+        return formContent;
+    }
+
 
     /**
      * Replace the literals with matching lookup value
@@ -188,9 +217,9 @@ export default class GenericQueryDetail extends Component {
 
         formContent.query_name = queryParamsData.short_name;
 
-        if (formContent.aggregate_column) {
-            formContent.aggregate_column = JSON.parse(formContent.aggregate_column);
-        }
+        // if (formContent.aggregate_column) {
+        //     formContent.aggregate_column = JSON.parse(formContent.aggregate_column);
+        // }
 
         // If there is a groupColumn or aggregateCoumn then disable useQueryTable
         if ((formContent.group_column && formContent.group_column != '') || (formContent.aggregate_column && formContent.aggregate_column != '')) {
@@ -206,7 +235,8 @@ export default class GenericQueryDetail extends Component {
         const result = await Post({ url, body: formContent });
         if (result.success) {
             const queryListing = result.response;
-            this.setState({ queryListing: queryListing });
+
+            this.setState({ formContent: formContent, queryListing: queryListing });
 
             let stats = result.stats ? result.stats : stats;
             params.dictionary = result.dictionary ? result.dictionary : params.dictionary;
@@ -227,8 +257,6 @@ export default class GenericQueryDetail extends Component {
 
             this.gatherData(result.response);
 
-            // return Get({ url, queryString: { page } });
-            console.log(GetUrlParams(this.props));
         }
     }
 
@@ -287,7 +315,7 @@ export default class GenericQueryDetail extends Component {
 
     render() {
 
-        const { useQueryTable, localSearch, operators, arrowstate, arrow, queryParamsData = {}, preference, columns, params, finalColumns, resultData, currentPage, stats, isTab, layout, loading } = this.state;
+        const { formContent, useQueryTable, localSearch, operators, arrowstate, arrow, queryParamsData = {}, preference, columns, params, finalColumns, resultData, currentPage, stats, isTab, layout, loading } = this.state;
 
         const { history, match, parentData } = this.props;
 
@@ -451,7 +479,7 @@ export default class GenericQueryDetail extends Component {
 
                     {/* Else Dashboard */}
 
-                    {!useQueryTable && <Dashboard />}
+                    {!useQueryTable && <Dashboard formContent={formContent} tableContents={resultData.listing} />}
 
                     {
                         (resultData.stats) ?
