@@ -5,6 +5,7 @@ import {
 } from 'reactstrap';
 
 import moment from 'moment';
+import { debounce as Debounce } from 'lodash';
 
 import './trackHistory.scene.css';
 import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
@@ -16,6 +17,8 @@ import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import TrackHistoryComponent from './../../Components/Track-History/trackHistory.component';
 import DatePicker from './../../Components/Forms/Components/Date-Picker/datePicker';
 import { GetLookupValues } from './../../Utils/lookup.utils';
+
+import SelectBox from  './../../Components/Forms/Components/Select-Box/selectBox';
 
 export default class TrackHistory extends Component {
 
@@ -30,8 +33,24 @@ export default class TrackHistory extends Component {
             filterForm: {
                  duration: 1, 
                  start_time: moment().subtract(3, "hours").format("YYYY-MM-DD HH:00:00") 
-            }
+            },
+            vehicles: []
         };
+        this.debouncedAdvanceSearch = Debounce(this.advancedSearch, 300);
+        
+    }
+
+    advancedSearch = async (val) => {
+        let url = 'searchVehicle';
+        let options = {
+            search_string: val
+        };
+
+        const result = await Post({ url: 'vehicleLocation', body: options});
+        if(result.success){
+            this.setState({vehicles: result.response});
+        }
+
     }
 
     componentDidMount() {
@@ -156,7 +175,7 @@ export default class TrackHistory extends Component {
     }
 
     render() {
-        const { data, mapFlag, alarms, filterForm, alertPreference, alerts } = this.state;
+        const { data, mapFlag, alarms, filterForm, alertPreference, alerts, vehicles } = this.state;
         console.log(alarms);
         return (
             <div className="track-history">
@@ -232,16 +251,14 @@ export default class TrackHistory extends Component {
                             <label >
                                 Vehicle
                             </label>
-                            <ReferenceInput 
-                                placeholder={`Enter registration number`}
-                                field='name'
-                                isClearable={"true"}
-                                onChange={(value, event) => {
-                                    this.filterInputChange('vehicle', e.target.value)
-                                }}
+                            {/* <SelectBox
+                                name={this.props.name}
+                                onChange={(value, event) => {console.log(value); console.log(event)}}
+                                field="registration_number"
+                                queryField={vehicles}
                                 value={filterForm.vehicle}
-                            />
-                            {/* <input type="text" placeholder="Enter vehicle " value={filterForm.vehicle} onChange={(e)=>this.filterInputChange('vehicle', e.target.value)} className="form-control" /> */}
+                            /> */}
+                            <input type="text" placeholder="Enter vehicle " value={filterForm.vehicle} onChange={(e)=>this.filterInputChange('vehicle', e.target.value)} className="form-control" />
                         </div>
                         <div className="form-group">
                             <label >
