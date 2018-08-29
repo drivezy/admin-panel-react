@@ -6,14 +6,21 @@ import { StoreEvent, SubscribeToEvent } from 'state-manager-utility';
 
 import { SelectFromOptions, BuildUrlForGetCall, IsUndefinedOrNull, IsUndefined } from './../../Utils/common.utils';
 
-var trackMarker, trackPos, markerArr, obj, trackWindow, flightPath, vehicleList, flightPath1, lineCoordinatesArray, infoWindow, map, google;
+var trackMarker, trackPos, markerArr, obj, prev_infowindow, trackWindow, flightPath, vehicleList, flightPath1, lineCoordinatesArray, infoWindow, map, google;
 var polylineArr = [];
 var google = window.google;
+
+/** 
+ * Component for map
+ * map used in tracking history page and vehicle track modal at booking detail page
+ * 
+ */
 class TrackMap extends Component {
   constructor(props) {
     super(props);
     this.state = {};
     SubscribeToEvent({ eventName: 'trackHistoryObj', callback: this.trackHistory });
+    SubscribeToEvent({ eventName: 'alertPreferenceChanged', callback: this.alertPreferenceChanged });
   }
 
   componentDidMount(){
@@ -50,32 +57,10 @@ class TrackMap extends Component {
             mapTypeControl: false,
             streetViewControl: false
         };
-
         map = new google.maps.Map(elem, mapOptions);
-    //  map = new google.maps.Map(document.getElementById('map-dir'), {
-    //     zoom: 3,
-    //     center: {lat: 0, lng: -180},
-    //     mapTypeId: 'terrain'
-    //   });
-
-    //   var flightPlanCoordinates = [
-    //     {lat: 37.772, lng: -122.214},
-    //     {lat: 21.291, lng: -157.821},
-    //     {lat: -18.142, lng: 178.431},
-    //     {lat: -27.467, lng: 153.027}
-    //   ];
-    //   var flightPath = new google.maps.Polyline({
-    //     path: flightPlanCoordinates,
-    //     geodesic: true,
-    //     strokeColor: '#FF0000',
-    //     strokeOpacity: 1.0,
-    //     strokeWeight: 2
-    //   });
-
-    //   flightPath.setMap(map);
   }
 
-  redMarker = (lat, long, img) => {
+redMarker = (lat, long, img) => {
     let marker = new google.maps.Marker({
         position: new google.maps.LatLng(Math.abs(lat), Math.abs(long)),
         animation: google.maps.Animation.DROP,
@@ -85,152 +70,47 @@ class TrackMap extends Component {
     return marker;
 }
 
-//To bind pusher method to get tracker data
-pusherSettings = (channelObj, totalChannel, callback) => {
-    // socketObj.channel = channelObj.channel_name;
-    // socket.emit("channel_connect", socketObj);
-    // socket.on("geo", handleGeoData);
-
-
-    // channelObj.identifier = channelObj.registration_number;
-    // var chanelName = channelObj.channel_name;
-    // channelObj.speed = 0;
-
-    // setDetails(channelObj, totalChannel);
-   
-    // var i = 1;
-    // var previous = 0;
-    // var total = 1;
-
-    // function handleGeoData(data) {
-    //     var d = new Date();
-    //     var n = d.getTime();
-    //     data.identifier = data.vehicle;
-    //     obj.track(data, i, totalChannel);
-    //     ++i;
-    //     return data;
-    // }
-
-    // function handleAlarmTrigger(data) {
-    //     console.log(data);
-    //     var iconUrl = "http://maps.google.com/mapfiles/ms/icons/orange-dot.png";
-    //     redMarker(data.latitude, data.longitude, iconUrl);
-    //     trackPos = new google.maps.LatLng(origin.lat, origin.long);
-    //     var alarmMarker = new google.maps.Marker({
-    //         position: trackPos, map: self.map
-    //     });
-    //     trackMarker.setIcon("http://maps.google.com/mapfiles/ms/icons/green-dot.png");
-    //     trackMarker.setPosition(trackPos);
-    // }
-};
-
-
-//For setting green marker in the map that continues to change its position 
-setMarker = (obj1, totalChannel) => {
-    let lat = Math.abs(obj1.latitude);
-    let long = Math.abs(obj1.longitude);
-    let identifier = obj1.identifier;
-    let obj = obj1;
-    let pos = new google.maps.LatLng(lat, long);
-    if (!IsUndefinedOrNull(markerArr[identifier])) {
-        markerArr[identifier].setPosition(null);
-        markerArr[identifier].setPosition(pos);
-        markerArr[identifier].setIcon("//maps.google.com/mapfiles/ms/icons/green-dot.png");
-        // self.map.panTo(pos);
-    } else {
-        markerArr[identifier] = new google.maps.Marker({
-            position: pos, map: map
-        });
-        markerArr[identifier].setPosition(pos);
-        //self.map.panTo(pos);
-
-        // on hover shows info
-        google.maps.event.addListener(markerArr[identifier], "mouseover", function (event) {
-            infoWindow[identifier] = new google.maps.InfoWindow({});
-            infoWindow[identifier].open(map, markerArr[identifier]);
-            this.setContent(obj, infoWindow[identifier], totalChannel);
-        });
-
-        google.maps.event.addListener(markerArr[identifier], "mouseout", function (event) {
-            infoWindow[identifier].close();
-        });
-    }
-    if (infoWindow[identifier]) {
-        this.setContent(obj, infoWindow[identifier], totalChannel);
-    }
-};
-
-//Info window initialization for track vehicle mehtod
-setContent = (obj, infoWindow1, totalChannel)=>{
-
-    if (obj.hasOwnProperty("tracker_time")) {
-        var reg = /\d{4}-\d{2}-\d{2}/g; // Checks for date
-        var date = obj.tracker_time.match(reg);
-        date = date ? obj.tracker_time : moment(parseInt(obj.tracker_time)).format("YYYY-MM-DD HH:mm:ss");
-    }
-
-    var contentForToolTip = totalChannel == 1 ? "<b><em>" + obj.registration_number + " <br />" + date + " <br/ >" + parseFloat(obj.speed).toFixed(2) + " Kmph </em></b>" : "<b>" + obj.registration_number + " <br />" + (parseFloat(obj.speed) || 0).toFixed(2) + " Kmph";
-    infoWindow1.setContent(contentForToolTip);
-}
-
-//get timeout to unsubscribe channel
-getTimeout = (channelName) => {
-    // var url = "openProperty/32";
-    // return ListingFactory.getListing(url);
-}
-
-unsubscribeChannel = (channelName) => {
-    // pusher.unsubscribe(channelName);
-    // this.initialization();
-    this.clearMarkers();
-    map = null;
-};
-
-
 trackHistory = (item) => {
-    if(item.history.length>1){
-        this.clearPolyline();
-        this.drawPolyline(item.history);
-        this.redMarker(item.history[item.history.length-1].latitude, item.history[item.history.length-1].longitude, "http://maps.google.com/mapfiles/ms/icons/green-dot.png");
+    this.clearPolyline();
+    trackWindow = null;
+    var trackWindowFlag = item.history.length-1;
+    let temp = item.history[item.history.length-1];
+    if(temp){
+        var origin = {
+            lat: Math.abs(temp.latitude), long: Math.abs(temp.longitude)
+        };
+        trackPos = new google.maps.LatLng(origin.lat, origin.long);
+        var setDetails = function () {
+            var contentForToolTip = "<b><em>" + temp.time + " <br>" + temp.speed + " Kmph </em></b>";
+            trackWindow.setContent(contentForToolTip);
+        };
+
+        item.history.length == 0 ? this.redMarker(origin.lat, origin.long) : "";
+
+        this.infoWindowInitialization(trackMarker);
+        setTimeout(() => {
+            this.drawPolyline(item.history);
+            if (!IsUndefinedOrNull(trackMarker)) {
+                trackMarker.setPosition(null);
+                trackMarker.setPosition(trackPos);
+                map.panTo(trackPos);
+            } else {
+                trackMarker = new google.maps.Marker({
+                    position: trackPos, map: map
+                });
+                trackMarker.setIcon("http://maps.google.com/mapfiles/ms/icons/green-dot.png");
+                trackMarker.setPosition(trackPos);
+
+            }
+            try {
+                IsUndefinedOrNull(trackWindow);
+            } catch (err) {
+                this.infoWindowInitialization(trackMarker);
+            }
+            setDetails();
+        }, 1000);
     }
-}
-
-
-// trackHistory = (item,) => {
-//     var trackWindowFlag = counter + 1;
-//     var origin = {
-//         lat: Math.abs(item.latitude), long: Math.abs(item.longitude)
-//     };
-//     trackPos = new google.maps.LatLng(origin.lat, origin.long);
-//     var setDetails = function () {
-//         var contentForToolTip = "<b><em>" + item.time + " <br>" + item.speed + " Kmph </em></b>";
-//         trackWindow.setContent(contentForToolTip);
-//     };
-
-//     counter == 0 ? this.redMarker(origin.lat, origin.long) : "";
-//     polylineArr.push(new google.maps.LatLng(origin.lat, origin.long));
-
-//     this.drawPolyline(polylineArr);
-
-//     if (IsUndefinedOrNull(trackMarker)) {
-//         trackMarker.setPosition(null);
-//         trackMarker.setPosition(trackPos);
-//         map.panTo(trackPos);
-//     } else {
-//         trackMarker = new google.maps.Marker({
-//             position: trackPos, map: map
-//         });
-//         trackMarker.setIcon("http://maps.google.com/mapfiles/ms/icons/green-dot.png");
-//         trackMarker.setPosition(trackPos);
-
-//     }
-//     try {
-//         IsUndefinedOrNull(trackWindow);
-//     } catch (err) {
-//         this.infoWindowInitialization(trackMarker);
-//     }
-//     setDetails();
-// };
+};
 
 
 /**
@@ -257,7 +137,7 @@ drawPolyline = (polyline) => {
 clearPolyline = () => {
     if (!IsUndefinedOrNull(flightPath)) {
         flightPath.setMap(null);
-        // flightPath = null;
+        flightPath = null;
     }
 };
 
@@ -291,12 +171,84 @@ deleteMarkers = () => {
     markerArr = [];
 };
 
+alertPreferenceChanged = (values) => {
+    setTimeout(() => {
+        if(values.alertPreference){
+            this.showTrackerAlerts(values.alerts, values.alarms);
+        }else{
+            this.deleteMarkers();
+        }
+    }, 1000);
+}
 
-  
+/**
+ * Deletes all markers in the array by removing references to them.
+ */
+deleteMarkers = () => {
+    this.clearMarkers();
+    markerArr = [];
+};
+
+/**
+ * takes array of alerts, iterates over it and shows all the tracker marker
+ * @param {array} alert - array of alerts object
+ */
+showTrackerAlerts = (alerts, lookups) => {
+    if (!Array.isArray(alerts))
+        return false;
+
+    if (lookups) {
+        for (var i in alerts) {
+            var alert = alerts[i];
+            this.trackerAlert(alert, lookups, i);
+        }
+        return true;
+    }
+};
+
+/**
+ * takes individual lat, long and shows individual tracker marker
+ * @param {object} alert - individual alert object from the alerts array
+ * @param {array} lookups - lookup value of lookupType 42
+ * @param {int} i - current index of alerts array
+ */
+trackerAlert = (alert, lookups, i) => {
+    var alertInfoWindow, marker;
+
+    var alertDetail = SelectFromOptions(lookups, alert.alarm, "value");
+
+    if (alertDetail.hasOwnProperty("active") && !alertDetail.active && parseInt(alertDetail.value) == parseInt(alert.alarm))
+        return false;
+
+    var content = "<b><em>" + alertDetail.name + " <br>" + alert.time + "</em></b> <br>";
+
+    content += parseInt(alert.threshold_value) ? "<b><em>" + alert.current_value + " out of " + alert.threshold_value + " </em></b>" : "";
+
+    content += parseInt(alert.type) ? " <br><b><em>  Activated  </em></b>" : " <br> <b><em>  Deactivated  </em></b>";
+
+    alertInfoWindow = new google.maps.InfoWindow({
+        content: content
+    });
+    marker = this.redMarker(alert.geocode.latitude, alert.geocode.longitude, 'http://maps.google.com/mapfiles/ms/icons/orange-dot.png');
+
+    google.maps.event.addListener(marker, "click", function () {
+        return function () {
+            if (prev_infowindow) {
+                prev_infowindow.close();
+            }
+
+            prev_infowindow = alertInfoWindow;
+            alertInfoWindow.open(map, marker);
+        };
+    }());
+
+    markerArr.push(marker);
+}
+
 
   render() {
     return (
-        <div id="map-dir" style={{width: '100%', height:'300px'}} className="map-dir" ></div>
+        <div id="map-dir" style={{width: '100%', height:'270px'}} className="map-dir" ></div>
     );
   }
 }

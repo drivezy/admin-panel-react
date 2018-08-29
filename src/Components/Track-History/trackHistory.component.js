@@ -7,7 +7,6 @@ import 'react-rangeslider/lib/index.css';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import moment from 'moment';
-import { TrackVehicleFactory } from './../../Utils/trackVehicle.utils';
 import { StoreEvent, SubscribeToEvent } from 'state-manager-utility';
 
 import TimeSpeedChart from './../../Components/Highcharts/TimeChart/timeChart.component';
@@ -25,13 +24,16 @@ export default class TrackHistoryComponent extends React.Component {
         super(props);
         this.state = {
             data : [],
+            alarms:this.props.alarms,
+            alerts: this.props.alerts,
+            alertPreference: this.props.alertPreference,
             currentPosition : 0,
             playFlag : 0,
             playSpeed : this.speedArr[0],
             currentSpeedIndex : 0,
-            step: 10,
             trackHistoryObj : {},
-            difference: 30
+            difference: 60,
+            noCount: 0
         };
     }
 
@@ -60,52 +62,57 @@ export default class TrackHistoryComponent extends React.Component {
             }
             let trackHistoryObj = {
                 history : data,
-                currentPosition : 0
+                noCount : 0,
             }
             this.setState({ data, startTime, endTime, currentPosition, speedArr, trackHistoryObj, difference});
         }
+        if(nextProps.alertPreference && nextProps.alarms && nextProps.alarms.length && nextProps.alerts && nextProps.alerts.length){
+            if(nextProps.alertPreference){
+                StoreEvent({eventName: 'alertPreferenceChanged', data: {alertPreference: nextProps.alertPreference, alarms: nextProps.alarms, alerts: nextProps.alerts} });
+            }
+        }
     }
 
-    pushTillGivenIndex = (time) => {
-        let i = 0;
-        let trackHistoryObj = { history : []};
-        while(this.state.data[i].timeInSeconds < time){
-            trackHistoryObj.history.push(this.state.data[i]);
-            i++;
+    pushTillGivenIndex = (noCount) => {
+        let trackHistoryObj = {
+            history : this.state.data.slice(0,noCount)
         }
-        trackHistoryObj.currentPosition = i;
         StoreEvent({eventName: 'trackHistoryObj', data: trackHistoryObj })
     }
 
   forward = () => {
-    let {currentPosition, step, endTime} = this.state;
-    if(currentPosition < endTime && currentPosition+step <= endTime){
-        currentPosition = currentPosition+step;
-        this.pushTillGivenIndex(currentPosition);
-        this.setState({currentPosition})
+    let { noCount} = this.state;
+    if(noCount < this.state.data.length){
+        noCount++;
+        let currentPosition = this.state.data[noCount].timeInSeconds;
+        this.pushTillGivenIndex(noCount);
+        this.setState({noCount, currentPosition});
     }
   };
   backward = () => {
-    let {currentPosition, step, endTime} = this.state;
-    if(currentPosition > 0 && currentPosition-step >= 0){
-        currentPosition = currentPosition-step;
-        this.pushTillGivenIndex(currentPosition);
-        this.setState({currentPosition})
+    let { noCount} = this.state;
+    if(noCount > 0){
+        noCount--;
+        let currentPosition = this.state.data[noCount].timeInSeconds;
+        this.pushTillGivenIndex(noCount, currentPosition);
+        this.setState({noCount});
     }
   };
   play = () => {
     this.setState({playFlag: 1})
-    let {currentPosition, step, endTime} = this.state;
-    let counter = currentPosition;
+    let {currentPosition, noCount, endTime, playSpeed} = this.state;
+    console.log(this.state);
     Timer = setInterval(()=>{
-        counter+=step;
-        this.pushTillGivenIndex(counter);
-        this.setState({currentPosition: counter });
-        if(counter >= endTime || !this.state.playFlag){
+        noCount++;
+        currentPosition = this.state.data[noCount].timeInSeconds;
+        console.log(this.state.data[noCount].timeInSeconds);
+        this.pushTillGivenIndex(noCount);
+        this.setState({ noCount, currentPosition });
+        if(noCount >= this.state.data.length){
             clearInterval(Timer);
             Timer=0;
         }
-    }, 1000)
+    }, playSpeed.value)
       
   };
   pause = () => {
@@ -118,31 +125,69 @@ export default class TrackHistoryComponent extends React.Component {
         let length = this.speedArr.length - 1;
         let temp = isIncreased ? currentSpeedIndex + 1 : currentSpeedIndex - 1;
         if (temp <= length && temp >= 0) {
-        currentSpeedIndex = temp;
-            playSpeed.selected = this.speedArr[temp];
+            currentSpeedIndex = temp;
+            playSpeed = this.speedArr[temp];
         }
         this.setState({currentSpeedIndex, playSpeed})
   };
 
   speedGraphClicked = (index) => {
+        if(Timer){
+            this.setState({playFlag: 0});
+            clearInterval(Timer);
+            Timer = 0;
+        }
+        let noCount = index;
         let currentPosition = this.state.data[index].timeInSeconds;
-        this.pushTillGivenIndex(currentPosition);
-        this.setState({currentPosition});
+        this.pushTillGivenIndex(noCount);
+        this.setState({currentPosition, noCount});
   };
 
   handleChange = (value) => {
-    this.setState({ currentPosition: value })
-    this.pushTillGivenIndex(value);
+    if(Timer){
+        this.setState({playFlag: 0});
+        clearInterval(Timer);
+        Timer = 0;
+    }
+      console.log(value);
+      console.log(this.state.difference);
+    this.setCurrentIndex(value);
+    let currentPosition = value;
+    this.setState({ currentPosition });
+  }
+
+    secondsToHms = (d) => {
+        d = Number(d);
+        let h = Math.floor(d / 3600);
+        let m = Math.floor(d % 3600 / 60);
+        let s = Math.floor(d % 3600 % 60);
+
+        let hDisplay = h > 0 ? h : "00";
+        let mDisplay = m > 0 ? m : "00";
+        let sDisplay = s > 0 ? s : "00";
+        return hDisplay + ':' + mDisplay + ':' + sDisplay; 
+    }
+
+  setCurrentIndex = (value) => {
+      let noCount , f=0;
+      this.state.data.map((item, key) => {
+            if(item.timeInSeconds >= value && f== 0){
+                noCount = key;
+                f = 1;
+            }
+      })
+      this.pushTillGivenIndex(noCount);
+      this.setState({noCount});
   }
 
   render() {
-    const {startTime, endTime, currentPosition, playFlag, data, playSpeed, step, speedArr} = this.state;
+    const {startTime, endTime, currentPosition, difference, alarms, alerts, alertPreference, playFlag, data, playSpeed, speedArr} = this.state;
     return (
       <div>
          <div className="Flexible-container">
          {
              data && data.length &&
-            <TrackMap data={data} />
+            <TrackMap data={data} alarms={alarms} alerts={alerts} alertPreference={alertPreference} />
          }
         </div>
         <div style={style} className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -174,20 +219,20 @@ export default class TrackHistoryComponent extends React.Component {
             </div>
           </div>
           <div style={{paddingTop: '22px', textAlign: 'center'}} className="col-lg-1 col-md-1 col-sm-2 col-xs-2 margin-top-4 font-12 roboto-regular opacity-7 black-text">
-            {currentPosition}
+            {this.secondsToHms(currentPosition)}
           </div>
           <div style={{paddingTop: '5px'}} className="col-lg-7 slider">
             <Slider
               min={startTime}
               max={endTime}
-              step={playSpeed.value}
+              step={difference}
               value={currentPosition}
               tooltip={false}
               onChange={this.handleChange}
             />
           </div>
           <div style={{paddingTop: '22px', textAlign: 'center'}} className="col-lg-1 col-md-1 col-sm-2 col-xs-2 margin-top-4 font-12 roboto-regular opacity-7 black-text">
-            {endTime}
+            {this.secondsToHms(endTime)}
           </div>
           
         </div>

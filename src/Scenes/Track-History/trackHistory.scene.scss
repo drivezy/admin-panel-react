@@ -1,0 +1,94 @@
+.track-history{
+    .myAlarmSidenav{
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        right: -40px;
+        background-color: #111;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding: 60px 0px;
+        font-size: 20px;
+        color: white;
+        .alarm-heading{
+            padding: 20px 15px;
+        }
+        .alarm-data{
+            padding: 0px 15px;
+            .individual-alarm{
+                input{
+                    color: #fff;
+                    background-color: #5bc0de;
+                    border-color: #46b8da;
+                }
+                .btn-info{
+                    padding: 18px;
+                     margin-bottom: -3px;
+                     .active{
+                         &:before{
+
+                         }
+                     }
+                }
+                .name{
+                    background: #33b76e;
+                    color: white;
+                    font-size: 12px;
+                    padding: 10px;
+                }
+            }
+        }
+    }
+    .myFilterSidenav{
+        display: none;
+        top: 50px;
+        right: 0;
+        width: 0;
+        position: absolute;
+        z-index: 100;
+        background: #2b3643;
+        color: white;
+        .filter-header{
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            padding: 15px;
+        }
+        .form-group{
+            padding: 8px 15px;
+            margin-bottom: 0px;
+            label{
+                margin-bottom: 0px;
+            }
+            .form-control{
+                padding: 3px 5px;
+                height: 25px;
+                font-size: 12px;
+                .react-bootstrap-daterangepicker-container{
+                    padding: 0px!important;
+                }
+            }
+        }
+        .mid-line{
+            display: flex;
+            span{
+                display: inline-block;
+                width: 145px;
+                font-size: 13px;
+                font-weight: 300;
+                margin-top: 0.7em;
+                margin-bottom: 0.6em;
+                margin-left: auto;
+                margin-right: auto;
+                border-style: inset;
+                border-width: 1px;
+            }
+        }
+        .track-btn{
+            margin: 20px 15px;
+            float: right;
+        }
+    }
+}

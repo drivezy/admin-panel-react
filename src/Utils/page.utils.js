@@ -51,6 +51,7 @@ export default class Pageutil {
 
         ModalManager.openModal({
             headerText: self.page.name || 'Input Form',
+            className: args.className || '',
             modalBody: () => <ModalBody
                 data={self.page.data}
                 menu={self.page.menu}
