@@ -18,6 +18,7 @@ import { BookingDate } from './../../Utils/booking.utils';
 
 import { Booking } from './../../Utils/booking.utils';
 
+
 export default class BookingDetail extends Component {
 
     constructor(props) {
