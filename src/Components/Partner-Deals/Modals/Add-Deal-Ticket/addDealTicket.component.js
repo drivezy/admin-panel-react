@@ -15,7 +15,6 @@ export default class AddDealTicket extends Component {
     constructor(props) {
         super(props);
 
-        console.log(props)
 
         this.state = {
             modal: false,

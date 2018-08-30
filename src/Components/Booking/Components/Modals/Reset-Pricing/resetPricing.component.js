@@ -41,7 +41,6 @@ export default class ResetPricing extends Component {
             // }
             // )
             this.setState({ carList: result.response });
-            console.log(this.state.carList)
         }
 
     }

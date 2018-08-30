@@ -14,7 +14,7 @@ export default class ImageViewer extends Component {
             images: props.images
             // toolbar:props.toolbar
         }
-        console.log(props.images);
+       
     }
 
 
@@ -88,7 +88,6 @@ export default class ImageViewer extends Component {
     render() {
         const { images } = this.state;
         let { idVal = 'images' } = this.props;
-        console.log('idVal', idVal);
         return (
             <div className="image-viewer ">
                 <ul id={idVal} style={{ display: 'none' }}>

@@ -19,7 +19,6 @@ export default class Test extends Component {
     editChanges = async (stat) => {
         const { listingRow } = this.props;
         let index = 'lead.id'
-        console.log(listingRow[index])
         let url = "lead/" + listingRow[index];
         const result = await Put({
             url: url,
@@ -108,7 +107,6 @@ export default class Test extends Component {
 
     render() {
         const { data } = this.state;
-        console.log(data);
         return (
 
             <div className="status-button">

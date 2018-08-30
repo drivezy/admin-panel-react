@@ -79,8 +79,6 @@ const InnerForm = ({
                         );
 
 
-                        console.log(license);
-
                     })
                 }
 

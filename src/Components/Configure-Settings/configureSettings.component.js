@@ -117,7 +117,7 @@ export default class ConfugreSettings extends Component {
     }
 
     displayKeys = (keys) => {
-        console.log(keys);
+        // console.log(keys);
     }
 
     addKeyListener = () => {
@@ -126,7 +126,7 @@ export default class ConfugreSettings extends Component {
     }
 
     removeKeyListener = () => {
-        document.removeEventListener('keydown', e => console.log(e))
+        // document.removeEventListener('keydown', e => console.log(e))
     }
 
 
@@ -199,7 +199,7 @@ export default class ConfugreSettings extends Component {
                             </NavLink>
                             </NavItem>
                         </Nav>
-                        <TabContent activeTab={this.state.activeTab} onKeyPress={() => { console.log('pressed') }}>
+                        <TabContent activeTab={this.state.activeTab} onKeyPress={() => {}}>
                             <TabPane tabId="1" >
                                 <Row >
                                     <Col sm="6">

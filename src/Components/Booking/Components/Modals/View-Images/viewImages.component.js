@@ -49,7 +49,6 @@ export default class ViewImages extends Component {
 
         tabsArr = Object.values(tabsObj);
         this.setState({ tabsObj, tabsArr });
-        console.log(tabsObj)
     }
 
     toggle = (key, tab) => {
