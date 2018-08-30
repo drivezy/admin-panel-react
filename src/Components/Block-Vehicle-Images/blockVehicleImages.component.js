@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import './blockVehicleImages.component.css';
-
 import {
     Carousel,
     CarouselItem,
@@ -8,8 +6,8 @@ import {
     CarouselIndicators,
     CarouselCaption
   } from 'reactstrap';
-
 import {Get} from "common-js-util";
+import './blockVehicleImages.component.css';
 
 export default class VehicleCard extends Component {
     constructor(props) {
