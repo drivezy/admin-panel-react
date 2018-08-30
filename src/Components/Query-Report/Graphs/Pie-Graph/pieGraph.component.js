@@ -14,39 +14,41 @@ export default class PieGraph extends React.Component {
 
     setConfig = (graph) => {
         return {
-            height: 100,
-            width: '500px',
-            chart: {
-                type: 'pie',
-                events: {
-                    load: function () {
-                        // scope.pieGraph.showGraph = true;
+            config: {
+                height: 100,
+                width: '500px',
+                chart: {
+                    type: 'pie',
+                    events: {
+                        load: function () {
+                            // scope.pieGraph.showGraph = true;
+                        }
                     }
-                }
-            },
-            exporting: {
-                enabled: false
-            },
-            title: {
-                text: null
-            },
-            tooltip: {
-                pointFormat: "{series.name}: <b>{point.y}</b>"
-            },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: true,
-                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                },
+                exporting: {
+                    enabled: false
+                },
+                title: {
+                    text: null
+                },
+                tooltip: {
+                    pointFormat: "{series.name}: <b>{point.y}</b>"
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        }
                     }
-                }
-            },
-            series: [{
-                name: graph.yAxis.split('_').join(' '),
-                data: graph.graphData
-            }]
+                },
+                series: [{
+                    name: graph.yAxis.split('_').join(' '),
+                    data: graph.graphData
+                }]
+            }
         }
     }
 

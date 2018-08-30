@@ -41,8 +41,8 @@ class TableContents extends Component {
                         <tr>
                             <th> #</th>
                             {/* Repeat the columns array for the header */}
-                            {columns.map((column) =>
-                                <th>
+                            {columns.map((column, index) =>
+                                <th key={index}>
                                     {column.column}
                                 </th>
                             )}
@@ -52,12 +52,12 @@ class TableContents extends Component {
                     <tbody>
                         {
                             tableData.map((tableRow, index) =>
-                                <tr>
+                                <tr key={index}>
                                     <td> {index + 1}}</td>
                                     {/* Repeat the columns array for the header */}
                                     {
-                                        columns.map((column) =>
-                                            <td>
+                                        columns.map((column, key) =>
+                                            <td key={key}>
                                                 {tableRow[column.field]}
                                             </td>
                                         )

@@ -163,9 +163,9 @@ export default class Dashboard extends Component {
                 {
                     graphs &&
                     graphs.map((graph, key) =>
-                        <div className="flex-container">
+                        <div key={key} className="flex-container">
                             <div className="card graph-container">
-                                <div class="card-header">
+                                <div className="card-header">
                                     <div className="graph-title">
                                         {graph.title || 'Graph'}
                                     </div>
@@ -185,7 +185,7 @@ export default class Dashboard extends Component {
 
                                     {graph.graphData && graph.graphType == 'column' && <ColumnGraph config={graph} />}
 
-                                    {graph.graphData && graph.graphType == 'column' && <LineGraph config={graph} />}
+                                    {graph.graphData && graph.graphType == 'line' && <LineGraph config={graph} />}
 
                                     {/* <pie-graph graph={graph} show-graph="showGraph" delete-method="deleteGraph({index:$index})" ng-if="graph.graphData&&graph.graphType=='pie'"></pie-graph>
                                     <line-graph graph={graph} show-graph="showGraph" delete-method="deleteGraph({index:$index})" ng-if="graph.graphData&&graph.graphType=='line'"></line-graph>
@@ -216,12 +216,12 @@ export default class Dashboard extends Component {
                                                 <div className="form-child">
                                                     <div className="graph-wrapper">
                                                         <div className="graph-types">
-                                                            <label for="graphTitle">Type of graph</label>
+                                                            <label htmlFor="graphTitle">Type of graph</label>
                                                             <div>
                                                                 {
                                                                     this.graphTypes &&
                                                                     this.graphTypes.map((graph, key) =>
-                                                                        <div className={`graph-type-holder ${graphForm.graphType == graph.graphType ? 'active' : ''}`} onClick={() => { this.selectGraph(graph) }}>
+                                                                        <div key={key} className={`graph-type-holder ${graphForm.graphType == graph.graphType ? 'active' : ''}`} onClick={() => { this.selectGraph(graph) }}>
                                                                             <div className="panel panel-default">
                                                                                 <div className="panel-body">
                                                                                     <img src={graph.image} alt="" />
@@ -238,7 +238,7 @@ export default class Dashboard extends Component {
                                                     </div>
                                                     <div className="form-wrapper">
                                                         <div className="form-group">
-                                                            <label for="graphTitle">Title</label>
+                                                            <label htmlFor="graphTitle">Title</label>
                                                             <input onChange={(event) => {
                                                                 const { graphForm } = this.state;
                                                                 graphForm.title = event.target.value;
@@ -249,12 +249,12 @@ export default class Dashboard extends Component {
                                                         {/* For Pie Graph */}
                                                         <div ng-if="formContent.graph.graphType == 'pie'">
                                                             <div className="form-group">
-                                                                <label for="graphTitle">{graphForm.pie ? 'Group' : 'X Axis'}</label>
+                                                                <label htmlFor="graphTitle">{graphForm.pie ? 'Group' : 'X Axis'}</label>
                                                                 <SelectBox onChange={this.selectGroup} value={graphForm.xAxis} name="group_column" options={group_columns} />
                                                             </div>
 
                                                             <div className="form-group">
-                                                                <label for="graphTitle">{graphForm.pie ? 'Aggregation' : 'Y Axis'}</label>
+                                                                <label htmlFor="graphTitle">{graphForm.pie ? 'Aggregation' : 'Y Axis'}</label>
                                                                 <SelectBox onChange={this.selectAggregation} value={graphForm.yAxis} name="aggregate_column" options={aggregate_columns} />
                                                             </div>
 
@@ -262,7 +262,7 @@ export default class Dashboard extends Component {
                                                             {
                                                                 (graphForm.graphType == 'line' || graphForm.graphType == 'column') &&
                                                                 <div className="form-group">
-                                                                    <label for="graphTitle">Group Column</label>
+                                                                    <label htmlFor="graphTitle">Group Column</label>
                                                                     <SelectBox onChange={(input) => {
 
                                                                         const { graphForm } = this.state;

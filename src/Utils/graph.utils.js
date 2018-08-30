@@ -78,7 +78,7 @@ function GetPieGraphData(tableContents, formContent) {
     let graphContent = [];
     let groupedContent = _.groupBy(tableContents, formContent.xAxis);
 
-    groupedContent.forEach((contents, groupBy) => {
+    _.forEach(groupedContent, (contents, groupBy) => {
         let entry = {};
 
         entry[formContent.xAxis] = groupBy;
@@ -109,7 +109,7 @@ function GetColumnGraphData(tableContents, formContent) {
 
     let cities = [];
 
-    cityGroup.forEach((dayEntry, key) => {
+    _.forEach(cityGroup, (dayEntry, key) => {
         let cityArray = [];
 
         dayEntry.forEach((entry) => {
