@@ -1,0 +1,57 @@
+.reset-invoice {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+//   padding: 15px;
+  width: 100%;
+  .left-pane {
+    width: 50%;
+    // display: flex;
+    flex-wrap: wrap;
+    // flex-direction: column;
+    // padding: 15px;
+    .reset-form{
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        .details {
+        width: 50%;
+        padding: 15px;
+        .text-field {
+            display: flex;
+            margin-bottom: 5px;
+            font-weight: 700!important;
+            i{
+                padding-left: 10px;
+                padding-top: 4px;
+            }
+        }
+        input {
+        }
+        }
+    }
+  }
+
+  .right-pane {
+    width: 50%;
+    padding: 15px;
+    .details {
+        width: 50%;
+        padding: 15px;
+        .text-field {
+            display: flex;
+            margin-bottom: 5px;
+            font-weight: 700!important;
+            i{
+                padding-left: 10px;
+                padding-top: 4px;
+            }
+        }
+        input {
+        }
+        }
+  }
+  .modal-footer{
+      width: 100%;
+  }
+}

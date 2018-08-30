@@ -90,7 +90,7 @@ export default class MultipleImageUpload extends Component {
 
             MultipleUpload(data).then(result => {
                 if (result.success) {
-                    onSubmit(column, result.response.success);
+                    onSubmit(result.response.success, column);
                     this.closeModal();
                 }
             });

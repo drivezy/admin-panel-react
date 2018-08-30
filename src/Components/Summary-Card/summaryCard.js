@@ -27,8 +27,12 @@ export default class SummaryCard extends Component {
     }
 
     getBookingData = (bookingData) => {
-        if (bookingData.payment && bookingData.payment.length) {
-            bookingData.payment.forEach(function (data) {
+        paidAmount = 0;
+        fairAmount = 0;
+        tentative_amount = 0;
+        amountDue = 0;
+        if (bookingData.booking_payment && bookingData.booking_payment.length) {
+            bookingData.booking_payment.forEach(function (data) {
                 paidAmount += parseFloat(data.amount);
             });
         }

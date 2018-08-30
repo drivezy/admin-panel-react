@@ -1,0 +1,16 @@
+.data{
+    display: flex;
+    justify-content: space-between;
+    .less{
+        width: 300px;
+        overflow: hidden;
+    }
+    .more{
+        width: 300px;
+        overflow-x: hidden;
+        white-space: initial;
+    }
+    a{
+        color: #368db9 !important;
+    }
+}

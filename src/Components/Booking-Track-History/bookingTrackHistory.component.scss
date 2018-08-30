@@ -1,0 +1,53 @@
+.my-toggle-btn{
+    cursor: pointer;
+    display: inline-block;
+  }
+  .my-toggle-btn input[type=checkbox]{
+    display: none;
+  }
+  .my-toggle-btn label{
+      background: #f44336;
+      color: #fff;
+      width: 120px;
+      padding: 5px 10px;
+      font-family: 'Roboto Slab', serif;
+      display: inline-block;
+      border-radius: 16px;
+      position: relative;
+      text-align: center;
+      transition: all .4s ease;
+      cursor: pointer;
+  }
+  .my-toggle-btn label:before{
+      content: '';
+      position: absolute;
+      height: 26px;
+      width: 26px;
+      border-radius: 16px;
+        background: #fff;
+        left: 4px;
+        top: 1px;
+      transition: left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), padding 0.3s ease, margin 0.3s ease;
+  }
+  .my-toggle-btn input[type=checkbox]:checked + label:before{
+    left: 92px;
+    transition: left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), padding 0.3s ease, margin 0.3s ease;
+  }
+  .my-toggle-btn input[type=checkbox]:checked + label span.off{
+    display: none;
+  }
+  .my-toggle-btn input[type=checkbox]:checked + label span.on{
+    margin-left: -20px;
+    display: inline;
+  }
+  .my-toggle-btn input[type=checkbox] + label span.on{
+    display: none;
+  }
+  .my-toggle-btn input[type=checkbox] + label span.off{
+    margin-right: -20px;
+    display: inline;
+  }
+  
+  .my-toggle-btn input[type=checkbox]:checked + label{
+    background: #4caf50;
+  }
