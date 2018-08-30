@@ -1,0 +1,44 @@
+.generate-qr{
+    .qr-block{
+        padding-top: 30px;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        .individual-qr{
+            text-align: center;
+            width: 50%;
+            .vehicle{
+                font-size: 26px;
+                font-weight: 500;
+                margin-top: 5px;
+                margin-bottom: 20px
+            }
+        }
+    }
+    .footer{
+        float: right;
+        padding: 20px;
+        .btn{
+            margin: 10px;
+        }
+    }
+    
+}
+@media screen {
+    #printSection {
+        display: none;
+    }
+}
+@media print {
+    body * {
+        visibility:hidden;
+    }
+    #printSection, #printSection * {
+        visibility:visible;
+    }
+    #printSection {
+        position:absolute;
+        left:0;
+        top:0;
+    }
+}

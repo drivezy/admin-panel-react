@@ -41,7 +41,7 @@ export default class UserLicenseCard extends Component {
 
     walletAmount = async () => {
         const { userData } = this.state;
-        
+
         const url = 'wallet?user=' + userData.id
         const result = await Get({ url });
         if (result.success) {
@@ -55,7 +55,7 @@ export default class UserLicenseCard extends Component {
 
     render() {
         const { userData = {}, promoWallet, cashWallet, userLicenseImage, flag } = this.state;
-       // sample = this.props.sample();
+        // sample = this.props.sample();
         let userLicenseImageArr = [];
 
         //.filter((image) => image.approved == 1)
@@ -80,9 +80,12 @@ export default class UserLicenseCard extends Component {
             show: this.state.visible && inline,
         });
 
+        { userLicenseImageArr.map((value, key) => value.image = value.license) }
+        
         return (
             <Card className="user-license-card">
                 <div className="user-license-photo">
+
                     {
                         userLicenseImageArr.length > 0 ?
                             // <div>
@@ -99,6 +102,7 @@ export default class UserLicenseCard extends Component {
                                         zoomable={false}
                                     /> */}
                                 {/* <div> */}
+
                                 <ImageViewer images={userLicenseImageArr} />
                                 {/* </div> */}
                                 {/* <i className="fa fa-plus"></i> */}

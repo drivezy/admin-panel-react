@@ -28,8 +28,6 @@ export default class ReleaseAmount extends Component {
                 ToastNotifications.success({ title: 'Amount Released' });
             }
 
-            console.log("DONE")
-
         }
         ConfirmUtils.confirmModal({ message: "Are you sure you want to proceed?", callback: method });
     }

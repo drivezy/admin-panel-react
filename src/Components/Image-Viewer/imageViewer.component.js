@@ -2,25 +2,25 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 
 
-import './../../../node_modules/imageviewer/dist/viewer';
-import './../../../node_modules/imageviewer/dist/viewer.css';
+import 'imageviewer/dist/viewer';
+import 'imageviewer/dist/viewer.css';
 import './imageViewer.component.css';
 
 export default class ImageViewer extends Component {
 
     constructor(props) {
         super(props);
-
         this.state = {
             images: props.images
             // toolbar:props.toolbar
-
         }
+       
     }
 
 
     componentDidMount = () => {
-        let $image = $('#images');
+        const { idVal = 'images' } = this.props;
+        let $image = $(`#${idVal}`);
 
         $image.viewer({
             inline: true,
@@ -72,7 +72,7 @@ export default class ImageViewer extends Component {
 
 
             viewed: function () {
-                // $image.viewer('zoomTo', 0.4);
+                $image.viewer('zoomTo', 0.2);
             }
         });
 
@@ -87,18 +87,21 @@ export default class ImageViewer extends Component {
 
     render() {
         const { images } = this.state;
+        let { idVal = 'images' } = this.props;
         return (
-            <div className="image-viewer">
-                <ul id="images">
+            <div className="image-viewer ">
+                <ul id={idVal} style={{ display: 'none' }}>
                     {
                         images.map((image, key) => (
-                            <li className="image-content" key={key}><img src={image.license} alt="Picture 1" /></li>
+                            <li className="image-content" key={key}>
+                                <img src={image.image} alt="Picture 1" />
+                            </li>
                         ))
                     }
                 </ul>
 
-            </div>
-            
+            </div >
+
         )
     }
 }
