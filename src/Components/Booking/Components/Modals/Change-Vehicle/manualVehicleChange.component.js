@@ -88,7 +88,7 @@ export default class ChangeVehicle extends Component {
             else{
                 ModalManager.closeModal();
                 alert(`${result.response}`)
-                window.location.reload(true);
+                ModalManager.closeModal();
             }
             
         }
