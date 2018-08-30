@@ -82,9 +82,15 @@ export default class ChangeVehicle extends Component {
             });
             if (result.success) {
                 ToastNotifications.success({ title: 'Vehicle Changed Successfully' });
+                ModalManager.closeModal();
                 window.location.reload(true);
             }
-            ModalManager.closeModal();
+            else{
+                ModalManager.closeModal();
+                alert(`${result.response}`)
+                window.location.reload(true);
+            }
+            
         }
         ConfirmUtils.confirmModal({ message: "Are you sure want to Change Vehicle?", callback: method });
     }
