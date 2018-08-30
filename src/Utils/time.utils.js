@@ -72,3 +72,10 @@ export function SetTimeInExistingDate(newDate, existingdateTime) {
 function Padding(num) {
     return `0${num}`.slice(-2);
 }
+
+export function TimeDifference(endTime, startTime) {
+    let ms = moment(endTime).diff(moment(startTime));
+    let d = moment.duration(ms);
+    let s = Math.floor(d.asHours()) + "h " + Math.floor(d.minutes()) + "m";
+    return s;
+};
