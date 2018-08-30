@@ -245,6 +245,7 @@ export class Spotlight extends Component {
             else if (querySearchList.length)
                 this.redirectTo(searchList[searchList.length - 1][this.currentIndex]);
         }
+    this.currentIndex = 0;
     }
 
     traverse = (direction) => {
