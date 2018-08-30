@@ -34,13 +34,18 @@ export default class ReferenceInput extends Component {
 
         const { column } = nextProps;
         const url = this.extractUrlFromColumn(column);
+        let stateObj = {};
 
-        const stateObj = { url };
+        if (url != this.state.url) {
+            stateObj = { url };
+        }
 
         if (nextProps.model && typeof nextProps.model == 'object') {
             stateObj.value = nextProps.model;
         }
-        this.setState(stateObj);
+        if (Object.keys(stateObj).length) {
+            this.setState(stateObj);
+        }
     }
 
     componentWillUnmount = () => {

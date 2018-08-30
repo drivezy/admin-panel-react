@@ -1,0 +1,35 @@
+.summary{
+    position: absolute;
+    display: flex;
+    top: 21px;
+    color: #3fb187;
+    right: 25%;
+    font-size: 1.25rem;
+    .item{
+        padding: 0px 10px;
+        .fa{
+            padding-right: 5px;
+        }
+    }
+}
+.panel{
+    margin: 5px 10px;
+    border: 1px solid #e6e6e6;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    .panel-heading{
+        padding: 10px 15px;
+        border-bottom: 1px solid transparent;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        .panel-title{
+            margin-top: 0;
+            margin-bottom: 0;
+            font-size: 16px;
+        }
+    }
+    .panel-body{
+        padding: 15px;
+    }
+}

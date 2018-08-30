@@ -17,7 +17,7 @@ export default class CustomTooltip extends Component {
         const { html, title, placement } = this.props;
         return (
             /* showing content in custom tool component */
-            <Tooltip position={placement} content={title} >
+            <Tooltip style={{zIndex: '9999999'}} position={placement} content={title} >
                 <span className="tooltip-element">
                     {html}
                 </span>
