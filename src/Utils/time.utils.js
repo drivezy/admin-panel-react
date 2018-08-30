@@ -24,6 +24,10 @@ export function ConvertToMMSS(secs) {
     return `${Padding(minutes)}:${Padding(Seconds)}`;
 }
 
+export function GetRelativeTime(time) {
+    return moment(time).fromNow();
+}
+
 /**
  * Can Add or Subtract time from given time param
  * @param  {string} {time - base time to be added or subtracted
