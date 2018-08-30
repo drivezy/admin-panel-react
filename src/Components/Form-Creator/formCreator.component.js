@@ -171,7 +171,7 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
                             FormUtils.OnChangeListener({ column, value: true });
                             props.setFieldValue(column.name, true);
                         }
-                        }>True</button> 
+                        }>True</button>
 
                     &nbsp;&nbsp;
 
@@ -320,25 +320,30 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         //     )}
         // />,
         [COLUMN_TYPE.UPLOAD]: <ImageUpload value={values[column.name]} name={column.name} onRemove={props.onFileRemove}
-            onSelect={(column, name) => {
-                // console.log(column, name);
+            onSelect={(columnName, name) => {
+                // console.log(columnName, name);
+                FormUtils.OnChangeListener({ column: { path: columnName }, value: name });
+                if (column.type && name.type && name.type.includes(column.type) == false) {
+                    return false;
+                }
                 setTimeout(() => {
-                    props.setFieldValue(column, name ? name.name : '')
-                    props.onFileUpload(column, name);
+                    props.setFieldValue(columnName, name ? name.name : '');
+                    props.onFileUpload(columnName, name);
                 });
+                return true;
             }}
         />,
         // Image Upload Ends
 
-        [COLUMN_TYPE.MULTIPLE_UPLOAD]: <ImageUpload value={values[column.name]} name={column.name} onRemove={props.onFileRemove}
-            onSelect={(column, name) => {
-                // console.log(column, name);
-                setTimeout(() => {
-                    props.setFieldValue(column, name ? name.name : '')
-                    props.onFileUpload(column, name);
-                });
-            }}
-        />,
+        // [COLUMN_TYPE.MULTIPLE_UPLOAD]: <ImageUpload value={values[column.name]} name={column.name} onRemove={props.onFileRemove}
+        //     onSelect={(column, name) => {
+        //         // console.log(column, name);
+        //         setTimeout(() => {
+        //             props.setFieldValue(column, name ? name.name : '')
+        //             props.onFileUpload(column, name);
+        //         });
+        //     }}
+        // />,
 
         // TextArea Begins
         160: <Field

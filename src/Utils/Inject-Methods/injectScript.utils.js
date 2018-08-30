@@ -123,7 +123,7 @@ export function RemoveError(script) {
 // Prepare script for execution according to script type
 export function PrefixScript(definition, executionType) {
     if (definition.activity_type_id == SCRIPT_TYPE.ON_CHANGE) {
-        return `form.onChange({ column: '${definition.column}', callback: (event, column)=> { ${definition.script}} })`;
+        return `form.onChange({ column: '${definition.column}', callback: (value, column, event)=> { ${definition.script}} })`;
     }
     if (IsUndefined(executionType) || executionType == definition.activity_type_id) {
         return definition.script;

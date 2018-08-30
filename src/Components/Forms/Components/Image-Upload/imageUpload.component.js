@@ -7,6 +7,7 @@ import './imageUpload.component.css';
 import GLOBAL from './../../../../Constants/global.constants'
 
 import Dropzone from 'react-dropzone';
+import { IsUndefined } from 'common-js-util/build/common.utils';
 
 export default class ImageUpload extends Component {
 
@@ -21,7 +22,10 @@ export default class ImageUpload extends Component {
     onSelect = acceptedFiles => {
         if (this.props.onSelect) {
             // this.props.onSelect('file', acceptedFiles[0]);
-            this.props.onSelect(this.props.name, acceptedFiles[0]);
+            const res = this.props.onSelect(this.props.name, acceptedFiles[0]);
+            if (res === false) {
+                return;
+            }
             this.setState({ file: acceptedFiles[0] });
         }
     }
