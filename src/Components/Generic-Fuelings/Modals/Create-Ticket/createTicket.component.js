@@ -64,7 +64,7 @@ export default class CreateTicket extends Component {
         //     "Created At": data["created_at"]
         // }
 
-        comment = " Venue:- " + data["vehicle.venue.name"] + "\n Car:-" + data["vehicle_id"] + "\n Reg. No.:- " + data["vehicle.registration_number"] + "\n Litres:- " + data["litres"] + "\n Amount:- " + data["amount"] + "\n Rate:- " + data["amount"] / data["litre"] + "\n Created By:- " + data["created_by"] + "\n Created At:- " + data["created_by"];
+        comment = " Venue:- " + data["vehicle.venue.name"] + "\n Car:-" + data["vehicle_id"] + "\n Reg. No.:- " + data["vehicle.registration_number"] + "\n Litres:- " + data["litres"] + "\n Amount:- " + data["amount"] + "\n Rate:- " + data["amount"] / data["litres"] + "\n Created By:- " + data["created_by"] + "\n Created At:- " + data["created_at"];
 
         this.setState({ comment })
     }
