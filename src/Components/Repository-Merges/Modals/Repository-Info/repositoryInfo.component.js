@@ -33,25 +33,32 @@ export default class RepositoryInfo extends Component {
 
     }
 
-    transfer = (value) => {
-        const { data } = this.state
-        const method = async () => {
-            let url = "approveFueling/" + data.id + "/" + value.id;
-            const result = await Get({
-                url: url
-            });
-            if (result.success) {
-                ModalManager.closeModal();
-                ToastNotifications.success("Record approved successfully");
-            }
-        }
 
+    shutdown = async () => {
+
+        let url = "deployCodeToServer/" + this.state.id;
+        const result = await Get({
+            url: url
+        });
+        if (result.success) {
+            ModalManager.closeModal();
+            ToastNotifications.success("Deployment Successful");
+        }
+        this.componentDidMount ();
+    }
+
+    reload = () => {
+        this.componentDidMount()
     }
 
     render() {
         const { data, deploymentHistory } = this.state
         return (
             <div className="repository-info">
+                <div>
+                    <button className="reload" onClick={() => { this.reload() }}><i class="fa fa-refresh" aria-hidden="true"></i>
+                    </button>
+                </div>
                 <div className="rows">
                     <div className="column-heading">
                         Repository Details
@@ -149,6 +156,55 @@ export default class RepositoryInfo extends Component {
                     <div className="column-heading">
                         Active Servers
                     </div>
+                    <Table>
+                        <thead>
+                            <tr className="list-heading table-row">
+                                <th>
+                                    <label>Server Name</label>
+                                </th>
+                                <th>
+                                    <label>Server IP</label>
+                                </th>
+                                <th>
+                                    <label>Repository Name</label>
+                                </th>
+                                <th>
+                                    <label>Server</label>
+                                </th>
+                                <th>
+                                    <label><i className="fa fa-cog" aria-hidden="true"></i></label>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                Object.keys(deploymentHistory).length && deploymentHistory.servers.length ?
+                                    deploymentHistory.servers.map((value, key) => (
+                                        <tr key={key}>
+                                            <td>
+                                                <label>{value.hostname}</label>
+                                            </td>
+                                            <td>
+                                                <label>{value.ip}</label>
+                                            </td>
+                                            <td>
+                                                <label>{value.repository_name}</label>
+                                            </td>
+                                            <td>
+                                                <label></label>
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td className="save-btn">
+                                                <label><button className="btn btn-sm btn-default" onClick={() => { this.shutdown() }}><i class="fa fa-times-circle" style="color:red"></i></button></label>
+                                            </td>
+                                        </tr>
+                                    ))
+
+                                    : null
+                            }
+                        </tbody>
+                    </Table>
                 </div>
             </div>
         )

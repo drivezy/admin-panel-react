@@ -9,11 +9,15 @@
     .reload {
         float: right;
         border-radius: 4px;
-        cursor: pointer;s
+        cursor: pointer;
     }
     .rows {
         display: flex;
         flex-direction: column;
+        .data-absent {
+            padding-left: 12px;
+            color: #0000004d;
+        }
         .column-heading {
             margin-bottom: 3px;
             margin-top: 3px;
