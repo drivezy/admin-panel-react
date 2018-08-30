@@ -3,16 +3,16 @@
  */
 import React, { Component } from "react";
 import Slider from "react-rangeslider";
-import 'react-rangeslider/lib/index.css';
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
 import moment from 'moment';
-import { StoreEvent, SubscribeToEvent } from 'state-manager-utility';
+import 'react-rangeslider/lib/index.css';
 
 import TimeSpeedChart from './../../Components/Highcharts/TimeChart/timeChart.component';
 import TrackMap from './../../Components/Track-Map/trackMap.component';
 
+import { StoreEvent, SubscribeToEvent } from 'state-manager-utility';
+
 const style = {display: 'flex',justifyContent: 'space-around',padding: '0px'};
+
 var Timer;
 
 export default class TrackHistoryComponent extends React.Component {
