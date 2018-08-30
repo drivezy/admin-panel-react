@@ -5,6 +5,7 @@
         padding: 5px; // margin: 4px;
         flex-basis: 50%;
         .card {
+            height: 100%;
             .card-body {
                 padding: 15px;
             }
@@ -15,11 +16,8 @@
         .panel {
             height: 98%;
             margin: 4px;
-        }
-
-
-        // Graph Builder CSs
-        .graph-builder{
+        } // Graph Builder CSs
+        .graph-builder {
             .graph-form-container {
                 margin: 4px;
                 form.graph-form {
@@ -41,7 +39,7 @@
                             background: #f9f9f9;
                             .graph-types {
                                 padding-top: 10px;
-                                label{
+                                label {
                                     padding: 0px 10px;
                                 }
                                 .graph-type-holder {
@@ -80,9 +78,14 @@
                     }
                 }
             }
-
         }
     }
     .table-panel {}
-    .graph-container {}
+    .graph-container {
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+    }
 }
