@@ -20,15 +20,23 @@ export default class DateTimePicker extends Component {
         }
     }
 
+    UNSAFE_componentWillReceiveProps = (nextProps) => {
+        this.setState({
+            name: nextProps.name,
+            format: nextProps.format,
+            minDate: nextProps.minDate,
+            maxDate: nextProps.maxDate,
+            value: nextProps.value,
+            onChange: nextProps.onChange
+        });
+    }
+
     applyDate = (dt) => {
 
         const { onChange } = this.state;
 
         onChange(this.state.name, dt.format(this.state.format));
 
-    }
-
-    componentDidMount() {
     }
 
     render() {

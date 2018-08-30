@@ -457,7 +457,7 @@ export default class GenericQueryDetail extends Component {
                             // queryTable={useQueryTable}
                             queryData={queryParamsData}
                             columns={columns}
-                            // formContent={formContent}
+                            formContent={formContent}
                             fields={queryParamsData.parameters}
                         />
                     }

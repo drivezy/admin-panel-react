@@ -23,7 +23,7 @@ const inputElement = ({ props, preference, column, values }) => {
         // String Ends
 
         // Single DatePicker with Timepicker 
-        594: <DateTimePicker onChange={props.setFieldValue} name={column.param} vdalue={values[column.param]} />,
+        594: <DateTimePicker onChange={props.setFieldValue} name={column.param} value={values[column.param]} />,
         // Single DatePicker with Timepicker ends
 
         // Single DatePicker with Timepicker 
@@ -152,7 +152,9 @@ class formElements extends Component {
 
                                         this.state.aggregate_column.push(param);
 
-                                        props.setFieldValue('aggregate_column', JSON.stringify(this.state.aggregate_column));
+                                        props.setFieldValue('aggregate_column', this.state.aggregate_column);
+
+                                        // props.setFieldValue('aggregate_column', JSON.stringify(this.state.aggregate_column));
                                         this.setState({ operator: '', custom_column: '' });
                                     }} >
                                         +
@@ -189,8 +191,10 @@ const FormContents = withFormik({
     mapPropsToValues: props => {
 
         const { payload } = props;
+        const { formContent } = payload;
 
 
+        return formContent;
     },
     setValues: () => {
         console.log(arguments);
@@ -212,6 +216,7 @@ export default class DashboardForm extends Component {
 
         this.state = {
             payload: {
+                formContent: this.props.formContent,
                 operators: this.props.operators,
                 queryData: this.props.queryParamsData,
                 columns: this.props.columns || [],
@@ -223,6 +228,7 @@ export default class DashboardForm extends Component {
     UNSAFE_componentWillReceiveProps(nextProps) {
         this.setState({
             payload: {
+                formContent: this.props.formContent,
                 operators: this.props.operators,
                 queryData: this.props.queryParamsData,
                 columns: this.props.columns || [],
