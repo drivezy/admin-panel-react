@@ -15,7 +15,8 @@ export default class RepositoryInfo extends Component {
 
         this.state = {
             data: props.data,
-            eventHistory: {}
+            eventHistory: {},
+            triggerHistory: {}
         }
     }
 
@@ -27,15 +28,17 @@ export default class RepositoryInfo extends Component {
     getMatches = async () => {
         const { data } = this.state
         const result = await Get({
-            url: "eventQueue?query=source=REPO-MERGE-" + data.id + "&includes=triggers"
+            url: 'eventQueue?query=source="REPO-MERGE-' + data.id + '"&includes=triggers'
         });
 
         this.setState({ eventHistory: result.response })
+        this.setState({ triggerHistory: eventHistory[0] })
 
     }
 
 
-    transmit = async () => {
+    transmit = async (key) => {
+        this.setState({ triggerHistory: eventHistory[key] })
     }
 
     reload = () => {
@@ -99,7 +102,7 @@ export default class RepositoryInfo extends Component {
                                                 <label>{value.end_time}</label>
                                             </td>
                                             <td className="save-btn">
-                                                <label><button className="btn btn-sm btn-default" onClick={() => { this.transmit() }}><i class="fa fa-info-blue" style="color:red"></i></button></label>
+                                                <label><button className="btn btn-sm btn-default" onClick={() => { this.transmit(key) }}><i class="fa fa-info" ></i></button></label>
                                             </td>
 
                                         </tr>
@@ -135,8 +138,8 @@ export default class RepositoryInfo extends Component {
                         </thead>
                         <tbody>
                             {
-                                (eventHistory && Object.keys(eventHistory).length && eventHistory.triggers.length) ?
-                                    eventHistory.servers.map((value, key) => (
+                                (triggerHistory && Object.keys(triggerHistory).length && triggerHistory.triggers.length) ?
+                                    triggerHistory.servers.map((value, key) => (
                                         <tr key={key}>
                                             <td>
                                                 <label>{value.identifier}</label>
