@@ -171,7 +171,7 @@ export default class ChangeVehicle extends Component {
                                         
                                             <SelectBox 
                                             value={bookingData.billing_car.name}
-                                            isClearable={false} onChange={(value) => { this.setState({ car_id: value.id }); }} field="name" options={cars} />
+                                            isClearable={false} onChange={(value) => { this.state.car_id = value.id; this.getVehicles(); }} field="name" options={cars} />
                                         
                                         </div>
                                     </div>
