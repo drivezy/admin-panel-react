@@ -81,7 +81,6 @@ export default class StartRide extends Component {
     setCurrentTime(presentTime) {
         // this.setState({ presentTime: presentTime })
         let pickupTime
-        console.log(presentTime)
         if (presentTime)
             pickupTime = moment().format('YYYY-MM-DD HH:mm')
         else

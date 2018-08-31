@@ -142,7 +142,7 @@ export default class Sidenav extends Component {
         // To search PNR
 
         result = await Get({ url: "bookingToken/" + searchText });
-        console.log(result)
+       
         // if (result.success) {
         //     result.response.name = searchText;
         //     result.response.url = 'booking/' + result.response.id;
@@ -271,8 +271,6 @@ export default class Sidenav extends Component {
             })
         }
 
-
-        console.log(finalData)
         this.setState({ finalData });
 
     }
