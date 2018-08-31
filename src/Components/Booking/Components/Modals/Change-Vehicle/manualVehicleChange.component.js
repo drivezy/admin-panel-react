@@ -86,11 +86,36 @@ export default class ChangeVehicle extends Component {
                 window.location.reload(true);
             }
             else{
-                ModalManager.closeModal();
-                alert(`${result.response}`)
-                ModalManager.closeModal();
+                ConfirmUtils.confirmModal({ message: "System didn't allow requested allocation. Click Yes to change the vehicle forcefully.", callback: forceMethod });
             }
-            
+            ModalManager.closeModal();
+        }
+        const forceMethod = async () => {
+            const result = await Post({
+                urlPrefix: API_HOST,
+                body: {
+                    forcefully: 1,
+                    between_booking,
+                    car: car_id,
+                    new_fuel,
+                    old_fuel,
+                    reason,
+                    reason_code: reason_id,
+                    time: start_date,
+                    vehicle: registration_id,
+                    new_odo,
+                    old_odo
+                },
+                url: `changeVehicle/${bookingData.id}`
+            });
+            if (result.success) {
+                ToastNotifications.success({ title: 'Vehicle Changed Successfully' });
+                window.location.reload(true);
+            }
+            else{
+                ToastNotifications.error({ title: `${result.response}` });
+            }
+            ModalManager.closeModal();
         }
         ConfirmUtils.confirmModal({ message: "Are you sure want to Change Vehicle?", callback: method });
     }
