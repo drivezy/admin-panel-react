@@ -6,6 +6,11 @@ export default {
         "columnType": COLUMN_TYPE.DATETIME,
         "path": 'Generic-Column-Filters/boldLetter.component.js'
     },
+    "View HTML": {
+        "name": "View HTML",
+        "columnType": COLUMN_TYPE.STRING,
+        "path": 'Generic-Column-Filters/viewHTML.component.js'
+    },
     "Shorten Content" : {
         "name": "Shorten Content",
         "columnType": COLUMN_TYPE.STRING,
