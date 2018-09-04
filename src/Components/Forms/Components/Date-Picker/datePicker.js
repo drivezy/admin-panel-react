@@ -29,7 +29,7 @@ export default class DatePicker extends Component {
     applyDate = (event, picker) => {
         let { value } = this.state;
 
-        if (this.props.single) {
+        if (this.props && this.props.single) {
             value = picker.startDate.format(this.state.format);
         } else {
             value.startDate = picker.startDate.format(this.state.format);
@@ -37,6 +37,7 @@ export default class DatePicker extends Component {
         }
 
         if (this.props.onChange) {
+            // this.props.onChange(...event);
             this.props.onChange(this.props.name, value);
         }
 

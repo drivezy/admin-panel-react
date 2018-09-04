@@ -65,8 +65,10 @@ export default class CustomAction extends Component {
 
     callFunction = ({ action, listingRow }) => {
         const args = [];
-        const { genericData, history, callback, source = 'model', menuDetail = {}, parentData = {} } = this.props;
+        const { genericData, history, callback, source = 'model', menuDetail: menuDetailOriginal = {}, parentData = {} } = this.props;
         this.genericData = genericData;
+
+        let menuDetail = { ...menuDetailOriginal }; // inorder to avoid double binding, which affects parent state menuDetail
         if (source == 'model') { // dont send restricted query for model
             delete menuDetail.restricted_query;
         }

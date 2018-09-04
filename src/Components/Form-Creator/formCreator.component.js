@@ -111,7 +111,19 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // Static Ends
 
         // Number
-        [COLUMN_TYPE.NUMBER]: <Field autoComplete="off" className="form-control" type="number" name={column.name} placeholder={`Enter ${column.display_name}`} />,
+        // [COLUMN_TYPE.NUMBER]: <Field autoComplete="off" className="form-control" type="number" name={column.name} placeholder={`Enter ${column.display_name}`} />,
+        [COLUMN_TYPE.NUMBER]: <input type="number" id={column.name} name={column.name} className="form-control" rows="3"
+            placeholder={`Enter ${column.display_name}`}
+            onBlur={(e) => { console.log(e); props.handleBlur(e) }}
+            onChange={(event, ...args) => {
+                FormUtils.OnChangeListener({ column, value: event.target.value, ...event });
+                // props.handleChange(event, args);
+                props.setFieldValue(column.name, event.target.value)
+            }}
+            disabled={column.disabled}
+            autoComplete="off"
+            value={values[column.name]}
+        />,
         // Number Ends
 
         // 108: <Field disabled={column.disabled} id={column.name} onChange={({ ...args }) => FormUtils.OnChangeListener(args)} name={column.name} className={`form-control ${props.errors[column.index] && props.touched[column.index] ? 'is-invalid' : ''}`} type="text" placeholder={`Enter ${column.name}`} />,
@@ -308,25 +320,30 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         //     )}
         // />,
         [COLUMN_TYPE.UPLOAD]: <ImageUpload value={values[column.name]} name={column.name} onRemove={props.onFileRemove}
-            onSelect={(column, name) => {
-                // console.log(column, name);
+            onSelect={(columnName, name) => {
+                // console.log(columnName, name);
+                FormUtils.OnChangeListener({ column: { path: columnName }, value: name });
+                if (column.type && name.type && name.type.includes(column.type) == false) {
+                    return false;
+                }
                 setTimeout(() => {
-                    props.setFieldValue(column, name ? name.name : '')
-                    props.onFileUpload(column, name);
+                    props.setFieldValue(columnName, name ? name.name : '');
+                    props.onFileUpload(columnName, name);
                 });
+                return true;
             }}
         />,
         // Image Upload Ends
 
-        [COLUMN_TYPE.MULTIPLE_UPLOAD]: <ImageUpload value={values[column.name]} name={column.name} onRemove={props.onFileRemove}
-            onSelect={(column, name) => {
-                // console.log(column, name);
-                setTimeout(() => {
-                    props.setFieldValue(column, name ? name.name : '')
-                    props.onFileUpload(column, name);
-                });
-            }}
-        />,
+        // [COLUMN_TYPE.MULTIPLE_UPLOAD]: <ImageUpload value={values[column.name]} name={column.name} onRemove={props.onFileRemove}
+        //     onSelect={(column, name) => {
+        //         // console.log(column, name);
+        //         setTimeout(() => {
+        //             props.setFieldValue(column, name ? name.name : '')
+        //             props.onFileUpload(column, name);
+        //         });
+        //     }}
+        // />,
 
         // TextArea Begins
         160: <Field
