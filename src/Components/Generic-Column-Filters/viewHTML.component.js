@@ -31,7 +31,13 @@ export default class MoreLess extends Component {
                         <a onClick={() =>
                             ModalManager.openModal({
                                 headerText: "Content",
-                                modalBody: () => (<div>{ReactHtmlParser(data)}</div>)
+                                modalBody: () => (
+                                    <div className="parsedHTML">
+                                        <div className="html">
+                                            {ReactHtmlParser(data)}
+                                        </div>
+                                    </div>
+                                )
                             })}>{data}</a>
                     </div>
                 </div>
@@ -40,7 +46,13 @@ export default class MoreLess extends Component {
                     <a onClick={() =>
                         ModalManager.openModal({
                             headerText: "Content",
-                            modalBody: () => (<div>{ReactHtmlParser(data)}</div>)
+                            modalBody: () => (
+                                <div className="parsedHTML">
+                                    <div className="html">
+                                        {ReactHtmlParser(data)}
+                                    </div>
+                                </div>
+                            )
                         })}>{data}</a>
                 </div>
         )
