@@ -242,11 +242,11 @@ class FormElements extends Component {
                                 <div className="active-selections">
                                     {
                                         formContent.aggregate_column.map((aggregation, key) =>
-                                            <li class="am-list-group-item ">
-                                                <span class="delete-icon" onClick={() => { this.removeAggregation(key); }}>
-                                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                            <li className="am-list-group-item" key={key}>
+                                                <span className="delete-icon" onClick={() => { this.removeAggregation(key); }}>
+                                                    <i className="fa fa-times" aria-hidden="true"></i>
                                                 </span>
-                                                <span class="item-label ng-binding">
+                                                <span className="item-label ng-binding">
                                                     {aggregation.name} : {aggregation.column}
                                                 </span>
                                             </li>

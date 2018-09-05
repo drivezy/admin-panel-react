@@ -62,8 +62,15 @@ export default class Dashboard extends Component {
         this.group_columns = [];
         this.aggregate_columns = [];
 
+        var aggregate_columns = [];
+
         var group_columns = formContent.group_column.split(',').filter((entry) => entry != '') || [];
-        var aggregate_columns = formContent.aggregate_column || [];
+
+        if (typeof formContent.aggregate_column == 'string') {
+            aggregate_columns = JSON.parse(formContent.aggregate_column);
+        } else {
+            aggregate_columns = formContent.aggregate_column;
+        }
 
         // Build the group Columns
         group_columns.forEach((column) => {
