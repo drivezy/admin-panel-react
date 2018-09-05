@@ -98,6 +98,8 @@ export default class EndRideConfirm extends Component {
                 ModalManager.closeModal();
                 ModalManager.closeModal();
                 ToastNotifications.success({ title: "Ride Ended Successfully" });
+                this.props.callback();
+
             }
             else{
                 ModalManager.closeModal();
@@ -166,11 +168,12 @@ export default class EndRideConfirm extends Component {
                                                 <label>End Time&nbsp;<i className="fa fa-clock-o" aria-hidden="true"></i>&nbsp;<i className="fa fa-car" aria-hidden="true"></i></label>
                                             </div>
                                             <div className="col-sm-12">
-                                                <DatePicker
+                                                {/* <DatePicker
                                                     value={endRideInfo.end_time}
                                                     single={true}
                                                     disabled
-                                                />
+                                                /> */}
+                                                <input type='text' placeholder='Booking PNR' value={endRideInfo.end_time} disabled />
                                                 {/* <input type='datetime-local' value={endRideInfo.end_time} disabled /> */}
                                             </div>
                                         </div>
@@ -228,7 +231,7 @@ export default class EndRideConfirm extends Component {
                                     <label>Comments</label>
                                 </div>
                                 <div className="col-sm-12">
-                                    <input type='text' value={endRideInfo.ride_return.comments} disabled />
+                                    <input type='text' value={endRideInfo.ride_return.comments ? endRideInfo.ride_return.comments : ''} disabled />
                                 </div>
                             </div>
                         </div>
