@@ -77,7 +77,6 @@ export default class RepositoryInfo extends Component {
         const result = await Get({ url: 'venue?query=city_id=' + cityid + ' and ' + 'active=1&limit=200' });
         let venues = []
         if (result.success) {
-            console.log(result.response)
             let venueData = result.response;
             venueData.map((value, key) => {
                 let venue = {}
@@ -119,7 +118,7 @@ export default class RepositoryInfo extends Component {
 
     transfer = async () => {
         const { cityid, amount, comment, time, expenseHeadId, vendorId, venueid } = this.state
-        
+
         const result = await Post({
             body: {
                 amount: amount,
@@ -134,13 +133,15 @@ export default class RepositoryInfo extends Component {
         });
         if (result.success) {
             ModalManager.closeModal();
-            MultiUploadModal({ title: 'Add Expense', onSubmit: this.getResult(this.props) })
+            MultiUploadModal({ title: 'Add Expense', onSubmit: this.attachImage })
         }
 
     }
 
-    getResult = (data) => {
-        console.log(data);
+    attachImage = (data) => {
+        this.props.callback();
+        ToastNotifications.success({ title: "Image uplaoded successfully!" });
+        ModalManager.closeModal();
     }
 
     render() {
@@ -170,7 +171,7 @@ export default class RepositoryInfo extends Component {
 
                         <div className="fields-right">
                             <span className="text-field">Venue</span>
-                            <SelectBox onChange={(e) => this.setVenue(e)} className="data-field" placeholder='Select Venue' field='name' options={venues} ></SelectBox>
+                            <SelectBox onChange={(e) => { this.setVenue(e); this.setState({ venueid: e.id }) }} className="data-field" placeholder='Select Venue' field='name' options={venues} ></SelectBox>
                         </div>
 
                     </div>
