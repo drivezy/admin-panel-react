@@ -20,6 +20,10 @@ export default class BookingTabsDetail extends Component {
         };
     }
 
+    UNSAFE_componentWillReceiveProps(nextProps){
+        this.setState({bookingTabsData: nextProps.bookingTabsData});
+    }
+
     toggle = (key, tab) => {
         this.setState({
             activeTab: key
