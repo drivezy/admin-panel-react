@@ -74,7 +74,7 @@ export default class BookingTabsDetail extends Component {
                     field: "created_by",
                     label: "Created By"
                 }]
-            },{
+            }, {
                 name: 'Booking Source',
                 data: bookingTabsData.source,
                 columns: [{
@@ -317,7 +317,7 @@ export default class BookingTabsDetail extends Component {
                     field: "created_at",
                     label: "Created At"
                 }]
-            },{
+            }, {
                 name: 'Reset Invoice',
                 data: bookingTabsData.reset_invoice,
                 columns: [{
@@ -333,7 +333,7 @@ export default class BookingTabsDetail extends Component {
                     field: "created_at",
                     label: "Created At"
                 }]
-            },{
+            }, {
                 name: 'Booking Checklist',
                 data: bookingTabsData.booking_steps,
                 columns: [{
@@ -349,7 +349,7 @@ export default class BookingTabsDetail extends Component {
                     field: "completed_at",
                     label: "Completed At"
                 }]
-            },{
+            }, {
                 name: 'Booking Source',
                 data: bookingTabsData.source,
                 columns: [{
@@ -365,7 +365,7 @@ export default class BookingTabsDetail extends Component {
                     field: "browser",
                     label: "Browser"
                 }]
-            },{
+            }, {
                 name: 'Extension',
                 data: bookingTabsData.extension,
                 columns: [{
@@ -395,13 +395,13 @@ export default class BookingTabsDetail extends Component {
                 }, {
                     field: "created_at",
                     label: "Created At"
-                },{
+                }, {
                     field: "deleted_at",
                     label: "Cancelled Time"
-                },{
+                }, {
                     field: "user_requested",
                     label: "User Requested"
-                },{
+                }, {
                     name: 'Pricing Object',
                     data: bookingTabsData.pricing_object,
                     columns: [{

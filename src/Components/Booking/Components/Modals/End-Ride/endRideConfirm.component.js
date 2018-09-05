@@ -98,7 +98,7 @@ export default class EndRideConfirm extends Component {
                 ModalManager.closeModal();
                 ModalManager.closeModal();
                 ToastNotifications.success({ title: "Ride Ended Successfully" });
-                this.props.callback();
+                this.props.callback;
 
             }
             else{
