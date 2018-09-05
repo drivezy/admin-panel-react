@@ -21,9 +21,17 @@ export default class SummaryCard extends Component {
         };
     }
 
+    UNSAFE_componentWillReceiveProps(nextProps){
+        this.setState({bookingData: nextProps.bookingData});
+    }
+
     componentDidMount() {
         const { bookingData } = this.state;
         this.getBookingData(bookingData);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({ bookingData: nextProps.bookingData });
     }
 
     getBookingData = (bookingData) => {
