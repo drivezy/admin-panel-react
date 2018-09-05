@@ -32,12 +32,13 @@ export default class RepositoryInfo extends Component {
         });
 
         this.setState({ eventHistory: result.response })
-        this.setState({ triggerHistory: eventHistory[0] })
+        this.setState({ triggerHistory: result.response[0] })
 
     }
 
 
     transmit = async (key) => {
+        const { eventHistory } = this.state
         this.setState({ triggerHistory: eventHistory[key] })
     }
 
@@ -46,7 +47,7 @@ export default class RepositoryInfo extends Component {
     }
 
     render() {
-        const { data, eventHistory } = this.state
+        const { data, eventHistory, triggerHistory } = this.state
         return (
             <div className="repository-info">
                 <div>
