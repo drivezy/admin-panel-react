@@ -33,7 +33,7 @@ export default class CreateTicket extends Component {
             url: "task",
             body: {
                 category: 232,
-                // assignee: obj.city.city_head_id,
+                assignee: data["city.city_head_id"],
                 priority: 2,
                 comment: this.state.comment,
                 subject: "Fueling Approval-" + data.id,
@@ -41,8 +41,9 @@ export default class CreateTicket extends Component {
                 from_name: this.state.userData.display_name
             }
         });
+        ModalManager.closeModal();
         if (result.success) {
-            ToastNotifications.success({ title: 'Successfull' });
+            ToastNotifications.success({ title: 'Ticket has been assigned to the City Head' });
         }
     }
 
@@ -64,7 +65,7 @@ export default class CreateTicket extends Component {
         //     "Created At": data["created_at"]
         // }
 
-        comment = " Venue:- " + data["vehicle.venue.name"] + "\n Car:-" + data["vehicle_id"] + "\n Reg. No.:- " + data["vehicle.registration_number"] + "\n Litres:- " + data["litres"] + "\n Amount:- " + data["amount"] + "\n Rate:- " + data["amount"] / data["litre"] + "\n Created By:- " + data["created_by"] + "\n Created At:- " + data["created_by"];
+        comment = " Venue:- " + data["vehicle.venue.name"] + "\n Car:-" + data["vehicle_id"] + "\n Reg. No.:- " + data["vehicle.registration_number"] + "\n Litres:- " + data["litres"] + "\n Amount:- " + data["amount"] + "\n Source:- " + data["source.name"] + "\n Rate:- " + data["amount"] / data["litres"] + "\n Fueling Time:- " + data["fueling_time"] + "\n Created By:- " + data["created_by"] + "\n Created At:- " + data["created_at"];
 
         this.setState({ comment })
     }
@@ -78,7 +79,7 @@ export default class CreateTicket extends Component {
             <div className="create-ticket">
                 <div>
                     <span className="text-field">Comment</span>
-                    <textarea onChange={(e)=>{this.setState({comment: e.target.value})}} value={comment} className="data-field"></textarea>
+                    <textarea onChange={(e) => { this.setState({ comment: e.target.value }) }} value={comment} className="data-field"></textarea>
                 </div>
                 <div className="col-sm-12 btns">
                     <button className="btn btn-default" onClick={(e) => { e.preventDefault(); ModalManager.closeModal(); }
