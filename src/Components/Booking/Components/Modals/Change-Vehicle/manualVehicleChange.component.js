@@ -5,7 +5,6 @@ import { API_HOST } from './../../../../../Constants/global.constants';
 
 import SelectBox from './../../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
 import DatePicker from './../../../../Forms/Components/Date-Picker/datePicker';
-import DateTimePicker from './../../../../../../src/Components/Date-Time-Picker/dateTimePicker.component';
 
 import { Get, Post } from 'common-js-util';
 import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
@@ -170,8 +169,14 @@ export default class ChangeVehicle extends Component {
                     </div>
                         <div className="col-sm-12">
                             {/* <DatePicker single={true} timePicker={true} onChange={(value) => this.setState({ start_date: value }) } /> */}
-                            
-                            <DateTimePicker onChange={(value) => this.setState({ start_date: value })} />
+
+                            <DatePicker
+                                value={start_date}
+                                single={true}
+                                timePicker={true}
+                                onChange={(name, value) => this.setState({ start_date: value })}
+                            />
+                            {/* <DateTimePicker onChange={(value) => this.setState({ start_date: value })} /> */}
                         </div>
                     </div>
 
