@@ -220,6 +220,7 @@ export default class ListingSearch extends Component {
                     <div className="listing-search-tool">
                         <div className="listing-select-tool">
                             <SelectBox label="display_name"
+                                field='path'
                                 isClearable={false}
                                 field="display_name"
                                 onChange={(data) => {

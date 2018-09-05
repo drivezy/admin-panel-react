@@ -4,8 +4,8 @@ import ScriptInput from './../../Components/Forms/Components/Script-Input/script
 
 import {  ToastNotifications } from 'drivezy-web-utils/build/Utils';
 import { GetUrlParams, Location } from 'drivezy-web-utils/build/Utils/location.utils';
+import { StoreEvent} from 'state-manager-utility';
 import { Get, Put, BuildUrlForGetCall, IsObjectHaveKeys  } from 'common-js-util';
-
 import { GetColumnDetail, ExtractColumnName } from './../../Utils/panel.utils';
 
 import { ClientScriptEndPoint } from './../../Constants/api.constants';
@@ -32,6 +32,7 @@ export default class ClientScript extends Component {
         url = BuildUrlForGetCall(url, apiParams);
         const result = await Get({ url, urlPrefix: ROUTE_URL });
         this.clientDataFetched(result);
+        StoreEvent({ eventName: 'showMenuName', data: { menuName: `Client Script - ${id}` } });
     }
 
     clientDataFetched = (result) => {
@@ -135,9 +136,9 @@ export default class ClientScript extends Component {
 
                 <div className='body'>
 
-                <div className="script-header">
+                {/* <div className="script-header">
                     {<h6>Client Script - {clientScript.id} </h6>}
-                </div>
+                </div> */}
 
                     <form name='securityRule' className="clientScript">
                         <div className='form-row'>
@@ -210,7 +211,7 @@ export default class ClientScript extends Component {
                                 }
                             </div>
                         </div>
-                    </form>
+                    
                     <div className="actions">
                         <button className="btn btn-info" onClick={() => this.closeForm(true)} style={{ margin: '8px' }}>
                             Cancel
@@ -219,6 +220,7 @@ export default class ClientScript extends Component {
                             Save
                         </button>
                     </div>
+                    </form>
                 </div>
             </div>
 

@@ -12,7 +12,7 @@ import UserCard from './../../Components/User-Card/userCard.component';
 import TableWrapper from './../../Components/Table-Wrapper/tableWrapper.component';
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 import { GetPreSelectedMethods, RegisterMethod, GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
-import { SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent } from 'state-manager-utility';
+import { StoreEvent } from 'state-manager-utility';
 
 
 import './userDetail.scene.css';
@@ -85,7 +85,7 @@ export default class UserDetail extends Component {
                         name: 'Transaction',
                         data: userTransaction,
                         columns: [{
-                            field: "booking.token",
+                            field: "token",
                             label: "PNR"
                         }, {
                             field: "order",
@@ -200,6 +200,7 @@ export default class UserDetail extends Component {
             });
         }
         this.getMenuData();
+        StoreEvent({ eventName: 'showMenuName', data: { menuName: `User Details` } });
     }
 
     getMenuData = async () => {

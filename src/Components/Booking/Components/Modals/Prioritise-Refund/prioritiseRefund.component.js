@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+
 import { ModalManager, ToastNotifications } from 'drivezy-web-utils/build/Utils';
 import { Get } from 'common-js-util';
 import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
+
 import './prioritiseRefund.component.css'
 
 export default class PrioritiseREfund extends Component {

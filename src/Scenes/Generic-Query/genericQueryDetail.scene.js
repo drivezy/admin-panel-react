@@ -89,7 +89,7 @@ export default class GenericQueryDetail extends Component {
             // this.setState({ queryParamsData });
             this.state.queryParamsData = queryParamsData;
             this.setState({ finalColumns: finalColumns });
-            console.log(layout)
+            
             // this.getDataForListing();
             this.setState({ layout });
         }

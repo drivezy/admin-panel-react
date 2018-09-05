@@ -206,7 +206,7 @@
                                 }
                             }
                             .generic-table-td{
-                                height: 19px;
+                                // height: 19px;
                             }
                         } // &:nth-child(even) {
                         //     background: #f1f1f16b;
@@ -224,7 +224,7 @@
             }
         }
         .table-actions {
-            position: absolute;
+            // position: absolute;
             right: 0px;
             table.table {
                 thead {
@@ -296,7 +296,7 @@
                 tr.table-row {
                     td {
                         padding: 6px 10px;
-                        font-size: 94%;
+                        font-size: 12px;
                     }
                 }
             }
@@ -369,7 +369,7 @@
                 tr.table-row {
                     td {
                         padding: 15px 20px;
-                        font-size: 110%;
+                        font-size: 15px;
                     }
                 }
             }

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import * as PartnerDealUtils from './../../Utils/partnerDeals.utils';
 import { ModalManager } from 'drivezy-web-utils/build/Utils/modal.utils';
 
@@ -18,8 +19,8 @@ export default class PartnerDeals extends Component {
         "source_id": 1007,
         "description": "This step will make the vehicle live at the selected venue.",
         "parameter": {
-            "pre_method": "addRtoTicket",
-            "post_method": "addRtoTicket"
+            "pre_method": "agreementUpload",
+            "post_method": "agreementUpload"
         },
         "order": 45,
         "created_by": 81232,

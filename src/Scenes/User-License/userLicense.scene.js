@@ -102,7 +102,6 @@ export default class UserLicense extends Component {
 
         const result = await Get({ url });
 
-        console.log(this.state.userObj);
 
 
         if (result.success) {
@@ -170,7 +169,7 @@ export default class UserLicense extends Component {
     }
 
     sample = () => {
-        console.log('abcdesfghijklmnopqrstuve=wcz');
+        
     }
 
     acceptL = () => {
