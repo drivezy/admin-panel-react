@@ -34,7 +34,7 @@ export default class RepositoryInfo extends Component {
     }
 
 
-    shutdown = async () => {
+    deployCodeToServer = async () => {
 
         let url = "deployCodeToServer/" + this.state.id;
         const result = await Get({
@@ -44,8 +44,19 @@ export default class RepositoryInfo extends Component {
             ModalManager.closeModal();
             ToastNotifications.success("Deployment Successful");
         }
-        this.componentDidMount ();
+        this.componentDidMount();
     }
+
+    // copyCode = async (obj) => {
+    //     var code = 'ssh -i ' + obj.server.value + ' ec2-user@' + obj.server.description;
+    //     var temp = document.createElement('textarea');
+    //     temp.innerHTML = code;
+    //     document.body.appendChild(temp);
+    //     temp.select();
+    //     document.execCommand('copy');
+    //     swl.success('Code has been copied');
+    // };
+
 
     reload = () => {
         this.componentDidMount()
@@ -193,10 +204,11 @@ export default class RepositoryInfo extends Component {
                                             <td>
                                                 <label></label>
                                             </td>
+                                            
                                             <td>
                                             </td>
                                             <td className="save-btn">
-                                                <label><button className="btn btn-sm btn-default" onClick={() => { this.shutdown() }}><i class="fa fa-times-circle" style="color:red"></i></button></label>
+                                                <label><button className="btn btn-sm btn-default" onClick={() => { this.deployCodeToServer() }}><i class="fa fa-times-circle" style="color:red"></i></button></label>
                                             </td>
                                         </tr>
                                     ))
