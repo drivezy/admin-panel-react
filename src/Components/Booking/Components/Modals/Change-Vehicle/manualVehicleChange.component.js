@@ -89,7 +89,7 @@ export default class ChangeVehicle extends Component {
     }
 
     render() {
-        const { cityCars, reasons, car_id, bookingData = {}, registration_id, selected_car, manual, vehicle } = this.state;
+        const { cityCars, reasons, car_id, bookingData = {}, registration_id, selected_car, manual, vehicle, start_date } = this.state;
         const ride_return = bookingData.ride_return || {};
         return (
             <div className="manual-change-modal">
