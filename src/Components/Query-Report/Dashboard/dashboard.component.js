@@ -141,15 +141,15 @@ export default class Dashboard extends Component {
     }
 
     render() {
-        const { tableContents, graphForm, group_columns, aggregate_columns, graphs, formParams, savedDashboard, savedGroupings, tableFilters, innerFilter } = this.state;
+        const { tableContents, formContent, graphForm, group_columns, aggregate_columns, graphs, formParams, savedDashboard, savedGroupings, tableFilters, innerFilter } = this.state;
 
-        console.log(tableContents);
+        console.log('formContent', formContent);
         return (
             <div className="dashboard">
                 <div className="flex-container {{expandTable?'expanded':''}}">
                     <div className="card" >
                         <div className="card-body">
-                            <h5 className="card-title">Card title</h5>
+                            <h5 className="card-title">Table</h5>
 
                             {/* Show the table Contents */}
                             {tableContents && <TableContents tableData={tableContents} />}
@@ -187,10 +187,7 @@ export default class Dashboard extends Component {
 
                                     {graph.graphData && graph.graphType == 'line' && <LineGraph config={graph} />}
 
-                                    {/* <pie-graph graph={graph} show-graph="showGraph" delete-method="deleteGraph({index:$index})" ng-if="graph.graphData&&graph.graphType=='pie'"></pie-graph>
-                                    <line-graph graph={graph} show-graph="showGraph" delete-method="deleteGraph({index:$index})" ng-if="graph.graphData&&graph.graphType=='line'"></line-graph>
-                                    <column-graph graph={graph} show-graph="showGraph" delete-method="deleteGraph({index:$index})" ng-if="graph.graphData&&graph.graphType=='column'"></column-graph>
-                                    <bar-graph graph={graph} show-graph="showGraph" delete-method="deleteGraph({index:$index})" ng-if="graph.graphData&&graph.graphType=='bar'"></bar-graph> */}
+                                    {/* <pie-graph graph={graph} show-graph="showGraph" delete-method="deleteGraph({index:$index})" ng-if="graph.graphData&&graph.graphType=='pie'"></pie-graph>*/}
                                 </div>
                             </div>
                         </div>
@@ -204,112 +201,117 @@ export default class Dashboard extends Component {
                         <div className="card" >
                             <div className="card-body">
                                 <h5 className="card-title">Graph Builder</h5>
-                                <strong>Add Graph</strong>
-                                <small>Create a graph of your choice</small>
+                                <strong>Add Graph </strong>
+                                <small> Create a graph of your choice</small>
 
                                 {/* Input for building form */}
                                 <div className="portlet-body">
                                     {
-                                        group_columns.length && aggregate_columns.length &&
-                                        <div className="graph-form-container">
-                                            <form name="graphForm" className="graph-form">
-                                                <div className="form-child">
-                                                    <div className="graph-wrapper">
-                                                        <div className="graph-types">
-                                                            <label htmlFor="graphTitle">Type of graph</label>
-                                                            <div>
-                                                                {
-                                                                    this.graphTypes &&
-                                                                    this.graphTypes.map((graph, key) =>
-                                                                        <div key={key} className={`graph-type-holder ${graphForm.graphType == graph.graphType ? 'active' : ''}`} onClick={() => { this.selectGraph(graph) }}>
-                                                                            <div className="panel panel-default">
-                                                                                <div className="panel-body">
-                                                                                    <img src={graph.image} alt="" />
-                                                                                </div>
-                                                                                <div className="panel-footer">
-                                                                                    {graph.caption}
+                                        (group_columns.length && aggregate_columns.length) ?
+                                            <div className="graph-form-container">
+                                                <form name="graphForm" className="graph-form">
+                                                    <div className="form-child">
+                                                        <div className="graph-wrapper">
+                                                            <div className="graph-types">
+                                                                <label htmlFor="graphTitle">Type of graph</label>
+                                                                <div className="graphs">
+                                                                    {
+                                                                        this.graphTypes &&
+                                                                        this.graphTypes.map((graph, key) =>
+                                                                            <div key={key} className={`graph-type-holder ${graphForm.graphType == graph.graphType ? 'active' : ''}`} onClick={() => { this.selectGraph(graph) }}>
+                                                                                <div className="panel panel-default">
+                                                                                    <div className="panel-body">
+                                                                                        <img src={graph.image} alt="" />
+                                                                                    </div>
+                                                                                    <div className="panel-footer">
+                                                                                        {graph.caption}
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>
-                                                                    )
+                                                                        )
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="form-wrapper">
+                                                            <div className="form-group">
+                                                                <label htmlFor="graphTitle">Title</label>
+                                                                <input onChange={(event) => {
+                                                                    const { graphForm } = this.state;
+                                                                    graphForm.title = event.target.value;
+                                                                    this.setState({ graphForm });
+                                                                }} type="text" value={graphForm.title} className="form-control" id="graphTitle" placeholder="Graph Title" />
+                                                            </div>
+
+                                                            {/* For Pie Graph */}
+                                                            <div ng-if="formContent.graph.graphType == 'pie'">
+                                                                <div className="form-group">
+                                                                    <label htmlFor="graphTitle">{graphForm.pie ? 'Group' : 'X Axis'}</label>
+                                                                    <SelectBox onChange={this.selectGroup} value={graphForm.xAxis} name="group_column" options={group_columns} />
+                                                                </div>
+
+                                                                <div className="form-group">
+                                                                    <label htmlFor="graphTitle">{graphForm.pie ? 'Aggregation' : 'Y Axis'}</label>
+                                                                    <SelectBox onChange={this.selectAggregation} value={graphForm.yAxis} name="aggregate_column" options={aggregate_columns} />
+                                                                </div>
+
+                                                                {/* For Line/Column Graph get zAxis aswell */}
+                                                                {
+                                                                    (graphForm.graphType == 'line' || graphForm.graphType == 'column') &&
+                                                                    <div className="form-group">
+                                                                        <label htmlFor="graphTitle">Group Column</label>
+                                                                        <SelectBox onChange={(input) => {
+
+                                                                            const { graphForm } = this.state;
+                                                                            graphForm.zAxis = input;
+                                                                            this.setState({ graphForm });
+
+                                                                        }} value={graphForm.zAxis} name="aggregate_column" options={group_columns} />
+                                                                    </div>
                                                                 }
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="form-wrapper">
-                                                        <div className="form-group">
-                                                            <label htmlFor="graphTitle">Title</label>
-                                                            <input onChange={(event) => {
-                                                                const { graphForm } = this.state;
-                                                                graphForm.title = event.target.value;
-                                                                this.setState({ graphForm });
-                                                            }} type="text" value={graphForm.title} className="form-control" id="graphTitle" placeholder="Graph Title" />
-                                                        </div>
+                                                            {/* Pie Graph Form Ends */}
 
-                                                        {/* For Pie Graph */}
-                                                        <div ng-if="formContent.graph.graphType == 'pie'">
-                                                            <div className="form-group">
-                                                                <label htmlFor="graphTitle">{graphForm.pie ? 'Group' : 'X Axis'}</label>
-                                                                <SelectBox onChange={this.selectGroup} value={graphForm.xAxis} name="group_column" options={group_columns} />
-                                                            </div>
-
-                                                            <div className="form-group">
-                                                                <label htmlFor="graphTitle">{graphForm.pie ? 'Aggregation' : 'Y Axis'}</label>
-                                                                <SelectBox onChange={this.selectAggregation} value={graphForm.yAxis} name="aggregate_column" options={aggregate_columns} />
-                                                            </div>
-
-                                                            {/* For Line/Column Graph get zAxis aswell */}
-                                                            {
-                                                                (graphForm.graphType == 'line' || graphForm.graphType == 'column') &&
-                                                                <div className="form-group">
-                                                                    <label htmlFor="graphTitle">Group Column</label>
-                                                                    <SelectBox onChange={(input) => {
-
-                                                                        const { graphForm } = this.state;
-                                                                        graphForm.zAxis = input;
-                                                                        this.setState({ graphForm });
-
-                                                                    }} value={graphForm.zAxis} name="aggregate_column" options={group_columns} />
-                                                                </div>
-                                                            }
-                                                        </div>
-                                                        {/* Pie Graph Form Ends */}
-
-                                                        <button type="button" className="btn btn-success pull-right" onClick={this.addGraph}>
-                                                            Add Graph
+                                                            <button type="button" className="btn btn-success pull-right" onClick={this.addGraph}>
+                                                                Add Graph
                                                         </button>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </form>
-                                            <p className="text-muted">
-                                                <small>Select a type of graph and choose your preference of X/Y Axis.</small>
-                                            </p>
-                                        </div>
+                                                </form>
+                                                <p className="text-muted">
+                                                    <small>Select a type of graph and choose your preference of X/Y Axis.</small>
+                                                </p>
+                                            </div> : null
                                     }
                                 </div>
 
 
-                                <div>
-                                    {
-                                        group_columns.length == 0 &&
-                                        <p>
-                                            Group by column to show relevant data.
-                                    </p>
-                                    }
-                                </div>
-                                <div>
-                                    {
-                                        aggregate_columns.length == 0 &&
-                                        <p>
-                                            Select an aggregation to show relevant data.
-                                    </p>
-                                    }
-                                </div>
+                                {/* If there is no group_Column alert user with text */}
+
                                 {
-                                    (group_columns.length == 0 || aggregate_columns.length == 0) &&
-                                    <small>
+                                    !formContent.group_column
+                                    &&
+                                    <div className="alert alert-warning" role="alert">
+                                        Group by column to show relevant data.
+                                                                        </div>
+                                }
+
+
+                                {/* Aggregation */}
+                                {
+                                    formContent.aggregate_column.length == 0
+                                    &&
+                                    <div className="alert alert-warning" role="alert">
+                                        Select an aggregation to show relevant data.
+                                                                        </div>
+                                }
+
+
+                                {
+                                    (!formContent.group_column && formContent.aggregate_column.length == 0) &&
+                                    <div className="alert alert-warning" role="alert">
                                         Group columns and add an aggregation to create a graph
-                                </small>
+                                    </div>
                                 }
 
                                 {/* Form Builder Ends */}

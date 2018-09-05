@@ -18,6 +18,10 @@
             margin: 4px;
         } // Graph Builder CSs
         .graph-builder {
+            .alert{
+                margin-left: 0px;
+                margin-top: 10px;
+            }
             .graph-form-container {
                 margin: 4px;
                 form.graph-form {
@@ -42,13 +46,17 @@
                                 label {
                                     padding: 0px 10px;
                                 }
+                                .graphs{
+                                    display: flex;
+                                    flex-wrap:wrap;
+                                }
                                 .graph-type-holder {
                                     padding: 5px;
                                     display: inline-block;
                                     cursor: pointer;
                                     width: 110px;
                                     .panel {
-                                        border: 1px solid gray;
+                                        border: 1px solid #bdbdbd;
                                         margin-bottom: 0px;
                                         .panel-body {
                                             padding: 0px;

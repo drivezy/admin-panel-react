@@ -1,31 +1,50 @@
 .reports-content {
     .dashboard-form {
         margin: 4px;
-        .card {
-            height: 110px;
-            // height: 85px;
-            .card-body{
-                padding: 12px 5px;
-                // padding: 4px;
+        .form-wrapper {
+            // height: 110px; // height: 85px;
+            .card-body {
+                padding: 0px; // padding: 12px 5px; // padding: 4px;
             }
             form {
-                height: 45px;
+                // height: 45px;
                 background-color: #fff;
                 .form-elements {
-                    display: flex;
-                    align-items: center;
+                    border: 1px solid #d8d8d8;
+                    display: flex; // align-items: center;
+                    padding: 5px;
                     .picker {
                         display: flex;
                         .form-group {
                             display: flex;
                             flex-direction: column;
-                            background-color: #fff;
-                            // color: #b3b3b3;
+                            background-color: #fff; // color: #b3b3b3;
                             // font-size: 9px;
-                            padding-top: 5px;
-                            padding-left: 10px;
+                            padding: 10px; // padding-top: 5px;
+                            // padding-left: 10px;
                             margin-bottom: 0px;
                             border-radius: 2px;
+                            border-right: 1px solid #dad7d7;
+                            label {
+                                margin-bottom: 0;
+                                color: #bfa283;
+                                font-weight: 100 !important;
+                                font-size: 10px;
+                            }
+                            .datetime-picker-wrapper {
+                                input.form-control {
+                                    border: none;
+                                    background: #fff;
+                                    padding: 0;
+                                    cursor: pointer;
+                                    margin-top: 5px;
+                                    height: 25px;
+                                    color: #655656;
+                                    border-bottom: 1px solid #dad7d7;
+                                    box-shadow: none;
+                                    border-radius: 0px;
+                                }
+                            }
                             .data-point {
                                 border-right: 1px solid black;
                                 .form-label {
@@ -51,12 +70,25 @@
                     display: flex;
                     padding: 0px 5px;
                     .form-element {
+                        border-right: 1px solid #dad7d7;
                         padding: 0px 10px;
                         display: flex;
                         flex-direction: column;
+                        .form-label {
+                            label {
+                                margin-bottom: 0;
+                                color: #bfa283;
+                                font-weight: 100 !important;
+                                font-size: 10px;
+                            }
+                        }
+                        .select-box {
+                            margin-top: 5px;
+                        }
                         .select-container {
                             display: flex;
-                            .element-container{
+                            align-items: center;
+                            .element-container {
                                 padding: 0px 4px;
                             }
                         }
@@ -90,8 +122,15 @@
                         }
                     }
                 }
+                .modal-actions {
+                    display:flex;
+                    
+                    align-items: center;
+                    .btn{
+                        margin: 4px;
+                    }
+                }
             }
         }
-        .modal-actions {}
     }
 }

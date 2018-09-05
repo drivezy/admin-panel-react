@@ -35,40 +35,43 @@ class TableContents extends Component {
         const { columns, tableData } = this.state;
 
         return <div className="table-body">
-            <div className="table-contents">
-                <table className="table table-hover table-fixed flip-content table-striped">
-                    <thead className="flip-content">
-                        <tr>
-                            <th> #</th>
-                            {/* Repeat the columns array for the header */}
-                            {columns.map((column, index) =>
-                                <th key={index}>
-                                    {column.column}
-                                </th>
-                            )}
-                            {/* Columns End */}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            tableData.map((tableRow, index) =>
-                                <tr key={index}>
-                                    <td> {index + 1}}</td>
+            {
+                tableData.length ?
+                    <div className="table-contents">
+                        <table className="table table-hover table-fixed flip-content table-striped">
+                            <thead className="flip-content">
+                                <tr>
+                                    <th> #</th>
                                     {/* Repeat the columns array for the header */}
-                                    {
-                                        columns.map((column, key) =>
-                                            <td key={key}>
-                                                {tableRow[column.field]}
-                                            </td>
-                                        )
-                                    }
+                                    {columns.map((column, index) =>
+                                        <th key={index}>
+                                            {column.column}
+                                        </th>
+                                    )}
                                     {/* Columns End */}
                                 </tr>
-                            )
-                        }
-                    </tbody>
-                </table>
-            </div>
+                            </thead>
+                            <tbody>
+                                {
+                                    tableData.map((tableRow, index) =>
+                                        <tr key={index}>
+                                            <td> {index + 1}}</td>
+                                            {/* Repeat the columns array for the header */}
+                                            {
+                                                columns.map((column, key) =>
+                                                    <td key={key}>
+                                                        {tableRow[column.field]}
+                                                    </td>
+                                                )
+                                            }
+                                            {/* Columns End */}
+                                        </tr>
+                                    )
+                                }
+                            </tbody>
+                        </table>
+                    </div> : <p className="tex-muted">Nothing to show</p>
+            }
         </div>
     }
 }

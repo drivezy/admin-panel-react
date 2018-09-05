@@ -16,7 +16,7 @@ import DateTimePicker from './../../../Components/Date-Time-Picker/dateTimePicke
 
 import SelectBox from './../../../Components/Forms/Components/Select-Box/selectBoxForGenericForm.component';
 
-const inputElement = ({ props, preference, column, formContent }) => {
+const inputElement = ({ self, preference, column, formContent }) => {
 
     const elements = {
 
@@ -30,7 +30,7 @@ const inputElement = ({ props, preference, column, formContent }) => {
 
         // Single DatePicker with Timepicker 
         // format='YYYY-MM' 
-        109: <DateTimePicker format='YYYY-MM-DD HH:mm' value={formContent[column.param]} name={column.param} />
+        109: <DateTimePicker format='YYYY-MM-DD HH:mm' onChange={self.dateChange} value={formContent[column.param]} name={column.param} />
         // Single DatePicker with Timepicker ends
 
     }
@@ -38,11 +38,15 @@ const inputElement = ({ props, preference, column, formContent }) => {
     return elements[column.param_type_id] || elements[108]; //uncomment this if required
 }
 
+let self = {};
+
 class FormElements extends Component {
 
     constructor(props) {
 
         super(props);
+
+        self = this;
 
         this.state = {
             formContent: this.props.formContent || {},
@@ -61,6 +65,15 @@ class FormElements extends Component {
             payload: nextProps.payload
         });
 
+    }
+
+    /**
+     * Update formContent on dateChange
+     */
+    dateChange = (field, value) => {
+        const { formContent } = this.state;
+        formContent[field] = value;
+        this.setState({ formContent });
     }
 
 
@@ -83,29 +96,19 @@ class FormElements extends Component {
         const formParam = { ...formContent };
         // console.log(formContent);
 
-        if (formContent.aggregate_column) {
+        //If there is an aggregation then stringify it and add it to the url
+        if (formContent.aggregate_column && formContent.aggregate_column.length) {
             formParam.aggregate_column = JSON.stringify(formContent.aggregate_column)
+        } else {
+            delete formParam.aggregate_column;
         }
 
         Location.search(formParam);
     }
 
     render() {
-        // const {
-        //     values,
-        //     touched,
-        //     errors,
-        //     dirty,
-        //     isSubmitting,
-        //     handleChange,
-        //     handleBlur,
-        //     handleSubmit,
-        //     handleReset,
-        //     setFieldValue,
-        //     setValues,
-        // } = this.props;
 
-
+        const { state } = this;
         const { props } = this;
         const { payload } = props;
 
@@ -138,15 +141,6 @@ class FormElements extends Component {
 
         formParam.aggregate_column = [];
 
-
-
-        console.log(formParam, formContent);
-
-
-        // const groupColumns = payload.columns;
-
-        let shouldColumnSplited = false;
-
         return (
             <form role="form" name="genericForm" >
                 <div className="form-elements">
@@ -163,7 +157,7 @@ class FormElements extends Component {
                                 // find the attached column
                                 if (preference) {
                                     column = preference;
-                                    elem = inputElement({ props, column, formContent });
+                                    elem = inputElement({ self, column, formContent });
                                 }
 
                                 if (column) {
@@ -189,11 +183,15 @@ class FormElements extends Component {
                                </label>
                             </div>
                             <SelectBox name="group_column" value={formParam.group_column} onChange={(input) => {
-                                const { formContent } = this.state;
-                                formContent.group_column = input.map((item) => item.column_name).join(',');
-                                // formContent.group_column(input.column_name)
-                                // formContent.group_column.push(input);
-                                this.setState({ formContent });
+                                if (input) {
+                                    const { formContent } = this.state;
+                                    formContent.group_column = input.map((item) => item.column_name).join(',');
+                                    this.setState({ formContent });
+                                } else {
+                                    const { formContent } = this.state;
+                                    formContent.group_column = '';
+                                    this.setState({ formContent });
+                                }
                             }} multi="true" options={groupColumns} field="display_name"
                             //  onChange={(value) => { console.log(value); props.setFieldValue('group_column', value.map((item) => item.column_name).join(',')); }}
                             />
@@ -207,29 +205,36 @@ class FormElements extends Component {
                             </div>
                             <div className="select-container">
                                 <div className="element-container">
-                                    <SelectBox onChange={(input) => { this.setState({ operator: input }) }} options={payload.operators} value={this.state.operator} />
+                                    <SelectBox onChange={(input) => {
+                                        if (input) {
+                                            this.setState({ operator: input })
+                                        } else {
+                                            this.setState({ operator: {} })
+                                        }
+                                    }} options={payload.operators} value={this.state.operator} />
                                 </div>
                                 <div className="element-container">
-                                    <SelectBox onChange={(input) => { this.setState({ custom_column: input }) }} options={payload.columns} field="display_name" value={this.state.custom_column} />
+                                    <SelectBox onChange={(input) => {
+                                        if (input) {
+                                            this.setState({ custom_column: input })
+                                        } else {
+                                            this.setState({ custom_column: {} })
+                                        }
+                                    }} options={payload.columns} field="display_name" value={this.state.custom_column} />
                                 </div>
-                                <div>
-                                    <button type="button" className="btn btn-success btn-sm" onClick={() => {
 
-                                        const param = { name: this.state.operator.name, operator: this.state.operator.id, column: this.state.custom_column.column_name };
+                                {/* Add Button for aggregation */}
+                                <button disabled={(!this.state.operator.id || !this.state.custom_column.id)} type="button" className="btn btn-success btn-sm" onClick={() => {
 
-                                        this.state.formContent.aggregate_column.push(param);
+                                    const param = { name: this.state.operator.name, operator: this.state.operator.id, column: this.state.custom_column.column_name };
 
-                                        this.setState({ operator: '', custom_column: '' });
-                                        // this.state.aggregate_column.push(param);
+                                    this.state.formContent.aggregate_column.push(param);
 
-                                        // props.setFieldValue('aggregate_column', this.state.aggregate_column);
-
-                                        // props.setFieldValue('aggregate_column', JSON.stringify(this.state.aggregate_column));
-                                        // this.setState({ operator: '', custom_column: '' });
-                                    }} >
-                                        +
+                                    this.setState({ operator: {}, custom_column: {} });
+                                }} >
+                                    +
                                     </button>
-                                </div>
+                                {/* Add Button Ends */}
                             </div>
                             {
                                 formContent.aggregate_column
@@ -260,7 +265,7 @@ class FormElements extends Component {
                     {/* Aggregation Ends */}
 
                     <div className="modal-actions">
-                        <button className="btn btn-primary btn-sm" onClick={this.resetForm}>
+                        <button className="btn btn-danger btn-sm" onClick={this.resetForm}>
                             Clear
                         </button>
 
@@ -309,16 +314,13 @@ export default class DashboardForm extends Component {
 
         return (
             <div className="dashboard-form">
-                <Card>
+                <div className="form-wrapper">
                     {
                         payload ?
-                            <CardBody>
-                                <FormElements formContent={formContent} payload={payload} />
-                            </CardBody>
-                            :
-                            null
+                            <FormElements formContent={formContent} payload={payload} /> : null
                     }
-                </Card>
+                </div>
+
             </div>
         )
     }
