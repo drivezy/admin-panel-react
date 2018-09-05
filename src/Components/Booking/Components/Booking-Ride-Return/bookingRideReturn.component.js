@@ -17,6 +17,10 @@ export default class BookingRideReturn extends Component {
         };
     }
 
+    UNSAFE_componentWillReceiveProps(nextProps){
+        this.setState({bookingRideReturnData: nextProps.bookingRideReturnData});
+    }
+
     render() {
 
         const { bookingRideReturnData = {} } = this.state;
