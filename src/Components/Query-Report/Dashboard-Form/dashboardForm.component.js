@@ -94,7 +94,10 @@ class FormElements extends Component {
         const { formContent } = this.state;
 
         const formParam = { ...formContent };
-        // console.log(formContent);
+
+        if (formContent.group_column == '') {
+            delete formParam.group_column;
+        }
 
         //If there is an aggregation then stringify it and add it to the url
         if (formContent.aggregate_column && formContent.aggregate_column.length) {
@@ -103,7 +106,7 @@ class FormElements extends Component {
             delete formParam.aggregate_column;
         }
 
-        Location.search(formParam);
+        Location.search(formParam, { reset: true });
     }
 
     render() {

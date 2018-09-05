@@ -78,7 +78,8 @@ export default class GenericQueryDetail extends Component {
     }
 
     refreshPage() {
-        this.getDataForListing();
+        const { formContent } = this.state;
+        this.getDataForListing(formContent);
     }
 
     layoutChanges = (layout) => {
@@ -89,7 +90,7 @@ export default class GenericQueryDetail extends Component {
             // this.setState({ queryParamsData });
             this.state.queryParamsData = queryParamsData;
             this.setState({ finalColumns: finalColumns });
-            
+
             // this.getDataForListing();
             this.setState({ layout });
         }
@@ -103,7 +104,7 @@ export default class GenericQueryDetail extends Component {
 
             const formContent = { ...this.state.formContent, ...newProps.queryString };
 
-            this.setState({ formContent });
+            this.setState({ formContent, loading: true });
             // this.state.queryString = newProps.queryString;
             // this.setState({ currentPage: this.state.queryString.page ? this.state.queryString.page : 1, limit: this.state.queryString.limit ? this.state.queryString.limit : 20 })
             this.getDataForListing(formContent);
@@ -227,8 +228,9 @@ export default class GenericQueryDetail extends Component {
         // }
 
         // If there is a groupColumn or aggregateCoumn then disable useQueryTable
-        if ((formContent.group_column && formContent.group_column != '') || (formContent.aggregate_column && formContent.aggregate_column != '')) {
-            this.state.useQueryTable = false;
+        if ((formContent.group_column && formContent.group_column != '') || (formContent.aggregate_column && formContent.aggregate_column.length == 0)) {
+            // this.state.useQueryTable = false;
+            this.setState({ useQueryTable: false });
         }
 
 
@@ -258,7 +260,7 @@ export default class GenericQueryDetail extends Component {
                 finalColumns = CreateFinalColumns(tempColumns, JSON.parse(preference[0].value));
             }
 
-            this.setState({ stats, params, columns: tempColumns, finalColumns, stats });
+            this.setState({ loading: false, stats, params, columns: tempColumns, finalColumns, stats });
 
             this.gatherData(result.response);
 
