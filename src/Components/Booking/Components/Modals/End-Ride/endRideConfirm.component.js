@@ -98,6 +98,8 @@ export default class EndRideConfirm extends Component {
                 ModalManager.closeModal();
                 ModalManager.closeModal();
                 ToastNotifications.success({ title: "Ride Ended Successfully" });
+                this.props.callback();
+
             }
             else{
                 ModalManager.closeModal();
@@ -228,7 +230,7 @@ export default class EndRideConfirm extends Component {
                                     <label>Comments</label>
                                 </div>
                                 <div className="col-sm-12">
-                                    <input type='text' value={endRideInfo.ride_return.comments} disabled />
+                                    <input type='text' value={endRideInfo.ride_return.comments ? endRideInfo.ride_return.comments : ''} disabled />
                                 </div>
                             </div>
                         </div>

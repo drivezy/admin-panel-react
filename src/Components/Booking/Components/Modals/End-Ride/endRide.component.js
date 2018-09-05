@@ -95,7 +95,7 @@ export default class EndRide extends Component {
         if (result.success) {
             ModalManager.openModal({
                 headerText: "CONFIRM COMPLETE RIDE FOR",
-                modalBody: () => (<EndRideConfirm endRidedata={endRideInfo} reviewRideData={result.response} />)
+                modalBody: () => (<EndRideConfirm endRidedata={endRideInfo} reviewRideData={result.response} callback={this.props.callback}/>)
             })
         }
         else{
@@ -307,7 +307,7 @@ export default class EndRide extends Component {
                                 </div>
                                 <div className="col-sm-12">
                                     <input
-                                        value={endRideInfo.ride_return.comments}
+                                        value={endRideInfo.ride_return.comments ? endRideInfo.ride_return.comments : ''}
                                         className={`${endRideInfo.ride_return.comments == "" ? 'red' : 'green'}`}
                                         type='text' placeholder="Add comments" onChange={(e) => { endRideInfo.ride_return.comments = e.target.value; this.setState({ endRideInfo }); }} />
                                 </div>
