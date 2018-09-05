@@ -372,7 +372,7 @@ export default class EndRide extends Component {
                                     </div>
                                 </div>
                                 {
-                                    endRideInfo.discount ?
+                                    endRideInfo.discount > 0 ?
                                         <div className="col-sm-6">
                                             <div className="row">
                                                 <div className="col-sm-12">
@@ -392,7 +392,7 @@ export default class EndRide extends Component {
                                         <div className="col-sm-12">
                                             <label>State Permit Cost
                                             {
-                                                    endRideInfo.permit_refund ?
+                                                    endRideInfo.permit_refund > 0?
                                                         <button className="btn btn-sm btn-default">
                                                             <CustomTooltip placement="top" html={<i className="fa fa-paperclip"></i>} title="Upload Permit">
                                                             </CustomTooltip>
@@ -410,7 +410,7 @@ export default class EndRide extends Component {
                                     </div>
                                 </div>
                                 {
-                                    endRideInfo.permit_refund ?
+                                    endRideInfo.permit_refund > 0?
                                         <div className="col-sm-6">
                                             <div className="row">
                                                 <div className="col-sm-12">
@@ -424,7 +424,7 @@ export default class EndRide extends Component {
                                         : null
                                 }
                                 {
-                                    endRideInfo.permit_refund ?
+                                    endRideInfo.permit_refund > 0?
                                         <div className="row">
                                             <div className="col-sm-12">
                                                 <label>Permit Validity</label>

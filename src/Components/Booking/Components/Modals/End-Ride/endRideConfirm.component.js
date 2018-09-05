@@ -97,6 +97,7 @@ export default class EndRideConfirm extends Component {
             if (result.success) {
                 ModalManager.closeModal();
                 ModalManager.closeModal();
+                window.location.reload(true);
                 ToastNotifications.success({ title: "Ride Ended Successfully" });
             }
             else{
