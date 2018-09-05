@@ -228,7 +228,7 @@ export default class GenericQueryDetail extends Component {
         // }
 
         // If there is a groupColumn or aggregateCoumn then disable useQueryTable
-        if ((formContent.group_column && formContent.group_column != '') || (formContent.aggregate_column && formContent.aggregate_column.length == 0)) {
+        if ((formContent.group_column && formContent.group_column != '') || (formContent.aggregate_column && formContent.aggregate_column.length != 0)) {
             // this.state.useQueryTable = false;
             this.setState({ useQueryTable: false });
         }
