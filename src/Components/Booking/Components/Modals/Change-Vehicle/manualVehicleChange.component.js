@@ -109,7 +109,6 @@ export default class ChangeVehicle extends Component {
             });
             if (result.success) {
                 ToastNotifications.success({ title: 'Vehicle Changed Successfully' });
-                // window.location.reload(true);
             }
             else{
                 ToastNotifications.error({ title: `${result.response}` });

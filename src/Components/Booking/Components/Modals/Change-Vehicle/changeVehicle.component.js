@@ -85,7 +85,7 @@ export default class ChangeVehicle extends Component {
         if (result.success) {
             ModalManager.openModal({
                 headerText: "CHANGE VEHICLE",
-                modalBody: () => (<ManualVehicleChange cars={carsList} reasons={result.response.values} bookingData={bookingData} manual={true}/>)
+                modalBody: () => (<ManualVehicleChange cars={carsList} reasons={result.response.values} bookingData={bookingData} manual={true} callback={this.props.callback}/>)
             })
         }
     }

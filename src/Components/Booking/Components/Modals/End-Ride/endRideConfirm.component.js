@@ -98,7 +98,7 @@ export default class EndRideConfirm extends Component {
                 ModalManager.closeModal();
                 ModalManager.closeModal();
                 ToastNotifications.success({ title: "Ride Ended Successfully" });
-                this.props.callback;
+                this.props.callback();
 
             }
             else{
@@ -168,11 +168,12 @@ export default class EndRideConfirm extends Component {
                                                 <label>End Time&nbsp;<i className="fa fa-clock-o" aria-hidden="true"></i>&nbsp;<i className="fa fa-car" aria-hidden="true"></i></label>
                                             </div>
                                             <div className="col-sm-12">
-                                                <DatePicker
+                                                {/* <DatePicker
                                                     value={endRideInfo.end_time}
                                                     single={true}
                                                     disabled
-                                                />
+                                                /> */}
+                                                <input type='text' placeholder='Booking PNR' value={endRideInfo.end_time} disabled />
                                                 {/* <input type='datetime-local' value={endRideInfo.end_time} disabled /> */}
                                             </div>
                                         </div>

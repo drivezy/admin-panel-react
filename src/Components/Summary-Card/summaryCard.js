@@ -30,6 +30,10 @@ export default class SummaryCard extends Component {
         this.getBookingData(bookingData);
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({ bookingData: nextProps.bookingData });
+    }
+
     getBookingData = (bookingData) => {
         paidAmount = 0;
         fairAmount = 0;

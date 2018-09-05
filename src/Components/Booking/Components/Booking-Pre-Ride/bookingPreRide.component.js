@@ -18,8 +18,8 @@ export default class BookingPreRide extends Component {
         };
     }
 
-    UNSAFE_componentWillReceiveProps(nextProps){
-        this.setState({bookingPreRideData: nextProps.bookingPreRideData});
+    componentWillReceiveProps(nextProps) {
+        this.setState({ bookingPreRideData: nextProps.bookingPreRideData });
     }
 
     render() {
