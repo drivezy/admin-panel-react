@@ -98,6 +98,7 @@ export default class LandingApp extends Component {
                                                     // console.log('cehhfbdh');
                                                     // this.loadedComponent[parentIndex][index] = () => <h1>g</h1>
                                                     // this.loadedComponent[parentIndex][index] = LoadAsyncComponent(state.component.path);
+                                                    // this.loadedComponent[parentIndex][index] = LoadAsyncComponent(() => import('./../../Scenes/Workflow-Detail/workflowDetail.scene'));
                                                     this.loadedComponent[parentIndex][index] = LoadAsyncComponent(() => require(`./../../Scenes/${state.component.path}.js`));
                                                 }
                                                 const GenericListing = this.loadedComponent[parentIndex][index];
