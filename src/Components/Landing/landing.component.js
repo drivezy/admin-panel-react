@@ -26,7 +26,6 @@ import RosterTimeline from './../../Scenes/Roster-Timeline/rosterTimeline.scene'
 import UserSearchList from './../User-Search-List/userSearchList.component.js';
 import VehicleSearchList from './../Vehicle-Search-List/vehicleSearchList.component.js';
 import GenericQueryDetail from './../../Scenes/Generic-Query/genericQueryDetail.scene';
-import QueryDashboardForm from './../../Components/Query-Report/Query-Dashboard-Form/queryDashboardForm.component'; //remove
 
 import LoadAsyncComponent from './../../Async/async';
 import SettingsUtil from './../../Utils/settings.utils';

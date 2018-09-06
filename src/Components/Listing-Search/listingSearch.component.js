@@ -222,6 +222,7 @@ export default class ListingSearch extends Component {
                             <SelectBox label="display_name"
                                 field='path'
                                 isClearable={false}
+                                field="display_name"
                                 onChange={(data) => {
                                     this.filterChange(data)
                                 }} value={selectedColumn} options={dictionary} placeholder='Column' />

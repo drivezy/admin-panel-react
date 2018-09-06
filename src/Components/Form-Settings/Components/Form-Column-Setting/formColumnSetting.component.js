@@ -15,6 +15,12 @@ export default class FormColumnSetting extends Component {
         }
     }
 
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if (nextProps.column) {
+            this.setState({ column: nextProps.column });
+        }
+    }
+
     toggleSetting = () => {
         let column = this.state.column;
         column.expanded = !column.expanded;
@@ -31,15 +37,6 @@ export default class FormColumnSetting extends Component {
 
     columnUpdate = (event) => {
         event.preventDefault();
-    }
-
-    componentDidMount() {
-    }
-
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        if (nextProps.column) {
-            this.setState({ column: nextProps.column });
-        }
     }
 
     render() {

@@ -29,9 +29,9 @@ export default class Home extends Component {
 
         return (
             <div className="home-scene">
-                <h1 onClick={() => MultiUploadModal({ title: 'Home Upload', })}>
+                {/* <h1 onClick={() => MultiUploadModal({ title: 'Home Upload', })}>
                     Upload
-                </h1>
+                </h1> */}
             </div>
         );
     }

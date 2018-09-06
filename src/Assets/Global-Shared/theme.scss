@@ -259,6 +259,17 @@ $themes: (
                 // Body Ends
                 ),
 );
+
+
+.loading-text h6 {
+    // position: absolute;
+    // top: 35%;
+    // left: 45%;
+    color: rgba(0, 0, 0, .3);
+    font-size: 2em;
+    padding: 10px;
+}
+
 // Themes Ends
 // Themify Begins
 @mixin themify($themes: $themes) {

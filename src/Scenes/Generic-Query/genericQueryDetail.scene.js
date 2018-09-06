@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 
-
 import './genericQueryDetail.scene.css';
+
+
+import Dashboard from './../../Components/Query-Report/Dashboard/dashboard.component';
 import QueryHeader from './../../Components/Query-Report/Query-Header/queryHeader.component';
 import DynamicFilter from './../../Components/Dynamic-Filter/dynamicFilter.component';
 import QueryTableSettings from './../../Components/Query-Report/Query-Table-Settings/queryTableSettings.component';
 import QueryPredefinedFilter from './../../Components/Query-Report/Query-Predefined-Filter/queryPredefinedFilter.component';
 import QueryConfigureDynamicFilter from './../../Components/Query-Report/Query-Configure-Filter/queryConfigureFilter.component';
-import QueryDashboardForm from './../../Components/Query-Report/Query-Dashboard-Form/queryDashboardForm.component';
+import DashboardForm from './../../Components/Query-Report/Dashboard-Form/dashboardForm.component';
 import QueryTable from './../../Components/Query-Report/Query-Table/queryTable.component';
 import ModalManager from './../../Wrappers/Modal-Wrapper/modalManager';
 import { Get, Post } from 'common-js-util';
@@ -33,7 +35,10 @@ export default class GenericQueryDetail extends Component {
         super(props);
         this.state = {
             ...GetUrlParams(this.props),
+            formContent: {},
+            useQueryTable: true,
             dateLiterals: [],
+            operators: [],
             queryParamsData: {},
             queryListing: {},
             preference: {},
@@ -60,7 +65,9 @@ export default class GenericQueryDetail extends Component {
         const { queryParamsData } = this.state
 
         this.getDateLiterals().then(() => {
-            this.getQueryParamsData();
+            this.getOperators().then(() => {
+                this.getQueryParamsData();
+            })
         })
 
         const result = await Get({ url: 'userPreference', parameter: queryParamsData.short_name + "list" });
@@ -71,7 +78,8 @@ export default class GenericQueryDetail extends Component {
     }
 
     refreshPage() {
-        this.getDataForListing();
+        const { formContent } = this.state;
+        this.getDataForListing(formContent);
     }
 
     layoutChanges = (layout) => {
@@ -82,7 +90,7 @@ export default class GenericQueryDetail extends Component {
             // this.setState({ queryParamsData });
             this.state.queryParamsData = queryParamsData;
             this.setState({ finalColumns: finalColumns });
-            
+
             // this.getDataForListing();
             this.setState({ layout });
         }
@@ -91,10 +99,15 @@ export default class GenericQueryDetail extends Component {
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (IsObjectHaveKeys(this.state.queryParamsData)) {
             const newProps = GetUrlParams(nextProps);
-            this.state.params = newProps.params;
-            this.state.queryString = newProps.queryString;
-            this.setState({ currentPage: this.state.queryString.page ? this.state.queryString.page : 1, limit: this.state.queryString.limit ? this.state.queryString.limit : 20 })
-            this.getDataForListing();
+
+            // this.state.params = newProps.params;
+
+            const formContent = { ...this.state.formContent, ...newProps.queryString };
+
+            this.setState({ formContent, loading: true });
+            // this.state.queryString = newProps.queryString;
+            // this.setState({ currentPage: this.state.queryString.page ? this.state.queryString.page : 1, limit: this.state.queryString.limit ? this.state.queryString.limit : 20 })
+            this.getDataForListing(formContent);
         }
     }
 
@@ -147,12 +160,40 @@ export default class GenericQueryDetail extends Component {
             // Set state with the loaded values
             this.setState({ preference: preference, queryParamsData, actions: queryParamsData.actions });
 
+            let options = this.getParamsFromUrl(this.formContent);
 
             // Get the reports data for the formContent
-            this.getDataForListing(this.formContent);
+            this.getDataForListing(options);
 
         }
     }
+
+    getParamsFromUrl = (params) => {
+        const urlParams = GetUrlParams(this.props);
+
+        const { queryString } = urlParams;
+
+        let formContent = {};
+
+        formContent.from = queryString.from || params.from;
+        formContent.to = queryString.to || params.to;
+
+        if (queryString.group_column) {
+            formContent.group_column = queryString.group_column;
+        } else {
+            formContent.group_column = '';
+        }
+
+        if (queryString.aggregate_column) {
+            formContent.aggregate_column = JSON.parse(queryString.aggregate_column);
+        } else {
+            formContent.aggregate_column = [];
+        }
+
+        // Code for showing saved dashboard should come below 
+        return formContent;
+    }
+
 
     /**
      * Replace the literals with matching lookup value
@@ -167,10 +208,31 @@ export default class GenericQueryDetail extends Component {
         }
     }
 
+    getOperators = async () => {
+        const result = await GetLookupValues(90);
+        if (result.success) {
+            const operators = result.response;
+            this.setState({ operators })
+        }
+    }
+
     getDataForListing = async (formContent) => {
         const { preference, params } = this.state;
 
         const queryParamsData = this.state.queryParamsData;
+
+        formContent.query_name = queryParamsData.short_name;
+
+        // if (formContent.aggregate_column) {
+        //     formContent.aggregate_column = JSON.parse(formContent.aggregate_column);
+        // }
+
+        // If there is a groupColumn or aggregateCoumn then disable useQueryTable
+        if ((formContent.group_column && formContent.group_column != '') || (formContent.aggregate_column && formContent.aggregate_column.length != 0)) {
+            // this.state.useQueryTable = false;
+            this.setState({ useQueryTable: false });
+        }
+
 
         // let options = GetDefaultOptionsForQuery();
         let options = { includes: '', order: '1,asc', query: '', limit: this.state.limit, page: this.state.currentPage, dictionary: false, stats: true }
@@ -180,7 +242,8 @@ export default class GenericQueryDetail extends Component {
         const result = await Post({ url, body: formContent });
         if (result.success) {
             const queryListing = result.response;
-            this.setState({ queryListing: queryListing });
+
+            this.setState({ formContent: formContent, queryListing: queryListing });
 
             let stats = result.stats ? result.stats : stats;
             params.dictionary = result.dictionary ? result.dictionary : params.dictionary;
@@ -197,12 +260,10 @@ export default class GenericQueryDetail extends Component {
                 finalColumns = CreateFinalColumns(tempColumns, JSON.parse(preference[0].value));
             }
 
-            this.setState({ stats, params, columns: tempColumns, finalColumns, stats });
+            this.setState({ loading: false, stats, params, columns: tempColumns, finalColumns, stats });
 
             this.gatherData(result.response);
 
-            // return Get({ url, queryString: { page } });
-            
         }
     }
 
@@ -255,97 +316,108 @@ export default class GenericQueryDetail extends Component {
      * Maintain localSearch for locally searching on type 
      */
     filterLocally = (column, value) => {
-        this.setState({ localSearch: { field: column ? column.name : '', value: value ? value : null } });
+        console.log(column);
+        this.setState({ localSearch: { field: column ? column.column_name : '', value: value ? value : null } });
     }
 
     render() {
 
-        const { localSearch, arrowstate, arrow, queryParamsData = {}, preference, columns, params, finalColumns, resultData, currentPage, stats, isTab, layout, loading } = this.state;
+        const { formContent, useQueryTable, localSearch, operators, arrowstate, arrow, queryParamsData = {}, preference, columns, params, finalColumns, resultData, currentPage, stats, isTab, layout, loading } = this.state;
 
         const { history, match, parentData } = this.props;
 
         let filteredResults = [];
 
+        if (localSearch.value) {
+            filteredResults = resultData.listing.filter(entry => entry[localSearch.field] && (entry[localSearch.field].toString().toLowerCase().indexOf(localSearch.value) != -1));
+        }
+
         let filterContent = {};
 
         return (
             <div className="generic-query">
-                <div className="page-bar">
-                    <div className="listing-tools left">
-                        <div className="search-box-wrapper">
-                            <ListingSearch
-                                localSearch={localSearch}
-                                onEdit={this.filterLocally}
-                                searchQuery={this.urlParams.search}
-                                dictionary={filterContent.dictionary}
-                            />
-                        </div>
-                        <div className="dynamic-filter-wrapper">
-
-                            {
-                                params && params.dictionary
-                                &&
-                                <DynamicFilter
-                                    toggleAdvancedFilter={this.toggleAdvancedFilter}    //@Done
-                                    //menuUpdatedCallback={this.predefinedFiltersUpdated}
-                                    selectedColumns={this.state.layout ? this.state.layout.column_definition : null} //@Done
-                                    menuId={this.props.menuId}  //@Done
-                                    currentUser={this.state.layout.user_id} //@Done
-                                    dictionary={params.dictionary.invoice_details}   //@done
-                                    layouts={this.layout}   //@Done
-                                    // restrictedQuery={menuDetail.restricted_query}
-                                    // restrictedColumn={menuDetail.restrictColumnFilter}
-                                    history={history}   //@Done
-                                    match={match}   //@Done
-                                />
-                            }
-                        </div>
-                    </div>
-                    <div className="listing-tools right">
-                        <div className="portlet-tools">
+                {
+                    loading ?
+                        <div className="loading-text">
+                            <h6>
+                                Loading content
+                                </h6>
+                        </div> :
+                        <div className="page-content">
 
 
-                            {
+                            <div className="page-bar">
+                                <div className="listing-tools left">
+                                    <div className="search-box-wrapper">
+                                        <ListingSearch
+                                            localSearch={localSearch}
+                                            onEdit={this.filterLocally}
+                                            searchQuery={this.urlParams.search}
+                                            dictionary={resultData.dictionary}
+                                        />
+                                    </div>
+                                    <div className="dynamic-filter-wrapper">
 
-                                resultData && resultData.listName && resultData.columns && // finalColumns && 
-                                <QueryTableSettings
-
-                                    listName={resultData.listName}
-                                    columns={resultData.columns}
-                                    selectedColumns={preference}
-                                    onSubmit={this.layoutChanges}
-                                    preference={this.state.preference}
-
-                                />
-                            }
-                            <button className="refresh-button btn btn-sm" onClick={() => { this.refreshPage() }}>
-                                <i className="fa fa-refresh"></i>
-                            </button>
-                            {
-                                resultData && queryParamsData.user_filter &&
-                                <QueryPredefinedFilter
-                                    listingObject={resultData}
-                                    finalColumns={finalColumns}
-                                    filters={queryParamsData.user_filter}
-                                />
-                            }
-
-                        </div>
+                                        {
+                                            params && params.dictionary
+                                            &&
+                                            <DynamicFilter
+                                                toggleAdvancedFilter={this.toggleAdvancedFilter}    //@Done
+                                                //menuUpdatedCallback={this.predefinedFiltersUpdated}
+                                                selectedColumns={this.state.layout ? this.state.layout.column_definition : null} //@Done
+                                                menuId={this.props.menuId}  //@Done
+                                                currentUser={this.state.layout.user_id} //@Done
+                                                dictionary={params.dictionary.invoice_details}   //@done
+                                                layouts={this.layout}   //@Done
+                                                // restrictedQuery={menuDetail.restricted_query}
+                                                // restrictedColumn={menuDetail.restrictColumnFilter}
+                                                history={history}   //@Done
+                                                match={match}   //@Done
+                                            />
+                                        }
+                                    </div>
+                                </div>
+                                <div className="listing-tools right">
+                                    <div className="portlet-tools">
 
 
+                                        {
 
-                    </div>
+                                            resultData && resultData.listName && resultData.columns && // finalColumns && 
+                                            <QueryTableSettings
 
-                </div>
+                                                listName={resultData.listName}
+                                                columns={resultData.columns}
+                                                selectedColumns={preference}
+                                                onSubmit={this.layoutChanges}
+                                                preference={this.state.preference}
 
-                <div className="configure-filter-wrapper">
-                    {!loading ?
-                        <div>
-                            {/* {console.log(params.dictionary.invoice_details)}
-                            {this.setState.filterContent = params.dictionary}
-                            {console.log(filterContent)} */}
+                                            />
+                                        }
+                                        <button className="refresh-button btn btn-sm" onClick={() => { this.refreshPage() }}>
+                                            <i className="fa fa-refresh"></i>
+                                        </button>
+                                        {
+                                            resultData && queryParamsData.user_filter &&
+                                            <QueryPredefinedFilter
+                                                listingObject={resultData}
+                                                finalColumns={finalColumns}
+                                                filters={queryParamsData.user_filter}
+                                            />
+                                        }
 
-                            {/* {filterContent &&
+                                    </div>
+
+
+
+                                </div>
+
+                            </div>
+
+                            <div className="configure-filter-wrapper">
+                                <div>
+
+                                    {/* {filterContent &&
                                 <QueryConfigureDynamicFilter
                                     history={history}
                                     match={match}
@@ -355,18 +427,17 @@ export default class GenericQueryDetail extends Component {
                                       layout={layout}
                                 
                                 />} */}
-                        </div>
-                        : <div>Loading</div>}
-                </div>
+                                </div>
+                            </div>
 
-                <div className="query-details">
-                    <div className="query-header">
-                        <div className="header-content">
-                            {
-                                <div className="content-name"> {queryParamsData.name} </div>
-                            }
-                        </div>
-                        {/* <div className="metrics-container">
+                            <div className="query-details">
+                                <div className="query-header">
+                                    <div className="header-content">
+                                        {
+                                            <div className="content-name"> {queryParamsData.name} </div>
+                                        }
+                                    </div>
+                                    {/* <div className="metrics-container">
                             {
                                 <div className="metrics-wrapper">
                                     <button className="metrics cursor-pointer" onClick={() => this.toggleMenu(arrowstate, arrow)}>
@@ -376,8 +447,8 @@ export default class GenericQueryDetail extends Component {
                             }
                         </div> */}
 
-                    </div>
-                    {/* {
+                                </div>
+                                {/* {
                         this.state.isCollapsed &&
                         <div className="active-filters-container">
                             <div className="active-filters">
@@ -385,50 +456,58 @@ export default class GenericQueryDetail extends Component {
                             </div>
                         </div>
                     } */}
-                </div>
+                            </div>
 
-                <div className="reports-content">
+                            <div className="reports-content">
 
-                    {
-                        !(queryParamsData.comparable == 0 && queryParamsData.parameters && queryParamsData.parameters.length == 0) &&
-                        // queryParamsData.parameters &&
-                        <QueryDashboardForm
-                            // savedDashboard={savedDashboard}
-                            // queryTable={useQueryTable}
-                            queryData={queryParamsData}
-                            columns={columns}
-                            // formContent={formContent}
-                            fields={queryParamsData.parameters}
-                        />
-                    }
+                                {
+                                    !(queryParamsData.comparable == 0 && queryParamsData.parameters && queryParamsData.parameters.length == 0) &&
+                                    // queryParamsData.parameters &&
+                                    <DashboardForm
+                                        operators={operators}
+                                        // savedDashboard={savedDashboard}
+                                        // queryTable={useQueryTable}
+                                        queryData={queryParamsData}
+                                        columns={columns}
+                                        formContent={formContent}
+                                        fields={queryParamsData.parameters}
+                                    />
+                                }
 
-                    {
-                        resultData.listing && finalColumns &&
-                        <QueryTable
-                            // formContent={formContent}
-                            finalColumns={finalColumns}
-                            listing={resultData.listing}
-                            queryTableObj={resultData}
-                            queryData={queryParamsData}
-                            actions={this.state.actions}
-                        />
-                    }
 
-                    {
-                        (resultData.stats) ?
-                            <ListingPagination
-                                history={history}
-                                match={match}
-                                current_page={this.state.currentPage}
-                                limit={this.state.limit}
-                                statsData={stats}
-                            />
-                            : <div className="noListMessage">Looks like no columns are selected , Configure it by pressing the settings icon.</div>
-                    }
-                </div>
+                                {/* When GroupColumn//Aggregations are active we use queryTable */}
 
+                                {
+                                    useQueryTable && resultData.listing && finalColumns &&
+                                    <QueryTable
+                                        // formContent={formContent}
+                                        finalColumns={finalColumns}
+                                        listing={resultData.listing}
+                                        queryTableObj={resultData}
+                                        queryData={queryParamsData}
+                                        actions={this.state.actions}
+                                    />
+                                }
+
+                                {/* Else Dashboard */}
+
+                                {!useQueryTable && <Dashboard formContent={formContent} tableContents={resultData.listing} />}
+
+                                {
+                                    (resultData.stats) ?
+                                        <ListingPagination
+                                            history={history}
+                                            match={match}
+                                            current_page={this.state.currentPage}
+                                            limit={this.state.limit}
+                                            statsData={stats}
+                                        />
+                                        : <div className="noListMessage">Looks like no columns are selected , Configure it by pressing the settings icon.</div>
+                                }
+                            </div>
+                        </div>
+                }
             </div>
-
         )
     }
 }

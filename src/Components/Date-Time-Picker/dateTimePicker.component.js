@@ -1,57 +1,52 @@
 import React, { Component } from 'react';
-import DateRangePicker from 'eonasdan-bootstrap-datetimepicker';
-import './dateTimePicker.css';
-import './../../../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css'
 
+import Datetime from 'react-datetime'
+import 'react-datetime/css/react-datetime.css';
 
-import $ from 'jquery';
-// import GLOBAL from './../../../../Constants/global.constants'
+// import './dateTimePicker.css';
 
 export default class DateTimePicker extends Component {
 
     constructor(props) {
         super(props);
 
+        this.state = {
+            name: props.name,
+            format: props.format,
+            minDate: props.minDate,
+            maxDate: props.maxDate,
+            value: props.value,
+            onChange: props.onChange
+        }
     }
 
-    componentDidMount() {
-        let $image = $('#datetimepicker11');
-        
-
-        $image.datetimepicker({
-            viewMode: this.props.viewMode,
-            format: this.props.format,
-            // inline: true,
-            sideBySide: true
+    UNSAFE_componentWillReceiveProps = (nextProps) => {
+        this.setState({
+            name: nextProps.name,
+            format: nextProps.format,
+            minDate: nextProps.minDate,
+            maxDate: nextProps.maxDate,
+            value: nextProps.value,
+            onChange: nextProps.onChange
         });
+    }
 
-        // $(function () {
-        //     $('#datetimepicker10').datetimepicker({
-        //         viewMode: this.props.viewMode,
-        //         format: this.props.format
-        //     });
-        // });
+    applyDate = (dt) => {
+
+        const { onChange } = this.state;
+
+        onChange(this.state.name, dt.format(this.state.format));
+
     }
 
     render() {
+
+        const { format, minDate, maxDate, name, value, onChange } = this.state;
+
         return (
-
-            <div>
-                <div className="">
-                    <div className="form-group-wrapper">
-                        <div className='input-group date' id='datetimepicker10' >
-                            <input type='text' autocomplete="off" className="form-control" id='datetimepicker11' />
-                            <span className="input-group-addon">
-                                {/* <span>
-                                    <i className="fa fa-calendar" aria-hidden="true">
-                                    </i>
-                                </span> */}
-                            </span>
-                        </div>
-                    </div>
-                </div>
+            <div className="datetime-picker-wrapper">
+                <Datetime dateFormat={format} value={value} onChange={this.applyDate} />
             </div>
-
         )
     }
 }

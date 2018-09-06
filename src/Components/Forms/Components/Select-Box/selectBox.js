@@ -130,7 +130,7 @@ export default class SelectBox extends Component {
                 // onInputChange={this.handleChange}
                 defaultOptions
                 placeholder={placeholder}
-                multi={multi}
+                isMulti={multi}
             />
         } else if (getOptions) {
             elem = <AsyncSelect
@@ -139,7 +139,7 @@ export default class SelectBox extends Component {
                 loadOptions={getOptions}
                 onChange={this.handleChange}
                 placeholder={placeholder}
-                multi={multi}
+                isMulti={multi}
             />
         } else {
             elem = <Select autoFocus={false}
@@ -149,7 +149,7 @@ export default class SelectBox extends Component {
                 options={options}
                 clearable
                 placeholder={placeholder}
-                multi={multi}
+                isMulti={multi}
                 key='id'
                 // formatOptionLabel={(context, inputValue) => <span>{context[label]}</span>}
                 getOptionLabel={(context, inputValue) => <span>{context[label]}</span>}
