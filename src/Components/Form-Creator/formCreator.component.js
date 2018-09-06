@@ -25,13 +25,14 @@ import TimePicker from './../Forms/Components/Time-Picker/timePicker';
 import ListSelect from './../Forms/Components/List-Select/listSelect';
 import Switch from './../Forms/Components/Switch/switch';
 import ImageUpload from './../Forms/Components/Image-Upload/imageUpload.component';
+import MultipleUpload from './../Forms/Components/Multiple-Image-Upload/multipleImageUpload.component';
 // import ImageThumbnail from './../Forms/Components/Image-Thumbnail/imageThumbnail.component';
 // import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from 'constants';
 import FormSettings from './../Form-Settings/FormSettings.component';
 import ScriptInput from './../Forms/Components/Script-Input/scriptInput.component';
 import FormInput from './../Forms/Components/Form-Type/formType.component';
 
-import { ExecuteScript } from './../../Utils/inject-method/injectScript.utils';
+import { ExecuteScript } from './../../Utils/Inject-Methods/injectScript.utils';
 
 import FormUtils from './../../Utils/form.utils';
 import { GetUrlForFormSubmit } from './../../Utils/generic.utils';
@@ -52,7 +53,7 @@ const submitGenericForm = async ({ payload, newValues, onSubmit }) => {
 
     let body = newValues;
     let Method = Post;
-    
+
     if (payload.method == 'edit') {
         Method = Put;
         const originalValues = FormUtils.getOriginalData();
@@ -110,7 +111,19 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         // Static Ends
 
         // Number
-        [COLUMN_TYPE.NUMBER]: <Field autoComplete="off" className="form-control" type="number" name={column.name} placeholder={`Enter ${column.display_name}`} />,
+        // [COLUMN_TYPE.NUMBER]: <Field autoComplete="off" className="form-control" type="number" name={column.name} placeholder={`Enter ${column.display_name}`} />,
+        [COLUMN_TYPE.NUMBER]: <input type="number" id={column.name} name={column.name} className="form-control" rows="3"
+            placeholder={`Enter ${column.display_name}`}
+            onBlur={(e) => { console.log(e); props.handleBlur(e) }}
+            onChange={(event, ...args) => {
+                FormUtils.OnChangeListener({ column, value: event.target.value, ...event });
+                // props.handleChange(event, args);
+                props.setFieldValue(column.name, event.target.value)
+            }}
+            disabled={column.disabled}
+            autoComplete="off"
+            value={values[column.name]}
+        />,
         // Number Ends
 
         // 108: <Field disabled={column.disabled} id={column.name} onChange={({ ...args }) => FormUtils.OnChangeListener(args)} name={column.name} className={`form-control ${props.errors[column.index] && props.touched[column.index] ? 'is-invalid' : ''}`} type="text" placeholder={`Enter ${column.name}`} />,
@@ -195,7 +208,8 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
                     // onChange={props.setFieldValue}
                     isClearable={!column.required}
                     onChange={(value, event) => {
-                        const valId = value && typeof value == 'object' ? value.id : value;
+                        const index = column.indexVal || 'id';
+                        const valId = value && typeof value == 'object' && !Array.isArray(value) ? value[index] : value;
                         FormUtils.OnChangeListener({ column, value: valId, ...event });
                         props.setFieldValue(event, value);
                     }}
@@ -214,7 +228,8 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
                     // onChange={props.setFieldValue}
                     isClearable={!column.required}
                     onChange={(value, event) => {
-                        const valId = value && typeof value == 'object' ? value.id : value;
+                        const index = column.indexVal || 'id';
+                        const valId = value && typeof value == 'object' && !Array.isArray(value) ? value[index] : value;
                         FormUtils.OnChangeListener({ column, value: valId, ...event });
                         props.setFieldValue(event, value);
                     }}
@@ -305,15 +320,30 @@ const inputElement = ({ props, values, column, shouldColumnSplited, key }) => {
         //     )}
         // />,
         [COLUMN_TYPE.UPLOAD]: <ImageUpload value={values[column.name]} name={column.name} onRemove={props.onFileRemove}
-            onSelect={(column, name) => {
-                // console.log(column, name);
+            onSelect={(columnName, name) => {
+                // console.log(columnName, name);
+                FormUtils.OnChangeListener({ column: { path: columnName }, value: name });
+                if (column.type && name.type && name.type.includes(column.type) == false) {
+                    return false;
+                }
                 setTimeout(() => {
-                    props.setFieldValue(column, name ? name.name : '')
-                    props.onFileUpload(column, name);
+                    props.setFieldValue(columnName, name ? name.name : '');
+                    props.onFileUpload(columnName, name);
                 });
+                return true;
             }}
         />,
         // Image Upload Ends
+
+        // [COLUMN_TYPE.MULTIPLE_UPLOAD]: <ImageUpload value={values[column.name]} name={column.name} onRemove={props.onFileRemove}
+        //     onSelect={(column, name) => {
+        //         // console.log(column, name);
+        //         setTimeout(() => {
+        //             props.setFieldValue(column, name ? name.name : '')
+        //             props.onFileUpload(column, name);
+        //         });
+        //     }}
+        // />,
 
         // TextArea Begins
         160: <Field
@@ -409,7 +439,8 @@ const formElements = props => {
                                     <div key={key} className={`${shouldColumnSplited ? 'col-6' : 'col-12'} form-group`}>
                                         <RightClick html={html} key={key} renderTag="div" className='generic-form-label' rowOptions={props.headerOptions} column={column} />
                                         {elem}
-
+                                        <span className='info-text-color'> {column.info} </span>
+                                        <span className='warning-text-color'> {column.error} </span>
                                         {/* Showing Errors when there are errors */}
                                         {
                                             errors[column.name] && touched[column.name] ?
@@ -449,7 +480,7 @@ const formElements = props => {
                         Cancel
                     </button> */}
 
-                    <button className="btn btn-success" disabled={isSubmitting} type="submit">
+                    <button className="btn btn-success" disabled={!dirty || isSubmitting} type="submit">
                         Submit
                     </button>
                 </div>
@@ -549,13 +580,17 @@ const FormContents = withFormik({
 
         // Check this code shubham , 
         // Modifying the data according to backend requiremend 
-
+        console.log(payload);
         let newValues = {};
         let keys = Object.keys(values);
         keys.forEach((key) => {
+            const column = payload.dictionary[key];
             const value = values[key];
 
-            newValues[key] = value && typeof value == 'object' ? value.id : value;
+            const index = column.indexVal || 'id';
+            newValues[key] = value && typeof value == 'object' && !Array.isArray(value) ? value[index] : value;
+
+            // newValues[key] = value && typeof value == 'object' ? value.id : value;
             // newValues[payload.dataModel + '.' + key] = values[key];
         })
 
@@ -588,7 +623,7 @@ const FormContents = withFormik({
 
         function uploadImages() {
             return Promise.all(props.fileUploads.map((entry) => {
-                return Upload('uploadFile', entry).then((result) => {
+                return Upload('api/admin/uploadFile', entry).then((result) => {
 
                     newValues[entry.column] = result.response;
 

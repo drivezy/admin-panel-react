@@ -8,53 +8,53 @@
 
 
 
-// export default class ToastNotifications {
+export default class ToastNotifications {
 
-//   static register(elem) {
-//     this.currentScope = elem;
-//   }
+  static register(elem) {
+    this.currentScope = elem;
+  }
 
-//   static openFlag(){
-//     this.currentScope.addFlag();
-//   }
+  static openFlag(){
+    this.currentScope.addFlag();
+  }
 
-//   /**
-//    * Shows success notification
-//    * @param  {string} message
-//    * @param  {Object} params={}
-//    */
-//   static success(params) {
-//     // overriding toast params
-//     this.currentScope.success(params);
-//   }
+  /**
+   * Shows success notification
+   * @param  {string} message
+   * @param  {Object} params={}
+   */
+  static success(params) {
+    // overriding toast params
+    this.currentScope.success(params);
+  }
 
-//   /**
-//    * Shows error notification
-//    * @param  {string} message
-//    * @param  {Object} params={}
-//    */
-//   static error(params) {
-//     // overriding toast params
-//     this.currentScope.error(params);
-//   }
+  /**
+   * Shows error notification
+   * @param  {string} message
+   * @param  {Object} params={}
+   */
+  static error(params) {
+    // overriding toast params
+    this.currentScope.error(params);
+  }
 
-//   /**
-//    * Shows warn notification
-//    * @param  {string} message
-//    * @param  {Object} params={}
-//    */
-//   static warning(params) {
-//     // overriding toast params
-//     this.currentScope.warn(params);
-//   }
-//  /**
-//    * Shows info notification
-//    * @param  {string} message
-//    * @param  {Object} params={}
-//    */
-//   static info(params) {
-//     // overriding toast params
-//     this.currentScope.info(params);
-//   }
+  /**
+   * Shows warn notification
+   * @param  {string} message
+   * @param  {Object} params={}
+   */
+  static warning(params) {
+    // overriding toast params
+    this.currentScope.warn(params);
+  }
+ /**
+   * Shows info notification
+   * @param  {string} message
+   * @param  {Object} params={}
+   */
+  static info(params) {
+    // overriding toast params
+    this.currentScope.info(params);
+  }
 
-// }
+}

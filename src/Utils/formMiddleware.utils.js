@@ -13,7 +13,7 @@ import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 
 import FormUtils from './form.utils';
 import { GetUrlForFormCreator, GetColumnsForListing, GetParsedLayoutScript, ParseRestrictedQuery, CreateUrlForFetchingDetailRecords } from './generic.utils';
-import { ExecuteScript } from './inject-method/injectScript.utils';
+import { ExecuteScript } from './Inject-Methods/injectScript.utils';
 
 import { ROUTE_URL, RECORD_URL } from './../Constants/global.constants';
 import SCRIPT_TYPE from './../Constants/scriptType.constants';
@@ -63,6 +63,7 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
             formContent.record = formContent.data;
             formContent.data = GetDataFromDictionary(formContent.dictionary, formContent.data);
             formContent.modelId = response.form.id;
+            formContent.name = response.form.name;
 
             if (response.form.method_id == 23) {
                 formContent.method = 'edit';
@@ -74,7 +75,7 @@ export async function ProcessForm({ formContent, scripts, isForm, openModal = tr
             if (response.form.form_type_id == 53) {
                 const { description: message } = response.form;
                 const submitCallback = response.client_scripts ? response.client_scripts : [];
-                ConfirmUtils.confirmModal({ message, callback: () => ExecuteScript({ formContent, scripts: submitCallback, context: FormUtils, contextName: 'form' }) })
+                ConfirmUtils.confirmModal({ title: formContent.name, message, callback: () => { ExecuteScript({ formContent, scripts: submitCallback, context: FormUtils, contextName: 'form' }); if (typeof formContent.callback == 'function') formContent.callback(); } })
                 return;
             }
         }
@@ -124,3 +125,4 @@ function GetDataFromDictionary(dictionary, data) {
 
     return obj;
 }
+

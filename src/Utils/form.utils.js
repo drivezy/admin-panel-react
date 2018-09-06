@@ -2,8 +2,11 @@
 import { Get, Post, Delete, Put, BuildUrlForGetCall, IsUndefined } from 'common-js-util';
 import { StoreEvent } from 'state-manager-utility';
 import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
+import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
 import { GetSourceMorphMap } from './preference.utils';
+import { GetTime } from './time.utils';
+
 import { ROUTE_URL } from './../Constants/global.constants';
 import { CreateUrl } from './generic.utils';
 
@@ -20,13 +23,24 @@ export default class FormUtil {
     static onChange({ column, callback }) {
         onChangeListeners[column] = callback;
     }
-    
+
     /**
      * Returns source hash value for the given source
      * @param  {string} source
      */
     static getSourceHash(source) {
         return GetSourceMorphMap(source);
+    }
+
+    static toast({ method = 'success', description = '', title = '' }) {
+        ToastNotifications[method]({ title, description });
+    }
+
+    /**
+     * Returns callback method to refresh the page content
+     */
+    static getCallback() {
+        return self.page.callback;
     }
 
     /**
@@ -54,7 +68,7 @@ export default class FormUtil {
     static setBody(body = {}) {
         self.form.body = body;
     }
-    
+
     /**
      * Returns body of the form right before making api call
      * this method is available for onSubmit and postSubmission script
@@ -62,7 +76,7 @@ export default class FormUtil {
     static getBody() {
         return self.form.body;
     }
-    
+
     /**
      * Returns response value after api call made thorough given route
      * this method is supposed to use only for postSubmission script
@@ -193,17 +207,17 @@ export default class FormUtil {
         if (dict && dict.reference_model) {
             let url = dict.reference_model.route_name;
             url = BuildUrlForGetCall(url, queryParams);
-            self.form.dictionary[column].reference_model.route_name = url;
+            self.form.dictionary[column].reference_model.modified_route = url;
         }
     }
-    
+
     /**
      * Returns menu detail
      */
     static getMenuDetail() {
         return self.form.menu;
     }
-    
+
     /**
      * same as data value,
      * ideally this method should be used when dealing with form
@@ -216,7 +230,7 @@ export default class FormUtil {
         }
         return self.form.record[column];
     }
-    
+
     /**
      * in case of tabs, returns portlet value
      * @param  {string} column
@@ -308,6 +322,14 @@ export default class FormUtil {
     static updateForm(updateState = true) {
         StoreEvent({ eventName: 'formChanged', data: { ...self.form, ...{ updateState } } });
     }
+
+     /**
+     * expects dateTime, format
+     * @param  {} {...args}
+     */
+    static getTime({ ...args }) {
+        return GetTime({ ...args });
+    }
 }
 
 
@@ -315,7 +337,7 @@ export default class FormUtil {
 //     let model = form.getValue('model_id');
 
 //     let sourceColumnAttribute = form.getAttribute('source_column_id');
-//     // sourceColumnAttribute.reference_model.route_name = 'api/admin/modelColumn?query=model_id=' + model;
+//     // sourceColumnAttribute.reference_model.modified_route = 'api/admin/modelColumn?query=model_id=' + model;
 
 //     form.setquery('source_column_id', { query: 'model_id=' + model });
 //     form.setAttribute('source_column_id', sourceColumnAttribute);

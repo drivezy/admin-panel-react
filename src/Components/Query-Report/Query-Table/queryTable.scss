@@ -1,0 +1,12 @@
+.table-body {
+    display: flex;
+    flex-direction: row;
+    .table-content {
+        width: 0px;
+        flex-basis: 100%;
+    }
+    .table-actions {
+        flex-basis: 1%;
+        float: right;
+    }
+}

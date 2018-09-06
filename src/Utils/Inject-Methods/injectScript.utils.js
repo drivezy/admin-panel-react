@@ -18,7 +18,8 @@ export function ExecuteScript({ formContent, scripts, context, contextName = 'fo
     let script = '';
 
     for (let i in scripts) {
-        script += PrefixScript(scripts[i], executionType);
+        script = `${script}
+        ${PrefixScript(scripts[i], executionType)}`;
     }
 
 
@@ -46,8 +47,10 @@ function methods({ formContent, context, contextName, script, scripts, execution
     } catch (err) {
         InjectError(scripts, err);
         console.log("%c🍺 Not valid Script", "color: #49ba8e; font-size:20px;");
-        console.log("%cError =======> " + err, "color: '#49ba8e'; font-size:14px;");
-        console.log("%cScript ======> " + scripts, "color: blue; font-size:14px;");
+        console.log("%cError =======> ", "color: '#49ba8e'; font-size:14px;");
+        console.error(err);
+        console.log("%cScript ======> ", "color: blue; font-size:14px;");
+        console.log(scripts);
         // console.log(scripts[i].name + ' - ' + err);
     }
 };
@@ -120,7 +123,7 @@ export function RemoveError(script) {
 // Prepare script for execution according to script type
 export function PrefixScript(definition, executionType) {
     if (definition.activity_type_id == SCRIPT_TYPE.ON_CHANGE) {
-        return `form.onChange({ column: '${definition.column}', callback: (event, column)=> { ${definition.script}} })`;
+        return `form.onChange({ column: '${definition.column}', callback: (value, column, event)=> { ${definition.script}} })`;
     }
     if (IsUndefined(executionType) || executionType == definition.activity_type_id) {
         return definition.script;

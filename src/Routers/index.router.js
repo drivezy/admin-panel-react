@@ -46,6 +46,7 @@ export default class IndexRouter extends Component {
 
     keyMap = {
         moveUp: 'Shift+B',
+        spotlight: 'Shift+F'
     }
 
     handlers = {
@@ -104,7 +105,7 @@ export default class IndexRouter extends Component {
     assignSpotlight = (preference) => {
         let spotlight;
         if (Array.isArray(preference)) {
-            spotlight = preference.filter(entry => entry.parameter == "spotlightkeys").pop();
+            spotlight = preference.filter(entry => entry.parameter == "spotlight").pop();
         }
         else {
             spotlight = preference.name;

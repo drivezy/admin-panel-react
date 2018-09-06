@@ -7,12 +7,16 @@ import { ToastNotifications, LoaderComponent, LoaderUtils, ModalManager } from '
 import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 import { Get, Post } from 'common-js-util';
 import { SubscribeToEvent, StoreEvent, UnsubscribeEvent } from 'state-manager-utility';
+import { Link } from 'react-router-dom';
 
 import GLOBAL from './../../Constants/global.constants';
 
 import SettingsUtil from './../../Utils/settings.utils';
 import ThemeUtil from './../../Utils/theme.utils';
 import ImpersonateFrom from './../../Components/Impersonate-Form/impersonateForm.component';
+// import { RemoveItem } from './../../Utils/localStorage.utils';
+import { RemoveItem } from 'storage-utility';
+import { SetUserPreference } from './../../Utils/userPreference.utils';
 
 export default class PageNav extends Component {
     constructor(props) {
@@ -62,6 +66,18 @@ export default class PageNav extends Component {
 
         })
 
+    }
+
+    clearStorage = () => {
+        RemoveItem({ clearLocalStorage: true });
+        ToastNotifications.success({ title: 'Local-Storage cleared successfully' });
+    }
+
+    setHomepage = async() => {
+        const result = await SetUserPreference('homepage', window.location.pathname);
+        if(result.success){
+            ToastNotifications.success({ title: 'Homepage has been set!' });
+        }
     }
 
     deimpersonateUser = () => {
@@ -129,18 +145,20 @@ export default class PageNav extends Component {
 
                     <DropdownMenu right>
                         <DropdownItem className="user-wrapper">
-                            <a className="user-details">
-                                <div className="display-name">
-                                    {this.state.currentUser.display_name}
-                                </div>
-                                <div className="email">
-                                    {this.state.currentUser.email ? this.state.currentUser.email.substring(0, 6) : null}
-                                    <i className="fa fa-cog" aria-hidden="true"></i>
-                                </div>
-                            </a>
+                            <span className="user-details">
+                                <Link to={`/user/${currentUser.id}`}>
+                                    <div className="display-name">
+                                        {this.state.currentUser.display_name}
+                                    </div>
+                                    <div className="email">
+                                        {this.state.currentUser.email ? this.state.currentUser.email.substring(0, 6) : null}
+                                        <i className="fa fa-cog" aria-hidden="true"></i>
+                                    </div>
+                                </Link>
+                            </span>
                         </DropdownItem>
-                        <DropdownItem>Clear Storage</DropdownItem>
-                        <DropdownItem>Set Homepage</DropdownItem>
+                        <DropdownItem onClick={this.clearStorage}>Clear Storage</DropdownItem>
+                        <DropdownItem onClick={this.setHomepage}>Set Homepage</DropdownItem>
                         <DropdownItem>Change Password</DropdownItem>
                         <DropdownItem onClick={this.configureSettings}>Settings</DropdownItem>
                         <DropdownItem onClick={this.impersonateUser}>Impersonate User</DropdownItem>

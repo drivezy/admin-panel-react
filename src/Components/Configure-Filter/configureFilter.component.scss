@@ -62,6 +62,9 @@
                 display: flex;
                 justify-content: flex-end;
                 .actions {}
+                .btn-default{
+                    border: 1px solid #989898;
+                }
             }
         }
     }

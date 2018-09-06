@@ -19,7 +19,7 @@ export default class VehicleCard extends Component {
     }
     render() {
         const { vehicle = {} } = this.state;
-        console.log(vehicle);
+    
         return (
             <Card className="detail-card">
                 <CardHeader >
