@@ -59,9 +59,9 @@ export class Spotlight extends Component {
         this.setState({ searchText: searchText });
     }
 
-    advancedSearch = () => {
+    advancedSearch = (searchText) => {
         {
-            const { searchText } = this.state;
+
             let obj = {};
             if (searchText.length == 10 && searchText.slice(0, 3) != "INV") {
                 if (parseInt(searchText).toString().length == 10) {
@@ -112,14 +112,14 @@ export class Spotlight extends Component {
             case 1:
                 url = "bookingToken/" + searchText;
                 result = await Get({ url: url });
-                if (result.success) {
+                if (result.success && Object.keys(result.response).length) {
                     result.response.name = searchText;
                     result.response.url = 'booking/' + result.response.id;
                     querySearchList.push(result.response)
                     this.setState({ querySearchList });
 
 
-                    // Location.navigate({ url: 'booking/'+result.response.id });
+                    Location.navigate({ url: '/booking/' + result.response.id });
                 }
                 break;
 
@@ -142,10 +142,12 @@ export class Spotlight extends Component {
 
             // To search vehicle
             case 4:     //@TODO MAKE A LIST PAGE WHERE WE SHOULD REDIRECT
-                url = '/searchVehicles?searchText=' + searchText;
-                // url = '/searchVehicles';
-                //const queryParam = { searchText };
-                Location.navigate({ url: url });
+                
+                    url = '/searchVehicles?searchText=' + searchText;
+                    // url = '/searchVehicles';
+                    //const queryParam = { searchText };
+                    Location.navigate({ url: url });
+                
                 break;
 
             // To search coupon
@@ -153,8 +155,10 @@ export class Spotlight extends Component {
 
                 body = 'coupon_code="' + searchText + '"';
                 result = await Get({ url: "coupon?query=" + body });
-                url = '/campaign/' + result.response[0].campaign_id;
-                Location.navigate({ url: url })
+                if (result.success && result.response.length) {
+                    url = '/campaign/' + result.response[0].campaign_id;
+                    Location.navigate({ url: url })
+                }
                 break;
 
             // To search Ticket
@@ -165,8 +169,10 @@ export class Spotlight extends Component {
 
                 body = 'ticket_number="' + searchText + '"';
                 result = await Get({ url: "task?query=" + body });
-                url = '/ticket/' + result.response[0].id;
-                Location.navigate({ url: url })
+                if (result.success && result.response.length) {
+                    url = '/ticket/' + result.response[0].id;
+                    Location.navigate({ url: url })
+                }
                 break;
 
             // To search Vendor
@@ -197,6 +203,7 @@ export class Spotlight extends Component {
 
 
     keyboardPress = (event) => {
+        const { searchText } = this.state;
         if (event.target.value) {
             if (event.which == 40) {
                 this.searchInput.current.blur();
@@ -212,8 +219,7 @@ export class Spotlight extends Component {
             else if (event.which == 13) {
 
                 this.redirectTo(this.state.querySearchList[this.state.querySearchList.length - 1]);
-
-                this.advancedSearch();
+                this.advancedSearch(searchText);
 
             }
         }
@@ -239,6 +245,7 @@ export class Spotlight extends Component {
             else if (querySearchList.length)
                 this.redirectTo(searchList[searchList.length - 1][this.currentIndex]);
         }
+    this.currentIndex = 0;
     }
 
     traverse = (direction) => {
@@ -281,7 +288,7 @@ export class Spotlight extends Component {
 
             menus.modules.forEach((module) => {
                 module.menus.forEach((menu) => {
-                    if (menu.name.toLowerCase().indexOf(searchText) != -1) {
+                    if (menu.name.toLowerCase().indexOf(searchText.toLowerCase()) != -1) {
                         menu.visible ? matches.push(menu) : null
                     }
                 });

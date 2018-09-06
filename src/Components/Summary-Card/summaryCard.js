@@ -21,14 +21,26 @@ export default class SummaryCard extends Component {
         };
     }
 
+    UNSAFE_componentWillReceiveProps(nextProps){
+        this.setState({bookingData: nextProps.bookingData});
+    }
+
     componentDidMount() {
         const { bookingData } = this.state;
         this.getBookingData(bookingData);
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({ bookingData: nextProps.bookingData });
+    }
+
     getBookingData = (bookingData) => {
-        if (bookingData.payment && bookingData.payment.length) {
-            bookingData.payment.forEach(function (data) {
+        paidAmount = 0;
+        fairAmount = 0;
+        tentative_amount = 0;
+        amountDue = 0;
+        if (bookingData.booking_payment && bookingData.booking_payment.length) {
+            bookingData.booking_payment.forEach(function (data) {
                 paidAmount += parseFloat(data.amount);
             });
         }
@@ -189,7 +201,7 @@ export default class SummaryCard extends Component {
                                                 return (
                                                     <Row className="card-object" key={key}>
                                                         <Col className="item">{key}</Col>
-                                                        <Col className="value">{pricing}</Col>
+                                                        <Col className="value">{(parseInt(pricing)).toFixed(2)}</Col>
                                                     </Row>
                                                 )
                                             }

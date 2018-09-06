@@ -12,7 +12,7 @@ import UserCard from './../../Components/User-Card/userCard.component';
 import TableWrapper from './../../Components/Table-Wrapper/tableWrapper.component';
 import CustomAction from './../../Components/Custom-Action/CustomAction.component';
 import { GetPreSelectedMethods, RegisterMethod, GetMenuDetail, ConvertMenuDetailForGenericPage } from './../../Utils/generic.utils';
-import { SubscribeToEvent, UnsubscribeEvent, StoreEvent, DeleteEvent } from 'state-manager-utility';
+import { StoreEvent } from 'state-manager-utility';
 
 
 import './userDetail.scene.css';
@@ -32,8 +32,15 @@ export default class UserDetail extends Component {
         this.getUser();
     }
 
-    getUser = async () => {
-        const { id } = this.props.match.params;
+    componentWillReceiveProps(props) {
+        const { id } = props.match.params;
+        if (id == this.props.match.params.id) {
+            return false;
+        }
+        this.getUser(id);
+    }
+
+    getUser = async (id = this.props.match.params.id) => {
         const url = 'user/' + id + '?includes=bookings.vehicle,bookings.pickup_venue,payment_requests.booking,payment_requests.order,roles.createdUser,roles.role,permissions.created_user,permissions.permission,comments.created_user,sms,user_tickets.status,user_tickets.category,user_tickets.assigned_to,bookings.feedback,licenses'
         const data = await Get({ url });
 
@@ -78,7 +85,7 @@ export default class UserDetail extends Component {
                         name: 'Transaction',
                         data: userTransaction,
                         columns: [{
-                            field: "booking.token",
+                            field: "token",
                             label: "PNR"
                         }, {
                             field: "order",
@@ -193,6 +200,7 @@ export default class UserDetail extends Component {
             });
         }
         this.getMenuData();
+        StoreEvent({ eventName: 'showMenuName', data: { menuName: `User Details` } });
     }
 
     getMenuData = async () => {
@@ -203,7 +211,7 @@ export default class UserDetail extends Component {
             const menuDetail = ConvertMenuDetailForGenericPage(response || {});
             this.state.menuDetail = menuDetail;
             this.setState({ menuDetail });
-        StoreEvent({ eventName: 'rightClickData', data: { menuData: menuDetail } });
+            StoreEvent({ eventName: 'rightClickData', data: { menuData: menuDetail } });
         }
     }
 
@@ -237,7 +245,7 @@ export default class UserDetail extends Component {
         };
 
         return (
-        
+
             <div className="user-details">
                 <div className="header-actions">
                     <button className="refresh-button btn btn-sm" onClick={(e) => { this.refreshPage(e) }}>
@@ -246,7 +254,7 @@ export default class UserDetail extends Component {
                     &nbsp;&nbsp;
                     <CustomAction menuDetail={menuDetail} genericData={genericDataForCustomColumn} history={history} actions={menuDetail.uiActions} listingRow={userData} placement={'as_dropdown'} callback={this.getUser} />
                 </div>
-                
+
                 <div className="display">
                     {/* <Row> */}
                     <div className="user-detail">

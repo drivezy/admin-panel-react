@@ -15,6 +15,10 @@ export default class BookingFeedback extends Component {
         };
     }
 
+    UNSAFE_componentWillReceiveProps(nextProps){
+        this.setState({bookingFeedback: nextProps.bookingFeedback});
+    }
+
     render() {
         const { bookingFeedback = {} } = this.state;
 

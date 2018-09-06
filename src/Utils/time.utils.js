@@ -2,9 +2,10 @@ import GLOBAL from './../Constants/global.constants';
 const moment = require('moment');
 
 
-export function GetTime({ dateTime, format }) {
+export function GetTime({ dateTime, format } = {}) {
     const dt = dateTime ? new Date(dateTime) : moment();
-    return moment(dt).format(format || GLOBAL.API_DATE_FORMAT);
+    console.log(format || GLOBAL.API_DATE_TIME_FORMAT);
+    return moment(dt).format(format || GLOBAL.API_DATE_TIME_FORMAT);
 }
 
 export function ConvertLiteral(description) {
@@ -23,18 +24,22 @@ export function ConvertToMMSS(secs) {
     return `${Padding(minutes)}:${Padding(Seconds)}`;
 }
 
+export function GetRelativeTime(time) {
+    return moment(time).fromNow();
+}
+
 /**
  * Can Add or Subtract time from given time param
  * @param  {string} {time - base time to be added or subtracted
  * @param  {number} value - for e.x. if paramName is 'minutes' and 15 is value, means it would add or subtract 15 minutes
  * @param  {string} paramName - can be minutes, hours, seconds (default is minutes)
- * @param  {string} format} - default is API_DATE_FORMAT
+ * @param  {string} format} - default is API_DATE_TIME_FORMAT
  * @param  {string} method} -  can be add or subtract (default is add)
  */
 export function CalculateTime({ time, value, paramName, format, method }) {
     method = method || 'add';
     const newTime = time || GetTime({ format });
-    return moment(newTime)[method](value, paramName || 'minutes').format(format || GLOBAL.API_DATE_FORMAT);
+    return moment(newTime)[method](value, paramName || 'minutes').format(format || GLOBAL.API_DATE_TIME_FORMAT);
 }
 
 export function ConvertToDisplayformat(time) {
@@ -71,3 +76,10 @@ export function SetTimeInExistingDate(newDate, existingdateTime) {
 function Padding(num) {
     return `0${num}`.slice(-2);
 }
+
+export function TimeDifference(endTime, startTime) {
+    let ms = moment(endTime).diff(moment(startTime));
+    let d = moment.duration(ms);
+    let s = Math.floor(d.asHours()) + "h " + Math.floor(d.minutes()) + "m";
+    return s;
+};

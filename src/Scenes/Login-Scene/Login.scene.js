@@ -4,6 +4,7 @@ import { Card, CardBody, Form, FormGroup, Label } from 'reactstrap';
 
 import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { Post } from 'common-js-util';
+import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
 import { SubscribeToEvent, UnsubscribeEvent } from 'state-manager-utility';
 
 import GLOBAL from './../../Constants/global.constants';
@@ -55,11 +56,12 @@ export default class LoginScene extends Component {
         const res = Post({ urlPrefix: GLOBAL.ROUTE_URL, url: 'login', body: { username, password } });
         const login = await res;
         if (login.success) {
-            // alert('User logged in successfully');
-            // this.loginCheck();
             const res = await LoginCheck();
-            if (res.success) {
+            if (res.success && res.response.admin) {
                 this.loggedIn(res.response);
+            }
+            else{
+                ToastNotifications.error({ title: `${res.response}` });
             }
         }
         else {

@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import './manualVehicleChange.component.css';
+
 import { API_HOST } from './../../../../../Constants/global.constants';
-import { Get, Post } from 'common-js-util';
+
 import SelectBox from './../../../../Forms/Components/Select-Box/selectBoxForGenericForm.component';
-import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 import DatePicker from './../../../../Forms/Components/Date-Picker/datePicker';
+
+import { Get, Post } from 'common-js-util';
+import { ConfirmUtils } from 'drivezy-web-utils/build/Utils/confirm.utils';
 import { ToastNotifications, ModalManager } from 'drivezy-web-utils/build/Utils';
-import DateTimePicker from './../../../../../../src/Components/Date-Time-Picker/dateTimePicker.component';
 
 import {
     Table
@@ -65,6 +67,34 @@ export default class ChangeVehicle extends Component {
                 urlPrefix: API_HOST,
                 body: {
                     between_booking,
+                    car: car_id ? car_id.toString() : bookingData.car_id.toString(),
+                    new_fuel : parseInt(new_fuel),
+                    old_fuel : parseInt(old_fuel),
+                    reason,
+                    reason_code: reason_id,
+                    time: start_date,
+                    vehicle: registration_id ? registration_id.toString() : bookingData.vehicle_id.toString(),
+                    new_odo : parseInt(new_odo),
+                    old_odo: parseInt(old_odo)
+                },
+                url: `changeVehicle/${bookingData.id}`
+            });
+            if (result.success) {
+                ToastNotifications.success({ title: 'Vehicle Changed Successfully' });
+                ModalManager.closeModal();
+                window.location.reload(true);
+            }
+            else{
+                ConfirmUtils.confirmModal({ message: "System didn't allow requested allocation. Click Yes to change the vehicle forcefully.", callback: forceMethod });
+            }
+            ModalManager.closeModal();
+        }
+        const forceMethod = async () => {
+            const result = await Post({
+                urlPrefix: API_HOST,
+                body: {
+                    forcefully: 1,
+                    between_booking,
                     car: car_id,
                     new_fuel,
                     old_fuel,
@@ -79,7 +109,9 @@ export default class ChangeVehicle extends Component {
             });
             if (result.success) {
                 ToastNotifications.success({ title: 'Vehicle Changed Successfully' });
-                window.location.reload(true);
+            }
+            else{
+                ToastNotifications.error({ title: `${result.response}` });
             }
             ModalManager.closeModal();
         }
@@ -87,7 +119,7 @@ export default class ChangeVehicle extends Component {
     }
 
     render() {
-        const { cityCars, reasons, car_id, bookingData = {}, registration_id, selected_car, manual, vehicle } = this.state;
+        const { cityCars, reasons, car_id, bookingData = {}, registration_id, selected_car, manual, vehicle, start_date } = this.state;
         const ride_return = bookingData.ride_return || {};
         return (
             <div className="manual-change-modal">
@@ -167,7 +199,13 @@ export default class ChangeVehicle extends Component {
                     </div>
                         <div className="col-sm-12">
                             {/* <DatePicker single={true} timePicker={true} onChange={(value) => this.setState({ start_date: value }) } /> */}
-                            <DateTimePicker onChange={(value) => this.setState({ start_date: value })} />
+                            <DatePicker
+                                value={start_date}
+                                single={true}
+                                timePicker={true}
+                                onChange={(name, value) => this.setState({ start_date: value })}
+                            />
+                            {/* <DateTimePicker onChange={(value) => this.setState({ start_date: value })} /> */}
                         </div>
                     </div>
 
@@ -204,6 +242,11 @@ export default class ChangeVehicle extends Component {
                                 <span className="input-group-text" id="basic-addon1"><i className="fa fa-strikethrough"></i></span>
                             </div>
                             <input type="number" className="form-control" onChange={(e) => { e.preventDefault(); this.setState({ old_odo: e.target.value }); }} placeholder={`Must be Greater than ${ride_return.start_odo_reading}`} aria-label="Username" aria-describedby="basic-addon1"></input>
+                            {
+                                this.state.old_odo && this.state.old_odo < parseInt(ride_return.start_odo_reading) ?
+                                    <div className="error-text">Current Odo cannot be less than {ride_return.start_odo_reading}</div> :
+                                    null
+                            }
                         </div>
                     </div>
 

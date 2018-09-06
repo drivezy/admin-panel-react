@@ -5,6 +5,8 @@ import { Location } from 'drivezy-web-utils/build/Utils/location.utils';
 import { ToastNotifications } from 'drivezy-web-utils/build/Utils';
 
 import { GetSourceMorphMap } from './preference.utils';
+import { GetTime } from './time.utils';
+
 import { ROUTE_URL } from './../Constants/global.constants';
 import { CreateUrl } from './generic.utils';
 
@@ -205,7 +207,7 @@ export default class FormUtil {
         if (dict && dict.reference_model) {
             let url = dict.reference_model.route_name;
             url = BuildUrlForGetCall(url, queryParams);
-            self.form.dictionary[column].reference_model.route_name = url;
+            self.form.dictionary[column].reference_model.modified_route = url;
         }
     }
 
@@ -320,6 +322,14 @@ export default class FormUtil {
     static updateForm(updateState = true) {
         StoreEvent({ eventName: 'formChanged', data: { ...self.form, ...{ updateState } } });
     }
+
+     /**
+     * expects dateTime, format
+     * @param  {} {...args}
+     */
+    static getTime({ ...args }) {
+        return GetTime({ ...args });
+    }
 }
 
 
@@ -327,7 +337,7 @@ export default class FormUtil {
 //     let model = form.getValue('model_id');
 
 //     let sourceColumnAttribute = form.getAttribute('source_column_id');
-//     // sourceColumnAttribute.reference_model.route_name = 'api/admin/modelColumn?query=model_id=' + model;
+//     // sourceColumnAttribute.reference_model.modified_route = 'api/admin/modelColumn?query=model_id=' + model;
 
 //     form.setquery('source_column_id', { query: 'model_id=' + model });
 //     form.setAttribute('source_column_id', sourceColumnAttribute);

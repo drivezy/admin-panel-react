@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import './endRideConfirm.component.css';
-import { Post} from 'common-js-util';
 
+import { API_HOST } from './../../../../../Constants/global.constants';
+
+import { Post} from 'common-js-util';
 import { TotalDuration } from './../../../../../Utils/booking.utils';
 import { ModalManager } from 'drivezy-web-utils/build/Utils';
-import { API_HOST } from './../../../../../Constants/global.constants';
+import DatePicker from './../../../../Forms/Components/Date-Picker/datePicker';
+import { ToastNotifications } from 'drivezy-web-utils/build/Utils/toast.utils';
 
 export default class EndRideConfirm extends Component {
 
@@ -18,7 +21,7 @@ export default class EndRideConfirm extends Component {
         }
     }
     /**
-     * Flat review data
+     * Flat review data from review ride modal
      */
     componentDidMount() {
         const { reviewdata } = this.state;
@@ -69,28 +72,39 @@ export default class EndRideConfirm extends Component {
                     actual_start_time : endRideInfo.pickup_time,
                     addons : endRideInfo.addons,
                     cleanliness_cost : endRideInfo.cleanliness_cost,
-                    comments : endRideInfo.comments,
+                    comments : endRideInfo.ride_return.comments,
                     damage_cost : endRideInfo.damage_cost,
                     discount : endRideInfo.discount,
                     discount_lookup : endRideInfo.discount_lookup,
                     end_time :  endRideInfo.end_time,
-                    fuel_percentage : endRideInfo.end_fuel_percentage,
+                    fuel_percentage : endRideInfo.ride_return.end_fuel_percentage,
                     odo_reading : endRideInfo.ride_return.end_odo_reading,
                     other_cost : endRideInfo.other_cost,
                     permit_refund : endRideInfo.permit_refund,
                     permit_state : endRideInfo.permit_state,
                     permit_validity : endRideInfo.permit_validity,
                     pnr : endRideInfo.token,
+                    refund_amount: endRideInfo.ride_return.refund_amount,
                     redeem : endRideInfo.redeem,
                     refuel_cost : endRideInfo.refuel_cost,
                     repair_cost : endRideInfo.repair_cost,
-                    start_fuel_percentage : endRideInfo.start_fuel_percentage,
+                    start_fuel_percentage : endRideInfo.ride_return.start_fuel_percentage,
+                    start_odo_reading : endRideInfo.ride_return.start_odo_reading,
                     start_addons : endRideInfo.start_addons
                 },
                 urlPrefix: API_HOST
             });
             if (result.success) {
                 ModalManager.closeModal();
+                ModalManager.closeModal();
+                ToastNotifications.success({ title: "Ride Ended Successfully" });
+                this.props.callback();
+
+            }
+            else{
+                ModalManager.closeModal();
+                ModalManager.closeModal();
+                ToastNotifications.error({ title: `${result.response}` });
             }
         }
 
@@ -154,7 +168,13 @@ export default class EndRideConfirm extends Component {
                                                 <label>End Time&nbsp;<i className="fa fa-clock-o" aria-hidden="true"></i>&nbsp;<i className="fa fa-car" aria-hidden="true"></i></label>
                                             </div>
                                             <div className="col-sm-12">
-                                                <input type='datetime-local' value={endRideInfo.end_time} disabled />
+                                                {/* <DatePicker
+                                                    value={endRideInfo.end_time}
+                                                    single={true}
+                                                    disabled
+                                                /> */}
+                                                <input type='text' placeholder='Booking PNR' value={endRideInfo.end_time} disabled />
+                                                {/* <input type='datetime-local' value={endRideInfo.end_time} disabled /> */}
                                             </div>
                                         </div>
                                     </div>
@@ -211,7 +231,7 @@ export default class EndRideConfirm extends Component {
                                     <label>Comments</label>
                                 </div>
                                 <div className="col-sm-12">
-                                    <input type='text' value={endRideInfo.comments} disabled />
+                                    <input type='text' value={endRideInfo.ride_return.comments ? endRideInfo.ride_return.comments : ''} disabled />
                                 </div>
                             </div>
                         </div>
@@ -241,10 +261,10 @@ export default class EndRideConfirm extends Component {
                                                 <label>{flatten ? index : null}</label>
                                             </div>
                                             <div className="col-sm-3 text-center">
-                                                <label>{flatten > 0 ? flatten : null}</label>
+                                                <label>{flatten > 0 ? (parseFloat(flatten)).toFixed(2) : null}</label>
                                             </div>
                                             <div className="col-sm-3 text-center">
-                                                <label>{flatten < 0 ? flatten*(-1) : null}</label>
+                                                <label>{flatten < 0 ? (parseFloat(flatten*(-1))).toFixed(2) : null}</label>
                                             </div>
                                         </div>
                                         : null
@@ -269,7 +289,7 @@ export default class EndRideConfirm extends Component {
                             While picking the vehicle from user end the ride.
                             </div>
                         <div className="col-sm-6 btns">
-                            <button className="btn btn-default"> Cancel </button>
+                            <button className="btn btn-default" onClick={(e) => { e.preventDefault(); ModalManager.closeModal() }}> Cancel </button>
                             &nbsp;
                                 <button className="btn btn-warning"> Go Back </button>
                             &nbsp;

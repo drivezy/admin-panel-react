@@ -1,0 +1,56 @@
+.expense-info {
+    padding: 16px;
+    .rows {
+        display: flex;
+        flex-direction: column;
+        .columns {
+            flex-direction: row;
+            display: flex;
+            .fields-left {
+                flex-basis: 50%;
+                margin: 5px;
+
+            }
+            .fields-right {
+                flex-basis: 50%;
+                margin: 5px;
+
+            }
+            .fields-center {
+                flex-basis: 100%;
+                margin: 5px;
+
+            }
+            .textbox {
+                width: 100%;
+                padding: .375rem .75rem;
+                /* min-height: 36px; */
+                display: block !important;
+                -webkit-align-items: center;
+                -webkit-box-align: center;
+                -ms-flex-align: acenter;
+                align-items: center;
+                background-color: hsl(0, 0%, 98%);
+                border-color: hsl(0, 0%, 80%);
+                border-radius: 4px;
+                border-style: solid;
+                border-width: 1px;
+                cursor: default;
+                display: flex;
+                -webkit-flex-wrap: wrap;
+                -ms-flex-wrap: wrap;
+                flex-wrap: wrap;
+                -webkit-box-pack: justify;
+                -webkit-justify-content: space-between;
+                -ms-flex-pack: justify;
+                justify-content: space-between;
+                min-height: 38px;
+                outline: 0 !important;
+                position: relative;
+                -webkit-transition: all 100ms;
+                transition: all 100ms;
+                box-sizing: border-box;
+            }
+        }
+    }
+}
